@@ -1,7 +1,7 @@
 ##--Michael duPont
 ##--METAR-RasPi : avwx.py
 ##--Shared METAR settings and functions
-##--2015-05-03
+##--2015-05-19
 
 # This file contains a series of functions and variables that are shared with
 # mplate and mscreen. This file can also be used in any project that needs a
@@ -325,7 +325,7 @@ def __getClouds(wxData):
 	return wxData , clouds
 
 #Returns a dictionary of parsed METAR data
-#Keys: Station, Time, Wind-Direction, Wind-Speed, Wind-Gust, Wind-Variable-Dir, Visibility, Runway-Visibility, Altimeter, Temperature, Dewpoint, Cloud-List, Other-List, Remarks
+#Keys: Station, Time, Wind-Direction, Wind-Speed, Wind-Gust, Wind-Variable-Dir, Visibility, Runway-Visibility, Altimeter, Temperature, Dewpoint, Cloud-List, Other-List, Remarks, Raw-Report
 def parseMETAR(txt):
 	if len(txt) < 2: return
 	if txt[0] in RegionsUsingUSParser: return parseUSMETAR(txt)
@@ -334,7 +334,7 @@ def parseMETAR(txt):
 	elif txt[:2] in MStationsUsingInternationalParser: return parseInternationalMETAR(txt)
 
 def parseUSMETAR(txt):
-	retWX = {}
+	retWX = {'Raw-Report':txt}
 	wxData , retWX['Remarks'] = __getRemarks(txt)
 	wxData , retWX['Runway-Visibility'] , notUsed = __sanitize(wxData)
 	wxData , retWX['Altimeter'] = __getAltimeterUS(wxData)
@@ -346,7 +346,7 @@ def parseUSMETAR(txt):
 	return retWX
 
 def parseInternationalMETAR(txt):
-	retWX = {}
+	retWX = {'Raw-Report':txt}
 	wxData , retWX['Remarks'] = __getRemarks(txt)
 	wxData , retWX['Runway-Visibility'] , notUsed = __sanitize(wxData)
 	wxData , retWX['Altimeter'] = __getAltimeterInternational(wxData)
@@ -440,13 +440,14 @@ def getTAF(station):
 
 #Returns a dictionary of parsed TAF data
 #'delim' is the divider between forecast lines. Ex: aviationweather.gov uses ' <br/>&nbsp;&nbsp;'
-#Keys: Station, Time, Forecast, Remarks, Min-Temp, Max-Temp
-#Australian stations also have the following keys: Temp-List, Alt-List
+#Keys: Station, Time, Forecast, Remarks, Min-Temp, Max-Temp, Raw-Report
+#PNG stations also have the following keys: Temp-List, Alt-List
 #Forecast is list of report dicts in order of time with the following keys:
-#Type , Start-Time, End-Time, Wind-Direction, Wind-Speed, Wind-Gust, Wind-Shear, Visibility, Altimeter, Cloud-List, Icing-List, Turb-List, Other-List, Probability
+#Type , Start-Time, End-Time, Wind-Direction, Wind-Speed, Wind-Gust, Wind-Shear, Visibility, Altimeter, Cloud-List, Icing-List, Turb-List, Other-List, Probability, Raw-Line
 #Min/Max-Temp is list: [temp , time]
 def parseTAF(txt , delim):
 	retWX = {}
+	retWX['Raw-Report'] = txt
 	while len(txt) > 3 and txt[:4] in ['TAF ' , 'AMD ' , 'COR ']: txt = txt[4:]
 	notUsed , retWX['Station'] , retWX['Time'] = __getStationAndTime(txt[:20].split(' '))
 	txt = txt.replace(retWX['Station'] , '')
@@ -469,6 +470,7 @@ def parseTAF(txt , delim):
 			lines.insert(1 , line[index+1:])
 			line = line[:index]
 		#Add empty PROB to next line data
+		rawLine = line
 		if len(line) == 6 and line[:4] == 'PROB':
 			prob = line
 			line = ''
@@ -478,6 +480,7 @@ def parseTAF(txt , delim):
 			elif retWX['Station'][:2] in MStationsUsingUSParser: parsedLine = parseUSTAFLine(line)
 			elif retWX['Station'][:2] in MStationsUsingInternationalParser: parsedLine = parseInternationalTAFLine(line)
 			parsedLine['Probability'] = prob
+			parsedLine['Raw-Line'] = rawLine
 			prob = ''
 			parsedLines.append(parsedLine)
 		lines.pop(0)
@@ -614,7 +617,6 @@ def metarTest(station):
 		if txt: ret += 'Station does not exist/Database lookup error'
 		else: ret += 'http connection error'
 	else:
-		ret += txt + '\n'
 		data = parseMETAR(txt)
 		for key in data: ret += '{0}  --  {1}\n'.format(key , data[key])
 		ret += '\nFlight rules for "{0}" and "{1}"  --  "{2}"'.format(data['Visibility'] , getCeiling(data['Cloud-List']) , flightRules[getFlightRules(data['Visibility'] , getCeiling(data['Cloud-List']))])
