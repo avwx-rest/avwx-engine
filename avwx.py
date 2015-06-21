@@ -1,7 +1,7 @@
 ##--Michael duPont
 ##--AVWX-Engine : avwx.py
 ##--Shared METAR settings and functions
-##--2015-06-19
+##--2015-06-20
 
 # This file contains a series of functions and variables that can be used
 # in any project that needs a means of fetching, interpretting, and/or
@@ -63,7 +63,7 @@ naUnits = {'Wind-Speed':'kt','Visibility':'sm','Altitude':'ft','Temperature':'C'
 inUnits = {'Wind-Speed':'kt','Visibility':'m','Altitude':'ft','Temperature':'C','Altimeter':'hPa'}
 curUnits = {} #Global placeholder for report units
 
-stationDBPath = '../db/stations.db' #Path to the station info database
+stationDBPath = 'stations.db' #Path to the station info database
 
 ####################################################################################################################################
 ##--Shared Functions
@@ -537,7 +537,6 @@ def parseUSTAFLine(txt):
 	wxData , retWX['Visibility'] = __getVisibility(wxData)
 	wxData , retWX['Cloud-List'] = __getClouds(wxData)
 	retWX['Other-List'] , retWX['Altimeter'] , retWX['Icing-List'] , retWX['Turb-List'] = __getTAFAltIceTurb(wxData)
-	retWX['Units'] = curUnits
 	return retWX
 	
 def parseInternationalTAFLine(txt):
@@ -556,7 +555,6 @@ def parseInternationalTAFLine(txt):
 		wxData , retWX['Visibility'] = __getVisibility(wxData)
 		wxData , retWX['Cloud-List'] = __getClouds(wxData)
 	retWX['Other-List'] , retWX['Altimeter'] , retWX['Icing-List'] , retWX['Turb-List'] = __getTAFAltIceTurb(wxData)
-	retWX['Units'] = curUnits
 	return retWX
 
 #Fixes common mistakes with 'new line' signifiers so that they can be recognized
@@ -648,7 +646,7 @@ def isNotTempoOrProb(reportType):
 
 #Format wind elements into a readable sentence
 #Returns the translation string
-#Ex: NNE (variable 010 to 040) at 14kt gusting to 20
+#Ex: NNE-020 (variable 010 to 040) at 14kt gusting to 20kt
 def translateWind(wDir , wSpd , wGst , wVar=[] , unit='kt'):
 	ret = ''
 	#Wind Direction - Cheat Sheet
@@ -680,18 +678,18 @@ def translateWind(wDir , wSpd , wGst , wVar=[] , unit='kt'):
 			ret += 'W'
 			if 237 <= wDir <= 258: ret += 'SW'
 			elif 282 <= wDir <= 303: ret += 'NW'
-		ret += '-' + str(wDir) + u'\u00B0'
+		ret += '-' + str(wDir)
 	elif wDir == 'VRB': ret += 'Variable'
 	if wVar:
 		ret += ' (variable ' + wVar[0] + ' to ' + wVar[1] + ')'
 	if wSpd and wSpd != '00':
 		ret += ' at ' + wSpd + unit
 	if wGst:
-		ret += ' gusting to ' + wGst
+		ret += ' gusting to ' + wGst + unit
 	return ret
 
 #Formats a visibility element into a string with both km and sm values
-#Ex: 8 km ( 5 sm )
+#Ex: 8km ( 5sm )
 def translateVisibility(vis , unit='m'):
 	if vis == 'P6': return 'Greater than 6sm ( >9999m )'
 	if vis == 'M1/4': return 'Less than .25sm ( <0400m )'
@@ -700,19 +698,19 @@ def translateVisibility(vis , unit='m'):
 	except ValueError: return ''
 	if unit == 'm':
 		converted = float(vis) * 0.000621371
-		converted = str(round(converted , 1)) + ' sm'
-		vis = str(round(int(vis)/1000.0 , 1))
+		converted = str(round(converted , 1)).replace('.0' , '') + 'sm'
+		vis = str(round(int(vis)/1000.0 , 1)).replace('.0' , '')
 		unit = 'km'
 	elif unit == 'sm':
 		converted = float(vis) / 0.621371
-		converted = str(round(converted , 1)) + ' km'
-		vis = str(vis)
+		converted = str(round(converted , 1)).replace('.0' , '') + 'km'
+		vis = str(vis).replace('.0' , '')
 	else: return ''
-	return vis + ' ' + unit + ' (' + converted + ')'
+	return vis + unit + ' (' + converted + ')'
 
 #Formats a temperature element into a string with both C and F values
 #Used for both Temp and Dew
-#Ex: 34°C (93°F)
+#Ex: 34C (93F)
 def translateTemp(temp , unit='C'):
 	temp = temp.replace('M','-')
 	try: int(temp)
@@ -720,12 +718,12 @@ def translateTemp(temp , unit='C'):
 	unit = unit.upper()
 	if unit == 'C':
 		converted = int(temp) * 1.8 + 32
-		converted = str(int(round(converted))) + u'\u00B0' + 'F'
+		converted = str(int(round(converted))) + 'F'
 	elif unit == 'F':
 		converted = (int(temp) - 32) / 1.8
-		converted = str(int(round(converted))) + u'\u00B0' + 'C'
+		converted = str(int(round(converted))) + 'C'
 	else: return ''
-	return temp + u'\u00B0' + unit + ' (' + converted + ')'
+	return temp + unit + ' (' + converted + ')'
 
 #Formats the altimter element into a string with hPa and inHg values
 #Ex: 30.11 inHg (1020 hPa)
@@ -735,13 +733,13 @@ def translateAltimeter(alt , unit='hPa'):
 	else: return ''
 	if unit == 'hPa':
 		converted = int(alt) / 33.8638866667
-		converted = str(round(converted , 2)) + ' inHg'
+		converted = str(round(converted , 2)) + 'inHg'
 	elif unit == 'inHg':
 		alt = alt[:2] + '.' + alt[2:]
 		converted = float(alt) * 33.8638866667
-		converted = str(int(round(converted))) + ' hPa'
+		converted = str(int(round(converted))) + 'hPa'
 	else: return ''
-	return alt + ' ' + unit + ' (' + converted + ')'
+	return alt + unit + ' (' + converted + ')'
 
 #Format cloud list into a readable sentence
 #Returns the translation string
@@ -824,7 +822,7 @@ def translateTurbIce(aList , unit='ft'):
 	return ', '.join(['{0} from {1}{3} to {2}{3}'.format(conditions[item[0]] , int(item[1])*100 , int(item[1])*100 + int(item[2])*1000 , unit) for item in splitList])
 
 #Format the Min and Max temp elemets into a readable string
-#Ex: Maximum temperature of 23°C (73°F) at 18-15:00Z
+#Ex: Maximum temperature of 23C (73F) at 18-15:00Z
 def translateMinMaxTemp(temp , unit='C'):
 	if not temp or len(temp) < 7: return ''
 	if temp[:2] == 'TX': tempType = 'Maximum'
@@ -835,21 +833,22 @@ def translateMinMaxTemp(temp , unit='C'):
 	return tempType + ' temperature of ' + translateTemp(temp[0] , unit) + ' at ' + temp[1] + ':00Z'
 
 #Translate Visibility, Altimeter, Clouds, and Other
-def translateShared(wxData):
+def translateShared(wxData , units):
 	translations = {}
-	translations['Visibility'] = translateVisibility(wxData['Visibility'] , wxData['Units']['Visibility'])
-	translations['Altimeter'] = translateAltimeter(wxData['Altimeter'] , wxData['Units']['Altimeter'])
-	translations['Clouds'] = translateClouds(wxData['Cloud-List'] , wxData['Units']['Altitude'])
+	translations['Visibility'] = translateVisibility(wxData['Visibility'] , units['Visibility'])
+	translations['Altimeter'] = translateAltimeter(wxData['Altimeter'] , units['Altimeter'])
+	translations['Clouds'] = translateClouds(wxData['Cloud-List'] , units['Altitude'])
 	translations['Other'] = translateOtherList(wxData['Other-List'])
 	return translations
 
 #Translate the results of parseMETAR
 #Keys: Wind, Visibility, Clouds, Temperature, Dewpoint, Altimeter, Other
 def translateMETAR(wxData):
-	translations = translateShared(wxData)
-	translations['Wind'] = translateWind(wxData['Wind-Direction'] , wxData['Wind-Speed'] , wxData['Wind-Gust'] , wxData['Wind-Variable-Dir'] , wxData['Units']['Wind-Speed'])
-	translations['Temperature'] = translateTemp(wxData['Temperature'] , wxData['Units']['Temperature'])
-	translations['Dewpoint'] = translateTemp(wxData['Dewpoint'] , wxData['Units']['Temperature'])
+	units = wxData['Units']
+	translations = translateShared(wxData , units)
+	translations['Wind'] = translateWind(wxData['Wind-Direction'] , wxData['Wind-Speed'] , wxData['Wind-Gust'] , wxData['Wind-Variable-Dir'] , units['Wind-Speed'])
+	translations['Temperature'] = translateTemp(wxData['Temperature'] , units['Temperature'])
+	translations['Dewpoint'] = translateTemp(wxData['Dewpoint'] , units['Temperature'])
 	return translations
 
 #Translate the results of parseTAF
@@ -857,16 +856,40 @@ def translateMETAR(wxData):
 #Forecast keys: Wind, Visibility, Clouds, Altimeter, Wind-Shear, Turbulance, Icing, Other
 def translateTAF(wxData):
 	translations = {'Forecast':[]}
+	units = wxData['Units']
 	for line in wxData['Forecast']:
-		transLine = translateShared(line)
-		transLine['Wind'] = translateWind(line['Wind-Direction'] , line['Wind-Speed'] , line['Wind-Gust'] , unit=wxData['Units']['Wind-Speed'])
-		transLine['Wind-Shear'] = translateWindShear(line['Wind-Shear'] , wxData['Units']['Altitude'] , wxData['Units']['Wind-Speed'])
-		transLine['Turbulance'] = translateTurbIce(line['Turb-List'] , wxData['Units']['Altitude'])
-		transLine['Icing'] = translateTurbIce(line['Icing-List'] , wxData['Units']['Altitude'])
+		transLine = translateShared(line , units)
+		transLine['Wind'] = translateWind(line['Wind-Direction'] , line['Wind-Speed'] , line['Wind-Gust'] , unit=units['Wind-Speed'])
+		transLine['Wind-Shear'] = translateWindShear(line['Wind-Shear'] , wxData['Units']['Altitude'] , units['Wind-Speed'])
+		transLine['Turbulance'] = translateTurbIce(line['Turb-List'] , units['Altitude'])
+		transLine['Icing'] = translateTurbIce(line['Icing-List'] , units['Altitude'])
 		translations['Forecast'].append(transLine)
-	translations['Min-Temp'] = translateMinMaxTemp(wxData['Min-Temp'] , wxData['Units']['Temperature'])
-	translations['Max-Temp'] = translateMinMaxTemp(wxData['Max-Temp'] , wxData['Units']['Temperature'])
+	translations['Min-Temp'] = translateMinMaxTemp(wxData['Min-Temp'] , units['Temperature'])
+	translations['Max-Temp'] = translateMinMaxTemp(wxData['Max-Temp'] , units['Temperature'])
 	return translations
+
+def createMETARSummary(wxTrans):
+	sumList = []
+	if 'Wind' in wxTrans and wxTrans['Wind']: sumList.append('Winds ' + wxTrans['Wind'])
+	if 'Visibility' in wxTrans and wxTrans['Visibility']: sumList.append('Vis ' + wxTrans['Visibility'][:wxTrans['Visibility'].find(' (')].lower())
+	if 'Temperature' in wxTrans and wxTrans['Temperature']: sumList.append('Temp ' + wxTrans['Temperature'][:wxTrans['Temperature'].find(' (')])
+	if 'Dewpoint' in wxTrans and wxTrans['Dewpoint']: sumList.append('Dew ' + wxTrans['Dewpoint'][:wxTrans['Dewpoint'].find(' (')])
+	if 'Altimeter' in wxTrans and wxTrans['Altimeter']: sumList.append('Alt ' + wxTrans['Altimeter'][:wxTrans['Altimeter'].find(' (')])
+	if 'Other' in wxTrans and wxTrans['Other']: sumList.append(wxTrans['Other'])
+	if 'Clouds' in wxTrans and wxTrans['Clouds']: sumList.append(wxTrans['Clouds'].replace(' - Reported AGL' , ''))
+	return ', '.join(sumList)
+
+def createTAFLineSummary(wxTrans):
+	sumList = []
+	if 'Wind' in wxTrans and wxTrans['Wind']: sumList.append('Winds ' + wxTrans['Wind'])
+	if 'Visibility' in wxTrans and wxTrans['Visibility']: sumList.append('Vis ' + wxTrans['Visibility'][:wxTrans['Visibility'].find(' (')].lower())
+	if 'Altimeter' in wxTrans and wxTrans['Altimeter']: sumList.append('Alt ' + wxTrans['Altimeter'][:wxTrans['Altimeter'].find(' (')])
+	if 'Other' in wxTrans and wxTrans['Other']: sumList.append(wxTrans['Other'])
+	if 'Clouds' in wxTrans and wxTrans['Clouds']: sumList.append(wxTrans['Clouds'][:wxTrans['Clouds'].find(' -')])
+	if 'Wind-Shear' in wxTrans and wxTrans['Wind-Shear']: sumList.append(wxTrans['Wind-Shear'])
+	if 'Turbulance' in wxTrans and wxTrans['Turbulance']: sumList.append(wxTrans['Turbulance'])
+	if 'Icing' in wxTrans and wxTrans['Icing']: sumList.append(wxTrans['Icing'])
+	return ', '.join(sumList)
 
 ####################################################################################################################################
 ##--Station data
@@ -907,6 +930,7 @@ def metarTest(station):
 		translation = translateMETAR(data)
 		ret += '\n\nTranslation'
 		for key in translation: ret += '\n' + key + ':   ' + translation[key]
+		ret += '\nSummary: ' + createMETARSummary(translation) + '\n'
 		ret += str(getInfoForStation(station))
 	print(ret)
 
@@ -933,7 +957,9 @@ def tafTest(station):
 		#Print Forecast dicts
 		for lineDict in taf['Forecast']: ret += str(lineDict) + '\n\n'
 		#Print Translation
-		ret += 'Translation\n\n' + str(translateTAF(taf))
+		trans = translateTAF(taf)
+		ret += 'Translation\n\n' + str(trans) + '\n\nSummary:'
+		for line in trans['Forecast']: ret += '\n' + createTAFLineSummary(line)
 	print(ret)
 
 if __name__ == '__main__':
