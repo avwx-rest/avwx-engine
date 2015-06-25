@@ -1,7 +1,7 @@
 ##--Michael duPont
 ##--AVWX-Engine : avwx.py
 ##--Shared METAR settings and functions
-##--2015-06-20
+##--2015-06-21
 
 # This file contains a series of functions and variables that can be used
 # in any project that needs a means of fetching, interpretting, and/or
@@ -164,11 +164,11 @@ def __sanitize(wxData , removeCLRandSKC=True):
 def __getAltimeterUS(wxData):
 	altimeter = ''
 	#Get altimeter
-	if wxData and wxData[len(wxData)-1][0] == 'A': altimeter = wxData.pop()
-	if wxData and wxData[len(wxData)-1][0] == 'Q':
+	if wxData and wxData[len(wxData)-1][0] == 'A': altimeter = wxData.pop()[1:]
+	elif wxData and wxData[len(wxData)-1][0] == 'Q':
 		global curUnits
 		curUnits['Altimeter'] = 'hPa'
-		altimeter = wxData.pop()
+		altimeter = wxData.pop()[1:]
 	elif wxData and len(wxData[len(wxData)-1]) == 4 and wxData[len(wxData)-1].isdigit(): altimeter = wxData.pop()
 	#Some stations report both, but we only need one
 	if wxData and (wxData[len(wxData)-1][0] == 'A' or wxData[len(wxData)-1][0] == 'Q'): wxData.pop()
@@ -177,11 +177,11 @@ def __getAltimeterUS(wxData):
 def __getAltimeterInternational(wxData):
 	altimeter = ''
 	#Get altimeter
-	if wxData and wxData[len(wxData)-1][0] == 'Q': altimeter = wxData.pop()
-	if wxData and wxData[len(wxData)-1][0] == 'A':
+	if wxData and wxData[len(wxData)-1][0] == 'Q': altimeter = wxData.pop()[1:]
+	elif wxData and wxData[len(wxData)-1][0] == 'A':
 		global curUnits
 		curUnits['Altimeter'] = 'inHg'
-		altimeter = wxData.pop()
+		altimeter = wxData.pop()[1:]
 	#Some stations report both, but we only need one
 	if wxData and (wxData[len(wxData)-1][0] == 'A' or wxData[len(wxData)-1][0] == 'Q'): wxData.pop()
 	return wxData , altimeter
@@ -409,6 +409,7 @@ def parseUSMETAR(txt):
 	wxData , retWX['Visibility'] = __getVisibility(wxData)
 	retWX['Other-List'] , retWX['Cloud-List'] = __getClouds(wxData)
 	retWX['Units'] = curUnits
+	retWX['Flight-Rules'] = flightRules[getFlightRules(retWX['Visibility'] , getCeiling(retWX['Cloud-List']))]
 	return retWX
 
 def parseInternationalMETAR(txt):
@@ -430,6 +431,7 @@ def parseInternationalMETAR(txt):
 		wxData , retWX['Cloud-List'] = __getClouds(wxData)
 	retWX['Other-List'] = wxData #Other weather
 	retWX['Units'] = curUnits
+	retWX['Flight-Rules'] = flightRules[getFlightRules(retWX['Visibility'] , getCeiling(retWX['Cloud-List']))]
 	return retWX
 
 ####################################################################################################################################
@@ -461,7 +463,7 @@ def getTAF(station):
 #Keys: Station, Time, Forecast, Remarks, Min-Temp, Max-Temp, Raw-Report, Units
 #Oceania stations also have the following keys: Temp-List, Alt-List
 #Forecast is list of report dicts in order of time with the following keys:
-#Type , Start-Time, End-Time, Wind-Direction, Wind-Speed, Wind-Gust, Wind-Shear, Visibility, Altimeter, Cloud-List, Icing-List, Turb-List, Other-List, Probability, Raw-Line
+#Type , Start-Time, End-Time, Flight-Rules, Wind-Direction, Wind-Speed, Wind-Gust, Wind-Shear, Visibility, Altimeter, Cloud-List, Icing-List, Turb-List, Other-List, Probability, Raw-Line
 #Units is dict of identified units of measurement for each field
 def parseTAF(txt , delim):
 	retWX = {}
@@ -885,7 +887,7 @@ def createTAFLineSummary(wxTrans):
 	if 'Visibility' in wxTrans and wxTrans['Visibility']: sumList.append('Vis ' + wxTrans['Visibility'][:wxTrans['Visibility'].find(' (')].lower())
 	if 'Altimeter' in wxTrans and wxTrans['Altimeter']: sumList.append('Alt ' + wxTrans['Altimeter'][:wxTrans['Altimeter'].find(' (')])
 	if 'Other' in wxTrans and wxTrans['Other']: sumList.append(wxTrans['Other'])
-	if 'Clouds' in wxTrans and wxTrans['Clouds']: sumList.append(wxTrans['Clouds'][:wxTrans['Clouds'].find(' -')])
+	if 'Clouds' in wxTrans and wxTrans['Clouds']: sumList.append(wxTrans['Clouds'].replace(' - Reported AGL' , ''))
 	if 'Wind-Shear' in wxTrans and wxTrans['Wind-Shear']: sumList.append(wxTrans['Wind-Shear'])
 	if 'Turbulance' in wxTrans and wxTrans['Turbulance']: sumList.append(wxTrans['Turbulance'])
 	if 'Icing' in wxTrans and wxTrans['Icing']: sumList.append(wxTrans['Icing'])
@@ -963,7 +965,7 @@ def tafTest(station):
 	print(ret)
 
 if __name__ == '__main__':
-	station = 'KJFK'
+	station = 'KGUS'
 	print(getInfoForStation(station))
 	metarTest(station)
 	print('\n------------------------------------------\n')
