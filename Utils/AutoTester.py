@@ -6,10 +6,7 @@
 ##--2015-06-19
 
 from avwx import *
-import time , csv , smtplib , os , sys , io
-if sys.version_info[0] == 2: import urllib2
-elif sys.version_info[0] == 3: from urllib.request import urlopen
-else: print("Cannot load urllib in AutoTester.py")
+import time , csv , smtplib , os , sys , io , requests
 
 timeoutStations = []
 notFoundStations = []
@@ -22,12 +19,8 @@ colors = ['255,0,0','255,130,0','255,200,0','0,255,0','0,0,255','255,0,200']
 #Return True if station hasn't produced a METAR report in the last 2 weeks
 def checkPast2Weeks(station):
 	try:
-		if sys.version_info[0] == 2:
-			response = urllib2.urlopen('http://www.aviationweather.gov/metar/data?ids='+station+'&format=raw&date=0&hours=336')
-			html = response.read()
-		elif sys.version_info[0] == 3:
-			response = urlopen('http://www.aviationweather.gov/metar/data?ids='+station+'&format=raw&date=0&hours=336')
-			html = response.read().decode('utf-8')
+		url = 'http://www.aviationweather.gov/metar/data?ids='+station+'&format=raw&date=0&hours=336'
+		html = requests.get(url).text
 		if html.find('No METAR found for ' + station) != -1: return True
 		else: return False
 	except:

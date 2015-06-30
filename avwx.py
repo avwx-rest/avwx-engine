@@ -1,7 +1,7 @@
 ##--Michael duPont
 ##--AVWX-Engine : avwx.py
 ##--Shared METAR settings and functions
-##--2015-06-21
+##--2015-06-29
 
 # This file contains a series of functions and variables that can be used
 # in any project that needs a means of fetching, interpretting, and/or
@@ -32,10 +32,7 @@
 # Example usage for both METAR and TAF can be found at the bottom of the file.
 # You can run this test code by running this file: python avwx.py
 
-import time , sys , csv , sqlite3
-if sys.version_info[0] == 2: import urllib2
-elif sys.version_info[0] == 3: from urllib.request import urlopen
-else: print("Cannot load urllib in avwx.py")
+import time , sys , csv , sqlite3 , requests
 from itertools import permutations
 
 ##--Logic Vars
@@ -373,12 +370,8 @@ def getCeiling(clouds):
 #0=Bad connection , 1=Station DNE/Server Error
 def getMETAR(station):
 	try:
-		if sys.version_info[0] == 2:
-			response = urllib2.urlopen('http://www.aviationweather.gov/metar/data?ids='+station+'&format=raw&date=0&hours=0')
-			html = response.read()
-		elif sys.version_info[0] == 3:
-			response = urlopen('http://www.aviationweather.gov/metar/data?ids='+station+'&format=raw&date=0&hours=0')
-			html = response.read().decode('utf-8')
+		url = 'http://www.aviationweather.gov/metar/data?ids='+station+'&format=raw&date=0&hours=0'
+		html = requests.get(url).text
 		if html.find(station+'<') != -1: return 1   #Station does not exist/Database lookup error
 		reportStart = html.find('<code>'+station+' ')+6      #Report begins with station iden
 		reportEnd = html[reportStart:].find('<')        #Report ends with html bracket
@@ -443,12 +436,8 @@ def parseInternationalMETAR(txt):
 #0=Bad Connection/Unknown Error , 1=Station DNE/Server Error , 2=Could Not Find Report Start
 def getTAF(station):
 	try:
-		if sys.version_info[0] == 2:
-			response = urllib2.urlopen('http://www.aviationweather.gov/taf/data?ids=' + station + '&format=raw&submit=Get+TAF+data')
-			html = response.read()
-		elif sys.version_info[0] == 3:
-			response = urlopen('http://www.aviationweather.gov/taf/data?ids=' + station + '&format=raw&submit=Get+TAF+data')
-			html = response.read().decode('utf-8')
+		url = 'http://www.aviationweather.gov/taf/data?ids=' + station + '&format=raw&submit=Get+TAF+data'
+		html = requests.get(url).text
 		if html.find(station+'<') != -1: return 1                             #Station does not exist/Database lookup error
 		reportStart = html.find('<code>TAF ')+6                               #Standard report begins with 'TAF'
 		if reportStart == 5: reportStart = html.find('<code>'+station+' ')+6  #US report begins with station iden
