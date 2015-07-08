@@ -1,7 +1,7 @@
 ##--Michael duPont
 ##--AVWX-Engine : avwx.py
 ##--Shared METAR settings and functions
-##--2015-06-29
+##--2015-07-07
 
 # This file contains a series of functions and variables that can be used
 # in any project that needs a means of fetching, interpretting, and/or
@@ -32,7 +32,7 @@
 # Example usage for both METAR and TAF can be found at the bottom of the file.
 # You can run this test code by running this file: python avwx.py
 
-import time , sys , csv , sqlite3 , requests
+import time , sys , csv , sqlite3 , requests , copy
 from itertools import permutations
 
 ##--Logic Vars
@@ -50,11 +50,11 @@ tafRMKStarts = ['RMK ','AUTOMATED ','COR ','AMD ','LAST ','FCST ','CANCEL ','CHE
 tafNewLineStarts = [' INTER ' , ' FM' , ' BECMG ' , ' TEMPO ']
 
 ##--Station Location Identifiers
-RegionsUsingUSParser = ['C', 'K', 'M', 'P', 'T']
-RegionsUsingInternationalParser = ['A', 'B', 'D', 'E', 'F', 'G', 'H', 'L', 'M', 'N', 'O', 'R', 'S', 'U', 'V', 'W', 'Y', 'Z']
+RegionsUsingUSParser = ['C', 'K', 'P', 'T']
+RegionsUsingInternationalParser = ['A', 'B', 'D', 'E', 'F', 'G', 'H', 'L', 'N', 'O', 'R', 'S', 'U', 'V', 'W', 'Y', 'Z']
 #The Central American region is split. Therefore we need to use the first two letters
-MStationsUsingUSParser = ['MB', 'MD', 'MK', 'MM', 'MT', 'MU', 'MW', 'MY']
-MStationsUsingInternationalParser = ['MG', 'MH', 'MN', 'MP', 'MR', 'MS', 'MZ']
+MStationsUsingUSParser = ['MB', 'MM', 'MT', 'MY']
+MStationsUsingInternationalParser = ['MD' , 'MG', 'MH', 'MK' , 'MN', 'MP', 'MR', 'MS', 'MU' , 'MW' , 'MZ']
 
 naUnits = {'Wind-Speed':'kt','Visibility':'sm','Altitude':'ft','Temperature':'C','Altimeter':'inHg'}
 inUnits = {'Wind-Speed':'kt','Visibility':'m','Altitude':'ft','Temperature':'C','Altimeter':'hPa'}
@@ -116,6 +116,8 @@ def extraSpaceExists(s1 , s2):
 #We can remove and identify "one-off" elements and fix other issues before parsing a line
 #We also return the runway visibility and wind shear since they are very easy to recognize
 #and their location in the report is non-standard
+itemRemoval = ['AUTO' , 'COR' , 'NSC' , 'NCD' , '$' , 'KT' , 'M' , '.' , 'RTD' , 'SPECI']
+itemReplacements = {'CALM': '00000KT'}
 visPermutations = [''.join(p) for p in permutations('P6SM')]
 def __sanitize(wxData , removeCLRandSKC=True):
 	runwayVisibility , shear = '' , ''
@@ -133,11 +135,14 @@ def __sanitize(wxData , removeCLRandSKC=True):
 		elif i != 0 and extraSpaceExists(wxData[i-1] , wxData[i]):
 			wxData[i-1] += wxData.pop(i)
 		#Remove spurious elements
-		elif wxData[i] in ['AUTO' , 'COR' , 'NSC' , 'NCD' , '$' , 'KT' , 'M' , '.']:
+		elif wxData[i] in itemRemoval:
 			wxData.pop(i)
 		#Remove 'Sky Clear' from METAR but not TAF
 		elif removeCLRandSKC and wxData[i] in ['CLR' , 'SKC']:
 			wxData.pop(i)
+		#Replace certain items
+		elif wxData[i] in itemReplacements:
+			wxData[i] = itemReplacements[wxData[i]]
 		#Remove ammend signifier from start of report ('CCA','CCB',etc)
 		elif len(wxData[i]) == 3 and wxData[i][:2] == 'CC' and wxData[i][2].isalpha():
 			wxData.pop(i)
@@ -198,6 +203,8 @@ def __getTAFAltIceTurb(wxData):
 def __getTempAndDewpoint(wxData):
 	if wxData and (wxData[len(wxData)-1].find('/') != -1):
 		TD = wxData.pop().split('/')
+		for i in range(len(TD)):
+			if TD[i] == 'MM': TD[i] = ''
 		return wxData , TD[0] , TD[1]
 	return wxData , '' , ''
 
@@ -217,9 +224,11 @@ def __getWindInfo(wxData):
 	if wxData and ((wxData[0][len(wxData[0])-2:] == 'KT') or (wxData[0][len(wxData[0])-3:] == 'KTS') or (len(wxData[0]) == 5 and wxData[0].isdigit()) or (len(wxData[0]) >= 8 and wxData[0].find('G') != -1 and wxData[0].find('/') == -1 and wxData[0].find('MPS') == -1)):
 		direction = wxData[0][:3]
 		if wxData[0].find('G') != -1:
-			gust = wxData[0][wxData[0].find('G')+1:wxData[0].find('KT')]
+			if wxData[0].find('KT') != -1: gust = wxData[0][wxData[0].find('G')+1:wxData[0].find('KT')]
+			else: gust = wxData[0][wxData[0].find('G')+1:]
 			speed = wxData[0][3:wxData[0].find('G')]
-		else: speed = wxData[0][3:wxData[0].find('KT')]
+		elif wxData[0].find('KT') != -1: speed = wxData[0][3:wxData[0].find('KT')]
+		else: speed = wxData[0][3:]
 		wxData.pop(0)
 	elif wxData and wxData[0][len(wxData[0])-3:] == 'MPS':
 		global curUnits
@@ -233,6 +242,7 @@ def __getWindInfo(wxData):
 	elif wxData and len(wxData[0]) > 5 and wxData[0][3] == '/' and  wxData[0][:3].isdigit() and  wxData[0][3:5].isdigit():
 		direction = wxData[0][:3]
 		if wxData[0].find('G') != -1:
+			print('Found second G: {0}'.format(wxData[0]))
 			gIndex = wxData[0].find('G')
 			gust = wxData[0][gIndex+1:gIndex+3]
 			speed = wxData[0][4:wxData[0].find('G')]
@@ -344,7 +354,7 @@ def getFlightRules(vis , splitCloud):
 	if splitCloud: cld = int(splitCloud[1])
 	else: cld = 99
 	#Determine flight rules
-	if (vis < 5) or (cld < 30):
+	if (vis <= 5) or (cld <= 30):
 		if (vis < 3) or (cld < 10):
 			if (vis < 1) or (cld < 5):
 				return 3 #LIFR
@@ -360,6 +370,13 @@ def getCeiling(clouds):
 		if len(cloud) > 1 and cloud[1].isdigit() and cloud[0] in ['OVC','BKN','VV']:
 			return cloud
 	return None
+
+#Returns True if the station uses the North American format, False if the International format
+def usesNAFormat(station):
+	if station[0] in RegionsUsingUSParser: return True
+	elif station[0] in RegionsUsingInternationalParser: return False
+	elif station[:2] in MStationsUsingUSParser: return True
+	elif station[:2] in MStationsUsingInternationalParser: return False
 
 ####################################################################################################################################
 ##--METAR Functions
@@ -383,15 +400,14 @@ def getMETAR(station):
 #Keys: Station, Time, Wind-Direction, Wind-Speed, Wind-Gust, Wind-Variable-Dir, Visibility, Runway-Visibility, Altimeter, Temperature, Dewpoint, Cloud-List, Other-List, Remarks, Raw-Report, Units
 #Units is dict of identified units of measurement for each field
 def parseMETAR(txt):
+	txt = txt.strip()
 	if len(txt) < 2: return
-	if txt[0] in RegionsUsingUSParser: return parseUSMETAR(txt)
-	elif txt[0] in RegionsUsingInternationalParser: return parseInternationalMETAR(txt)
-	elif txt[:2] in MStationsUsingUSParser: return parseUSMETAR(txt)
-	elif txt[:2] in MStationsUsingInternationalParser: return parseInternationalMETAR(txt)
+	if usesNAFormat(txt[:2]): return parseUSMETAR(txt)
+	else: return parseInternationalMETAR(txt)
 
 def parseUSMETAR(txt):
 	global curUnits
-	curUnits = naUnits
+	curUnits = copy.copy(naUnits)
 	retWX = {'Raw-Report':txt}
 	wxData , retWX['Remarks'] = __getRemarks(txt)
 	wxData , retWX['Runway-Visibility'] , notUsed = __sanitize(wxData)
@@ -407,7 +423,7 @@ def parseUSMETAR(txt):
 
 def parseInternationalMETAR(txt):
 	global curUnits
-	curUnits = inUnits
+	curUnits = copy.copy(inUnits)
 	retWX = {'Raw-Report':txt}
 	wxData , retWX['Remarks'] = __getRemarks(txt)
 	wxData , retWX['Runway-Visibility'] , notUsed = __sanitize(wxData)
@@ -461,18 +477,13 @@ def parseTAF(txt , delim):
 	notUsed , retWX['Station'] , retWX['Time'] = __getStationAndTime(txt[:20].split(' '))
 	txt = txt.replace(retWX['Station'] , '')
 	txt = txt.replace(retWX['Time'] , '')
-	if retWX['Station'][0] in RegionsUsingUSParser:
+	global curUnits
+	if usesNAFormat(retWX['Station']):
 		isInternational = False
-		curUnits = naUnits
-	elif retWX['Station'][0] in RegionsUsingInternationalParser:
+		curUnits = copy.copy(naUnits)
+	else:
 		isInternational = True
-		curUnits = inUnits
-	elif retWX['Station'][:2] in MStationsUsingUSParser:
-		isInternational = False
-		curUnits = naUnits
-	elif retWX['Station'][:2] in MStationsUsingInternationalParser:
-		isInternational = True
-		curUnits = inUnits
+		curUnits = copy.copy(inUnits)
 	retWX['Remarks'] = ''
 	parsedLines = []
 	prob = ''
@@ -503,7 +514,6 @@ def parseTAF(txt , delim):
 			prob = ''
 			parsedLines.append(parsedLine)
 		lines.pop(0)
-	#print(parsedLines)
 	if parsedLines:
 		parsedLines[len(parsedLines)-1]['Other-List'] , retWX['Max-Temp'] , retWX['Min-Temp'] = getTempMinAndMax(parsedLines[len(parsedLines)-1]['Other-List'])
 		if not (retWX['Max-Temp'] or retWX['Min-Temp']): parsedLines[0]['Other-List'] , retWX['Max-Temp'] , retWX['Min-Temp'] = getTempMinAndMax(parsedLines[0]['Other-List'])
@@ -717,18 +727,21 @@ def translateTemp(temp , unit='C'):
 	return temp + unit + ' (' + converted + ')'
 
 #Formats the altimter element into a string with hPa and inHg values
-#Ex: 30.11 inHg (1020 hPa)
+#Ex: 30.11 inHg (10.20 hPa)
 def translateAltimeter(alt , unit='hPa'):
 	if alt.isdigit(): 1
 	elif not alt.isdigit() and len(alt) == 5 and alt[1:].isdigit(): alt = alt[1:]
 	else: return ''
 	if unit == 'hPa':
-		converted = int(alt) / 33.8638866667
+		alt = alt[:2] + '.' + alt[2:]
+		converted = float(alt) / 33.8638866667
 		converted = str(round(converted , 2)) + 'inHg'
+		converted = converted[:2] + '.' + converted[2:]
 	elif unit == 'inHg':
 		alt = alt[:2] + '.' + alt[2:]
 		converted = float(alt) * 33.8638866667
 		converted = str(int(round(converted))) + 'hPa'
+		converted = converted[:2] + '.' + converted[2:]
 	else: return ''
 	return alt + unit + ' (' + converted + ')'
 
@@ -909,8 +922,8 @@ def timestamp(logString): return time.strftime('%d %H:%M:%S - ') + logString
 #Retrive, parse, and display METAR report
 def metarTest(station):
 	ret = timestamp(station + '\n\n')
-	txt = getMETAR(station)
-	#txt = 'OIZH 181100Z 09014KT 9999 FEW035TCU SCT CHECK TEXT NEW ENDING ADDED VABBYFYX'
+	#txt = getMETAR(station)
+	txt = 'PAPT 070055Z 16011G23 25SM BKN065 19/13 A2996 RMK NO SPECI'
 	if type(txt) == int: 
 		if txt: ret += 'Station does not exist/Database lookup error'
 		else: ret += 'http connection error'
@@ -922,7 +935,7 @@ def metarTest(station):
 		ret += '\n\nTranslation'
 		for key in translation: ret += '\n' + key + ':   ' + translation[key]
 		ret += '\nSummary: ' + createMETARSummary(translation) + '\n'
-		ret += str(getInfoForStation(station))
+		#ret += str(getInfoForStation(station))
 	print(ret)
 
 #Retrive, parse, and display TAF report
@@ -955,7 +968,7 @@ def tafTest(station):
 
 if __name__ == '__main__':
 	station = 'KGUS'
-	print(getInfoForStation(station))
+	#print(getInfoForStation(station))
 	metarTest(station)
 	print('\n------------------------------------------\n')
-	tafTest(station)
+	#tafTest(station)
