@@ -1,7 +1,7 @@
 ##--Michael duPont
 ##--AVWX-Engine : avwx.py
 ##--Shared METAR settings and functions
-##--2015-07-27
+##--2015-09-04
 
 # This file contains a series of functions and variables that can be used
 # in any project that needs a means of fetching, interpretting, and/or
@@ -565,7 +565,22 @@ def parseInternationalMETAR(txt):
 #Returns TAF report string
 #Else returns error int
 #0=Bad Connection/Unknown Error , 1=Station DNE/Server Error , 2=Could Not Find Report Start
-def getTAF(station):
+#getTAF pulls from the ADDS API and is 3x faster than getTAF2
+def getMETAR(station):
+	try:
+		xml = get(requestURL.format('taf' , station)).text
+		initDictString = json.dumps(xmltodict.parse(xml))
+		for word in ['response' , 'data' , 'TAF' , station]:
+			if initDictString.find(word) == -1: return 1
+		retDict = json.loads(initDictString)['response']['data']['TAF']
+		if type(retDict) == dict: return retDict['raw_text']
+		elif type(retDict) == list and len(retDict) >= 1: return retDict[0]['raw_text']
+		else: return 1
+	except:
+		return 0
+
+#getTAF2 scrapes the report from html
+def getTAF2(station):
 	try:
 		url = 'http://www.aviationweather.gov/taf/data?ids=' + station + '&format=raw&submit=Get+TAF+data'
 		html = get(url).text
