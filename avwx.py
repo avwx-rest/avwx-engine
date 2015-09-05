@@ -1,7 +1,7 @@
 ##--Michael duPont
 ##--AVWX-Engine : avwx.py
 ##--Shared METAR settings and functions
-##--2015-07-07
+##--2015-07-27
 
 # This file contains a series of functions and variables that can be used
 # in any project that needs a means of fetching, interpretting, and/or
@@ -32,8 +32,11 @@
 # Example usage for both METAR and TAF can be found at the bottom of the file.
 # You can run this test code by running this file: python avwx.py
 
-import time , sys , csv , sqlite3 , requests , copy
+import sqlite3 , xmltodict , json
+from requests import get
 from itertools import permutations
+from time import strftime
+from copy import copy
 
 ##--Logic Vars
 flightRules = ['VFR','MVFR','IFR','LIFR']
@@ -45,8 +48,8 @@ wxReplacements = {
 'SQ':'Squall','PO':'Dust Whirls','DS':'Duststorm','SS':'Sandstorm','FC':'Funnel Cloud',
 'BL':'Blowing','MI':'Shallow','BC':'Patchy','PR':'Partial','UP':'Unknown'}
 
-metarRMKStarts = [' BLU',' BLU+',' WHT',' GRN',' YLO',' AMB',' RED',' BECMG',' TEMPO',' INTER',' NOSIG',' RMK',' WIND',' QFE',' INFO',' RWY',' CHECK']
-tafRMKStarts = ['RMK ','AUTOMATED ','COR ','AMD ','LAST ','FCST ','CANCEL ','CHECK ','WND ','MOD ',' BY', ' QFE']
+metarRMKStarts = [' BLU',' BLU+',' WHT',' GRN',' YLO',' AMB',' RED',' BECMG',' TEMPO',' INTER',' NOSIG',' RMK',' WIND',' QFE',' QFF',' INFO',' RWY',' CHECK']
+tafRMKStarts = ['RMK ','AUTOMATED ','COR ','AMD ','LAST ','FCST ','CANCEL ','CHECK ','WND ','MOD ',' BY',' QFE',' QFF']
 tafNewLineStarts = [' INTER ' , ' FM' , ' BECMG ' , ' TEMPO ']
 
 ##--Station Location Identifiers
@@ -60,7 +63,8 @@ naUnits = {'Wind-Speed':'kt','Visibility':'sm','Altitude':'ft','Temperature':'C'
 inUnits = {'Wind-Speed':'kt','Visibility':'m','Altitude':'ft','Temperature':'C','Altimeter':'hPa'}
 curUnits = {} #Global placeholder for report units
 
-stationDBPath = 'stations.db' #Path to the station info database
+stationDBPath = 'stations.sqlite' #Path to the station info database
+requestURL = """https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource={0}s&requestType=retrieve&format=XML&stationString={1}&hoursBeforeNow=2"""
 
 ####################################################################################################################################
 ##--Shared Functions
@@ -79,7 +83,7 @@ def __getRemarks(txt):
 	txt = txt.replace('?' , '').strip(' ')
 	#First look for Altimeter in txt
 	altIndex = len(txt)+1
-	for item in [' A2',' A3',' Q1',' Q0']:
+	for item in [' A2',' A3',' Q1',' Q0',' Q9']:
 		index = txt.find(item)
 		if -1 < index < len(txt)-6 and txt[index+2:index+6].isdigit(): altIndex = index
 	#Then look for earliest remarks 'signifier'
@@ -89,25 +93,56 @@ def __getRemarks(txt):
 	elif -1 < sigIndex < altIndex: return txt[:sigIndex].strip().split(' ') , txt[sigIndex+1:]
 	return txt.strip().split(' ') , ''
 
+#Provides sanitization for operations that work better when the report is a string
+#Returns the first pass sanitized report string
+strReplacements = {' C A V O K ':' CAVOK ' , '?':' '}
+def __sanitizeFirstPass(txt):
+	if len(txt) > 4:
+		stid = txt[:4]
+		txt = txt[4:] #Prevent changes to station ID
+	for key in strReplacements: txt = txt.replace(key , strReplacements[key])
+	#Check for missing spaces in front of cloud layers
+	#Ex: TSFEW004SCT012FEW///CBBKN080
+	for cloud in cloudList:
+		if txt.find(cloud) != -1 and txt.find(' '+cloud) == -1:
+			startIndex = 0
+			counter = 0
+			while txt.count(cloud) != txt.count(' '+cloud):
+				if len(txt[txt[startIndex:].find(cloud)+startIndex:]) >= 3:
+					targetText = txt[txt[startIndex:].find(cloud)+len(cloud)+startIndex:txt[startIndex:].find(cloud)+len(cloud)+startIndex+3]
+					if targetText.isdigit() or not targetText.strip('/'):
+						txt = txt[:txt[startIndex:].find(cloud)+startIndex] + ' ' + txt[txt[startIndex:].find(cloud)+startIndex:]
+				startIndex = startIndex + txt[startIndex:].find(cloud) + len(cloud) + 1
+				#Prevent infinite loops
+				if counter > txt.count(cloud): break
+				counter += 1
+	return stid + txt
+
 #Return True if a space shouldn't exist between two items
 #This list grew so large that it had to be moved to its own function for readability
 def extraSpaceExists(s1 , s2):
 	if s1.isdigit():
 		# 10 SM
-		if s2 == 'SM' and s1.isdigit(): return True
+		if s2 in ['SM','0SM']: return True
 		# 12 /10
-		if len(s2) > 2 and s2[0] == '/' and s1[1:].isdigit(): return True
+		if len(s2) > 2 and s2[0] == '/' and s2[1:].isdigit(): return True
 	if s2.isdigit():
 		# OVC 040
 		if s1 in cloudList: return True
 		# 12/ 10
-		if len(s1) > 2 and s1[len(s1)-1] == '/' and s1[:len(s1)-1].isdigit(): return True
+		if len(s1) > 2 and s1.endswith('/') and s1[:len(s1)-1].isdigit(): return True
+		# 12/1 0
+		if len(s2) == 1 and len(s1) > 3 and s1[:2].isdigit() and s1.find('/') != -1 and s1[3:].isdigit(): return True
+		# Q 1001
+		if s1 in ['Q','A']: return True
 	# 36010G20 KT
-	if s2 == 'KT' and (s1[:5].isdigit() or (s1[:3] == 'VRB' and s1[3:5].isdigit())): return True
+	if s2 == 'KT' and (s1[:5].isdigit() or (s1.startswith('VRB') and s1[3:5].isdigit())) and s1[len(s1)-1].isdigit(): return True
 	# 36010K T
-	if s2 == 'T' and len(s1) == 6 and (s1[:5].isdigit() or (s1[:3] == 'VRB' and s1[3:5].isdigit())) and s1[5] == 'K': return True
+	if s2 == 'T' and len(s1) == 6 and (s1[:5].isdigit() or (s1.startswith('VRB') and s1[3:5].isdigit())) and s1[5] == 'K': return True
+	# OVC022 CB
+	if s2 in cloudTranslationStrings and s2 not in cloudList and len(s1) >= 3 and s1[:3] in cloudList: return True
 	# FM 122400
-	if s1 in ['FM','TL'] and (s2.isdigit() or (s2[len(s2)-1] == 'Z' and s2[:len(s2)-1].isdigit())): return True
+	if s1 in ['FM','TL'] and (s2.isdigit() or (s2.endswith('Z') and s2[:len(s2)-1].isdigit())): return True
 	# TX 20/10
 	if s1 in ['TX','TN'] and s2.find('/') != -1: return True
 	return False
@@ -116,62 +151,72 @@ def extraSpaceExists(s1 , s2):
 #We can remove and identify "one-off" elements and fix other issues before parsing a line
 #We also return the runway visibility and wind shear since they are very easy to recognize
 #and their location in the report is non-standard
-itemRemoval = ['AUTO' , 'COR' , 'NSC' , 'NCD' , '$' , 'KT' , 'M' , '.' , 'RTD' , 'SPECI']
+itemRemoval = ['AUTO' , 'COR' , 'NSC' , 'NCD' , '$' , 'KT' , 'M' , '.' , 'RTD' , 'SPECI' , 'METAR' , 'CORR']
 itemReplacements = {'CALM': '00000KT'}
 visPermutations = [''.join(p) for p in permutations('P6SM')]
+visPermutations.pop(visPermutations.index('6MPS'))
 def __sanitize(wxData , removeCLRandSKC=True):
-	runwayVisibility , shear = '' , ''
-	for i in reversed(range(len(wxData))):
+	shear = ''
+	runwayVisibility = []
+	for i , item in reversed(list(enumerate(wxData))):
+		#print(i , item)
 		#Remove elements containing only '/'
-		if wxData[i].strip('/') == '':
+		if not item.strip('/'):
 			wxData.pop(i)
 		#Identify Runway Visibility
-		elif len(wxData[i]) > 4 and wxData[i][0] == 'R' and (wxData[i][3] == '/' or wxData[i][4] == '/') and wxData[i][1:3].isdigit():
-			runwayVisibility = wxData.pop(i)
+		elif len(item) > 4 and item[0] == 'R' and (item[3] == '/' \
+		or item[4] == '/') and item[1:3].isdigit():
+			runwayVisibility.append(wxData.pop(i))
 		#Remove RE from wx codes, REVCTS -> VCTS
-		elif len(wxData[i]) in [4,6] and wxData[i][:2] == 'RE':
+		elif len(item) in [4,6] and item.startswith('RE'):
 			wxData.pop(i)
 		#Fix a slew of easily identifiable conditions where a space does not belong
-		elif i != 0 and extraSpaceExists(wxData[i-1] , wxData[i]):
+		elif i and extraSpaceExists(wxData[i-1] , item):
 			wxData[i-1] += wxData.pop(i)
 		#Remove spurious elements
-		elif wxData[i] in itemRemoval:
+		elif item in itemRemoval:
 			wxData.pop(i)
 		#Remove 'Sky Clear' from METAR but not TAF
-		elif removeCLRandSKC and wxData[i] in ['CLR' , 'SKC']:
+		elif removeCLRandSKC and item in ['CLR' , 'SKC']:
 			wxData.pop(i)
 		#Replace certain items
-		elif wxData[i] in itemReplacements:
-			wxData[i] = itemReplacements[wxData[i]]
+		elif item in itemReplacements:
+			wxData[i] = itemReplacements[item]
 		#Remove ammend signifier from start of report ('CCA','CCB',etc)
-		elif len(wxData[i]) == 3 and wxData[i][:2] == 'CC' and wxData[i][2].isalpha():
+		elif len(item) == 3 and item.startswith('CC') and item[2].isalpha():
 			wxData.pop(i)
 		#Identify Wind Shear
-		elif len(wxData[i]) > 6 and wxData[i][:2] == 'WS' and wxData[i].find('/') != -1:
+		elif len(item) > 6 and item.startswith('WS') and item.find('/') != -1:
 			shear = wxData.pop(i).replace('KT' , '')
 		#Fix inconsistant 'P6SM' Ex: TP6SM or 6PSM -> P6SM
-		elif len(wxData[i]) > 3 and wxData[i][len(wxData[i])-4:] in visPermutations:
+		elif len(item) > 3 and item[len(item)-4:] in visPermutations:
 			wxData[i] = 'P6SM'
+		#Fix wind T
+		elif (len(item) == 6 and item[5] in ['K','T'] and (item[:5].isdigit() or item.startswith('VRB'))) \
+		or (len(item) == 9 and item[8] in ['K','T'] and item[5] == 'G' and (item[:5].isdigit() or item.startswith('VRB'))):
+			wxData[i] = item[:len(item)-1] + 'KT'
 		#Fix joined TX-TN
-		elif len(wxData[i]) > 16 and len(wxData[i].split('/')) == 3:
-			if wxData[i][:2] == 'TX' and wxData[i].find('TN') != -1:
-				wxData.insert(i+1 , wxData[i][:wxData[i].find('TN')])
-				wxData[i] = wxData[i][wxData[i].find('TN'):]
-			elif wxData[i][:2] == 'TN' and wxData[i].find('TX') != -1:
-				wxData.insert(i+1 , wxData[i][:wxData[i].find('TX')])
-				wxData[i] = wxData[i][wxData[i].find('TX'):]
+		elif len(item) > 16 and len(item.split('/')) == 3:
+			if item.startswith('TX') and item.find('TN') != -1:
+				wxData.insert(i+1 , item[:item.find('TN')])
+				wxData[i] = item[item.find('TN'):]
+			elif item.startswith('TN') and item.find('TX') != -1:
+				wxData.insert(i+1 , item[:item.find('TX')])
+				wxData[i] = item[item.find('TX'):]
+		#print(i , item)
 	return wxData , runwayVisibility , shear
 	
 #Altimeter
 def __getAltimeterUS(wxData):
 	altimeter = ''
 	#Get altimeter
-	if wxData and wxData[len(wxData)-1][0] == 'A': altimeter = wxData.pop()[1:]
-	elif wxData and wxData[len(wxData)-1][0] == 'Q':
-		global curUnits
-		curUnits['Altimeter'] = 'hPa'
-		altimeter = wxData.pop()[1:]
-	elif wxData and len(wxData[len(wxData)-1]) == 4 and wxData[len(wxData)-1].isdigit(): altimeter = wxData.pop()
+	if wxData:
+		if wxData[len(wxData)-1][0] == 'A': altimeter = wxData.pop()[1:]
+		elif wxData[len(wxData)-1][0] == 'Q':
+			global curUnits
+			curUnits['Altimeter'] = 'hPa'
+			altimeter = wxData.pop()[1:].lstrip('.')
+		elif len(wxData[len(wxData)-1]) == 4 and wxData[len(wxData)-1].isdigit(): altimeter = wxData.pop()
 	#Some stations report both, but we only need one
 	if wxData and (wxData[len(wxData)-1][0] == 'A' or wxData[len(wxData)-1][0] == 'Q'): wxData.pop()
 	return wxData , altimeter
@@ -179,11 +224,14 @@ def __getAltimeterUS(wxData):
 def __getAltimeterInternational(wxData):
 	altimeter = ''
 	#Get altimeter
-	if wxData and wxData[len(wxData)-1][0] == 'Q': altimeter = wxData.pop()[1:]
-	elif wxData and wxData[len(wxData)-1][0] == 'A':
-		global curUnits
-		curUnits['Altimeter'] = 'inHg'
-		altimeter = wxData.pop()[1:]
+	if wxData:
+		if wxData[len(wxData)-1][0] == 'Q':
+			altimeter = wxData.pop()[1:].lstrip('.')
+			if altimeter.find('/') != -1: altimeter = altimeter[:altimeter.find('/')]
+		elif wxData[len(wxData)-1][0] == 'A':
+			global curUnits
+			curUnits['Altimeter'] = 'inHg'
+			altimeter = wxData.pop()[1:]
 	#Some stations report both, but we only need one
 	if wxData and (wxData[len(wxData)-1][0] == 'A' or wxData[len(wxData)-1][0] == 'Q'): wxData.pop()
 	return wxData , altimeter
@@ -192,63 +240,88 @@ def __getTAFAltIceTurb(wxData):
 	altimeter = ''
 	icing , turbulence = [] , []
 	for i in reversed(range(len(wxData))):
-		if len(wxData[i]) > 6 and wxData[i][:3] == 'QNH' and wxData[i][3:7].isdigit():
+		if len(wxData[i]) > 6 and wxData[i].startswith('QNH') and wxData[i][3:7].isdigit():
 			altimeter = wxData.pop(i)[3:7]
 		elif wxData[i].isdigit():
 			if wxData[i][0] == '6': icing.append(wxData.pop(i))
 			elif wxData[i][0] == '5': turbulence.append(wxData.pop(i))
 	return wxData , altimeter , icing , turbulence
 
+def isPossibleTemp(temp):
+	for index in temp:
+		if index not in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'M']: return False
+	return True
+
 #Temp/Dewpoint
 def __getTempAndDewpoint(wxData):
-	if wxData and (wxData[len(wxData)-1].find('/') != -1):
-		TD = wxData.pop().split('/')
-		for i in range(len(TD)):
-			if TD[i] == 'MM': TD[i] = ''
-		return wxData , TD[0] , TD[1]
+	for i in reversed(range(len(wxData))):
+		if wxData[i].find('/') != -1:
+			curVal = copy(wxData[i])
+			#///07
+			if curVal[0] == '/': curVal = '/' + curVal.strip('/')
+			#07///
+			elif curVal[len(curVal)-1] == '/': curVal = curVal.strip('/') + '/'
+			TD = curVal.split('/')
+			if len(TD) != 2: continue
+			isValid = True
+			for j in range(len(TD)):
+				if TD[j] in ['MM','XX']: TD[j] = ''
+				elif not isPossibleTemp(TD[j]):
+					isValid = False
+					break
+			if isValid:
+				wxData.pop(i)
+				return wxData , TD[0] , TD[1]
 	return wxData , '' , ''
 
 #Station and Time
 def __getStationAndTime(wxData):
 	station = wxData.pop(0)
-	if wxData and len(wxData[0]) == 7 and wxData[0][6] == 'Z' and wxData[0][:6].isdigit(): time = wxData.pop(0)
-	elif wxData and len(wxData[0]) == 6 and wxData[0].isdigit(): time = wxData.pop(0)
-	else: time = ''
-	return wxData , station , time
+	if wxData and wxData[0].endswith('Z') and wxData[0][:len(wxData[0])-1].isdigit(): rTime = wxData.pop(0)
+	elif wxData and len(wxData[0]) == 6 and wxData[0].isdigit(): rTime = wxData.pop(0) + 'Z'
+	else: rTime = ''
+	return wxData , station , rTime
 
 #Surface wind
-#Occasionally KT is not included. Check len=5 and is not altimeter. Check len>=8 and contains G (gust)
 def __getWindInfo(wxData):
 	direction , speed , gust = '' , '' , ''
 	variable = []
-	if wxData and ((wxData[0][len(wxData[0])-2:] == 'KT') or (wxData[0][len(wxData[0])-3:] == 'KTS') or (len(wxData[0]) == 5 and wxData[0].isdigit()) or (len(wxData[0]) >= 8 and wxData[0].find('G') != -1 and wxData[0].find('/') == -1 and wxData[0].find('MPS') == -1)):
-		direction = wxData[0][:3]
-		if wxData[0].find('G') != -1:
-			if wxData[0].find('KT') != -1: gust = wxData[0][wxData[0].find('G')+1:wxData[0].find('KT')]
-			else: gust = wxData[0][wxData[0].find('G')+1:]
-			speed = wxData[0][3:wxData[0].find('G')]
-		elif wxData[0].find('KT') != -1: speed = wxData[0][3:wxData[0].find('KT')]
-		else: speed = wxData[0][3:]
-		wxData.pop(0)
-	elif wxData and wxData[0][len(wxData[0])-3:] == 'MPS':
-		global curUnits
-		curUnits['Wind-Speed'] = 'm/s'
-		direction = wxData[0][:3]
-		if wxData[0].find('G') != -1:
-			gust = wxData[0][wxData[0].find('G')+1:wxData[0].find('MPS')]
-			speed = wxData[0][3:wxData[0].find('G')]
-		else: speed = wxData[0][3:wxData[0].find('MPS')]
-		wxData.pop(0)
-	elif wxData and len(wxData[0]) > 5 and wxData[0][3] == '/' and  wxData[0][:3].isdigit() and  wxData[0][3:5].isdigit():
-		direction = wxData[0][:3]
-		if wxData[0].find('G') != -1:
-			print('Found second G: {0}'.format(wxData[0]))
-			gIndex = wxData[0].find('G')
-			gust = wxData[0][gIndex+1:gIndex+3]
-			speed = wxData[0][4:wxData[0].find('G')]
-		else:
-			speed = wxData[0][4:]
-		wxData.pop(0)
+	global curUnits
+	if wxData:
+		item = copy(wxData[0])
+		for rep in ['(E)']: item = item.replace(rep , '')
+		item = item.replace('O' , '0')
+		#09010KT , 09010G15KT
+		if item.endswith('KT') \
+		or item.endswith('KTS') \
+		or item.endswith('MPS') \
+		or item.endswith('KMH') \
+		or ((len(item) == 5 or (len(item) >= 8 and item.find('G') != -1) and item.find('/') == -1) and (item[:5].isdigit() or (item.startswith('VRB') and item[3:5].isdigit()))):
+			#In order of frequency
+			if item.endswith('KT'): item = item.replace('KT' , '')
+			elif item.endswith('KTS'): item = item.replace('KTS' , '')
+			elif item.endswith('MPS'):
+				curUnits['Wind-Speed'] = 'm/s'
+				item = item.replace('MPS' , '')
+			elif item.endswith('KMH'):
+				curUnits['Wind-Speed'] = 'km/h'
+				item = item.replace('KMH' , '')
+			direction = item[:3]
+			if item.find('G') != -1:
+				gust = item[item.find('G')+1:]
+				speed = item[3:item.find('G')]
+			else: speed = item[3:]
+			wxData.pop(0)
+		#elif len(item) > 5 and item[3] == '/' and item[:3].isdigit() and item[4:6].isdigit():
+			#direction = item[:3]
+			#if item.find('G') != -1:
+				#print('Found second G: {0}'.format(item))
+				#gIndex = item.find('G')
+				#gust = item[gIndex+1:gIndex+3]
+				#speed = item[4:item.find('G')]
+			#else:
+				#speed = item[4:]
+			#wxData.pop(0)
 	#Separated Gust
 	if wxData and 1 < len(wxData[0]) < 4 and wxData[0][0] == 'G' and wxData[0][1:].isdigit():
 		gust = wxData.pop(0)[1:]
@@ -260,25 +333,37 @@ def __getWindInfo(wxData):
 #Visibility
 def __getVisibility(wxData):
 	visibility = ''
-	#Vis reported in statue miles
-	if wxData and (wxData[0].find('SM') != -1):   #10SM
-		if wxData[0] == 'P6SM': visibility = 'P6'
-		elif wxData[0] == 'M1/4SM': visibility = 'M1/4'
-		elif wxData[0].find('/') == -1: visibility = str(int(wxData[0][:wxData[0].find('SM')]))  #str(int()) fixes 01SM
-		else: visibility = wxData[0][:wxData[0].find('SM')] #1/2SM
-		wxData.pop(0)
-	#Vis reported in meters
-	elif wxData and len(wxData[0]) == 4 and wxData[0].isdigit(): visibility = wxData.pop(0)
-	elif wxData and len(wxData[0]) == 5 and wxData[0][:4].isdigit() and wxData[0][4] == 'M': visibility = wxData.pop(0)[:4]
-	#Vis statute miles but split
-	elif (len(wxData) > 1) and wxData[1].find('SM') != -1 and wxData[0].isdigit():   #2 1/2SM
-		vis1 = wxData.pop(0)  #2
-		vis2 = wxData[0][:wxData[0].find('SM')]  #1/2
-		wxData.pop(0)
-		visibility = str(int(vis1)*int(vis2[2])+int(vis2[0]))+vis2[1:]  #5/2
 	global curUnits
-	if visibility.isdigit() and len(visibility) == 4: curUnits['Visibility'] = 'm'
-	else: curUnits['Visibility'] = 'sm'
+	if wxData:
+		item = copy(wxData[0])
+		#Vis reported in statue miles
+		if item.endswith('SM'):   #10SM
+			if item == 'P6SM': visibility = 'P6'
+			elif item == 'M1/4SM': visibility = 'M1/4'
+			elif item.find('/') == -1: visibility = str(int(item[:item.find('SM')]))  #str(int()) fixes 01SM
+			else: visibility = item[:item.find('SM')] #1/2SM
+			wxData.pop(0)
+			curUnits['Visibility'] = 'sm'
+		#Vis reported in meters
+		elif len(item) == 4 and item.isdigit():
+			visibility = wxData.pop(0)
+			curUnits['Visibility'] = 'm'
+		elif 5 <= len(item) <= 7 and item[:4].isdigit() and (item[4] in ['M','N','S','E','W'] or item[4:] == 'NDV'):
+			visibility = wxData.pop(0)[:4]
+			curUnits['Visibility'] = 'm'
+		elif len(item) == 5 and item[1:5].isdigit() and item[0] in ['M','P','B']:
+			visibility = wxData.pop(0)[1:5]
+			curUnits['Visibility'] = 'm'
+		elif item.endswith('KM') and item[:item.find('KM')].isdigit():
+			visibility = item[:item.find('KM')] + '000'
+			wxData.pop(0)
+			curUnits['Visibility'] = 'm'
+		#Vis statute miles but split
+		elif len(wxData) > 1 and wxData[1].endswith('SM') and wxData[1].find('/') != -1 and item.isdigit():   #2 1/2SM
+			vis1 = wxData.pop(0)  #2
+			vis2 = wxData.pop(0).replace('SM','')  #1/2
+			visibility = str(int(vis1)*int(vis2[2])+int(vis2[0]))+vis2[1:]  #5/2
+			curUnits['Visibility'] = 'sm'
 	return wxData , visibility
 
 #TAF line report type and start/end times
@@ -287,13 +372,13 @@ def __getTypeAndTimes(wxData):
 	#TEMPO, BECMG, INTER
 	if wxData and wxData[0] in ['TEMPO','BECMG','INTER']: reportType = wxData.pop(0)
 	#PROB[30,40]
-	elif wxData and len(wxData[0]) == 6 and wxData[0][:4] == 'PROB': reportType = wxData.pop(0)
+	elif wxData and len(wxData[0]) == 6 and wxData[0].startswith('PROB'): reportType = wxData.pop(0)
 	#1200/1306
 	if wxData and len(wxData[0]) == 9 and wxData[0][4] == '/' and wxData[0][:4].isdigit() and wxData[0][5:].isdigit():
 		times = wxData.pop(0).split('/')
 		startTime , endTime = times[0] , times[1]
 	#FM120000
-	elif wxData and len(wxData[0]) > 7 and wxData[0][:2] == 'FM':
+	elif wxData and len(wxData[0]) > 7 and wxData[0].startswith('FM'):
 		reportType = 'FROM'
 		if wxData[0].find('/') != -1 and wxData[0][2:].split('/')[0].isdigit() and wxData[0][2:].split('/')[1].isdigit():
 			tSplit = wxData.pop(0)[2:].split('/')
@@ -301,14 +386,14 @@ def __getTypeAndTimes(wxData):
 			endTime = tSplit[1]
 		elif wxData[0][2:8].isdigit(): startTime = wxData.pop(0)[2:6]
 		#TL120600
-		if wxData and len(wxData[0]) > 7 and wxData[0][:2] == 'TL' and wxData[0][2:8].isdigit(): endTime = wxData.pop(0)[2:6]
+		if wxData and len(wxData[0]) > 7 and wxData[0].startswith('TL') and wxData[0][2:8].isdigit(): endTime = wxData.pop(0)[2:6]
 	return wxData , reportType , startTime , endTime
 
 #Fix rare cloud layer issues
 def sanitizeCloud(cloud):
 	if len(cloud) < 4: return cloud
 	if not cloud[3].isdigit() and cloud[3] != '/':
-		if cloud[3] == 'O': cloud[3] == '0'  #Bad "O": FEWO03 -> FEW003
+		if cloud[3] == 'O': cloud = cloud[:3] + '0' + cloud[4:]  #Bad "O": FEWO03 -> FEW003
 		else:  #Move modifiers to end: BKNC015 -> BKN015C
 			cloud = cloud[:3] + cloud[4:] + cloud[3]
 	return cloud
@@ -325,6 +410,7 @@ def splitCloud(cloud, beginsWithVV):
 		splitCloud.append(cloud[:3])
 		cloud = cloud[3:]
 	if cloud: splitCloud.append(cloud)
+	if len(splitCloud) == 1: splitCloud.append('')
 	return splitCloud
 
 #Clouds
@@ -335,8 +421,7 @@ def __getClouds(wxData):
 			clouds.append(splitCloud(wxData.pop(i) , False))
 		elif wxData[i][:2] == 'VV':
 			clouds.append(splitCloud(wxData.pop(i) , True))
-	clouds.reverse()
-	return wxData , clouds
+	return wxData , sorted(clouds , key=lambda pair: (pair[1],pair[0]))
 
 #Returns int based on current flight rules from parsed METAR data
 #0=VFR , 1=MVFR , 2=IFR , 3=LIFR
@@ -371,6 +456,18 @@ def getCeiling(clouds):
 			return cloud
 	return None
 
+def parseRemarks(rmk):
+	rmkData = {}
+	rmk = rmk.split(' ')
+	for item in rmk:
+		if len(item) in [9,5] and item[0] == 'T' and item[1:].isdigit():
+			if item[1] == '1': rmkData['Temp-Decimal'] = '-' + item[2].replace('0','') + item[3] + '.' + item[4]
+			elif item[1] == '0': rmkData['Temp-Decimal'] = item[2].replace('0','') + item[3] + '.' + item[4]
+			if len(item) == 9:
+				if item[5] == '1': rmkData['Dew-Decimal'] = '-' + item[6].replace('0','') + item[7] + '.' + item[8]
+				elif item[5] == '0': rmkData['Dew-Decimal'] = item[6].replace('0','') + item[7] + '.' + item[8]
+	return rmkData
+
 #Returns True if the station uses the North American format, False if the International format
 def usesNAFormat(station):
 	if station[0] in RegionsUsingUSParser: return True
@@ -385,10 +482,25 @@ def usesNAFormat(station):
 #Returns METAR report string
 #Else returns error int
 #0=Bad connection , 1=Station DNE/Server Error
+#getMETAR pulls from the ADDS API and is 3x faster than getMETAR2
 def getMETAR(station):
 	try:
+		xml = get(requestURL.format('metar' , station)).text
+		initDictString = json.dumps(xmltodict.parse(xml))
+		for word in ['response' , 'data' , 'METAR' , station]:
+			if initDictString.find(word) == -1: return 1
+		retDict = json.loads(initDictString)['response']['data']['METAR']
+		if type(retDict) == dict: return retDict['raw_text']
+		elif type(retDict) == list and len(retDict) >= 1: return retDict[0]['raw_text']
+		else: return 1
+	except:
+		return 0
+
+#getMETAR2 scrapes the report from html
+def getMETAR2(station):
+	try:
 		url = 'http://www.aviationweather.gov/metar/data?ids='+station+'&format=raw&date=0&hours=0'
-		html = requests.get(url).text
+		html = get(url).text
 		if html.find(station+'<') != -1: return 1   #Station does not exist/Database lookup error
 		reportStart = html.find('<code>'+station+' ')+6      #Report begins with station iden
 		reportEnd = html[reportStart:].find('<')        #Report ends with html bracket
@@ -397,50 +509,53 @@ def getMETAR(station):
 		return 0
 
 #Returns a dictionary of parsed METAR data
-#Keys: Station, Time, Wind-Direction, Wind-Speed, Wind-Gust, Wind-Variable-Dir, Visibility, Runway-Visibility, Altimeter, Temperature, Dewpoint, Cloud-List, Other-List, Remarks, Raw-Report, Units
+#Keys: Station, Time, Wind-Direction, Wind-Speed, Wind-Gust, Wind-Variable-Dir, Visibility, Runway-Vis-List, Altimeter, Temperature, Dewpoint, Cloud-List, Other-List, Remarks, Raw-Report, Units
 #Units is dict of identified units of measurement for each field
 def parseMETAR(txt):
-	txt = txt.strip()
 	if len(txt) < 2: return
 	if usesNAFormat(txt[:2]): return parseUSMETAR(txt)
 	else: return parseInternationalMETAR(txt)
 
 def parseUSMETAR(txt):
 	global curUnits
-	curUnits = copy.copy(naUnits)
+	curUnits = copy(naUnits)
 	retWX = {'Raw-Report':txt}
+	txt = __sanitizeFirstPass(txt)
 	wxData , retWX['Remarks'] = __getRemarks(txt)
-	wxData , retWX['Runway-Visibility'] , notUsed = __sanitize(wxData)
-	wxData , retWX['Altimeter'] = __getAltimeterUS(wxData)
-	wxData , retWX['Temperature'] , retWX['Dewpoint'] = __getTempAndDewpoint(wxData)
+	wxData , retWX['Runway-Vis-List'] , notUsed = __sanitize(wxData)
 	wxData , retWX['Station'] , retWX['Time'] = __getStationAndTime(wxData)
+	wxData , retWX['Cloud-List'] = __getClouds(wxData)
 	wxData , retWX['Wind-Direction'] , retWX['Wind-Speed'] , retWX['Wind-Gust'] , retWX['Wind-Variable-Dir'] = __getWindInfo(wxData)
+	wxData , retWX['Altimeter'] = __getAltimeterUS(wxData)
 	wxData , retWX['Visibility'] = __getVisibility(wxData)
-	retWX['Other-List'] , retWX['Cloud-List'] = __getClouds(wxData)
+	retWX['Other-List'] , retWX['Temperature'] , retWX['Dewpoint'] = __getTempAndDewpoint(wxData)
 	retWX['Units'] = curUnits
 	retWX['Flight-Rules'] = flightRules[getFlightRules(retWX['Visibility'] , getCeiling(retWX['Cloud-List']))]
+	retWX['Remarks-Info'] = parseRemarks(retWX['Remarks'])
 	return retWX
 
 def parseInternationalMETAR(txt):
 	global curUnits
-	curUnits = copy.copy(inUnits)
+	curUnits = copy(inUnits)
 	retWX = {'Raw-Report':txt}
+	txt = __sanitizeFirstPass(txt)
 	wxData , retWX['Remarks'] = __getRemarks(txt)
-	wxData , retWX['Runway-Visibility'] , notUsed = __sanitize(wxData)
-	wxData , retWX['Altimeter'] = __getAltimeterInternational(wxData)
-	wxData , retWX['Temperature'] , retWX['Dewpoint'] = __getTempAndDewpoint(wxData)
+	wxData , retWX['Runway-Vis-List'] , notUsed = __sanitize(wxData)
 	wxData , retWX['Station'] , retWX['Time'] = __getStationAndTime(wxData)
+	if 'CAVOK' not in wxData: wxData , retWX['Cloud-List'] = __getClouds(wxData)
 	wxData , retWX['Wind-Direction'] , retWX['Wind-Speed'] , retWX['Wind-Gust'] , retWX['Wind-Variable-Dir'] = __getWindInfo(wxData)
+	wxData , retWX['Altimeter'] = __getAltimeterInternational(wxData)
 	if 'CAVOK' in wxData:
 		retWX['Visibility'] = '9999'
 		retWX['Cloud-List'] = []
 		wxData.pop(wxData.index('CAVOK'))
 	else:
 		wxData , retWX['Visibility'] = __getVisibility(wxData)
-		wxData , retWX['Cloud-List'] = __getClouds(wxData)
+	wxData , retWX['Temperature'] , retWX['Dewpoint'] = __getTempAndDewpoint(wxData)
 	retWX['Other-List'] = wxData #Other weather
 	retWX['Units'] = curUnits
 	retWX['Flight-Rules'] = flightRules[getFlightRules(retWX['Visibility'] , getCeiling(retWX['Cloud-List']))]
+	retWX['Remarks-Info'] = parseRemarks(retWX['Remarks'])
 	return retWX
 
 ####################################################################################################################################
@@ -453,7 +568,7 @@ def parseInternationalMETAR(txt):
 def getTAF(station):
 	try:
 		url = 'http://www.aviationweather.gov/taf/data?ids=' + station + '&format=raw&submit=Get+TAF+data'
-		html = requests.get(url).text
+		html = get(url).text
 		if html.find(station+'<') != -1: return 1                             #Station does not exist/Database lookup error
 		reportStart = html.find('<code>TAF ')+6                               #Standard report begins with 'TAF'
 		if reportStart == 5: reportStart = html.find('<code>'+station+' ')+6  #US report begins with station iden
@@ -480,10 +595,10 @@ def parseTAF(txt , delim):
 	global curUnits
 	if usesNAFormat(retWX['Station']):
 		isInternational = False
-		curUnits = copy.copy(naUnits)
+		curUnits = copy(naUnits)
 	else:
 		isInternational = True
-		curUnits = copy.copy(inUnits)
+		curUnits = copy(inUnits)
 	retWX['Remarks'] = ''
 	parsedLines = []
 	prob = ''
@@ -503,7 +618,7 @@ def parseTAF(txt , delim):
 			line = line[:index]
 		#Add empty PROB to next line data
 		rawLine = line
-		if len(line) == 6 and line[:4] == 'PROB':
+		if len(line) == 6 and line.startswith('PROB'):
 			prob = line
 			line = ''
 		if line:
@@ -640,7 +755,7 @@ def getTAFFlightRules(tafLines):
 	return tafLines
 
 def isNotTempoOrProb(reportType):
-	return reportType != 'TEMPO' and not (len(reportType) == 6 and reportType[:4] == 'PROB')
+	return reportType != 'TEMPO' and not (len(reportType) == 6 and reportType.startswith('PROB'))
 
 ####################################################################################################################################
 ##--Translation Functions
@@ -733,15 +848,12 @@ def translateAltimeter(alt , unit='hPa'):
 	elif not alt.isdigit() and len(alt) == 5 and alt[1:].isdigit(): alt = alt[1:]
 	else: return ''
 	if unit == 'hPa':
-		alt = alt[:2] + '.' + alt[2:]
 		converted = float(alt) / 33.8638866667
 		converted = str(round(converted , 2)) + 'inHg'
-		converted = converted[:2] + '.' + converted[2:]
 	elif unit == 'inHg':
 		alt = alt[:2] + '.' + alt[2:]
 		converted = float(alt) * 33.8638866667
 		converted = str(int(round(converted))) + 'hPa'
-		converted = converted[:2] + '.' + converted[2:]
 	else: return ''
 	return alt + unit + ' (' + converted + ')'
 
@@ -756,9 +868,20 @@ cloudTranslationStrings = {
 	'VV':'Vertical visibility up to {0}{1}',
 	'CLR':'Sky Clear',
 	'SKC':'Sky Clear',
-	'TCU':'Towering Cumulus',
+	'AC':'Altocumulus',
+	'ACC':'Altocumulus Castellanus',
+	'AS':'Altostratus',
 	'CB':'Cumulonimbus',
-	'ACC':'Altocumulus Castellanus'
+	'CC':'Cirrocumulus',
+	'CI':'Cirrus',
+	'CS':'Cirrostratus',
+	'CU':'Cumulus',
+	'FC':'Fractocumulus',
+	'FS':'Fractostratus',
+	'NS':'Nimbostratus',
+    'SC':'Stratocumulus',
+	'ST':'Stratus',
+	'TCU':'Towering Cumulus'
 	}
 def translateClouds(cloudList , unit='ft'):
 	retList = []
@@ -797,7 +920,7 @@ def translateOtherList(wxList):
 def translateWindShear(shear , unitAlt='ft' , unitWnd='kt'):
 	if not shear or shear.find('WS') == -1 or shear.find('/') == -1: return ''
 	shear = shear[2:].split('/')
-	return 'Wind shear ' + str(int(shear[0])*100) + unitAlt + ' from ' + shear[1][:3] + u'\u00B0' + ' at ' + shear[1][3:] + unitWnd
+	return 'Wind shear ' + str(int(shear[0])*100) + unitAlt + ' from ' + shear[1][:3] + ' at ' + shear[1][3:] + unitWnd
 
 #Translate the list of turbulance or icing into a readable sentence
 #Ex: Occasional moderate turbulence in clouds from 3000ft to 14000ft
@@ -917,13 +1040,13 @@ def getInfoForStation(station):
 
 #Adds timestamp to begining of print statement
 #Returns string of time + logString
-def timestamp(logString): return time.strftime('%d %H:%M:%S - ') + logString
+def timestamp(logString): return strftime('%d %H:%M:%S - ') + logString
 
 #Retrive, parse, and display METAR report
 def metarTest(station):
 	ret = timestamp(station + '\n\n')
 	#txt = getMETAR(station)
-	txt = 'PAPT 070055Z 16011G23 25SM BKN065 19/13 A2996 RMK NO SPECI'
+	txt = 'VTSF 230200Z 22006KT 1701V240 9999 FEW020 30/25 Q1013 A2993 INFO C / RWY 19'
 	if type(txt) == int: 
 		if txt: ret += 'Station does not exist/Database lookup error'
 		else: ret += 'http connection error'
@@ -967,7 +1090,7 @@ def tafTest(station):
 	print(ret)
 
 if __name__ == '__main__':
-	station = 'KGUS'
+	station = 'CWER'
 	#print(getInfoForStation(station))
 	metarTest(station)
 	print('\n------------------------------------------\n')
