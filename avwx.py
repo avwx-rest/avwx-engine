@@ -566,7 +566,7 @@ def parseInternationalMETAR(txt):
 #Else returns error int
 #0=Bad Connection/Unknown Error , 1=Station DNE/Server Error , 2=Could Not Find Report Start
 #getTAF pulls from the ADDS API and is 3x faster than getTAF2
-def getMETAR(station):
+def getTAF(station):
 	try:
 		xml = get(requestURL.format('taf' , station)).text
 		initDictString = json.dumps(xmltodict.parse(xml))
@@ -775,45 +775,53 @@ def isNotTempoOrProb(reportType):
 ####################################################################################################################################
 ##--Translation Functions
 
-#Format wind elements into a readable sentence
-#Returns the translation string
-#Ex: NNE-020 (variable 010 to 040) at 14kt gusting to 20kt
-def translateWind(wDir , wSpd , wGst , wVar=[] , unit='kt'):
-	ret = ''
+#Returns the cardinal direction (NSEW) for a degree direction
+def getCardinalDirection(wDir):
 	#Wind Direction - Cheat Sheet
 	#(360) -- 011/012 -- 033/034 -- (045) -- 056/057 -- 078/079 -- (090)
 	#(090) -- 101/102 -- 123/124 -- (135) -- 146/147 -- 168/169 -- (180)
 	#(180) -- 191/192 -- 213/214 -- (225) -- 236/237 -- 258/259 -- (270)
 	#(270) -- 281/282 -- 303/304 -- (315) -- 326/327 -- 348/349 -- (360)
+	ret = ''
+	wDir = int(wDir)
+	if 304 <= wDir <= 360 or 0 <= wDir <= 56:
+		ret += 'N'
+		if 304 <= wDir <= 348:
+			if 327 <= wDir <= 348: ret += 'N'
+			ret += 'W'
+		elif 11 <= wDir <= 56:
+			if 11 <= wDir <= 33: ret += 'N'
+			ret += 'E'
+	elif 124 <= wDir <= 236:
+		ret += 'S'
+		if 124 <= wDir <= 168:
+			if 147 <= wDir <= 168: ret += 'S'
+			ret += 'E'
+	elif 57 <= wDir <= 123:
+		ret += 'E'
+		if 57 <= wDir <= 78: ret += 'NE'
+		elif 102 <= wDir <= 123: 'SE'
+	elif 237 <= wDir <= 303:
+		ret += 'W'
+		if 237 <= wDir <= 258: ret += 'SW'
+		elif 282 <= wDir <= 303: ret += 'NW'
+	return ret
+
+#Format wind elements into a readable sentence
+#Returns the translation string
+#Ex: NNE-020 (variable 010 to 040) at 14kt gusting to 20kt
+def translateWind(wDir , wSpd , wGst , wVar=[] , unit='kt', cardinals=True):
+	ret = ''
 	if wDir == '000': ret += 'Calm'
 	elif wDir.isdigit():
-		wDir = int(wDir)
-		if 304 <= wDir <= 360 or 0 <= wDir <= 56:
-			ret += 'N'
-			if 304 <= wDir <= 348:
-				if 327 <= wDir <= 348: ret += 'N'
-				ret += 'W'
-			elif 11 <= wDir <= 56:
-				if 11 <= wDir <= 33: ret += 'N'
-				ret += 'E'
-		elif 124 <= wDir <= 236:
-			ret += 'S'
-			if 124 <= wDir <= 168:
-				if 147 <= wDir <= 168: ret += 'S'
-				ret += 'E'
-		elif 57 <= wDir <= 123:
-			ret += 'E'
-			if 57 <= wDir <= 78: ret += 'NE'
-			elif 102 <= wDir <= 123: 'SE'
-		elif 237 <= wDir <= 303:
-			ret += 'W'
-			if 237 <= wDir <= 258: ret += 'SW'
-			elif 282 <= wDir <= 303: ret += 'NW'
-		ret += '-' + str(wDir)
+		if cardinals:
+			ret += getCardinalDirection(wDir) + '-'
+		ret += wDir
 	elif wDir == 'VRB': ret += 'Variable'
+	else: ret += wDir
 	if wVar:
 		ret += ' (variable ' + wVar[0] + ' to ' + wVar[1] + ')'
-	if wSpd and wSpd != '00':
+	if wSpd and wSpd not in ('0', '00'):
 		ret += ' at ' + wSpd + unit
 	if wGst:
 		ret += ' gusting to ' + wGst + unit
@@ -1034,6 +1042,97 @@ def createTAFLineSummary(wxTrans):
 	return ', '.join(sumList)
 
 ####################################################################################################################################
+##--Speech Functions
+
+spokenUnits = {
+	'sm': 'mile',
+	'km': 'kilometer',
+	'C': 'Celsius',
+	'F': 'Fahrenheit'
+}
+
+numberReplacements = {'-': 'minus', 'M': 'minus', '0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four', '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine'}
+fractions = {'1/4': 'one quarter of a', '1/2': 'one half', '3/4': 'three quarters of a'}
+def speakNumbers(num):
+	if num in fractions: return fractions[num]
+	return ' '.join([numberReplacements[char] for char in num])
+
+def removeLeadingZeros(num):
+	if not num: return num
+	if num.startswith('M'): ret = 'M' + num[1:].lstrip('0')
+	elif num.startswith('-'): ret = '-' + num[1:].lstrip('0')
+	else: ret = num.lstrip('0')
+	if not ret: ret = '0'
+	return ret
+
+def speakWind(wDir , wSpd , wGst , wVar=[] , unit='kt'):
+	if unit in spokenUnits: unit = spokenUnits[unit]
+	if wDir != '000': wDir = speakNumbers(wDir)
+	for i, val in enumerate(wVar): wVar[i] = speakNumbers(val)
+	return 'Winds ' + translateWind(wDir , removeLeadingZeros(wSpd) , removeLeadingZeros(wGst) , wVar , unit, cardinals=False)
+
+def speakTemperature(header, temp, unit='C'):
+	if unit in spokenUnits: unit = spokenUnits[unit]
+	temp = speakNumbers(removeLeadingZeros(temp))
+	useS = '' if temp in ('one', 'minus one') else 's'
+	return ' '.join((header, temp, 'degree'+useS, unit))
+
+def unpackFraction(num):
+	nums = [int(n) for n in num.split('/')]
+	if nums[0] > nums[1]:
+		over = nums[0] // nums[1]
+		rem = nums[0] % nums[1]
+		return '{} {}/{}'.format(over, rem, nums[1])
+	else:
+		return num
+
+def speakVisibility(vis, unit='m'):
+	if vis.startswith('M'):
+		vis = 'less than ' + speakNumbers(removeLeadingZeros(vis[1:]))
+	elif vis.startswith('P'):
+		vis = 'greater than ' + speakNumbers(removeLeadingZeros(vis[1:]))
+	elif '/' in vis:
+		vis = unpackFraction(vis)
+		vis = ' and '.join([speakNumbers(removeLeadingZeros(n)) for n in vis.split(' ')])
+	else:
+		vis = translateVisibility(vis, unit=unit)
+		if unit == 'm': unit = 'km'
+		vis = vis[:vis.find(' (')].lower().replace(unit, '').strip()
+		vis = speakNumbers(removeLeadingZeros(vis))
+	ret = 'Visibility ' + vis
+	if unit in spokenUnits:
+		ret += ' ' + spokenUnits[unit]
+		if not (('one half' in vis and ' and ' not in vis) or 'of a' in vis): ret += 's'
+	else: ret += unit
+	return ret
+
+def speakAltimeter(alt, unit='inHg'):
+	ret = 'Altimeter '
+	if unit == 'inHg': ret += speakNumbers(alt[:2]) + ' point ' + speakNumbers(alt[2:])
+	elif unit == 'hPa': ret += speakNumbers(alt)
+	return ret
+
+def speakOther(wxList):
+	retList = []
+	for item in wxList:
+		item = translateWX(item)
+		if item.startswith('Vicinity'): item = item.lstrip('Vicinity ') + ' in the Vicinity'
+		retList.append(item)
+	return '. '.join(retList)
+
+def createMETARSpeech(wxData):
+	speechList = []
+	units = wxData['Units']
+	if wxData['Wind-Direction'] and wxData['Wind-Speed']: speechList.append(speakWind(wxData['Wind-Direction'] , wxData['Wind-Speed'] , wxData['Wind-Gust'] , wxData['Wind-Variable-Dir'] , units['Wind-Speed']))
+	if wxData['Visibility']: speechList.append(speakVisibility(wxData['Visibility'], units['Visibility']))
+	if wxData['Temperature']: speechList.append(speakTemperature('Temperature', wxData['Temperature'], units['Temperature']))
+	if wxData['Dewpoint']: speechList.append(speakTemperature('Dew point', wxData['Dewpoint'], units['Temperature']))
+	if wxData['Altimeter']: speechList.append(speakAltimeter(wxData['Altimeter'], units['Altimeter']))
+	if wxData['Other-List']: speechList.append(speakOther(wxData['Other-List']))
+	speechList.append(translateClouds(wxData['Cloud-List'] , units['Altitude']).replace(' - Reported AGL' , ''))
+	return ('. '.join([l for l in speechList if l])).replace(',', '.')
+
+####################################################################################################################################
 ##--Station data
 
 #Provide basic station info with the keys below
@@ -1073,6 +1172,7 @@ def metarTest(station):
 		ret += '\n\nTranslation'
 		for key in translation: ret += '\n' + key + ':   ' + translation[key]
 		ret += '\nSummary: ' + createMETARSummary(translation) + '\n'
+		ret += '\nSpeech: ' + createMETARSpeech(data)
 		#ret += str(getInfoForStation(station))
 	print(ret)
 
