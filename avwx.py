@@ -1,7 +1,9 @@
+#!/usr/bin/python3
+
 ##--Michael duPont
 ##--AVWX-Engine : avwx.py
 ##--Shared METAR settings and functions
-##--2015-09-04
+##--2017-04-19
 
 # This file contains a series of functions and variables that can be used
 # in any project that needs a means of fetching, interpretting, and/or
@@ -32,11 +34,13 @@
 # Example usage for both METAR and TAF can be found at the bottom of the file.
 # You can run this test code by running this file: python avwx.py
 
-import sqlite3 , xmltodict , json
-from requests import get
+import sqlite3 , json , sys
 from itertools import permutations
 from time import strftime
 from copy import copy
+from os import path
+from requests import get
+from xmltodict import parse
 
 ##--Logic Vars
 flightRules = ['VFR','MVFR','IFR','LIFR']
@@ -63,11 +67,16 @@ naUnits = {'Wind-Speed':'kt','Visibility':'sm','Altitude':'ft','Temperature':'C'
 inUnits = {'Wind-Speed':'kt','Visibility':'m','Altitude':'ft','Temperature':'C','Altimeter':'hPa'}
 curUnits = {} #Global placeholder for report units
 
-stationDBPath = 'stations.sqlite' #Path to the station info database
+#LOCAL_PATH = path.dirname(path.realpath(__file__))
+stationDBPath = path.dirname(path.realpath(__file__))+'/stations.sqlite' #Path to the station info database
 requestURL = """https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource={0}s&requestType=retrieve&format=XML&stationString={1}&hoursBeforeNow=2"""
 
 ####################################################################################################################################
 ##--Shared Functions
+
+#Returns True if val contains only '/' characters
+def isUnknown(val):
+	return val == '/'*len(val)
 
 #Returns the index of the earliest occurence of an item from a list in a string
 def findFirstInList(txt,aList):
@@ -428,7 +437,7 @@ def __getClouds(wxData):
 #Note: Common practice is to report IFR if visibility unavailable
 def getFlightRules(vis , splitCloud):
 	#Parse visibility
-	if vis == '': return 2
+	if vis == '' or isUnknown(vis): return 2
 	elif vis == 'P6': vis = 10
 	elif vis.find('/') != -1:
 		if vis[0] == 'M': vis = 0
@@ -486,7 +495,7 @@ def usesNAFormat(station):
 def getMETAR(station):
 	try:
 		xml = get(requestURL.format('metar' , station)).text
-		initDictString = json.dumps(xmltodict.parse(xml))
+		initDictString = json.dumps(parse(xml))
 		for word in ['response' , 'data' , 'METAR' , station]:
 			if initDictString.find(word) == -1: return 1
 		retDict = json.loads(initDictString)['response']['data']['METAR']
@@ -569,7 +578,7 @@ def parseInternationalMETAR(txt):
 def getTAF(station):
 	try:
 		xml = get(requestURL.format('taf' , station)).text
-		initDictString = json.dumps(xmltodict.parse(xml))
+		initDictString = json.dumps(parse(xml))
 		for word in ['response' , 'data' , 'TAF' , station]:
 			if initDictString.find(word) == -1: return 1
 		retDict = json.loads(initDictString)['response']['data']['TAF']
@@ -578,7 +587,7 @@ def getTAF(station):
 		else: return 1
 	except:
 		return 0
-
+		
 #getTAF2 scrapes the report from html
 def getTAF2(station):
 	try:
@@ -600,7 +609,7 @@ def getTAF2(station):
 #Forecast is list of report dicts in order of time with the following keys:
 #Type , Start-Time, End-Time, Flight-Rules, Wind-Direction, Wind-Speed, Wind-Gust, Wind-Shear, Visibility, Altimeter, Cloud-List, Icing-List, Turb-List, Other-List, Probability, Raw-Line
 #Units is dict of identified units of measurement for each field
-def parseTAF(txt , delim):
+def parseTAF(txt , delim='<br/>&nbsp;&nbsp;'):
 	retWX = {}
 	retWX['Raw-Report'] = txt
 	while len(txt) > 3 and txt[:4] in ['TAF ' , 'AMD ' , 'COR ']: txt = txt[4:]
@@ -832,7 +841,7 @@ def translateWind(wDir , wSpd , wGst , wVar=[] , unit='kt', cardinals=True):
 def translateVisibility(vis , unit='m'):
 	if vis == 'P6': return 'Greater than 6sm ( >9999m )'
 	if vis == 'M1/4': return 'Less than .25sm ( <0400m )'
-	if vis.find('/') != -1: vis = float(vis[:vis.find('/')]) / int(vis[vis.find('/')+1:])
+	if vis.find('/') != -1 and not isUnknown(vis): vis = float(vis[:vis.find('/')]) / int(vis[vis.find('/')+1:])
 	try: float(vis)
 	except ValueError: return ''
 	if unit == 'm':
@@ -1051,7 +1060,7 @@ spokenUnits = {
 	'F': 'Fahrenheit'
 }
 
-numberReplacements = {'-': 'minus', 'M': 'minus', '0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four', '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine'}
+numberReplacements = {'.': 'point', '-': 'minus', 'M': 'minus', '0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four', '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine'}
 fractions = {'1/4': 'one quarter of a', '1/2': 'one half', '3/4': 'three quarters of a'}
 def speakNumbers(num):
 	if num in fractions: return fractions[num]
@@ -1067,11 +1076,12 @@ def removeLeadingZeros(num):
 
 def speakWind(wDir , wSpd , wGst , wVar=[] , unit='kt'):
 	if unit in spokenUnits: unit = spokenUnits[unit]
-	if wDir != '000': wDir = speakNumbers(wDir)
+	if wDir not in ('000', 'VRB'): wDir = speakNumbers(wDir)
 	for i, val in enumerate(wVar): wVar[i] = speakNumbers(val)
 	return 'Winds ' + translateWind(wDir , removeLeadingZeros(wSpd) , removeLeadingZeros(wGst) , wVar , unit, cardinals=False)
 
 def speakTemperature(header, temp, unit='C'):
+	if isUnknown(temp): return 'Temperature Unknown'
 	if unit in spokenUnits: unit = spokenUnits[unit]
 	temp = speakNumbers(removeLeadingZeros(temp))
 	useS = '' if temp in ('one', 'minus one') else 's'
@@ -1087,7 +1097,8 @@ def unpackFraction(num):
 		return num
 
 def speakVisibility(vis, unit='m'):
-	if vis.startswith('M'):
+	if isUnknown(vis): return 'Visibility Unknown'
+	elif vis.startswith('M'):
 		vis = 'less than ' + speakNumbers(removeLeadingZeros(vis[1:]))
 	elif vis.startswith('P'):
 		vis = 'greater than ' + speakNumbers(removeLeadingZeros(vis[1:]))
@@ -1108,7 +1119,8 @@ def speakVisibility(vis, unit='m'):
 
 def speakAltimeter(alt, unit='inHg'):
 	ret = 'Altimeter '
-	if unit == 'inHg': ret += speakNumbers(alt[:2]) + ' point ' + speakNumbers(alt[2:])
+	if isUnknown(alt): ret += 'Unknown'
+	elif unit == 'inHg': ret += speakNumbers(alt[:2]) + ' point ' + speakNumbers(alt[2:])
 	elif unit == 'hPa': ret += speakNumbers(alt)
 	return ret
 
@@ -1141,7 +1153,7 @@ def getInfoForStation(station):
 	conn = sqlite3.connect(stationDBPath)
 	#conn.text_factory = str
 	curs = conn.cursor()
-	curs.execute('SELECT * FROM Stations WHERE icao=?' , (station,))
+	curs.execute('SELECT '+','.join(dbHeaders)+' FROM Stations WHERE icao=?' , (station,))
 	row = curs.fetchone()
 	ret = {}
 	if row:
@@ -1159,8 +1171,8 @@ def timestamp(logString): return strftime('%d %H:%M:%S - ') + logString
 #Retrive, parse, and display METAR report
 def metarTest(station):
 	ret = timestamp(station + '\n\n')
-	#txt = getMETAR(station)
-	txt = 'VTSF 230200Z 22006KT 1701V240 9999 FEW020 30/25 Q1013 A2993 INFO C / RWY 19'
+	txt = getMETAR(station)
+	#txt = 'VTSF 230200Z 22006KT 1701V240 9999 FEW020 30/25 Q1013 A2993 INFO C / RWY 19'
 	if type(txt) == int: 
 		if txt: ret += 'Station does not exist/Database lookup error'
 		else: ret += 'http connection error'
