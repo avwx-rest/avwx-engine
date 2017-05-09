@@ -257,7 +257,7 @@ def shared(wxdata: [str], units: {str: str}) -> {str: str}:
     return translations
 
 def metar(wxdata: [str]) -> {str: str}:
-    """Translate the results of parseMETAR
+    """Translate the results of metar.parse
     Keys: Wind, Visibility, Clouds, Temperature, Dewpoint, Altimeter, Other
     """
     units = wxdata['Units']
@@ -270,7 +270,7 @@ def metar(wxdata: [str]) -> {str: str}:
     return translations
 
 def taf(wxdata: [str]) -> {str: str}:
-    """Translate the results of parseTAF
+    """Translate the results of taf.parse
     Keys: Forecast, Min-Temp, Max-Temp
     Forecast keys: Wind, Visibility, Clouds, Altimeter, Wind-Shear, Turbulance, Icing, Other
     """

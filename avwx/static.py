@@ -112,3 +112,32 @@ ICING_CONDITIONS = {
     '8': 'Severe icing in clouds',
     '9': 'Severe icing in precipitation'
 }
+
+SPOKEN_UNITS = {
+    'sm': 'mile',
+    'km': 'kilometer',
+    'C': 'Celsius',
+    'F': 'Fahrenheit'
+}
+
+NUMBER_REPL = {
+    '.': 'point',
+    '-': 'minus',
+    'M': 'minus',
+    '0': 'zero',
+    '1': 'one',
+    '2': 'two',
+    '3': 'three',
+    '4': 'four',
+    '5': 'five',
+    '6': 'six',
+    '7': 'seven',
+    '8': 'eight',
+    '9': 'nine'
+}
+
+FRACTIONS = {
+    '1/4': 'one quarter of a',
+    '1/2': 'one half',
+    '3/4': 'three quarters of a'
+}
