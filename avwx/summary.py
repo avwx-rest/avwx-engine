@@ -3,7 +3,7 @@ Michael duPont - michael@mdupont.com
 AVWX-Engine : avwx/summary.py
 """
 
-def metar(trans: [str]) -> str:
+def metar(trans: {str: object}) -> str:
     """Condense the translation strings into a single report summary string"""
     summary = []
     if 'Wind' in trans and trans['Wind']:
@@ -22,8 +22,8 @@ def metar(trans: [str]) -> str:
         summary.append(trans['Clouds'].replace(' - Reported AGL', ''))
     return ', '.join(summary)
 
-def taf(trans: [str]) -> str:
-    """Condense the translation strings into a single report summary string"""
+def taf(trans: {str: object}) -> str:
+    """Condense the translation strings into a single forecast summary string"""
     summary = []
     if 'Wind' in trans and trans['Wind']:
         summary.append('Winds ' + trans['Wind'])

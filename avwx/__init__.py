@@ -85,7 +85,7 @@ class Taf(Report):
 
     @property
     def summary(self):
-        """Condensed report summary created from translations"""
+        """Condensed summary for each forecast created from translations"""
         if not self.translations:
             self.update()
-        return summary.taf(self.translations)
+        return [summary.taf(trans) for trans in self.translations['Forecast']]
