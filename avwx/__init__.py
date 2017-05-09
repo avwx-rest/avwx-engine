@@ -4,13 +4,20 @@ AVWX-Engine : avwx/__init__.py
 """
 
 # stdlib
+import sqlite3
 from datetime import datetime
+from os import path
 # module
 from avwx import metar, translate, summary
 from avwx.core import valid_station
+from avwx.exceptions import BadStation
+
+DB_HEADERS = ['ICAO', 'Country', 'State', 'City', 'Name', 'IATA',
+              'Elevation', 'Latitude', 'Longitude', 'Priority']
+DB_PATH = path.dirname(path.realpath(__file__))+'/stations.sqlite'
 
 class Report:
-    """"""
+    """Base report to take care of station info"""
 
     def __init__(self, station: str):
         valid_station(station)
@@ -19,6 +26,23 @@ class Report:
         self.raw = None
         self.data = None
         self.translations = None
+        self._station_info = None
+
+    @property
+    def station_info(self):
+        """Provide basic station info with the keys below"""
+        if self._station_info is None:
+            conn = sqlite3.connect(DB_PATH)
+            #conn.text_factory = str
+            curs = conn.cursor()
+            query = 'SELECT {} FROM Stations WHERE icao=?;'.format(','.join(DB_HEADERS))
+            curs.execute(query, (self.station,))
+            row = curs.fetchone()
+            if row:
+                self._station_info = dict(zip(DB_HEADERS, row))
+            else:
+                raise BadStation('Could not find station in info database')
+        return self._station_info
 
 class Metar(Report):
     """Class to handle METAR report data"""
@@ -36,12 +60,14 @@ class Metar(Report):
 
     @property
     def summary(self):
+        """Condensed report summary created from translations"""
         if not self.translations:
             self.update()
         return summary.metar(self.translations)
 
     # @property
     # def speech(self):
+    #     """Report summary designed to be read by a text-to-speech program"""
     #     if not self.translations:
     #         self.update()
     #     return speech.metar(self.translations)
