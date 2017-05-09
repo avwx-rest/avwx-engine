@@ -1,6 +1,6 @@
 FLIGHT_RULES = ['VFR', 'MVFR', 'IFR', 'LIFR']
 CLOUD_LIST = ['FEW', 'SCT', 'BKN', 'OVC']
-WX_REPLACEMENTS = {
+WX_TRANSLATIONS = {
     'BC': 'Patchy',
     'BL': 'Blowing',
     'BR': 'Mist',
@@ -85,3 +85,30 @@ METAR_RMK = [' BLU', ' BLU+', ' WHT', ' GRN', ' YLO', ' AMB', ' RED', ' BECMG', 
              ' INTER', ' NOSIG', ' RMK', ' WIND', ' QFE', ' QFF', ' INFO', ' RWY', ' CHECK']
 
 REQUEST_URL = """https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource={0}s&requestType=retrieve&format=XML&stationString={1}&hoursBeforeNow=2"""
+
+TURBULANCE_CONDITIONS = {
+    '0': 'None',
+    '1': 'Light turbulence',
+    '2': 'Occasional moderate turbulence in clear air',
+    '3': 'Frequent moderate turbulence in clear air',
+    '4': 'Occasional moderate turbulence in clouds',
+    '5': 'Frequent moderate turbulence in clouds',
+    '6': 'Occasional severe turbulence in clear air',
+    '7': 'Frequent severe turbulence in clear air',
+    '8': 'Occasional severe turbulence in clouds',
+    '9': 'Frequent severe turbulence in clouds',
+    'X': 'Extreme turbulence'
+}
+
+ICING_CONDITIONS = {
+    '0': 'No icing',
+    '1': 'Light icing',
+    '2': 'Light icing in clouds',
+    '3': 'Light icing in precipitation',
+    '4': 'Moderate icing',
+    '5': 'Moderate icing in clouds',
+    '6': 'Moderate icing in precipitation',
+    '7': 'Severe icing',
+    '8': 'Severe icing in clouds',
+    '9': 'Severe icing in precipitation'
+}

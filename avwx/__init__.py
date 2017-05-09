@@ -6,7 +6,7 @@ AVWX-Engine : avwx/__init__.py
 # stdlib
 from datetime import datetime
 # module
-from avwx import metar
+from avwx import metar, translate, summary
 from avwx.core import valid_station
 
 class Report:
@@ -30,15 +30,15 @@ class Metar(Report):
             return False
         self.raw = raw
         self.data = metar.parse(self.station, raw)
-        #self.translations = translate.metar(self.data)
+        self.translations = translate.metar(self.data)
         self.last_updated = datetime.utcnow()
         return True
 
-    # @property
-    # def summary(self):
-    #     if not self.translations:
-    #         self.update()
-    #     return summary.metar(self.translations)
+    @property
+    def summary(self):
+        if not self.translations:
+            self.update()
+        return summary.metar(self.translations)
 
     # @property
     # def speech(self):
