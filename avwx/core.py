@@ -9,7 +9,7 @@ from itertools import permutations
 # module
 from avwx.exceptions import BadStation
 from avwx.static import CLOUD_LIST, CLOUD_TRANSLATIONS, METAR_RMK, \
-    NA_REGIONS, IN_REGIONS, M_NA_REGIONS, M_IN_REGIONS
+    NA_REGIONS, IN_REGIONS, M_NA_REGIONS, M_IN_REGIONS, FLIGHT_RULES
 
 # This is a global units file designed to be overriden by the functions in this module
 # It's by no means a perfect solution, but it works for now
@@ -70,7 +70,7 @@ def get_remarks(txt) -> ([str], str):
         return txt[:sig_index].strip().split(' '), txt[sig_index+1:]
     return txt.strip().split(' '), ''
 
-STR_REPL = {' C A V O K ':' CAVOK ', '?':' '}
+STR_REPL = {' C A V O K ': ' CAVOK ', '?': ' '}
 def sanitize_report_string(txt: str) -> str:
     """Provides sanitization for operations that work better when the report is a string
     Returns the first pass sanitized report string
@@ -99,6 +99,23 @@ def sanitize_report_string(txt: str) -> str:
                     break
                 counter += 1
     return stid + txt
+
+LINE_FIXES = {'TEMP0': 'TEMPO', 'TEMP O': 'TEMPO', 'TMPO': 'TEMPO', 'TE MPO': 'TEMPO',
+              'TEMP ': 'TEMPO ', ' EMPO': ' TEMPO', 'TEMO': 'TEMPO', 'T EMPO': 'TEMPO',
+              'BECM G': 'BECMG', 'BEMCG': 'BECMG', 'BE CMG': 'BECMG', 'BEMG': 'BECMG',
+              ' BEC ': ' BECMG ', 'BCEMG': 'BECMG', 'B ECMG': 'BECMG'}
+def sanitize_line(txt: str) -> str:
+    """Fixes common mistakes with 'new line' signifiers so that they can be recognized"""
+    for key in LINE_FIXES:
+        index = txt.find(key)
+        if index > -1:
+            txt = txt[:index] + LINE_FIXES[key] + txt[index+len(key):]
+    #Fix when space is missing following new line signifiers
+    for item in ['BECMG', 'TEMPO']:
+        if item in txt and item+' ' not in txt:
+            index = txt.find(item)+len(item)
+            txt = txt[:index] + ' ' + txt[index:]
+    return txt
 
 def extra_space_exists(s1: str, s2: str) -> bool:
     """Return True if a space shouldn't exist between two items"""
@@ -178,7 +195,7 @@ def sanitize_report_list(wxdata: [str], remove_CLR_and_SKC: bool=True) -> ([str]
         # Replace certain items
         elif item in ITEM_REPL:
             wxdata[i] = ITEM_REPL[item]
-        # Remove ammend signifier from start of report ('CCA','CCB',etc)
+        # Remove ammend signifier from start of report ('CCA', 'CCB',etc)
         elif ilen == 3 and item.startswith('CC') and item[2].isalpha():
             wxdata.pop(i)
         # Identify Wind Shear
@@ -188,8 +205,8 @@ def sanitize_report_list(wxdata: [str], remove_CLR_and_SKC: bool=True) -> ([str]
         elif ilen > 3 and item[-4:] in VIS_PERMUTATIONS:
             wxdata[i] = 'P6SM'
         # Fix wind T
-        elif (ilen == 6 and item[5] in ['K','T'] and (item[:5].isdigit() or item.startswith('VRB'))) \
-        or (ilen == 9 and item[8] in ['K','T'] and item[5] == 'G' and (item[:5].isdigit() or item.startswith('VRB'))):
+        elif (ilen == 6 and item[5] in ['K', 'T'] and (item[:5].isdigit() or item.startswith('VRB'))) \
+        or (ilen == 9 and item[8] in ['K', 'T'] and item[5] == 'G' and (item[:5].isdigit() or item.startswith('VRB'))):
             wxdata[i] = item[:-1] + 'KT'
         # Fix joined TX-TN
         elif ilen > 16 and len(item.split('/')) == 3:
@@ -202,6 +219,10 @@ def sanitize_report_list(wxdata: [str], remove_CLR_and_SKC: bool=True) -> ([str]
                 wxdata.insert(i+1, item[:tx_index])
                 wxdata[i] = item[tx_index:]
     return wxdata, runway_vis, shear
+
+def is_not_tempo_or_prob(report_type: str) -> bool:
+    """Returns True if report type is TEMPO or PROB__"""
+    return report_type != 'TEMPO' and not (len(report_type) == 6 and report_type.startswith('PROB'))
 
 def get_altimeter(wxdata: [str], version: str='NA') -> ([str], str):
     """Returns the report list and the removed altimeter item
@@ -418,6 +439,67 @@ def get_type_and_times(wxdata: [str]) -> ([str], str, str, str):
             end_time = wxdata.pop(0)[2:6]
     return wxdata, report_type, start_time, end_time
 
+def find_missing_taf_times(lines: [str]) -> [str]:
+    """Fix any missing time issues (except for error/empty lines)"""
+    last_fm_line = 0
+    for i, line in enumerate(lines):
+        if line['End-Time'] == '' and is_not_tempo_or_prob(line['Type']):
+            last_fm_line = i
+            if i < len(lines)-1:
+                for report in lines[i+1:]:
+                    if is_not_tempo_or_prob(report['Type']):
+                        line['End-Time'] = report['Start-Time']
+                        break
+    #Special case for final forcast
+    if last_fm_line > 0:
+        lines[last_fm_line]['End-Time'] = lines[0]['End-Time']
+    return lines
+
+def get_temp_min_and_max(wx: [str]) -> ([str], str, str):
+    """Pull out Max temp at time and Min temp at time items from wx list
+    """
+    temp_max, temp_min = '', ''
+    for i, item in reversed(list(enumerate(wx))):
+        if len(item) > 6 and item[0] == 'T' and '/' in item:
+            #TX12/1316Z
+            if item[1] == 'X':
+                temp_max = wx.pop(i)
+            #TNM03/1404Z
+            elif item[1] == 'N':
+                temp_min = wx.pop(i)
+            #TM03/1404Z T12/1316Z   -> Will fix TN/TX
+            elif item[1] == 'M' or item[1].isdigit():
+                if temp_min:
+                    if int(temp_min[2:temp_min.find('/')].replace('M', '-')) \
+                    > int(item[1:item.find('/')].replace('M', '-')):
+                        temp_max = 'TX' + temp_min[2:]
+                        temp_min = 'TN' + item[1:]
+                    else:
+                        temp_max = 'TX' + item[1:]
+                else:
+                    temp_min = 'TN' + item[1:]
+                wx.pop(i)
+    return wx, temp_max, temp_min
+
+def get_digit_list(alist: [str], from_index: int) -> ([str], [str]):
+    """Returns a list of items removed from a given list of strings
+    that are all digits from 'from_index' until hitting a non-digit item
+    """
+    ret = []
+    alist.pop(from_index)
+    while len(alist) > from_index and alist[from_index].isdigit():
+        ret.append(alist.pop(from_index))
+    return alist, ret
+
+def get_oceania_temp_and_alt(wx: [str]) -> ([str], [str], [str]):
+    """Get Temperature and Altimeter lists for Oceania TAFs"""
+    tlist, qlist = [], []
+    if 'T' in wx:
+        wx, tlist = get_digit_list(wx, wx.index('T'))
+    if 'Q' in wx:
+        wx, qlist = get_digit_list(wx, wx.index('Q'))
+    return wx, tlist, qlist
+
 def sanitize_cloud(cloud: str) -> str:
     """Fix rare cloud layer issues"""
     if len(cloud) < 4:
@@ -481,6 +563,25 @@ def get_flight_rules(vis: str, cloud: [str]) -> int:
             return 2 #IFR
         return 1 #MVFR
     return 0 #VFR
+
+def get_taf_flight_rules(lines: [str]) -> [str]:
+    """Get flight rules by looking for missing data in prior reports"""
+    for i, line in enumerate(lines):
+        temp_vis, temp_cloud = line['Visibility'], line['Cloud-List']
+        for report in reversed(lines[:i]):
+            if is_not_tempo_or_prob(report['Type']):
+                if temp_vis == '':
+                    temp_vis = report['Visibility']
+                if 'SKC' in report['Other-List'] or 'CLR' in report['Other-List']:
+                    temp_cloud = 'tempClear'
+                elif temp_cloud == []:
+                    temp_cloud = report['Cloud-List']
+                if temp_vis != '' and temp_cloud != []:
+                    break
+        if temp_cloud == 'tempClear':
+            temp_cloud = []
+        line['Flight-Rules'] = FLIGHT_RULES[get_flight_rules(temp_vis, get_ceiling(temp_cloud))]
+    return lines
 
 def get_ceiling(clouds: [[str]]) -> [str]:
     """Returns list of ceiling layer from Cloud-List or None if none found

@@ -75,7 +75,6 @@ class Taf(Report):
 
     def update(self) -> bool:
         """Updates raw, data, and translations by fetching and parsing the TAF report"""
-        raise NotImplementedError()
         raw = taf.fetch(self.station)
         if raw == self.raw:
             return False

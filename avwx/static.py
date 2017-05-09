@@ -81,8 +81,12 @@ CLOUD_TRANSLATIONS = {
     'TCU': 'Towering Cumulus'
 }
 
+# Strings signifying the start of the remarks section of a new TAF time period
 METAR_RMK = [' BLU', ' BLU+', ' WHT', ' GRN', ' YLO', ' AMB', ' RED', ' BECMG', ' TEMPO',
              ' INTER', ' NOSIG', ' RMK', ' WIND', ' QFE', ' QFF', ' INFO', ' RWY', ' CHECK']
+TAF_RMK = ['RMK ', 'AUTOMATED ', 'COR ', 'AMD ', 'LAST ', 'FCST ',
+           'CANCEL ', 'CHECK ', 'WND ', 'MOD ', ' BY', ' QFE', ' QFF']
+TAF_NEWLINE = [' INTER ', ' FM', ' BECMG ', ' TEMPO ']
 
 REQUEST_URL = """https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource={0}s&requestType=retrieve&format=XML&stationString={1}&hoursBeforeNow=2"""
 
