@@ -11,10 +11,6 @@ from avwx.exceptions import BadStation
 from avwx.static import CLOUD_LIST, CLOUD_TRANSLATIONS, METAR_RMK, \
     NA_REGIONS, IN_REGIONS, M_NA_REGIONS, M_IN_REGIONS, FLIGHT_RULES
 
-# This is a global units file designed to be overriden by the functions in this module
-# It's by no means a perfect solution, but it works for now
-CUR_UNITS = {}
-
 def valid_station(station: str):
     """Checks the validity of station ident and aises BadStation exception if needed"""
     if len(station) != 4:
@@ -117,45 +113,45 @@ def sanitize_line(txt: str) -> str:
             txt = txt[:index] + ' ' + txt[index:]
     return txt
 
-def extra_space_exists(s1: str, s2: str) -> bool:
+def extra_space_exists(str1: str, str2: str) -> bool:
     """Return True if a space shouldn't exist between two items"""
-    ls1, ls2 = len(s1), len(s2)
-    if s1.isdigit():
+    ls1, ls2 = len(str1), len(str2)
+    if str1.isdigit():
         # 10 SM
-        if s2 in ['SM', '0SM']:
+        if str2 in ['SM', '0SM']:
             return True
         # 12 /10
-        if ls2 > 2 and s2[0] == '/' and s2[1:].isdigit():
+        if ls2 > 2 and str2[0] == '/' and str2[1:].isdigit():
             return True
-    if s2.isdigit():
+    if str2.isdigit():
         # OVC 040
-        if s1 in CLOUD_LIST:
+        if str1 in CLOUD_LIST:
             return True
         # 12/ 10
-        if ls1 > 2 and s1.endswith('/') and s1[:-1].isdigit():
+        if ls1 > 2 and str1.endswith('/') and str1[:-1].isdigit():
             return True
         # 12/1 0
-        if ls2 == 1 and ls1 > 3 and s1[:2].isdigit() and '/' not in s1 and s1[3:].isdigit():
+        if ls2 == 1 and ls1 > 3 and str1[:2].isdigit() and '/' not in str1 and str1[3:].isdigit():
             return True
         # Q 1001
-        if s1 in ['Q', 'A']:
+        if str1 in ['Q', 'A']:
             return True
     # 36010G20 KT
-    if s2 == 'KT' and s1[-1].isdigit() \
-    and (s1[:5].isdigit() or (s1.startswith('VRB') and s1[3:5].isdigit())):
+    if str2 == 'KT' and str1[-1].isdigit() \
+    and (str1[:5].isdigit() or (str1.startswith('VRB') and str1[3:5].isdigit())):
         return True
     # 36010K T
-    if s2 == 'T' and ls1 == 6 \
-    and (s1[:5].isdigit() or (s1.startswith('VRB') and s1[3:5].isdigit())) and s1[5] == 'K':
+    if str2 == 'T' and ls1 == 6 \
+    and (str1[:5].isdigit() or (str1.startswith('VRB') and str1[3:5].isdigit())) and str1[5] == 'K':
         return True
     # OVC022 CB
-    if s2 in CLOUD_TRANSLATIONS and s2 not in CLOUD_LIST and ls1 >= 3 and s1[:3] in CLOUD_LIST:
+    if str2 in CLOUD_TRANSLATIONS and str2 not in CLOUD_LIST and ls1 >= 3 and str1[:3] in CLOUD_LIST:
         return True
     # FM 122400
-    if s1 in ['FM', 'TL'] and (s2.isdigit() or (s2.endswith('Z') and s2[:-1].isdigit())):
+    if str1 in ['FM', 'TL'] and (str2.isdigit() or (str2.endswith('Z') and str2[:-1].isdigit())):
         return True
     # TX 20/10
-    if s1 in ['TX', 'TN'] and s2.find('/') != -1:
+    if str1 in ['TX', 'TN'] and str2.find('/') != -1:
         return True
     return False
 
@@ -224,18 +220,18 @@ def is_not_tempo_or_prob(report_type: str) -> bool:
     """Returns True if report type is TEMPO or PROB__"""
     return report_type != 'TEMPO' and not (len(report_type) == 6 and report_type.startswith('PROB'))
 
-def get_altimeter(wxdata: [str], version: str='NA') -> ([str], str):
+def get_altimeter(wxdata: [str], units: {str: str}, version: str='NA') -> ([str], {str: str}, str):
     """Returns the report list and the removed altimeter item
     Version is 'NA' (North American / default) or 'IN' (International)
     """
-    global CUR_UNITS
     if not wxdata:
-        return wxdata, ''
+        return wxdata, units, ''
+    altimeter = ''
     if version == 'NA':
         if wxdata[-1][0] == 'A':
             altimeter = wxdata.pop()[1:]
         elif wxdata[-1][0] == 'Q':
-            CUR_UNITS['Altimeter'] = 'hPa'
+            units['Altimeter'] = 'hPa'
             altimeter = wxdata.pop()[1:].lstrip('.')
         elif len(wxdata[-1]) == 4 and wxdata[-1].isdigit():
             altimeter = wxdata.pop()
@@ -245,12 +241,12 @@ def get_altimeter(wxdata: [str], version: str='NA') -> ([str], str):
             if altimeter.find('/') != -1:
                 altimeter = altimeter[:altimeter.find('/')]
         elif wxdata[-1][0] == 'A':
-            CUR_UNITS['Altimeter'] = 'inHg'
+            units['Altimeter'] = 'inHg'
             altimeter = wxdata.pop()[1:]
     #Some stations report both, but we only need one
     if wxdata and (wxdata[-1][0] == 'A' or wxdata[-1][0] == 'Q'):
         wxdata.pop()
-    return wxdata, altimeter
+    return wxdata, units, altimeter
 
 def get_taf_alt_ice_turb(wxdata: [str]) -> ([str], str, [str], [str]):
     """Returns the report list and removed: Altimeter string, Icing list, Turbulance list
@@ -310,12 +306,11 @@ def get_station_and_time(wxdata: [str]) -> ([str], str, str):
         rtime = ''
     return wxdata, station, rtime
 
-def get_wind(wxdata: [str]) -> ([str], str, str, str, [str]):
+def get_wind(wxdata: [str], units: {str: str}) -> ([str], {str: str}, str, str, str, [str]):
     """Returns the report list and removed:
     Direction string, speed string, gust string, variable direction list"""
     direction, speed, gust = '', '', ''
     variable = []
-    global CUR_UNITS
     if wxdata:
         item = copy(wxdata[0])
         for rep in ['(E)']:
@@ -334,10 +329,10 @@ def get_wind(wxdata: [str]) -> ([str], str, str, str, [str]):
             elif item.endswith('KTS'):
                 item = item.replace('KTS', '')
             elif item.endswith('MPS'):
-                CUR_UNITS['Wind-Speed'] = 'm/s'
+                units['Wind-Speed'] = 'm/s'
                 item = item.replace('MPS', '')
             elif item.endswith('KMH'):
-                CUR_UNITS['Wind-Speed'] = 'km/h'
+                units['Wind-Speed'] = 'km/h'
                 item = item.replace('KMH', '')
             direction = item[:3]
             if 'G' in item:
@@ -364,13 +359,12 @@ def get_wind(wxdata: [str]) -> ([str], str, str, str, [str]):
     if wxdata and len(wxdata[0]) == 7 and wxdata[0][:3].isdigit() \
     and wxdata[0][3] == 'V' and wxdata[0][4:].isdigit():
         variable = wxdata.pop(0).split('V')
-    return wxdata, direction, speed, gust, variable
+    return wxdata, units, direction, speed, gust, variable
 
 #Visibility
-def get_visibility(wxdata: [str]) -> ([str], str):
+def get_visibility(wxdata: [str], units: {str: str}) -> ([str], {str: str}, str):
     """Returns the report list and removed visibility string"""
     visibility = ''
-    global CUR_UNITS
     if wxdata:
         item = copy(wxdata[0])
         #Vis reported in statue miles
@@ -384,29 +378,29 @@ def get_visibility(wxdata: [str]) -> ([str], str):
             else:
                 visibility = item[:item.find('SM')] #1/2SM
             wxdata.pop(0)
-            CUR_UNITS['Visibility'] = 'sm'
+            units['Visibility'] = 'sm'
         #Vis reported in meters
         elif len(item) == 4 and item.isdigit():
             visibility = wxdata.pop(0)
-            CUR_UNITS['Visibility'] = 'm'
+            units['Visibility'] = 'm'
         elif 7 >= len(item) >= 5 and item[:4].isdigit() \
         and (item[4] in ['M', 'N', 'S', 'E', 'W'] or item[4:] == 'NDV'):
             visibility = wxdata.pop(0)[:4]
-            CUR_UNITS['Visibility'] = 'm'
+            units['Visibility'] = 'm'
         elif len(item) == 5 and item[1:5].isdigit() and item[0] in ['M', 'P', 'B']:
             visibility = wxdata.pop(0)[1:5]
-            CUR_UNITS['Visibility'] = 'm'
+            units['Visibility'] = 'm'
         elif item.endswith('KM') and item[:item.find('KM')].isdigit():
             visibility = item[:item.find('KM')] + '000'
             wxdata.pop(0)
-            CUR_UNITS['Visibility'] = 'm'
+            units['Visibility'] = 'm'
         #Vis statute miles but split Ex: 2 1/2SM
         elif len(wxdata) > 1 and wxdata[1].endswith('SM') and '/' in wxdata[1] and item.isdigit():
             vis1 = wxdata.pop(0)  #2
             vis2 = wxdata.pop(0).replace('SM', '')  #1/2
             visibility = str(int(vis1)*int(vis2[2])+int(vis2[0]))+vis2[1:]  #5/2
-            CUR_UNITS['Visibility'] = 'sm'
-    return wxdata, visibility
+            units['Visibility'] = 'sm'
+    return wxdata, units, visibility
 
 #TAF line report type and start/end times
 def get_type_and_times(wxdata: [str]) -> ([str], str, str, str):

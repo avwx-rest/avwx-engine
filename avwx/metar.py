@@ -71,10 +71,10 @@ def parse_na(txt: str) -> {str: object}:
     wxdata, wxresp['Runway-Vis-List'], _ = core.sanitize_report_list(wxdata)
     wxdata, wxresp['Station'], wxresp['Time'] = core.get_station_and_time(wxdata)
     wxdata, wxresp['Cloud-List'] = core.get_clouds(wxdata)
-    wxdata, wxresp['Wind-Direction'], wxresp['Wind-Speed'], \
-    wxresp['Wind-Gust'], wxresp['Wind-Variable-Dir'] = core.get_wind(wxdata)
-    wxdata, wxresp['Altimeter'] = core.get_altimeter(wxdata, 'NA')
-    wxdata, wxresp['Visibility'] = core.get_visibility(wxdata)
+    wxdata, units, wxresp['Wind-Direction'], wxresp['Wind-Speed'], \
+    wxresp['Wind-Gust'], wxresp['Wind-Variable-Dir'] = core.get_wind(wxdata, units)
+    wxdata, units, wxresp['Altimeter'] = core.get_altimeter(wxdata, units, 'NA')
+    wxdata, units, wxresp['Visibility'] = core.get_visibility(wxdata, units)
     wxresp['Other-List'], wxresp['Temperature'], wxresp['Dewpoint'] = core.get_temp_and_dew(wxdata)
     wxresp['Units'] = units
     condition = core.get_flight_rules(wxresp['Visibility'], core.get_ceiling(wxresp['Cloud-List']))
@@ -92,15 +92,15 @@ def parse_in(txt: str) -> {str: object}:
     wxdata, wxresp['Station'], wxresp['Time'] = core.get_station_and_time(wxdata)
     if 'CAVOK' not in wxdata:
         wxdata, wxresp['Cloud-List'] = core.get_clouds(wxdata)
-    wxdata, wxresp['Wind-Direction'], wxresp['Wind-Speed'], \
-    wxresp['Wind-Gust'], wxresp['Wind-Variable-Dir'] = core.get_wind(wxdata)
-    wxdata, wxresp['Altimeter'] = core.get_altimeter(wxdata, 'IN')
+    wxdata, units, wxresp['Wind-Direction'], wxresp['Wind-Speed'], \
+    wxresp['Wind-Gust'], wxresp['Wind-Variable-Dir'] = core.get_wind(wxdata, units)
+    wxdata, units, wxresp['Altimeter'] = core.get_altimeter(wxdata, units, 'IN')
     if 'CAVOK' in wxdata:
         wxresp['Visibility'] = '9999'
         wxresp['Cloud-List'] = []
         wxdata.remove('CAVOK')
     else:
-        wxdata, wxresp['Visibility'] = core.get_visibility(wxdata)
+        wxdata, units, wxresp['Visibility'] = core.get_visibility(wxdata, units)
     wxresp['Other-List'], wxresp['Temperature'], wxresp['Dewpoint'] = core.get_temp_and_dew(wxdata)
     wxresp['Units'] = units
     condition = core.get_flight_rules(wxresp['Visibility'], core.get_ceiling(wxresp['Cloud-List']))

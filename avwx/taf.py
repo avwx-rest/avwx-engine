@@ -14,8 +14,6 @@ from avwx import core
 from avwx.exceptions import InvalidRequest
 from avwx.static import REQUEST_URL, NA_UNITS, IN_UNITS, TAF_RMK, TAF_NEWLINE
 
-CUR_UNITS = {}
-
 def fetch(station: str) -> str:
     """Get TAF report for 'station' from www.aviationweather.gov
     Returns TAF report string or raises an error
@@ -78,13 +76,12 @@ def parse(station: str, txt: str, delim: str='<br/>&nbsp;&nbsp;') -> {str: objec
     _, retwx['Station'], retwx['Time'] = core.get_station_and_time(txt[:20].split(' '))
     txt = txt.replace(retwx['Station'], '')
     txt = txt.replace(retwx['Time'], '')
-    global CUR_UNITS
     if core.uses_na_format(retwx['Station']):
         is_international = False
-        CUR_UNITS = copy(NA_UNITS)
+        units = copy(NA_UNITS)
     else:
         is_international = True
-        CUR_UNITS = copy(IN_UNITS)
+        units = copy(IN_UNITS)
     retwx['Remarks'] = ''
     parsed_lines = []
     prob = ''
@@ -108,7 +105,8 @@ def parse(station: str, txt: str, delim: str='<br/>&nbsp;&nbsp;') -> {str: objec
             prob = line
             line = ''
         if line:
-            parsed_line = parse_in_line(line) if is_international else parse_na_line(line)
+            parsed_line, units = parse_in_line(line, units) if is_international \
+                            else parse_na_line(line, units)
             parsed_line['Probability'] = prob
             parsed_line['Raw-Line'] = raw_line
             prob = ''
@@ -129,36 +127,38 @@ def parse(station: str, txt: str, delim: str='<br/>&nbsp;&nbsp;') -> {str: objec
         parsed_lines[len(parsed_lines)-1]['Other-List'], retwx['Alt-List'], retwx['Temp-List'] \
             = core.get_oceania_temp_and_alt(parsed_lines[len(parsed_lines)-1]['Other-List'])
     retwx['Forecast'] = parsed_lines
-    retwx['Units'] = CUR_UNITS
+    retwx['Units'] = units
     return retwx
 
-def parse_na_line(txt: str) -> {str: object}:
+def parse_na_line(txt: str, units: {str: str}) -> ({str: object}, {str: str}):
     """Parser for the North American TAF forcast varient"""
     retwx = {}
     wxdata = txt.split(' ')
     wxdata, _, retwx['Wind-Shear'] = core.sanitize_report_list(wxdata, remove_CLR_and_SKC=False)
     wxdata, retwx['Type'], retwx['Start-Time'], retwx['End-Time'] = core.get_type_and_times(wxdata)
-    wxdata, retwx['Wind-Direction'], retwx['Wind-Speed'], retwx['Wind-Gust'], _ = core.get_wind(wxdata)
-    wxdata, retwx['Visibility'] = core.get_visibility(wxdata)
+    wxdata, units, retwx['Wind-Direction'], retwx['Wind-Speed'],\
+        retwx['Wind-Gust'], _ = core.get_wind(wxdata, units)
+    wxdata, units, retwx['Visibility'] = core.get_visibility(wxdata, units)
     wxdata, retwx['Cloud-List'] = core.get_clouds(wxdata)
     retwx['Other-List'], retwx['Altimeter'], retwx['Icing-List'], retwx['Turb-List'] \
         = core.get_taf_alt_ice_turb(wxdata)
-    return retwx
+    return retwx, units
 
-def parse_in_line(txt: str) -> {str: object}:
+def parse_in_line(txt: str, units: {str: str}) -> ({str: object}, {str: str}):
     """Parser for the North American TAF forcast varient"""
     retwx = {}
     wxdata = txt.split(' ')
     wxdata, _, retwx['Wind-Shear'] = core.sanitize_report_list(wxdata, remove_CLR_and_SKC=False)
     wxdata, retwx['Type'], retwx['Start-Time'], retwx['End-Time'] = core.get_type_and_times(wxdata)
-    wxdata, retwx['Wind-Direction'], retwx['Wind-Speed'], retwx['Wind-Gust'], _ = core.get_wind(wxdata)
+    wxdata, units, retwx['Wind-Direction'], retwx['Wind-Speed'],\
+        retwx['Wind-Gust'], _ = core.get_wind(wxdata, units)
     if 'CAVOK' in wxdata:
         retwx['Visibility'] = '9999'
         retwx['Cloud-List'] = []
         wxdata.pop(wxdata.index('CAVOK'))
     else:
-        wxdata, retwx['Visibility'] = core.get_visibility(wxdata)
+        wxdata, units, retwx['Visibility'] = core.get_visibility(wxdata, units)
         wxdata, retwx['Cloud-List'] = core.get_clouds(wxdata)
     retwx['Other-List'], retwx['Altimeter'], retwx['Icing-List'], retwx['Turb-List'] \
         = core.get_taf_alt_ice_turb(wxdata)
-    return retwx
+    return retwx, units
