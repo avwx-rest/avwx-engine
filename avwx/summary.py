@@ -1,6 +1,8 @@
 """
 Michael duPont - michael@mdupont.com
 AVWX-Engine : avwx/summary.py
+
+Contains functions for combining translations into a summary string
 """
 
 def metar(trans: {str: object}) -> str:

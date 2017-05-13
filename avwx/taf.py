@@ -1,6 +1,8 @@
 """
 Michael duPont - michael@mdupont.com
 AVWX-Engine : avwx/taf.py
+
+Contains TAF-specific functions for fetching and parsing
 """
 
 # stdlib

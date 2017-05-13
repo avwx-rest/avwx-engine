@@ -1,6 +1,8 @@
 """
 Michael duPont - michael@mdupont.com
 AVWX-Engine : avwx/metar.py
+
+Contains METAR-specific functions for fetching and parsing
 """
 
 # stdlib

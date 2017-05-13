@@ -1,6 +1,9 @@
 """
 Michael duPont - michael@mdupont.com
 AVWX-Engine : avwx/speech.py
+
+Contains functions for converting translations into a speech string
+Currently only supports METAR
 """
 
 from avwx import core, translate

@@ -1,5 +1,45 @@
+"""
+Michael duPont - michael@mdupont.com
+AVWX-Engine : avwx/static.py
+
+Contains static objects for internal and external use
+"""
+
+# NOAA ADDS API endpoint for METAR and TAF reports
+REQUEST_URL = "https://aviationweather.gov/adds/dataserver_current/httpparam"+\
+              "?dataSource={0}s&requestType=retrieve&format=XML&stationString={1}&hoursBeforeNow=2"
+
+# Station Location Identifiers (first character)
+NA_REGIONS = ['C', 'K', 'P', 'T']
+IN_REGIONS = ['A', 'B', 'D', 'E', 'F', 'G', 'H', 'L', 'N', 'O', 'R', 'S', 'U', 'V', 'W', 'Y', 'Z']
+# The Central American region is split. Therefore we need to use the first two letters
+M_NA_REGIONS = ['MB', 'MM', 'MT', 'MY']
+M_IN_REGIONS = ['MD', 'MG', 'MH', 'MK', 'MN', 'MP', 'MR', 'MS', 'MU', 'MW', 'MZ']
+
+# North American variant units
+NA_UNITS = {
+    'Wind-Speed': 'kt',
+    'Visibility': 'sm',
+    'Altitude': 'ft',
+    'Temperature': 'C',
+    'Altimeter': 'inHg'
+}
+# International variant units
+IN_UNITS = {
+    'Wind-Speed': 'kt',
+    'Visibility': 'm',
+    'Altitude': 'ft',
+    'Temperature': 'C',
+    'Altimeter': 'hPa'
+}
+
+# List of flight rules abreviations
 FLIGHT_RULES = ['VFR', 'MVFR', 'IFR', 'LIFR']
+
+# List of cloud layer abreviations
 CLOUD_LIST = ['FEW', 'SCT', 'BKN', 'OVC']
+
+# Dictionary associating WX codes with descriptions
 WX_TRANSLATIONS = {
     'BC': 'Patchy',
     'BL': 'Blowing',
@@ -33,30 +73,7 @@ WX_TRANSLATIONS = {
     'VC': 'Vicinity'
 }
 
-# Station Location Identifiers
-NA_REGIONS = ['C', 'K', 'P', 'T']
-IN_REGIONS = ['A', 'B', 'D', 'E', 'F', 'G', 'H', 'L', 'N', 'O', 'R', 'S', 'U', 'V', 'W', 'Y', 'Z']
-# The Central American region is split. Therefore we need to use the first two letters
-M_NA_REGIONS = ['MB', 'MM', 'MT', 'MY']
-M_IN_REGIONS = ['MD', 'MG', 'MH', 'MK', 'MN', 'MP', 'MR', 'MS', 'MU', 'MW', 'MZ']
-
-# North American variant units
-NA_UNITS = {
-    'Wind-Speed': 'kt',
-    'Visibility': 'sm',
-    'Altitude': 'ft',
-    'Temperature': 'C',
-    'Altimeter': 'inHg'
-}
-# International variant units
-IN_UNITS = {
-    'Wind-Speed': 'kt',
-    'Visibility': 'm',
-    'Altitude': 'ft',
-    'Temperature': 'C',
-    'Altimeter': 'hPa'
-}
-
+# Dictionary associating cloud layer and cloud codes with descriptions
 CLOUD_TRANSLATIONS = {
     'OVC': 'Overcast layer at {0}{1}',
     'BKN': 'Broken layer at {0}{1}',
@@ -81,15 +98,7 @@ CLOUD_TRANSLATIONS = {
     'TCU': 'Towering Cumulus'
 }
 
-# Strings signifying the start of the remarks section of a new TAF time period
-METAR_RMK = [' BLU', ' BLU+', ' WHT', ' GRN', ' YLO', ' AMB', ' RED', ' BECMG', ' TEMPO',
-             ' INTER', ' NOSIG', ' RMK', ' WIND', ' QFE', ' QFF', ' INFO', ' RWY', ' CHECK']
-TAF_RMK = ['RMK ', 'AUTOMATED ', 'COR ', 'AMD ', 'LAST ', 'FCST ',
-           'CANCEL ', 'CHECK ', 'WND ', 'MOD ', ' BY', ' QFE', ' QFF']
-TAF_NEWLINE = [' INTER ', ' FM', ' BECMG ', ' TEMPO ']
-
-REQUEST_URL = """https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource={0}s&requestType=retrieve&format=XML&stationString={1}&hoursBeforeNow=2"""
-
+# Dictionary associating turbulance report IDs with descriptions
 TURBULANCE_CONDITIONS = {
     '0': 'None',
     '1': 'Light turbulence',
@@ -104,6 +113,7 @@ TURBULANCE_CONDITIONS = {
     'X': 'Extreme turbulence'
 }
 
+# Dictionary associating icing report IDs with descriptions
 ICING_CONDITIONS = {
     '0': 'No icing',
     '1': 'Light icing',
@@ -117,6 +127,14 @@ ICING_CONDITIONS = {
     '9': 'Severe icing in precipitation'
 }
 
+# Strings signifying the start of the remarks section of a new TAF time period
+METAR_RMK = [' BLU', ' BLU+', ' WHT', ' GRN', ' YLO', ' AMB', ' RED', ' BECMG', ' TEMPO',
+             ' INTER', ' NOSIG', ' RMK', ' WIND', ' QFE', ' QFF', ' INFO', ' RWY', ' CHECK']
+TAF_RMK = ['RMK ', 'AUTOMATED ', 'COR ', 'AMD ', 'LAST ', 'FCST ',
+           'CANCEL ', 'CHECK ', 'WND ', 'MOD ', ' BY', ' QFE', ' QFF']
+TAF_NEWLINE = [' INTER ', ' FM', ' BECMG ', ' TEMPO ']
+
+# Units required to be translated in order to be spoken properly
 SPOKEN_UNITS = {
     'sm': 'mile',
     'km': 'kilometer',
@@ -124,6 +142,7 @@ SPOKEN_UNITS = {
     'F': 'Fahrenheit'
 }
 
+# Dictionary associating algebraic signs with their spoken version
 NUMBER_REPL = {
     '.': 'point',
     '-': 'minus',
@@ -140,6 +159,7 @@ NUMBER_REPL = {
     '9': 'nine'
 }
 
+# Dictionary associating fraction strings with their spoken version
 FRACTIONS = {
     '1/4': 'one quarter of a',
     '1/2': 'one half',

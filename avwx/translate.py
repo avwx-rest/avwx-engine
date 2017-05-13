@@ -1,6 +1,8 @@
 """
 Michael duPont - michael@mdupont.com
 AVWX-Engine : avwx/translate.py
+
+Contains functions for translating report data
 """
 
 from avwx import core

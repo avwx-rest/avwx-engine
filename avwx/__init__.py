@@ -1,6 +1,8 @@
 """
 Michael duPont - michael@mdupont.com
 AVWX-Engine : avwx/__init__.py
+
+Contains the primary report classes of avwx: Metar and Taf
 """
 
 # stdlib

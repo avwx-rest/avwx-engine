@@ -1,6 +1,8 @@
 """
 Michael duPont - michael@mdupont.com
 AVWX-Engine : avwx/core.py
+
+Contains the core parsing and indent functions of avwx
 """
 
 # stdlib
