@@ -268,14 +268,14 @@ def get_taf_alt_ice_turb(wxdata: [str]) -> ([str], str, [str], [str]):
 def is_possible_temp(temp: str) -> bool:
     """Returns True if all characters are digits or 'M' (for minus)"""
     for char in temp:
-        if char.isdigit() or char == 'M':
+        if not (char.isdigit() or char == 'M'):
             return False
     return True
 
 def get_temp_and_dew(wxdata: str) -> ([str], str, str):
     """Returns the report list and removed temperature and dewpoint strings"""
     for i, item in reversed(list(enumerate(wxdata))):
-        if '/' not in item:
+        if '/' in item:
             #///07
             if item[0] == '/':
                 item = '/' + item.strip('/')
