@@ -15,6 +15,7 @@ from avwx.static import CLOUD_LIST, CLOUD_TRANSLATIONS, METAR_RMK, \
 
 def valid_station(station: str):
     """Checks the validity of station ident and aises BadStation exception if needed"""
+    sttion = station.strip()
     if len(station) != 4:
         raise BadStation('ICAO station idents must be four characters long')
     uses_na_format(station)

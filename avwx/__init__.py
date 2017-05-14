@@ -47,13 +47,16 @@ class Report:
 class Metar(Report):
     """Class to handle METAR report data"""
 
-    def update(self) -> bool:
+    def update(self, report: str=None) -> bool:
         """Updates raw, data, and translations by fetching and parsing the METAR report"""
-        raw = metar.fetch(self.station)
-        if raw == self.raw:
-            return False
-        self.raw = raw
-        self.data = metar.parse(self.station, raw)
+        if report is not None:
+            self.raw = report
+        else:
+            raw = metar.fetch(self.station)
+            if raw == self.raw:
+                return False
+            self.raw = raw
+        self.data = metar.parse(self.station, self.raw)
         self.translations = translate.metar(self.data)
         self.last_updated = datetime.utcnow()
         return True
@@ -75,13 +78,16 @@ class Metar(Report):
 class Taf(Report):
     """Class to handle TAF report data"""
 
-    def update(self) -> bool:
+    def update(self, report: str=None) -> bool:
         """Updates raw, data, and translations by fetching and parsing the TAF report"""
-        raw = taf.fetch(self.station)
-        if raw == self.raw:
-            return False
-        self.raw = raw
-        self.data = taf.parse(self.station, raw)
+        if report is not None:
+            self.raw = report
+        else:
+            raw = taf.fetch(self.station)
+            if raw == self.raw:
+                return False
+            self.raw = raw
+        self.data = taf.parse(self.station, self.raw)
         self.translations = translate.taf(self.data)
         self.last_updated = datetime.utcnow()
 

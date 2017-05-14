@@ -25,6 +25,8 @@ True
 'IFR'
 ```
 
+**Note**: This library is written in Python 3 with no plans of back-porting to Python 2.7
+
 # METAR
 
 Meteorological Aerodrome Reports (METAR) contain current surface conditions at an airport or other reporting location that updates every hour or earlier.
@@ -33,14 +35,15 @@ Meteorological Aerodrome Reports (METAR) contain current surface conditions at a
 
 - Metar objects are initialized with the desired ICAO ident
 
-### avwx.Metar.update() -> bool`
+### avwx.Metar.update(report: str=None) -> bool`
 
 - Fetches the current report from NOAA ADDS and parses the result. Populates the `data` and `translations` attributes
+- Returns True if the fetched report has changed, else False
+- Will parse a supplied report if one is given
 
 ### avwx.Metar.station_info -> dict`
 
 - Basic information about the station including name, elevation, and coordinates
-
 - Available without needing to call `.update()`
 
 ### avwx.Metar.data -> dict
@@ -89,14 +92,15 @@ Terminal Area Forecasts (TAF) are in-flight 24-hour forecasts for an area within
 
 - TAF objects are initialized with the desired ICAO ident
 
-### avwx.TAF.update() -> bool`
+### avwx.TAF.update(report: str=None) -> bool`
 
 - Fetches the current report from NOAA ADDS and parses the result. Populates the `data` and `translations` attributes
+- Returns True if the fetched report has changed, else False
+- Will parse a supplied report if one is given
 
 ### avwx.TAF.station_info -> dict`
 
 - Basic information about the station including name, elevation, and coordinates
-
 - Available without needing to call `.update()`
 
 ### avwx.TAF.data -> dict
