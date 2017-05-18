@@ -145,8 +145,8 @@ if __name__ == '__main__':
 	#Example METAR fetching report from server
 	m = METAR(station)
 	if m.update() and m.parse() and m.translate():
-		print(('Summary for {0} ({1}) METAR at {2}\nCurrent Flight Conditions - {3}\n{4}'.format(m.stationID , m.getStationInfo()['City'] , m.getUpdateTimeString() , m.getData()['Flight-Rules'] , m.getSummary())))
-	else: print((m.lastError))
+		print('Summary for {0} ({1}) METAR at {2}\nCurrent Flight Conditions - {3}\n{4}'.format(m.stationID , m.getStationInfo()['City'] , m.getUpdateTimeString() , m.getData()['Flight-Rules'] , m.getSummary()))
+	else: print(m.lastError)
 	
 	print('\n')
 	
@@ -157,8 +157,8 @@ if __name__ == '__main__':
 	t.rawReport = testReport
 	t.delim = testDelimeter
 	if t.parse() and t.translate():
-		print(('Summary for {0} ({1}) TAF'.format(t.stationID , t.getStationInfo()['City'])))
+		print('Summary for {0} ({1}) TAF'.format(t.stationID , t.getStationInfo()['City']))
 		wxData = t.getData()
 		for i in range(len(wxData['Forecast'])):
-			print(('From {0} to {1}: Conditions - {2}, {3}'.format(wxData['Forecast'][i]['Start-Time'] , wxData['Forecast'][i]['End-Time'] , wxData['Forecast'][i]['Flight-Rules'] , t.getForecastSummary(i))))
-	else: print((t.lastError))
+			print('From {0} to {1}: Conditions - {2}, {3}'.format(wxData['Forecast'][i]['Start-Time'] , wxData['Forecast'][i]['End-Time'] , wxData['Forecast'][i]['Flight-Rules'] , t.getForecastSummary(i)))
+	else: print(t.lastError)

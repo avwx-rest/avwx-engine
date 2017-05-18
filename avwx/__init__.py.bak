@@ -41,7 +41,7 @@ class Report:
             row = curs.fetchone()
             if not row:
                 raise BadStation('Could not find station in info database')
-            self._station_info = dict(list(zip(DB_HEADERS, row)))
+            self._station_info = dict(zip(DB_HEADERS, row))
         return self._station_info
 
 class Metar(Report):

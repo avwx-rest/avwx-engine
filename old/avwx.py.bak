@@ -248,7 +248,7 @@ def __getAltimeterInternational(wxData):
 def __getTAFAltIceTurb(wxData):
 	altimeter = ''
 	icing , turbulence = [] , []
-	for i in reversed(list(range(len(wxData)))):
+	for i in reversed(range(len(wxData))):
 		if len(wxData[i]) > 6 and wxData[i].startswith('QNH') and wxData[i][3:7].isdigit():
 			altimeter = wxData.pop(i)[3:7]
 		elif wxData[i].isdigit():
@@ -263,7 +263,7 @@ def isPossibleTemp(temp):
 
 #Temp/Dewpoint
 def __getTempAndDewpoint(wxData):
-	for i in reversed(list(range(len(wxData)))):
+	for i in reversed(range(len(wxData))):
 		if wxData[i].find('/') != -1:
 			curVal = copy(wxData[i])
 			#///07
@@ -425,7 +425,7 @@ def splitCloud(cloud, beginsWithVV):
 #Clouds
 def __getClouds(wxData):
 	clouds = []
-	for i in reversed(list(range(len(wxData)))):
+	for i in reversed(range(len(wxData))):
 		if wxData[i][:3] in cloudList:
 			clouds.append(splitCloud(wxData.pop(i) , False))
 		elif wxData[i][:2] == 'VV':
@@ -713,7 +713,7 @@ def __sanitizeLine(txt):
 #Pull out Max temp at time and Min temp at time items
 def getTempMinAndMax(otherList):
 	tempMax , tempMin  = '' , ''
-	for i in reversed(list(range(len(otherList)))):
+	for i in reversed(range(len(otherList))):
 		item = otherList[i]
 		if len(item) > 6 and item[0] == 'T' and item.find('/') != -1:
 			#TX12/1316Z
@@ -973,7 +973,7 @@ def translateTurbIce(aList , unit='ft'):
 	for item in aList:
 		if len(item) == 6: splitList.append([item[1:2],item[2:5],item[5:6]])
 	#Combine items that cover a layer greater than 9000ft
-	for i in reversed(list(range(len(splitList)-1))):
+	for i in reversed(range(len(splitList)-1)):
 		if splitList[i][2] == '9' and splitList[i][0] == splitList[i+1][0] and int(splitList[i+1][1]) == (int(splitList[i][1]) + int(splitList[i][2])*10):
 			splitList[i][2] = str(int(splitList[i][2]) + int(splitList[i+1][2]))
 			splitList.pop(i+1)
