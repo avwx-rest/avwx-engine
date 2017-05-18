@@ -79,7 +79,7 @@ def sanitize_report_string(txt: str) -> str:
     # Prevent changes to station ID
     stid, txt = txt[:4], txt[4:]
     # Replace invalid key-value pairs
-    for key, rep in list(STR_REPL.items()):
+    for key, rep in STR_REPL.items():
         txt = txt.replace(key, rep)
     # Check for missing spaces in front of cloud layers
     # Ex: TSFEW004SCT012FEW///CBBKN080
