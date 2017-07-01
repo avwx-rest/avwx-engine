@@ -17,9 +17,9 @@ setup(
         ]
     },
     cmdclass={
-        'compile_catalog': babel.compile_catalog,
-        'extract_messages': babel.extract_messages,
-        'init_catalog': babel.init_catalog,
-        'update_catalog': babel.update_catalog
+        'compile': babel.compile_catalog,
+        'extract': babel.extract_messages,
+        'init': babel.init_catalog,
+        'update': babel.update_catalog
     }
 )
