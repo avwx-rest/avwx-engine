@@ -5,12 +5,6 @@ AVWX-Engine : avwx/static.py
 Contains static objects for internal and external use
 """
 
-import os
-from gettext import translation
-
-LOCALE = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'locale')
-_ = translation('avwx', LOCALE, fallback=True).gettext
-
 # NOAA ADDS API endpoint for METAR and TAF reports
 REQUEST_URL = "https://aviationweather.gov/adds/dataserver_current/httpparam"+\
               "?dataSource={0}s&requestType=retrieve&format=XML&stationString={1}&hoursBeforeNow=2"

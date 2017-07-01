@@ -5,8 +5,10 @@ AVWX-Engine : avwx/translate.py
 Contains functions for translating report data
 """
 
+# pylint: disable=E0602
+
 from avwx import core
-from avwx.static import _, CLOUD_TRANSLATIONS, WX_TRANSLATIONS, TURBULANCE_CONDITIONS, ICING_CONDITIONS
+from avwx.static import CLOUD_TRANSLATIONS, WX_TRANSLATIONS, TURBULANCE_CONDITIONS, ICING_CONDITIONS
 
 def get_cardinal_direction(wdir: str) -> str:
     """Returns the cardinal direction (NSEW) for a degree direction
