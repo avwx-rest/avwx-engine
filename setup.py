@@ -3,7 +3,7 @@ from babel.messages import frontend as babel
 
 setup(
     name='avwx-engine',
-    version='0.9',
+    version='0.9.1',
     description='Aviation weather report parsing library',
     url='https://github.com/flyinactor91/AVWX-Engine',
     author='Michael duPont',
