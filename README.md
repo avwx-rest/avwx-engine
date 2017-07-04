@@ -31,9 +31,10 @@ True
 
 Meteorological Aerodrome Reports (METAR) contain current surface conditions at an airport or other reporting location that updates every hour or earlier.
 
-### avwx.Metar.\_\_init\_\_(station: str)
+### avwx.Metar.\_\_init\_\_(station: str, lang: str=None)
 
 - Metar objects are initialized with the desired ICAO ident
+- Can optionally provide a language code for translations and summary to be in another supported locale
 
 ### avwx.Metar.update(report: str=None) -> bool`
 
@@ -88,9 +89,10 @@ True
 
 Terminal Area Forecasts (TAF) are in-flight 24-hour forecasts for an area within 5nm of an airport or other reporting station that updates every six hours. Parsed reports are broken out into time periods.
 
-### avwx.TAF.\_\_init\_\_(station: str)
+### avwx.TAF.\_\_init\_\_(station: str, lang: str=None)
 
 - TAF objects are initialized with the desired ICAO ident
+- Can optionally provide a language code for translations and summary to be in another supported locale
 
 ### avwx.TAF.update(report: str=None) -> bool`
 
