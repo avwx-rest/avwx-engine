@@ -13,7 +13,7 @@ from contextlib import contextmanager
 from datetime import datetime
 
 LOCALE = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'locale')
-gettext.install('avwx', LOCALE)
+gettext.install('messages', LOCALE)
 
 # module
 from avwx import metar, taf, translate, summary, speech
@@ -26,12 +26,15 @@ DB_PATH = os.path.dirname(os.path.realpath(__file__))+'/stations.sqlite'
 
 @contextmanager
 def set_language(lang: str=None):
-    """"""
+    """Used to change the translation locale for the duration of the 'with' block
+    with set_language('en_US'): # do stuff
+    """
     if not lang is None:
-        gettext.translation('avwx', LOCALE, languages=[lang], fallback=True).install()
-    yield
-    pass
-    #gettext.translation('avwx', LOCALE, fallback=True).install()
+        gettext.translation('messages', LOCALE, languages=[lang], fallback=True).install()
+        yield
+        gettext.install('messages', LOCALE)
+    else:
+        yield
 
 class Report:
     """Base report to take care of station info"""

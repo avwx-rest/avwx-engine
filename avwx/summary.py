@@ -11,9 +11,6 @@ def metar(trans: {str: object}) -> str:
     """Condense the translation strings into a single report summary string"""
     summary = []
     if 'Wind' in trans and trans['Wind']:
-        #print(gettext('Winds {}'))
-        print(_('Winds {}'))
-        print(_('Winds {}').format(trans['Wind']))
         summary.append(_('Winds {}').format(trans['Wind']))
     if 'Visibility' in trans and trans['Visibility']:
         summary.append(_('Vis {}').format(trans['Visibility'][:trans['Visibility'].find(' (')].lower()))

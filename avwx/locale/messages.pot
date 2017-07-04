@@ -1,0 +1,468 @@
+# Translations template for avwx-engine.
+# Copyright (C) 2017 ORGANIZATION
+# This file is distributed under the same license as the avwx-engine
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: avwx-engine 0.9.1\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2017-07-04 11:21-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.4.0\n"
+
+#: avwx/__init__.py:31 avwx/__init__.py:34 avwx/__init__.py:38
+msgid "TARGET STRING"
+msgstr ""
+
+#: avwx/static.py:44
+msgid "Patchy"
+msgstr ""
+
+#: avwx/static.py:45
+msgid "Blowing"
+msgstr ""
+
+#: avwx/static.py:46
+msgid "Mist"
+msgstr ""
+
+#: avwx/static.py:47
+msgid "Duststorm"
+msgstr ""
+
+#: avwx/static.py:48
+msgid "Wide Dust"
+msgstr ""
+
+#: avwx/static.py:49
+msgid "Drizzle"
+msgstr ""
+
+#: avwx/static.py:50
+msgid "Funnel Cloud"
+msgstr ""
+
+#: avwx/static.py:51
+msgid "Fog"
+msgstr ""
+
+#: avwx/static.py:52
+msgid "Smoke"
+msgstr ""
+
+#: avwx/static.py:53
+msgid "Freezing"
+msgstr ""
+
+#: avwx/static.py:54
+msgid "Hail"
+msgstr ""
+
+#: avwx/static.py:55
+msgid "Small Hail"
+msgstr ""
+
+#: avwx/static.py:56
+msgid "Haze"
+msgstr ""
+
+#: avwx/static.py:57
+msgid "Ice Crystals"
+msgstr ""
+
+#: avwx/static.py:58
+msgid "Shallow"
+msgstr ""
+
+#: avwx/static.py:59
+msgid "Ice Pellets"
+msgstr ""
+
+#: avwx/static.py:60
+msgid "Dust Whirls"
+msgstr ""
+
+#: avwx/static.py:61
+msgid "Partial"
+msgstr ""
+
+#: avwx/static.py:62
+msgid "Rain"
+msgstr ""
+
+#: avwx/static.py:63
+msgid "Sand"
+msgstr ""
+
+#: avwx/static.py:64
+msgid "Snow Grains"
+msgstr ""
+
+#: avwx/static.py:65
+msgid "Showers"
+msgstr ""
+
+#: avwx/static.py:66
+msgid "Snow"
+msgstr ""
+
+#: avwx/static.py:67
+msgid "Squall"
+msgstr ""
+
+#: avwx/static.py:68
+msgid "Sandstorm"
+msgstr ""
+
+#: avwx/static.py:69
+msgid "Spray"
+msgstr ""
+
+#: avwx/static.py:70
+msgid "Thunderstorm"
+msgstr ""
+
+#: avwx/static.py:71
+msgid "Unknown Precip"
+msgstr ""
+
+#: avwx/static.py:72
+msgid "Volcanic Ash"
+msgstr ""
+
+#: avwx/static.py:73
+msgid "Vicinity"
+msgstr ""
+
+#: avwx/static.py:78
+msgid "Overcast layer at {0}{1}"
+msgstr ""
+
+#: avwx/static.py:79
+msgid "Broken layer at {0}{1}"
+msgstr ""
+
+#: avwx/static.py:80
+msgid "Scattered clouds at {0}{1}"
+msgstr ""
+
+#: avwx/static.py:81
+msgid "Few clouds at {0}{1}"
+msgstr ""
+
+#: avwx/static.py:82
+msgid "Vertical visibility up to {0}{1}"
+msgstr ""
+
+#: avwx/static.py:83 avwx/static.py:84
+msgid "Sky Clear"
+msgstr ""
+
+#: avwx/static.py:85
+msgid "Altocumulus"
+msgstr ""
+
+#: avwx/static.py:86
+msgid "Altocumulus Castellanus"
+msgstr ""
+
+#: avwx/static.py:87
+msgid "Altostratus"
+msgstr ""
+
+#: avwx/static.py:88
+msgid "Cumulonimbus"
+msgstr ""
+
+#: avwx/static.py:89
+msgid "Cirrocumulus"
+msgstr ""
+
+#: avwx/static.py:90
+msgid "Cirrus"
+msgstr ""
+
+#: avwx/static.py:91
+msgid "Cirrostratus"
+msgstr ""
+
+#: avwx/static.py:92
+msgid "Cumulus"
+msgstr ""
+
+#: avwx/static.py:93
+msgid "Fractocumulus"
+msgstr ""
+
+#: avwx/static.py:94
+msgid "Fractostratus"
+msgstr ""
+
+#: avwx/static.py:95
+msgid "Nimbostratus"
+msgstr ""
+
+#: avwx/static.py:96
+msgid "Stratocumulus"
+msgstr ""
+
+#: avwx/static.py:97
+msgid "Stratus"
+msgstr ""
+
+#: avwx/static.py:98
+msgid "Towering Cumulus"
+msgstr ""
+
+#: avwx/static.py:103
+msgid "None"
+msgstr ""
+
+#: avwx/static.py:104
+msgid "Light turbulence"
+msgstr ""
+
+#: avwx/static.py:105
+msgid "Occasional moderate turbulence in clear air"
+msgstr ""
+
+#: avwx/static.py:106
+msgid "Frequent moderate turbulence in clear air"
+msgstr ""
+
+#: avwx/static.py:107
+msgid "Occasional moderate turbulence in clouds"
+msgstr ""
+
+#: avwx/static.py:108
+msgid "Frequent moderate turbulence in clouds"
+msgstr ""
+
+#: avwx/static.py:109
+msgid "Occasional severe turbulence in clear air"
+msgstr ""
+
+#: avwx/static.py:110
+msgid "Frequent severe turbulence in clear air"
+msgstr ""
+
+#: avwx/static.py:111
+msgid "Occasional severe turbulence in clouds"
+msgstr ""
+
+#: avwx/static.py:112
+msgid "Frequent severe turbulence in clouds"
+msgstr ""
+
+#: avwx/static.py:113
+msgid "Extreme turbulence"
+msgstr ""
+
+#: avwx/static.py:118
+msgid "No icing"
+msgstr ""
+
+#: avwx/static.py:119
+msgid "Light icing"
+msgstr ""
+
+#: avwx/static.py:120
+msgid "Light icing in clouds"
+msgstr ""
+
+#: avwx/static.py:121
+msgid "Light icing in precipitation"
+msgstr ""
+
+#: avwx/static.py:122
+msgid "Moderate icing"
+msgstr ""
+
+#: avwx/static.py:123
+msgid "Moderate icing in clouds"
+msgstr ""
+
+#: avwx/static.py:124
+msgid "Moderate icing in precipitation"
+msgstr ""
+
+#: avwx/static.py:125
+msgid "Severe icing"
+msgstr ""
+
+#: avwx/static.py:126
+msgid "Severe icing in clouds"
+msgstr ""
+
+#: avwx/static.py:127
+msgid "Severe icing in precipitation"
+msgstr ""
+
+#: avwx/static.py:139
+msgid "mile"
+msgstr ""
+
+#: avwx/static.py:140
+msgid "kilometer"
+msgstr ""
+
+#: avwx/static.py:141
+msgid "Celsius"
+msgstr ""
+
+#: avwx/static.py:142
+msgid "Fahrenheit"
+msgstr ""
+
+#: avwx/static.py:147
+msgid "point"
+msgstr ""
+
+#: avwx/static.py:148 avwx/static.py:149
+msgid "minus"
+msgstr ""
+
+#: avwx/static.py:150
+msgid "zero"
+msgstr ""
+
+#: avwx/static.py:151
+msgid "one"
+msgstr ""
+
+#: avwx/static.py:152
+msgid "two"
+msgstr ""
+
+#: avwx/static.py:153
+msgid "three"
+msgstr ""
+
+#: avwx/static.py:154
+msgid "four"
+msgstr ""
+
+#: avwx/static.py:155
+msgid "five"
+msgstr ""
+
+#: avwx/static.py:156
+msgid "six"
+msgstr ""
+
+#: avwx/static.py:157
+msgid "seven"
+msgstr ""
+
+#: avwx/static.py:158
+msgid "eight"
+msgstr ""
+
+#: avwx/static.py:159
+msgid "nine"
+msgstr ""
+
+#: avwx/static.py:164
+msgid "one quarter of a"
+msgstr ""
+
+#: avwx/static.py:165
+msgid "one half"
+msgstr ""
+
+#: avwx/static.py:166
+msgid "three quarters of a"
+msgstr ""
+
+#: avwx/summary.py:14 avwx/summary.py:33
+msgid "Winds {}"
+msgstr ""
+
+#: avwx/summary.py:16 avwx/summary.py:35
+msgid "Vis {}"
+msgstr ""
+
+#: avwx/summary.py:18
+msgid "Temp {}"
+msgstr ""
+
+#: avwx/summary.py:20
+msgid "Dew {}"
+msgstr ""
+
+#: avwx/summary.py:22 avwx/summary.py:37
+msgid "Alt {}"
+msgstr ""
+
+#: avwx/summary.py:26 avwx/summary.py:41 avwx/translate.py:160
+msgid " - Reported AGL"
+msgstr ""
+
+#: avwx/translate.py:61
+msgid "Calm"
+msgstr ""
+
+#: avwx/translate.py:67
+msgid "Variable"
+msgstr ""
+
+#: avwx/translate.py:71
+msgid " (variable {low} to {high})"
+msgstr ""
+
+#: avwx/translate.py:73
+msgid " at {speed}{unit}"
+msgstr ""
+
+#: avwx/translate.py:75
+msgid " gusting to {speed}{unit}"
+msgstr ""
+
+#: avwx/translate.py:83
+msgid "Greater than 6sm ( >9999m )"
+msgstr ""
+
+#: avwx/translate.py:85
+msgid "Less than .25sm ( <0400m )"
+msgstr ""
+
+#: avwx/translate.py:161
+msgid "Sky clear"
+msgstr ""
+
+#: avwx/translate.py:168
+msgid "Heavy "
+msgstr ""
+
+#: avwx/translate.py:171
+msgid "Light "
+msgstr ""
+
+#: avwx/translate.py:202
+msgid "Wind shear {alt}{unit_alt} from {winddir} at {speed}{unit_wind}"
+msgstr ""
+
+#: avwx/translate.py:231
+msgid "{conditions} from {low_alt}{unit} to {high_alt}{unit}"
+msgstr ""
+
+#: avwx/translate.py:242
+msgid "Maximum"
+msgstr ""
+
+#: avwx/translate.py:244
+msgid "Minimum"
+msgstr ""
+
+#: avwx/translate.py:250
+msgid "{temp_type} temperature of {temp} at {time}:00Z"
+msgstr ""
+
