@@ -1,9 +1,15 @@
+"""
+Michael duPont - michael@mdupont.com
+AVWX-Engine : setup.py
+
+avwx package metadata
+"""
+
 from setuptools import setup
-from babel.messages import frontend as babel
 
 setup(
     name='avwx-engine',
-    version='0.9.1',
+    version='0.9.2',
     description='Aviation weather report parsing library',
     url='https://github.com/flyinactor91/AVWX-Engine',
     author='Michael duPont',
