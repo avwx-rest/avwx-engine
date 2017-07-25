@@ -5,8 +5,6 @@ AVWX-Engine : avwx/translate.py
 Contains functions for translating report data
 """
 
-# pylint: disable=E0602
-
 from avwx import core
 from avwx.static import CLOUD_TRANSLATIONS, WX_TRANSLATIONS, TURBULANCE_CONDITIONS, ICING_CONDITIONS
 
@@ -58,21 +56,21 @@ def wind(wdir: str, wspd: str, wgst: str, wvar: [str]=None, unit: str='kt', card
     """
     ret = ''
     if wdir == '000':
-        ret += _('Calm')
+        ret += 'Calm'
     elif wdir.isdigit():
         if cardinals:
             ret += get_cardinal_direction(wdir) + '-'
         ret += wdir
     elif wdir == 'VRB':
-        ret += _('Variable')
+        ret += 'Variable'
     else:
         ret += wdir
     if wvar and isinstance(wvar, list):
-        ret += _(' (variable {low} to {high})').format(low=wvar[0], high=wvar[1])
+        ret += ' (variable {low} to {high})'.format(low=wvar[0], high=wvar[1])
     if wspd and wspd not in ('0', '00'):
-        ret += _(' at {speed}{unit}').format(speed=wspd, unit=unit)
+        ret += ' at {speed}{unit}'.format(speed=wspd, unit=unit)
     if wgst:
-        ret += _(' gusting to {speed}{unit}').format(speed=wgst, unit=unit)
+        ret += ' gusting to {speed}{unit}'.format(speed=wgst, unit=unit)
     return ret
 
 def visibility(vis: str, unit: str='m') -> str:
@@ -80,9 +78,9 @@ def visibility(vis: str, unit: str='m') -> str:
     Ex: 8km ( 5sm )
     """
     if vis == 'P6':
-        return _('Greater than 6sm ( >9999m )')
+        return 'Greater than 6sm ( >9999m )'
     if vis == 'M1/4':
-        return _('Less than .25sm ( <0400m )')
+        return 'Less than .25sm ( <0400m )'
     if '/' in vis and not core.is_unknown(vis):
         vis = float(vis[:vis.find('/')]) / int(vis[vis.find('/')+1:])
     try:
@@ -157,18 +155,18 @@ def clouds(clds: [str], unit: str='ft') -> str:
             cloudstr = CLOUD_TRANSLATIONS[cloud[0]]+' ('+CLOUD_TRANSLATIONS[cloud[2]]+')'
             ret.append(cloudstr.format(int(cloud[1])*100, unit))
     if ret:
-        return ', '.join(ret) + _(' - Reported AGL')
-    return _('Sky clear')
+        return ', '.join(ret) + ' - Reported AGL'
+    return 'Sky clear'
 
 def wx(wxstr: str) -> str:
     """Translates weather codes into readable strings
     Returns translated string of variable length
     """
     if wxstr[0] == '+':
-        ret = _('Heavy ')
+        ret = 'Heavy '
         wxstr = wxstr[1:]
     elif wxstr[0] == '-':
-        ret = _('Light ')
+        ret = 'Light '
         wxstr = wxstr[1:]
     else:
         ret = ''
@@ -199,7 +197,7 @@ def wind_shear(shear: str, unit_alt: str='ft', unit_wnd: str='kt') -> str:
     if not shear or 'WS' not in shear or '/' not in shear:
         return ''
     shear = shear[2:].split('/')
-    return _('Wind shear {alt}{unit_alt} from {winddir} at {speed}{unit_wind}').format(
+    return 'Wind shear {alt}{unit_alt} from {winddir} at {speed}{unit_wind}'.format(
         alt=int(shear[0])*100, unit_alt=unit_alt, winddir=shear[1][:3],
         speed=shear[1][3:], unit_wind=unit_wnd)
 
@@ -228,7 +226,7 @@ def turb_ice(turbice: [str], unit: str='ft') -> str:
             split[i][2] = str(int(split[i][2]) + int(split[i+1][2]))
             split.pop(i+1)
     #Return joined, formatted string from split items
-    return ', '.join([_('{conditions} from {low_alt}{unit} to {high_alt}{unit}').format(
+    return ', '.join(['{conditions} from {low_alt}{unit} to {high_alt}{unit}'.format(
         conditions=conditions[item[0]], low_alt=int(item[1])*100,
         high_alt=int(item[1])*100 + int(item[2])*1000, unit=unit) for item in split])
 
@@ -239,15 +237,15 @@ def min_max_temp(temp: str, unit: str='C') -> str:
     if not temp or len(temp) < 7:
         return ''
     if temp[:2] == 'TX':
-        temp_type = _('Maximum')
+        temp_type = 'Maximum'
     elif temp[:2] == 'TN':
-        temp_type = _('Minimum')
+        temp_type = 'Minimum'
     else:
         return ''
     temp = temp[2:].replace('M', '-').replace('Z', '').split('/')
     if len(temp[1]) > 2:
         temp[1] = temp[1][:2] + '-' + temp[1][2:]
-    return _('{temp_type} temperature of {temp} at {time}:00Z').format(
+    return '{temp_type} temperature of {temp} at {time}:00Z'.format(
         temp_type=temp_type, temp=temperature(temp[0], unit), time=temp[1])
 
 def shared(wxdata: [str], units: {str: str}) -> {str: str}:

@@ -6,15 +6,9 @@ Contains the primary report classes of avwx: Metar and Taf
 """
 
 # stdlib
-import os
-import gettext
 import sqlite3
-from contextlib import contextmanager
 from datetime import datetime
-
-LOCALE = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'locale')
-gettext.install('messages', LOCALE)
-
+from os import path
 # module
 from avwx import metar, taf, translate, summary, speech
 from avwx.core import valid_station
@@ -22,19 +16,7 @@ from avwx.exceptions import BadStation
 
 DB_HEADERS = ['ICAO', 'Country', 'State', 'City', 'Name', 'IATA',
               'Elevation', 'Latitude', 'Longitude', 'Priority']
-DB_PATH = os.path.dirname(os.path.realpath(__file__))+'/stations.sqlite'
-
-@contextmanager
-def set_language(lang: str=None):
-    """Used to change the translation locale for the duration of the 'with' block
-    with set_language('en_US'): # do stuff
-    """
-    if not lang is None:
-        gettext.translation('messages', LOCALE, languages=[lang], fallback=True).install()
-        yield
-        gettext.install('messages', LOCALE)
-    else:
-        yield
+DB_PATH = path.dirname(path.realpath(__file__))+'/stations.sqlite'
 
 class Report:
     """Base report to take care of station info"""
@@ -76,8 +58,7 @@ class Metar(Report):
                 return False
             self.raw = raw
         self.data = metar.parse(self.station, self.raw)
-        with set_language(self.lang):
-            self.translations = translate.metar(self.data)
+        self.translations = translate.metar(self.data)
         self.last_updated = datetime.utcnow()
         return True
 
@@ -86,16 +67,14 @@ class Metar(Report):
         """Condensed report summary created from translations"""
         if not self.translations:
             self.update()
-        with set_language(self.lang):
-            return summary.metar(self.translations)
+        return summary.metar(self.translations)
 
     @property
     def speech(self):
         """Report summary designed to be read by a text-to-speech program"""
         if not self.data:
             self.update()
-        with set_language(self.lang):
-            return speech.metar(self.data)
+        return speech.metar(self.data)
 
 class Taf(Report):
     """Class to handle TAF report data"""

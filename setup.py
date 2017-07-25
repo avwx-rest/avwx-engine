@@ -8,6 +8,7 @@ setup(
     url='https://github.com/flyinactor91/AVWX-Engine',
     author='Michael duPont',
     author_email='michael@mdupont.com',
+    license='MIT',
     packages=[
         'avwx'
     ],
@@ -15,11 +16,5 @@ setup(
         'avwx': [
             'stations.sqlite'
         ]
-    },
-    cmdclass={
-        'compile': babel.compile_catalog,
-        'extract': babel.extract_messages,
-        'init': babel.init_catalog,
-        'update': babel.update_catalog
     }
 )
