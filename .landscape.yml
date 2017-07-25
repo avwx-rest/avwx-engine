@@ -1,0 +1,5 @@
+doc-warnings: true
+strictness: veryhigh
+python-targets: 3
+ignore-paths:
+  - util
