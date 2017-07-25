@@ -1,6 +1,7 @@
 # AVWX-Engine
 
 [![PyPI version](https://badge.fury.io/py/avwx-engine.svg)](https://badge.fury.io/py/avwx-engine)
+[![Code Health](https://landscape.io/github/flyinactor91/AVWX-Engine/master/landscape.svg?style=flat)](https://landscape.io/github/flyinactor91/AVWX-Engine/master)
 [![Requirements Status](https://requires.io/github/flyinactor91/AVWX-Engine/requirements.svg?branch=master)](https://requires.io/github/flyinactor91/AVWX-Engine/requirements/?branch=master)
 [![Documentation](https://img.shields.io/badge/docs-pythonhosted-blue.svg)](http://pythonhosted.org/avwx-engine/)
 [![PyPI](https://img.shields.io/pypi/l/avwx-engine.svg)]()
