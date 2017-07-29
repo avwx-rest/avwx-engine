@@ -1,4 +1,4 @@
-doc-warnings: true
+doc-warnings: false
 test-warnings: false
 strictness: veryhigh
 max-line-length: 120
