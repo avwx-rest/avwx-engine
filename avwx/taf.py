@@ -101,12 +101,23 @@ def parse(station: str, txt: str, delim: str='<br/>&nbsp;&nbsp;') -> {str: objec
         if index != -1:
             lines.insert(1, line[index+1:])
             line = line[:index]
-        #Add empty PROB to next line data
-        raw_line = line
-        if len(line) == 6 and line.startswith('PROB'):
-            prob = line
-            line = ''
+        # Remove prob from the beginning of a line
+        if line.startswith('PROB'):
+            # Add standalone prob to next line
+            if len(line) == 6:
+                prob = line
+                line = ''
+            # Add to current line
+            elif len(line) > 6:
+                prob = line[:6]
+                line = line[6:].strip()
         if line:
+            # Separate full prob forecast into its own line
+            if ' PROB' in line:
+                probindex = line.index(' PROB')
+                lines.insert(1, line[probindex+1:])
+                line = line[:probindex]
+            raw_line = prob+' '+line if prob else line
             parsed_line, units = parse_in_line(line, units) if is_international \
                             else parse_na_line(line, units)
             parsed_line['Probability'] = prob
