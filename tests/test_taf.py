@@ -27,5 +27,5 @@ class TestTaf(unittest.TestCase):
         lines = taf.data['Forecast']
         self.assertEqual(len(lines), 6)
         self.assertEqual(lines[3]['Probability'], '')
-        self.assertEqual(lines[4]['Probability'], 'PROB30')
+        self.assertEqual(lines[4]['Probability'], '30')
         self.assertTrue(lines[4]['Raw-Line'].startswith('PROB30'))
