@@ -120,7 +120,7 @@ def parse(station: str, txt: str, delim: str='<br/>&nbsp;&nbsp;') -> {str: objec
             raw_line = prob+' '+line if prob else line
             parsed_line, units = parse_in_line(line, units) if is_international \
                             else parse_na_line(line, units)
-            parsed_line['Probability'] = prob
+            parsed_line['Probability'] = prob[4:]
             parsed_line['Raw-Line'] = raw_line
             prob = ''
             parsed_lines.append(parsed_line)
