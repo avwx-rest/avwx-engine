@@ -1,5 +1,8 @@
 doc-warnings: true
+test-warnings: false
 strictness: veryhigh
-python-targets: 3
+max-line-length: 120
 ignore-paths:
   - util
+python-targets:
+  - 3
