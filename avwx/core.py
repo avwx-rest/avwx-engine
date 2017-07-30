@@ -154,11 +154,11 @@ def extra_space_exists(str1: str, str2: str) -> bool:
     # 36010G20 KT
     if str2 == 'KT' and str1[-1].isdigit() \
         and (str1[:5].isdigit() or (str1.startswith('VRB') and str1[3:5].isdigit())):
-            return True
+        return True
     # 36010K T
     if str2 == 'T' and ls1 == 6 \
         and (str1[:5].isdigit() or (str1.startswith('VRB') and str1[3:5].isdigit())) and str1[5] == 'K':
-            return True
+        return True
     # OVC022 CB
     if str2 in CLOUD_TRANSLATIONS and str2 not in CLOUD_LIST and ls1 >= 3 and str1[:3] in CLOUD_LIST:
         return True
@@ -193,7 +193,7 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool=True) -> ([str]
         # Identify Runway Visibility
         elif ilen > 4 and item[0] == 'R' \
             and (item[3] == '/' or item[4] == '/') and item[1:3].isdigit():
-                runway_vis.append(wxdata.pop(i))
+            runway_vis.append(wxdata.pop(i))
         # Remove RE from wx codes, REVCTS -> VCTS
         elif ilen in [4, 6] and item.startswith('RE'):
             wxdata[i] = item[2:]
@@ -221,7 +221,7 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool=True) -> ([str]
         # Fix wind T
         elif (ilen == 6 and item[5] in ['K', 'T'] and (item[:5].isdigit() or item.startswith('VRB'))) \
             or (ilen == 9 and item[8] in ['K', 'T'] and item[5] == 'G' and (item[:5].isdigit() or item.startswith('VRB'))):
-                wxdata[i] = item[:-1] + 'KT'
+            wxdata[i] = item[:-1] + 'KT'
         # Fix joined TX-TN
         elif ilen > 16 and len(item.split('/')) == 3:
             if item.startswith('TX') and 'TN' not in item:
@@ -348,25 +348,25 @@ def get_wind(wxdata: [str], units: {str: str}) -> ([str], {str: str}, str, str, 
             or item.endswith('KMH') \
             or ((len(item) == 5 or (len(item) >= 8 and item.find('G') != -1) and item.find('/') == -1)
             and (item[:5].isdigit() or (item.startswith('VRB') and item[3:5].isdigit()))):
-                #In order of frequency
-                if item.endswith('KT'):
-                    item = item.replace('KT', '')
-                elif item.endswith('KTS'):
-                    item = item.replace('KTS', '')
-                elif item.endswith('MPS'):
-                    units['Wind-Speed'] = 'm/s'
-                    item = item.replace('MPS', '')
-                elif item.endswith('KMH'):
-                    units['Wind-Speed'] = 'km/h'
-                    item = item.replace('KMH', '')
-                direction = item[:3]
-                if 'G' in item:
-                    g_index = item.find('G')
-                    gust = item[g_index + 1:]
-                    speed = item[3:g_index]
-                else:
-                    speed = item[3:]
-                wxdata.pop(0)
+            #In order of frequency
+            if item.endswith('KT'):
+                item = item.replace('KT', '')
+            elif item.endswith('KTS'):
+                item = item.replace('KTS', '')
+            elif item.endswith('MPS'):
+                units['Wind-Speed'] = 'm/s'
+                item = item.replace('MPS', '')
+            elif item.endswith('KMH'):
+                units['Wind-Speed'] = 'km/h'
+                item = item.replace('KMH', '')
+            direction = item[:3]
+            if 'G' in item:
+                g_index = item.find('G')
+                gust = item[g_index + 1:]
+                speed = item[3:g_index]
+            else:
+                speed = item[3:]
+            wxdata.pop(0)
         # elif len(item) > 5 and item[3] == '/' and item[:3].isdigit() and item[4:6].isdigit():
         #     direction = item[:3]
         #     if item.find('G') != -1:
@@ -383,7 +383,7 @@ def get_wind(wxdata: [str], units: {str: str}) -> ([str], {str: str}, str, str, 
     #Variable Wind Direction
     if wxdata and len(wxdata[0]) == 7 and wxdata[0][:3].isdigit() \
         and wxdata[0][3] == 'V' and wxdata[0][4:].isdigit():
-            variable = wxdata.pop(0).split('V')
+        variable = wxdata.pop(0).split('V')
     return wxdata, units, direction, speed, gust, variable
 
 
@@ -410,8 +410,8 @@ def get_visibility(wxdata: [str], units: {str: str}) -> ([str], {str: str}, str)
             units['Visibility'] = 'm'
         elif 7 >= len(item) >= 5 and item[:4].isdigit() \
             and (item[4] in ['M', 'N', 'S', 'E', 'W'] or item[4:] == 'NDV'):
-                visibility = wxdata.pop(0)[:4]
-                units['Visibility'] = 'm'
+            visibility = wxdata.pop(0)[:4]
+            units['Visibility'] = 'm'
         elif len(item) == 5 and item[1:5].isdigit() and item[0] in ['M', 'P', 'B']:
             visibility = wxdata.pop(0)[1:5]
             units['Visibility'] = 'm'
@@ -443,19 +443,19 @@ def get_type_and_times(wxdata: [str]) -> ([str], str, str, str):
     #1200/1306
     if wxdata and len(wxdata[0]) == 9 and wxdata[0][4] == '/' \
         and wxdata[0][:4].isdigit() and wxdata[0][5:].isdigit():
-            start_time, end_time = wxdata.pop(0).split('/')
+        start_time, end_time = wxdata.pop(0).split('/')
     #FM120000
     elif wxdata and len(wxdata[0]) > 7 and wxdata[0].startswith('FM'):
         report_type = 'FROM'
         if '/' in wxdata[0] and wxdata[0][2:].split('/')[0].isdigit() \
             and wxdata[0][2:].split('/')[1].isdigit():
-                start_time, end_time = wxdata.pop(0)[2:].split('/')
+            start_time, end_time = wxdata.pop(0)[2:].split('/')
         elif wxdata[0][2:8].isdigit():
             start_time = wxdata.pop(0)[2:6]
         #TL120600
         if wxdata and len(wxdata[0]) > 7 and wxdata[0].startswith('TL') \
             and wxdata[0][2:8].isdigit():
-                end_time = wxdata.pop(0)[2:6]
+            end_time = wxdata.pop(0)[2:6]
     return wxdata, report_type, start_time, end_time
 
 
@@ -493,8 +493,8 @@ def get_temp_min_and_max(wxlist: [str]) -> ([str], str, str):
                 if temp_min:
                     if int(temp_min[2:temp_min.find('/')].replace('M', '-')) \
                         > int(item[1:item.find('/')].replace('M', '-')):
-                            temp_max = 'TX' + temp_min[2:]
-                            temp_min = 'TN' + item[1:]
+                        temp_max = 'TX' + temp_min[2:]
+                        temp_min = 'TN' + item[1:]
                     else:
                         temp_max = 'TX' + item[1:]
                 else:
