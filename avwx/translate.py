@@ -158,8 +158,8 @@ def clouds(clds: [str], unit: str='ft') -> str:
             ret.append(CLOUD_TRANSLATIONS[cloud[0]].format(int(cloud[1]) * 100, unit))
         elif len(cloud) == 3 and cloud[1].isdigit() \
             and cloud[0] in CLOUD_TRANSLATIONS and cloud[2] in CLOUD_TRANSLATIONS:
-            cloudstr = CLOUD_TRANSLATIONS[cloud[0]] + ' (' + CLOUD_TRANSLATIONS[cloud[2]] + ')'
-            ret.append(cloudstr.format(int(cloud[1]) * 100, unit))
+                cloudstr = CLOUD_TRANSLATIONS[cloud[0]] + ' (' + CLOUD_TRANSLATIONS[cloud[2]] + ')'
+                ret.append(cloudstr.format(int(cloud[1]) * 100, unit))
     if ret:
         return ', '.join(ret) + ' - Reported AGL'
     return 'Sky clear'
@@ -233,8 +233,8 @@ def turb_ice(turbice: [str], unit: str='ft') -> str:
     for i in reversed(range(len(split) - 1)):
         if split[i][2] == '9' and split[i][0] == split[i + 1][0] \
             and int(split[i + 1][1]) == (int(split[i][1]) + int(split[i][2]) * 10):
-            split[i][2] = str(int(split[i][2]) + int(split[i + 1][2]))
-            split.pop(i + 1)
+                split[i][2] = str(int(split[i][2]) + int(split[i + 1][2]))
+                split.pop(i + 1)
     #Return joined, formatted string from split items
     return ', '.join(['{conditions} from {low_alt}{unit} to {high_alt}{unit}'.format(
         conditions=conditions[item[0]], low_alt=int(item[1]) * 100,
