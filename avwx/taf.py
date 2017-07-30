@@ -158,7 +158,7 @@ def parse_na_line(txt: str, units: {str: str}) -> ({str: object}, {str: str}):
     """Parser for the North American TAF forcast varient"""
     retwx = {}
     wxdata = txt.split(' ')
-    wxdata, _, retwx['Wind-Shear'] = core.sanitize_report_list(wxdata, remove_CLR_and_SKC=False)
+    wxdata, _, retwx['Wind-Shear'] = core.sanitize_report_list(wxdata, remove_clr_and_skc=False)
     wxdata, retwx['Type'], retwx['Start-Time'], retwx['End-Time'] = core.get_type_and_times(wxdata)
     wxdata, units, retwx['Wind-Direction'], retwx['Wind-Speed'],\
         retwx['Wind-Gust'], _ = core.get_wind(wxdata, units)
@@ -173,7 +173,7 @@ def parse_in_line(txt: str, units: {str: str}) -> ({str: object}, {str: str}):
     """Parser for the North American TAF forcast varient"""
     retwx = {}
     wxdata = txt.split(' ')
-    wxdata, _, retwx['Wind-Shear'] = core.sanitize_report_list(wxdata, remove_CLR_and_SKC=False)
+    wxdata, _, retwx['Wind-Shear'] = core.sanitize_report_list(wxdata, remove_clr_and_skc=False)
     wxdata, retwx['Type'], retwx['Start-Time'], retwx['End-Time'] = core.get_type_and_times(wxdata)
     wxdata, units, retwx['Wind-Direction'], retwx['Wind-Speed'],\
         retwx['Wind-Gust'], _ = core.get_wind(wxdata, units)
