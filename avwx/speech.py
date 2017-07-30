@@ -9,12 +9,14 @@ Currently only supports METAR
 from avwx import core, translate
 from avwx.static import SPOKEN_UNITS, NUMBER_REPL, FRACTIONS
 
+
 def numbers(num: str) -> str:
     """Returns the spoken version of a number
     Ex: 1.2 -> one point two"""
     if num in FRACTIONS:
         return FRACTIONS[num]
     return ' '.join([NUMBER_REPL[char] for char in num])
+
 
 def remove_leading_zeros(num: str) -> str:
     """Strips zeros while handling -, M, and empty strings"""
@@ -27,6 +29,7 @@ def remove_leading_zeros(num: str) -> str:
     else:
         ret = num.lstrip('0')
     return ret if ret else '0'
+
 
 def wind(wdir: str, wspd: str, wgst: str, wvar: [str]=None, unit: str='kt') -> str:
     """Format wind details into a spoken word string"""
@@ -41,6 +44,7 @@ def wind(wdir: str, wspd: str, wgst: str, wvar: [str]=None, unit: str='kt') -> s
                                      remove_leading_zeros(wgst), wvar,
                                      unit, cardinals=False)
 
+
 def temperature(header: str, temp: str, unit: str='C') -> str:
     """Format temperature details into a spoken word string"""
     if core.is_unknown(temp):
@@ -49,7 +53,8 @@ def temperature(header: str, temp: str, unit: str='C') -> str:
         unit = SPOKEN_UNITS[unit]
     temp = numbers(remove_leading_zeros(temp))
     use_s = '' if temp in ('one', 'minus one') else 's'
-    return ' '.join((header, temp, 'degree'+use_s, unit))
+    return ' '.join((header, temp, 'degree' + use_s, unit))
+
 
 def unpack_fraction(num: str) -> str:
     """Returns unpacked fraction string 5/2 -> 2 1/2"""
@@ -60,6 +65,7 @@ def unpack_fraction(num: str) -> str:
         return '{} {}/{}'.format(over, rem, nums[1])
     else:
         return num
+
 
 def visibility(vis: str, unit: str='m') -> str:
     """Format visibility details into a spoken word string"""
@@ -87,6 +93,7 @@ def visibility(vis: str, unit: str='m') -> str:
         ret += unit
     return ret
 
+
 def altimeter(alt: str, unit: str='inHg') -> str:
     """Format altimeter details into a spoken word string"""
     ret = 'Altimeter '
@@ -98,15 +105,17 @@ def altimeter(alt: str, unit: str='inHg') -> str:
         ret += numbers(alt)
     return ret
 
-def other(wx: [str]) -> str:
+
+def other(wxcodes: [str]) -> str:
     """Format wx codes into a spoken word string"""
     ret = []
-    for item in wx:
-        item = translate.wx(item)
+    for item in wxcodes:
+        item = translate.wxcode(item)
         if item.startswith('Vicinity'):
             item = item.lstrip('Vicinity ') + ' in the Vicinity'
         ret.append(item)
     return '. '.join(ret)
+
 
 def metar(wxdata: {str: object}) -> str:
     """Convert wxdata into a string for text-to-speech"""

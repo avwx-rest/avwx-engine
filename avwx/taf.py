@@ -16,6 +16,7 @@ from avwx import core
 from avwx.exceptions import InvalidRequest
 from avwx.static import REQUEST_URL, NA_UNITS, IN_UNITS, TAF_RMK, TAF_NEWLINE
 
+
 def fetch(station: str) -> str:
     """Get TAF report for 'station' from www.aviationweather.gov
     Returns TAF report string or raises an error
@@ -27,16 +28,19 @@ def fetch(station: str) -> str:
     resp_str = json.dumps(resp)
     for word in ['response', 'data', 'TAF', station]:
         if word not in resp_str:
-            raise InvalidRequest('Could not find "{}" in NOAA response\n{}'\
-                .format(word, json.dumps(resp, indent=4)))
+            raise InvalidRequest(
+                'Could not find "{}" in NOAA response\n{}'.format(word, json.dumps(resp, indent=4))
+            )
     resp = json.loads(resp_str)['response']['data']['TAF']
     if isinstance(resp, dict):
         return resp['raw_text']
     elif isinstance(resp, list) and resp:
         return resp[0]['raw_text']
     else:
-        raise InvalidRequest('Could not find "raw_text" in NOAA response\n{}'\
-            .format(json.dumps(resp, indent=4)))
+        raise InvalidRequest(
+            'Could not find "raw_text" in NOAA response\n{}'.format(json.dumps(resp, indent=4))
+        )
+
 
 def fetch2(station: str) -> str:
     """Get TAF report for 'station' from www.aviationweather.gov
@@ -44,21 +48,27 @@ def fetch2(station: str) -> str:
     fetch2 scrapes the report from html
     """
     core.valid_station(station)
-    url = 'http://www.aviationweather.gov/taf/data?ids='+station+'&format=raw&submit=Get+TAF+data'
+    url = (
+        "http://www.aviationweather.gov/taf/data"
+        "?ids={}"
+        "&format=raw"
+        "&submit=Get+TAF+data"
+    ).format(station)
     html = get(url).text
-    if station+'<' in html:
+    if station + '<' in html:
         raise InvalidRequest('Station does not exist/Database lookup error')
     # Standard report begins with 'TAF'
-    start = html.find('<code>TAF ')+6
+    start = html.find('<code>TAF ') + 6
     # US report begins with station iden
     if start == 5:
-        start = html.find('<code>'+station+' ')+6
+        start = html.find('<code>' + station + ' ') + 6
     # Beginning of report is non-standard/skewed
     if start == 5:
         raise InvalidRequest('Request response was not able to be isolated')
     # Report ends with html bracket
     end = html[start:].find('</code>')
-    return html[start:start+end].replace('\n ', '')
+    return html[start:start + end].replace('\n ', '')
+
 
 def parse(station: str, txt: str, delim: str='<br/>&nbsp;&nbsp;') -> {str: object}:
     """Returns a dictionary of parsed TAF data
@@ -99,7 +109,7 @@ def parse(station: str, txt: str, delim: str='<br/>&nbsp;&nbsp;') -> {str: objec
         #Separate new lines fixed by sanitizeLine
         index = core.find_first_in_list(line, TAF_NEWLINE)
         if index != -1:
-            lines.insert(1, line[index+1:])
+            lines.insert(1, line[index + 1:])
             line = line[:index]
         # Remove prob from the beginning of a line
         if line.startswith('PROB'):
@@ -115,19 +125,19 @@ def parse(station: str, txt: str, delim: str='<br/>&nbsp;&nbsp;') -> {str: objec
             # Separate full prob forecast into its own line
             if ' PROB' in line:
                 probindex = line.index(' PROB')
-                lines.insert(1, line[probindex+1:])
+                lines.insert(1, line[probindex + 1:])
                 line = line[:probindex]
-            raw_line = prob+' '+line if prob else line
+            raw_line = prob + ' ' + line if prob else line
             parsed_line, units = parse_in_line(line, units) if is_international \
-                            else parse_na_line(line, units)
+                else parse_na_line(line, units)
             parsed_line['Probability'] = prob[4:]
             parsed_line['Raw-Line'] = raw_line
             prob = ''
             parsed_lines.append(parsed_line)
         lines.pop(0)
     if parsed_lines:
-        parsed_lines[len(parsed_lines)-1]['Other-List'], retwx['Max-Temp'], retwx['Min-Temp'] \
-            = core.get_temp_min_and_max(parsed_lines[len(parsed_lines)-1]['Other-List'])
+        parsed_lines[len(parsed_lines) - 1]['Other-List'], retwx['Max-Temp'], retwx['Min-Temp'] \
+            = core.get_temp_min_and_max(parsed_lines[len(parsed_lines) - 1]['Other-List'])
         if not (retwx['Max-Temp'] or retwx['Min-Temp']):
             parsed_lines[0]['Other-List'], retwx['Max-Temp'], retwx['Min-Temp'] \
                 = core.get_temp_min_and_max(parsed_lines[0]['Other-List'])
@@ -137,11 +147,12 @@ def parse(station: str, txt: str, delim: str='<br/>&nbsp;&nbsp;') -> {str: objec
         retwx['Min-Temp'] = ['', '']
         retwx['Max-Temp'] = ['', '']
     if retwx['Station'][0] == 'A':
-        parsed_lines[len(parsed_lines)-1]['Other-List'], retwx['Alt-List'], retwx['Temp-List'] \
-            = core.get_oceania_temp_and_alt(parsed_lines[len(parsed_lines)-1]['Other-List'])
+        parsed_lines[len(parsed_lines) - 1]['Other-List'], retwx['Alt-List'], retwx['Temp-List'] \
+            = core.get_oceania_temp_and_alt(parsed_lines[len(parsed_lines) - 1]['Other-List'])
     retwx['Forecast'] = parsed_lines
     retwx['Units'] = units
     return retwx
+
 
 def parse_na_line(txt: str, units: {str: str}) -> ({str: object}, {str: str}):
     """Parser for the North American TAF forcast varient"""
@@ -156,6 +167,7 @@ def parse_na_line(txt: str, units: {str: str}) -> ({str: object}, {str: str}):
     retwx['Other-List'], retwx['Altimeter'], retwx['Icing-List'], retwx['Turb-List'] \
         = core.get_taf_alt_ice_turb(wxdata)
     return retwx, units
+
 
 def parse_in_line(txt: str, units: {str: str}) -> ({str: object}, {str: str}):
     """Parser for the North American TAF forcast varient"""

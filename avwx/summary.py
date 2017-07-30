@@ -5,6 +5,7 @@ AVWX-Engine : avwx/summary.py
 Contains functions for combining translations into a summary string
 """
 
+
 def metar(trans: {str: object}) -> str:
     """Condense the translation strings into a single report summary string"""
     summary = []
@@ -23,6 +24,7 @@ def metar(trans: {str: object}) -> str:
     if 'Clouds' in trans and trans['Clouds']:
         summary.append(trans['Clouds'].replace(' - Reported AGL', ''))
     return ', '.join(summary)
+
 
 def taf(trans: {str: object}) -> str:
     """Condense the translation strings into a single forecast summary string"""

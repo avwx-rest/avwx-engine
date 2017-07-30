@@ -16,7 +16,8 @@ from avwx.exceptions import BadStation
 
 DB_HEADERS = ['ICAO', 'Country', 'State', 'City', 'Name', 'IATA',
               'Elevation', 'Latitude', 'Longitude', 'Priority']
-DB_PATH = path.dirname(path.realpath(__file__))+'/stations.sqlite'
+DB_PATH = path.dirname(path.realpath(__file__)) + '/stations.sqlite'
+
 
 class Report:
     """Base report to take care of station info"""
@@ -44,6 +45,7 @@ class Report:
                 raise BadStation('Could not find station in info database')
             self._station_info = dict(zip(DB_HEADERS, row))
         return self._station_info
+
 
 class Metar(Report):
     """Class to handle METAR report data"""
@@ -75,6 +77,7 @@ class Metar(Report):
         if not self.data:
             self.update()
         return speech.metar(self.data)
+
 
 class Taf(Report):
     """Class to handle TAF report data"""

@@ -16,6 +16,7 @@ import avwx.core as core
 from avwx.exceptions import InvalidRequest
 from avwx.static import REQUEST_URL, NA_UNITS, IN_UNITS, FLIGHT_RULES
 
+
 def fetch(station: str) -> str:
     """Get METAR report for 'station' from www.aviationweather.gov
     Returns METAR report string or raises an error
@@ -27,16 +28,19 @@ def fetch(station: str) -> str:
     resp_str = json.dumps(resp)
     for word in ['response', 'data', 'METAR', station]:
         if word not in resp_str:
-            raise InvalidRequest('Could not find "{}" in NOAA response\n{}'\
-                .format(word, json.dumps(resp, indent=4)))
+            raise InvalidRequest(
+                'Could not find "{}" in NOAA response\n{}'.format(word, json.dumps(resp, indent=4))
+            )
     resp = json.loads(resp_str)['response']['data']['METAR']
     if isinstance(resp, dict):
         return resp['raw_text']
     elif isinstance(resp, list) and resp:
         return resp[0]['raw_text']
     else:
-        raise InvalidRequest('Could not find "raw_text" in NOAA response\n{}'\
-            .format(json.dumps(resp, indent=4)))
+        raise InvalidRequest(
+            'Could not find "raw_text" in NOAA response\n{}'.format(json.dumps(resp, indent=4))
+        )
+
 
 def fetch2(station: str) -> str:
     """Get METAR report for 'station' from www.aviationweather.gov
@@ -44,15 +48,22 @@ def fetch2(station: str) -> str:
     fetch2 scrapes the report from html
     """
     core.valid_station(station)
-    url = 'http://www.aviationweather.gov/metar/data?ids='+station+'&format=raw&date=0&hours=0'
+    url = (
+        "http://www.aviationweather.gov/metar/data"
+        "?ids={}"
+        "&format=raw"
+        "&date=0"
+        "&hours=0"
+    ).format(station)
     html = get(url).text
-    if station+'<' in html:
+    if station + '<' in html:
         raise InvalidRequest('Station does not exist/Database lookup error')
     #Report begins with station iden
-    start = html.find('<code>'+station+' ')+6
+    start = html.find('<code>' + station + ' ') + 6
     #Report ends with html bracket
     end = html[start:].find('<')
-    return html[start:start+end].replace('\n ', '')
+    return html[start:start + end].replace('\n ', '')
+
 
 def parse(station: str, txt: str) -> {str: object}:
     """Returns a dictionary of parsed METAR data
@@ -64,6 +75,7 @@ def parse(station: str, txt: str) -> {str: object}:
     core.valid_station(station)
     return parse_na(txt) if core.uses_na_format(station[:2]) else parse_in(txt)
 
+
 def parse_na(txt: str) -> {str: object}:
     """Parser for the North American METAR variant"""
     units = copy(NA_UNITS)
@@ -74,7 +86,7 @@ def parse_na(txt: str) -> {str: object}:
     wxdata, wxresp['Station'], wxresp['Time'] = core.get_station_and_time(wxdata)
     wxdata, wxresp['Cloud-List'] = core.get_clouds(wxdata)
     wxdata, units, wxresp['Wind-Direction'], wxresp['Wind-Speed'], \
-    wxresp['Wind-Gust'], wxresp['Wind-Variable-Dir'] = core.get_wind(wxdata, units)
+        wxresp['Wind-Gust'], wxresp['Wind-Variable-Dir'] = core.get_wind(wxdata, units)
     wxdata, units, wxresp['Altimeter'] = core.get_altimeter(wxdata, units, 'NA')
     wxdata, units, wxresp['Visibility'] = core.get_visibility(wxdata, units)
     wxresp['Other-List'], wxresp['Temperature'], wxresp['Dewpoint'] = core.get_temp_and_dew(wxdata)
@@ -83,6 +95,7 @@ def parse_na(txt: str) -> {str: object}:
     wxresp['Flight-Rules'] = FLIGHT_RULES[condition]
     wxresp['Remarks-Info'] = core.parse_remarks(wxresp['Remarks'])
     return wxresp
+
 
 def parse_in(txt: str) -> {str: object}:
     """Parser for the International METAR variant"""
@@ -95,7 +108,7 @@ def parse_in(txt: str) -> {str: object}:
     if 'CAVOK' not in wxdata:
         wxdata, wxresp['Cloud-List'] = core.get_clouds(wxdata)
     wxdata, units, wxresp['Wind-Direction'], wxresp['Wind-Speed'], \
-    wxresp['Wind-Gust'], wxresp['Wind-Variable-Dir'] = core.get_wind(wxdata, units)
+        wxresp['Wind-Gust'], wxresp['Wind-Variable-Dir'] = core.get_wind(wxdata, units)
     wxdata, units, wxresp['Altimeter'] = core.get_altimeter(wxdata, units, 'IN')
     if 'CAVOK' in wxdata:
         wxresp['Visibility'] = '9999'

@@ -8,6 +8,7 @@ Contains functions for translating report data
 from avwx import core
 from avwx.static import CLOUD_TRANSLATIONS, WX_TRANSLATIONS, TURBULANCE_CONDITIONS, ICING_CONDITIONS
 
+
 def get_cardinal_direction(wdir: str) -> str:
     """Returns the cardinal direction (NSEW) for a degree direction
     Wind Direction - Cheat Sheet
@@ -49,6 +50,7 @@ def get_cardinal_direction(wdir: str) -> str:
             ret += 'NW'
     return ret
 
+
 def wind(wdir: str, wspd: str, wgst: str, wvar: [str]=None, unit: str='kt', cardinals=True) -> str:
     """Format wind elements into a readable sentence
     Returns the translation string
@@ -73,6 +75,7 @@ def wind(wdir: str, wspd: str, wgst: str, wvar: [str]=None, unit: str='kt', card
         ret += ' gusting to {speed}{unit}'.format(speed=wgst, unit=unit)
     return ret
 
+
 def visibility(vis: str, unit: str='m') -> str:
     """Formats a visibility element into a string with both km and sm values
     Ex: 8km ( 5sm )
@@ -82,7 +85,7 @@ def visibility(vis: str, unit: str='m') -> str:
     if vis == 'M1/4':
         return 'Less than .25sm ( <0400m )'
     if '/' in vis and not core.is_unknown(vis):
-        vis = float(vis[:vis.find('/')]) / int(vis[vis.find('/')+1:])
+        vis = float(vis[:vis.find('/')]) / int(vis[vis.find('/') + 1:])
     try:
         float(vis)
     except ValueError:
@@ -90,7 +93,7 @@ def visibility(vis: str, unit: str='m') -> str:
     if unit == 'm':
         converted = float(vis) * 0.000621371
         converted = str(round(converted, 1)).replace('.0', '') + 'sm'
-        vis = str(round(int(vis)/1000.0, 1)).replace('.0', '')
+        vis = str(round(int(vis) / 1000, 1)).replace('.0', '')
         unit = 'km'
     elif unit == 'sm':
         converted = float(vis) / 0.621371
@@ -99,6 +102,7 @@ def visibility(vis: str, unit: str='m') -> str:
     else:
         return ''
     return vis + unit + ' (' + converted + ')'
+
 
 def temperature(temp: str, unit: str='C') -> str:
     """Formats a temperature element into a string with both C and F values
@@ -121,6 +125,7 @@ def temperature(temp: str, unit: str='C') -> str:
         return ''
     return temp + unit + ' (' + converted + ')'
 
+
 def altimeter(alt: str, unit: str='hPa') -> str:
     """Formats the altimter element into a string with hPa and inHg values
     Ex: 30.11 inHg (10.20 hPa)
@@ -141,6 +146,7 @@ def altimeter(alt: str, unit: str='hPa') -> str:
         return ''
     return alt + unit + ' (' + converted + ')'
 
+
 def clouds(clds: [str], unit: str='ft') -> str:
     """Format cloud list into a readable sentence
     Returns the translation string
@@ -149,16 +155,17 @@ def clouds(clds: [str], unit: str='ft') -> str:
     ret = []
     for cloud in clds:
         if len(cloud) == 2 and cloud[1].isdigit() and cloud[0] in CLOUD_TRANSLATIONS:
-            ret.append(CLOUD_TRANSLATIONS[cloud[0]].format(int(cloud[1])*100, unit))
+            ret.append(CLOUD_TRANSLATIONS[cloud[0]].format(int(cloud[1]) * 100, unit))
         elif len(cloud) == 3 and cloud[1].isdigit() \
-        and cloud[0] in CLOUD_TRANSLATIONS and cloud[2] in CLOUD_TRANSLATIONS:
-            cloudstr = CLOUD_TRANSLATIONS[cloud[0]]+' ('+CLOUD_TRANSLATIONS[cloud[2]]+')'
-            ret.append(cloudstr.format(int(cloud[1])*100, unit))
+            and cloud[0] in CLOUD_TRANSLATIONS and cloud[2] in CLOUD_TRANSLATIONS:
+            cloudstr = CLOUD_TRANSLATIONS[cloud[0]] + ' (' + CLOUD_TRANSLATIONS[cloud[2]] + ')'
+            ret.append(cloudstr.format(int(cloud[1]) * 100, unit))
     if ret:
         return ', '.join(ret) + ' - Reported AGL'
     return 'Sky clear'
 
-def wx(wxstr: str) -> str:
+
+def wxcode(wxstr: str) -> str:
     """Translates weather codes into readable strings
     Returns translated string of variable length
     """
@@ -173,7 +180,7 @@ def wx(wxstr: str) -> str:
     #Return wxstr if wxstr is not a code, ex R03/03002V03
     if len(wxstr) not in [2, 4, 6]:
         return wxstr
-    for x in range(len(wxstr)//2):
+    for _ in range(len(wxstr) // 2):
         if wxstr[:2] in WX_TRANSLATIONS:
             ret += WX_TRANSLATIONS[wxstr[:2]] + ' '
         else:
@@ -181,14 +188,16 @@ def wx(wxstr: str) -> str:
         wxstr = wxstr[2:]
     return ret.strip(' ')
 
+
 def other_list(wxcodes: [str]) -> str:
     """Translate the list of wx codes (otherList) into a readable sentence
     Returns the translation string
     """
     ret = []
     for item in wxcodes:
-        ret.append(wx(item))
+        ret.append(wxcode(item))
     return ', '.join(ret)
+
 
 def wind_shear(shear: str, unit_alt: str='ft', unit_wnd: str='kt') -> str:
     """Translate wind shear into a readable string
@@ -198,8 +207,9 @@ def wind_shear(shear: str, unit_alt: str='ft', unit_wnd: str='kt') -> str:
         return ''
     shear = shear[2:].split('/')
     return 'Wind shear {alt}{unit_alt} from {winddir} at {speed}{unit_wind}'.format(
-        alt=int(shear[0])*100, unit_alt=unit_alt, winddir=shear[1][:3],
+        alt=int(shear[0]) * 100, unit_alt=unit_alt, winddir=shear[1][:3],
         speed=shear[1][3:], unit_wind=unit_wnd)
+
 
 def turb_ice(turbice: [str], unit: str='ft') -> str:
     """Translate the list of turbulance or icing into a readable sentence
@@ -220,15 +230,16 @@ def turb_ice(turbice: [str], unit: str='ft') -> str:
         if len(item) == 6:
             split.append([item[1:2], item[2:5], item[5:6]])
     #Combine items that cover a layer greater than 9000ft
-    for i in reversed(range(len(split)-1)):
-        if split[i][2] == '9' and split[i][0] == split[i+1][0] \
-        and int(split[i+1][1]) == (int(split[i][1]) + int(split[i][2])*10):
-            split[i][2] = str(int(split[i][2]) + int(split[i+1][2]))
-            split.pop(i+1)
+    for i in reversed(range(len(split) - 1)):
+        if split[i][2] == '9' and split[i][0] == split[i + 1][0] \
+            and int(split[i + 1][1]) == (int(split[i][1]) + int(split[i][2]) * 10):
+            split[i][2] = str(int(split[i][2]) + int(split[i + 1][2]))
+            split.pop(i + 1)
     #Return joined, formatted string from split items
     return ', '.join(['{conditions} from {low_alt}{unit} to {high_alt}{unit}'.format(
-        conditions=conditions[item[0]], low_alt=int(item[1])*100,
-        high_alt=int(item[1])*100 + int(item[2])*1000, unit=unit) for item in split])
+        conditions=conditions[item[0]], low_alt=int(item[1]) * 100,
+        high_alt=int(item[1]) * 100 + int(item[2]) * 1000, unit=unit) for item in split])
+
 
 def min_max_temp(temp: str, unit: str='C') -> str:
     """Format the Min and Max temp elemets into a readable string
@@ -248,6 +259,7 @@ def min_max_temp(temp: str, unit: str='C') -> str:
     return '{temp_type} temperature of {temp} at {time}:00Z'.format(
         temp_type=temp_type, temp=temperature(temp[0], unit), time=temp[1])
 
+
 def shared(wxdata: [str], units: {str: str}) -> {str: str}:
     """Translate Visibility, Altimeter, Clouds, and Other"""
     translations = {}
@@ -256,6 +268,7 @@ def shared(wxdata: [str], units: {str: str}) -> {str: str}:
     translations['Clouds'] = clouds(wxdata['Cloud-List'], units['Altitude'])
     translations['Other'] = other_list(wxdata['Other-List'])
     return translations
+
 
 def metar(wxdata: [str]) -> {str: str}:
     """Translate the results of metar.parse
@@ -270,12 +283,13 @@ def metar(wxdata: [str]) -> {str: str}:
     translations['Dewpoint'] = temperature(wxdata['Dewpoint'], units['Temperature'])
     return translations
 
+
 def taf(wxdata: [str]) -> {str: str}:
     """Translate the results of taf.parse
     Keys: Forecast, Min-Temp, Max-Temp
     Forecast keys: Wind, Visibility, Clouds, Altimeter, Wind-Shear, Turbulance, Icing, Other
     """
-    translations = {'Forecast':[]}
+    translations = {'Forecast': []}
     units = wxdata['Units']
     for line in wxdata['Forecast']:
         trans = shared(line, units)
