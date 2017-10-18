@@ -8,9 +8,11 @@ tests/test_core.py
 # library
 import unittest
 # module
+import avwx
 
 class TestCore(unittest.TestCase):
 
-    def test_(self):
+    def test_valid_station(self):
         """"""
-        pass
+        good_stations = ('KJFK', 'K123', 'EIGL', 'PHNL', 'MNAH', 'MAYT')
+        bad_stations = ('12K', 'MZRT')
