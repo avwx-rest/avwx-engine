@@ -6,7 +6,7 @@ Contains the primary report classes of avwx: Metar and Taf
 """
 
 # stdlib
-import sqlite3
+import json
 from datetime import datetime
 from os import path
 # module
@@ -14,9 +14,10 @@ from avwx import metar, taf, translate, summary, speech
 from avwx.core import valid_station
 from avwx.exceptions import BadStation
 
-DB_HEADERS = ['ICAO', 'Country', 'State', 'City', 'Name', 'IATA',
+INFO_KEYS = ['ICAO', 'Country', 'State', 'City', 'Name', 'IATA',
               'Elevation', 'Latitude', 'Longitude', 'Priority']
-DB_PATH = path.dirname(path.realpath(__file__)) + '/stations.sqlite'
+INFO_PATH = path.dirname(path.realpath(__file__)) + '/stations.json'
+STATIONS = json.load(open(INFO_PATH))
 
 
 class Report:
@@ -36,14 +37,10 @@ class Report:
     def station_info(self):
         """Provide basic station info with the keys below"""
         if self._station_info is None:
-            conn = sqlite3.connect(DB_PATH)
-            curs = conn.cursor()
-            query = 'SELECT {} FROM Stations WHERE icao=?;'.format(','.join(DB_HEADERS))
-            curs.execute(query, (self.station,))
-            row = curs.fetchone()
-            if not row:
-                raise BadStation('Could not find station in info database')
-            self._station_info = dict(zip(DB_HEADERS, row))
+            if not self.station in STATIONS:
+                raise BadStation('Could not find station in the info dict. Check avwx.STATIONS')
+            info = [self.station] + STATIONS[self.station]
+            self._station_info = dict(zip(INFO_KEYS, info))
         return self._station_info
 
 
