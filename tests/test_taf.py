@@ -29,3 +29,18 @@ class TestTaf(unittest.TestCase):
         self.assertEqual(lines[3]['Probability'], '')
         self.assertEqual(lines[4]['Probability'], '30')
         self.assertTrue(lines[4]['Raw-Line'].startswith('PROB30'))
+
+    def test_wind_shear(self):
+        """"""
+        report = ("TAF AMD CYOW 282059Z 2821/2918 09008KT WS015/20055KT P6SM BKN220 "
+                  "BECMG 2821/2823 19015G25KT "
+                  "FM290300 21013G23KT P6SM -SHRA BKN040 OVC100 "
+                  "TEMPO 2903/2909 4SM BR OVC020 "
+                  "FM290900 25012KT P6SM SCT030 "
+                  "FM291300 32017G27KT P6SM OVC030 "
+                  "TEMPO 2913/2918 P6SM -SHRA OVC020 RMK NXT FCST BY 290000Z")
+        taf = avwx.Taf('CYBC')
+        taf.update(report)
+        lines = taf.data['Forecast']
+        self.assertEqual(len(lines), 7)
+        self.assertEqual(lines[0]['Wind-Shear'], 'WS015/20055')
