@@ -215,7 +215,7 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool=True) -> ([str]
         elif ilen == 3 and item.startswith('CC') and item[2].isalpha():
             wxdata.pop(i)
         # Identify Wind Shear
-        elif ilen > 6 and item.startswith('WS') and '/' not in item:
+        elif ilen > 6 and item.startswith('WS') and item[5] == '/':
             shear = wxdata.pop(i).replace('KT', '')
         # Fix inconsistant 'P6SM' Ex: TP6SM or 6PSM -> P6SM
         elif ilen > 3 and item[-4:] in VIS_PERMUTATIONS:
