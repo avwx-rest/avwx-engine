@@ -44,3 +44,4 @@ class TestTaf(unittest.TestCase):
         lines = taf.data['Forecast']
         self.assertEqual(len(lines), 7)
         self.assertEqual(lines[0]['Wind-Shear'], 'WS015/20055')
+        self.assertEqual(taf.translations['Forecast'][1]['Clouds'], '')

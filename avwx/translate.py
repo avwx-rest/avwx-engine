@@ -6,7 +6,8 @@ Contains functions for translating report data
 """
 
 from avwx import core
-from avwx.static import CLOUD_TRANSLATIONS, WX_TRANSLATIONS, TURBULANCE_CONDITIONS, ICING_CONDITIONS
+from avwx.static import CLOUD_TRANSLATIONS, WX_TRANSLATIONS, \
+                        TURBULANCE_CONDITIONS, ICING_CONDITIONS
 
 
 def get_cardinal_direction(wdir: str) -> str:
@@ -300,6 +301,9 @@ def taf(wxdata: [str]) -> {str: str}:
                                          units['Wind-Speed'])
         trans['Turbulance'] = turb_ice(line['Turb-List'], units['Altitude'])
         trans['Icing'] = turb_ice(line['Icing-List'], units['Altitude'])
+        # Remove false 'Sky Clear' if line type is 'BECMG'
+        if line['Type'] == 'BECMG' and trans['Clouds'] == 'Sky clear':
+            trans['Clouds'] = ''
         translations['Forecast'].append(trans)
     translations['Min-Temp'] = min_max_temp(wxdata['Min-Temp'], units['Temperature'])
     translations['Max-Temp'] = min_max_temp(wxdata['Max-Temp'], units['Temperature'])
