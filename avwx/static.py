@@ -171,3 +171,37 @@ FRACTIONS = {
     '1/2': 'one half',
     '3/4': 'three quarters of a'
 }
+
+# Static remarks translation elements
+REMARKS_ELEMENTS = {
+    '$': 'ASOS requires maintenance',
+    'AO1': 'Automated with no precipitation sensor',
+    'AO2': 'Automated with precipitation sensor',
+    'BINOVC': 'Breaks in Overcast',
+    'FZRANO': 'Freezing rain information not available',
+    'NOSPECI': 'No SPECI reports taken',
+    'P0000': 'Trace amount of rain in the last hour',
+    'PNO': 'Precipitation amount not available',
+    'PRESFR': 'Pressure Falling Rapidly',
+    'PRESRR': 'Pressure Rising Rapidly',
+    'PWINO': 'Precipitation identifier information not available',
+    'RVRNO': 'RVR missing',
+    'TSNO': 'Thunderstorm information not available'
+}
+
+# Static remarks translation groups
+REMARKS_GROUPS = {
+    ' ACFT MSHP ': 'Aircraft mishap'
+}
+
+PRESSURE_TENDENCIES = {
+    '0': 'Increasing, then decreasing',
+    '1': 'Increasing, then steady',
+    '2': 'Increasing steadily or unsteadily',
+    '3': 'Decreasing or steady, then increasing',
+    '4': 'Steady',
+    '5': 'Decreasing, then increasing',
+    '6': 'Decreasing, then steady',
+    '7': 'Decreasing steadily or unsteadily',
+    '8': 'Steady or increasing, then decreasing',
+}
