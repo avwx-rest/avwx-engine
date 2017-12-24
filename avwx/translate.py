@@ -5,7 +5,7 @@ AVWX-Engine : avwx/translate.py
 Contains functions for translating report data
 """
 
-from avwx import core
+from avwx import core, remarks
 from avwx.static import CLOUD_TRANSLATIONS, WX_TRANSLATIONS, \
                         TURBULANCE_CONDITIONS, ICING_CONDITIONS
 
@@ -271,7 +271,7 @@ def shared(wxdata: [str], units: {str: str}) -> {str: str}:
     return translations
 
 
-def metar(wxdata: [str]) -> {str: str}:
+def metar(wxdata: {str: object}) -> {str: str}:
     """Translate the results of metar.parse
     Keys: Wind, Visibility, Clouds, Temperature, Dewpoint, Altimeter, Other
     """
@@ -282,10 +282,11 @@ def metar(wxdata: [str]) -> {str: str}:
                                 units['Wind-Speed'])
     translations['Temperature'] = temperature(wxdata['Temperature'], units['Temperature'])
     translations['Dewpoint'] = temperature(wxdata['Dewpoint'], units['Temperature'])
+    translations['Remarks'] = remarks.translate(wxdata['Remarks'])
     return translations
 
 
-def taf(wxdata: [str]) -> {str: str}:
+def taf(wxdata: {str: object}) -> {str: str}:
     """Translate the results of taf.parse
     Keys: Forecast, Min-Temp, Max-Temp
     Forecast keys: Wind, Visibility, Clouds, Altimeter, Wind-Shear, Turbulance, Icing, Other
@@ -307,4 +308,5 @@ def taf(wxdata: [str]) -> {str: str}:
         translations['Forecast'].append(trans)
     translations['Min-Temp'] = min_max_temp(wxdata['Min-Temp'], units['Temperature'])
     translations['Max-Temp'] = min_max_temp(wxdata['Max-Temp'], units['Temperature'])
+    translations['Remarks'] = remarks.translate(wxdata['Remarks'])
     return translations
