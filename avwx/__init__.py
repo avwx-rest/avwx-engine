@@ -10,12 +10,12 @@ import json
 from datetime import datetime
 from os import path
 # module
-from avwx import metar, taf, translate, summary, speech
+from avwx import metar, taf, translate, summary, speech, service
 from avwx.core import valid_station
 from avwx.exceptions import BadStation
 
 INFO_KEYS = ['ICAO', 'Country', 'State', 'City', 'Name', 'IATA',
-              'Elevation', 'Latitude', 'Longitude', 'Priority']
+             'Elevation', 'Latitude', 'Longitude', 'Priority']
 INFO_PATH = path.dirname(path.realpath(__file__)) + '/stations.json'
 STATIONS = json.load(open(INFO_PATH))
 
@@ -23,8 +23,9 @@ STATIONS = json.load(open(INFO_PATH))
 class Report:
     """Base report to take care of station info"""
 
-    def __init__(self, station: str, lang: str=None):
+    def __init__(self, station: str, lang: str = None):
         valid_station(station)
+        self.service = service.get_service(station)(self.__class__.__name__.lower())
         self.station = station
         self.lang = lang
         self.last_updated = None
@@ -43,16 +44,20 @@ class Report:
             self._station_info = dict(zip(INFO_KEYS, info))
         return self._station_info
 
+    def update(self, report: str = None) -> bool:
+        """Updates report elements. Not implemented"""
+        raise NotImplementedError()
+
 
 class Metar(Report):
     """Class to handle METAR report data"""
 
-    def update(self, report: str=None) -> bool:
+    def update(self, report: str = None) -> bool:
         """Updates raw, data, and translations by fetching and parsing the METAR report"""
         if report is not None:
             self.raw = report
         else:
-            raw = metar.fetch(self.station)
+            raw = self.service.fetch(self.station)
             if raw == self.raw:
                 return False
             self.raw = raw
@@ -79,12 +84,12 @@ class Metar(Report):
 class Taf(Report):
     """Class to handle TAF report data"""
 
-    def update(self, report: str=None) -> bool:
+    def update(self, report: str = None) -> bool:
         """Updates raw, data, and translations by fetching and parsing the TAF report"""
         if report is not None:
             self.raw = report
         else:
-            raw = taf.fetch(self.station)
+            raw = self.service.fetch(self.station)
             if raw == self.raw:
                 return False
             self.raw = raw

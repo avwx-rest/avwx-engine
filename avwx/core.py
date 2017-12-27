@@ -179,7 +179,7 @@ VIS_PERMUTATIONS = [''.join(p) for p in permutations('P6SM')]
 VIS_PERMUTATIONS.remove('6MPS')
 
 
-def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool=True) -> ([str], [str], str):
+def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([str], [str], str):
     """Sanitize wxData
     We can remove and identify "one-off" elements and fix other issues before parsing a line
     We also return the runway visibility and wind shear since they are very easy to recognize
@@ -242,7 +242,7 @@ def is_not_tempo_or_prob(report_type: str) -> bool:
     return report_type != 'TEMPO' and not (len(report_type) == 6 and report_type.startswith('PROB'))
 
 
-def get_altimeter(wxdata: [str], units: {str: str}, version: str='NA') -> ([str], {str: str}, str):
+def get_altimeter(wxdata: [str], units: {str: str}, version: str = 'NA') -> ([str], {str: str}, str):
     """Returns the report list and the removed altimeter item
     Version is 'NA' (North American / default) or 'IN' (International)
     """

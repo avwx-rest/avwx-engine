@@ -31,7 +31,7 @@ def remove_leading_zeros(num: str) -> str:
     return ret if ret else '0'
 
 
-def wind(wdir: str, wspd: str, wgst: str, wvar: [str]=None, unit: str='kt') -> str:
+def wind(wdir: str, wspd: str, wgst: str, wvar: [str] = None, unit: str = 'kt') -> str:
     """Format wind details into a spoken word string"""
     if unit in SPOKEN_UNITS:
         unit = SPOKEN_UNITS[unit]
@@ -45,7 +45,7 @@ def wind(wdir: str, wspd: str, wgst: str, wvar: [str]=None, unit: str='kt') -> s
                                      unit, cardinals=False)
 
 
-def temperature(header: str, temp: str, unit: str='C') -> str:
+def temperature(header: str, temp: str, unit: str = 'C') -> str:
     """Format temperature details into a spoken word string"""
     if core.is_unknown(temp):
         return header + ' Unknown'
@@ -63,11 +63,10 @@ def unpack_fraction(num: str) -> str:
         over = nums[0] // nums[1]
         rem = nums[0] % nums[1]
         return '{} {}/{}'.format(over, rem, nums[1])
-    else:
-        return num
+    return num
 
 
-def visibility(vis: str, unit: str='m') -> str:
+def visibility(vis: str, unit: str = 'm') -> str:
     """Format visibility details into a spoken word string"""
     if core.is_unknown(vis):
         return 'Visibility Unknown'
@@ -94,7 +93,7 @@ def visibility(vis: str, unit: str='m') -> str:
     return ret
 
 
-def altimeter(alt: str, unit: str='inHg') -> str:
+def altimeter(alt: str, unit: str = 'inHg') -> str:
     """Format altimeter details into a spoken word string"""
     ret = 'Altimeter '
     if core.is_unknown(alt):

@@ -5,16 +5,6 @@ AVWX-Engine : avwx/static.py
 Contains static objects for internal and external use
 """
 
-# NOAA ADDS API endpoint for METAR and TAF reports
-REQUEST_URL = (
-    "https://aviationweather.gov/adds/dataserver_current/httpparam"
-    "?dataSource={0}s"
-    "&requestType=retrieve"
-    "&format=XML"
-    "&stationString={1}"
-    "&hoursBeforeNow=2"
-)
-
 # Station Location Identifiers (first character)
 NA_REGIONS = ['C', 'K', 'P', 'T']
 IN_REGIONS = ['A', 'B', 'D', 'E', 'F', 'G', 'H', 'L', 'N', 'O', 'R', 'S', 'U', 'V', 'W', 'Y', 'Z']

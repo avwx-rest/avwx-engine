@@ -6,63 +6,17 @@ Contains METAR-specific functions for fetching and parsing
 """
 
 # stdlib
-import json
 from copy import copy
-# library
-from requests import get
-from xmltodict import parse as parsexml
 # module
-import avwx.core as core
-from avwx.exceptions import InvalidRequest
-from avwx.static import REQUEST_URL, NA_UNITS, IN_UNITS, FLIGHT_RULES
-
+from avwx import core, service
+from avwx.static import NA_UNITS, IN_UNITS, FLIGHT_RULES
 
 def fetch(station: str) -> str:
     """Get METAR report for 'station' from www.aviationweather.gov
     Returns METAR report string or raises an error
-    fetch pulls from the ADDS API and is 3x faster than fetch2
+    Maintains backwards compatability but uses the new AddsRequest object
     """
-    core.valid_station(station)
-    xml = get(REQUEST_URL.format('metar', station)).text
-    resp = parsexml(xml)
-    resp_str = json.dumps(resp)
-    for word in ['response', 'data', 'METAR', station]:
-        if word not in resp_str:
-            raise InvalidRequest(
-                'Could not find "{}" in NOAA response\n{}'.format(word, json.dumps(resp, indent=4))
-            )
-    resp = json.loads(resp_str)['response']['data']['METAR']
-    if isinstance(resp, dict):
-        return resp['raw_text']
-    elif isinstance(resp, list) and resp:
-        return resp[0]['raw_text']
-    else:
-        raise InvalidRequest(
-            'Could not find "raw_text" in NOAA response\n{}'.format(json.dumps(resp, indent=4))
-        )
-
-
-def fetch2(station: str) -> str:
-    """Get METAR report for 'station' from www.aviationweather.gov
-    Returns METAR report string or raises an error
-    fetch2 scrapes the report from html
-    """
-    core.valid_station(station)
-    url = (
-        "http://www.aviationweather.gov/metar/data"
-        "?ids={}"
-        "&format=raw"
-        "&date=0"
-        "&hours=0"
-    ).format(station)
-    html = get(url).text
-    if station + '<' in html:
-        raise InvalidRequest('Station does not exist/Database lookup error')
-    #Report begins with station iden
-    start = html.find('<code>' + station + ' ') + 6
-    #Report ends with html bracket
-    end = html[start:].find('<')
-    return html[start:start + end].replace('\n ', '')
+    return service.get_service(station)('metar').fetch(station)
 
 
 def parse(station: str, txt: str) -> {str: object}:

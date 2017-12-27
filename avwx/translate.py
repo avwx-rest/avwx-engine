@@ -52,7 +52,7 @@ def get_cardinal_direction(wdir: str) -> str:
     return ret
 
 
-def wind(wdir: str, wspd: str, wgst: str, wvar: [str]=None, unit: str='kt', cardinals=True) -> str:
+def wind(wdir: str, wspd: str, wgst: str, wvar: [str] = None, unit: str = 'kt', cardinals: bool = True) -> str:
     """Format wind elements into a readable sentence
     Returns the translation string
     Ex: NNE-020 (variable 010 to 040) at 14kt gusting to 20kt
@@ -77,7 +77,7 @@ def wind(wdir: str, wspd: str, wgst: str, wvar: [str]=None, unit: str='kt', card
     return ret
 
 
-def visibility(vis: str, unit: str='m') -> str:
+def visibility(vis: str, unit: str = 'm') -> str:
     """Formats a visibility element into a string with both km and sm values
     Ex: 8km ( 5sm )
     """
@@ -105,7 +105,7 @@ def visibility(vis: str, unit: str='m') -> str:
     return vis + unit + ' (' + converted + ')'
 
 
-def temperature(temp: str, unit: str='C') -> str:
+def temperature(temp: str, unit: str = 'C') -> str:
     """Formats a temperature element into a string with both C and F values
     Used for both Temp and Dew
     Ex: 34C (93F)
@@ -127,7 +127,7 @@ def temperature(temp: str, unit: str='C') -> str:
     return temp + unit + ' (' + converted + ')'
 
 
-def altimeter(alt: str, unit: str='hPa') -> str:
+def altimeter(alt: str, unit: str = 'hPa') -> str:
     """Formats the altimter element into a string with hPa and inHg values
     Ex: 30.11 inHg (10.20 hPa)
     """
@@ -148,7 +148,7 @@ def altimeter(alt: str, unit: str='hPa') -> str:
     return alt + unit + ' (' + converted + ')'
 
 
-def clouds(clds: [str], unit: str='ft') -> str:
+def clouds(clds: [str], unit: str = 'ft') -> str:
     """Format cloud list into a readable sentence
     Returns the translation string
     Ex: Broken layer at 2200ft (Cumulonimbus), Overcast layer at 3600ft - Reported AGL
@@ -200,7 +200,7 @@ def other_list(wxcodes: [str]) -> str:
     return ', '.join(ret)
 
 
-def wind_shear(shear: str, unit_alt: str='ft', unit_wnd: str='kt') -> str:
+def wind_shear(shear: str, unit_alt: str = 'ft', unit_wnd: str = 'kt') -> str:
     """Translate wind shear into a readable string
     Ex: Wind shear 2000ft from 140 at 30kt
     """
@@ -212,7 +212,7 @@ def wind_shear(shear: str, unit_alt: str='ft', unit_wnd: str='kt') -> str:
         speed=shear[1][3:], unit_wind=unit_wnd)
 
 
-def turb_ice(turbice: [str], unit: str='ft') -> str:
+def turb_ice(turbice: [str], unit: str = 'ft') -> str:
     """Translate the list of turbulance or icing into a readable sentence
     Ex: Occasional moderate turbulence in clouds from 3000ft to 14000ft
     """
@@ -242,7 +242,7 @@ def turb_ice(turbice: [str], unit: str='ft') -> str:
         high_alt=int(item[1]) * 100 + int(item[2]) * 1000, unit=unit) for item in split])
 
 
-def min_max_temp(temp: str, unit: str='C') -> str:
+def min_max_temp(temp: str, unit: str = 'C') -> str:
     """Format the Min and Max temp elemets into a readable string
     Ex: Maximum temperature of 23C (73F) at 18-15:00Z
     """

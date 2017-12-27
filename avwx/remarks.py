@@ -8,7 +8,7 @@ Contains functions for handling and translating remarks
 from avwx.static import PRESSURE_TENDENCIES, REMARKS_ELEMENTS, REMARKS_GROUPS, WX_TRANSLATIONS
 
 
-def _tdec(code: str, unit: str='C') -> str:
+def _tdec(code: str, unit: str = 'C') -> str:
     """Translates a 4-digit decimal temperature representation
     Ex: 1045 -> -04.5°C    0237 -> 23.7°C
     """
@@ -21,7 +21,7 @@ def temp_minmax(code: str) -> str:
     return f'6-hour {label} temperature {_tdec(code[1:])}'
 
 
-def pressure_tendency(code: str, unit: str='mb') -> str:
+def pressure_tendency(code: str, unit: str = 'mb') -> str:
     """Translates a 5-digit pressure outlook code
     Ex: 50123 -> 12.3 mb: Increasing, then decreasing
     """
@@ -30,18 +30,18 @@ def pressure_tendency(code: str, unit: str='mb') -> str:
             f'{width}.{precision} {unit} - {PRESSURE_TENDENCIES[code[1]]}')
 
 
-def precip_36(code: str, unit: str='in') -> str:
+def precip_36(code: str, unit: str = 'in') -> str:
     """Translates a 5-digit 3 and 6-hour precipitation code"""
     return ('Precipitation in the last 3 hours: '
             f'{int(code[1:3])} {unit}. - 6 hours: {int(code[3:])} {unit}.')
 
 
-def precip_24(code: str, unit: str='in') -> str:
+def precip_24(code: str, unit: str = 'in') -> str:
     """Translates a 5-digit 24-hour precipitation code"""
     return f'Precipitation in the last 24 hours: {int(code[1:])} {unit}.'
 
 
-def sunshine_duration(code: str, unit: str='minutes') -> str:
+def sunshine_duration(code: str, unit: str = 'minutes') -> str:
     """Translates a 5-digit sunlight duration code"""
     return f'Duration of sunlight: {int(code[1:])} {unit}'
 

@@ -6,71 +6,21 @@ Contains TAF-specific functions for fetching and parsing
 """
 
 # stdlib
-import json
 from copy import copy
-# library
-from requests import get
-from xmltodict import parse as parsexml
 # module
-from avwx import core
-from avwx.exceptions import InvalidRequest
-from avwx.static import REQUEST_URL, NA_UNITS, IN_UNITS, TAF_RMK, TAF_NEWLINE
+from avwx import core, service
+from avwx.static import NA_UNITS, IN_UNITS, TAF_RMK, TAF_NEWLINE
 
 
 def fetch(station: str) -> str:
     """Get TAF report for 'station' from www.aviationweather.gov
     Returns TAF report string or raises an error
-    fetch pulls from the ADDS API and is 3x faster than fetch2
+    Maintains backwards compatability but uses the new AddsRequest object
     """
-    core.valid_station(station)
-    xml = get(REQUEST_URL.format('taf', station)).text
-    resp = parsexml(xml)
-    resp_str = json.dumps(resp)
-    for word in ['response', 'data', 'TAF', station]:
-        if word not in resp_str:
-            raise InvalidRequest(
-                'Could not find "{}" in NOAA response\n{}'.format(word, json.dumps(resp, indent=4))
-            )
-    resp = json.loads(resp_str)['response']['data']['TAF']
-    if isinstance(resp, dict):
-        return resp['raw_text']
-    elif isinstance(resp, list) and resp:
-        return resp[0]['raw_text']
-    else:
-        raise InvalidRequest(
-            'Could not find "raw_text" in NOAA response\n{}'.format(json.dumps(resp, indent=4))
-        )
+    return service.get_service(station)('taf').fetch(station)
 
 
-def fetch2(station: str) -> str:
-    """Get TAF report for 'station' from www.aviationweather.gov
-    Returns METAR report string or raises an error
-    fetch2 scrapes the report from html
-    """
-    core.valid_station(station)
-    url = (
-        "http://www.aviationweather.gov/taf/data"
-        "?ids={}"
-        "&format=raw"
-        "&submit=Get+TAF+data"
-    ).format(station)
-    html = get(url).text
-    if station + '<' in html:
-        raise InvalidRequest('Station does not exist/Database lookup error')
-    # Standard report begins with 'TAF'
-    start = html.find('<code>TAF ') + 6
-    # US report begins with station iden
-    if start == 5:
-        start = html.find('<code>' + station + ' ') + 6
-    # Beginning of report is non-standard/skewed
-    if start == 5:
-        raise InvalidRequest('Request response was not able to be isolated')
-    # Report ends with html bracket
-    end = html[start:].find('</code>')
-    return html[start:start + end].replace('\n ', '')
-
-
-def parse(station: str, txt: str, delim: str='<br/>&nbsp;&nbsp;') -> {str: object}:
+def parse(station: str, txt: str, delim: str = '<br/>&nbsp;&nbsp;') -> {str: object}:
     """Returns a dictionary of parsed TAF data
     'delim' is the divider between forecast lines. Ex: aviationweather.gov uses '<br/>&nbsp;&nbsp;'
     Keys: Station, Time, Forecast, Remarks, Min-Temp, Max-Temp, Raw-Report, Units
