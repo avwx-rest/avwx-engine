@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'AVWX'
-copyright = '2017, Michael duPont'
+copyright = '2018, Michael duPont'
 author = 'Michael duPont'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -164,6 +164,3 @@ texinfo_documents = [
      author, 'AVWX', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
