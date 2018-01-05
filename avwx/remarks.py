@@ -87,7 +87,7 @@ def translate(remarks: str) -> {str: str}:
                 ret[rmk] = LEN5_DECODE[rmk[0]](rmk)
             # 24-hour min/max temperature
             elif rlen == 9:
-                ret[rmk] = f'24-hour temperature: max {_tdec(rmk[1:5])} min {_tdec(rmk[1:5])}'
+                ret[rmk] = f'24-hour temperature: max {_tdec(rmk[1:5])} min {_tdec(rmk[5:])}'
         # Sea level pressure: SLP218
         elif rmk.startswith('SLP'):
             ret[rmk] = f'Sea level pressure: 10{rmk[3:5]}.{rmk[5]} hPa'
