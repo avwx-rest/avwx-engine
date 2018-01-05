@@ -1,7 +1,4 @@
 """
-Michael duPont - michael@mdupont.com
-AVWX-Engine : avwx/static.py
-
 Contains static objects for internal and external use
 """
 
@@ -40,6 +37,7 @@ WX_TRANSLATIONS = {
     'BC': 'Patchy',
     'BL': 'Blowing',
     'BR': 'Mist',
+    'DR': 'Low Drifting',
     'DS': 'Duststorm',
     'DU': 'Wide Dust',
     'DZ': 'Drizzle',
@@ -55,6 +53,7 @@ WX_TRANSLATIONS = {
     'PL': 'Ice Pellets',
     'PO': 'Dust Whirls',
     'PR': 'Partial',
+    'PY': 'Spray',
     'RA': 'Rain',
     'SA': 'Sand',
     'SG': 'Snow Grains',

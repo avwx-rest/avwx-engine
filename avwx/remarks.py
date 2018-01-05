@@ -1,7 +1,4 @@
 """
-Michael duPont - michael@mdupont.com
-AVWX-Engine : avwx/remarks.py
-
 Contains functions for handling and translating remarks
 """
 
@@ -9,20 +6,26 @@ from avwx.static import PRESSURE_TENDENCIES, REMARKS_ELEMENTS, REMARKS_GROUPS, W
 
 
 def _tdec(code: str, unit: str = 'C') -> str:
-    """Translates a 4-digit decimal temperature representation
+    """
+    Translates a 4-digit decimal temperature representation
+
     Ex: 1045 -> -04.5°C    0237 -> 23.7°C
     """
     return f"{'-' if code[0] == '1' else ''}{int(code[1:3])}.{code[3]}°{unit}"
 
 
 def temp_minmax(code: str) -> str:
-    """Translates a 5-digit min/max temperature code"""
+    """
+    Translates a 5-digit min/max temperature code
+    """
     label = 'maximum' if code[0] == '1' else 'minimum'
     return f'6-hour {label} temperature {_tdec(code[1:])}'
 
 
 def pressure_tendency(code: str, unit: str = 'mb') -> str:
-    """Translates a 5-digit pressure outlook code
+    """
+    Translates a 5-digit pressure outlook code
+
     Ex: 50123 -> 12.3 mb: Increasing, then decreasing
     """
     width, precision = int(code[2:4]), code[4]
@@ -31,18 +34,24 @@ def pressure_tendency(code: str, unit: str = 'mb') -> str:
 
 
 def precip_36(code: str, unit: str = 'in') -> str:
-    """Translates a 5-digit 3 and 6-hour precipitation code"""
+    """
+    Translates a 5-digit 3 and 6-hour precipitation code
+    """
     return ('Precipitation in the last 3 hours: '
             f'{int(code[1:3])} {unit}. - 6 hours: {int(code[3:])} {unit}.')
 
 
 def precip_24(code: str, unit: str = 'in') -> str:
-    """Translates a 5-digit 24-hour precipitation code"""
+    """
+    Translates a 5-digit 24-hour precipitation code
+    """
     return f'Precipitation in the last 24 hours: {int(code[1:])} {unit}.'
 
 
 def sunshine_duration(code: str, unit: str = 'minutes') -> str:
-    """Translates a 5-digit sunlight duration code"""
+    """
+    Translates a 5-digit sunlight duration code
+    """
     return f'Duration of sunlight: {int(code[1:])} {unit}'
 
 
@@ -57,8 +66,8 @@ LEN5_DECODE = {
 
 
 def translate(remarks: str) -> {str: str}:
-    """Translates elements in the remarks string
-    Initially sourced from http://www.dixwx.com/wxdecoding.htm#qual
+    """
+    Translates elements in the remarks string
     """
     ret = {}
     # Add and replace static multi-word elements

@@ -1,13 +1,12 @@
 """
-Michael duPont - michael@mdupont.com
-AVWX-Engine : avwx/summary.py
-
 Contains functions for combining translations into a summary string
 """
 
 
 def metar(trans: {str: object}) -> str:
-    """Condense the translation strings into a single report summary string"""
+    """
+    Condense the translation strings into a single report summary string
+    """
     summary = []
     if 'Wind' in trans and trans['Wind']:
         summary.append('Winds ' + trans['Wind'])
@@ -27,7 +26,9 @@ def metar(trans: {str: object}) -> str:
 
 
 def taf(trans: {str: object}) -> str:
-    """Condense the translation strings into a single forecast summary string"""
+    """
+    Condense the translation strings into a single forecast summary string
+    """
     summary = []
     if 'Wind' in trans and trans['Wind']:
         summary.append('Winds ' + trans['Wind'])

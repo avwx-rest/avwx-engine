@@ -1,7 +1,4 @@
 """
-Michael duPont - michael@mdupont.com
-AVWX-Engine : avwx/metar.py
-
 Contains METAR-specific functions for fetching and parsing
 """
 
@@ -12,18 +9,21 @@ from avwx import core, service
 from avwx.static import NA_UNITS, IN_UNITS, FLIGHT_RULES
 
 def fetch(station: str) -> str:
-    """Get METAR report for 'station' from www.aviationweather.gov
+    """
     Returns METAR report string or raises an error
-    Maintains backwards compatability but uses the new AddsRequest object
+    
+    Maintains backwards compatability but uses the new Request object
     """
     return service.get_service(station)('metar').fetch(station)
 
 
 def parse(station: str, txt: str) -> {str: object}:
     """Returns a dictionary of parsed METAR data
+
     Keys: Station, Time, Wind-Direction, Wind-Speed, Wind-Gust, Wind-Variable-Dir,
           Visibility, Runway-Vis-List, Altimeter, Temperature, Dewpoint,
-          Cloud-List, Other-List, Remarks, Raw-Report, Units
+          Cloud-List, Other-List, Remarks, Units
+
     Units is dict of identified units of measurement for each field
     """
     core.valid_station(station)
@@ -31,9 +31,11 @@ def parse(station: str, txt: str) -> {str: object}:
 
 
 def parse_na(txt: str) -> {str: object}:
-    """Parser for the North American METAR variant"""
+    """
+    Parser for the North American METAR variant
+    """
     units = copy(NA_UNITS)
-    wxresp = {'Raw-Report': txt}
+    wxresp = {}
     txt = core.sanitize_report_string(txt)
     wxdata, wxresp['Remarks'] = core.get_remarks(txt)
     wxdata, wxresp['Runway-Vis-List'], _ = core.sanitize_report_list(wxdata)
@@ -52,9 +54,11 @@ def parse_na(txt: str) -> {str: object}:
 
 
 def parse_in(txt: str) -> {str: object}:
-    """Parser for the International METAR variant"""
+    """
+    Parser for the International METAR variant
+    """
     units = copy(IN_UNITS)
-    wxresp = {'Raw-Report': txt}
+    wxresp = {}
     txt = core.sanitize_report_string(txt)
     wxdata, wxresp['Remarks'] = core.get_remarks(txt)
     wxdata, wxresp['Runway-Vis-List'], _ = core.sanitize_report_list(wxdata)

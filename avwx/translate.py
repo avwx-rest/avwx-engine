@@ -1,7 +1,4 @@
 """
-Michael duPont - michael@mdupont.com
-AVWX-Engine : avwx/translate.py
-
 Contains functions for translating report data
 """
 
@@ -11,11 +8,17 @@ from avwx.static import CLOUD_TRANSLATIONS, WX_TRANSLATIONS, \
 
 
 def get_cardinal_direction(wdir: str) -> str:
-    """Returns the cardinal direction (NSEW) for a degree direction
-    Wind Direction - Cheat Sheet
+    """
+    Returns the cardinal direction (NSEW) for a degree direction
+
+    Wind Direction - Cheat Sheet:
+
     (360) -- 011/012 -- 033/034 -- (045) -- 056/057 -- 078/079 -- (090)
+
     (090) -- 101/102 -- 123/124 -- (135) -- 146/147 -- 168/169 -- (180)
+
     (180) -- 191/192 -- 213/214 -- (225) -- 236/237 -- 258/259 -- (270)
+
     (270) -- 281/282 -- 303/304 -- (315) -- 326/327 -- 348/349 -- (360)
     """
     ret = ''
@@ -53,8 +56,11 @@ def get_cardinal_direction(wdir: str) -> str:
 
 
 def wind(wdir: str, wspd: str, wgst: str, wvar: [str] = None, unit: str = 'kt', cardinals: bool = True) -> str:
-    """Format wind elements into a readable sentence
+    """
+    Format wind elements into a readable sentence
+
     Returns the translation string
+
     Ex: NNE-020 (variable 010 to 040) at 14kt gusting to 20kt
     """
     ret = ''
@@ -78,7 +84,9 @@ def wind(wdir: str, wspd: str, wgst: str, wvar: [str] = None, unit: str = 'kt', 
 
 
 def visibility(vis: str, unit: str = 'm') -> str:
-    """Formats a visibility element into a string with both km and sm values
+    """
+    Formats a visibility element into a string with both km and sm values
+
     Ex: 8km ( 5sm )
     """
     if vis == 'P6':
@@ -106,8 +114,11 @@ def visibility(vis: str, unit: str = 'm') -> str:
 
 
 def temperature(temp: str, unit: str = 'C') -> str:
-    """Formats a temperature element into a string with both C and F values
+    """
+    Formats a temperature element into a string with both C and F values
+
     Used for both Temp and Dew
+
     Ex: 34C (93F)
     """
     temp = temp.replace('M', '-')
@@ -128,7 +139,9 @@ def temperature(temp: str, unit: str = 'C') -> str:
 
 
 def altimeter(alt: str, unit: str = 'hPa') -> str:
-    """Formats the altimter element into a string with hPa and inHg values
+    """
+    Formats the altimter element into a string with hPa and inHg values
+
     Ex: 30.11 inHg (10.20 hPa)
     """
     if not alt.isdigit():
@@ -149,8 +162,11 @@ def altimeter(alt: str, unit: str = 'hPa') -> str:
 
 
 def clouds(clds: [str], unit: str = 'ft') -> str:
-    """Format cloud list into a readable sentence
+    """
+    Format cloud list into a readable sentence
+
     Returns the translation string
+
     Ex: Broken layer at 2200ft (Cumulonimbus), Overcast layer at 3600ft - Reported AGL
     """
     ret = []
@@ -167,7 +183,9 @@ def clouds(clds: [str], unit: str = 'ft') -> str:
 
 
 def wxcode(wxstr: str) -> str:
-    """Translates weather codes into readable strings
+    """
+    Translates weather codes into readable strings
+
     Returns translated string of variable length
     """
     if wxstr[0] == '+':
@@ -191,7 +209,9 @@ def wxcode(wxstr: str) -> str:
 
 
 def other_list(wxcodes: [str]) -> str:
-    """Translate the list of wx codes (otherList) into a readable sentence
+    """
+    Translate the list of wx codes (otherList) into a readable sentence
+
     Returns the translation string
     """
     ret = []
@@ -201,7 +221,9 @@ def other_list(wxcodes: [str]) -> str:
 
 
 def wind_shear(shear: str, unit_alt: str = 'ft', unit_wnd: str = 'kt') -> str:
-    """Translate wind shear into a readable string
+    """
+    Translate wind shear into a readable string
+
     Ex: Wind shear 2000ft from 140 at 30kt
     """
     if not shear or 'WS' not in shear or '/' not in shear:
@@ -213,7 +235,9 @@ def wind_shear(shear: str, unit_alt: str = 'ft', unit_wnd: str = 'kt') -> str:
 
 
 def turb_ice(turbice: [str], unit: str = 'ft') -> str:
-    """Translate the list of turbulance or icing into a readable sentence
+    """
+    Translate the list of turbulance or icing into a readable sentence
+
     Ex: Occasional moderate turbulence in clouds from 3000ft to 14000ft
     """
     if not turbice:
@@ -243,7 +267,9 @@ def turb_ice(turbice: [str], unit: str = 'ft') -> str:
 
 
 def min_max_temp(temp: str, unit: str = 'C') -> str:
-    """Format the Min and Max temp elemets into a readable string
+    """
+    Format the Min and Max temp elemets into a readable string
+
     Ex: Maximum temperature of 23C (73F) at 18-15:00Z
     """
     if not temp or len(temp) < 7:
@@ -262,7 +288,9 @@ def min_max_temp(temp: str, unit: str = 'C') -> str:
 
 
 def shared(wxdata: [str], units: {str: str}) -> {str: str}:
-    """Translate Visibility, Altimeter, Clouds, and Other"""
+    """
+    Translate Visibility, Altimeter, Clouds, and Other
+    """
     translations = {}
     translations['Visibility'] = visibility(wxdata['Visibility'], units['Visibility'])
     translations['Altimeter'] = altimeter(wxdata['Altimeter'], units['Altimeter'])
@@ -272,7 +300,9 @@ def shared(wxdata: [str], units: {str: str}) -> {str: str}:
 
 
 def metar(wxdata: {str: object}) -> {str: str}:
-    """Translate the results of metar.parse
+    """
+    Translate the results of metar.parse
+
     Keys: Wind, Visibility, Clouds, Temperature, Dewpoint, Altimeter, Other
     """
     units = wxdata['Units']
@@ -287,8 +317,11 @@ def metar(wxdata: {str: object}) -> {str: str}:
 
 
 def taf(wxdata: {str: object}) -> {str: str}:
-    """Translate the results of taf.parse
+    """
+    Translate the results of taf.parse
+
     Keys: Forecast, Min-Temp, Max-Temp
+
     Forecast keys: Wind, Visibility, Clouds, Altimeter, Wind-Shear, Turbulance, Icing, Other
     """
     translations = {'Forecast': []}

@@ -1,7 +1,4 @@
 """
-Michael duPont - michael@mdupont.com
-AVWX-Engine : avwx/service.py
-
 Classes for retrieving raw report strings
 """
 
@@ -13,7 +10,9 @@ from avwx.core import valid_station
 from avwx.exceptions import InvalidRequest
 
 class Service(object):
-    """Base Service class for fetching reports"""
+    """
+    Base Service class for fetching reports
+    """
 
     # Service URL must accept report type and station via .format()
     url: str = None
@@ -22,23 +21,31 @@ class Service(object):
         self.rtype = request_type
 
     def make_err(self, body: str, key: str = 'report path') -> InvalidRequest:
-        """Returns an InvalidRequest exception with formatted error message"""
+        """
+        Returns an InvalidRequest exception with formatted error message
+        """
         msg = f'Could not find {key} in {self.__class__.__name__} response\n'
         return InvalidRequest(msg + body)
 
     def _extract(self, raw: str) -> str:
-        """Extracts report from response. Not implemented"""
+        """
+        Extracts report from response. Implemented by child classes
+        """
         raise NotImplementedError()
 
     def fetch(self, station: str) -> str:
-        """Fetches a report string from the service"""
+        """
+        Fetches a report string from the service
+        """
         valid_station(station)
         resp = requests.get(self.url.format(self.rtype, station)).text
         return self._extract(resp)
 
 
 class NOAA(Service):
-    """Requests data from NOAA ADDS"""
+    """
+    Requests data from NOAA ADDS
+    """
 
     url = (
         'https://aviationweather.gov/adds/dataserver_current/httpparam'
@@ -50,7 +57,9 @@ class NOAA(Service):
     )
 
     def _extract(self, raw: str) -> str:
-        """Extracts the raw_report element from XML response"""
+        """
+        Extracts the raw_report element from XML response
+        """
         resp = parsexml(raw)
         try:
             report = resp['response']['data'][self.rtype.upper()]
@@ -65,12 +74,16 @@ class NOAA(Service):
 
 
 class AMO(Service):
-    """Requests data from AMO KMA for Korean stations"""
+    """
+    Requests data from AMO KMA for Korean stations
+    """
 
     url = 'http://amoapi.kma.go.kr/amoApi/{0}?icao={1}'
 
     def _extract(self, raw: str) -> str:
-        """Extracts the report message from XML response"""
+        """
+        Extracts the report message from XML response
+        """
         resp = parsexml(raw)
         try:
             report = resp['response']['body']['items']['item'][self.rtype.lower() + 'Msg']
@@ -90,8 +103,8 @@ PREFERRED = {
 
 
 def get_service(station: str) -> Service:
-    """Returns the preferred service for a given station if available
-    Defaults to NOAA
+    """
+    Returns the preferred service for a given station
     """
     for prefix in PREFERRED:
         if station.startswith(prefix):

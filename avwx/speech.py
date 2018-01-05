@@ -1,25 +1,30 @@
 """
-Michael duPont - michael@mdupont.com
-AVWX-Engine : avwx/speech.py
-
 Contains functions for converting translations into a speech string
 Currently only supports METAR
 """
 
+# stdlib
+from copy import deepcopy
+# module
 from avwx import core, translate
 from avwx.static import SPOKEN_UNITS, NUMBER_REPL, FRACTIONS
 
 
 def numbers(num: str) -> str:
-    """Returns the spoken version of a number
-    Ex: 1.2 -> one point two"""
+    """
+    Returns the spoken version of a number
+
+    Ex: 1.2 -> one point two
+    """
     if num in FRACTIONS:
         return FRACTIONS[num]
-    return ' '.join([NUMBER_REPL[char] for char in num])
+    return ' '.join([NUMBER_REPL[char] for char in num if char in NUMBER_REPL])
 
 
 def remove_leading_zeros(num: str) -> str:
-    """Strips zeros while handling -, M, and empty strings"""
+    """
+    Strips zeros while handling -, M, and empty strings
+    """
     if not num:
         return num
     if num.startswith('M'):
@@ -32,12 +37,14 @@ def remove_leading_zeros(num: str) -> str:
 
 
 def wind(wdir: str, wspd: str, wgst: str, wvar: [str] = None, unit: str = 'kt') -> str:
-    """Format wind details into a spoken word string"""
+    """
+    Format wind details into a spoken word string
+    """
     if unit in SPOKEN_UNITS:
         unit = SPOKEN_UNITS[unit]
     if wdir not in ('000', 'VRB'):
         wdir = numbers(wdir)
-    wvar = wvar if wvar is not None else []
+    wvar = wvar if not wvar is None else []
     for i, val in enumerate(wvar):
         wvar[i] = numbers(val)
     return 'Winds ' + translate.wind(wdir, remove_leading_zeros(wspd),
@@ -46,7 +53,9 @@ def wind(wdir: str, wspd: str, wgst: str, wvar: [str] = None, unit: str = 'kt') 
 
 
 def temperature(header: str, temp: str, unit: str = 'C') -> str:
-    """Format temperature details into a spoken word string"""
+    """
+    Format temperature details into a spoken word string
+    """
     if core.is_unknown(temp):
         return header + ' Unknown'
     if unit in SPOKEN_UNITS:
@@ -57,7 +66,9 @@ def temperature(header: str, temp: str, unit: str = 'C') -> str:
 
 
 def unpack_fraction(num: str) -> str:
-    """Returns unpacked fraction string 5/2 -> 2 1/2"""
+    """
+    Returns unpacked fraction string 5/2 -> 2 1/2
+    """
     nums = [int(n) for n in num.split('/')]
     if nums[0] > nums[1]:
         over = nums[0] // nums[1]
@@ -67,7 +78,9 @@ def unpack_fraction(num: str) -> str:
 
 
 def visibility(vis: str, unit: str = 'm') -> str:
-    """Format visibility details into a spoken word string"""
+    """
+    Format visibility details into a spoken word string
+    """
     if core.is_unknown(vis):
         return 'Visibility Unknown'
     elif vis.startswith('M'):
@@ -94,7 +107,9 @@ def visibility(vis: str, unit: str = 'm') -> str:
 
 
 def altimeter(alt: str, unit: str = 'inHg') -> str:
-    """Format altimeter details into a spoken word string"""
+    """
+    Format altimeter details into a spoken word string
+    """
     ret = 'Altimeter '
     if core.is_unknown(alt):
         ret += 'Unknown'
@@ -106,7 +121,9 @@ def altimeter(alt: str, unit: str = 'inHg') -> str:
 
 
 def other(wxcodes: [str]) -> str:
-    """Format wx codes into a spoken word string"""
+    """
+    Format wx codes into a spoken word string
+    """
     ret = []
     for item in wxcodes:
         item = translate.wxcode(item)
@@ -117,23 +134,26 @@ def other(wxcodes: [str]) -> str:
 
 
 def metar(wxdata: {str: object}) -> str:
-    """Convert wxdata into a string for text-to-speech"""
+    """
+    Convert wxdata into a string for text-to-speech
+    """
+    _data = deepcopy(wxdata)
+    units = deepcopy(wxdata['Units'])
     speech = []
-    units = wxdata['Units']
-    if wxdata['Wind-Direction'] and wxdata['Wind-Speed']:
-        speech.append(wind(wxdata['Wind-Direction'], wxdata['Wind-Speed'],
-                           wxdata['Wind-Gust'], wxdata['Wind-Variable-Dir'],
+    if _data['Wind-Direction'] and _data['Wind-Speed']:
+        speech.append(wind(_data['Wind-Direction'], _data['Wind-Speed'],
+                           _data['Wind-Gust'], _data['Wind-Variable-Dir'],
                            units['Wind-Speed']))
-    if wxdata['Visibility']:
-        speech.append(visibility(wxdata['Visibility'], units['Visibility']))
-    if wxdata['Temperature']:
-        speech.append(temperature('Temperature', wxdata['Temperature'], units['Temperature']))
-    if wxdata['Dewpoint']:
-        speech.append(temperature('Dew point', wxdata['Dewpoint'], units['Temperature']))
-    if wxdata['Altimeter']:
-        speech.append(altimeter(wxdata['Altimeter'], units['Altimeter']))
-    if wxdata['Other-List']:
-        speech.append(other(wxdata['Other-List']))
-    speech.append(translate.clouds(wxdata['Cloud-List'],
+    if _data['Visibility']:
+        speech.append(visibility(_data['Visibility'], units['Visibility']))
+    if _data['Temperature']:
+        speech.append(temperature('Temperature', _data['Temperature'], units['Temperature']))
+    if _data['Dewpoint']:
+        speech.append(temperature('Dew point', _data['Dewpoint'], units['Temperature']))
+    if _data['Altimeter']:
+        speech.append(altimeter(_data['Altimeter'], units['Altimeter']))
+    if _data['Other-List']:
+        speech.append(other(_data['Other-List']))
+    speech.append(translate.clouds(_data['Cloud-List'],
                                    units['Altitude']).replace(' - Reported AGL', ''))
     return ('. '.join([l for l in speech if l])).replace(',', '.')

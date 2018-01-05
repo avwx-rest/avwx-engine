@@ -1,7 +1,4 @@
 """
-Michael duPont - michael@mdupont.com
-AVWX-Engine : avwx/core.py
-
 Contains the core parsing and indent functions of avwx
 """
 
@@ -15,7 +12,9 @@ from avwx.static import CLOUD_LIST, CLOUD_TRANSLATIONS, METAR_RMK, \
 
 
 def valid_station(station: str):
-    """Checks the validity of station ident and aises BadStation exception if needed
+    """
+    Checks the validity of a station ident
+
     This function doesn't return anything. It merely raises a BadStation error if needed
     """
     station = station.strip()
@@ -25,7 +24,8 @@ def valid_station(station: str):
 
 
 def uses_na_format(station: str) -> bool:
-    """Returns True if the station uses the North American format,
+    """
+    Returns True if the station uses the North American format,
     False if the International format
     """
     if station[0] in NA_REGIONS:
@@ -40,12 +40,16 @@ def uses_na_format(station: str) -> bool:
 
 
 def is_unknown(val: str) -> bool:
-    """Returns True if val contains only '/' characters"""
+    """
+    Returns True if val contains only '/' characters
+    """
     return val == '/' * len(val)
 
 
 def find_first_in_list(txt: str, str_list: [str]) -> int:
-    """Returns the index of the earliest occurence of an item from a list in a string
+    """
+    Returns the index of the earliest occurence of an item from a list in a string
+
     Ex: find_first_in_list('foobar', ['bar', 'fin']) -> 3
     """
     start = len(txt) + 1
@@ -56,7 +60,9 @@ def find_first_in_list(txt: str, str_list: [str]) -> int:
 
 
 def get_remarks(txt) -> ([str], str):
-    """Returns the report split into components and the remarks string
+    """
+    Returns the report split into components and the remarks string
+
     Remarks can include items like RMK and on, NOSIG and on, and BECMG and on
     """
     txt = txt.replace('?', '').strip(' ')
@@ -81,7 +87,9 @@ STR_REPL = {' C A V O K ': ' CAVOK ', '?': ' '}
 
 
 def sanitize_report_string(txt: str) -> str:
-    """Provides sanitization for operations that work better when the report is a string
+    """
+    Provides sanitization for operations that work better when the report is a string
+
     Returns the first pass sanitized report string
     """
     if len(txt) < 4:
@@ -117,7 +125,9 @@ LINE_FIXES = {'TEMP0': 'TEMPO', 'TEMP O': 'TEMPO', 'TMPO': 'TEMPO', 'TE MPO': 'T
 
 
 def sanitize_line(txt: str) -> str:
-    """Fixes common mistakes with 'new line' signifiers so that they can be recognized"""
+    """
+    Fixes common mistakes with 'new line' signifiers so that they can be recognized
+    """
     for key in LINE_FIXES:
         index = txt.find(key)
         if index > -1:
@@ -131,7 +141,9 @@ def sanitize_line(txt: str) -> str:
 
 
 def extra_space_exists(str1: str, str2: str) -> bool:
-    """Return True if a space shouldn't exist between two items"""
+    """
+    Return True if a space shouldn't exist between two items
+    """
     ls1, ls2 = len(str1), len(str2)
     if str1.isdigit():
         # 10 SM
@@ -180,8 +192,11 @@ VIS_PERMUTATIONS.remove('6MPS')
 
 
 def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([str], [str], str):
-    """Sanitize wxData
+    """
+    Sanitize wxData
+
     We can remove and identify "one-off" elements and fix other issues before parsing a line
+
     We also return the runway visibility and wind shear since they are very easy to recognize
     and their location in the report is non-standard
     """
@@ -238,12 +253,16 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
 
 
 def is_not_tempo_or_prob(report_type: str) -> bool:
-    """Returns True if report type is TEMPO or PROB__"""
+    """
+    Returns True if report type is TEMPO or PROB__
+    """
     return report_type != 'TEMPO' and not (len(report_type) == 6 and report_type.startswith('PROB'))
 
 
 def get_altimeter(wxdata: [str], units: {str: str}, version: str = 'NA') -> ([str], {str: str}, str):
-    """Returns the report list and the removed altimeter item
+    """
+    Returns the report list and the removed altimeter item
+
     Version is 'NA' (North American / default) or 'IN' (International)
     """
     if not wxdata:
@@ -272,7 +291,8 @@ def get_altimeter(wxdata: [str], units: {str: str}, version: str = 'NA') -> ([st
 
 
 def get_taf_alt_ice_turb(wxdata: [str]) -> ([str], str, [str], [str]):
-    """Returns the report list and removed: Altimeter string, Icing list, Turbulance list
+    """
+    Returns the report list and removed: Altimeter string, Icing list, Turbulance list
     """
     altimeter = ''
     icing, turbulence = [], []
@@ -288,7 +308,9 @@ def get_taf_alt_ice_turb(wxdata: [str]) -> ([str], str, [str], [str]):
 
 
 def is_possible_temp(temp: str) -> bool:
-    """Returns True if all characters are digits or 'M' (for minus)"""
+    """
+    Returns True if all characters are digits or 'M' (for minus)
+    """
     for char in temp:
         if not (char.isdigit() or char == 'M'):
             return False
@@ -296,7 +318,9 @@ def is_possible_temp(temp: str) -> bool:
 
 
 def get_temp_and_dew(wxdata: str) -> ([str], str, str):
-    """Returns the report list and removed temperature and dewpoint strings"""
+    """
+    Returns the report list and removed temperature and dewpoint strings
+    """
     for i, item in reversed(list(enumerate(wxdata))):
         if '/' in item:
             #///07
@@ -322,7 +346,9 @@ def get_temp_and_dew(wxdata: str) -> ([str], str, str):
 
 
 def get_station_and_time(wxdata: [str]) -> ([str], str, str):
-    """Returns the report list and removed station ident and time strings"""
+    """
+    Returns the report list and removed station ident and time strings
+    """
     station = wxdata.pop(0)
     if wxdata and wxdata[0].endswith('Z') and wxdata[0][:-1].isdigit():
         rtime = wxdata.pop(0)
@@ -334,8 +360,10 @@ def get_station_and_time(wxdata: [str]) -> ([str], str, str):
 
 
 def get_wind(wxdata: [str], units: {str: str}) -> ([str], {str: str}, str, str, str, [str]):
-    """Returns the report list and removed:
-    Direction string, speed string, gust string, variable direction list"""
+    """
+    Returns the report list and removed:
+    Direction string, speed string, gust string, variable direction list
+    """
     direction, speed, gust = '', '', ''
     variable = []
     if wxdata:
@@ -390,7 +418,9 @@ def get_wind(wxdata: [str], units: {str: str}) -> ([str], {str: str}, str, str, 
 
 
 def get_visibility(wxdata: [str], units: {str: str}) -> ([str], {str: str}, str):
-    """Returns the report list and removed visibility string"""
+    """
+    Returns the report list and removed visibility string
+    """
     visibility = ''
     if wxdata:
         item = copy(wxdata[0])
@@ -432,7 +462,8 @@ def get_visibility(wxdata: [str], units: {str: str}) -> ([str], {str: str}, str)
 
 # TAF line report type and start/end times
 def get_type_and_times(wxdata: [str]) -> ([str], str, str, str):
-    """Returns the report list and removed:
+    """
+    Returns the report list and removed:
     Report type string, start time string, end time string
     """
     report_type, start_time, end_time = 'BASE', '', ''
@@ -462,7 +493,9 @@ def get_type_and_times(wxdata: [str]) -> ([str], str, str, str):
 
 
 def find_missing_taf_times(lines: [str]) -> [str]:
-    """Fix any missing time issues (except for error/empty lines)"""
+    """
+    Fix any missing time issues (except for error/empty lines)
+    """
     last_fm_line = 0
     for i, line in enumerate(lines):
         if line['End-Time'] == '' and is_not_tempo_or_prob(line['Type']):
@@ -479,7 +512,8 @@ def find_missing_taf_times(lines: [str]) -> [str]:
 
 
 def get_temp_min_and_max(wxlist: [str]) -> ([str], str, str):
-    """Pull out Max temp at time and Min temp at time items from wx list
+    """
+    Pull out Max temp at time and Min temp at time items from wx list
     """
     temp_max, temp_min = '', ''
     for i, item in reversed(list(enumerate(wxlist))):
@@ -506,7 +540,8 @@ def get_temp_min_and_max(wxlist: [str]) -> ([str], str, str):
 
 
 def get_digit_list(alist: [str], from_index: int) -> ([str], [str]):
-    """Returns a list of items removed from a given list of strings
+    """
+    Returns a list of items removed from a given list of strings
     that are all digits from 'from_index' until hitting a non-digit item
     """
     ret = []
@@ -517,7 +552,9 @@ def get_digit_list(alist: [str], from_index: int) -> ([str], [str]):
 
 
 def get_oceania_temp_and_alt(wxlist: [str]) -> ([str], [str], [str]):
-    """Get Temperature and Altimeter lists for Oceania TAFs"""
+    """
+    Get Temperature and Altimeter lists for Oceania TAFs
+    """
     tlist, qlist = [], []
     if 'T' in wxlist:
         wxlist, tlist = get_digit_list(wxlist, wxlist.index('T'))
@@ -527,7 +564,9 @@ def get_oceania_temp_and_alt(wxlist: [str]) -> ([str], [str], [str]):
 
 
 def sanitize_cloud(cloud: str) -> str:
-    """Fix rare cloud layer issues"""
+    """
+    Fix rare cloud layer issues
+    """
     if len(cloud) < 4:
         return cloud
     if not cloud[3].isdigit() and cloud[3] != '/':
@@ -539,7 +578,9 @@ def sanitize_cloud(cloud: str) -> str:
 
 
 def split_cloud(cloud: str, begins_with_vv: bool) -> [str]:
-    """Transforms a cloud string into a list of strings: [Type, Height (, Optional Modifier)]"""
+    """
+    Transforms a cloud string into a list of strings: [Type, Height (, Optional Modifier)]
+    """
     split = []
     cloud = sanitize_cloud(cloud)
     if begins_with_vv:
@@ -556,7 +597,9 @@ def split_cloud(cloud: str, begins_with_vv: bool) -> [str]:
 
 
 def get_clouds(wxdata: [str]) -> ([str], list):
-    """Returns the report list and removed list of split cloud layers"""
+    """
+    Returns the report list and removed list of split cloud layers
+    """
     clouds = []
     for i, item in reversed(list(enumerate(wxdata))):
         if item[:3] in CLOUD_LIST:
@@ -567,8 +610,11 @@ def get_clouds(wxdata: [str]) -> ([str], list):
 
 
 def get_flight_rules(vis: str, cloud: [str]) -> int:
-    """Returns int based on current flight rules from parsed METAR data
+    """
+    Returns int based on current flight rules from parsed METAR data
+
     0=VFR, 1=MVFR, 2=IFR, 3=LIFR
+
     Note: Common practice is to report IFR if visibility unavailable
     """
     # Parse visibility
@@ -596,7 +642,9 @@ def get_flight_rules(vis: str, cloud: [str]) -> int:
 
 
 def get_taf_flight_rules(lines: [str]) -> [str]:
-    """Get flight rules by looking for missing data in prior reports"""
+    """
+    Get flight rules by looking for missing data in prior reports
+    """
     for i, line in enumerate(lines):
         temp_vis, temp_cloud = line['Visibility'], line['Cloud-List']
         for report in reversed(lines[:i]):
@@ -616,9 +664,13 @@ def get_taf_flight_rules(lines: [str]) -> [str]:
 
 
 def get_ceiling(clouds: [[str]]) -> [str]:
-    """Returns list of ceiling layer from Cloud-List or None if none found
+    """
+    Returns list of ceiling layer from Cloud-List or None if none found
+
     Assumes that the clouds are already sorted lowest to highest
+
     Only 'Broken', 'Overcast', and 'Vertical Visibility' are considdered ceilings
+
     Prevents errors due to lack of cloud information (eg. '' or 'FEW///')
     """
     for cloud in clouds:
@@ -628,7 +680,9 @@ def get_ceiling(clouds: [[str]]) -> [str]:
 
 
 def parse_remarks(rmk: str) -> {str: str}:
-    """Finds temperature and dewpoint decimal values from the remarks"""
+    """
+    Finds temperature and dewpoint decimal values from the remarks
+    """
     rmkdata = {}
     for item in rmk.split(' '):
         if len(item) in [5, 9] and item[0] == 'T' and item[1:].isdigit():

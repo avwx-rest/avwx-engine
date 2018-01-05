@@ -1,7 +1,4 @@
 """
-Michael duPont - michael@mdupont.com
-AVWX-Engine : avwx/taf.py
-
 Contains TAF-specific functions for fetching and parsing
 """
 
@@ -13,26 +10,32 @@ from avwx.static import NA_UNITS, IN_UNITS, TAF_RMK, TAF_NEWLINE
 
 
 def fetch(station: str) -> str:
-    """Get TAF report for 'station' from www.aviationweather.gov
+    """
     Returns TAF report string or raises an error
-    Maintains backwards compatability but uses the new AddsRequest object
+
+    Maintains backwards compatability but uses the new Request object
     """
     return service.get_service(station)('taf').fetch(station)
 
 
 def parse(station: str, txt: str, delim: str = '<br/>&nbsp;&nbsp;') -> {str: object}:
-    """Returns a dictionary of parsed TAF data
+    """
+    Returns a dictionary of parsed TAF data
+
     'delim' is the divider between forecast lines. Ex: aviationweather.gov uses '<br/>&nbsp;&nbsp;'
-    Keys: Station, Time, Forecast, Remarks, Min-Temp, Max-Temp, Raw-Report, Units
+
+    Keys: Station, Time, Forecast, Remarks, Min-Temp, Max-Temp, Units
+
     Oceania stations also have the following keys: Temp-List, Alt-List
+
     Forecast is list of report dicts in order of time with the following keys:
     Type, Start-Time, End-Time, Flight-Rules, Wind-Direction, Wind-Speed, Wind-Gust, Wind-Shear,
     Visibility, Altimeter, Cloud-List, Icing-List, Turb-List, Other-List, Probability, Raw-Line
+
     Units is dict of identified units of measurement for each field
     """
     core.valid_station(station)
     retwx = {}
-    retwx['Raw-Report'] = txt
     while len(txt) > 3 and txt[:4] in ['TAF ', 'AMD ', 'COR ']:
         txt = txt[4:]
     _, retwx['Station'], retwx['Time'] = core.get_station_and_time(txt[:20].split(' '))
@@ -105,7 +108,9 @@ def parse(station: str, txt: str, delim: str = '<br/>&nbsp;&nbsp;') -> {str: obj
 
 
 def parse_na_line(txt: str, units: {str: str}) -> ({str: object}, {str: str}):
-    """Parser for the North American TAF forcast varient"""
+    """
+    Parser for the North American TAF forcast varient
+    """
     retwx = {}
     wxdata = txt.split(' ')
     wxdata, _, retwx['Wind-Shear'] = core.sanitize_report_list(wxdata, remove_clr_and_skc=False)
@@ -120,7 +125,9 @@ def parse_na_line(txt: str, units: {str: str}) -> ({str: object}, {str: str}):
 
 
 def parse_in_line(txt: str, units: {str: str}) -> ({str: object}, {str: str}):
-    """Parser for the North American TAF forcast varient"""
+    """
+    Parser for the North American TAF forcast varient
+    """
     retwx = {}
     wxdata = txt.split(' ')
     wxdata, _, retwx['Wind-Shear'] = core.sanitize_report_list(wxdata, remove_clr_and_skc=False)

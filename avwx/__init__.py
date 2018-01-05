@@ -21,22 +21,26 @@ STATIONS = json.load(open(INFO_PATH))
 
 
 class Report:
-    """Base report to take care of station info"""
+    """
+    Base report to take care of service assignment and station info
+    """
 
-    def __init__(self, station: str, lang: str = None):
+    last_updated: datetime = None
+    raw: str = None
+    data: dict = None
+    translations: dict = None
+    _station_info: dict = None
+
+    def __init__(self, station: str):
         valid_station(station)
         self.service = service.get_service(station)(self.__class__.__name__.lower())
         self.station = station
-        self.lang = lang
-        self.last_updated = None
-        self.raw = None
-        self.data = None
-        self.translations = None
-        self._station_info = None
 
     @property
     def station_info(self):
-        """Provide basic station info with the keys below"""
+        """
+        Provide basic station info
+        """
         if self._station_info is None:
             if not self.station in STATIONS:
                 raise BadStation('Could not find station in the info dict. Check avwx.STATIONS')
@@ -45,15 +49,22 @@ class Report:
         return self._station_info
 
     def update(self, report: str = None) -> bool:
-        """Updates report elements. Not implemented"""
+        """
+        Updates report elements. Not implemented
+        """
         raise NotImplementedError()
 
 
 class Metar(Report):
-    """Class to handle METAR report data"""
+    """
+    Class to handle METAR report data
+    """
 
     def update(self, report: str = None) -> bool:
-        """Updates raw, data, and translations by fetching and parsing the METAR report"""
+        """Updates raw, data, and translations by fetching and parsing the METAR report
+
+        Returns True is a new report is available, else False
+        """
         if report is not None:
             self.raw = report
         else:
@@ -68,24 +79,34 @@ class Metar(Report):
 
     @property
     def summary(self):
-        """Condensed report summary created from translations"""
+        """
+        Condensed report summary created from translations
+        """
         if not self.translations:
             self.update()
         return summary.metar(self.translations)
 
     @property
     def speech(self):
-        """Report summary designed to be read by a text-to-speech program"""
+        """
+        Report summary designed to be read by a text-to-speech program
+        """
         if not self.data:
             self.update()
         return speech.metar(self.data)
 
 
 class Taf(Report):
-    """Class to handle TAF report data"""
+    """
+    Class to handle TAF report data
+    """
 
     def update(self, report: str = None) -> bool:
-        """Updates raw, data, and translations by fetching and parsing the TAF report"""
+        """
+        Updates raw, data, and translations by fetching and parsing the TAF report
+
+        Returns True is a new report is available, else False
+        """
         if report is not None:
             self.raw = report
         else:
@@ -96,10 +117,13 @@ class Taf(Report):
         self.data = taf.parse(self.station, self.raw)
         self.translations = translate.taf(self.data)
         self.last_updated = datetime.utcnow()
+        return True
 
     @property
     def summary(self):
-        """Condensed summary for each forecast created from translations"""
+        """
+        Condensed summary for each forecast created from translations
+        """
         if not self.translations:
             self.update()
         return [summary.taf(trans) for trans in self.translations['Forecast']]
