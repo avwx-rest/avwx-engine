@@ -696,3 +696,50 @@ def parse_remarks(rmk: str) -> {str: str}:
                 elif item[5] == '0':
                     rmkdata['Dew-Decimal'] = item[6].replace('0', '') + item[7] + '.' + item[8]
     return rmkdata
+
+
+def tafDateToDate(tafDate: str):
+    """takes tafDate (str) format %d%H and outputs best guess datetime object
+    assumes tafDate is in the +-5 days within when the function is called"""
+    from datetime import datetime, timedelta
+    dateNow = datetime.now()
+    tafGuess = dateNow.replace(day = int(tafDate[0:2]), hour = int(tafDate[2:4])%24, microsecond=0,second=0,minute=0)
+    #print("time diff of " + str((tafGuess-dateNow ) / timedelta(minutes=1)/60.))
+    if (tafGuess-dateNow ) / timedelta(minutes=1)/60. < -120 or (tafGuess-dateNow ) / timedelta(minutes=1)/60. > 120:
+       if dateNow.month + 1 == 13:
+         tafGuess = dateNow.replace(year = dateNow.year + 1, month = (dateNow.month+1)%12, 
+                                    day = int(tafDate[0:2]), hour = int(tafDate[2:4]), microsecond=0,second=0,minute=0) 
+       elif (tafGuess-dateNow ) / timedelta(minutes=1)/60. > 120. and dateNow.month -1 == 0: 
+         tafGuess = dateNow.replace(year = dateNow.year - 1, month = 12, 
+                                    day = int(tafDate[0:2]), hour = int(tafDate[2:4]), microsecond=0,second=0,minute=0)
+       elif (tafGuess-dateNow ) / timedelta(minutes=1)/60. > 120.: 
+         tafGuess = dateNow.replace(month = (dateNow.month-1)%12, 
+                                    day = int(tafDate[0:2]), hour = int(tafDate[2:4]), microsecond=0,second=0,minute=0)
+       else:
+         tafGuess = dateNow.replace(month=(dateNow.month+1)%12, 
+                                    day = int(tafDate[0:2]), hour = int(tafDate[2:4]), microsecond=0,second=0,minute=0) 
+    return(tafGuess)
+
+
+def metarDateToDate(metarDate: str):
+    """takes metarDate (str) format %d%H%M and outputs best guess datetime object
+    assumes metarDate is in the +-5 days within when the function is called"""
+    from datetime import datetime, timedelta
+    dateNow = datetime.now()
+    tafGuess = dateNow.replace(day = int(metarDate[0:2]), hour = int(metarDate[2:4])%24, 
+                               microsecond=0,second=0,minute=int(metarDate[4:6])%60)
+    #print("time diff of " + str((tafGuess-dateNow ) / timedelta(minutes=1)/60.))
+    if (tafGuess-dateNow ) / timedelta(minutes=1)/60. < -120 or (tafGuess-dateNow ) / timedelta(minutes=1)/60. > 120:
+       if dateNow.month + 1 == 13:
+         tafGuess = dateNow.replace(year = dateNow.year + 1, month = (dateNow.month+1)%12, 
+                                    day = int(metarDate[0:2]), hour = int(metarDate[2:4]), microsecond=0,second=0,minute=int(metarDate[4:6])%60) 
+       elif (tafGuess-dateNow ) / timedelta(minutes=1)/60. > 120. and dateNow.month -1 == 0: 
+         tafGuess = dateNow.replace(year = dateNow.year - 1, month = 12, day = int(metarDate[0:2]), 
+                                    hour = int(metarDate[2:4]), microsecond=0,second=0,minute=int(metarDate[4:6])%60)
+       elif (tafGuess-dateNow ) / timedelta(minutes=1)/60. > 120.: 
+         tafGuess = dateNow.replace(month = (dateNow.month-1)%12, day = int(metarDate[0:2]), 
+                                    hour = int(metarDate[2:4]), microsecond=0,second=0,minute=int(metarDate[4:6])%60)
+       else:
+         tafGuess = dateNow.replace(month=(dateNow.month+1)%12, day = int(metarDate[0:2]), 
+                                    hour = int(metarDate[2:4]), microsecond=0,second=0,minute=int(metarDate[4:6])%60) 
+    return(tafGuess)
