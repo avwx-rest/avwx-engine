@@ -43,13 +43,13 @@ Meteorological Aerodrome Reports (METAR) contain current surface conditions at a
 - Metar objects are initialized with the desired ICAO ident
 - Can optionally provide a language code for translations and summary to be in another supported locale
 
-### avwx.Metar.update(report: str=None) -> bool`
+### avwx.Metar.update(report: str=None) -> bool
 
 - Fetches the current report from NOAA ADDS and parses the result. Populates the `data` and `translations` attributes
 - Returns True if the fetched report has changed, else False
 - Will parse a supplied report if one is given
 
-### avwx.Metar.station_info -> dict`
+### avwx.Metar.station_info -> dict
 
 - Basic information about the station including name, elevation, and coordinates
 - Available without needing to call `.update()`
@@ -101,13 +101,13 @@ Terminal Area Forecasts (TAF) are in-flight 24-hour forecasts for an area within
 - TAF objects are initialized with the desired ICAO ident
 - Can optionally provide a language code for translations and summary to be in another supported locale
 
-### avwx.TAF.update(report: str=None) -> bool`
+### avwx.TAF.update(report: str=None) -> bool
 
 - Fetches the current report from NOAA ADDS and parses the result. Populates the `data` and `translations` attributes
 - Returns True if the fetched report has changed, else False
 - Will parse a supplied report if one is given
 
-### avwx.TAF.station_info -> dict`
+### avwx.TAF.station_info -> dict
 
 - Basic information about the station including name, elevation, and coordinates
 - Available without needing to call `.update()`
