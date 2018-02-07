@@ -174,7 +174,8 @@ REMARKS_ELEMENTS = {
     'PRESFR': 'Pressure Falling Rapidly',
     'PRESRR': 'Pressure Rising Rapidly',
     'PWINO': 'Precipitation identifier information not available',
-    'RVRNO': 'RVR missing',
+    'RVRNO': 'Runway Visual Range missing',
+    'SOG': 'Snow on the ground',
     'TSNO': 'Thunderstorm information not available'
 }
 
