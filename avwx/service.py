@@ -78,7 +78,7 @@ class AMO(Service):
     Requests data from AMO KMA for Korean stations
     """
 
-    url = 'http://amoapi.kma.go.kr/amoApi/{0}?icao={1}'
+    url = 'https://amoapi.kma.go.kr/amoApi/{0}?icao={1}'
 
     def _extract(self, raw: str) -> str:
         """
