@@ -2,14 +2,18 @@
 Contains static objects for internal and external use
 """
 
-# Station Location Identifiers (first character)
+#: Station Location Identifiers - North American formatting
 NA_REGIONS = ['C', 'K', 'P', 'T']
+#: Station Location Identifiers - International formatting
 IN_REGIONS = ['A', 'B', 'D', 'E', 'F', 'G', 'H', 'L', 'N', 'O', 'R', 'S', 'U', 'V', 'W', 'Y', 'Z']
+
 # The Central American region is split. Therefore we need to use the first two letters
+#: Central America Station Location Identifiers - North American formatting
 M_NA_REGIONS = ['MB', 'MM', 'MT', 'MY']
+#: Central America Station Location Identifiers - International formatting
 M_IN_REGIONS = ['MD', 'MG', 'MH', 'MK', 'MN', 'MP', 'MR', 'MS', 'MU', 'MW', 'MZ']
 
-# North American variant units
+#: North American variant units
 NA_UNITS = {
     'Wind-Speed': 'kt',
     'Visibility': 'sm',
@@ -17,7 +21,7 @@ NA_UNITS = {
     'Temperature': 'C',
     'Altimeter': 'inHg'
 }
-# International variant units
+#: International variant units
 IN_UNITS = {
     'Wind-Speed': 'kt',
     'Visibility': 'm',
@@ -26,13 +30,13 @@ IN_UNITS = {
     'Altimeter': 'hPa'
 }
 
-# List of flight rules abreviations
+#: List of flight rules abreviations
 FLIGHT_RULES = ['VFR', 'MVFR', 'IFR', 'LIFR']
 
-# List of cloud layer abreviations
+#: List of cloud layer abreviations
 CLOUD_LIST = ['FEW', 'SCT', 'BKN', 'OVC']
 
-# Dictionary associating WX codes with descriptions
+#: Dictionary associating WX codes with descriptions
 WX_TRANSLATIONS = {
     'BC': 'Patchy',
     'BL': 'Blowing',
@@ -68,7 +72,7 @@ WX_TRANSLATIONS = {
     'VC': 'Vicinity'
 }
 
-# Dictionary associating cloud layer and cloud codes with descriptions
+#: Dictionary associating cloud layer and cloud codes with descriptions
 CLOUD_TRANSLATIONS = {
     'OVC': 'Overcast layer at {0}{1}',
     'BKN': 'Broken layer at {0}{1}',
@@ -93,7 +97,7 @@ CLOUD_TRANSLATIONS = {
     'TCU': 'Towering Cumulus'
 }
 
-# Dictionary associating turbulance report IDs with descriptions
+#: Dictionary associating turbulance report IDs with descriptions
 TURBULANCE_CONDITIONS = {
     '0': 'None',
     '1': 'Light turbulence',
@@ -108,7 +112,7 @@ TURBULANCE_CONDITIONS = {
     'X': 'Extreme turbulence'
 }
 
-# Dictionary associating icing report IDs with descriptions
+#: Dictionary associating icing report IDs with descriptions
 ICING_CONDITIONS = {
     '0': 'No icing',
     '1': 'Light icing',
@@ -122,14 +126,29 @@ ICING_CONDITIONS = {
     '9': 'Severe icing in precipitation'
 }
 
-# Strings signifying the start of the remarks section of a new TAF time period
+#: Dictionary associating pressure change IDs with descriptions
+PRESSURE_TENDENCIES = {
+    '0': 'Increasing, then decreasing',
+    '1': 'Increasing, then steady',
+    '2': 'Increasing steadily or unsteadily',
+    '3': 'Decreasing or steady, then increasing',
+    '4': 'Steady',
+    '5': 'Decreasing, then increasing',
+    '6': 'Decreasing, then steady',
+    '7': 'Decreasing steadily or unsteadily',
+    '8': 'Steady or increasing, then decreasing',
+}
+
+#: Strings signifying the start of the remarks section of a METAR
 METAR_RMK = [' BLU', ' BLU+', ' WHT', ' GRN', ' YLO', ' AMB', ' RED', ' BECMG', ' TEMPO',
              ' INTER', ' NOSIG', ' RMK', ' WIND', ' QFE', ' QFF', ' INFO', ' RWY', ' CHECK']
+#: Strings signifying the start of the remarks section of a TAF
 TAF_RMK = ['RMK ', 'AUTOMATED ', 'COR ', 'AMD ', 'LAST ', 'FCST ',
            'CANCEL ', 'CHECK ', 'WND ', 'MOD ', ' BY', ' QFE', ' QFF']
+#: Strings signifying the start of a new TAF time period
 TAF_NEWLINE = [' INTER ', ' FM', ' BECMG ', ' TEMPO ']
 
-# Units required to be translated in order to be spoken properly
+#: Units required to be translated in order to be spoken properly
 SPOKEN_UNITS = {
     'sm': 'mile',
     'km': 'kilometer',
@@ -137,7 +156,7 @@ SPOKEN_UNITS = {
     'F': 'Fahrenheit'
 }
 
-# Dictionary associating algebraic signs with their spoken version
+#: Dictionary associating algebraic signs with their spoken version
 NUMBER_REPL = {
     '.': 'point',
     '-': 'minus',
@@ -154,14 +173,14 @@ NUMBER_REPL = {
     '9': 'nine'
 }
 
-# Dictionary associating fraction strings with their spoken version
+#: Dictionary associating fraction strings with their spoken version
 FRACTIONS = {
     '1/4': 'one quarter of a',
     '1/2': 'one half',
     '3/4': 'three quarters of a'
 }
 
-# Static remarks translation elements
+#: Static remarks translation elements
 REMARKS_ELEMENTS = {
     '$': 'ASOS requires maintenance',
     'AO1': 'Automated with no precipitation sensor',
@@ -179,19 +198,7 @@ REMARKS_ELEMENTS = {
     'TSNO': 'Thunderstorm information not available'
 }
 
-# Static remarks translation groups
+#: Static remarks translation groups
 REMARKS_GROUPS = {
     ' ACFT MSHP ': 'Aircraft mishap'
-}
-
-PRESSURE_TENDENCIES = {
-    '0': 'Increasing, then decreasing',
-    '1': 'Increasing, then steady',
-    '2': 'Increasing steadily or unsteadily',
-    '3': 'Decreasing or steady, then increasing',
-    '4': 'Steady',
-    '5': 'Decreasing, then increasing',
-    '6': 'Decreasing, then steady',
-    '7': 'Decreasing steadily or unsteadily',
-    '8': 'Steady or increasing, then decreasing',
 }

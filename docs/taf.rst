@@ -6,7 +6,12 @@ TAF
    :maxdepth: 2
    :caption: Contents:
 
-A TAF (Terminal Aerodrome Forecast) is a 24-hour weather forecast for the area 5 statute miles from 
+A TAF (Terminal Aerodrome Forecast) is a 24-hour weather forecast for the area 5 statute miles from the reporting station. They are update once every three or six hours or when significant changes warrent an update, and the observations are valid for six hours or until the next report is issued
+
+Taf Class
+---------
+
+The Taf class offers an object-oriented approach to managing TAF data for a single station.
 
 .. autoclass:: avwx.Taf
   :inherited-members:
@@ -42,3 +47,11 @@ A TAF (Terminal Aerodrome Forecast) is a 24-hour weather forecast for the area 5
   .. method:: speech: str
 
     Report summary designed to be read by a text-to-speech program
+
+Standalone Functions
+--------------------
+
+If you don't need or want the object-oriented handling provided by the Taf class, you can use the core TAF functions directly.
+
+.. automodule:: avwx.taf
+   :members:
