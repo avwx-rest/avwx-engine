@@ -31,7 +31,7 @@ class TestTaf(unittest.TestCase):
         self.assertTrue(lines[4]['Raw-Line'].startswith('PROB30'))
 
     def test_wind_shear(self):
-        """"""
+        """Wind shear should be recognized as its own element in addition to wind"""
         report = ("TAF AMD CYOW 282059Z 2821/2918 09008KT WS015/20055KT P6SM BKN220 "
                   "BECMG 2821/2823 19015G25KT "
                   "FM290300 21013G23KT P6SM -SHRA BKN040 OVC100 "
