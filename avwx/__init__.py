@@ -13,33 +13,47 @@ from os import path
 from avwx import metar, taf, translate, summary, speech, service
 from avwx.core import valid_station
 from avwx.exceptions import BadStation
+from avwx.static import INFO_KEYS
 
-INFO_KEYS = ['ICAO', 'Country', 'State', 'City', 'Name', 'IATA',
-             'Elevation', 'Latitude', 'Longitude', 'Priority']
 INFO_PATH = path.dirname(path.realpath(__file__)) + '/stations.json'
 STATIONS = json.load(open(INFO_PATH))
 
 
-class Report:
+class Report(object):
     """
     Base report to take care of service assignment and station info
     """
 
+    #: UTC Datetime object when the report was last updated
     last_updated: datetime = None
+
+    #: The unparsed report string. Fetched on update()
     raw: str = None
+
+    #: Dictionary of parsed data values and units. Parsed on update()
     data: dict = None
+
+    #: Dictionary of translation strings from data. Parsed on update()
     translations: dict = None
+
     _station_info: dict = None
 
     def __init__(self, station: str):
+        # Raises a BadStation error if needed
         valid_station(station)
+
+        #: Service object used to fetch the report string
         self.service = service.get_service(station)(self.__class__.__name__.lower())
+        
+        #: 4-character ICAO station ident code the report was initialized with
         self.station = station
 
     @property
-    def station_info(self):
+    def station_info(self) -> dict:
         """
         Provide basic station info
+
+        Raises a BadStation exception if the station's info cannot be found
         """
         if self._station_info is None:
             if not self.station in STATIONS:
@@ -78,7 +92,7 @@ class Metar(Report):
         return True
 
     @property
-    def summary(self):
+    def summary(self) -> str:
         """
         Condensed report summary created from translations
         """
@@ -87,7 +101,7 @@ class Metar(Report):
         return summary.metar(self.translations)
 
     @property
-    def speech(self):
+    def speech(self) -> str:
         """
         Report summary designed to be read by a text-to-speech program
         """
@@ -120,7 +134,7 @@ class Taf(Report):
         return True
 
     @property
-    def summary(self):
+    def summary(self) -> str:
         """
         Condensed summary for each forecast created from translations
         """

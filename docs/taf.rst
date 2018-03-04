@@ -14,39 +14,39 @@ Taf Class
 The Taf class offers an object-oriented approach to managing TAF data for a single station.
 
 .. autoclass:: avwx.Taf
-  :inherited-members:
+  :members: update
 
-  .. method:: last_updated: datetime.datetime
+  .. attribute:: data: {str: object}
+
+    Dictionary of parsed data values and units. Parsed on update()
+
+  .. attribute:: last_updated: datetime.datetime
 
     UTC Datetime object when the report was last updated
 
-  .. method:: raw: str
+  .. attribute:: raw: str
 
-    The unparsed report string
+    The unparsed report string. Fetched on update()
 
-  .. method:: data: {str: object}
+  .. attribute:: station: str
 
-    Dictionary of parsed data values and units
+    4-character ICAO station ident code the report was initialized with
 
-  .. method:: translations: {str: object}
+  .. attribute:: service: avwx.service.Service
 
-    Dictionary of element translations
+    Service object used to fetch the report string
 
-  .. method:: station: str
+  .. attribute:: station_info: {str: object}
 
-    Station ICAO the report was initialized with
+    Provide basic station info. Raises a BadStation exception if the station's info cannot be found
 
-  .. method:: service: avwx.service.Service
-
-    Service object used to fetch the report
-
-  .. method:: summary: str
+  .. attribute:: summary: str
 
     Condensed report summary created from translations
 
-  .. method:: speech: str
+  .. attribute:: translations: {str: object}
 
-    Report summary designed to be read by a text-to-speech program
+    Dictionary of translation strings from data. Parsed on update()
 
 Standalone Functions
 --------------------

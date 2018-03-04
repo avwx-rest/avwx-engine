@@ -13,6 +13,10 @@ M_NA_REGIONS = ['MB', 'MM', 'MT', 'MY']
 #: Central America Station Location Identifiers - International formatting
 M_IN_REGIONS = ['MD', 'MG', 'MH', 'MK', 'MN', 'MP', 'MR', 'MS', 'MU', 'MW', 'MZ']
 
+#: Station info keys
+INFO_KEYS = ['ICAO', 'Country', 'State', 'City', 'Name', 'IATA',
+             'Elevation', 'Latitude', 'Longitude', 'Priority']
+
 #: North American variant units
 NA_UNITS = {
     'Wind-Speed': 'kt',

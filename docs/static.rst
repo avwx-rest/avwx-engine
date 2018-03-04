@@ -29,4 +29,4 @@ Misc
 ----
 
 .. automodule:: avwx.static
-   :members: METAR_RMK, TAF_RMK, TAF_NEWLINE
+   :members: INFO_KEYS, METAR_RMK, TAF_RMK, TAF_NEWLINE

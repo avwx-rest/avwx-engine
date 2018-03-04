@@ -12,7 +12,8 @@ def fetch(station: str) -> str:
     """
     Returns METAR report string or raises an error
     
-    Maintains backwards compatability but uses the new Request object
+    Maintains backwards compatability but uses the new Service object.
+    It is recommended to use the Service class directly instead of this function
     """
     return service.get_service(station)('metar').fetch(station)
 
