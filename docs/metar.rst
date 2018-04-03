@@ -13,6 +13,45 @@ Metar Class
 
 The Metar class offers an object-oriented approach to managing METAR data for a single station.
 
+Below is typical usage for fetching and pulling METAR data for KJFK.
+
+.. code-block:: python
+
+  >>> from avwx import Metar
+  >>> kjfk = Metar('KJFK')
+  >>> kjfk.station_info['Name']
+  'John F Kennedy International Airport'
+  >>> kjfk.update()
+  True
+  >>> kjfk.last_updated
+  datetime.datetime(2018, 3, 4, 23, 36, 6, 62376)
+  >>> kjfk.raw
+  'KJFK 042251Z 32023G32KT 10SM BKN060 04/M08 A3008 RMK AO2 PK WND 32032/2251 SLP184 T00441078'
+  >>> kjfk.data['Flight-Rules']
+  'VFR'
+  >>> kjfk.translations['Remarks']
+  {'AO2': 'Automated with precipitation sensor', 'SLP184': 'Sea level pressure: 1018.4 hPa', 'T00441078': 'Temperature 4.4°C and dewpoint -7.8°C'}
+
+The update function can also accept a given report string if you want to override to normal fetching process. Here's an example of a really bad day.
+
+.. code-block:: python
+
+  >>> from avwx import Metar
+  >>> ksfo = Metar('KSFO')
+  >>> ksfo.station_info['City']
+  'San Francisco'
+  >>> report = 'KSFO 031254Z 36024G55KT 320V040 1/8SM R06/0200D +TS VCFC OVC050 BKN040TCU 14/10 A2978 RMK AIRPORT CLOSED'
+  >>> ksfo.update(report)
+  True
+  >>> ksfo.last_updated
+  datetime.datetime(2018, 3, 4, 23, 54, 4, 353757)
+  >>> ksfo.data['Flight-Rules']
+  'LIFR'
+  >>> ksfo.translations['Clouds']
+  'Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft - Reported AGL'
+  >>> ksfo.summary
+  'Winds N-360 (variable 320 to 040) at 24kt gusting to 55kt, Vis 0.125sm, Temp 14C, Dew 10C, Alt 29.78inHg, Heavy Thunderstorm, Vicinity Funnel Cloud, Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft'
+
 .. autoclass:: avwx.Metar
   :members: update
 
