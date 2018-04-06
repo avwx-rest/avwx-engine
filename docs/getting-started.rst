@@ -9,7 +9,7 @@ Getting Started
 Installation
 ------------
 
-AVWX is available on PyPI. Note: the package name is avwx-engine, but the import is avwx
+AVWX is available on PyPI. Note: the package name is ``avwx-engine``, but the import is ``avwx``
 
 .. code-block:: bash
 
