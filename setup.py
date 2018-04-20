@@ -15,6 +15,10 @@ setup(
     author='Michael duPont',
     author_email='michael@mdupont.com',
     license='MIT',
+    install_requires=[
+        'requests~=2.18.2',
+        'xmltodict~=0.11.0'
+    ],
     packages=[
         'avwx'
     ],
