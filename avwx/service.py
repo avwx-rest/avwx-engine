@@ -7,7 +7,7 @@ import requests
 from xmltodict import parse as parsexml
 # module
 from avwx.core import valid_station
-from avwx.exceptions import InvalidRequest
+from avwx.exceptions import InvalidRequest, SourceError
 
 class Service(object):
     """
@@ -38,8 +38,13 @@ class Service(object):
         Fetches a report string from the service
         """
         valid_station(station)
-        resp = requests.get(self.url.format(self.rtype, station)).text
-        return self._extract(resp)
+        try:
+            resp = requests.get(self.url.format(self.rtype, station))
+            if resp.status_code != 200:
+                raise SourceError(f'{self.__class__.__name__} server returned {resp.status_code}')
+        except requests.exceptions.ConnectionError:
+            raise ConnectionError(f'Unable to connect to {self.__class__.__name__} server')
+        return self._extract(resp.text)
 
 
 class NOAA(Service):
