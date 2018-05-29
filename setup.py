@@ -16,6 +16,7 @@ setup(
     author_email='michael@mdupont.com',
     license='MIT',
     install_requires=[
+        'dataclasses>=0.6.0',
         'requests~=2.18.4',
         'xmltodict~=0.11.0'
     ],
