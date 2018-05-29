@@ -5,9 +5,10 @@ Contains functions for translating report data
 from avwx import core, remarks
 from avwx.static import CLOUD_TRANSLATIONS, WX_TRANSLATIONS, \
                         TURBULANCE_CONDITIONS, ICING_CONDITIONS
+from avwx.structs import MetarData, MetarTrans, ReportData, TafData, TafLineTrans, TafTrans, Units
 
 
-def get_cardinal_direction(wdir: str) -> str:
+def get_cardinal_direction(wdir: int) -> str:
     """
     Returns the cardinal direction (NSEW) for a degree direction
 
@@ -287,36 +288,35 @@ def min_max_temp(temp: str, unit: str = 'C') -> str:
         temp_type=temp_type, temp=temperature(temp[0], unit), time=temp[1])
 
 
-def shared(wxdata: [str], units: {str: str}) -> {str: str}:
+def shared(wxdata: ReportData, units: Units) -> {str: str}:
     """
     Translate Visibility, Altimeter, Clouds, and Other
     """
     translations = {}
-    translations['Visibility'] = visibility(wxdata['Visibility'], units['Visibility'])
-    translations['Altimeter'] = altimeter(wxdata['Altimeter'], units['Altimeter'])
-    translations['Clouds'] = clouds(wxdata['Cloud-List'], units['Altitude'])
-    translations['Other'] = other_list(wxdata['Other-List'])
+    translations['visibility'] = visibility(wxdata.visibility, units.visibility)
+    translations['altimeter'] = altimeter(wxdata.altimeter, units.altimeter)
+    translations['clouds'] = clouds(wxdata.clouds, units.altitude)
+    translations['other'] = other_list(wxdata.other)
     return translations
 
 
-def metar(wxdata: {str: object}) -> {str: str}:
+def metar(wxdata: MetarData, units: Units) -> MetarTrans:
     """
     Translate the results of metar.parse
 
     Keys: Wind, Visibility, Clouds, Temperature, Dewpoint, Altimeter, Other
     """
-    units = wxdata['Units']
     translations = shared(wxdata, units)
-    translations['Wind'] = wind(wxdata['Wind-Direction'], wxdata['Wind-Speed'],
-                                wxdata['Wind-Gust'], wxdata['Wind-Variable-Dir'],
-                                units['Wind-Speed'])
-    translations['Temperature'] = temperature(wxdata['Temperature'], units['Temperature'])
-    translations['Dewpoint'] = temperature(wxdata['Dewpoint'], units['Temperature'])
-    translations['Remarks'] = remarks.translate(wxdata['Remarks'])
-    return translations
+    translations['wind'] = wind(wxdata.wind_direction, wxdata.wind_speed,
+                                wxdata.wind_gust, wxdata.wind_variable_direction,
+                                units.wind_speed)
+    translations['temperature'] = temperature(wxdata.temperature, units.temperature)
+    translations['dewpoint'] = temperature(wxdata.dewpoint, units.temperature)
+    translations['remarks'] = remarks.translate(wxdata.remarks)
+    return MetarTrans(**translations)
 
 
-def taf(wxdata: {str: object}) -> {str: str}:
+def taf(wxdata: TafData, units: Units) -> TafTrans:
     """
     Translate the results of taf.parse
 
@@ -324,22 +324,19 @@ def taf(wxdata: {str: object}) -> {str: str}:
 
     Forecast keys: Wind, Visibility, Clouds, Altimeter, Wind-Shear, Turbulance, Icing, Other
     """
-    translations = {'Forecast': []}
-    units = wxdata['Units']
-    for line in wxdata['Forecast']:
+    translations = {'forecast': []}
+    for line in wxdata.forecast:
         trans = shared(line, units)
-        trans['Wind'] = wind(line['Wind-Direction'], line['Wind-Speed'],
-                             line['Wind-Gust'], unit=units['Wind-Speed'])
-        trans['Wind-Shear'] = wind_shear(line['Wind-Shear'],
-                                         wxdata['Units']['Altitude'],
-                                         units['Wind-Speed'])
-        trans['Turbulance'] = turb_ice(line['Turb-List'], units['Altitude'])
-        trans['Icing'] = turb_ice(line['Icing-List'], units['Altitude'])
+        trans['wind'] = wind(line.wind_direction, line.wind_speed,
+                             line.wind_gust, unit=units.wind_speed)
+        trans['wind_shear'] = wind_shear(line.wind_shear, units.altitude, units.wind_speed)
+        trans['turbulance'] = turb_ice(line.turbulance, units.altitude)
+        trans['icing'] = turb_ice(line.icing, units.altitude)
         # Remove false 'Sky Clear' if line type is 'BECMG'
-        if line['Type'] == 'BECMG' and trans['Clouds'] == 'Sky clear':
-            trans['Clouds'] = ''
-        translations['Forecast'].append(trans)
-    translations['Min-Temp'] = min_max_temp(wxdata['Min-Temp'], units['Temperature'])
-    translations['Max-Temp'] = min_max_temp(wxdata['Max-Temp'], units['Temperature'])
-    translations['Remarks'] = remarks.translate(wxdata['Remarks'])
-    return translations
+        if line.type == 'BECMG' and trans['clouds'] == 'Sky clear':
+            trans['clouds'] = None
+        translations['forecast'].append(TafLineTrans(**trans))
+    translations['min_temp'] = min_max_temp(wxdata.min_temp, units.temperature)
+    translations['max_temp'] = min_max_temp(wxdata.max_temp, units.temperature)
+    translations['remarks'] = remarks.translate(wxdata.remarks)
+    return TafTrans(**translations)

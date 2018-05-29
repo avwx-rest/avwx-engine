@@ -7,6 +7,7 @@ from copy import copy
 # module
 from avwx import core, service
 from avwx.static import NA_UNITS, IN_UNITS, TAF_RMK, TAF_NEWLINE
+from avwx.structs import TafData, TafLineData, Units
 
 
 def fetch(station: str) -> str:
@@ -19,7 +20,7 @@ def fetch(station: str) -> str:
     return service.get_service(station)('taf').fetch(station)
 
 
-def parse(station: str, txt: str, delim: str = '<br/>&nbsp;&nbsp;') -> {str: object}:
+def parse(station: str, txt: str, delim: str = '<br/>&nbsp;&nbsp;') -> TafData:
     """
     Returns a dictionary of parsed TAF data
 
@@ -36,29 +37,54 @@ def parse(station: str, txt: str, delim: str = '<br/>&nbsp;&nbsp;') -> {str: obj
     Units is dict of identified units of measurement for each field
     """
     core.valid_station(station)
-    retwx = {}
     while len(txt) > 3 and txt[:4] in ['TAF ', 'AMD ', 'COR ']:
         txt = txt[4:]
-    _, retwx['Station'], retwx['Time'] = core.get_station_and_time(txt[:20].split(' '))
-    txt = txt.replace(retwx['Station'], '')
-    txt = txt.replace(retwx['Time'], '')
-    if core.uses_na_format(retwx['Station']):
-        is_international = False
-        units = copy(NA_UNITS)
+    _, station, time = core.get_station_and_time(txt[:20].split(' '))
+    retwx = {
+        'raw': txt,
+        'remarks': '',
+        'station': station,
+        'time': time
+    }
+    txt = txt.replace(station, '')
+    txt = txt.replace(time, '')
+    if core.uses_na_format(station):
+        use_na = True
+        units = Units(**NA_UNITS)
     else:
-        is_international = True
-        units = copy(IN_UNITS)
-    retwx['Remarks'] = ''
+        use_na = False
+        units = Units(**IN_UNITS)
+    parsed_lines, retwx['remarks'] = parse_lines(txt.strip(' ').split(delim), units, use_na)
+    last_index = len(parsed_lines) - 1
+    if parsed_lines:
+        parsed_lines[last_index]['other'], retwx['max_temp'], retwx['min_temp'] \
+            = core.get_temp_min_and_max(parsed_lines[last_index]['other'])
+        if not (retwx['max_temp'] or retwx['min_temp']):
+            parsed_lines[0]['other'], retwx['max_temp'], retwx['min_temp'] \
+                = core.get_temp_min_and_max(parsed_lines[0]['other'])
+        parsed_lines = core.find_missing_taf_times(parsed_lines)
+        parsed_lines = core.get_taf_flight_rules(parsed_lines)
+    if retwx['station'][0] == 'A':
+        parsed_lines[last_index]['other'], retwx['alts'], retwx['temps'] \
+            = core.get_oceania_temp_and_alt(parsed_lines[last_index]['other'])
+    retwx['forecast'] = [TafLineData(**line) for line in parsed_lines]
+    return TafData(**retwx), units
+
+
+def parse_lines(lines: [str], units: Units, use_na: bool = True) -> ([dict], str):
+    """
+    Returns a list of parsed line dictionaries and the remarks string if found
+    """
     parsed_lines = []
     prob = ''
-    lines = txt.strip(' ').split(delim)
+    remarks = ''
     while lines:
-        line = lines[0].strip(' ')
-        line = core.sanitize_line(line)
+        raw_line = lines[0].strip(' ')
+        line = core.sanitize_line(raw_line)
         #Remove Remarks from line
         index = core.find_first_in_list(line, TAF_RMK)
         if index != -1:
-            retwx['Remarks'] = line[index:]
+            remarks = line[index:]
             line = line[:index].strip(' ')
         #Separate new lines fixed by sanitizeLine
         index = core.find_first_in_list(line, TAF_NEWLINE)
@@ -81,67 +107,50 @@ def parse(station: str, txt: str, delim: str = '<br/>&nbsp;&nbsp;') -> {str: obj
                 probindex = line.index(' PROB')
                 lines.insert(1, line[probindex + 1:])
                 line = line[:probindex]
-            raw_line = prob + ' ' + line if prob else line
-            parsed_line, units = parse_in_line(line, units) if is_international \
-                else parse_na_line(line, units)
-            parsed_line['Probability'] = prob[4:]
-            parsed_line['Raw-Line'] = raw_line
+            parsed_line = (parse_na_line if use_na else parse_in_line)(line, units)
+            parsed_line['probability'] = prob[4:]
+            parsed_line['raw'] = raw_line
+            parsed_line['sanitized'] = prob + ' ' + line if prob else line
             prob = ''
             parsed_lines.append(parsed_line)
         lines.pop(0)
-    if parsed_lines:
-        parsed_lines[len(parsed_lines) - 1]['Other-List'], retwx['Max-Temp'], retwx['Min-Temp'] \
-            = core.get_temp_min_and_max(parsed_lines[len(parsed_lines) - 1]['Other-List'])
-        if not (retwx['Max-Temp'] or retwx['Min-Temp']):
-            parsed_lines[0]['Other-List'], retwx['Max-Temp'], retwx['Min-Temp'] \
-                = core.get_temp_min_and_max(parsed_lines[0]['Other-List'])
-        parsed_lines = core.find_missing_taf_times(parsed_lines)
-        parsed_lines = core.get_taf_flight_rules(parsed_lines)
-    else:
-        retwx['Min-Temp'] = ['', '']
-        retwx['Max-Temp'] = ['', '']
-    if retwx['Station'][0] == 'A':
-        parsed_lines[len(parsed_lines) - 1]['Other-List'], retwx['Alt-List'], retwx['Temp-List'] \
-            = core.get_oceania_temp_and_alt(parsed_lines[len(parsed_lines) - 1]['Other-List'])
-    retwx['Forecast'] = parsed_lines
-    retwx['Units'] = units
+    return parsed_lines, remarks
+
+
+def parse_na_line(txt: str, units: Units) -> {str: str}:
+    """
+    Parser for the North American TAF forcast varient
+    """
+    retwx = {}
+    wxdata = txt.split(' ')
+    wxdata, _, retwx['wind_shear'] = core.sanitize_report_list(wxdata, remove_clr_and_skc=False)
+    wxdata, retwx['type'], retwx['start_time'], retwx['end_time'] = core.get_type_and_times(wxdata)
+    wxdata, retwx['wind_direction'], retwx['wind_speed'],\
+        retwx['wind_gust'], _ = core.get_wind(wxdata, units)
+    wxdata, retwx['visibility'] = core.get_visibility(wxdata, units)
+    wxdata, retwx['clouds'] = core.get_clouds(wxdata)
+    retwx['other'], retwx['altimeter'], retwx['icing'], retwx['turbulance'] \
+        = core.get_taf_alt_ice_turb(wxdata)
     return retwx
 
 
-def parse_na_line(txt: str, units: {str: str}) -> ({str: object}, {str: str}):
+def parse_in_line(txt: str, units: Units) -> {str: str}:
     """
-    Parser for the North American TAF forcast varient
-    """
-    retwx = {}
-    wxdata = txt.split(' ')
-    wxdata, _, retwx['Wind-Shear'] = core.sanitize_report_list(wxdata, remove_clr_and_skc=False)
-    wxdata, retwx['Type'], retwx['Start-Time'], retwx['End-Time'] = core.get_type_and_times(wxdata)
-    wxdata, units, retwx['Wind-Direction'], retwx['Wind-Speed'],\
-        retwx['Wind-Gust'], _ = core.get_wind(wxdata, units)
-    wxdata, units, retwx['Visibility'] = core.get_visibility(wxdata, units)
-    wxdata, retwx['Cloud-List'] = core.get_clouds(wxdata)
-    retwx['Other-List'], retwx['Altimeter'], retwx['Icing-List'], retwx['Turb-List'] \
-        = core.get_taf_alt_ice_turb(wxdata)
-    return retwx, units
-
-
-def parse_in_line(txt: str, units: {str: str}) -> ({str: object}, {str: str}):
-    """
-    Parser for the North American TAF forcast varient
+    Parser for the International TAF forcast varient
     """
     retwx = {}
     wxdata = txt.split(' ')
-    wxdata, _, retwx['Wind-Shear'] = core.sanitize_report_list(wxdata, remove_clr_and_skc=False)
-    wxdata, retwx['Type'], retwx['Start-Time'], retwx['End-Time'] = core.get_type_and_times(wxdata)
-    wxdata, units, retwx['Wind-Direction'], retwx['Wind-Speed'],\
-        retwx['Wind-Gust'], _ = core.get_wind(wxdata, units)
+    wxdata, _, retwx['wind_shear'] = core.sanitize_report_list(wxdata, remove_clr_and_skc=False)
+    wxdata, retwx['type'], retwx['start_time'], retwx['end_time'] = core.get_type_and_times(wxdata)
+    wxdata, retwx['wind_direction'], retwx['wind_speed'],\
+        retwx['wind_gust'], _ = core.get_wind(wxdata, units)
     if 'CAVOK' in wxdata:
-        retwx['Visibility'] = '9999'
-        retwx['Cloud-List'] = []
+        retwx['visibility'] = '9999'
+        retwx['clouds'] = []
         wxdata.pop(wxdata.index('CAVOK'))
     else:
-        wxdata, units, retwx['Visibility'] = core.get_visibility(wxdata, units)
-        wxdata, retwx['Cloud-List'] = core.get_clouds(wxdata)
-    retwx['Other-List'], retwx['Altimeter'], retwx['Icing-List'], retwx['Turb-List'] \
+        wxdata, retwx['visibility'] = core.get_visibility(wxdata, units)
+        wxdata, retwx['clouds'] = core.get_clouds(wxdata)
+    retwx['other'], retwx['altimeter'], retwx['icing'], retwx['turbulance'] \
         = core.get_taf_alt_ice_turb(wxdata)
-    return retwx, units
+    return retwx

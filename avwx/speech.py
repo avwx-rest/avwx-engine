@@ -8,6 +8,7 @@ from copy import deepcopy
 # module
 from avwx import core, translate
 from avwx.static import SPOKEN_UNITS, NUMBER_REPL, FRACTIONS
+from avwx.structs import MetarData, Units
 
 
 def numbers(num: str) -> str:
@@ -133,27 +134,28 @@ def other(wxcodes: [str]) -> str:
     return '. '.join(ret)
 
 
-def metar(wxdata: {str: object}) -> str:
+def metar(wxdata: MetarData, units: Units) -> str:
     """
     Convert wxdata into a string for text-to-speech
     """
+    # We make copies here because the functions may change the original values
     _data = deepcopy(wxdata)
-    units = deepcopy(wxdata['Units'])
+    units = deepcopy(units)
     speech = []
-    if _data['Wind-Direction'] and _data['Wind-Speed']:
-        speech.append(wind(_data['Wind-Direction'], _data['Wind-Speed'],
-                           _data['Wind-Gust'], _data['Wind-Variable-Dir'],
-                           units['Wind-Speed']))
-    if _data['Visibility']:
-        speech.append(visibility(_data['Visibility'], units['Visibility']))
-    if _data['Temperature']:
-        speech.append(temperature('Temperature', _data['Temperature'], units['Temperature']))
-    if _data['Dewpoint']:
-        speech.append(temperature('Dew point', _data['Dewpoint'], units['Temperature']))
-    if _data['Altimeter']:
-        speech.append(altimeter(_data['Altimeter'], units['Altimeter']))
-    if _data['Other-List']:
-        speech.append(other(_data['Other-List']))
-    speech.append(translate.clouds(_data['Cloud-List'],
-                                   units['Altitude']).replace(' - Reported AGL', ''))
+    if _data.wind_direction and _data.wind_speed:
+        speech.append(wind(_data.wind_direction, _data.wind_speed,
+                           _data.wind_gust, _data.wind_variable_direction,
+                           units.wind_speed))
+    if _data.visibility:
+        speech.append(visibility(_data.visibility, units.visibility))
+    if _data.temperature:
+        speech.append(temperature('Temperature', _data.temperature, units.temperature))
+    if _data.dewpoint:
+        speech.append(temperature('Dew point', _data.dewpoint, units.temperature))
+    if _data.altimeter:
+        speech.append(altimeter(_data.altimeter, units.altimeter))
+    if _data.other:
+        speech.append(other(_data.other))
+    speech.append(translate.clouds(_data.clouds,
+                                   units.altitude).replace(' - Reported AGL', ''))
     return ('. '.join([l for l in speech if l])).replace(',', '.')

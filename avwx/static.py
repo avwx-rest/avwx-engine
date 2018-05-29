@@ -14,24 +14,24 @@ M_NA_REGIONS = ['MB', 'MM', 'MT', 'MY']
 M_IN_REGIONS = ['MD', 'MG', 'MH', 'MK', 'MN', 'MP', 'MR', 'MS', 'MU', 'MW', 'MZ']
 
 #: Station info keys
-INFO_KEYS = ['ICAO', 'Country', 'State', 'City', 'Name', 'IATA',
-             'Elevation', 'Latitude', 'Longitude', 'Priority']
+INFO_KEYS = ['icao', 'country', 'state', 'city', 'name', 'iata',
+             'elevation', 'latitude', 'longitude', 'priority']
 
 #: North American variant units
 NA_UNITS = {
-    'Wind-Speed': 'kt',
-    'Visibility': 'sm',
-    'Altitude': 'ft',
-    'Temperature': 'C',
-    'Altimeter': 'inHg'
+    'altimeter': 'inHg',
+    'altitude': 'ft',
+    'temperature': 'C',
+    'visibility': 'sm',
+    'wind_speed': 'kt'
 }
 #: International variant units
 IN_UNITS = {
-    'Wind-Speed': 'kt',
-    'Visibility': 'm',
-    'Altitude': 'ft',
-    'Temperature': 'C',
-    'Altimeter': 'hPa'
+    'altimeter': 'hPa',
+    'altitude': 'ft',
+    'temperature': 'C',
+    'visibility': 'm',
+    'wind_speed': 'kt'
 }
 
 #: List of flight rules abreviations

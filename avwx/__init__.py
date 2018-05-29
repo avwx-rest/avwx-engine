@@ -14,6 +14,7 @@ from avwx import metar, taf, translate, summary, speech, service
 from avwx.core import valid_station
 from avwx.exceptions import BadStation
 from avwx.static import INFO_KEYS
+from avwx.structs import MetarData, ReportData, StationInfo, Units
 
 INFO_PATH = path.dirname(path.realpath(__file__)) + '/stations.json'
 STATIONS = json.load(open(INFO_PATH))
@@ -31,12 +32,15 @@ class Report(object):
     raw: str = None
 
     #: Dictionary of parsed data values and units. Parsed on update()
-    data: dict = None
+    data: ReportData = None
 
     #: Dictionary of translation strings from data. Parsed on update()
     translations: dict = None
 
-    _station_info: dict = None
+    #: Units inferred from the station location and report contents
+    units: Units = None
+
+    _station_info: StationInfo = None
 
     def __init__(self, station: str):
         # Raises a BadStation error if needed
@@ -49,7 +53,7 @@ class Report(object):
         self.station = station
 
     @property
-    def station_info(self) -> dict:
+    def station_info(self) -> StationInfo:
         """
         Provide basic station info
 
@@ -59,7 +63,7 @@ class Report(object):
             if not self.station in STATIONS:
                 raise BadStation('Could not find station in the info dict. Check avwx.STATIONS')
             info = [self.station] + STATIONS[self.station]
-            self._station_info = dict(zip(INFO_KEYS, info))
+            self._station_info = StationInfo(**dict(zip(INFO_KEYS, info)))
         return self._station_info
 
     def update(self, report: str = None) -> bool:
@@ -86,8 +90,8 @@ class Metar(Report):
             if raw == self.raw:
                 return False
             self.raw = raw
-        self.data = metar.parse(self.station, self.raw)
-        self.translations = translate.metar(self.data)
+        self.data, self.units = metar.parse(self.station, self.raw)
+        self.translations = translate.metar(self.data, self.units)
         self.last_updated = datetime.utcnow()
         return True
 
@@ -107,7 +111,7 @@ class Metar(Report):
         """
         if not self.data:
             self.update()
-        return speech.metar(self.data)
+        return speech.metar(self.data, self.units)
 
 
 class Taf(Report):
@@ -128,8 +132,8 @@ class Taf(Report):
             if raw == self.raw:
                 return False
             self.raw = raw
-        self.data = taf.parse(self.station, self.raw)
-        self.translations = translate.taf(self.data)
+        self.data, self.units = taf.parse(self.station, self.raw)
+        self.translations = translate.taf(self.data, self.units)
         self.last_updated = datetime.utcnow()
         return True
 
@@ -140,4 +144,4 @@ class Taf(Report):
         """
         if not self.translations:
             self.update()
-        return [summary.taf(trans) for trans in self.translations['Forecast']]
+        return [summary.taf(trans) for trans in self.translations.forecast]

@@ -2,8 +2,9 @@
 Contains functions for handling and translating remarks
 """
 
+# module
 from avwx.static import PRESSURE_TENDENCIES, REMARKS_ELEMENTS, REMARKS_GROUPS, WX_TRANSLATIONS
-
+from avwx.structs import RemarksData
 
 def _tdec(code: str, unit: str = 'C') -> str:
     """
@@ -63,6 +64,25 @@ LEN5_DECODE = {
     '7': precip_24,
     '9': sunshine_duration
 }
+
+
+def parse_remarks(rmk: str) -> RemarksData:
+    """
+    Finds temperature and dewpoint decimal values from the remarks
+    """
+    rmkdata = {}
+    for item in rmk.split(' '):
+        if len(item) in [5, 9] and item[0] == 'T' and item[1:].isdigit():
+            if item[1] == '1':
+                rmkdata['temperature_decimal'] = '-' + item[2].replace('0', '') + item[3] + '.' + item[4]
+            elif item[1] == '0':
+                rmkdata['temperature_decimal'] = item[2].replace('0', '') + item[3] + '.' + item[4]
+            if len(item) == 9:
+                if item[5] == '1':
+                    rmkdata['dewpoint_decimal'] = '-' + item[6].replace('0', '') + item[7] + '.' + item[8]
+                elif item[5] == '0':
+                    rmkdata['dewpoint_decimal'] = item[6].replace('0', '') + item[7] + '.' + item[8]
+    return RemarksData(**rmkdata)
 
 
 def translate(remarks: str) -> {str: str}:

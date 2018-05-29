@@ -9,7 +9,7 @@ from itertools import permutations
 from avwx.exceptions import BadStation
 from avwx.static import CLOUD_LIST, CLOUD_TRANSLATIONS, METAR_RMK, \
     NA_REGIONS, IN_REGIONS, M_NA_REGIONS, M_IN_REGIONS, FLIGHT_RULES
-
+from avwx.structs import Units
 
 def valid_station(station: str):
     """
@@ -59,7 +59,7 @@ def find_first_in_list(txt: str, str_list: [str]) -> int:
     return start if len(txt) + 1 > start > -1 else -1
 
 
-def get_remarks(txt) -> ([str], str):
+def get_remarks(txt: str) -> ([str], str):
     """
     Returns the report split into components and the remarks string
 
@@ -259,20 +259,20 @@ def is_not_tempo_or_prob(report_type: str) -> bool:
     return report_type != 'TEMPO' and not (len(report_type) == 6 and report_type.startswith('PROB'))
 
 
-def get_altimeter(wxdata: [str], units: {str: str}, version: str = 'NA') -> ([str], {str: str}, str):
+def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], str):
     """
     Returns the report list and the removed altimeter item
 
     Version is 'NA' (North American / default) or 'IN' (International)
     """
     if not wxdata:
-        return wxdata, units, ''
+        return wxdata, ''
     altimeter = ''
     if version == 'NA':
         if wxdata[-1][0] == 'A':
             altimeter = wxdata.pop()[1:]
         elif wxdata[-1][0] == 'Q':
-            units['Altimeter'] = 'hPa'
+            units.altimeter = 'hPa'
             altimeter = wxdata.pop()[1:].lstrip('.')
         elif len(wxdata[-1]) == 4 and wxdata[-1].isdigit():
             altimeter = wxdata.pop()
@@ -282,12 +282,12 @@ def get_altimeter(wxdata: [str], units: {str: str}, version: str = 'NA') -> ([st
             if altimeter.find('/') != -1:
                 altimeter = altimeter[:altimeter.find('/')]
         elif wxdata[-1][0] == 'A':
-            units['Altimeter'] = 'inHg'
+            units.altimeter = 'inHg'
             altimeter = wxdata.pop()[1:]
     #Some stations report both, but we only need one
     if wxdata and (wxdata[-1][0] == 'A' or wxdata[-1][0] == 'Q'):
         wxdata.pop()
-    return wxdata, units, altimeter
+    return wxdata, altimeter
 
 
 def get_taf_alt_ice_turb(wxdata: [str]) -> ([str], str, [str], [str]):
@@ -359,7 +359,7 @@ def get_station_and_time(wxdata: [str]) -> ([str], str, str):
     return wxdata, station, rtime
 
 
-def get_wind(wxdata: [str], units: {str: str}) -> ([str], {str: str}, str, str, str, [str]):
+def get_wind(wxdata: [str], units: Units) -> ([str], str, str, str, [str]):
     """
     Returns the report list and removed:
     Direction string, speed string, gust string, variable direction list
@@ -373,21 +373,21 @@ def get_wind(wxdata: [str], units: {str: str}) -> ([str], {str: str}, str, str, 
         item = item.replace('O', '0')
         #09010KT, 09010G15KT
         if item.endswith('KT') \
-            or item.endswith('KTS') \
-            or item.endswith('MPS') \
-            or item.endswith('KMH') \
-            or ((len(item) == 5 or (len(item) >= 8 and item.find('G') != -1) and item.find('/') == -1)
-            and (item[:5].isdigit() or (item.startswith('VRB') and item[3:5].isdigit()))):
+        or item.endswith('KTS') \
+        or item.endswith('MPS') \
+        or item.endswith('KMH') \
+        or ((len(item) == 5 or (len(item) >= 8 and item.find('G') != -1) and item.find('/') == -1)
+        and (item[:5].isdigit() or (item.startswith('VRB') and item[3:5].isdigit()))):
             #In order of frequency
             if item.endswith('KT'):
                 item = item.replace('KT', '')
             elif item.endswith('KTS'):
                 item = item.replace('KTS', '')
             elif item.endswith('MPS'):
-                units['Wind-Speed'] = 'm/s'
+                units.wind_speed = 'm/s'
                 item = item.replace('MPS', '')
             elif item.endswith('KMH'):
-                units['Wind-Speed'] = 'km/h'
+                units.wind_speed = 'km/h'
                 item = item.replace('KMH', '')
             direction = item[:3]
             if 'G' in item:
@@ -397,16 +397,6 @@ def get_wind(wxdata: [str], units: {str: str}) -> ([str], {str: str}, str, str, 
             else:
                 speed = item[3:]
             wxdata.pop(0)
-        # elif len(item) > 5 and item[3] == '/' and item[:3].isdigit() and item[4:6].isdigit():
-        #     direction = item[:3]
-        #     if item.find('G') != -1:
-        #         print('Found second G: {0}'.format(item))
-        #         gIndex = item.find('G')
-        #         gust = item[gIndex+1:gIndex+3]
-        #         speed = item[4:item.find('G')]
-        #     else:
-        #         speed = item[4:]
-        #     wxdata.pop(0)
     #Separated Gust
     if wxdata and 1 < len(wxdata[0]) < 4 and wxdata[0][0] == 'G' and wxdata[0][1:].isdigit():
         gust = wxdata.pop(0)[1:]
@@ -414,10 +404,10 @@ def get_wind(wxdata: [str], units: {str: str}) -> ([str], {str: str}, str, str, 
     if wxdata and len(wxdata[0]) == 7 and wxdata[0][:3].isdigit() \
         and wxdata[0][3] == 'V' and wxdata[0][4:].isdigit():
         variable = wxdata.pop(0).split('V')
-    return wxdata, units, direction, speed, gust, variable
+    return wxdata, direction, speed, gust, variable
 
 
-def get_visibility(wxdata: [str], units: {str: str}) -> ([str], {str: str}, str):
+def get_visibility(wxdata: [str], units: Units) -> ([str], str):
     """
     Returns the report list and removed visibility string
     """
@@ -435,29 +425,29 @@ def get_visibility(wxdata: [str], units: {str: str}) -> ([str], {str: str}, str)
             else:
                 visibility = item[:item.find('SM')]  # 1/2SM
             wxdata.pop(0)
-            units['Visibility'] = 'sm'
+            units.visibility = 'sm'
         # Vis reported in meters
         elif len(item) == 4 and item.isdigit():
             visibility = wxdata.pop(0)
-            units['Visibility'] = 'm'
+            units.visibility = 'm'
         elif 7 >= len(item) >= 5 and item[:4].isdigit() \
             and (item[4] in ['M', 'N', 'S', 'E', 'W'] or item[4:] == 'NDV'):
             visibility = wxdata.pop(0)[:4]
-            units['Visibility'] = 'm'
+            units.visibility = 'm'
         elif len(item) == 5 and item[1:5].isdigit() and item[0] in ['M', 'P', 'B']:
             visibility = wxdata.pop(0)[1:5]
-            units['Visibility'] = 'm'
+            units.visibility = 'm'
         elif item.endswith('KM') and item[:item.find('KM')].isdigit():
             visibility = item[:item.find('KM')] + '000'
             wxdata.pop(0)
-            units['Visibility'] = 'm'
+            units.visibility = 'm'
         # Vis statute miles but split Ex: 2 1/2SM
         elif len(wxdata) > 1 and wxdata[1].endswith('SM') and '/' in wxdata[1] and item.isdigit():
             vis1 = wxdata.pop(0)  # 2
             vis2 = wxdata.pop(0).replace('SM', '')  # 1/2
             visibility = str(int(vis1) * int(vis2[2]) + int(vis2[0])) + vis2[1:]  # 5/2
-            units['Visibility'] = 'sm'
-    return wxdata, units, visibility
+            units.visibility = 'sm'
+    return wxdata, visibility
 
 
 # TAF line report type and start/end times
@@ -492,22 +482,22 @@ def get_type_and_times(wxdata: [str]) -> ([str], str, str, str):
     return wxdata, report_type, start_time, end_time
 
 
-def find_missing_taf_times(lines: [str]) -> [str]:
+def find_missing_taf_times(lines: [dict]) -> [dict]:
     """
     Fix any missing time issues (except for error/empty lines)
     """
     last_fm_line = 0
     for i, line in enumerate(lines):
-        if line['End-Time'] == '' and is_not_tempo_or_prob(line['Type']):
+        if line['end_time'] == '' and is_not_tempo_or_prob(line['type']):
             last_fm_line = i
             if i < len(lines) - 1:
                 for report in lines[i + 1:]:
-                    if is_not_tempo_or_prob(report['Type']):
-                        line['End-Time'] = report['Start-Time']
+                    if is_not_tempo_or_prob(report['type']):
+                        line['end_time'] = report['start_time']
                         break
     #Special case for final forcast
     if last_fm_line > 0:
-        lines[last_fm_line]['End-Time'] = lines[0]['End-Time']
+        lines[last_fm_line]['end_time'] = lines[0]['end_time']
     return lines
 
 
@@ -641,25 +631,25 @@ def get_flight_rules(vis: str, cloud: [str]) -> int:
     return 0  # VFR
 
 
-def get_taf_flight_rules(lines: [str]) -> [str]:
+def get_taf_flight_rules(lines: [dict]) -> [dict]:
     """
     Get flight rules by looking for missing data in prior reports
     """
     for i, line in enumerate(lines):
-        temp_vis, temp_cloud = line['Visibility'], line['Cloud-List']
+        temp_vis, temp_cloud = line['visibility'], line['clouds']
         for report in reversed(lines[:i]):
-            if is_not_tempo_or_prob(report['Type']):
+            if is_not_tempo_or_prob(report['type']):
                 if temp_vis == '':
-                    temp_vis = report['Visibility']
-                if 'SKC' in report['Other-List'] or 'CLR' in report['Other-List']:
-                    temp_cloud = 'tempClear'
+                    temp_vis = report['visibility']
+                if 'SKC' in report['other'] or 'CLR' in report['other']:
+                    temp_cloud = 'temp-clear'
                 elif temp_cloud == []:
-                    temp_cloud = report['Cloud-List']
+                    temp_cloud = report['clouds']
                 if temp_vis != '' and temp_cloud != []:
                     break
-        if temp_cloud == 'tempClear':
+        if temp_cloud == 'temp-clear':
             temp_cloud = []
-        line['Flight-Rules'] = FLIGHT_RULES[get_flight_rules(temp_vis, get_ceiling(temp_cloud))]
+        line['flight_rules'] = FLIGHT_RULES[get_flight_rules(temp_vis, get_ceiling(temp_cloud))]
     return lines
 
 
@@ -677,25 +667,6 @@ def get_ceiling(clouds: [[str]]) -> [str]:
         if len(cloud) > 1 and cloud[1].isdigit() and cloud[0] in ['OVC', 'BKN', 'VV']:
             return cloud
     return None
-
-
-def parse_remarks(rmk: str) -> {str: str}:
-    """
-    Finds temperature and dewpoint decimal values from the remarks
-    """
-    rmkdata = {}
-    for item in rmk.split(' '):
-        if len(item) in [5, 9] and item[0] == 'T' and item[1:].isdigit():
-            if item[1] == '1':
-                rmkdata['Temp-Decimal'] = '-' + item[2].replace('0', '') + item[3] + '.' + item[4]
-            elif item[1] == '0':
-                rmkdata['Temp-Decimal'] = item[2].replace('0', '') + item[3] + '.' + item[4]
-            if len(item) == 9:
-                if item[5] == '1':
-                    rmkdata['Dew-Decimal'] = '-' + item[6].replace('0', '') + item[7] + '.' + item[8]
-                elif item[5] == '0':
-                    rmkdata['Dew-Decimal'] = item[6].replace('0', '') + item[7] + '.' + item[8]
-    return rmkdata
 
 
 def tafDateToDate(tafDate: str):
