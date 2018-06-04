@@ -160,7 +160,7 @@ def extra_space_exists(str1: str, str2: str) -> bool:
         if ls1 > 2 and str1.endswith('/') and str1[:-1].isdigit():
             return True
         # 12/1 0
-        if ls2 == 1 and ls1 > 3 and str1[:2].isdigit() and '/' not in str1 and str1[3:].isdigit():
+        if ls2 == 1 and ls1 > 3 and str1[:2].isdigit() and '/' in str1 and str1[3:].isdigit():
             return True
         # Q 1001
         if str1 in ['Q', 'A']:
@@ -170,8 +170,8 @@ def extra_space_exists(str1: str, str2: str) -> bool:
         and (str1[:5].isdigit() or (str1.startswith('VRB') and str1[3:5].isdigit())):
         return True
     # 36010K T
-    if str2 == 'T' and ls1 == 6 \
-        and (str1[:5].isdigit() or (str1.startswith('VRB') and str1[3:5].isdigit())) and str1[5] == 'K':
+    if str2 == 'T' and ls1 >= 6 \
+        and (str1[:5].isdigit() or (str1.startswith('VRB') and str1[3:5].isdigit())) and str1[-1] == 'K':
         return True
     # OVC022 CB
     if str2 in CLOUD_TRANSLATIONS and str2 not in CLOUD_LIST and ls1 >= 3 and str1[:3] in CLOUD_LIST:
