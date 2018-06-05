@@ -71,6 +71,7 @@ class TestGlobal(unittest.TestCase):
 
     def test_extra_space_exists(self):
         """
+        Tests whether a space should exist between two elements
         """
         for strings in (
             ('10', 'SM'),
@@ -100,6 +101,21 @@ class TestGlobal(unittest.TestCase):
         ):
             self.assertFalse(core.extra_space_exists(*strings))
 
+    def test_sanitize_report_list(self):
+        """
+        Tests a function which fixes common mistakes while the report is a list
+        """
+        for line, fixed in (
+            ('KJFK AUTO 123456Z ////// KT 10SM 20/10', 'KJFK 123456Z 10SM 20/10'),
+            ('METAR EGLL CALM RETS 6SPM CLR Q 1000', 'EGLL 00000KT TS P6SM Q1000'),
+        ):
+            line, fixed = line.split(), fixed.split()
+            self.assertEqual(core.sanitize_report_list(line), (fixed, [], ''))
+        # Test extracting runway visibility and wind shear
+        line = 'EGLL 12345 KT R10/10 RETS WS100/20KT 6SPM'.split()
+        fixed = 'EGLL 12345KT TS P6SM'.split()
+        self.assertEqual(core.sanitize_report_list(line), (fixed, ['R10/10'], 'WS100/20'))
+
 class TestMetar(unittest.TestCase):
 
     def test_get_remarks(self):
@@ -118,12 +134,20 @@ class TestMetar(unittest.TestCase):
 
     def test_sanitize_report_string(self):
         """
+        Tests a function which fixes common mistakes while the report is a string
         """
-        pass
+        line = 'KJFK 36010 ? TSFEW004SCT012FEW///CBBKN080 C A V O K A2992'
+        fixed = 'KJFK 36010   TS FEW004 SCT012 FEW///CB BKN080 CAVOK A2992'
+        self.assertEqual(core.sanitize_report_string(line), fixed)
 
 class TestTaf(unittest.TestCase):
 
     def test_sanitize_line(self):
         """
+        Tests a function which fixes common new-line signifiers in TAF reports
         """
-        pass
+        for line in ('1 BEC 1', '1 BE CMG1', '1 BEMG 1'):
+            self.assertEqual(core.sanitize_line(line), '1 BECMG 1')
+        for line in ('1 TEMP0 1', '1 TEMP 1', '1 TEMO1', '1 T EMPO1'):
+            self.assertEqual(core.sanitize_line(line), '1 TEMPO 1')
+        self.assertEqual(core.sanitize_line('1 2 3 4 5'), '1 2 3 4 5')

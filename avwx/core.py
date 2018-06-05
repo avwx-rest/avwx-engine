@@ -119,9 +119,9 @@ def sanitize_report_string(txt: str) -> str:
 
 
 LINE_FIXES = {'TEMP0': 'TEMPO', 'TEMP O': 'TEMPO', 'TMPO': 'TEMPO', 'TE MPO': 'TEMPO',
-              'TEMP ': 'TEMPO ', ' EMPO': ' TEMPO', 'TEMO': 'TEMPO', 'T EMPO': 'TEMPO',
-              'BECM G': 'BECMG', 'BEMCG': 'BECMG', 'BE CMG': 'BECMG', 'BEMG': 'BECMG',
-              ' BEC ': ' BECMG ', 'BCEMG': 'BECMG', 'B ECMG': 'BECMG'}
+              'TEMP ': 'TEMPO ', 'T EMPO': 'TEMPO', ' EMPO': ' TEMPO', 'TEMO': 'TEMPO',
+              'BECM G': 'BECMG', 'BEMCG': 'BECMG', 'BE CMG': 'BECMG', 'B ECMG': 'BECMG',
+              ' BEC ': ' BECMG ', 'BCEMG': 'BECMG', 'BEMG': 'BECMG',}
 
 
 def sanitize_line(txt: str) -> str:
