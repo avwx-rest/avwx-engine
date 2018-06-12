@@ -24,11 +24,11 @@ class TestTaf(unittest.TestCase):
                   "FM280000 23008KT P6SM BKN040 RMK FCST BASED ON AUTO OBS. NXT FCST BY 272000Z")
         taf = avwx.Taf('CYBC')
         taf.update(report)
-        lines = taf.data['Forecast']
+        lines = taf.data.forecast
         self.assertEqual(len(lines), 6)
-        self.assertEqual(lines[3]['Probability'], '')
-        self.assertEqual(lines[4]['Probability'], '30')
-        self.assertTrue(lines[4]['Raw-Line'].startswith('PROB30'))
+        self.assertEqual(lines[3].probability, '')
+        self.assertEqual(lines[4].probability, '30')
+        self.assertTrue(lines[4].raw.startswith('PROB30'))
 
     def test_wind_shear(self):
         """Wind shear should be recognized as its own element in addition to wind"""
@@ -41,7 +41,7 @@ class TestTaf(unittest.TestCase):
                   "TEMPO 2913/2918 P6SM -SHRA OVC020 RMK NXT FCST BY 290000Z")
         taf = avwx.Taf('CYBC')
         taf.update(report)
-        lines = taf.data['Forecast']
+        lines = taf.data.forecast
         self.assertEqual(len(lines), 7)
-        self.assertEqual(lines[0]['Wind-Shear'], 'WS015/20055')
-        self.assertEqual(taf.translations['Forecast'][1]['Clouds'], '')
+        self.assertEqual(lines[0].wind_shear, 'WS015/20055')
+        self.assertEqual(taf.translations.forecast[1].clouds, None)

@@ -256,7 +256,11 @@ def is_not_tempo_or_prob(report_type: str) -> bool:
     """
     Returns True if report type is TEMPO or PROB__
     """
-    return report_type != 'TEMPO' and not (len(report_type) == 6 and report_type.startswith('PROB'))
+    if report_type == 'TEMPO':
+        return False
+    if len(report_type) == 6 and report_type.startswith('PROB'):
+        return False
+    return True
 
 
 def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], str):
@@ -268,22 +272,36 @@ def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], s
     if not wxdata:
         return wxdata, ''
     altimeter = ''
+    target = wxdata[-1]
     if version == 'NA':
-        if wxdata[-1][0] == 'A':
+        # Version target
+        if target[0] == 'A':
             altimeter = wxdata.pop()[1:]
-        elif wxdata[-1][0] == 'Q':
-            units.altimeter = 'hPa'
-            altimeter = wxdata.pop()[1:].lstrip('.')
-        elif len(wxdata[-1]) == 4 and wxdata[-1].isdigit():
+        # Other version but prefer normal if available
+        elif target[0] == 'Q':
+            if wxdata[-2][0] == 'A':
+                wxdata.pop()
+                altimeter = wxdata.pop()[1:]
+            else:
+                units.altimeter = 'hPa'
+                altimeter = wxdata.pop()[1:].lstrip('.')
+        # Else grab the digits
+        elif len(target) == 4 and target.isdigit():
             altimeter = wxdata.pop()
     elif version == 'IN':
-        if wxdata[-1][0] == 'Q':
+        # Version target
+        if target[0] == 'Q':
             altimeter = wxdata.pop()[1:].lstrip('.')
-            if altimeter.find('/') != -1:
+            if '/' in altimeter:
                 altimeter = altimeter[:altimeter.find('/')]
-        elif wxdata[-1][0] == 'A':
-            units.altimeter = 'inHg'
-            altimeter = wxdata.pop()[1:]
+        # Other version but prefer normal if available
+        elif target[0] == 'A':
+            if wxdata[-2][0] == 'Q':
+                wxdata.pop()
+                altimeter = wxdata.pop()[1:]
+            else:
+                units.altimeter = 'inHg'
+                altimeter = wxdata.pop()[1:]
     #Some stations report both, but we only need one
     if wxdata and (wxdata[-1][0] == 'A' or wxdata[-1][0] == 'Q'):
         wxdata.pop()

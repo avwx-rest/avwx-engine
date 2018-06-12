@@ -8,7 +8,7 @@ tests/test_core.py
 # library
 import unittest
 # module
-from avwx import core, exceptions, static
+from avwx import core, exceptions, static, structs
 
 class TestGlobal(unittest.TestCase):
 
@@ -140,6 +140,39 @@ class TestMetar(unittest.TestCase):
         fixed = 'KJFK 36010   TS FEW004 SCT012 FEW///CB BKN080 CAVOK A2992'
         self.assertEqual(core.sanitize_report_string(line), fixed)
 
+    def test_get_altimeter(self):
+        """
+        Tests that the correct alimeter item gets removed from the end of the wx list
+        """
+        # North American default
+        units = structs.Units(**static.NA_UNITS)
+        for wx, altim,  in (
+            (['1', '2'], ''),
+            (['1', '2', 'A2992'], '2992'),
+            (['1', '2', '2992'], '2992'),
+            (['1', '2', 'A2992', 'Q1000'], '2992'),
+            (['1', '2', 'Q1000', 'A2992'], '2992'),
+            (['1', '2', 'Q1000'], '1000')
+        ):
+            self.assertEqual(units.altimeter, 'inHg')
+            self.assertEqual(core.get_altimeter(wx, units), (['1', '2'], altim))
+        # The last one should have changed the unit
+        self.assertEqual(units.altimeter, 'hPa')
+        # International
+        units = structs.Units(**static.IN_UNITS)
+        for wx, altim,  in (
+            (['1', '2'], ''),
+            (['1', '2', 'Q.1000'], '1000'),
+            (['1', '2', 'Q1000/10'], '1000'),
+            (['1', '2', 'A2992', 'Q1000'], '1000'),
+            (['1', '2', 'Q1000', 'A2992'], '1000'),
+            (['1', '2', 'A2992'], '2992')
+        ):
+            self.assertEqual(units.altimeter, 'hPa')
+            self.assertEqual(core.get_altimeter(wx, units, 'IN'), (['1', '2'], altim))
+        # The last one should have changed the unit
+        self.assertEqual(units.altimeter, 'inHg')
+
 class TestTaf(unittest.TestCase):
 
     def test_sanitize_line(self):
@@ -151,3 +184,12 @@ class TestTaf(unittest.TestCase):
         for line in ('1 TEMP0 1', '1 TEMP 1', '1 TEMO1', '1 T EMPO1'):
             self.assertEqual(core.sanitize_line(line), '1 TEMPO 1')
         self.assertEqual(core.sanitize_line('1 2 3 4 5'), '1 2 3 4 5')
+
+    def test_is_not_tempo_or_prob(self):
+        """
+        Tests a function which checks that an item signifies a new time period
+        """
+        for rtype in ('1', 'TEMPORARY', 'TEMP0', 'PROBABLY', 'PROB'):
+            self.assertTrue(core.is_not_tempo_or_prob(rtype))
+        for rtype in ('TEMPO', 'PROB30', 'PROBNA'):
+            self.assertFalse(core.is_not_tempo_or_prob(rtype))
