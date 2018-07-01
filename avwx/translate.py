@@ -254,7 +254,7 @@ def turb_ice(turbice: [str], unit: str = 'ft') -> str:
     split = []
     for item in turbice:
         if len(item) == 6:
-            split.append([item[1:2], item[2:5], item[5:6]])
+            split.append([item[1:2], item[2:5], item[5]])
     #Combine items that cover a layer greater than 9000ft
     for i in reversed(range(len(split) - 1)):
         if split[i][2] == '9' and split[i][0] == split[i + 1][0] \

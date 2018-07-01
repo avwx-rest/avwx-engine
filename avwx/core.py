@@ -343,10 +343,10 @@ def get_temp_and_dew(wxdata: str) -> ([str], str, str):
         if '/' in item:
             #///07
             if item[0] == '/':
-                item = '/' + item.strip('/')
+                item = '/' + item.lstrip('/')
             #07///
             elif item[-1] == '/':
-                item = item.strip('/') + '/'
+                item = item.rstrip('/') + '/'
             tempdew = item.split('/')
             if len(tempdew) != 2:
                 continue
@@ -359,7 +359,7 @@ def get_temp_and_dew(wxdata: str) -> ([str], str, str):
                     break
             if valid:
                 wxdata.pop(i)
-                return wxdata, tempdew[0], tempdew[1]
+                return (wxdata, *tempdew)
     return wxdata, '', ''
 
 
@@ -368,9 +368,10 @@ def get_station_and_time(wxdata: [str]) -> ([str], str, str):
     Returns the report list and removed station ident and time strings
     """
     station = wxdata.pop(0)
-    if wxdata and wxdata[0].endswith('Z') and wxdata[0][:-1].isdigit():
+    qtime = wxdata[0]
+    if wxdata and qtime.endswith('Z') and qtime[:-1].isdigit():
         rtime = wxdata.pop(0)
-    elif wxdata and len(wxdata[0]) == 6 and wxdata[0].isdigit():
+    elif wxdata and len(qtime) == 6 and qtime.isdigit():
         rtime = wxdata.pop(0) + 'Z'
     else:
         rtime = ''
@@ -434,10 +435,8 @@ def get_visibility(wxdata: [str], units: Units) -> ([str], str):
         item = copy(wxdata[0])
         # Vis reported in statue miles
         if item.endswith('SM'):  # 10SM
-            if item == 'P6SM':
-                visibility = 'P6'
-            elif item == 'M1/4SM':
-                visibility = 'M1/4'
+            if item in ('P6SM', 'M1/4SM'):
+                visibility = item[:-2]
             elif '/' not in item:
                 visibility = str(int(item[:item.find('SM')]))
             else:
@@ -452,8 +451,8 @@ def get_visibility(wxdata: [str], units: Units) -> ([str], str):
             and (item[4] in ['M', 'N', 'S', 'E', 'W'] or item[4:] == 'NDV'):
             visibility = wxdata.pop(0)[:4]
             units.visibility = 'm'
-        elif len(item) == 5 and item[1:5].isdigit() and item[0] in ['M', 'P', 'B']:
-            visibility = wxdata.pop(0)[1:5]
+        elif len(item) == 5 and item[1:].isdigit() and item[0] in ['M', 'P', 'B']:
+            visibility = wxdata.pop(0)[1:]
             units.visibility = 'm'
         elif item.endswith('KM') and item[:item.find('KM')].isdigit():
             visibility = item[:item.find('KM')] + '000'
@@ -475,28 +474,30 @@ def get_type_and_times(wxdata: [str]) -> ([str], str, str, str):
     Report type string, start time string, end time string
     """
     report_type, start_time, end_time = 'BASE', '', ''
-    #TEMPO, BECMG, INTER
-    if wxdata and wxdata[0] in ['TEMPO', 'BECMG', 'INTER']:
-        report_type = wxdata.pop(0)
-    #PROB[30,40]
-    elif wxdata and len(wxdata[0]) == 6 and wxdata[0].startswith('PROB'):
-        report_type = wxdata.pop(0)
-    #1200/1306
-    if wxdata and len(wxdata[0]) == 9 and wxdata[0][4] == '/' \
-        and wxdata[0][:4].isdigit() and wxdata[0][5:].isdigit():
-        start_time, end_time = wxdata.pop(0).split('/')
-    #FM120000
-    elif wxdata and len(wxdata[0]) > 7 and wxdata[0].startswith('FM'):
-        report_type = 'FROM'
-        if '/' in wxdata[0] and wxdata[0][2:].split('/')[0].isdigit() \
-            and wxdata[0][2:].split('/')[1].isdigit():
-            start_time, end_time = wxdata.pop(0)[2:].split('/')
-        elif wxdata[0][2:8].isdigit():
-            start_time = wxdata.pop(0)[2:6]
-        #TL120600
-        if wxdata and len(wxdata[0]) > 7 and wxdata[0].startswith('TL') \
-            and wxdata[0][2:8].isdigit():
-            end_time = wxdata.pop(0)[2:6]
+    if wxdata:
+        #TEMPO, BECMG, INTER
+        if wxdata[0] in ('TEMPO', 'BECMG', 'INTER'):
+            report_type = wxdata.pop(0)
+        #PROB[30,40]
+        elif len(wxdata[0]) == 6 and wxdata[0].startswith('PROB'):
+            report_type = wxdata.pop(0)
+    if wxdata:
+        #1200/1306
+        if len(wxdata[0]) == 9 and wxdata[0][4] == '/' \
+            and wxdata[0][:4].isdigit() and wxdata[0][5:].isdigit():
+            start_time, end_time = wxdata.pop(0).split('/')
+        #FM120000
+        elif len(wxdata[0]) > 7 and wxdata[0].startswith('FM'):
+            report_type = 'FROM'
+            if '/' in wxdata[0] and wxdata[0][2:].split('/')[0].isdigit() \
+                and wxdata[0][2:].split('/')[1].isdigit():
+                start_time, end_time = wxdata.pop(0)[2:].split('/')
+            elif wxdata[0][2:8].isdigit():
+                start_time = wxdata.pop(0)[2:6]
+            #TL120600
+            if wxdata and len(wxdata[0]) > 7 and wxdata[0].startswith('TL') \
+                and wxdata[0][2:8].isdigit():
+                end_time = wxdata.pop(0)[2:6]
     return wxdata, report_type, start_time, end_time
 
 

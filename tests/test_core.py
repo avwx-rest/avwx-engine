@@ -5,6 +5,8 @@ tests/test_core.py
 
 # pylint: disable=E1101,C0103
 
+# stdlib
+from copy import deepcopy
 # library
 import unittest
 # module
@@ -116,6 +118,84 @@ class TestGlobal(unittest.TestCase):
         fixed = 'EGLL 12345KT TS P6SM'.split()
         self.assertEqual(core.sanitize_report_list(line), (fixed, ['R10/10'], 'WS100/20'))
 
+    def test_is_possible_temp(self):
+        """
+        Tests if an element could be a formatted temperature
+        """
+        for is_temp in ('10', '22', '333', 'M05', '5'):
+            self.assertTrue(core.is_possible_temp(is_temp))
+        for not_temp in ('A', '12.3', 'MNA', '-13'):
+            self.assertFalse(core.is_possible_temp(not_temp))
+
+    def test_get_temp_and_dew(self):
+        """
+        Tests temperature and dewpoint extraction
+        """
+        for wx, temp, dew,  in (
+            (['1', '2'], '', ''),
+            (['1', '2', '07/05'], '07', '05'),
+            (['07/05', '1', '2'], '07', '05'),
+            (['M05/M10', '1', '2'], 'M05', 'M10'),
+            (['///20', '1', '2'], '', '20'),
+            (['10///', '1', '2'], '10', ''),
+            (['/////', '1', '2'], '', ''),
+            (['XX/01', '1', '2'], '', '01')
+        ):
+            self.assertEqual(core.get_temp_and_dew(wx), (['1', '2'], temp, dew))
+        self.assertEquals(core.get_temp_and_dew(['MX/01']), (['MX/01'], '', ''))
+
+    def test_get_station_and_time(self):
+        """
+        Tests removal of station (first item) and potential timestamp
+        """
+        for wx, ret, station, time,  in (
+            (['KJFK', '123456Z', '1'], ['1'], 'KJFK', '123456Z'),
+            (['KJFK', '123456', '1'], ['1'], 'KJFK', '123456Z'),
+            (['KJFK', '1234Z', '1'], ['1'], 'KJFK', '1234Z'),
+            (['KJFK', '1234', '1'], ['1234', '1'], 'KJFK', ''),
+            (['KJFK', '1'], ['1'], 'KJFK', '')
+        ):
+            self.assertEqual(core.get_station_and_time(wx), (ret, station, time))
+
+    def test_get_wind(self):
+        """
+        Tests that the wind item gets removed and split into its components
+        """
+        #Both us knots as the default unit, so just test North American default
+        for wx, unit, *wind  in (
+            (['1'], 'kt', '', '', '', []),
+            (['12345(E)', 'G50', '1'], 'kt', '123', '45', '50', []),
+            (['O1234G56', '1'], 'kt', '012', '34', '56', []),
+            (['36010KTS', 'G20', '300V060', '1'], 'kt', '360', '10', '20', ['300', '060']),
+            (['VRB10MPS', '1'], 'm/s', 'VRB', '10', '', []),
+            (['VRB20G30KMH', '1'], 'km/h', 'VRB', '20', '30', [])
+        ):
+            units = structs.Units(**static.NA_UNITS)
+            self.assertEqual(core.get_wind(wx, units), (['1'], *wind))
+            self.assertEqual(units.wind_speed, unit)
+
+    def test_get_visibility(self):
+        """
+        Tests that the visibility item(s) gets removed and cleaned
+        """
+        for wx, unit, visibility in (
+            (['1'], 'sm', ''),
+            (['05SM', '1'], 'sm', '5'),
+            (['10SM', '1'], 'sm', '10'),
+            (['P6SM', '1'], 'sm', 'P6'),
+            (['M1/4SM', '1'], 'sm', 'M1/4'),
+            (['1/2SM', '1'], 'sm', '1/2'),
+            (['2', '1/2SM', '1'], 'sm', '5/2'),
+            (['1000', '1'], 'm', '1000'),
+            (['1000E', '1'], 'm', '1000'),
+            (['1000NDV', '1'], 'm', '1000'),
+            (['M1000', '1'], 'm', '1000'),
+            (['2KM', '1'], 'm', '2000'),
+        ):
+            units = structs.Units(**static.NA_UNITS)
+            self.assertEqual(core.get_visibility(wx, units), (['1'], visibility))
+            self.assertEqual(units.visibility, unit)
+
 class TestMetar(unittest.TestCase):
 
     def test_get_remarks(self):
@@ -193,3 +273,53 @@ class TestTaf(unittest.TestCase):
             self.assertTrue(core.is_not_tempo_or_prob(rtype))
         for rtype in ('TEMPO', 'PROB30', 'PROBNA'):
             self.assertFalse(core.is_not_tempo_or_prob(rtype))
+
+    def test_get_taf_alt_ice_turb(self):
+        """
+        Tests that report global altimeter, icing, and turbulance get removed
+        """
+        for wx, *data  in (
+            (['1'], '', [], []),
+            (['1', '512345', '612345'], '', ['612345'], ['512345']),
+            (['QNH1234', '1', '612345'], '1234', ['612345'], [])
+        ):
+            self.assertEqual(core.get_taf_alt_ice_turb(wx), (['1'], *data))
+
+    def test_get_type_and_times(self):
+        """
+        Tests TAF line type, start time, and end time extraction
+        """
+        for wx, *data  in (
+            (['1'], 'BASE', '', ''),
+            (['INTER', '1'], 'INTER', '', ''),
+            (['TEMPO', '0101/0103', '1'], 'TEMPO', '0101', '0103'),
+            (['PROB30', '0101/0103', '1'], 'PROB30', '0101', '0103'),
+            (['FM120000', '1'], 'FROM', '1200', ''),
+            (['FM1200/1206', '1'], 'FROM', '1200', '1206'),
+            (['FM120000', 'TL120600', '1'], 'FROM', '1200', '1206')
+        ):
+            self.assertEqual(core.get_type_and_times(wx), (['1'], *data))
+
+    # def test_find_missing_taf_times(self):
+    #     """
+    #     """
+    #     good_lines = [
+    #         {'type': 'BASE', 'start_time': '3021', 'end_time': '0114'},
+    #         {'type': 'FROM', 'start_time': '3023', 'end_time': '0105'},
+    #         {'type': 'FROM', 'start_time': '0105', 'end_time': '0108'},
+    #         {'type': 'FROM', 'start_time': '0108', 'end_time': '0114'}
+    #     ]
+    #     bad_lines = deepcopy(good_lines)
+    #     bad_lines[2]['end_time'] = ''
+    #     self.assertEqual(core.find_missing_taf_times(bad_lines), good_lines)
+
+    def test_get_temp_min_and_max(self):
+        """
+        Tests that temp max and min times are extracted and assigned properly
+        """
+        for wx, *temps  in (
+            (['1'], '', ''),
+            (['1', 'TX12/1316Z', 'TNM03/1404Z'], 'TX12/1316Z', 'TNM03/1404Z'),
+            (['1', 'TM03/1404Z', 'T12/1316Z'], 'TX12/1316Z', 'TNM03/1404Z'),
+        ):
+            self.assertEqual(core.get_temp_min_and_max(wx), (['1'], *temps))

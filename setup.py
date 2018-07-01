@@ -21,9 +21,9 @@ setup(
     ],
     python_requires='>= 3.6',
     install_requires=[
-        'dataclasses>=0.6.0', # Used for 3.6 backport
-        'requests~=2.18.4',
-        'xmltodict~=0.11.0'
+        'dataclasses>=0.6', # Used for 3.6 backport
+        'requests~=2.19',
+        'xmltodict~=0.11'
     ],
     packages=['avwx'],
     package_data={'avwx': ['stations.json']}
