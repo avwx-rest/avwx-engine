@@ -252,17 +252,6 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
     return wxdata, runway_vis, shear
 
 
-def is_not_tempo_or_prob(report_type: str) -> bool:
-    """
-    Returns True if report type is TEMPO or PROB__
-    """
-    if report_type == 'TEMPO':
-        return False
-    if len(report_type) == 6 and report_type.startswith('PROB'):
-        return False
-    return True
-
-
 def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], str):
     """
     Returns the report list and the removed altimeter item
@@ -473,7 +462,7 @@ def get_type_and_times(wxdata: [str]) -> ([str], str, str, str):
     Returns the report list and removed:
     Report type string, start time string, end time string
     """
-    report_type, start_time, end_time = 'BASE', '', ''
+    report_type, start_time, end_time = 'FROM', '', ''
     if wxdata:
         #TEMPO, BECMG, INTER
         if wxdata[0] in ('TEMPO', 'BECMG', 'INTER'):
@@ -501,22 +490,49 @@ def get_type_and_times(wxdata: [str]) -> ([str], str, str, str):
     return wxdata, report_type, start_time, end_time
 
 
-def find_missing_taf_times(lines: [dict]) -> [dict]:
+def _is_tempo_or_prob(report_type: str) -> bool:
+    """
+    Returns True if report type is TEMPO or PROB__
+    """
+    if report_type == 'TEMPO':
+        return True
+    if len(report_type) == 6 and report_type.startswith('PROB'):
+        return True
+    return False
+
+
+def _get_next_time(lines: [dict], target: str) -> str:
+    """
+    Returns the next FROM target value or empty
+    """
+    for line in lines:
+        if line[target] and not _is_tempo_or_prob(line['type']):
+            return line[target]
+    return ''
+
+
+def find_missing_taf_times(lines: [dict], start: str, end: str) -> [dict]:
     """
     Fix any missing time issues (except for error/empty lines)
     """
+    if not lines:
+        return lines
+    # Assign start time
+    lines[0]['start_time'] = start
+    # Fix other times
     last_fm_line = 0
     for i, line in enumerate(lines):
-        if line['end_time'] == '' and is_not_tempo_or_prob(line['type']):
-            last_fm_line = i
-            if i < len(lines) - 1:
-                for report in lines[i + 1:]:
-                    if is_not_tempo_or_prob(report['type']):
-                        line['end_time'] = report['start_time']
-                        break
+        if _is_tempo_or_prob(line['type']):
+            continue
+        last_fm_line = i
+        # Search remaining lines to fill empty end or previous for empty start
+        for target, other, direc in (('start', 'end', -1), ('end', 'start', 1)):
+            target += '_time'
+            if not line[target]:
+                line[target] = _get_next_time(lines[i::direc][1:], other+'_time')
     #Special case for final forcast
-    if last_fm_line > 0:
-        lines[last_fm_line]['end_time'] = lines[0]['end_time']
+    if last_fm_line:
+        lines[last_fm_line]['end_time'] = end
     return lines
 
 
@@ -657,7 +673,7 @@ def get_taf_flight_rules(lines: [dict]) -> [dict]:
     for i, line in enumerate(lines):
         temp_vis, temp_cloud = line['visibility'], line['clouds']
         for report in reversed(lines[:i]):
-            if is_not_tempo_or_prob(report['type']):
+            if not _is_tempo_or_prob(report['type']):
                 if temp_vis == '':
                     temp_vis = report['visibility']
                 if 'SKC' in report['other'] or 'CLR' in report['other']:

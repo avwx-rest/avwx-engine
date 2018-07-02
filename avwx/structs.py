@@ -79,6 +79,8 @@ class TafLineData(SharedData):
 @dataclass
 class TafData(ReportData):
     forecast: [TafLineData]
+    start_time: str
+    end_time: str
     max_temp: float = None
     min_temp: float = None
     alts: [str] = None

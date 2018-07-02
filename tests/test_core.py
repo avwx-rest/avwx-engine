@@ -265,14 +265,14 @@ class TestTaf(unittest.TestCase):
             self.assertEqual(core.sanitize_line(line), '1 TEMPO 1')
         self.assertEqual(core.sanitize_line('1 2 3 4 5'), '1 2 3 4 5')
 
-    def test_is_not_tempo_or_prob(self):
+    def test_is_tempo_or_prob(self):
         """
         Tests a function which checks that an item signifies a new time period
         """
-        for rtype in ('1', 'TEMPORARY', 'TEMP0', 'PROBABLY', 'PROB'):
-            self.assertTrue(core.is_not_tempo_or_prob(rtype))
         for rtype in ('TEMPO', 'PROB30', 'PROBNA'):
-            self.assertFalse(core.is_not_tempo_or_prob(rtype))
+            self.assertTrue(core._is_tempo_or_prob(rtype))
+        for rtype in ('1', 'TEMPORARY', 'TEMP0', 'PROBABLY', 'PROB'):
+            self.assertFalse(core._is_tempo_or_prob(rtype))
 
     def test_get_taf_alt_ice_turb(self):
         """
@@ -290,7 +290,7 @@ class TestTaf(unittest.TestCase):
         Tests TAF line type, start time, and end time extraction
         """
         for wx, *data  in (
-            (['1'], 'BASE', '', ''),
+            (['1'], 'FROM', '', ''),
             (['INTER', '1'], 'INTER', '', ''),
             (['TEMPO', '0101/0103', '1'], 'TEMPO', '0101', '0103'),
             (['PROB30', '0101/0103', '1'], 'PROB30', '0101', '0103'),
@@ -300,18 +300,22 @@ class TestTaf(unittest.TestCase):
         ):
             self.assertEqual(core.get_type_and_times(wx), (['1'], *data))
 
-    # def test_find_missing_taf_times(self):
-    #     """
-    #     """
-    #     good_lines = [
-    #         {'type': 'BASE', 'start_time': '3021', 'end_time': '0114'},
-    #         {'type': 'FROM', 'start_time': '3023', 'end_time': '0105'},
-    #         {'type': 'FROM', 'start_time': '0105', 'end_time': '0108'},
-    #         {'type': 'FROM', 'start_time': '0108', 'end_time': '0114'}
-    #     ]
-    #     bad_lines = deepcopy(good_lines)
-    #     bad_lines[2]['end_time'] = ''
-    #     self.assertEqual(core.find_missing_taf_times(bad_lines), good_lines)
+    def test_find_missing_taf_times(self):
+        """
+        Tests that missing forecast times can be interpretted by 
+        """
+        good_lines = [
+            {'type': 'FROM', 'start_time': '3021', 'end_time': '3023'},
+            {'type': 'FROM', 'start_time': '3023', 'end_time': '0105'},
+            {'type': 'FROM', 'start_time': '0105', 'end_time': '0108'},
+            {'type': 'FROM', 'start_time': '0108', 'end_time': '0114'}
+        ]
+        bad_lines = deepcopy(good_lines)
+        bad_lines[0]['start_time'] = ''
+        bad_lines[1]['start_time'] = ''
+        bad_lines[2]['end_time'] = ''
+        bad_lines[3]['end_time'] = ''
+        self.assertEqual(core.find_missing_taf_times(bad_lines, '3021', '0114'), good_lines)
 
     def test_get_temp_min_and_max(self):
         """

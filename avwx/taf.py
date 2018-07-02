@@ -37,12 +37,14 @@ def parse(station: str, txt: str, delim: str = '<br/>&nbsp;&nbsp;') -> TafData:
     Units is dict of identified units of measurement for each field
     """
     core.valid_station(station)
-    while len(txt) > 3 and txt[:4] in ['TAF ', 'AMD ', 'COR ']:
+    while len(txt) > 3 and txt[:4] in ('TAF ', 'AMD ', 'COR '):
         txt = txt[4:]
     _, station, time = core.get_station_and_time(txt[:20].split(' '))
     retwx = {
+        'end_time': '',
         'raw': txt,
         'remarks': '',
+        'start_time': '',
         'station': station,
         'time': time
     }
@@ -54,19 +56,25 @@ def parse(station: str, txt: str, delim: str = '<br/>&nbsp;&nbsp;') -> TafData:
     else:
         use_na = False
         units = Units(**IN_UNITS)
-    parsed_lines, retwx['remarks'] = parse_lines(txt.strip(' ').split(delim), units, use_na)
-    last_index = len(parsed_lines) - 1
+    parsed_lines, retwx['remarks'] = parse_lines(txt.strip().split(delim), units, use_na)
+    # Perform additional info extract and corrections
     if parsed_lines:
-        parsed_lines[last_index]['other'], retwx['max_temp'], retwx['min_temp'] \
-            = core.get_temp_min_and_max(parsed_lines[last_index]['other'])
+        parsed_lines[-1]['other'], retwx['max_temp'], retwx['min_temp'] \
+            = core.get_temp_min_and_max(parsed_lines[-1]['other'])
         if not (retwx['max_temp'] or retwx['min_temp']):
             parsed_lines[0]['other'], retwx['max_temp'], retwx['min_temp'] \
                 = core.get_temp_min_and_max(parsed_lines[0]['other'])
-        parsed_lines = core.find_missing_taf_times(parsed_lines)
+        # Set start and end times based on the first line
+        start, end = parsed_lines[0]['start_time'], parsed_lines[0]['end_time']
+        parsed_lines[0]['end_time'] = ''
+        retwx['start_time'], retwx['end_time'] = start, end
+        parsed_lines = core.find_missing_taf_times(parsed_lines, start, end)
         parsed_lines = core.get_taf_flight_rules(parsed_lines)
+    # Extract Oceania-specific data
     if retwx['station'][0] == 'A':
-        parsed_lines[last_index]['other'], retwx['alts'], retwx['temps'] \
-            = core.get_oceania_temp_and_alt(parsed_lines[last_index]['other'])
+        parsed_lines[-1]['other'], retwx['alts'], retwx['temps'] \
+            = core.get_oceania_temp_and_alt(parsed_lines[-1]['other'])
+    # Convert to dataclass
     retwx['forecast'] = [TafLineData(**line) for line in parsed_lines]
     return TafData(**retwx), units
 
