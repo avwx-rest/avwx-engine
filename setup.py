@@ -21,7 +21,7 @@ setup(
     ],
     python_requires='>= 3.6',
     install_requires=[
-        'dataclasses>=0.6', # Used for 3.6 backport
+        'dataclasses>=0.6;python_version<"3.7"',
         'requests~=2.19',
         'xmltodict~=0.11'
     ],
