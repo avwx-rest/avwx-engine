@@ -564,7 +564,7 @@ def get_temp_min_and_max(wxlist: [str]) -> ([str], str, str):
     return wxlist, temp_max, temp_min
 
 
-def get_digit_list(alist: [str], from_index: int) -> ([str], [str]):
+def _get_digit_list(alist: [str], from_index: int) -> ([str], [str]):
     """
     Returns a list of items removed from a given list of strings
     that are all digits from 'from_index' until hitting a non-digit item
@@ -582,9 +582,9 @@ def get_oceania_temp_and_alt(wxlist: [str]) -> ([str], [str], [str]):
     """
     tlist, qlist = [], []
     if 'T' in wxlist:
-        wxlist, tlist = get_digit_list(wxlist, wxlist.index('T'))
+        wxlist, tlist = _get_digit_list(wxlist, wxlist.index('T'))
     if 'Q' in wxlist:
-        wxlist, qlist = get_digit_list(wxlist, wxlist.index('Q'))
+        wxlist, qlist = _get_digit_list(wxlist, wxlist.index('Q'))
     return wxlist, tlist, qlist
 
 
@@ -602,13 +602,13 @@ def sanitize_cloud(cloud: str) -> str:
     return cloud
 
 
-def split_cloud(cloud: str, begins_with_vv: bool) -> [str]:
+def split_cloud(cloud: str) -> [str]:
     """
     Transforms a cloud string into a list of strings: [Type, Height (, Optional Modifier)]
     """
     split = []
     cloud = sanitize_cloud(cloud)
-    if begins_with_vv:
+    if cloud.startswith('VV'):
         split.append(cloud[:2])
         cloud = cloud[2:]
     while len(cloud) >= 3:
@@ -627,14 +627,12 @@ def get_clouds(wxdata: [str]) -> ([str], list):
     """
     clouds = []
     for i, item in reversed(list(enumerate(wxdata))):
-        if item[:3] in CLOUD_LIST:
-            clouds.append(split_cloud(wxdata.pop(i), False))
-        elif item[:2] == 'VV':
-            clouds.append(split_cloud(wxdata.pop(i), True))
+        if item[:3] in CLOUD_LIST or item[:2] == 'VV':
+            clouds.append(split_cloud(wxdata.pop(i)))
     return wxdata, sorted(clouds, key=lambda pair: (pair[1], pair[0]))
 
 
-def get_flight_rules(vis: str, cloud: [str]) -> int:
+def get_flight_rules(vis: str, ceiling: [str]) -> int:
     """
     Returns int based on current flight rules from parsed METAR data
 
@@ -655,7 +653,7 @@ def get_flight_rules(vis: str, cloud: [str]) -> int:
     else:
         vis = int(vis)
     # Parse ceiling
-    cld = int(cloud[1]) if cloud else 99
+    cld = int(ceiling[1]) if ceiling else 99
     # Determine flight rules
     if (vis <= 5) or (cld <= 30):
         if (vis < 3) or (cld < 10):

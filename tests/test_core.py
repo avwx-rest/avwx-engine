@@ -196,6 +196,90 @@ class TestGlobal(unittest.TestCase):
             self.assertEqual(core.get_visibility(wx, units), (['1'], visibility))
             self.assertEqual(units.visibility, unit)
 
+    def test_get_digit_list(self):
+        """
+        Tests that digits are removed after an index but before a non-digit item
+        """
+        items = ['1', 'T', '2', '3', 'ODD', 'Q', '4', 'C']
+        items, ret = core._get_digit_list(items, 1)
+        self.assertEqual(items, ['1', 'ODD', 'Q', '4', 'C'])
+        self.assertEqual(ret, ['2', '3'])
+        items, ret = core._get_digit_list(items, 2)
+        self.assertEqual(items, ['1', 'ODD','C'])
+        self.assertEqual(ret, ['4'])
+
+    def test_sanitize_cloud(self):
+        """
+        Tests the common cloud issues are fixed before parsing
+        """
+        for bad, good in (
+            ('OVC', 'OVC'),
+            ('010', '010'),
+            ('SCT060', 'SCT060'),
+            ('FEWO03', 'FEW003'),
+            ('BKNC015', 'BKN015C'),
+        ):
+            self.assertEqual(core.sanitize_cloud(bad), good)
+
+    def test_split_cloud(self):
+        """
+        Tests that cloud strings and fixed and split into their two or three elements
+        """
+        for cloud, out in (
+            ('SCT060', ['SCT', '060']),
+            ('FEWO03', ['FEW', '003']),
+            ('BKNC015', ['BKN', '015', 'C']),
+            ('OVC120TS', ['OVC', '120', 'TS']),
+            ('VV002', ['VV', '002']),
+            ('SCT', ['SCT', '']),
+        ):
+            self.assertEqual(core.split_cloud(cloud), out)
+
+    def test_get_clouds(self):
+        """
+        Tests that clouds are removed, fixed, and split correctly
+        """
+        for wx, clouds in (
+            (['1'], []),
+            (['SCT060','1'], [['SCT','060']]),
+            (['OVC100','1','VV010','SCTO50C'], [['VV','010'],['SCT','050','C'],['OVC','100']]),
+            (['1','BKN020','SCT050'], [['BKN','020'],['SCT','050']]),
+        ):
+            self.assertEqual(core.get_clouds(wx), (['1'], clouds))
+
+    def test_get_flight_rules(self):
+        """
+        Tests that the proper flight rule is calculated for a set visibility and ceiling
+
+        Note: Only 'Broken', 'Overcast', and 'Vertical Visibility' are considdered ceilings
+        """
+        for vis, ceiling, rule in (
+            (None, None, 'IFR'),
+            ('10', None, 'VFR'),
+            ('6', ['OVC','020'], 'MVFR'),
+            ('6', ['OVC','007'], 'IFR'),
+            ('2', ['OVC','020'], 'IFR'),
+            ('6', ['OVC','004'], 'LIFR'),
+            ('1/2', ['OVC','030'], 'LIFR'),
+        ):
+            print(vis, ceiling, rule)
+            self.assertEqual(static.FLIGHT_RULES[core.get_flight_rules(vis, ceiling)], rule)
+
+    def test_get_ceiling(self):
+        """
+        Tests that the ceiling is properly identified from a list of clouds
+        """
+        for clouds, ceiling in (
+            ([], None),
+            ([['FEW', '010'], ['SCT', '010']], None),
+            ([['OVC', '///']], None),
+            ([['VV', '005']], ['VV', '005']),
+            ([['OVC', '020'], ['BKN', '030']], ['OVC', '020']),
+            ([['OVC', '///'], ['BKN', '030']], ['BKN', '030']),
+            ([['FEW', '010'], ['OVC', '020']], ['OVC', '020']),
+        ):
+            self.assertEqual(core.get_ceiling(clouds), ceiling)
+
 class TestMetar(unittest.TestCase):
 
     def test_get_remarks(self):
@@ -327,3 +411,18 @@ class TestTaf(unittest.TestCase):
             (['1', 'TM03/1404Z', 'T12/1316Z'], 'TX12/1316Z', 'TNM03/1404Z'),
         ):
             self.assertEqual(core.get_temp_min_and_max(wx), (['1'], *temps))
+
+    def test_get_oceania_temp_and_alt(self):
+        """
+        Tests that Oceania-specific elements are identified and removed
+        """
+        items = ['1', 'T', '2', '3', 'ODD', 'Q', '4', 'C']
+        items, tlist, qlist = core.get_oceania_temp_and_alt(items)
+        self.assertEqual(items, ['1', 'ODD','C'])
+        self.assertEqual(tlist, ['2', '3'])
+        self.assertEqual(qlist, ['4'])
+
+    # def test_get_taf_flight_rules(self):
+    #     """
+    #     """
+    #     pass
