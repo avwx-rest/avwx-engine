@@ -10,7 +10,7 @@ def _tdec(code: str, unit: str = 'C') -> str:
     """
     Translates a 4-digit decimal temperature representation
 
-    Ex: 1045 -> -04.5°C    0237 -> 23.7°C
+    Ex: 1045 -> -4.5°C    0237 -> 23.7°C
     """
     return f"{'-' if code[0] == '1' else ''}{int(code[1:3])}.{code[3]}°{unit}"
 
@@ -93,7 +93,7 @@ def translate(remarks: str) -> {str: str}:
     # Add and replace static multi-word elements
     for key in REMARKS_GROUPS:
         if key in remarks:
-            ret[key] = REMARKS_GROUPS[key]
+            ret[key.strip()] = REMARKS_GROUPS[key]
             remarks.replace(key, ' ')
     # For each remaining element
     for rmk in remarks.split()[1:]:
