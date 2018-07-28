@@ -83,7 +83,7 @@ class AMO(Service):
     Requests data from AMO KMA for Korean stations
     """
 
-    url = 'https://amoapi.kma.go.kr/amoApi/{0}?icao={1}'
+    url = 'http://amoapi.kma.go.kr/amoApi/{0}?icao={1}'
 
     def _extract(self, raw: str) -> str:
         """
@@ -97,7 +97,9 @@ class AMO(Service):
         # Replace line breaks
         report = report.replace('\n', '')
         # Remove excess leading and trailing data
-        report = report.lstrip(self.rtype.upper()).rstrip('=')
+        for item in (self.rtype.upper(), 'SPECI'):
+            report = report.lstrip(item)
+        report = report.rstrip('=')
         # Make every element single-spaced and stripped
         return ' '.join(report.split())
 
