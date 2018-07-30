@@ -25,14 +25,18 @@ def get_cardinal_direction(wdir: int) -> str:
     ret = ''
     if not isinstance(wdir, int):
         wdir = int(wdir)
+    # Convert to range [0 360]
+    while wdir < 0:
+        wdir += 360
+    wdir = wdir % 360
     if 304 <= wdir <= 360 or 0 <= wdir <= 56:
         ret += 'N'
         if 304 <= wdir <= 348:
             if 327 <= wdir <= 348:
                 ret += 'N'
             ret += 'W'
-        elif 11 <= wdir <= 56:
-            if 11 <= wdir <= 33:
+        elif 12 <= wdir <= 56:
+            if 12 <= wdir <= 33:
                 ret += 'N'
             ret += 'E'
     elif 124 <= wdir <= 236:
@@ -41,6 +45,10 @@ def get_cardinal_direction(wdir: int) -> str:
             if 147 <= wdir <= 168:
                 ret += 'S'
             ret += 'E'
+        elif 192 <= wdir <= 236:
+            if 192 <= wdir <= 213:
+                ret += 'S'
+            ret += 'W'
     elif 57 <= wdir <= 123:
         ret += 'E'
         if 57 <= wdir <= 78:
@@ -76,11 +84,11 @@ def wind(wdir: str, wspd: str, wgst: str, wvar: [str] = None, unit: str = 'kt', 
     else:
         ret += wdir
     if wvar and isinstance(wvar, list):
-        ret += ' (variable {low} to {high})'.format(low=wvar[0], high=wvar[1])
+        ret += f' (variable {wvar[0]} to {wvar[1]})'
     if wspd and wspd not in ('0', '00'):
-        ret += ' at {speed}{unit}'.format(speed=wspd, unit=unit)
+        ret += f' at {wspd}{unit}'
     if wgst:
-        ret += ' gusting to {speed}{unit}'.format(speed=wgst, unit=unit)
+        ret += f' gusting to {wgst}{unit}'
     return ret
 
 
@@ -91,9 +99,9 @@ def visibility(vis: str, unit: str = 'm') -> str:
     Ex: 8km ( 5sm )
     """
     if vis == 'P6':
-        return 'Greater than 6sm ( >9999m )'
+        return 'Greater than 6sm ( >10km )'
     if vis == 'M1/4':
-        return 'Less than .25sm ( <0400m )'
+        return 'Less than .25sm ( <0.4km )'
     if '/' in vis and not core.is_unknown(vis):
         vis = float(vis[:vis.find('/')]) / int(vis[vis.find('/') + 1:])
     try:
@@ -111,7 +119,7 @@ def visibility(vis: str, unit: str = 'm') -> str:
         vis = str(vis).replace('.0', '')
     else:
         return ''
-    return vis + unit + ' (' + converted + ')'
+    return f'{vis}{unit} ({converted})'
 
 
 def temperature(temp: str, unit: str = 'C') -> str:
@@ -120,23 +128,23 @@ def temperature(temp: str, unit: str = 'C') -> str:
 
     Used for both Temp and Dew
 
-    Ex: 34C (93F)
+    Ex: 34°C (93°F)
     """
     temp = temp.replace('M', '-')
     try:
-        int(temp)
+        temp = int(temp)
     except ValueError:
         return ''
     unit = unit.upper()
     if unit == 'C':
         converted = int(temp) * 1.8 + 32
-        converted = str(int(round(converted))) + 'F'
+        converted = str(int(round(converted))) + '°F'
     elif unit == 'F':
         converted = (int(temp) - 32) / 1.8
-        converted = str(int(round(converted))) + 'C'
+        converted = str(int(round(converted))) + '°C'
     else:
         return ''
-    return temp + unit + ' (' + converted + ')'
+    return f'{temp}°{unit} ({converted})'
 
 
 def altimeter(alt: str, unit: str = 'hPa') -> str:
@@ -152,14 +160,14 @@ def altimeter(alt: str, unit: str = 'hPa') -> str:
             return ''
     if unit == 'hPa':
         converted = float(alt) / 33.8638866667
-        converted = str(round(converted, 2)) + 'inHg'
+        converted = str(round(converted, 2)) + ' inHg'
     elif unit == 'inHg':
         alt = alt[:2] + '.' + alt[2:]
         converted = float(alt) * 33.8638866667
-        converted = str(int(round(converted))) + 'hPa'
+        converted = str(int(round(converted))) + ' hPa'
     else:
         return ''
-    return alt + unit + ' (' + converted + ')'
+    return f'{alt} {unit} ({converted})'
 
 
 def clouds(clds: [str], unit: str = 'ft') -> str:
@@ -183,29 +191,30 @@ def clouds(clds: [str], unit: str = 'ft') -> str:
     return 'Sky clear'
 
 
-def wxcode(wxstr: str) -> str:
+def wxcode(code: str) -> str:
     """
     Translates weather codes into readable strings
 
     Returns translated string of variable length
     """
-    if wxstr[0] == '+':
+    if not code:
+        return ''
+    ret = ''
+    if code[0] == '+':
         ret = 'Heavy '
-        wxstr = wxstr[1:]
-    elif wxstr[0] == '-':
+        code = code[1:]
+    elif code[0] == '-':
         ret = 'Light '
-        wxstr = wxstr[1:]
-    else:
-        ret = ''
-    #Return wxstr if wxstr is not a code, ex R03/03002V03
-    if len(wxstr) not in [2, 4, 6]:
-        return wxstr
-    for _ in range(len(wxstr) // 2):
-        if wxstr[:2] in WX_TRANSLATIONS:
-            ret += WX_TRANSLATIONS[wxstr[:2]] + ' '
+        code = code[1:]
+    #Return code if code is not a code, ex R03/03002V03
+    if len(code) not in [2, 4, 6]:
+        return code
+    for _ in range(len(code) // 2):
+        if code[:2] in WX_TRANSLATIONS:
+            ret += WX_TRANSLATIONS[code[:2]] + ' '
         else:
-            ret += wxstr[:2]
-        wxstr = wxstr[2:]
+            ret += code[:2]
+        code = code[2:]
     return ret.strip(' ')
 
 
@@ -215,10 +224,7 @@ def other_list(wxcodes: [str]) -> str:
 
     Returns the translation string
     """
-    ret = []
-    for item in wxcodes:
-        ret.append(wxcode(item))
-    return ', '.join(ret)
+    return ', '.join([wxcode(code) for code in wxcodes])
 
 
 def wind_shear(shear: str, unit_alt: str = 'ft', unit_wnd: str = 'kt') -> str:
@@ -229,7 +235,7 @@ def wind_shear(shear: str, unit_alt: str = 'ft', unit_wnd: str = 'kt') -> str:
     """
     if not shear or 'WS' not in shear or '/' not in shear:
         return ''
-    shear = shear[2:].split('/')
+    shear = shear[2:].rstrip(unit_wnd.upper()).split('/')
     return 'Wind shear {alt}{unit_alt} from {winddir} at {speed}{unit_wind}'.format(
         alt=int(shear[0]) * 100, unit_alt=unit_alt, winddir=shear[1][:3],
         speed=shear[1][3:], unit_wind=unit_wnd)
@@ -271,7 +277,7 @@ def min_max_temp(temp: str, unit: str = 'C') -> str:
     """
     Format the Min and Max temp elemets into a readable string
 
-    Ex: Maximum temperature of 23C (73F) at 18-15:00Z
+    Ex: Maximum temperature of 23°C (73°F) at 18-15:00Z
     """
     if not temp or len(temp) < 7:
         return ''
@@ -284,8 +290,7 @@ def min_max_temp(temp: str, unit: str = 'C') -> str:
     temp = temp[2:].replace('M', '-').replace('Z', '').split('/')
     if len(temp[1]) > 2:
         temp[1] = temp[1][:2] + '-' + temp[1][2:]
-    return '{temp_type} temperature of {temp} at {time}:00Z'.format(
-        temp_type=temp_type, temp=temperature(temp[0], unit), time=temp[1])
+    return f'{temp_type} temperature of {temperature(temp[0], unit)} at {temp[1]}:00Z'
 
 
 def shared(wxdata: ReportData, units: Units) -> {str: str}:

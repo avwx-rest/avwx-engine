@@ -114,9 +114,9 @@ class TestGlobal(unittest.TestCase):
             line, fixed = line.split(), fixed.split()
             self.assertEqual(core.sanitize_report_list(line), (fixed, [], ''))
         # Test extracting runway visibility and wind shear
-        line = 'EGLL 12345 KT R10/10 RETS WS100/20KT 6SPM'.split()
+        line = 'EGLL 12345 KT R10/10 RETS WS020/07040KT 6SPM'.split()
         fixed = 'EGLL 12345KT TS P6SM'.split()
-        self.assertEqual(core.sanitize_report_list(line), (fixed, ['R10/10'], 'WS100/20'))
+        self.assertEqual(core.sanitize_report_list(line), (fixed, ['R10/10'], 'WS020/07040'))
 
     def test_is_possible_temp(self):
         """
