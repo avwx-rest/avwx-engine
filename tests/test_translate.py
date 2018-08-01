@@ -24,7 +24,6 @@ class TestShared(unittest.TestCase):
             ('3/4', 'sm', '0.75sm (1.2km)'),
             ('3/2', 'sm', '1.5sm (2.4km)'),
             ('3', 'sm', '3sm (4.8km)'),
-
         ):
             self.assertEqual(translate.visibility(vis, unit), translation)
 

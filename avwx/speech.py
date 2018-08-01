@@ -34,23 +34,23 @@ def remove_leading_zeros(num: str) -> str:
         ret = '-' + num[1:].lstrip('0')
     else:
         ret = num.lstrip('0')
-    return ret if ret else '0'
+    return '0' if ret in ('', 'M', '-') else ret
 
 
 def wind(wdir: str, wspd: str, wgst: str, wvar: [str] = None, unit: str = 'kt') -> str:
     """
     Format wind details into a spoken word string
     """
-    if unit in SPOKEN_UNITS:
-        unit = SPOKEN_UNITS[unit]
+    unit = SPOKEN_UNITS.get(unit, unit)
     if wdir not in ('000', 'VRB'):
         wdir = numbers(wdir)
-    wvar = wvar if not wvar is None else []
+    wvar = wvar or []
     for i, val in enumerate(wvar):
         wvar[i] = numbers(val)
-    return 'Winds ' + translate.wind(wdir, remove_leading_zeros(wspd),
-                                     remove_leading_zeros(wgst), wvar,
-                                     unit, cardinals=False)
+    val = translate.wind(wdir, remove_leading_zeros(wspd),
+                         remove_leading_zeros(wgst), wvar,
+                         unit, cardinals=False)
+    return 'Winds ' + (val or 'unknown')
 
 
 def temperature(header: str, temp: str, unit: str = 'C') -> str:
@@ -58,7 +58,7 @@ def temperature(header: str, temp: str, unit: str = 'C') -> str:
     Format temperature details into a spoken word string
     """
     if core.is_unknown(temp):
-        return header + ' Unknown'
+        return header + ' unknown'
     if unit in SPOKEN_UNITS:
         unit = SPOKEN_UNITS[unit]
     temp = numbers(remove_leading_zeros(temp))
@@ -70,11 +70,11 @@ def unpack_fraction(num: str) -> str:
     """
     Returns unpacked fraction string 5/2 -> 2 1/2
     """
-    nums = [int(n) for n in num.split('/')]
-    if nums[0] > nums[1]:
+    nums = [int(n) for n in num.split('/') if n]
+    if len(nums) == 2 and nums[0] > nums[1]:
         over = nums[0] // nums[1]
         rem = nums[0] % nums[1]
-        return '{} {}/{}'.format(over, rem, nums[1])
+        return f'{over} {rem}/{nums[1]}'
     return num
 
 
@@ -83,7 +83,7 @@ def visibility(vis: str, unit: str = 'm') -> str:
     Format visibility details into a spoken word string
     """
     if core.is_unknown(vis):
-        return 'Visibility Unknown'
+        return 'Visibility unknown'
     elif vis.startswith('M'):
         vis = 'less than ' + numbers(remove_leading_zeros(vis[1:]))
     elif vis.startswith('P'):
@@ -113,7 +113,7 @@ def altimeter(alt: str, unit: str = 'inHg') -> str:
     """
     ret = 'Altimeter '
     if core.is_unknown(alt):
-        ret += 'Unknown'
+        ret += 'unknown'
     elif unit == 'inHg':
         ret += numbers(alt[:2]) + ' point ' + numbers(alt[2:])
     elif unit == 'hPa':
