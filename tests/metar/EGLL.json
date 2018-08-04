@@ -1,0 +1,49 @@
+{
+    "data": {
+        "altimeter": "1022",
+        "clouds": [],
+        "dewpoint": "17",
+        "flight_rules": "VFR",
+        "other": [],
+        "raw": "EGLL 032220Z AUTO 31003KT 9999 NCD 23/17 Q1022 NOSIG",
+        "remarks": "NOSIG",
+        "remarks_info": {
+            "dewpoint_decimal": null,
+            "temperature_decimal": null
+        },
+        "runway_visibility": [],
+        "sanitized": "EGLL 032220Z AUTO 31003KT 9999 NCD 23/17 Q1022 NOSIG",
+        "station": "EGLL",
+        "temperature": "23",
+        "time": "032220Z",
+        "visibility": "9999",
+        "wind_direction": "310",
+        "wind_gust": "",
+        "wind_speed": "03",
+        "wind_variable_direction": []
+    },
+    "speech": "Winds three one zero at 3kt. Visibility one zero kilometers. Temperature two three degrees Celsius. Dew point one seven degrees Celsius. Altimeter one zero two two. Sky clear",
+    "station_info": {
+        "city": "London",
+        "country": "GBR",
+        "elevation": 24.4,
+        "iata": "LHR",
+        "icao": "EGLL",
+        "latitude": 51.47916667,
+        "longitude": -0.450555556,
+        "name": "Heathrow",
+        "priority": 6,
+        "state": "ENG"
+    },
+    "summary": "Winds NW-310 at 03kt, Vis 10km, Temp 23\u00b0C, Dew 17\u00b0C, Alt 1022 hPa, Sky clear",
+    "translations": {
+        "altimeter": "1022 hPa (30.18 inHg)",
+        "clouds": "Sky clear",
+        "dewpoint": "17\u00b0C (63\u00b0F)",
+        "other": "",
+        "remarks": {},
+        "temperature": "23\u00b0C (73\u00b0F)",
+        "visibility": "10km (6.2sm)",
+        "wind": "NW-310 at 03kt"
+    }
+}

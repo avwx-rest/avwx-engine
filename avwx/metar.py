@@ -20,7 +20,7 @@ def fetch(station: str) -> str:
     return service.get_service(station)('metar').fetch(station)
 
 
-def parse(station: str, txt: str) -> {str: object}:
+def parse(station: str, txt: str) -> (MetarData, Units):
     """Returns a dictionary of parsed METAR data
 
     Keys: Station, Time, Wind-Direction, Wind-Speed, Wind-Gust, Wind-Variable-Dir,

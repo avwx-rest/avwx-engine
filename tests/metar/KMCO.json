@@ -1,0 +1,64 @@
+{
+    "data": {
+        "altimeter": "3008",
+        "clouds": [
+            [
+                "FEW",
+                "050"
+            ],
+            [
+                "BKN",
+                "250"
+            ]
+        ],
+        "dewpoint": "23",
+        "flight_rules": "VFR",
+        "other": [],
+        "raw": "KMCO 032153Z 13006KT 10SM FEW050 BKN250 29/23 A3008 RMK AO2 LTG DSNT N TSE17 SLP183 CB DSNT SE-SW AND NW T02890233 $",
+        "remarks": "RMK AO2 LTG DSNT N TSE17 SLP183 CB DSNT SE-SW AND NW T02890233 $",
+        "remarks_info": {
+            "dewpoint_decimal": "23.3",
+            "temperature_decimal": "28.9"
+        },
+        "runway_visibility": [],
+        "sanitized": "KMCO 032153Z 13006KT 10SM FEW050 BKN250 29/23 A3008 RMK AO2 LTG DSNT N TSE17 SLP183 CB DSNT SE-SW AND NW T02890233 $",
+        "station": "KMCO",
+        "temperature": "29",
+        "time": "032153Z",
+        "visibility": "10",
+        "wind_direction": "130",
+        "wind_gust": "",
+        "wind_speed": "06",
+        "wind_variable_direction": []
+    },
+    "speech": "Winds one three zero at 6kt. Visibility one zero miles. Temperature two nine degrees Celsius. Dew point two three degrees Celsius. Altimeter three zero point zero eight. Few clouds at 5000ft. Broken layer at 25000ft",
+    "station_info": {
+        "city": "Orlando",
+        "country": "USA",
+        "elevation": 29.3,
+        "iata": "MCO",
+        "icao": "KMCO",
+        "latitude": 28.42939361,
+        "longitude": -81.30899306,
+        "name": "International Airport",
+        "priority": 2,
+        "state": "FL"
+    },
+    "summary": "Winds SE-130 at 06kt, Vis 10sm, Temp 29\u00b0C, Dew 23\u00b0C, Alt 30.08 inHg, Few clouds at 5000ft, Broken layer at 25000ft",
+    "translations": {
+        "altimeter": "30.08 inHg (1019 hPa)",
+        "clouds": "Few clouds at 5000ft, Broken layer at 25000ft - Reported AGL",
+        "dewpoint": "23\u00b0C (73\u00b0F)",
+        "other": "",
+        "remarks": {
+            "$": "ASOS requires maintenance",
+            "AO2": "Automated with precipitation sensor",
+            "SLP183": "Sea level pressure: 1018.3 hPa",
+            "T02890233": "Temperature 28.9\u00b0C and dewpoint 23.3\u00b0C",
+            "TSE17": "Thunderstorm ended at :17"
+        },
+        "temperature": "29\u00b0C (84\u00b0F)",
+        "visibility": "10sm (16.1km)",
+        "wind": "SE-130 at 06kt"
+    }
+}

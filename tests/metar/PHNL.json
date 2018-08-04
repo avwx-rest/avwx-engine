@@ -1,0 +1,62 @@
+{
+    "data": {
+        "altimeter": "3002",
+        "clouds": [
+            [
+                "FEW",
+                "025"
+            ],
+            [
+                "FEW",
+                "036"
+            ]
+        ],
+        "dewpoint": "19",
+        "flight_rules": "VFR",
+        "other": [],
+        "raw": "PHNL 032153Z 05012G24KT 10SM FEW025 FEW036 31/19 A3002 RMK AO2 PK WND 06028/2132 SLP166 T03060194",
+        "remarks": "RMK AO2 PK WND 06028/2132 SLP166 T03060194",
+        "remarks_info": {
+            "dewpoint_decimal": "19.4",
+            "temperature_decimal": "30.6"
+        },
+        "runway_visibility": [],
+        "sanitized": "PHNL 032153Z 05012G24KT 10SM FEW025 FEW036 31/19 A3002 RMK AO2 PK WND 06028/2132 SLP166 T03060194",
+        "station": "PHNL",
+        "temperature": "31",
+        "time": "032153Z",
+        "visibility": "10",
+        "wind_direction": "050",
+        "wind_gust": "24",
+        "wind_speed": "12",
+        "wind_variable_direction": []
+    },
+    "speech": "Winds zero five zero at 12kt gusting to 24kt. Visibility one zero miles. Temperature three one degrees Celsius. Dew point one nine degrees Celsius. Altimeter three zero point zero two. Few clouds at 2500ft. Few clouds at 3600ft",
+    "station_info": {
+        "city": "Honolulu",
+        "country": "USA",
+        "elevation": 4.0,
+        "iata": "HNL",
+        "icao": "PHNL",
+        "latitude": 21.31868128,
+        "longitude": -157.9224287,
+        "name": "International Airport",
+        "priority": 6,
+        "state": "HI"
+    },
+    "summary": "Winds NE-050 at 12kt gusting to 24kt, Vis 10sm, Temp 31\u00b0C, Dew 19\u00b0C, Alt 30.02 inHg, Few clouds at 2500ft, Few clouds at 3600ft",
+    "translations": {
+        "altimeter": "30.02 inHg (1017 hPa)",
+        "clouds": "Few clouds at 2500ft, Few clouds at 3600ft - Reported AGL",
+        "dewpoint": "19\u00b0C (66\u00b0F)",
+        "other": "",
+        "remarks": {
+            "AO2": "Automated with precipitation sensor",
+            "SLP166": "Sea level pressure: 1016.6 hPa",
+            "T03060194": "Temperature 30.6\u00b0C and dewpoint 19.4\u00b0C"
+        },
+        "temperature": "31\u00b0C (88\u00b0F)",
+        "visibility": "10sm (16.1km)",
+        "wind": "NE-050 at 12kt gusting to 24kt"
+    }
+}
