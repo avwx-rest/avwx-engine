@@ -24,6 +24,21 @@ def make_metar_test(station: str):
         'station_info': asdict(m.station_info)
     }
 
+def make_taf_test(station: str):
+    """
+    Builds TAF test files
+    """
+    t = avwx.Taf(station)
+    t.update()
+    return {
+        'data': asdict(t.data),
+        'translations': asdict(t.translations),
+        'summary': t.summary,
+        'station_info': asdict(t.station_info)
+    }
+
 if __name__ == '__main__':
     for station in ('KJFK', 'KMCO', 'PHNL', 'EGLL'):
-        json.dump(make_metar_test(station), open(station+'.json', 'w'), indent=4, sort_keys=True)
+        func = make_metar_test
+        # func = make_taf_test
+        json.dump(func(station), open(station+'.json', 'w'), indent=4, sort_keys=True)

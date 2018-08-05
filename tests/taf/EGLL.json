@@ -1,0 +1,97 @@
+{
+    "data": {
+        "alts": null,
+        "end_time": "0606",
+        "forecast": [
+            {
+                "altimeter": "",
+                "clouds": [],
+                "end_time": "0601",
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": "",
+                "raw": "0500/0606 12004KT CAVOK PROB30 0601/0606 8000",
+                "sanitized": "0500/0606 12004KT CAVOK",
+                "start_time": "0500",
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": "9999",
+                "wind_direction": "120",
+                "wind_gust": "",
+                "wind_shear": "",
+                "wind_speed": "04"
+            },
+            {
+                "altimeter": "",
+                "clouds": [],
+                "end_time": "0606",
+                "flight_rules": "MVFR",
+                "icing": [],
+                "other": [],
+                "probability": "30",
+                "raw": "PROB30 0601/0606 8000",
+                "sanitized": "PROB30 0601/0606 8000",
+                "start_time": "0601",
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": "8000",
+                "wind_direction": "",
+                "wind_gust": "",
+                "wind_shear": "",
+                "wind_speed": ""
+            }
+        ],
+        "max_temp": "",
+        "min_temp": "",
+        "raw": "EGLL 042252Z 0500/0606 12004KT CAVOK PROB30 0601/0606 8000",
+        "remarks": "",
+        "start_time": "0500",
+        "station": "EGLL",
+        "temps": null,
+        "time": "042252Z"
+    },
+    "station_info": {
+        "city": "London",
+        "country": "GBR",
+        "elevation": 24.4,
+        "iata": "LHR",
+        "icao": "EGLL",
+        "latitude": 51.47916667,
+        "longitude": -0.450555556,
+        "name": "Heathrow",
+        "priority": 6,
+        "state": "ENG"
+    },
+    "summary": [
+        "Winds ESE-120 at 04kt, Vis 10km, Sky clear",
+        "Vis 8km, Sky clear"
+    ],
+    "translations": {
+        "forecast": [
+            {
+                "altimeter": "",
+                "clouds": "Sky clear",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "10km (6.2sm)",
+                "wind": "ESE-120 at 04kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Sky clear",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "8km (5sm)",
+                "wind": "",
+                "wind_shear": ""
+            }
+        ],
+        "max_temp": "",
+        "min_temp": "",
+        "remarks": {}
+    }
+}

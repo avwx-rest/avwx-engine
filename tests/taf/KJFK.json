@@ -1,0 +1,247 @@
+{
+    "data": {
+        "alts": null,
+        "end_time": "0606",
+        "forecast": [
+            {
+                "altimeter": "",
+                "clouds": [
+                    [
+                        "FEW",
+                        "050"
+                    ]
+                ],
+                "end_time": "0502",
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": "",
+                "raw": "0500/0606 21008KT P6SM FEW050 FM050200 28005KT P6SM FEW050 FM051200 VRB04KT P6SM FEW050 FM051700 21009KT P6SM SCT060 FM051900 19011KT P6SM SCT060 FM060000 20006KT P6SM FEW060",
+                "sanitized": "0500/0606 21008KT P6SM FEW050",
+                "start_time": "0500",
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": "P6",
+                "wind_direction": "210",
+                "wind_gust": "",
+                "wind_shear": "",
+                "wind_speed": "08"
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    [
+                        "FEW",
+                        "050"
+                    ]
+                ],
+                "end_time": "0512",
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": "",
+                "raw": "FM050200 28005KT P6SM FEW050 FM051200 VRB04KT P6SM FEW050 FM051700 21009KT P6SM SCT060 FM051900 19011KT P6SM SCT060 FM060000 20006KT P6SM FEW060",
+                "sanitized": "FM050200 28005KT P6SM FEW050",
+                "start_time": "0502",
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": "P6",
+                "wind_direction": "280",
+                "wind_gust": "",
+                "wind_shear": "",
+                "wind_speed": "05"
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    [
+                        "FEW",
+                        "050"
+                    ]
+                ],
+                "end_time": "0517",
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": "",
+                "raw": "FM051200 VRB04KT P6SM FEW050 FM051700 21009KT P6SM SCT060 FM051900 19011KT P6SM SCT060 FM060000 20006KT P6SM FEW060",
+                "sanitized": "FM051200 VRB04KT P6SM FEW050",
+                "start_time": "0512",
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": "P6",
+                "wind_direction": "VRB",
+                "wind_gust": "",
+                "wind_shear": "",
+                "wind_speed": "04"
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    [
+                        "SCT",
+                        "060"
+                    ]
+                ],
+                "end_time": "0519",
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": "",
+                "raw": "FM051700 21009KT P6SM SCT060 FM051900 19011KT P6SM SCT060 FM060000 20006KT P6SM FEW060",
+                "sanitized": "FM051700 21009KT P6SM SCT060",
+                "start_time": "0517",
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": "P6",
+                "wind_direction": "210",
+                "wind_gust": "",
+                "wind_shear": "",
+                "wind_speed": "09"
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    [
+                        "SCT",
+                        "060"
+                    ]
+                ],
+                "end_time": "0600",
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": "",
+                "raw": "FM051900 19011KT P6SM SCT060 FM060000 20006KT P6SM FEW060",
+                "sanitized": "FM051900 19011KT P6SM SCT060",
+                "start_time": "0519",
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": "P6",
+                "wind_direction": "190",
+                "wind_gust": "",
+                "wind_shear": "",
+                "wind_speed": "11"
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    [
+                        "FEW",
+                        "060"
+                    ]
+                ],
+                "end_time": "0606",
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": "",
+                "raw": "FM060000 20006KT P6SM FEW060",
+                "sanitized": "FM060000 20006KT P6SM FEW060",
+                "start_time": "0600",
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": "P6",
+                "wind_direction": "200",
+                "wind_gust": "",
+                "wind_shear": "",
+                "wind_speed": "06"
+            }
+        ],
+        "max_temp": "",
+        "min_temp": "",
+        "raw": "KJFK 042323Z 0500/0606 21008KT P6SM FEW050 FM050200 28005KT P6SM FEW050 FM051200 VRB04KT P6SM FEW050 FM051700 21009KT P6SM SCT060 FM051900 19011KT P6SM SCT060 FM060000 20006KT P6SM FEW060",
+        "remarks": "",
+        "start_time": "0500",
+        "station": "KJFK",
+        "temps": null,
+        "time": "042323Z"
+    },
+    "station_info": {
+        "city": "New York City",
+        "country": "USA",
+        "elevation": 4.3,
+        "iata": "JFK",
+        "icao": "KJFK",
+        "latitude": 40.63975111,
+        "longitude": -73.77892556,
+        "name": "John F Kennedy International Airport",
+        "priority": 1,
+        "state": "NY"
+    },
+    "summary": [
+        "Winds SSW-210 at 08kt, Vis greater than 6sm, Few clouds at 5000ft",
+        "Winds W-280 at 05kt, Vis greater than 6sm, Few clouds at 5000ft",
+        "Winds Variable at 04kt, Vis greater than 6sm, Few clouds at 5000ft",
+        "Winds SSW-210 at 09kt, Vis greater than 6sm, Scattered clouds at 6000ft",
+        "Winds S-190 at 11kt, Vis greater than 6sm, Scattered clouds at 6000ft",
+        "Winds SSW-200 at 06kt, Vis greater than 6sm, Few clouds at 6000ft"
+    ],
+    "translations": {
+        "forecast": [
+            {
+                "altimeter": "",
+                "clouds": "Few clouds at 5000ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "SSW-210 at 08kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Few clouds at 5000ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "W-280 at 05kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Few clouds at 5000ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "Variable at 04kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Scattered clouds at 6000ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "SSW-210 at 09kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Scattered clouds at 6000ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "S-190 at 11kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Few clouds at 6000ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "SSW-200 at 06kt",
+                "wind_shear": ""
+            }
+        ],
+        "max_temp": "",
+        "min_temp": "",
+        "remarks": {}
+    }
+}

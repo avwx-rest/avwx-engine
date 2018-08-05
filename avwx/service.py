@@ -68,14 +68,20 @@ class NOAA(Service):
         resp = parsexml(raw)
         try:
             report = resp['response']['data'][self.rtype.upper()]
-        except:
+        except KeyError:
             raise self.make_err(raw)
+        # Find report string
         if isinstance(report, dict):
-            return report['raw_text']
+            report = report['raw_text']
         elif isinstance(report, list) and report:
-            return report[0]['raw_text']
+            report = report[0]['raw_text']
         else:
             raise self.make_err(raw, '"raw_text"')
+        # Remove excess leading and trailing data
+        for item in (self.rtype.upper(), 'SPECI'):
+            if report.startswith(item + ' '):
+                report = report[len(item)+1:]
+        return report
 
 
 class AMO(Service):
@@ -92,13 +98,14 @@ class AMO(Service):
         resp = parsexml(raw)
         try:
             report = resp['response']['body']['items']['item'][self.rtype.lower() + 'Msg']
-        except:
+        except KeyError:
             raise self.make_err(raw)
         # Replace line breaks
         report = report.replace('\n', '')
         # Remove excess leading and trailing data
         for item in (self.rtype.upper(), 'SPECI'):
-            report = report.lstrip(item)
+            if report.startswith(item + ' '):
+                report = report[len(item)+1:]
         report = report.rstrip('=')
         # Make every element single-spaced and stripped
         return ' '.join(report.split())

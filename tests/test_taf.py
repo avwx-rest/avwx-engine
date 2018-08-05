@@ -3,14 +3,37 @@ Michael duPont - michael@mdupont.com
 tests/test_taf.py
 """
 
-# pylint: disable=E1101,C0103
 
 # library
+import json
+import os
 import unittest
+from dataclasses import asdict
+from glob import glob
 # module
-import avwx
+from avwx import taf, structs, Taf
 
 class TestTaf(unittest.TestCase):
+
+    def test_fetch(self):
+        """
+        Tests if the old fetch function returns a report from a Service object
+        """
+        for station in ('KJFK', 'PHNL', 'EGLL', 'RKSI'):
+            report = taf.fetch(station)
+            self.assertIsInstance(report, str)
+            self.assertTrue(report.startswith(station))
+
+    def test_parse(self):
+        """
+        Tests returned structs from the parse function
+        """
+        report = ('PHNL 042339Z 0500/0606 06018G25KT P6SM FEW030 SCT060 FM050600 06010KT '
+                  'P6SM FEW025 SCT060 FM052000 06012G20KT P6SM FEW030 SCT060')
+        data, units = taf.parse(report[:4], report)
+        self.assertIsInstance(data, structs.TafData)
+        self.assertIsInstance(units, structs.Units)
+        self.assertEqual(data.raw, report)
 
     def test_prob_line(self):
         """Even though PROB__ is not in TAF_NEWLINE, it should still separate,
@@ -22,7 +45,7 @@ class TestTaf(unittest.TestCase):
                   "TEMPO 2718/2724 6SM -SHRA "
                   "PROB30 2718/2724 VRB25G35KT 1SM +TSRA BR BKN020 OVC040CB "
                   "FM280000 23008KT P6SM BKN040 RMK FCST BASED ON AUTO OBS. NXT FCST BY 272000Z")
-        taf = avwx.Taf('CYBC')
+        taf = Taf('CYBC')
         taf.update(report)
         lines = taf.data.forecast
         self.assertEqual(len(lines), 6)
@@ -39,9 +62,23 @@ class TestTaf(unittest.TestCase):
                   "FM290900 25012KT P6SM SCT030 "
                   "FM291300 32017G27KT P6SM OVC030 "
                   "TEMPO 2913/2918 P6SM -SHRA OVC020 RMK NXT FCST BY 290000Z")
-        taf = avwx.Taf('CYBC')
+        taf = Taf('CYBC')
         taf.update(report)
         lines = taf.data.forecast
         self.assertEqual(len(lines), 7)
         self.assertEqual(lines[0].wind_shear, 'WS015/20055')
         self.assertEqual(taf.translations.forecast[1].clouds, None)
+
+    def test_taf_ete(self):
+        """
+        Performs an end-to-end test of all TAF JSON files
+        """
+        for path in glob(os.path.dirname(os.path.realpath(__file__))+'/taf/*.json'):
+            ref = json.load(open(path))
+            station = Taf(path.split('/')[-1][:4])
+            self.assertTrue(station.update(ref['data']['raw']))
+            self.assertEqual(asdict(station.data), ref['data'])
+            self.assertEqual(asdict(station.translations), ref['translations'])
+            self.assertEqual(station.summary, ref['summary'])
+            # self.assertEqual(station.speech, ref['speech'])
+            self.assertEqual(asdict(station.station_info), ref['station_info'])

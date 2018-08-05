@@ -1,0 +1,154 @@
+{
+    "data": {
+        "alts": null,
+        "end_time": "0606",
+        "forecast": [
+            {
+                "altimeter": "",
+                "clouds": [
+                    [
+                        "FEW",
+                        "030"
+                    ],
+                    [
+                        "SCT",
+                        "060"
+                    ]
+                ],
+                "end_time": "0506",
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": "",
+                "raw": "0500/0606 06018G25KT P6SM FEW030 SCT060 FM050600 06010KT P6SM FEW025 SCT060 FM052000 06012G20KT P6SM FEW030 SCT060",
+                "sanitized": "0500/0606 06018G25KT P6SM FEW030 SCT060",
+                "start_time": "0500",
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": "P6",
+                "wind_direction": "060",
+                "wind_gust": "25",
+                "wind_shear": "",
+                "wind_speed": "18"
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    [
+                        "FEW",
+                        "025"
+                    ],
+                    [
+                        "SCT",
+                        "060"
+                    ]
+                ],
+                "end_time": "0520",
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": "",
+                "raw": "FM050600 06010KT P6SM FEW025 SCT060 FM052000 06012G20KT P6SM FEW030 SCT060",
+                "sanitized": "FM050600 06010KT P6SM FEW025 SCT060",
+                "start_time": "0506",
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": "P6",
+                "wind_direction": "060",
+                "wind_gust": "",
+                "wind_shear": "",
+                "wind_speed": "10"
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    [
+                        "FEW",
+                        "030"
+                    ],
+                    [
+                        "SCT",
+                        "060"
+                    ]
+                ],
+                "end_time": "0606",
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": "",
+                "raw": "FM052000 06012G20KT P6SM FEW030 SCT060",
+                "sanitized": "FM052000 06012G20KT P6SM FEW030 SCT060",
+                "start_time": "0520",
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": "P6",
+                "wind_direction": "060",
+                "wind_gust": "20",
+                "wind_shear": "",
+                "wind_speed": "12"
+            }
+        ],
+        "max_temp": "",
+        "min_temp": "",
+        "raw": "PHNL 042339Z 0500/0606 06018G25KT P6SM FEW030 SCT060 FM050600 06010KT P6SM FEW025 SCT060 FM052000 06012G20KT P6SM FEW030 SCT060",
+        "remarks": "",
+        "start_time": "0500",
+        "station": "PHNL",
+        "temps": null,
+        "time": "042339Z"
+    },
+    "station_info": {
+        "city": "Honolulu",
+        "country": "USA",
+        "elevation": 4.0,
+        "iata": "HNL",
+        "icao": "PHNL",
+        "latitude": 21.31868128,
+        "longitude": -157.9224287,
+        "name": "International Airport",
+        "priority": 6,
+        "state": "HI"
+    },
+    "summary": [
+        "Winds ENE-060 at 18kt gusting to 25kt, Vis greater than 6sm, Few clouds at 3000ft, Scattered clouds at 6000ft",
+        "Winds ENE-060 at 10kt, Vis greater than 6sm, Few clouds at 2500ft, Scattered clouds at 6000ft",
+        "Winds ENE-060 at 12kt gusting to 20kt, Vis greater than 6sm, Few clouds at 3000ft, Scattered clouds at 6000ft"
+    ],
+    "translations": {
+        "forecast": [
+            {
+                "altimeter": "",
+                "clouds": "Few clouds at 3000ft, Scattered clouds at 6000ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "ENE-060 at 18kt gusting to 25kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Few clouds at 2500ft, Scattered clouds at 6000ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "ENE-060 at 10kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Few clouds at 3000ft, Scattered clouds at 6000ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "ENE-060 at 12kt gusting to 20kt",
+                "wind_shear": ""
+            }
+        ],
+        "max_temp": "",
+        "min_temp": "",
+        "remarks": {}
+    }
+}
