@@ -76,7 +76,8 @@ def wind(direction: Number,
          gust: Number,
          vardir: [Number] = None,
          unit: str = 'kt',
-         cardinals: bool = True) -> str:
+         cardinals: bool = True,
+         spoken: bool = False) -> str:
     """
     Format wind elements into a readable sentence
 
@@ -94,10 +95,14 @@ def wind(direction: Number,
         else:
             if cardinals:
                 ret += get_cardinal_direction(direction.value) + '-'
-            ret += direction.repr
+            ret += core.spoken_number(direction.repr) if spoken else direction.repr
     # Variable direction
     if vardir and isinstance(vardir, list):
-        ret += f' (variable {vardir[0].repr} to {vardir[1].repr})'
+        if spoken:
+            vardir = [core.spoken_number(d.repr) for d in vardir]
+        else:
+            vardir = [d.repr for d in vardir]
+        ret += ' (variable {} to {})'.format(*vardir)
     # Speed
     if speed and speed.value:
         ret += f' at {speed.value}{unit}'

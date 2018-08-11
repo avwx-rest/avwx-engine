@@ -179,9 +179,17 @@ NUMBER_REPL = {
 
 #: Dictionary associating fraction strings with their spoken version
 FRACTIONS = {
-    '1/4': 'one quarter of a',
+    '1/4': 'one quarter',
     '1/2': 'one half',
-    '3/4': 'three quarters of a'
+    '3/4': 'three quarters'
+}
+
+#: Dictionary associating special number values with their spoken version
+SPECIAL_NUMBERS = {
+    'P6': 'greater than six',
+    'P6SM': 'greater than six',
+    'M1/4': 'less than one quarter',
+    'VRB': 'variable',
 }
 
 #: Static remarks translation elements

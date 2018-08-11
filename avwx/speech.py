@@ -8,104 +8,72 @@ from copy import deepcopy
 # module
 from avwx import core, translate
 from avwx.static import SPOKEN_UNITS, NUMBER_REPL, FRACTIONS
-from avwx.structs import MetarData, Units
+from avwx.structs import Cloud, MetarData, Number, Units
 
 
-def numbers(num: str) -> str:
-    """
-    Returns the spoken version of a number
-
-    Ex: 1.2 -> one point two
-    """
-    if num in FRACTIONS:
-        return FRACTIONS[num]
-    return ' '.join([NUMBER_REPL[char] for char in num if char in NUMBER_REPL])
-
-
-def remove_leading_zeros(num: str) -> str:
-    """
-    Strips zeros while handling -, M, and empty strings
-    """
-    if not num:
-        return num
-    if num.startswith('M'):
-        ret = 'M' + num[1:].lstrip('0')
-    elif num.startswith('-'):
-        ret = '-' + num[1:].lstrip('0')
-    else:
-        ret = num.lstrip('0')
-    return '0' if ret in ('', 'M', '-') else ret
-
-
-def wind(wdir: str, wspd: str, wgst: str, wvar: [str] = None, unit: str = 'kt') -> str:
+def wind(direction: Number,
+         speed: Number,
+         gust: Number,
+         vardir: [Number] = None,
+         unit: str = 'kt') -> str:
     """
     Format wind details into a spoken word string
     """
     unit = SPOKEN_UNITS.get(unit, unit)
-    if wdir not in ('000', 'VRB'):
-        wdir = numbers(wdir)
-    wvar = wvar or []
-    for i, val in enumerate(wvar):
-        wvar[i] = numbers(val)
-    val = translate.wind(wdir, remove_leading_zeros(wspd),
-                         remove_leading_zeros(wgst), wvar,
-                         unit, cardinals=False)
+    val = translate.wind(direction, speed, gust, vardir, unit,
+                         cardinals=False, spoken=True)
     return 'Winds ' + (val or 'unknown')
 
 
-def temperature(header: str, temp: str, unit: str = 'C') -> str:
+def temperature(header: str, temp: Number, unit: str = 'C') -> str:
     """
     Format temperature details into a spoken word string
     """
-    if core.is_unknown(temp):
+    if not (temp and temp.value):
         return header + ' unknown'
     if unit in SPOKEN_UNITS:
         unit = SPOKEN_UNITS[unit]
-    temp = numbers(remove_leading_zeros(temp))
-    use_s = '' if temp in ('one', 'minus one') else 's'
-    return ' '.join((header, temp, 'degree' + use_s, unit))
+    use_s = '' if temp.spoken in ('one', 'minus one') else 's'
+    return ' '.join((header, temp.spoken, 'degree' + use_s, unit))
 
 
-def visibility(vis: str, unit: str = 'm') -> str:
+def visibility(vis: Number, unit: str = 'm') -> str:
     """
     Format visibility details into a spoken word string
     """
-    if core.is_unknown(vis):
+    if not vis:
         return 'Visibility unknown'
-    elif vis.startswith('M'):
-        vis = 'less than ' + numbers(remove_leading_zeros(vis[1:]))
-    elif vis.startswith('P'):
-        vis = 'greater than ' + numbers(remove_leading_zeros(vis[1:]))
-    elif '/' in vis:
-        vis = core.unpack_fraction(vis)
-        vis = ' and '.join([numbers(remove_leading_zeros(n)) for n in vis.split(' ')])
+    if vis.value is None or '/' in vis.repr:
+        ret_vis = vis.spoken
     else:
-        vis = translate.visibility(vis, unit=unit)
+        ret_vis = translate.visibility(vis, unit=unit)
         if unit == 'm':
             unit = 'km'
-        vis = vis[:vis.find(' (')].lower().replace(unit, '').strip()
-        vis = numbers(remove_leading_zeros(vis))
-    ret = 'Visibility ' + vis
+        ret_vis = ret_vis[:ret_vis.find(' (')].lower().replace(unit, '').strip()
+        ret_vis = core.spoken_number(core.remove_leading_zeros(ret_vis))
+    ret = 'Visibility ' + ret_vis
     if unit in SPOKEN_UNITS:
+        if '/' in vis.repr and 'half' not in ret:
+            ret += ' of a'
         ret += ' ' + SPOKEN_UNITS[unit]
-        if not (('one half' in vis and ' and ' not in vis) or 'of a' in vis):
+        if not (('one half' in ret and ' and ' not in ret) or 'of a' in ret):
             ret += 's'
     else:
         ret += unit
     return ret
 
 
-def altimeter(alt: str, unit: str = 'inHg') -> str:
+def altimeter(alt: Number, unit: str = 'inHg') -> str:
     """
     Format altimeter details into a spoken word string
     """
     ret = 'Altimeter '
-    if core.is_unknown(alt):
+    if not alt:
         ret += 'unknown'
     elif unit == 'inHg':
-        ret += numbers(alt[:2]) + ' point ' + numbers(alt[2:])
+        ret += core.spoken_number(alt.repr[:2]) + ' point ' + core.spoken_number(alt.repr[2:])
     elif unit == 'hPa':
-        ret += numbers(alt)
+        ret += core.spoken_number(alt.repr)
     return ret
 
 

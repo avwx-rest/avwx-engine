@@ -8,7 +8,8 @@ from itertools import permutations
 # module
 from avwx.exceptions import BadStation
 from avwx.static import CLOUD_LIST, CLOUD_TRANSLATIONS, METAR_RMK, \
-    NA_REGIONS, IN_REGIONS, M_NA_REGIONS, M_IN_REGIONS, FLIGHT_RULES
+    NA_REGIONS, IN_REGIONS, M_NA_REGIONS, M_IN_REGIONS, FLIGHT_RULES, \
+    NUMBER_REPL, FRACTIONS, SPECIAL_NUMBERS
 from avwx.structs import Cloud, Fraction, Number, Units
 
 def valid_station(station: str):
@@ -58,6 +59,37 @@ def unpack_fraction(num: str) -> str:
     return num
 
 
+def remove_leading_zeros(num: str) -> str:
+    """
+    Strips zeros while handling -, M, and empty strings
+    """
+    if not num:
+        return num
+    if num.startswith('M'):
+        ret = 'M' + num[1:].lstrip('0')
+    elif num.startswith('-'):
+        ret = '-' + num[1:].lstrip('0')
+    else:
+        ret = num.lstrip('0')
+    return '0' if ret in ('', 'M', '-') else ret
+
+
+def spoken_number(num: str) -> str:
+    """
+    Returns the spoken version of a number
+
+    Ex: 1.2 -> one point two
+        1 1/2 -> one and one half
+    """
+    ret = []
+    for part in num.split(' '):
+        if part in FRACTIONS:
+            ret.append(FRACTIONS[part])
+        else:
+            ret.append(' '.join([NUMBER_REPL[char] for char in part if char in NUMBER_REPL]))
+    return ' and '.join(ret)
+
+
 def make_number(num: str, repr: str = None) -> Number:
     """
     Returns a Number or Fraction dataclass for a number string
@@ -65,15 +97,18 @@ def make_number(num: str, repr: str = None) -> Number:
     if not num or is_unknown(num):
         return
     # Check special
-    if num in ('P6', 'P6SM', 'M1/4', 'VRB'):
-        return Number(None, repr or num)
+    if num in SPECIAL_NUMBERS:
+        return Number(None, repr or num, SPECIAL_NUMBERS[num])
     # Create Fraction
     if '/' in num:
         nmr, dnm = [int(i) for i in num.split('/')]
-        return Fraction(nmr/dnm, repr or num, nmr, dnm, unpack_fraction(num))
+        unpacked = unpack_fraction(num)
+        spoken = spoken_number(unpacked)
+        return Fraction(nmr/dnm, repr or num, spoken, nmr, dnm, unpacked)
     # Create Number
     val = num.replace('M', '-')
-    return Number(float(val) if '.' in num else int(val), repr or num)
+    val = float(val) if '.' in num else int(val)
+    return Number(val, repr or num, spoken_number(str(val)))
 
 
 def find_first_in_list(txt: str, str_list: [str]) -> int:

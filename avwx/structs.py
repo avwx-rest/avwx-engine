@@ -32,6 +32,7 @@ class Units(object):
 class Number(object):
     value: float
     repr: str
+    spoken: str
 
 
 @dataclass

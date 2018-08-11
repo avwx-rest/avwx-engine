@@ -14,7 +14,7 @@ from avwx import core, exceptions, static, structs
 
 class BaseTest(unittest.TestCase):
 
-    def assert_number(self, num: structs.Number, repr: str, value: object = None):
+    def assert_number(self, num: structs.Number, repr: str, value: object = None, spoken: str = None):
         """
         Tests string conversion into a Number dataclass
         """
@@ -24,6 +24,8 @@ class BaseTest(unittest.TestCase):
             self.assertIsInstance(num, structs.Number)
             self.assertEqual(num.repr, repr)
             self.assertEqual(num.value, value)
+            if spoken:
+                self.assertEqual(num.spoken, spoken)
 
 class TestGlobal(BaseTest):
 
@@ -84,29 +86,63 @@ class TestGlobal(BaseTest):
         ):
             self.assertEqual(core.unpack_fraction(fraction), unpacked)
 
+    def test_remove_leading_zeros(self):
+        """
+        Tests removing leading zeros from a number
+        """
+        for num, stripped in (
+            ('', ''),
+            ('5', '5'),
+            ('010', '10'),
+            ('M10', 'M10'),
+            ('M002', 'M2'),
+            ('-09.9', '-9.9'),
+            ('000', '0'),
+            ('M00', '0'),
+        ):
+            self.assertEqual(core.remove_leading_zeros(num), stripped)
+
+    def test_spoken_number(self):
+        """
+        Tests converting digits into spoken values
+        """
+        for num, spoken in (
+            ('1', 'one'),
+            ('5', 'five'),
+            ('20', 'two zero'),
+            ('937', 'nine three seven'),
+            ('4.8', 'four point eight'),
+            ('29.92', 'two nine point nine two'),
+            ('1/2', 'one half'),
+            ('3 3/4', 'three and three quarters'),
+        ):
+            self.assertEqual(core.spoken_number(num), spoken)
+
     def test_make_number(self):
         """
         Tests Number dataclass generation from a number string
         """
         self.assertIsNone(core.make_number(''))
-        for num, value in (
-            ('1', 1),
-            ('1.5', 1.5),
-            ('060', 60),
-            ('M10', -10),
-            ('P6SM', None),
-            ('M1/4', None),
+        for num, value, spoken in (
+            ('1', 1, 'one'),
+            ('1.5', 1.5, 'one point five'),
+            ('060', 60, 'six zero'),
+            ('M10', -10, 'minus one zero'),
+            ('P6SM', None, 'greater than six'),
+            ('M1/4', None, 'less than one quarter'),
         ):
             number = core.make_number(num)
             self.assertEqual(number.repr, num)
             self.assertEqual(number.value, value)
-        for num, value, nmr, dnm, norm in (
-            ('2/5', 0.4, 2, 5, '2/5'),
-            ('5/2', 2.5, 5, 2, '2 1/2'),
-            ('3/4', 0.75, 3, 4, '3/4'),
+            self.assertEqual(number.spoken, spoken)
+        for num, value, spoken, nmr, dnm, norm in (
+            ('1/4', 0.25, 'one quarter', 1, 4, '1/4'),
+            ('5/2', 2.5, 'two and one half', 5, 2, '2 1/2'),
+            ('3/4', 0.75, 'three quarters', 3, 4, '3/4'),
         ):
             number = core.make_number(num)
             self.assertEqual(number.value, value)
+            self.assertEqual(number.spoken, spoken)
             self.assertEqual(number.numerator, nmr)
             self.assertEqual(number.denominator, dnm)
             self.assertEqual(number.normalized, norm)
