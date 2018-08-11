@@ -720,7 +720,7 @@ def get_clouds(wxdata: [str]) -> ([str], list):
     return wxdata, sorted(clouds, key=lambda cloud: (cloud.altitude, cloud.type))
 
 
-def get_flight_rules(vis: str, ceiling: Cloud) -> int:
+def get_flight_rules(vis: Number, ceiling: Cloud) -> int:
     """
     Returns int based on current flight rules from parsed METAR data
 
@@ -729,17 +729,17 @@ def get_flight_rules(vis: str, ceiling: Cloud) -> int:
     Note: Common practice is to report IFR if visibility unavailable
     """
     # Parse visibility
-    if not vis or is_unknown(vis):
+    if not vis:
         return 2
-    elif vis == 'P6':
+    elif vis.repr.startswith('P6'):
         vis = 10
-    elif '/' in vis:
-        vis = 0 if vis[0] == 'M' else int(vis.split('/')[0]) / int(vis.split('/')[1])
+    elif vis.repr.startswith('M'):
+        vis = 0
     # Convert meters to miles
-    elif len(vis) == 4 and vis.isdigit():
-        vis = int(vis) * 0.000621371
+    elif len(vis.repr) == 4:
+        vis = vis.value * 0.000621371
     else:
-        vis = int(vis)
+        vis = vis.value
     # Parse ceiling
     cld = ceiling.altitude if ceiling else 99
     # Determine flight rules

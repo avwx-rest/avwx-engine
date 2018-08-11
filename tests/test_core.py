@@ -381,12 +381,15 @@ class TestGlobal(BaseTest):
         for vis, ceiling, rule in (
             (None, None, 'IFR'),
             ('10', None, 'VFR'),
+            ('P6SM', ['OCV',50], 'VFR'),
             ('6', ['OVC',20], 'MVFR'),
             ('6', ['OVC',7], 'IFR'),
             ('2', ['OVC',20], 'IFR'),
             ('6', ['OVC',4], 'LIFR'),
             ('1/2', ['OVC',30], 'LIFR'),
+            ('M1/4', ['OVC',30], 'LIFR'),
         ):
+            vis = core.make_number(vis)
             if ceiling:
                 ceiling = structs.Cloud(None, *ceiling)
             self.assertEqual(static.FLIGHT_RULES[core.get_flight_rules(vis, ceiling)], rule)
@@ -465,7 +468,6 @@ class TestMetar(BaseTest):
         ):
             self.assertEqual(units.altimeter, 'hPa')
             retwx, ret_alt = core.get_altimeter(wx, units, 'IN')
-            print(ret_alt, *alt)
             self.assertEqual(retwx, ['1', '2'])
             self.assert_number(ret_alt, *alt)
         # The last one should have changed the unit
