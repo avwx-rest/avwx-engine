@@ -5,10 +5,11 @@ Contains functions for translating report data
 from avwx import core, remarks
 from avwx.static import CLOUD_TRANSLATIONS, WX_TRANSLATIONS, \
                         TURBULANCE_CONDITIONS, ICING_CONDITIONS
-from avwx.structs import MetarData, MetarTrans, ReportData, TafData, TafLineTrans, TafTrans, Units
+from avwx.structs import Cloud, MetarData, MetarTrans, Number, ReportData, \
+                         TafData, TafLineTrans, TafTrans, Units
 
 
-def get_cardinal_direction(wdir: int) -> str:
+def get_cardinal_direction(direction: int) -> str:
     """
     Returns the cardinal direction (NSEW) for a degree direction
 
@@ -23,48 +24,59 @@ def get_cardinal_direction(wdir: int) -> str:
     (270) -- 281/282 -- 303/304 -- (315) -- 326/327 -- 348/349 -- (360)
     """
     ret = ''
-    if not isinstance(wdir, int):
-        wdir = int(wdir)
+    if not isinstance(direction, int):
+        direction = int(direction)
     # Convert to range [0 360]
-    while wdir < 0:
-        wdir += 360
-    wdir = wdir % 360
-    if 304 <= wdir <= 360 or 0 <= wdir <= 56:
+    while direction < 0:
+        direction += 360
+    direction = direction % 360
+    if 304 <= direction <= 360 or 0 <= direction <= 56:
         ret += 'N'
-        if 304 <= wdir <= 348:
-            if 327 <= wdir <= 348:
+        if 304 <= direction <= 348:
+            if 327 <= direction <= 348:
                 ret += 'N'
             ret += 'W'
-        elif 12 <= wdir <= 56:
-            if 12 <= wdir <= 33:
+        elif 12 <= direction <= 56:
+            if 12 <= direction <= 33:
                 ret += 'N'
             ret += 'E'
-    elif 124 <= wdir <= 236:
+    elif 124 <= direction <= 236:
         ret += 'S'
-        if 124 <= wdir <= 168:
-            if 147 <= wdir <= 168:
+        if 124 <= direction <= 168:
+            if 147 <= direction <= 168:
                 ret += 'S'
             ret += 'E'
-        elif 192 <= wdir <= 236:
-            if 192 <= wdir <= 213:
+        elif 192 <= direction <= 236:
+            if 192 <= direction <= 213:
                 ret += 'S'
             ret += 'W'
-    elif 57 <= wdir <= 123:
+    elif 57 <= direction <= 123:
         ret += 'E'
-        if 57 <= wdir <= 78:
+        if 57 <= direction <= 78:
             ret += 'NE'
-        elif 102 <= wdir <= 123:
+        elif 102 <= direction <= 123:
             ret += 'SE'
-    elif 237 <= wdir <= 303:
+    elif 237 <= direction <= 303:
         ret += 'W'
-        if 237 <= wdir <= 258:
+        if 237 <= direction <= 258:
             ret += 'SW'
-        elif 282 <= wdir <= 303:
+        elif 282 <= direction <= 303:
             ret += 'NW'
     return ret
 
 
-def wind(wdir: str, wspd: str, wgst: str, wvar: [str] = None, unit: str = 'kt', cardinals: bool = True) -> str:
+WIND_DIR_REPR = {
+    '000': 'Calm',
+    'VRB': 'Variable',
+}
+
+
+def wind(direction: Number,
+         speed: Number,
+         gust: Number,
+         vardir: [Number] = None,
+         unit: str = 'kt',
+         cardinals: bool = True) -> str:
     """
     Format wind elements into a readable sentence
 
@@ -73,56 +85,57 @@ def wind(wdir: str, wspd: str, wgst: str, wvar: [str] = None, unit: str = 'kt', 
     Ex: NNE-020 (variable 010 to 040) at 14kt gusting to 20kt
     """
     ret = ''
-    if wdir == '000':
-        ret += 'Calm'
-    elif wdir.isdigit():
-        if cardinals:
-            ret += get_cardinal_direction(wdir) + '-'
-        ret += wdir
-    elif wdir == 'VRB':
-        ret += 'Variable'
-    else:
-        ret += wdir
-    if wvar and isinstance(wvar, list):
-        ret += f' (variable {wvar[0]} to {wvar[1]})'
-    if wspd and wspd not in ('0', '00'):
-        ret += f' at {wspd}{unit}'
-    if wgst:
-        ret += f' gusting to {wgst}{unit}'
+    # Wind direction
+    if direction:
+        if direction.repr in WIND_DIR_REPR:
+            ret += WIND_DIR_REPR[direction.repr]
+        elif direction.value is None:
+            ret += direction.repr
+        else:
+            if cardinals:
+                ret += get_cardinal_direction(direction.value) + '-'
+            ret += direction.repr
+    # Variable direction
+    if vardir and isinstance(vardir, list):
+        ret += f' (variable {vardir[0].repr} to {vardir[1].repr})'
+    # Speed
+    if speed and speed.value:
+        ret += f' at {speed.value}{unit}'
+    # Gust
+    if gust and gust.value:
+        ret += f' gusting to {gust.value}{unit}'
     return ret
 
 
-def visibility(vis: str, unit: str = 'm') -> str:
+VIS_REPR = {
+    'P6': 'Greater than 6sm ( >10km )',
+    'M1/4': 'Less than .25sm ( <0.4km )'
+}
+
+
+def visibility(vis: Number, unit: str = 'm') -> str:
     """
     Formats a visibility element into a string with both km and sm values
 
     Ex: 8km ( 5sm )
     """
-    if vis == 'P6':
-        return 'Greater than 6sm ( >10km )'
-    if vis == 'M1/4':
-        return 'Less than .25sm ( <0.4km )'
-    if '/' in vis and not core.is_unknown(vis):
-        vis = float(vis[:vis.find('/')]) / int(vis[vis.find('/') + 1:])
-    try:
-        float(vis)
-    except ValueError:
+    if not (vis and unit in ('m', 'sm')):
         return ''
+    if vis.repr in VIS_REPR:
+        return VIS_REPR[vis.repr]
     if unit == 'm':
-        converted = float(vis) * 0.000621371
+        converted = vis.value * 0.000621371
         converted = str(round(converted, 1)).replace('.0', '') + 'sm'
-        vis = str(round(int(vis) / 1000, 1)).replace('.0', '')
+        value = str(round(vis.value / 1000, 1)).replace('.0', '')
         unit = 'km'
     elif unit == 'sm':
-        converted = float(vis) / 0.621371
+        converted = vis.value / 0.621371
         converted = str(round(converted, 1)).replace('.0', '') + 'km'
-        vis = str(vis).replace('.0', '')
-    else:
-        return ''
-    return f'{vis}{unit} ({converted})'
+        value = str(vis.value).replace('.0', '')
+    return f'{value}{unit} ({converted})'
 
 
-def temperature(temp: str, unit: str = 'C') -> str:
+def temperature(temp: Number, unit: str = 'C') -> str:
     """
     Formats a temperature element into a string with both C and F values
 
@@ -130,47 +143,38 @@ def temperature(temp: str, unit: str = 'C') -> str:
 
     Ex: 34°C (93°F)
     """
-    temp = temp.replace('M', '-')
-    try:
-        temp = int(temp)
-    except ValueError:
-        return ''
     unit = unit.upper()
+    if not (temp and unit in ('C', 'F')):
+        return ''
     if unit == 'C':
-        converted = int(temp) * 1.8 + 32
+        converted = temp.value * 1.8 + 32
         converted = str(int(round(converted))) + '°F'
     elif unit == 'F':
-        converted = (int(temp) - 32) / 1.8
+        converted = (temp.value - 32) / 1.8
         converted = str(int(round(converted))) + '°C'
-    else:
-        return ''
-    return f'{temp}°{unit} ({converted})'
+    return f'{temp.value}°{unit} ({converted})'
 
 
-def altimeter(alt: str, unit: str = 'hPa') -> str:
+def altimeter(alt: Number, unit: str = 'hPa') -> str:
     """
     Formats the altimter element into a string with hPa and inHg values
 
     Ex: 30.11 inHg (10.20 hPa)
     """
-    if not alt.isdigit():
-        if len(alt) == 5 and alt[1:].isdigit():
-            alt = alt[1:]
-        else:
-            return ''
+    if not (alt and unit in ('hPa', 'inHg')):
+        return ''
     if unit == 'hPa':
-        converted = float(alt) / 33.8638866667
+        value = alt.repr
+        converted = alt.value / 33.8638866667
         converted = str(round(converted, 2)) + ' inHg'
     elif unit == 'inHg':
-        alt = alt[:2] + '.' + alt[2:]
-        converted = float(alt) * 33.8638866667
+        value = alt.repr[:2] + '.' + alt.repr[2:]
+        converted = float(value) * 33.8638866667
         converted = str(int(round(converted))) + ' hPa'
-    else:
-        return ''
-    return f'{alt} {unit} ({converted})'
+    return f'{value} {unit} ({converted})'
 
 
-def clouds(clds: [str], unit: str = 'ft') -> str:
+def clouds(clds: [Cloud], unit: str = 'ft') -> str:
     """
     Format cloud list into a readable sentence
 
@@ -180,12 +184,12 @@ def clouds(clds: [str], unit: str = 'ft') -> str:
     """
     ret = []
     for cloud in clds:
-        if len(cloud) == 2 and cloud[1].isdigit() and cloud[0] in CLOUD_TRANSLATIONS:
-            ret.append(CLOUD_TRANSLATIONS[cloud[0]].format(int(cloud[1]) * 100, unit))
-        elif len(cloud) == 3 and cloud[1].isdigit() \
-            and cloud[0] in CLOUD_TRANSLATIONS and cloud[2] in CLOUD_TRANSLATIONS:
-            cloudstr = CLOUD_TRANSLATIONS[cloud[0]] + ' (' + CLOUD_TRANSLATIONS[cloud[2]] + ')'
-            ret.append(cloudstr.format(int(cloud[1]) * 100, unit))
+        if cloud.altitude is None:
+            continue
+        cloud_str = CLOUD_TRANSLATIONS[cloud.type]
+        if cloud.modifier:
+            cloud_str += f' ({CLOUD_TRANSLATIONS[cloud.modifier]})'
+        ret.append(cloud_str.format(cloud.altitude * 100, unit))
     if ret:
         return ', '.join(ret) + ' - Reported AGL'
     return 'Sky clear'
@@ -290,7 +294,8 @@ def min_max_temp(temp: str, unit: str = 'C') -> str:
     temp = temp[2:].replace('M', '-').replace('Z', '').split('/')
     if len(temp[1]) > 2:
         temp[1] = temp[1][:2] + '-' + temp[1][2:]
-    return f'{temp_type} temperature of {temperature(temp[0], unit)} at {temp[1]}:00Z'
+    temp_value = temperature(core.make_number(temp[0]), unit)
+    return f'{temp_type} temperature of {temp_value} at {temp[1]}:00Z'
 
 
 def shared(wxdata: ReportData, units: Units) -> {str: str}:

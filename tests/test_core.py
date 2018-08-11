@@ -301,6 +301,24 @@ class TestGlobal(BaseTest):
         ):
             self.assertEqual(core.split_cloud(cloud), out)
 
+    def test_make_cloud(self):
+        """
+        Tests helper function which returns a Cloud dataclass
+        """
+        for cloud, out in (
+            ('SCT060', ['SCT', 60, None]),
+            ('FEWO03', ['FEW', 3, None]),
+            ('BKNC015', ['BKN', 15, 'C']),
+            ('OVC120TS', ['OVC', 120, 'TS']),
+            ('VV002', ['VV', 2, None]),
+            ('SCT', ['SCT', None, None]),
+        ):
+            ret_cloud = core.make_cloud(cloud)
+            self.assertIsInstance(ret_cloud, structs.Cloud)
+            self.assertEqual(ret_cloud.repr, cloud)
+            for i, key in enumerate(('type', 'altitude', 'modifier')):
+                self.assertEqual(getattr(ret_cloud, key), out[i])
+
     def test_get_clouds(self):
         """
         Tests that clouds are removed, fixed, and split correctly

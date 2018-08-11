@@ -62,7 +62,7 @@ def make_number(num: str, repr: str = None) -> Number:
     """
     Returns a Number or Fraction dataclass for a number string
     """
-    if not num:
+    if not num or is_unknown(num):
         return
     # Check special
     if num in ('P6', 'P6SM', 'M1/4', 'VRB'):
@@ -664,6 +664,15 @@ def split_cloud(cloud: str) -> [str]:
     return split
 
 
+def make_cloud(cloud: str) -> Cloud:
+    """
+    Returns a Cloud dataclass for a cloud string
+
+    This function assumes the input is potentially valid
+    """
+    return Cloud(cloud, *split_cloud(cloud))
+
+
 def get_clouds(wxdata: [str]) -> ([str], list):
     """
     Returns the report list and removed list of split cloud layers
@@ -672,7 +681,7 @@ def get_clouds(wxdata: [str]) -> ([str], list):
     for i, item in reversed(list(enumerate(wxdata))):
         if item[:3] in CLOUD_LIST or item[:2] == 'VV':
             cloud = wxdata.pop(i)
-            clouds.append(Cloud(cloud, *split_cloud(cloud)))
+            clouds.append(make_cloud(cloud))
     return wxdata, sorted(clouds, key=lambda cloud: (cloud.altitude, cloud.type))
 
 
