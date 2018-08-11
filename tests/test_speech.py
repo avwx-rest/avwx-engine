@@ -66,19 +66,6 @@ class TestSpeech(unittest.TestCase):
         ):
             self.assertEqual(speech.temperature('Temp', temp, unit), 'Temp ' + spoken)
 
-    def test_unpack_fraction(self):
-        """
-        Tests unpacking a fraction where the numerator can be greater than the denominator
-        """
-        for fraction, unpacked in (
-            ('', ''),
-            ('1', '1'),
-            ('1/2', '1/2'),
-            ('3/2', '1 1/2'),
-            ('10/3', '3 1/3'),
-        ):
-            self.assertEqual(speech.unpack_fraction(fraction), unpacked)
-
     def test_visibility(self):
         """
         Tests converting visibility distance into a spoken string

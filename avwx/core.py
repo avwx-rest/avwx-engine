@@ -9,7 +9,7 @@ from itertools import permutations
 from avwx.exceptions import BadStation
 from avwx.static import CLOUD_LIST, CLOUD_TRANSLATIONS, METAR_RMK, \
     NA_REGIONS, IN_REGIONS, M_NA_REGIONS, M_IN_REGIONS, FLIGHT_RULES
-from avwx.structs import Units
+from avwx.structs import Cloud, Fraction, Number, Units
 
 def valid_station(station: str):
     """
@@ -44,6 +44,36 @@ def is_unknown(val: str) -> bool:
     Returns True if val contains only '/' characters
     """
     return val == '/' * len(val)
+
+
+def unpack_fraction(num: str) -> str:
+    """
+    Returns unpacked fraction string 5/2 -> 2 1/2
+    """
+    nums = [int(n) for n in num.split('/') if n]
+    if len(nums) == 2 and nums[0] > nums[1]:
+        over = nums[0] // nums[1]
+        rem = nums[0] % nums[1]
+        return f'{over} {rem}/{nums[1]}'
+    return num
+
+
+def make_number(num: str, repr: str = None) -> Number:
+    """
+    Returns a Number or Fraction dataclass for a number string
+    """
+    if not num:
+        return
+    # Check special
+    if num in ('P6', 'P6SM', 'M1/4', 'VRB'):
+        return Number(None, repr or num)
+    # Create Fraction
+    if '/' in num:
+        nmr, dnm = [int(i) for i in num.split('/')]
+        return Fraction(nmr/dnm, repr or num, nmr, dnm, unpack_fraction(num))
+    # Create Number
+    val = num.replace('M', '-')
+    return Number(float(val) if '.' in num else int(val), repr or num)
 
 
 def find_first_in_list(txt: str, str_list: [str]) -> int:
@@ -252,14 +282,14 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
     return wxdata, runway_vis, shear
 
 
-def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], str):
+def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], Number):
     """
     Returns the report list and the removed altimeter item
 
     Version is 'NA' (North American / default) or 'IN' (International)
     """
     if not wxdata:
-        return wxdata, ''
+        return wxdata, None
     altimeter = ''
     target = wxdata[-1]
     if version == 'NA':
@@ -294,7 +324,14 @@ def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], s
     #Some stations report both, but we only need one
     if wxdata and (wxdata[-1][0] == 'A' or wxdata[-1][0] == 'Q'):
         wxdata.pop()
-    return wxdata, altimeter
+    # convert to Number
+    if not altimeter:
+        return wxdata, None
+    if units.altimeter == 'inHg':
+        value = altimeter[:2] + '.' + altimeter[2:]
+    else:
+        value = altimeter
+    return wxdata, make_number(value, altimeter)
 
 
 def get_taf_alt_ice_turb(wxdata: [str]) -> ([str], str, [str], [str]):
@@ -324,7 +361,7 @@ def is_possible_temp(temp: str) -> bool:
     return True
 
 
-def get_temp_and_dew(wxdata: str) -> ([str], str, str):
+def get_temp_and_dew(wxdata: str) -> ([str], Number, Number):
     """
     Returns the report list and removed temperature and dewpoint strings
     """
@@ -348,8 +385,8 @@ def get_temp_and_dew(wxdata: str) -> ([str], str, str):
                     break
             if valid:
                 wxdata.pop(i)
-                return (wxdata, *tempdew)
-    return wxdata, '', ''
+                return (wxdata, *[make_number(t) for t in tempdew])
+    return wxdata, None, None
 
 
 def get_station_and_time(wxdata: [str]) -> ([str], str, str):
@@ -367,7 +404,7 @@ def get_station_and_time(wxdata: [str]) -> ([str], str, str):
     return wxdata, station, rtime
 
 
-def get_wind(wxdata: [str], units: Units) -> ([str], str, str, str, [str]):
+def get_wind(wxdata: [str], units: Units) -> ([str], Number, Number, Number, [Number]):
     """
     Returns the report list and removed:
     Direction string, speed string, gust string, variable direction list
@@ -411,11 +448,15 @@ def get_wind(wxdata: [str], units: Units) -> ([str], str, str, str, [str]):
     #Variable Wind Direction
     if wxdata and len(wxdata[0]) == 7 and wxdata[0][:3].isdigit() \
         and wxdata[0][3] == 'V' and wxdata[0][4:].isdigit():
-        variable = wxdata.pop(0).split('V')
+        variable = [make_number(i) for i in wxdata.pop(0).split('V')]
+    # Convert to Number
+    direction = make_number(direction)
+    speed = make_number(speed)
+    gust = make_number(gust)
     return wxdata, direction, speed, gust, variable
 
 
-def get_visibility(wxdata: [str], units: Units) -> ([str], str):
+def get_visibility(wxdata: [str], units: Units) -> ([str], Number):
     """
     Returns the report list and removed visibility string
     """
@@ -453,7 +494,7 @@ def get_visibility(wxdata: [str], units: Units) -> ([str], str):
             vis2 = wxdata.pop(0).replace('SM', '')  # 1/2
             visibility = str(int(vis1) * int(vis2[2]) + int(vis2[0])) + vis2[1:]  # 5/2
             units.visibility = 'sm'
-    return wxdata, visibility
+    return wxdata, make_number(visibility)
 
 
 # TAF line report type and start/end times
@@ -617,7 +658,9 @@ def split_cloud(cloud: str) -> [str]:
     if cloud:
         split.append(cloud)
     if len(split) == 1:
-        split.append('')
+        split.append(None)
+    else:
+        split[1] = int(split[1])
     return split
 
 
@@ -628,11 +671,12 @@ def get_clouds(wxdata: [str]) -> ([str], list):
     clouds = []
     for i, item in reversed(list(enumerate(wxdata))):
         if item[:3] in CLOUD_LIST or item[:2] == 'VV':
-            clouds.append(split_cloud(wxdata.pop(i)))
-    return wxdata, sorted(clouds, key=lambda pair: (pair[1], pair[0]))
+            cloud = wxdata.pop(i)
+            clouds.append(Cloud(cloud, *split_cloud(cloud)))
+    return wxdata, sorted(clouds, key=lambda cloud: (cloud.altitude, cloud.type))
 
 
-def get_flight_rules(vis: str, ceiling: [str]) -> int:
+def get_flight_rules(vis: str, ceiling: Cloud) -> int:
     """
     Returns int based on current flight rules from parsed METAR data
 
@@ -653,7 +697,7 @@ def get_flight_rules(vis: str, ceiling: [str]) -> int:
     else:
         vis = int(vis)
     # Parse ceiling
-    cld = int(ceiling[1]) if ceiling else 99
+    cld = ceiling.altitude if ceiling else 99
     # Determine flight rules
     if (vis <= 5) or (cld <= 30):
         if (vis < 3) or (cld < 10):
@@ -686,9 +730,9 @@ def get_taf_flight_rules(lines: [dict]) -> [dict]:
     return lines
 
 
-def get_ceiling(clouds: [[str]]) -> [str]:
+def get_ceiling(clouds: [Cloud]) -> Cloud:
     """
-    Returns list of ceiling layer from Cloud-List or None if none found
+    Returns ceiling layer from Cloud-List or None if none found
 
     Assumes that the clouds are already sorted lowest to highest
 
@@ -697,7 +741,7 @@ def get_ceiling(clouds: [[str]]) -> [str]:
     Prevents errors due to lack of cloud information (eg. '' or 'FEW///')
     """
     for cloud in clouds:
-        if len(cloud) > 1 and cloud[1].isdigit() and cloud[0] in ['OVC', 'BKN', 'VV']:
+        if cloud.altitude and cloud.type in ('OVC', 'BKN', 'VV'):
             return cloud
     return None
 

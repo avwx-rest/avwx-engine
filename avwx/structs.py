@@ -29,6 +29,27 @@ class Units(object):
 
 
 @dataclass
+class Number(object):
+    value: float
+    repr: str
+
+
+@dataclass
+class Fraction(Number):
+    numerator: int
+    denominator: int
+    normalized: str
+
+
+@dataclass
+class Cloud(object):
+    repr: str
+    type: str
+    altitude: int
+    modifier: str = None
+
+
+@dataclass
 class RemarksData(object):
     dewpoint_decimal: float = None
     temperature_decimal: float = None
@@ -44,24 +65,24 @@ class ReportData(object):
 
 @dataclass
 class SharedData(object):
-    altimeter: float
-    clouds: list
+    altimeter: Number
+    clouds: [Cloud]
     flight_rules: str
-    other: list
+    other: [str]
     sanitized: str
-    visibility: int
-    wind_direction: int
-    wind_gust: int
-    wind_speed: int
+    visibility: Number
+    wind_direction: Number
+    wind_gust: Number
+    wind_speed: Number
 
 
 @dataclass
 class MetarData(ReportData, SharedData):
-    dewpoint: int
+    dewpoint: Number
     remarks_info: RemarksData
-    runway_visibility: list
-    temperature: int
-    wind_variable_direction: list
+    runway_visibility: [str]
+    temperature: Number
+    wind_variable_direction: [Number]
 
 
 @dataclass

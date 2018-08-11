@@ -66,18 +66,6 @@ def temperature(header: str, temp: str, unit: str = 'C') -> str:
     return ' '.join((header, temp, 'degree' + use_s, unit))
 
 
-def unpack_fraction(num: str) -> str:
-    """
-    Returns unpacked fraction string 5/2 -> 2 1/2
-    """
-    nums = [int(n) for n in num.split('/') if n]
-    if len(nums) == 2 and nums[0] > nums[1]:
-        over = nums[0] // nums[1]
-        rem = nums[0] % nums[1]
-        return f'{over} {rem}/{nums[1]}'
-    return num
-
-
 def visibility(vis: str, unit: str = 'm') -> str:
     """
     Format visibility details into a spoken word string
@@ -89,7 +77,7 @@ def visibility(vis: str, unit: str = 'm') -> str:
     elif vis.startswith('P'):
         vis = 'greater than ' + numbers(remove_leading_zeros(vis[1:]))
     elif '/' in vis:
-        vis = unpack_fraction(vis)
+        vis = core.unpack_fraction(vis)
         vis = ' and '.join([numbers(remove_leading_zeros(n)) for n in vis.split(' ')])
     else:
         vis = translate.visibility(vis, unit=unit)
