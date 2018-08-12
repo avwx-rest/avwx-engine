@@ -1,41 +1,73 @@
 {
     "data": {
-        "altimeter": "3013",
+        "altimeter": {
+            "repr": "2994",
+            "spoken": "two nine point nine four",
+            "value": 29.94
+        },
         "clouds": [
-            [
-                "FEW",
-                "034"
-            ],
-            [
-                "FEW",
-                "130"
-            ],
-            [
-                "BKN",
-                "250"
-            ]
+            {
+                "altitude": 120,
+                "modifier": null,
+                "repr": "FEW120",
+                "type": "FEW"
+            },
+            {
+                "altitude": 250,
+                "modifier": null,
+                "repr": "OVC250",
+                "type": "OVC"
+            }
         ],
-        "dewpoint": "23",
+        "dewpoint": {
+            "repr": "23",
+            "spoken": "two three",
+            "value": 23
+        },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "KJFK 032151Z 16008KT 10SM FEW034 FEW130 BKN250 27/23 A3013 RMK AO2 SLP201 CB DSNT SW TCU DSNT SW AND DSNT W T02670233",
-        "remarks": "RMK AO2 SLP201 CB DSNT SW TCU DSNT SW AND DSNT W T02670233",
+        "raw": "KJFK 112351Z 16010KT 10SM FEW120 OVC250 24/23 A2994 RMK AO2 SLP139 60007 T02390233 10244 20233 58003",
+        "remarks": "RMK AO2 SLP139 60007 T02390233 10244 20233 58003",
         "remarks_info": {
-            "dewpoint_decimal": "23.3",
-            "temperature_decimal": "26.7"
+            "dewpoint_decimal": {
+                "repr": "23.3",
+                "spoken": "two three point three",
+                "value": 23.3
+            },
+            "temperature_decimal": {
+                "repr": "23.9",
+                "spoken": "two three point nine",
+                "value": 23.9
+            }
         },
         "runway_visibility": [],
-        "sanitized": "KJFK 032151Z 16008KT 10SM FEW034 FEW130 BKN250 27/23 A3013 RMK AO2 SLP201 CB DSNT SW TCU DSNT SW AND DSNT W T02670233",
+        "sanitized": "KJFK 112351Z 16010KT 10SM FEW120 OVC250 24/23 A2994 RMK AO2 SLP139 60007 T02390233 10244 20233 58003",
         "station": "KJFK",
-        "temperature": "27",
-        "time": "032151Z",
-        "visibility": "10",
-        "wind_direction": "160",
-        "wind_gust": "",
-        "wind_speed": "08",
+        "temperature": {
+            "repr": "24",
+            "spoken": "two four",
+            "value": 24
+        },
+        "time": "112351Z",
+        "visibility": {
+            "repr": "10",
+            "spoken": "one zero",
+            "value": 10
+        },
+        "wind_direction": {
+            "repr": "160",
+            "spoken": "one six zero",
+            "value": 160
+        },
+        "wind_gust": null,
+        "wind_speed": {
+            "repr": "10",
+            "spoken": "one zero",
+            "value": 10
+        },
         "wind_variable_direction": []
     },
-    "speech": "Winds one six zero at 8kt. Visibility one zero miles. Temperature two seven degrees Celsius. Dew point two three degrees Celsius. Altimeter three zero point one three. Few clouds at 3400ft. Few clouds at 13000ft. Broken layer at 25000ft",
+    "speech": "Winds one six zero at 10kt. Visibility one zero miles. Temperature two four degrees Celsius. Dew point two three degrees Celsius. Altimeter two nine point nine four. Few clouds at 12000ft. Overcast layer at 25000ft",
     "station_info": {
         "city": "New York City",
         "country": "USA",
@@ -48,19 +80,23 @@
         "priority": 1,
         "state": "NY"
     },
-    "summary": "Winds SSE-160 at 08kt, Vis 10sm, Temp 27\u00b0C, Dew 23\u00b0C, Alt 30.13 inHg, Few clouds at 3400ft, Few clouds at 13000ft, Broken layer at 25000ft",
+    "summary": "Winds SSE-160 at 10kt, Vis 10sm, Temp 24\u00b0C, Dew 23\u00b0C, Alt 29.94 inHg, Few clouds at 12000ft, Overcast layer at 25000ft",
     "translations": {
-        "altimeter": "30.13 inHg (1020 hPa)",
-        "clouds": "Few clouds at 3400ft, Few clouds at 13000ft, Broken layer at 25000ft - Reported AGL",
+        "altimeter": "29.94 inHg (1014 hPa)",
+        "clouds": "Few clouds at 12000ft, Overcast layer at 25000ft - Reported AGL",
         "dewpoint": "23\u00b0C (73\u00b0F)",
         "other": "",
         "remarks": {
+            "10244": "6-hour maximum temperature 24.4\u00b0C",
+            "20233": "6-hour minimum temperature 23.3\u00b0C",
+            "58003": "3-hour pressure difference: +/- 0.3 mb - Steady or increasing, then decreasing",
+            "60007": "Precipitation in the last 3 hours: 0 in. - 6 hours: 7 in.",
             "AO2": "Automated with precipitation sensor",
-            "SLP201": "Sea level pressure: 1020.1 hPa",
-            "T02670233": "Temperature 26.7\u00b0C and dewpoint 23.3\u00b0C"
+            "SLP139": "Sea level pressure: 1013.9 hPa",
+            "T02390233": "Temperature 23.9\u00b0C and dewpoint 23.3\u00b0C"
         },
-        "temperature": "27\u00b0C (81\u00b0F)",
+        "temperature": "24\u00b0C (75\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "SSE-160 at 08kt"
+        "wind": "SSE-160 at 10kt"
     }
 }

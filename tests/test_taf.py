@@ -11,7 +11,7 @@ import unittest
 from dataclasses import asdict
 from glob import glob
 # module
-from avwx import taf, structs, Taf
+from avwx import core, taf, structs, Taf
 
 class TestTaf(unittest.TestCase):
 
@@ -49,8 +49,8 @@ class TestTaf(unittest.TestCase):
         taf.update(report)
         lines = taf.data.forecast
         self.assertEqual(len(lines), 6)
-        self.assertEqual(lines[3].probability, '')
-        self.assertEqual(lines[4].probability, '30')
+        self.assertEqual(lines[3].probability, None)
+        self.assertEqual(lines[4].probability, core.make_number('30'))
         self.assertTrue(lines[4].raw.startswith('PROB30'))
 
     def test_wind_shear(self):

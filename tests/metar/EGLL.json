@@ -1,28 +1,52 @@
 {
     "data": {
-        "altimeter": "1022",
+        "altimeter": {
+            "repr": "1016",
+            "spoken": "one zero one six",
+            "value": 1016
+        },
         "clouds": [],
-        "dewpoint": "17",
+        "dewpoint": {
+            "repr": "15",
+            "spoken": "one five",
+            "value": 15
+        },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "EGLL 032220Z AUTO 31003KT 9999 NCD 23/17 Q1022 NOSIG",
-        "remarks": "NOSIG",
+        "raw": "EGLL 120020Z AUTO 18004KT 9999 NCD 17/15 Q1016",
+        "remarks": "",
         "remarks_info": {
             "dewpoint_decimal": null,
             "temperature_decimal": null
         },
         "runway_visibility": [],
-        "sanitized": "EGLL 032220Z AUTO 31003KT 9999 NCD 23/17 Q1022 NOSIG",
+        "sanitized": "EGLL 120020Z AUTO 18004KT 9999 NCD 17/15 Q1016",
         "station": "EGLL",
-        "temperature": "23",
-        "time": "032220Z",
-        "visibility": "9999",
-        "wind_direction": "310",
-        "wind_gust": "",
-        "wind_speed": "03",
+        "temperature": {
+            "repr": "17",
+            "spoken": "one seven",
+            "value": 17
+        },
+        "time": "120020Z",
+        "visibility": {
+            "repr": "9999",
+            "spoken": "nine nine nine nine",
+            "value": 9999
+        },
+        "wind_direction": {
+            "repr": "180",
+            "spoken": "one eight zero",
+            "value": 180
+        },
+        "wind_gust": null,
+        "wind_speed": {
+            "repr": "04",
+            "spoken": "four",
+            "value": 4
+        },
         "wind_variable_direction": []
     },
-    "speech": "Winds three one zero at 3kt. Visibility one zero kilometers. Temperature two three degrees Celsius. Dew point one seven degrees Celsius. Altimeter one zero two two. Sky clear",
+    "speech": "Winds one eight zero at 4kt. Visibility one zero kilometers. Temperature one seven degrees Celsius. Dew point one five degrees Celsius. Altimeter one zero one six. Sky clear",
     "station_info": {
         "city": "London",
         "country": "GBR",
@@ -35,15 +59,15 @@
         "priority": 6,
         "state": "ENG"
     },
-    "summary": "Winds NW-310 at 03kt, Vis 10km, Temp 23\u00b0C, Dew 17\u00b0C, Alt 1022 hPa, Sky clear",
+    "summary": "Winds S-180 at 4kt, Vis 10km, Temp 17\u00b0C, Dew 15\u00b0C, Alt 1016 hPa, Sky clear",
     "translations": {
-        "altimeter": "1022 hPa (30.18 inHg)",
+        "altimeter": "1016 hPa (30.0 inHg)",
         "clouds": "Sky clear",
-        "dewpoint": "17\u00b0C (63\u00b0F)",
+        "dewpoint": "15\u00b0C (59\u00b0F)",
         "other": "",
         "remarks": {},
-        "temperature": "23\u00b0C (73\u00b0F)",
+        "temperature": "17\u00b0C (63\u00b0F)",
         "visibility": "10km (6.2sm)",
-        "wind": "NW-310 at 03kt"
+        "wind": "S-180 at 4kt"
     }
 }

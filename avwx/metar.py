@@ -5,8 +5,7 @@ Contains METAR-specific functions for fetching and parsing
 # stdlib
 from copy import copy
 # module
-from avwx import core, service
-from avwx.remarks import parse_remarks
+from avwx import core, remarks, service
 from avwx.static import NA_UNITS, IN_UNITS, FLIGHT_RULES
 from avwx.structs import MetarData, Units
 
@@ -51,7 +50,7 @@ def parse_na(txt: str) -> (MetarData, Units):
     wxresp['other'], wxresp['temperature'], wxresp['dewpoint'] = core.get_temp_and_dew(wxdata)
     condition = core.get_flight_rules(wxresp['visibility'], core.get_ceiling(wxresp['clouds']))
     wxresp['flight_rules'] = FLIGHT_RULES[condition]
-    wxresp['remarks_info'] = parse_remarks(wxresp['remarks'])
+    wxresp['remarks_info'] = remarks.parse(wxresp['remarks'])
     return MetarData(**wxresp), units
 
 
@@ -79,5 +78,5 @@ def parse_in(txt: str) -> (MetarData, Units):
     wxresp['other'], wxresp['temperature'], wxresp['dewpoint'] = core.get_temp_and_dew(wxdata)
     condition = core.get_flight_rules(wxresp['visibility'], core.get_ceiling(wxresp['clouds']))
     wxresp['flight_rules'] = FLIGHT_RULES[condition]
-    wxresp['remarks_info'] = parse_remarks(wxresp['remarks'])
+    wxresp['remarks_info'] = remarks.parse(wxresp['remarks'])
     return MetarData(**wxresp), units

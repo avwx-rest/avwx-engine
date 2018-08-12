@@ -6,7 +6,7 @@ tests/test_remarks.py
 # library
 import unittest
 # module
-from avwx import remarks, static, structs
+from avwx import core, remarks, static, structs
 
 class TestRemarks(unittest.TestCase):
 
@@ -82,7 +82,7 @@ class TestRemarks(unittest.TestCase):
             equals = f'Duration of sunlight: {minutes} minutes'
             self.assertEqual(remarks.sunshine_duration(code), equals)
 
-    def test_parse_remarks(self):
+    def test_parse(self):
         """
         Tests generating RemarksData from a remarks string
         """
@@ -91,7 +91,8 @@ class TestRemarks(unittest.TestCase):
             ('T09870123', ('12.3', '98.7')),
             ('RMK AO2 SLP141 T02670189 $', ('18.9', '26.7')),
         ):
-            self.assertEqual(remarks.parse_remarks(rmk), structs.RemarksData(*data))
+            data = [core.make_number(d) for d in data]
+            self.assertEqual(remarks.parse(rmk), structs.RemarksData(*data))
 
     def test_translate(self):
         """

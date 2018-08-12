@@ -3,6 +3,7 @@ Contains functions for handling and translating remarks
 """
 
 # module
+from avwx import core
 from avwx.static import PRESSURE_TENDENCIES, REMARKS_ELEMENTS, REMARKS_GROUPS, WX_TRANSLATIONS
 from avwx.structs import RemarksData
 
@@ -12,7 +13,10 @@ def _tdec(code: str, unit: str = 'C') -> str:
 
     Ex: 1045 -> -4.5°C    0237 -> 23.7°C
     """
-    return f"{'-' if code[0] == '1' else ''}{int(code[1:3])}.{code[3]}°{unit}"
+    ret = f"{'-' if code[0] == '1' else ''}{int(code[1:3])}.{code[3]}"
+    if unit:
+        ret += f'°{unit}'
+    return ret
 
 
 def temp_minmax(code: str) -> str:
@@ -66,22 +70,15 @@ LEN5_DECODE = {
 }
 
 
-def parse_remarks(rmk: str) -> RemarksData:
+def parse(rmk: str) -> RemarksData:
     """
     Finds temperature and dewpoint decimal values from the remarks
     """
     rmkdata = {}
     for item in rmk.split(' '):
         if len(item) in [5, 9] and item[0] == 'T' and item[1:].isdigit():
-            if item[1] == '1':
-                rmkdata['temperature_decimal'] = '-' + item[2].replace('0', '') + item[3] + '.' + item[4]
-            elif item[1] == '0':
-                rmkdata['temperature_decimal'] = item[2].replace('0', '') + item[3] + '.' + item[4]
-            if len(item) == 9:
-                if item[5] == '1':
-                    rmkdata['dewpoint_decimal'] = '-' + item[6].replace('0', '') + item[7] + '.' + item[8]
-                elif item[5] == '0':
-                    rmkdata['dewpoint_decimal'] = item[6].replace('0', '') + item[7] + '.' + item[8]
+            rmkdata['temperature_decimal'] = core.make_number(_tdec(item[1:5], None))
+            rmkdata['dewpoint_decimal'] = core.make_number(_tdec(item[5:], None))
     return RemarksData(**rmkdata)
 
 

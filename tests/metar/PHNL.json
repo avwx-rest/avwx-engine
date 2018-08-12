@@ -1,37 +1,89 @@
 {
     "data": {
-        "altimeter": "3002",
+        "altimeter": {
+            "repr": "2995",
+            "spoken": "two nine point nine five",
+            "value": 29.95
+        },
         "clouds": [
-            [
-                "FEW",
-                "025"
-            ],
-            [
-                "FEW",
-                "036"
-            ]
+            {
+                "altitude": 25,
+                "modifier": null,
+                "repr": "FEW025",
+                "type": "FEW"
+            },
+            {
+                "altitude": 47,
+                "modifier": null,
+                "repr": "SCT047",
+                "type": "SCT"
+            },
+            {
+                "altitude": 70,
+                "modifier": null,
+                "repr": "SCT070",
+                "type": "SCT"
+            },
+            {
+                "altitude": 130,
+                "modifier": null,
+                "repr": "BKN130",
+                "type": "BKN"
+            }
         ],
-        "dewpoint": "19",
+        "dewpoint": {
+            "repr": "21",
+            "spoken": "two one",
+            "value": 21
+        },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "PHNL 032153Z 05012G24KT 10SM FEW025 FEW036 31/19 A3002 RMK AO2 PK WND 06028/2132 SLP166 T03060194",
-        "remarks": "RMK AO2 PK WND 06028/2132 SLP166 T03060194",
+        "raw": "PHNL 112353Z 06016G21KT 10SM FEW025 SCT047 SCT070 BKN130 31/21 A2995 RMK AO2 SLP142 VCSH NE-E T03110211 10322 20272 56015",
+        "remarks": "RMK AO2 SLP142 VCSH NE-E T03110211 10322 20272 56015",
         "remarks_info": {
-            "dewpoint_decimal": "19.4",
-            "temperature_decimal": "30.6"
+            "dewpoint_decimal": {
+                "repr": "21.1",
+                "spoken": "two one point one",
+                "value": 21.1
+            },
+            "temperature_decimal": {
+                "repr": "31.1",
+                "spoken": "three one point one",
+                "value": 31.1
+            }
         },
         "runway_visibility": [],
-        "sanitized": "PHNL 032153Z 05012G24KT 10SM FEW025 FEW036 31/19 A3002 RMK AO2 PK WND 06028/2132 SLP166 T03060194",
+        "sanitized": "PHNL 112353Z 06016G21KT 10SM FEW025 SCT047 SCT070 BKN130 31/21 A2995 RMK AO2 SLP142 VCSH NE-E T03110211 10322 20272 56015",
         "station": "PHNL",
-        "temperature": "31",
-        "time": "032153Z",
-        "visibility": "10",
-        "wind_direction": "050",
-        "wind_gust": "24",
-        "wind_speed": "12",
+        "temperature": {
+            "repr": "31",
+            "spoken": "three one",
+            "value": 31
+        },
+        "time": "112353Z",
+        "visibility": {
+            "repr": "10",
+            "spoken": "one zero",
+            "value": 10
+        },
+        "wind_direction": {
+            "repr": "060",
+            "spoken": "six zero",
+            "value": 60
+        },
+        "wind_gust": {
+            "repr": "21",
+            "spoken": "two one",
+            "value": 21
+        },
+        "wind_speed": {
+            "repr": "16",
+            "spoken": "one six",
+            "value": 16
+        },
         "wind_variable_direction": []
     },
-    "speech": "Winds zero five zero at 12kt gusting to 24kt. Visibility one zero miles. Temperature three one degrees Celsius. Dew point one nine degrees Celsius. Altimeter three zero point zero two. Few clouds at 2500ft. Few clouds at 3600ft",
+    "speech": "Winds zero six zero at 16kt gusting to 21kt. Visibility one zero miles. Temperature three one degrees Celsius. Dew point two one degrees Celsius. Altimeter two nine point nine five. Few clouds at 2500ft. Scattered clouds at 4700ft. Scattered clouds at 7000ft. Broken layer at 13000ft",
     "station_info": {
         "city": "Honolulu",
         "country": "USA",
@@ -44,19 +96,22 @@
         "priority": 6,
         "state": "HI"
     },
-    "summary": "Winds NE-050 at 12kt gusting to 24kt, Vis 10sm, Temp 31\u00b0C, Dew 19\u00b0C, Alt 30.02 inHg, Few clouds at 2500ft, Few clouds at 3600ft",
+    "summary": "Winds ENE-060 at 16kt gusting to 21kt, Vis 10sm, Temp 31\u00b0C, Dew 21\u00b0C, Alt 29.95 inHg, Few clouds at 2500ft, Scattered clouds at 4700ft, Scattered clouds at 7000ft, Broken layer at 13000ft",
     "translations": {
-        "altimeter": "30.02 inHg (1017 hPa)",
-        "clouds": "Few clouds at 2500ft, Few clouds at 3600ft - Reported AGL",
-        "dewpoint": "19\u00b0C (66\u00b0F)",
+        "altimeter": "29.95 inHg (1014 hPa)",
+        "clouds": "Few clouds at 2500ft, Scattered clouds at 4700ft, Scattered clouds at 7000ft, Broken layer at 13000ft - Reported AGL",
+        "dewpoint": "21\u00b0C (70\u00b0F)",
         "other": "",
         "remarks": {
+            "10322": "6-hour maximum temperature 32.2\u00b0C",
+            "20272": "6-hour minimum temperature 27.2\u00b0C",
+            "56015": "3-hour pressure difference: +/- 1.5 mb - Decreasing, then steady",
             "AO2": "Automated with precipitation sensor",
-            "SLP166": "Sea level pressure: 1016.6 hPa",
-            "T03060194": "Temperature 30.6\u00b0C and dewpoint 19.4\u00b0C"
+            "SLP142": "Sea level pressure: 1014.2 hPa",
+            "T03110211": "Temperature 31.1\u00b0C and dewpoint 21.1\u00b0C"
         },
         "temperature": "31\u00b0C (88\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "NE-050 at 12kt gusting to 24kt"
+        "wind": "ENE-060 at 16kt gusting to 21kt"
     }
 }

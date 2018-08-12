@@ -116,7 +116,7 @@ def parse_lines(lines: [str], units: Units, use_na: bool = True) -> ([dict], str
                 lines.insert(1, line[probindex + 1:])
                 line = line[:probindex]
             parsed_line = (parse_na_line if use_na else parse_in_line)(line, units)
-            parsed_line['probability'] = prob[4:]
+            parsed_line['probability'] = core.make_number(prob[4:])
             parsed_line['raw'] = raw_line
             parsed_line['sanitized'] = prob + ' ' + line if prob else line
             prob = ''
