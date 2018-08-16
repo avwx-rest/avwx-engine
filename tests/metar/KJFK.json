@@ -1,22 +1,16 @@
 {
     "data": {
         "altimeter": {
-            "repr": "2994",
-            "spoken": "two nine point nine four",
-            "value": 29.94
+            "repr": "2998",
+            "spoken": "two nine point nine eight",
+            "value": 29.98
         },
         "clouds": [
             {
-                "altitude": 120,
-                "modifier": null,
-                "repr": "FEW120",
-                "type": "FEW"
-            },
-            {
                 "altitude": 250,
                 "modifier": null,
-                "repr": "OVC250",
-                "type": "OVC"
+                "repr": "BKN250",
+                "type": "BKN"
             }
         ],
         "dewpoint": {
@@ -26,48 +20,48 @@
         },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "KJFK 112351Z 16010KT 10SM FEW120 OVC250 24/23 A2994 RMK AO2 SLP139 60007 T02390233 10244 20233 58003",
-        "remarks": "RMK AO2 SLP139 60007 T02390233 10244 20233 58003",
+        "raw": "KJFK 160251Z 26009KT 10SM BKN250 27/23 A2998 RMK AO2 SLP150 T02670228 50013",
+        "remarks": "RMK AO2 SLP150 T02670228 50013",
         "remarks_info": {
             "dewpoint_decimal": {
-                "repr": "23.3",
-                "spoken": "two three point three",
-                "value": 23.3
+                "repr": "22.8",
+                "spoken": "two two point eight",
+                "value": 22.8
             },
             "temperature_decimal": {
-                "repr": "23.9",
-                "spoken": "two three point nine",
-                "value": 23.9
+                "repr": "26.7",
+                "spoken": "two six point seven",
+                "value": 26.7
             }
         },
         "runway_visibility": [],
-        "sanitized": "KJFK 112351Z 16010KT 10SM FEW120 OVC250 24/23 A2994 RMK AO2 SLP139 60007 T02390233 10244 20233 58003",
+        "sanitized": "KJFK 160251Z 26009KT 10SM BKN250 27/23 A2998 RMK AO2 SLP150 T02670228 50013",
         "station": "KJFK",
         "temperature": {
-            "repr": "24",
-            "spoken": "two four",
-            "value": 24
+            "repr": "27",
+            "spoken": "two seven",
+            "value": 27
         },
-        "time": "112351Z",
+        "time": null,
         "visibility": {
             "repr": "10",
             "spoken": "one zero",
             "value": 10
         },
         "wind_direction": {
-            "repr": "160",
-            "spoken": "one six zero",
-            "value": 160
+            "repr": "260",
+            "spoken": "two six zero",
+            "value": 260
         },
         "wind_gust": null,
         "wind_speed": {
-            "repr": "10",
-            "spoken": "one zero",
-            "value": 10
+            "repr": "09",
+            "spoken": "nine",
+            "value": 9
         },
         "wind_variable_direction": []
     },
-    "speech": "Winds one six zero at 10kt. Visibility one zero miles. Temperature two four degrees Celsius. Dew point two three degrees Celsius. Altimeter two nine point nine four. Few clouds at 12000ft. Overcast layer at 25000ft",
+    "speech": "Winds two six zero at 9kt. Visibility one zero miles. Temperature two seven degrees Celsius. Dew point two three degrees Celsius. Altimeter two nine point nine eight. Broken layer at 25000ft",
     "station_info": {
         "city": "New York City",
         "country": "USA",
@@ -80,23 +74,20 @@
         "priority": 1,
         "state": "NY"
     },
-    "summary": "Winds SSE-160 at 10kt, Vis 10sm, Temp 24\u00b0C, Dew 23\u00b0C, Alt 29.94 inHg, Few clouds at 12000ft, Overcast layer at 25000ft",
+    "summary": "Winds W-260 at 9kt, Vis 10sm, Temp 27\u00b0C, Dew 23\u00b0C, Alt 29.98 inHg, Broken layer at 25000ft",
     "translations": {
-        "altimeter": "29.94 inHg (1014 hPa)",
-        "clouds": "Few clouds at 12000ft, Overcast layer at 25000ft - Reported AGL",
+        "altimeter": "29.98 inHg (1015 hPa)",
+        "clouds": "Broken layer at 25000ft - Reported AGL",
         "dewpoint": "23\u00b0C (73\u00b0F)",
         "other": "",
         "remarks": {
-            "10244": "6-hour maximum temperature 24.4\u00b0C",
-            "20233": "6-hour minimum temperature 23.3\u00b0C",
-            "58003": "3-hour pressure difference: +/- 0.3 mb - Steady or increasing, then decreasing",
-            "60007": "Precipitation in the last 3 hours: 0 in. - 6 hours: 7 in.",
+            "50013": "3-hour pressure difference: +/- 1.3 mb - Increasing, then decreasing",
             "AO2": "Automated with precipitation sensor",
-            "SLP139": "Sea level pressure: 1013.9 hPa",
-            "T02390233": "Temperature 23.9\u00b0C and dewpoint 23.3\u00b0C"
+            "SLP150": "Sea level pressure: 1015.0 hPa",
+            "T02670228": "Temperature 26.7\u00b0C and dewpoint 22.8\u00b0C"
         },
-        "temperature": "24\u00b0C (75\u00b0F)",
+        "temperature": "27\u00b0C (81\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "SSE-160 at 10kt"
+        "wind": "W-260 at 9kt"
     }
 }

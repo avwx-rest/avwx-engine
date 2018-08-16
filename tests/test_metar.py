@@ -41,6 +41,8 @@ class TestMetar(unittest.TestCase):
             ref = json.load(open(path))
             station = Metar(path.split('/')[-1][:4])
             self.assertTrue(station.update(ref['data']['raw']))
+            # Clear timestamp due to parse_date limitations
+            station.data.time = None
             self.assertEqual(asdict(station.data), ref['data'])
             self.assertEqual(asdict(station.translations), ref['translations'])
             self.assertEqual(station.summary, ref['summary'])

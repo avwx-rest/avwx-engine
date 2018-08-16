@@ -22,7 +22,7 @@ class TestTaf(unittest.TestCase):
         for station in ('KJFK', 'PHNL', 'EGLL', 'RKSI'):
             report = taf.fetch(station)
             self.assertIsInstance(report, str)
-            self.assertTrue(report.startswith(station))
+            self.assertTrue(report.startswith(station) or report.startswith('AMD '+station))
 
     def test_parse(self):
         """
@@ -77,6 +77,12 @@ class TestTaf(unittest.TestCase):
             ref = json.load(open(path))
             station = Taf(path.split('/')[-1][:4])
             self.assertTrue(station.update(ref['data']['raw']))
+            # Clear timestamp due to parse_date limitations
+            for key in ('time', 'start_time', 'end_time'):
+                setattr(station.data, key, None)
+            for i in range(len(station.data.forecast)):
+                for key in ('start_time', 'end_time'):
+                    setattr(station.data.forecast[i], key, None)
             self.assertEqual(asdict(station.data), ref['data'])
             self.assertEqual(asdict(station.translations), ref['translations'])
             self.assertEqual(station.summary, ref['summary'])

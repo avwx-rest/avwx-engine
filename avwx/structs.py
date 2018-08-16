@@ -4,6 +4,7 @@ Contains dataclasses to hold report data
 
 # stdlib
 from dataclasses import asdict, dataclass
+from datetime import datetime
 
 @dataclass
 class StationInfo(object):
@@ -30,8 +31,8 @@ class Units(object):
 
 @dataclass
 class Number(object):
-    value: float
     repr: str
+    value: float
     spoken: str
 
 
@@ -40,6 +41,12 @@ class Fraction(Number):
     numerator: int
     denominator: int
     normalized: str
+
+
+@dataclass
+class Timestamp(object):
+    repr: str
+    dt: datetime
 
 
 @dataclass
@@ -61,7 +68,7 @@ class ReportData(object):
     raw: str
     remarks: str
     station: str
-    time: str
+    time: Timestamp
 
 
 @dataclass
@@ -88,11 +95,11 @@ class MetarData(ReportData, SharedData):
 
 @dataclass
 class TafLineData(SharedData):
-    end_time: str
+    end_time: Timestamp
     icing: [str]
     probability: str
     raw: str
-    start_time: str
+    start_time: Timestamp
     turbulance: [str]
     type: str
     wind_shear: str
@@ -101,8 +108,8 @@ class TafLineData(SharedData):
 @dataclass
 class TafData(ReportData):
     forecast: [TafLineData]
-    start_time: str
-    end_time: str
+    start_time: Timestamp
+    end_time: Timestamp
     max_temp: float = None
     min_temp: float = None
     alts: [str] = None

@@ -4,13 +4,16 @@ Contains the core parsing and indent functions of avwx
 
 # stdlib
 from copy import copy
+from datetime import datetime, timedelta
 from itertools import permutations
+# library
+from dateutil.relativedelta import relativedelta
 # module
 from avwx.exceptions import BadStation
 from avwx.static import CLOUD_LIST, CLOUD_TRANSLATIONS, METAR_RMK, \
     NA_REGIONS, IN_REGIONS, M_NA_REGIONS, M_IN_REGIONS, FLIGHT_RULES, \
     NUMBER_REPL, FRACTIONS, SPECIAL_NUMBERS
-from avwx.structs import Cloud, Fraction, Number, Units
+from avwx.structs import Cloud, Fraction, Number, Timestamp, Units
 
 def valid_station(station: str):
     """
@@ -98,17 +101,17 @@ def make_number(num: str, repr: str = None) -> Number:
         return
     # Check special
     if num in SPECIAL_NUMBERS:
-        return Number(None, repr or num, SPECIAL_NUMBERS[num])
+        return Number(repr or num, None, SPECIAL_NUMBERS[num])
     # Create Fraction
     if '/' in num:
         nmr, dnm = [int(i) for i in num.split('/')]
         unpacked = unpack_fraction(num)
         spoken = spoken_number(unpacked)
-        return Fraction(nmr/dnm, repr or num, spoken, nmr, dnm, unpacked)
+        return Fraction(repr or num, nmr/dnm, spoken, nmr, dnm, unpacked)
     # Create Number
     val = num.replace('M', '-')
     val = float(val) if '.' in num else int(val)
-    return Number(val, repr or num, spoken_number(str(val)))
+    return Number(repr or num, val, spoken_number(str(val)))
 
 
 def find_first_in_list(txt: str, str_list: [str]) -> int:
@@ -587,7 +590,7 @@ def _get_next_time(lines: [dict], target: str) -> str:
     return ''
 
 
-def find_missing_taf_times(lines: [dict], start: str, end: str) -> [dict]:
+def find_missing_taf_times(lines: [dict], start: Timestamp, end: Timestamp) -> [dict]:
     """
     Fix any missing time issues (except for error/empty lines)
     """
@@ -790,48 +793,36 @@ def get_ceiling(clouds: [Cloud]) -> Cloud:
     return None
 
 
-def tafDateToDate(tafDate: str):
-    """takes tafDate (str) format %d%H and outputs best guess datetime object
-    assumes tafDate is in the +-5 days within when the function is called"""
-    from datetime import datetime, timedelta
-    dateNow = datetime.now()
-    tafGuess = dateNow.replace(day = int(tafDate[0:2]), hour = int(tafDate[2:4])%24, microsecond=0,second=0,minute=0)
-    #print("time diff of " + str((tafGuess-dateNow ) / timedelta(minutes=1)/60.))
-    if (tafGuess-dateNow ) / timedelta(minutes=1)/60. < -120 or (tafGuess-dateNow ) / timedelta(minutes=1)/60. > 120:
-       if dateNow.month + 1 == 13:
-         tafGuess = dateNow.replace(year = dateNow.year + 1, month = (dateNow.month+1)%12, 
-                                    day = int(tafDate[0:2]), hour = int(tafDate[2:4]), microsecond=0,second=0,minute=0) 
-       elif (tafGuess-dateNow ) / timedelta(minutes=1)/60. > 120. and dateNow.month -1 == 0: 
-         tafGuess = dateNow.replace(year = dateNow.year - 1, month = 12, 
-                                    day = int(tafDate[0:2]), hour = int(tafDate[2:4]), microsecond=0,second=0,minute=0)
-       elif (tafGuess-dateNow ) / timedelta(minutes=1)/60. > 120.: 
-         tafGuess = dateNow.replace(month = (dateNow.month-1)%12, 
-                                    day = int(tafDate[0:2]), hour = int(tafDate[2:4]), microsecond=0,second=0,minute=0)
-       else:
-         tafGuess = dateNow.replace(month=(dateNow.month+1)%12, 
-                                    day = int(tafDate[0:2]), hour = int(tafDate[2:4]), microsecond=0,second=0,minute=0) 
-    return(tafGuess)
+def parse_date(date: str, hour_threshold: int = 200) -> datetime:
+    """
+    Parses a report timestamp in ddhhZ or ddhhmmZ format
+
+    This function assumes the given timestamp is within the hour threshold from current date
+    """
+    # Format date string
+    date = date.strip('Z')
+    if len(date) == 4:
+        date += '00'
+    if not (len(date) == 6 and date.isdigit()):
+        return
+    # Create initial guess
+    now = datetime.utcnow()
+    guess = now.replace(day=int(date[0:2]),
+                        hour=int(date[2:4])%24, 
+                        minute=int(date[4:6])%60,
+                        second=0, microsecond=0)
+    hourdiff = (guess-now) / timedelta(minutes=1) / 60
+    # Handle changing months
+    if hourdiff > hour_threshold:
+        guess += relativedelta(months=-1)
+    elif hourdiff < -hour_threshold:
+        guess += relativedelta(months=+1)
+    return guess
 
 
-def metarDateToDate(metarDate: str):
-    """takes metarDate (str) format %d%H%M and outputs best guess datetime object
-    assumes metarDate is in the +-5 days within when the function is called"""
-    from datetime import datetime, timedelta
-    dateNow = datetime.now()
-    tafGuess = dateNow.replace(day = int(metarDate[0:2]), hour = int(metarDate[2:4])%24, 
-                               microsecond=0,second=0,minute=int(metarDate[4:6])%60)
-    #print("time diff of " + str((tafGuess-dateNow ) / timedelta(minutes=1)/60.))
-    if (tafGuess-dateNow ) / timedelta(minutes=1)/60. < -120 or (tafGuess-dateNow ) / timedelta(minutes=1)/60. > 120:
-       if dateNow.month + 1 == 13:
-         tafGuess = dateNow.replace(year = dateNow.year + 1, month = (dateNow.month+1)%12, 
-                                    day = int(metarDate[0:2]), hour = int(metarDate[2:4]), microsecond=0,second=0,minute=int(metarDate[4:6])%60) 
-       elif (tafGuess-dateNow ) / timedelta(minutes=1)/60. > 120. and dateNow.month -1 == 0: 
-         tafGuess = dateNow.replace(year = dateNow.year - 1, month = 12, day = int(metarDate[0:2]), 
-                                    hour = int(metarDate[2:4]), microsecond=0,second=0,minute=int(metarDate[4:6])%60)
-       elif (tafGuess-dateNow ) / timedelta(minutes=1)/60. > 120.: 
-         tafGuess = dateNow.replace(month = (dateNow.month-1)%12, day = int(metarDate[0:2]), 
-                                    hour = int(metarDate[2:4]), microsecond=0,second=0,minute=int(metarDate[4:6])%60)
-       else:
-         tafGuess = dateNow.replace(month=(dateNow.month+1)%12, day = int(metarDate[0:2]), 
-                                    hour = int(metarDate[2:4]), microsecond=0,second=0,minute=int(metarDate[4:6])%60) 
-    return(tafGuess)
+def make_timestamp(timestamp: str) -> Timestamp:
+    """
+    Returns a Timestamp dataclass for a report timestamp in ddhhZ or ddhhmmZ format
+    """
+    if timestamp:
+        return Timestamp(timestamp, parse_date(timestamp))

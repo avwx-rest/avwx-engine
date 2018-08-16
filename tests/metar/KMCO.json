@@ -1,9 +1,9 @@
 {
     "data": {
         "altimeter": {
-            "repr": "2999",
-            "spoken": "two nine point nine nine",
-            "value": 29.99
+            "repr": "3014",
+            "spoken": "three zero point one four",
+            "value": 30.14
         },
         "clouds": [
             {
@@ -13,16 +13,16 @@
                 "type": "FEW"
             },
             {
-                "altitude": 75,
+                "altitude": 110,
                 "modifier": null,
-                "repr": "FEW075",
+                "repr": "FEW110",
                 "type": "FEW"
             },
             {
                 "altitude": 250,
                 "modifier": null,
-                "repr": "BKN250",
-                "type": "BKN"
+                "repr": "SCT250",
+                "type": "SCT"
             }
         ],
         "dewpoint": {
@@ -32,48 +32,48 @@
         },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "KMCO 112353Z 18004KT 10SM FEW040 FEW075 BKN250 27/24 A2999 RMK AO2 LTG DSNT W SLP154 CB DSNT ALQDS MOV E 60000 T02720244 10300 20256 58000",
-        "remarks": "RMK AO2 LTG DSNT W SLP154 CB DSNT ALQDS MOV E 60000 T02720244 10300 20256 58000",
+        "raw": "KMCO 160253Z 13005KT 10SM FEW040 FEW110 SCT250 27/24 A3014 RMK AO2 SLP204 OCNL LTGIC DSNT S CB DSNT S T02670239 53014",
+        "remarks": "RMK AO2 SLP204 OCNL LTGIC DSNT S CB DSNT S T02670239 53014",
         "remarks_info": {
             "dewpoint_decimal": {
-                "repr": "24.4",
-                "spoken": "two four point four",
-                "value": 24.4
+                "repr": "23.9",
+                "spoken": "two three point nine",
+                "value": 23.9
             },
             "temperature_decimal": {
-                "repr": "27.2",
-                "spoken": "two seven point two",
-                "value": 27.2
+                "repr": "26.7",
+                "spoken": "two six point seven",
+                "value": 26.7
             }
         },
         "runway_visibility": [],
-        "sanitized": "KMCO 112353Z 18004KT 10SM FEW040 FEW075 BKN250 27/24 A2999 RMK AO2 LTG DSNT W SLP154 CB DSNT ALQDS MOV E 60000 T02720244 10300 20256 58000",
+        "sanitized": "KMCO 160253Z 13005KT 10SM FEW040 FEW110 SCT250 27/24 A3014 RMK AO2 SLP204 OCNL LTGIC DSNT S CB DSNT S T02670239 53014",
         "station": "KMCO",
         "temperature": {
             "repr": "27",
             "spoken": "two seven",
             "value": 27
         },
-        "time": "112353Z",
+        "time": null,
         "visibility": {
             "repr": "10",
             "spoken": "one zero",
             "value": 10
         },
         "wind_direction": {
-            "repr": "180",
-            "spoken": "one eight zero",
-            "value": 180
+            "repr": "130",
+            "spoken": "one three zero",
+            "value": 130
         },
         "wind_gust": null,
         "wind_speed": {
-            "repr": "04",
-            "spoken": "four",
-            "value": 4
+            "repr": "05",
+            "spoken": "five",
+            "value": 5
         },
         "wind_variable_direction": []
     },
-    "speech": "Winds one eight zero at 4kt. Visibility one zero miles. Temperature two seven degrees Celsius. Dew point two four degrees Celsius. Altimeter two nine point nine nine. Few clouds at 4000ft. Few clouds at 7500ft. Broken layer at 25000ft",
+    "speech": "Winds one three zero at 5kt. Visibility one zero miles. Temperature two seven degrees Celsius. Dew point two four degrees Celsius. Altimeter three zero point one four. Few clouds at 4000ft. Few clouds at 11000ft. Scattered clouds at 25000ft",
     "station_info": {
         "city": "Orlando",
         "country": "USA",
@@ -86,23 +86,20 @@
         "priority": 2,
         "state": "FL"
     },
-    "summary": "Winds S-180 at 4kt, Vis 10sm, Temp 27\u00b0C, Dew 24\u00b0C, Alt 29.99 inHg, Few clouds at 4000ft, Few clouds at 7500ft, Broken layer at 25000ft",
+    "summary": "Winds SE-130 at 5kt, Vis 10sm, Temp 27\u00b0C, Dew 24\u00b0C, Alt 30.14 inHg, Few clouds at 4000ft, Few clouds at 11000ft, Scattered clouds at 25000ft",
     "translations": {
-        "altimeter": "29.99 inHg (1016 hPa)",
-        "clouds": "Few clouds at 4000ft, Few clouds at 7500ft, Broken layer at 25000ft - Reported AGL",
+        "altimeter": "30.14 inHg (1021 hPa)",
+        "clouds": "Few clouds at 4000ft, Few clouds at 11000ft, Scattered clouds at 25000ft - Reported AGL",
         "dewpoint": "24\u00b0C (75\u00b0F)",
         "other": "",
         "remarks": {
-            "10300": "6-hour maximum temperature 30.0\u00b0C",
-            "20256": "6-hour minimum temperature 25.6\u00b0C",
-            "58000": "3-hour pressure difference: +/- 0.0 mb - Steady or increasing, then decreasing",
-            "60000": "Precipitation in the last 3 hours: 0 in. - 6 hours: 0 in.",
+            "53014": "3-hour pressure difference: +/- 1.4 mb - Decreasing or steady, then increasing",
             "AO2": "Automated with precipitation sensor",
-            "SLP154": "Sea level pressure: 1015.4 hPa",
-            "T02720244": "Temperature 27.2\u00b0C and dewpoint 24.4\u00b0C"
+            "SLP204": "Sea level pressure: 1020.4 hPa",
+            "T02670239": "Temperature 26.7\u00b0C and dewpoint 23.9\u00b0C"
         },
         "temperature": "27\u00b0C (81\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "S-180 at 4kt"
+        "wind": "SE-130 at 5kt"
     }
 }

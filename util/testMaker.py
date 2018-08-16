@@ -16,6 +16,8 @@ def make_metar_test(station: str):
     """
     m = avwx.Metar(station)
     m.update()
+    # Clear timestamp due to parse_date limitations
+    m.data.time = None
     return {
         'data': asdict(m.data),
         'translations': asdict(m.translations),
@@ -30,8 +32,15 @@ def make_taf_test(station: str):
     """
     t = avwx.Taf(station)
     t.update()
+    data = asdict(t.data)
+    # Clear timestamp due to parse_date limitations
+    for key in ('time', 'start_time', 'end_time'):
+        data[key] = None
+    for i in range(len(data['forecast'])):
+        for key in ('start_time', 'end_time'):
+            data['forecast'][i][key] = None
     return {
-        'data': asdict(t.data),
+        'data': data,
         'translations': asdict(t.translations),
         'summary': t.summary,
         'station_info': asdict(t.station_info)

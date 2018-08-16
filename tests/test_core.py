@@ -7,6 +7,7 @@ tests/test_core.py
 
 # stdlib
 from copy import deepcopy
+from datetime import datetime, timedelta
 # library
 import unittest
 # module
@@ -412,6 +413,30 @@ class TestGlobal(BaseTest):
                 ceiling = structs.Cloud(None, *ceiling)
             self.assertEqual(core.get_ceiling(clouds), ceiling)
 
+    def test_parse_date(self):
+        """
+        Tests that report timestamp is parsed into a datetime object
+        """
+        today = datetime.utcnow()
+        rts = today.strftime(r'%d%H%MZ')
+        parsed = core.parse_date(rts)
+        self.assertIsInstance(parsed, datetime)
+        self.assertEqual(parsed.day, today.day)
+        self.assertEqual(parsed.hour, today.hour)
+        self.assertEqual(parsed.minute, today.minute)
+
+    def test_make_timestamp(self):
+        """
+        Tests that a report timestamp is converted into a Timestamp dataclass
+        """
+        today = datetime.utcnow()
+        rts = today.strftime(r'%d%HZ')
+        date = core.make_timestamp(rts)
+        self.assertIsInstance(date, structs.Timestamp)
+        self.assertEqual(date.repr, rts)
+        self.assertEqual(date.dt.day, today.day)
+        self.assertEqual(date.dt.hour, today.hour)
+
 class TestMetar(BaseTest):
 
     def test_get_remarks(self):
@@ -530,12 +555,16 @@ class TestTaf(unittest.TestCase):
             {'type': 'FROM', 'start_time': '0105', 'end_time': '0108'},
             {'type': 'FROM', 'start_time': '0108', 'end_time': '0114'}
         ]
+        for line in good_lines:
+            for key in ('start_time', 'end_time'):
+                line[key] = core.make_timestamp(line[key])
         bad_lines = deepcopy(good_lines)
-        bad_lines[0]['start_time'] = ''
-        bad_lines[1]['start_time'] = ''
-        bad_lines[2]['end_time'] = ''
-        bad_lines[3]['end_time'] = ''
-        self.assertEqual(core.find_missing_taf_times(bad_lines, '3021', '0114'), good_lines)
+        bad_lines[0]['start_time'] = None
+        bad_lines[1]['start_time'] = None
+        bad_lines[2]['end_time'] = None
+        bad_lines[3]['end_time'] = None
+        start, end = good_lines[0]['start_time'], good_lines[-1]['end_time']
+        self.assertEqual(core.find_missing_taf_times(bad_lines, start, end), good_lines)
 
     def test_get_temp_min_and_max(self):
         """

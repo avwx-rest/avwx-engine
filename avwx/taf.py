@@ -41,12 +41,12 @@ def parse(station: str, txt: str, delim: str = '<br/>&nbsp;&nbsp;') -> TafData:
         txt = txt[4:]
     _, station, time = core.get_station_and_time(txt[:20].split(' '))
     retwx = {
-        'end_time': '',
+        'end_time': None,
         'raw': txt,
-        'remarks': '',
-        'start_time': '',
+        'remarks': None,
+        'start_time': None,
         'station': station,
-        'time': time
+        'time': core.make_timestamp(time)
     }
     txt = txt.replace(station, '')
     txt = txt.replace(time, '')
@@ -66,7 +66,7 @@ def parse(station: str, txt: str, delim: str = '<br/>&nbsp;&nbsp;') -> TafData:
                 = core.get_temp_min_and_max(parsed_lines[0]['other'])
         # Set start and end times based on the first line
         start, end = parsed_lines[0]['start_time'], parsed_lines[0]['end_time']
-        parsed_lines[0]['end_time'] = ''
+        parsed_lines[0]['end_time'] = None
         retwx['start_time'], retwx['end_time'] = start, end
         parsed_lines = core.find_missing_taf_times(parsed_lines, start, end)
         parsed_lines = core.get_taf_flight_rules(parsed_lines)
@@ -116,6 +116,8 @@ def parse_lines(lines: [str], units: Units, use_na: bool = True) -> ([dict], str
                 lines.insert(1, line[probindex + 1:])
                 line = line[:probindex]
             parsed_line = (parse_na_line if use_na else parse_in_line)(line, units)
+            for key in ('start_time', 'end_time'):
+                parsed_line[key] = core.make_timestamp(parsed_line[key])
             parsed_line['probability'] = core.make_number(prob[4:])
             parsed_line['raw'] = raw_line
             parsed_line['sanitized'] = prob + ' ' + line if prob else line

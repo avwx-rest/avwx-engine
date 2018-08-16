@@ -1,38 +1,32 @@
 {
     "data": {
         "alts": null,
-        "end_time": "1306",
+        "end_time": null,
         "forecast": [
             {
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 30,
+                        "altitude": 25,
                         "modifier": null,
-                        "repr": "SCT030",
-                        "type": "SCT"
+                        "repr": "FEW025",
+                        "type": "FEW"
                     },
                     {
                         "altitude": 50,
                         "modifier": null,
                         "repr": "SCT050",
                         "type": "SCT"
-                    },
-                    {
-                        "altitude": 250,
-                        "modifier": null,
-                        "repr": "SCT250",
-                        "type": "SCT"
                     }
                 ],
-                "end_time": "1205",
+                "end_time": null,
                 "flight_rules": "VFR",
                 "icing": [],
                 "other": [],
                 "probability": null,
-                "raw": "1200/1306 05013KT P6SM SCT030 SCT050 SCT250 FM120500 05008KT P6SM SCT025 SCT050 SCT250 FM122000 06010G18KT P6SM SCT030 SCT050",
-                "sanitized": "1200/1306 05013KT P6SM SCT030 SCT050 SCT250",
-                "start_time": "1200",
+                "raw": "1603/1706 04012KT P6SM FEW025 SCT050 FM160600 04005KT P6SM FEW030 SCT050 FM162000 06010G17KT P6SM SCT025 SCT050 FM170500 05006KT P6SM FEW025 SCT050",
+                "sanitized": "1603/1706 04012KT P6SM FEW025 SCT050",
+                "start_time": null,
                 "turbulance": [],
                 "type": "FROM",
                 "visibility": {
@@ -41,16 +35,60 @@
                     "value": null
                 },
                 "wind_direction": {
-                    "repr": "050",
-                    "spoken": "five zero",
-                    "value": 50
+                    "repr": "040",
+                    "spoken": "four zero",
+                    "value": 40
                 },
                 "wind_gust": null,
                 "wind_shear": "",
                 "wind_speed": {
-                    "repr": "13",
-                    "spoken": "one three",
-                    "value": 13
+                    "repr": "12",
+                    "spoken": "one two",
+                    "value": 12
+                }
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "altitude": 30,
+                        "modifier": null,
+                        "repr": "FEW030",
+                        "type": "FEW"
+                    },
+                    {
+                        "altitude": 50,
+                        "modifier": null,
+                        "repr": "SCT050",
+                        "type": "SCT"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": null,
+                "raw": "FM160600 04005KT P6SM FEW030 SCT050 FM162000 06010G17KT P6SM SCT025 SCT050 FM170500 05006KT P6SM FEW025 SCT050",
+                "sanitized": "FM160600 04005KT P6SM FEW030 SCT050",
+                "start_time": null,
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": {
+                    "repr": "P6",
+                    "spoken": "greater than six",
+                    "value": null
+                },
+                "wind_direction": {
+                    "repr": "040",
+                    "spoken": "four zero",
+                    "value": 40
+                },
+                "wind_gust": null,
+                "wind_shear": "",
+                "wind_speed": {
+                    "repr": "05",
+                    "spoken": "five",
+                    "value": 5
                 }
             },
             {
@@ -67,22 +105,64 @@
                         "modifier": null,
                         "repr": "SCT050",
                         "type": "SCT"
-                    },
-                    {
-                        "altitude": 250,
-                        "modifier": null,
-                        "repr": "SCT250",
-                        "type": "SCT"
                     }
                 ],
-                "end_time": "1220",
+                "end_time": null,
                 "flight_rules": "VFR",
                 "icing": [],
                 "other": [],
                 "probability": null,
-                "raw": "FM120500 05008KT P6SM SCT025 SCT050 SCT250 FM122000 06010G18KT P6SM SCT030 SCT050",
-                "sanitized": "FM120500 05008KT P6SM SCT025 SCT050 SCT250",
-                "start_time": "1205",
+                "raw": "FM162000 06010G17KT P6SM SCT025 SCT050 FM170500 05006KT P6SM FEW025 SCT050",
+                "sanitized": "FM162000 06010G17KT P6SM SCT025 SCT050",
+                "start_time": null,
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": {
+                    "repr": "P6",
+                    "spoken": "greater than six",
+                    "value": null
+                },
+                "wind_direction": {
+                    "repr": "060",
+                    "spoken": "six zero",
+                    "value": 60
+                },
+                "wind_gust": {
+                    "repr": "17",
+                    "spoken": "one seven",
+                    "value": 17
+                },
+                "wind_shear": "",
+                "wind_speed": {
+                    "repr": "10",
+                    "spoken": "one zero",
+                    "value": 10
+                }
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "altitude": 25,
+                        "modifier": null,
+                        "repr": "FEW025",
+                        "type": "FEW"
+                    },
+                    {
+                        "altitude": 50,
+                        "modifier": null,
+                        "repr": "SCT050",
+                        "type": "SCT"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": null,
+                "raw": "FM170500 05006KT P6SM FEW025 SCT050",
+                "sanitized": "FM170500 05006KT P6SM FEW025 SCT050",
+                "start_time": null,
                 "turbulance": [],
                 "type": "FROM",
                 "visibility": {
@@ -98,68 +178,20 @@
                 "wind_gust": null,
                 "wind_shear": "",
                 "wind_speed": {
-                    "repr": "08",
-                    "spoken": "eight",
-                    "value": 8
-                }
-            },
-            {
-                "altimeter": "",
-                "clouds": [
-                    {
-                        "altitude": 30,
-                        "modifier": null,
-                        "repr": "SCT030",
-                        "type": "SCT"
-                    },
-                    {
-                        "altitude": 50,
-                        "modifier": null,
-                        "repr": "SCT050",
-                        "type": "SCT"
-                    }
-                ],
-                "end_time": "1306",
-                "flight_rules": "VFR",
-                "icing": [],
-                "other": [],
-                "probability": null,
-                "raw": "FM122000 06010G18KT P6SM SCT030 SCT050",
-                "sanitized": "FM122000 06010G18KT P6SM SCT030 SCT050",
-                "start_time": "1220",
-                "turbulance": [],
-                "type": "FROM",
-                "visibility": {
-                    "repr": "P6",
-                    "spoken": "greater than six",
-                    "value": null
-                },
-                "wind_direction": {
-                    "repr": "060",
-                    "spoken": "six zero",
-                    "value": 60
-                },
-                "wind_gust": {
-                    "repr": "18",
-                    "spoken": "one eight",
-                    "value": 18
-                },
-                "wind_shear": "",
-                "wind_speed": {
-                    "repr": "10",
-                    "spoken": "one zero",
-                    "value": 10
+                    "repr": "06",
+                    "spoken": "six",
+                    "value": 6
                 }
             }
         ],
         "max_temp": "",
         "min_temp": "",
-        "raw": "PHNL 112343Z 1200/1306 05013KT P6SM SCT030 SCT050 SCT250 FM120500 05008KT P6SM SCT025 SCT050 SCT250 FM122000 06010G18KT P6SM SCT030 SCT050",
+        "raw": "PHNL 160306Z 1603/1706 04012KT P6SM FEW025 SCT050 FM160600 04005KT P6SM FEW030 SCT050 FM162000 06010G17KT P6SM SCT025 SCT050 FM170500 05006KT P6SM FEW025 SCT050",
         "remarks": "",
-        "start_time": "1200",
+        "start_time": null,
         "station": "PHNL",
         "temps": null,
-        "time": "112343Z"
+        "time": null
     },
     "station_info": {
         "city": "Honolulu",
@@ -174,40 +206,51 @@
         "state": "HI"
     },
     "summary": [
-        "Winds NE-050 at 13kt, Vis greater than 6sm, Scattered clouds at 3000ft, Scattered clouds at 5000ft, Scattered clouds at 25000ft",
-        "Winds NE-050 at 8kt, Vis greater than 6sm, Scattered clouds at 2500ft, Scattered clouds at 5000ft, Scattered clouds at 25000ft",
-        "Winds ENE-060 at 10kt gusting to 18kt, Vis greater than 6sm, Scattered clouds at 3000ft, Scattered clouds at 5000ft"
+        "Winds NE-040 at 12kt, Vis greater than 6sm, Few clouds at 2500ft, Scattered clouds at 5000ft",
+        "Winds NE-040 at 5kt, Vis greater than 6sm, Few clouds at 3000ft, Scattered clouds at 5000ft",
+        "Winds ENE-060 at 10kt gusting to 17kt, Vis greater than 6sm, Scattered clouds at 2500ft, Scattered clouds at 5000ft",
+        "Winds NE-050 at 6kt, Vis greater than 6sm, Few clouds at 2500ft, Scattered clouds at 5000ft"
     ],
     "translations": {
         "forecast": [
             {
                 "altimeter": "",
-                "clouds": "Scattered clouds at 3000ft, Scattered clouds at 5000ft, Scattered clouds at 25000ft - Reported AGL",
+                "clouds": "Few clouds at 2500ft, Scattered clouds at 5000ft - Reported AGL",
                 "icing": "",
                 "other": "",
                 "turbulance": "",
                 "visibility": "Greater than 6sm ( >10km )",
-                "wind": "NE-050 at 13kt",
+                "wind": "NE-040 at 12kt",
                 "wind_shear": ""
             },
             {
                 "altimeter": "",
-                "clouds": "Scattered clouds at 2500ft, Scattered clouds at 5000ft, Scattered clouds at 25000ft - Reported AGL",
+                "clouds": "Few clouds at 3000ft, Scattered clouds at 5000ft - Reported AGL",
                 "icing": "",
                 "other": "",
                 "turbulance": "",
                 "visibility": "Greater than 6sm ( >10km )",
-                "wind": "NE-050 at 8kt",
+                "wind": "NE-040 at 5kt",
                 "wind_shear": ""
             },
             {
                 "altimeter": "",
-                "clouds": "Scattered clouds at 3000ft, Scattered clouds at 5000ft - Reported AGL",
+                "clouds": "Scattered clouds at 2500ft, Scattered clouds at 5000ft - Reported AGL",
                 "icing": "",
                 "other": "",
                 "turbulance": "",
                 "visibility": "Greater than 6sm ( >10km )",
-                "wind": "ENE-060 at 10kt gusting to 18kt",
+                "wind": "ENE-060 at 10kt gusting to 17kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Few clouds at 2500ft, Scattered clouds at 5000ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "NE-050 at 6kt",
                 "wind_shear": ""
             }
         ],

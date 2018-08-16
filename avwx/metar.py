@@ -51,6 +51,7 @@ def parse_na(txt: str) -> (MetarData, Units):
     condition = core.get_flight_rules(wxresp['visibility'], core.get_ceiling(wxresp['clouds']))
     wxresp['flight_rules'] = FLIGHT_RULES[condition]
     wxresp['remarks_info'] = remarks.parse(wxresp['remarks'])
+    wxresp['time'] = core.make_timestamp(wxresp['time'])
     return MetarData(**wxresp), units
 
 
@@ -79,4 +80,5 @@ def parse_in(txt: str) -> (MetarData, Units):
     condition = core.get_flight_rules(wxresp['visibility'], core.get_ceiling(wxresp['clouds']))
     wxresp['flight_rules'] = FLIGHT_RULES[condition]
     wxresp['remarks_info'] = remarks.parse(wxresp['remarks'])
+    wxresp['time'] = core.make_timestamp(wxresp['time'])
     return MetarData(**wxresp), units

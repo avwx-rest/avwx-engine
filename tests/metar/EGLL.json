@@ -1,52 +1,71 @@
 {
     "data": {
         "altimeter": {
-            "repr": "1016",
-            "spoken": "one zero one six",
-            "value": 1016
+            "repr": "1014",
+            "spoken": "one zero one four",
+            "value": 1014
         },
-        "clouds": [],
+        "clouds": [
+            {
+                "altitude": 18,
+                "modifier": null,
+                "repr": "BKN018",
+                "type": "BKN"
+            },
+            {
+                "altitude": 24,
+                "modifier": null,
+                "repr": "BKN024",
+                "type": "BKN"
+            },
+            {
+                "altitude": 28,
+                "modifier": null,
+                "repr": "OVC028",
+                "type": "OVC"
+            }
+        ],
         "dewpoint": {
             "repr": "15",
             "spoken": "one five",
             "value": 15
         },
-        "flight_rules": "VFR",
+        "flight_rules": "MVFR",
         "other": [],
-        "raw": "EGLL 120020Z AUTO 18004KT 9999 NCD 17/15 Q1016",
-        "remarks": "",
+        "raw": "EGLL 160250Z AUTO 24010KT 9999 BKN018 BKN024 OVC028 19/15 Q1014 NOSIG",
+        "remarks": "NOSIG",
         "remarks_info": {
             "dewpoint_decimal": null,
             "temperature_decimal": null
         },
         "runway_visibility": [],
-        "sanitized": "EGLL 120020Z AUTO 18004KT 9999 NCD 17/15 Q1016",
+        "sanitized": "EGLL 160250Z AUTO 24010KT 9999 BKN018 BKN024 OVC028 19/15 Q1014 NOSIG",
         "station": "EGLL",
         "temperature": {
-            "repr": "17",
-            "spoken": "one seven",
-            "value": 17
+            "repr": "19",
+            "spoken": "one nine",
+            "value": 19
         },
-        "time": "120020Z",
+        "time": null,
         "visibility": {
             "repr": "9999",
             "spoken": "nine nine nine nine",
             "value": 9999
         },
         "wind_direction": {
-            "repr": "180",
-            "spoken": "one eight zero",
-            "value": 180
+            "repr": "240",
+            "spoken": "two four zero",
+            "value": 240
         },
         "wind_gust": null,
         "wind_speed": {
-            "repr": "04",
-            "spoken": "four",
-            "value": 4
+            "repr": "10",
+            "spoken": "one zero",
+            "value": 10
         },
         "wind_variable_direction": []
     },
-    "speech": "Winds one eight zero at 4kt. Visibility one zero kilometers. Temperature one seven degrees Celsius. Dew point one five degrees Celsius. Altimeter one zero one six. Sky clear",
+    "speech": "Winds two four zero at 10kt. Visibility one zero kilometers. Temperature one nine degrees Celsius. Dew point one five degrees Celsius. Altimeter one zero one four. Broken layer at 1800ft. Broken layer at 2400ft. Overcast layer at 2800ft",
     "station_info": {
         "city": "London",
         "country": "GBR",
@@ -59,15 +78,15 @@
         "priority": 6,
         "state": "ENG"
     },
-    "summary": "Winds S-180 at 4kt, Vis 10km, Temp 17\u00b0C, Dew 15\u00b0C, Alt 1016 hPa, Sky clear",
+    "summary": "Winds WSW-240 at 10kt, Vis 10km, Temp 19\u00b0C, Dew 15\u00b0C, Alt 1014 hPa, Broken layer at 1800ft, Broken layer at 2400ft, Overcast layer at 2800ft",
     "translations": {
-        "altimeter": "1016 hPa (30.0 inHg)",
-        "clouds": "Sky clear",
+        "altimeter": "1014 hPa (29.94 inHg)",
+        "clouds": "Broken layer at 1800ft, Broken layer at 2400ft, Overcast layer at 2800ft - Reported AGL",
         "dewpoint": "15\u00b0C (59\u00b0F)",
         "other": "",
         "remarks": {},
-        "temperature": "17\u00b0C (63\u00b0F)",
+        "temperature": "19\u00b0C (66\u00b0F)",
         "visibility": "10km (6.2sm)",
-        "wind": "S-180 at 4kt"
+        "wind": "WSW-240 at 10kt"
     }
 }
