@@ -97,7 +97,7 @@ class MetarData(ReportData, SharedData):
 class TafLineData(SharedData):
     end_time: Timestamp
     icing: [str]
-    probability: str
+    probability: Number
     raw: str
     start_time: Timestamp
     turbulance: [str]

@@ -93,7 +93,7 @@ def spoken_number(num: str) -> str:
     return ' and '.join(ret)
 
 
-def make_number(num: str, repr: str = None) -> Number:
+def make_number(num: str, repr: str = None, speak: str = None) -> Number:
     """
     Returns a Number or Fraction dataclass for a number string
     """
@@ -111,7 +111,7 @@ def make_number(num: str, repr: str = None) -> Number:
     # Create Number
     val = num.replace('M', '-')
     val = float(val) if '.' in num else int(val)
-    return Number(repr or num, val, spoken_number(str(val)))
+    return Number(repr or num, val, spoken_number(speak or str(val)))
 
 
 def find_first_in_list(txt: str, str_list: [str]) -> int:
@@ -486,9 +486,9 @@ def get_wind(wxdata: [str], units: Units) -> ([str], Number, Number, Number, [Nu
     #Variable Wind Direction
     if wxdata and len(wxdata[0]) == 7 and wxdata[0][:3].isdigit() \
         and wxdata[0][3] == 'V' and wxdata[0][4:].isdigit():
-        variable = [make_number(i) for i in wxdata.pop(0).split('V')]
+        variable = [make_number(i, speak=i) for i in wxdata.pop(0).split('V')]
     # Convert to Number
-    direction = make_number(direction)
+    direction = make_number(direction, speak=direction)
     speed = make_number(speed)
     gust = make_number(gust)
     return wxdata, direction, speed, gust, variable
@@ -609,9 +609,12 @@ def find_missing_taf_times(lines: [dict], start: Timestamp, end: Timestamp) -> [
             target += '_time'
             if not line[target]:
                 line[target] = _get_next_time(lines[i::direc][1:], other+'_time')
-    #Special case for final forcast
+    # Special case for final forcast
     if last_fm_line:
         lines[last_fm_line]['end_time'] = end
+    # Reset original end time if still empty
+    if lines and not lines[0]['end_time']:
+        lines[0]['end_time'] = end
     return lines
 
 

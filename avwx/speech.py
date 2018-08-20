@@ -3,12 +3,13 @@ Contains functions for converting translations into a speech string
 Currently only supports METAR
 """
 
-# stdlib
-from copy import deepcopy
 # module
 from avwx import core, translate
 from avwx.static import SPOKEN_UNITS, NUMBER_REPL, FRACTIONS
-from avwx.structs import Cloud, MetarData, Number, Units
+from avwx.structs import Cloud, MetarData, Number, TafData, TafLineData, Timestamp, Units
+
+
+ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(n/10%10!=1)*(n%10<4)*n%10::4])
 
 
 def wind(direction: Number,
@@ -82,36 +83,97 @@ def other(wxcodes: [str]) -> str:
     Format wx codes into a spoken word string
     """
     ret = []
-    for item in wxcodes:
-        item = translate.wxcode(item)
+    for code in wxcodes:
+        item = translate.wxcode(code)
         if item.startswith('Vicinity'):
             item = item.lstrip('Vicinity ') + ' in the Vicinity'
         ret.append(item)
     return '. '.join(ret)
 
 
-def metar(wxdata: MetarData, units: Units) -> str:
+def type_and_times(type: str, start: Timestamp, end: Timestamp, probability: Number = None) -> str:
     """
-    Convert wxdata into a string for text-to-speech
+    Format line type and times into the beginning of a spoken line string
     """
-    # We make copies here because the functions may change the original values
-    _data = deepcopy(wxdata)
-    units = deepcopy(units)
+    if not type:
+        return ''    
+    if type == 'BECMG':
+        return f"At {start.dt.hour or 'midnight'} zulu becoming"
+    ret = f"From {start.dt.hour or 'midnight'} to {end.dt.hour or 'midnight'} zulu,"
+    if probability and probability.value:
+        ret += f" there's a {probability.value}% chance for"
+    if type == 'INTER':
+        ret += ' intermittent'
+    elif type == 'TEMPO':
+        ret += ' temporary'
+    return ret
+
+def wind_shear(shear: str, unit_alt: str = 'ft', unit_wind: str = 'kt') -> str:
+    """
+    Format wind shear string into a spoken word string
+    """
+    unit_alt = SPOKEN_UNITS.get(unit_alt, unit_alt)
+    unit_wind = SPOKEN_UNITS.get(unit_wind, unit_wind)
+    return translate.wind_shear(shear, unit_alt, unit_wind, spoken=True) or 'Wind shear unknown'
+
+def metar(data: MetarData, units: Units) -> str:
+    """
+    Convert MetarData into a string for text-to-speech
+    """
     speech = []
-    if _data.wind_direction and _data.wind_speed:
-        speech.append(wind(_data.wind_direction, _data.wind_speed,
-                           _data.wind_gust, _data.wind_variable_direction,
+    if data.wind_direction and data.wind_speed:
+        speech.append(wind(data.wind_direction, data.wind_speed,
+                           data.wind_gust, data.wind_variable_direction,
                            units.wind_speed))
-    if _data.visibility:
-        speech.append(visibility(_data.visibility, units.visibility))
-    if _data.temperature:
-        speech.append(temperature('Temperature', _data.temperature, units.temperature))
-    if _data.dewpoint:
-        speech.append(temperature('Dew point', _data.dewpoint, units.temperature))
-    if _data.altimeter:
-        speech.append(altimeter(_data.altimeter, units.altimeter))
-    if _data.other:
-        speech.append(other(_data.other))
-    speech.append(translate.clouds(_data.clouds,
+    if data.visibility:
+        speech.append(visibility(data.visibility, units.visibility))
+    if data.temperature:
+        speech.append(temperature('Temperature', data.temperature, units.temperature))
+    if data.dewpoint:
+        speech.append(temperature('Dew point', data.dewpoint, units.temperature))
+    if data.altimeter:
+        speech.append(altimeter(data.altimeter, units.altimeter))
+    if data.other:
+        speech.append(other(data.other))
+    speech.append(translate.clouds(data.clouds,
                                    units.altitude).replace(' - Reported AGL', ''))
     return ('. '.join([l for l in speech if l])).replace(',', '.')
+
+
+def taf_line(line: TafLineData, units: Units) -> str:
+    """
+    Convert TafLineData into a string for text-to-speech
+    """
+    speech = []
+    start = type_and_times(line.type, line.start_time, line.end_time, line.probability)
+    if line.wind_direction and line.wind_speed:
+        speech.append(wind(line.wind_direction, line.wind_speed,
+                           line.wind_gust, unit=units.wind_speed))
+    if line.wind_shear:
+        speech.append(wind_shear(line.wind_shear, units.altimeter, units.wind_speed))
+    if line.visibility:
+        speech.append(visibility(line.visibility, units.visibility))
+    if line.altimeter:
+        speech.append(altimeter(line.altimeter, units.altimeter))
+    if line.other:
+        speech.append(other(line.other))
+    speech.append(translate.clouds(line.clouds,
+                                   units.altitude).replace(' - Reported AGL', ''))
+    if line.turbulance:
+        speech.append(translate.turb_ice(line.turbulance, units.altitude))
+    if line.icing:
+        speech.append(translate.turb_ice(line.icing, units.altitude))
+    return start + ' ' + ('. '.join([l for l in speech if l])).replace(',', '.')
+
+
+def taf(data: TafData, units: Units) -> str:
+    """
+    Convert TafData into a string for text-to-speech
+    """
+    try:
+        month = data.start_time.dt.strftime(r'%B')
+        day = ordinal(data.start_time.dt.day)
+        ret = f"Starting on {month} {day} - "
+    except AttributeError:
+        ret = ''
+    return ret + '. '.join([taf_line(line, units) for line in data.forecast])

@@ -43,6 +43,7 @@ def make_taf_test(station: str):
         'data': data,
         'translations': asdict(t.translations),
         'summary': t.summary,
+        'speech': t.speech,
         'station_info': asdict(t.station_info)
     }
 

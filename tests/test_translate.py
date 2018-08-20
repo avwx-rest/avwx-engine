@@ -46,6 +46,7 @@ class TestShared(unittest.TestCase):
         """
         Tests translating each cloud into a single string
         """
+        self.assertEqual(translate.clouds(None), '')
         self.assertEqual(translate.clouds([]), 'Sky clear')
         for clouds, translation in (
             (['BKN','FEW020'], 'Few clouds at 2000ft'),
@@ -118,7 +119,6 @@ class TestMetar(unittest.TestCase):
             lower = keys[i%4]+90*(i//4)
             upper = keys[0]+90*((i//4)+1)-1 if i%4==3 else keys[(i%4)+1]+90*(i//4)-1
             for direction in range(lower, upper+1):
-                print(direction, cardinal)
                 self.assertEqual(translate.get_cardinal_direction(direction), cardinal)
         # -0 - 11
         for direction in range(-10, 12):

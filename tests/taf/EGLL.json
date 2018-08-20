@@ -7,19 +7,19 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 25,
+                        "altitude": 35,
                         "modifier": null,
-                        "repr": "BKN025",
+                        "repr": "BKN035",
                         "type": "BKN"
                     }
                 ],
                 "end_time": null,
-                "flight_rules": "MVFR",
+                "flight_rules": "VFR",
                 "icing": [],
                 "other": [],
                 "probability": null,
-                "raw": "1601/1706 21012KT 9999 BKN025 TEMPO 1606/1613 6000 RA BKN012 PROB40 TEMPO 1607/1613 3000 +RA BKN008 BECMG 1612/1615 27008KT PROB30 1702/1706 7000",
-                "sanitized": "1601/1706 21012KT 9999 BKN025",
+                "raw": "2000/2106 28006KT 9999 BKN035 PROB30 TEMPO 2004/2009 BKN012 PROB30 TEMPO 2105/2106 8000 BKN006",
+                "sanitized": "2000/2106 28006KT 9999 BKN035",
                 "start_time": null,
                 "turbulance": [],
                 "type": "FROM",
@@ -29,16 +29,16 @@
                     "value": 9999
                 },
                 "wind_direction": {
-                    "repr": "210",
-                    "spoken": "two one zero",
-                    "value": 210
+                    "repr": "280",
+                    "spoken": "two eight zero",
+                    "value": 280
                 },
                 "wind_gust": null,
                 "wind_shear": "",
                 "wind_speed": {
-                    "repr": "12",
-                    "spoken": "one two",
-                    "value": 12
+                    "repr": "06",
+                    "spoken": "six",
+                    "value": 6
                 }
             },
             {
@@ -52,22 +52,20 @@
                     }
                 ],
                 "end_time": null,
-                "flight_rules": "MVFR",
+                "flight_rules": "IFR",
                 "icing": [],
-                "other": [
-                    "RA"
-                ],
-                "probability": null,
-                "raw": "TEMPO 1606/1613 6000 RA BKN012 PROB40 TEMPO 1607/1613 3000 +RA BKN008 BECMG 1612/1615 27008KT PROB30 1702/1706 7000",
-                "sanitized": "TEMPO 1606/1613 6000 RA BKN012",
+                "other": [],
+                "probability": {
+                    "repr": "30",
+                    "spoken": "three zero",
+                    "value": 30
+                },
+                "raw": "TEMPO 2004/2009 BKN012 PROB30 TEMPO 2105/2106 8000 BKN006",
+                "sanitized": "PROB30 TEMPO 2004/2009 BKN012",
                 "start_time": null,
                 "turbulance": [],
                 "type": "TEMPO",
-                "visibility": {
-                    "repr": "6000",
-                    "spoken": "six zero zero zero",
-                    "value": 6000
-                },
+                "visibility": null,
                 "wind_direction": null,
                 "wind_gust": null,
                 "wind_shear": "",
@@ -77,70 +75,14 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 8,
+                        "altitude": 6,
                         "modifier": null,
-                        "repr": "BKN008",
+                        "repr": "BKN006",
                         "type": "BKN"
                     }
                 ],
                 "end_time": null,
                 "flight_rules": "IFR",
-                "icing": [],
-                "other": [
-                    "+RA"
-                ],
-                "probability": {
-                    "repr": "40",
-                    "spoken": "four zero",
-                    "value": 40
-                },
-                "raw": "TEMPO 1607/1613 3000 +RA BKN008 BECMG 1612/1615 27008KT PROB30 1702/1706 7000",
-                "sanitized": "PROB40 TEMPO 1607/1613 3000 +RA BKN008",
-                "start_time": null,
-                "turbulance": [],
-                "type": "TEMPO",
-                "visibility": {
-                    "repr": "3000",
-                    "spoken": "three zero zero zero",
-                    "value": 3000
-                },
-                "wind_direction": null,
-                "wind_gust": null,
-                "wind_shear": "",
-                "wind_speed": null
-            },
-            {
-                "altimeter": "",
-                "clouds": [],
-                "end_time": null,
-                "flight_rules": "IFR",
-                "icing": [],
-                "other": [],
-                "probability": null,
-                "raw": "BECMG 1612/1615 27008KT PROB30 1702/1706 7000",
-                "sanitized": "BECMG 1612/1615 27008KT",
-                "start_time": null,
-                "turbulance": [],
-                "type": "BECMG",
-                "visibility": null,
-                "wind_direction": {
-                    "repr": "270",
-                    "spoken": "two seven zero",
-                    "value": 270
-                },
-                "wind_gust": null,
-                "wind_shear": "",
-                "wind_speed": {
-                    "repr": "08",
-                    "spoken": "eight",
-                    "value": 8
-                }
-            },
-            {
-                "altimeter": "",
-                "clouds": [],
-                "end_time": null,
-                "flight_rules": "MVFR",
                 "icing": [],
                 "other": [],
                 "probability": {
@@ -148,15 +90,15 @@
                     "spoken": "three zero",
                     "value": 30
                 },
-                "raw": "PROB30 1702/1706 7000",
-                "sanitized": "PROB30 1702/1706 7000",
+                "raw": "TEMPO 2105/2106 8000 BKN006",
+                "sanitized": "PROB30 TEMPO 2105/2106 8000 BKN006",
                 "start_time": null,
                 "turbulance": [],
-                "type": "FROM",
+                "type": "TEMPO",
                 "visibility": {
-                    "repr": "7000",
-                    "spoken": "seven zero zero zero",
-                    "value": 7000
+                    "repr": "8000",
+                    "spoken": "eight zero zero zero",
+                    "value": 8000
                 },
                 "wind_direction": null,
                 "wind_gust": null,
@@ -166,13 +108,14 @@
         ],
         "max_temp": "",
         "min_temp": "",
-        "raw": "EGLL 160128Z 1601/1706 21012KT 9999 BKN025 TEMPO 1606/1613 6000 RA BKN012 PROB40 TEMPO 1607/1613 3000 +RA BKN008 BECMG 1612/1615 27008KT PROB30 1702/1706 7000",
+        "raw": "EGLL 192253Z 2000/2106 28006KT 9999 BKN035 PROB30 TEMPO 2004/2009 BKN012 PROB30 TEMPO 2105/2106 8000 BKN006",
         "remarks": "",
         "start_time": null,
         "station": "EGLL",
         "temps": null,
         "time": null
     },
+    "speech": "Starting on August 20th - From midnight to 6 zulu, Winds two eight zero at 6kt. Visibility one zero kilometers. Broken layer at 3500ft. From 4 to 9 zulu, there's a 30% chance for temporary Broken layer at 1200ft. From 5 to 6 zulu, there's a 30% chance for temporary Visibility eight kilometers. Broken layer at 600ft",
     "station_info": {
         "city": "London",
         "country": "GBR",
@@ -186,61 +129,39 @@
         "state": "ENG"
     },
     "summary": [
-        "Winds SSW-210 at 12kt, Vis 10km, Broken layer at 2500ft",
-        "Vis 6km, Rain, Broken layer at 1200ft",
-        "Vis 3km, Heavy Rain, Broken layer at 800ft",
-        "Winds W-270 at 8kt",
-        "Vis 7km, Sky clear"
+        "Winds W-280 at 6kt, Vis 10km, Broken layer at 3500ft",
+        "Broken layer at 1200ft",
+        "Vis 8km, Broken layer at 600ft"
     ],
     "translations": {
         "forecast": [
             {
                 "altimeter": "",
-                "clouds": "Broken layer at 2500ft - Reported AGL",
+                "clouds": "Broken layer at 3500ft - Reported AGL",
                 "icing": "",
                 "other": "",
                 "turbulance": "",
                 "visibility": "10km (6.2sm)",
-                "wind": "SSW-210 at 12kt",
+                "wind": "W-280 at 6kt",
                 "wind_shear": ""
             },
             {
                 "altimeter": "",
                 "clouds": "Broken layer at 1200ft - Reported AGL",
                 "icing": "",
-                "other": "Rain",
-                "turbulance": "",
-                "visibility": "6km (3.7sm)",
-                "wind": "",
-                "wind_shear": ""
-            },
-            {
-                "altimeter": "",
-                "clouds": "Broken layer at 800ft - Reported AGL",
-                "icing": "",
-                "other": "Heavy Rain",
-                "turbulance": "",
-                "visibility": "3km (1.9sm)",
-                "wind": "",
-                "wind_shear": ""
-            },
-            {
-                "altimeter": "",
-                "clouds": null,
-                "icing": "",
                 "other": "",
                 "turbulance": "",
                 "visibility": "",
-                "wind": "W-270 at 8kt",
+                "wind": "",
                 "wind_shear": ""
             },
             {
                 "altimeter": "",
-                "clouds": "Sky clear",
+                "clouds": "Broken layer at 600ft - Reported AGL",
                 "icing": "",
                 "other": "",
                 "turbulance": "",
-                "visibility": "7km (4.3sm)",
+                "visibility": "8km (5sm)",
                 "wind": "",
                 "wind_shear": ""
             }

@@ -1,58 +1,66 @@
 {
     "data": {
         "altimeter": {
-            "repr": "3014",
-            "spoken": "three zero point one four",
-            "value": 30.14
+            "repr": "3009",
+            "spoken": "three zero point zero nine",
+            "value": 30.09
         },
         "clouds": [
             {
-                "altitude": 40,
+                "altitude": 14,
                 "modifier": null,
-                "repr": "FEW040",
+                "repr": "FEW014",
                 "type": "FEW"
             },
             {
-                "altitude": 110,
+                "altitude": 55,
+                "modifier": "CB",
+                "repr": "BKN055CB",
+                "type": "BKN"
+            },
+            {
+                "altitude": 90,
                 "modifier": null,
-                "repr": "FEW110",
-                "type": "FEW"
+                "repr": "BKN090",
+                "type": "BKN"
             },
             {
                 "altitude": 250,
                 "modifier": null,
-                "repr": "SCT250",
-                "type": "SCT"
+                "repr": "OVC250",
+                "type": "OVC"
             }
         ],
         "dewpoint": {
-            "repr": "24",
-            "spoken": "two four",
-            "value": 24
+            "repr": "23",
+            "spoken": "two three",
+            "value": 23
         },
         "flight_rules": "VFR",
-        "other": [],
-        "raw": "KMCO 160253Z 13005KT 10SM FEW040 FEW110 SCT250 27/24 A3014 RMK AO2 SLP204 OCNL LTGIC DSNT S CB DSNT S T02670239 53014",
-        "remarks": "RMK AO2 SLP204 OCNL LTGIC DSNT S CB DSNT S T02670239 53014",
+        "other": [
+            "TS"
+        ],
+        "raw": "KMCO 200010Z 32009KT 10SM TS FEW014 BKN055CB BKN090 OVC250 24/23 A3009 RMK AO2 LTG DSNT W-N RAE2355 FRQ LTGICCG W-N-NE TS W-N-NE MOV NW P0000 T02390233 $",
+        "remarks": "RMK AO2 LTG DSNT W-N RAE2355 FRQ LTGICCG W-N-NE TS W-N-NE MOV NW P0000 T02390233 $",
         "remarks_info": {
             "dewpoint_decimal": {
+                "repr": "23.3",
+                "spoken": "two three point three",
+                "value": 23.3
+            },
+            "temperature_decimal": {
                 "repr": "23.9",
                 "spoken": "two three point nine",
                 "value": 23.9
-            },
-            "temperature_decimal": {
-                "repr": "26.7",
-                "spoken": "two six point seven",
-                "value": 26.7
             }
         },
         "runway_visibility": [],
-        "sanitized": "KMCO 160253Z 13005KT 10SM FEW040 FEW110 SCT250 27/24 A3014 RMK AO2 SLP204 OCNL LTGIC DSNT S CB DSNT S T02670239 53014",
+        "sanitized": "KMCO 200010Z 32009KT 10SM TS FEW014 BKN055CB BKN090 OVC250 24/23 A3009 RMK AO2 LTG DSNT W-N RAE2355 FRQ LTGICCG W-N-NE TS W-N-NE MOV NW P0000 T02390233 $",
         "station": "KMCO",
         "temperature": {
-            "repr": "27",
-            "spoken": "two seven",
-            "value": 27
+            "repr": "24",
+            "spoken": "two four",
+            "value": 24
         },
         "time": null,
         "visibility": {
@@ -61,19 +69,19 @@
             "value": 10
         },
         "wind_direction": {
-            "repr": "130",
-            "spoken": "one three zero",
-            "value": 130
+            "repr": "320",
+            "spoken": "three two zero",
+            "value": 320
         },
         "wind_gust": null,
         "wind_speed": {
-            "repr": "05",
-            "spoken": "five",
-            "value": 5
+            "repr": "09",
+            "spoken": "nine",
+            "value": 9
         },
         "wind_variable_direction": []
     },
-    "speech": "Winds one three zero at 5kt. Visibility one zero miles. Temperature two seven degrees Celsius. Dew point two four degrees Celsius. Altimeter three zero point one four. Few clouds at 4000ft. Few clouds at 11000ft. Scattered clouds at 25000ft",
+    "speech": "Winds three two zero at 9kt. Visibility one zero miles. Temperature two four degrees Celsius. Dew point two three degrees Celsius. Altimeter three zero point zero nine. Thunderstorm. Few clouds at 1400ft. Broken layer at 5500ft (Cumulonimbus). Broken layer at 9000ft. Overcast layer at 25000ft",
     "station_info": {
         "city": "Orlando",
         "country": "USA",
@@ -86,20 +94,20 @@
         "priority": 2,
         "state": "FL"
     },
-    "summary": "Winds SE-130 at 5kt, Vis 10sm, Temp 27\u00b0C, Dew 24\u00b0C, Alt 30.14 inHg, Few clouds at 4000ft, Few clouds at 11000ft, Scattered clouds at 25000ft",
+    "summary": "Winds NW-320 at 9kt, Vis 10sm, Temp 24\u00b0C, Dew 23\u00b0C, Alt 30.09 inHg, Thunderstorm, Few clouds at 1400ft, Broken layer at 5500ft (Cumulonimbus), Broken layer at 9000ft, Overcast layer at 25000ft",
     "translations": {
-        "altimeter": "30.14 inHg (1021 hPa)",
-        "clouds": "Few clouds at 4000ft, Few clouds at 11000ft, Scattered clouds at 25000ft - Reported AGL",
-        "dewpoint": "24\u00b0C (75\u00b0F)",
-        "other": "",
+        "altimeter": "30.09 inHg (1019 hPa)",
+        "clouds": "Few clouds at 1400ft, Broken layer at 5500ft (Cumulonimbus), Broken layer at 9000ft, Overcast layer at 25000ft - Reported AGL",
+        "dewpoint": "23\u00b0C (73\u00b0F)",
+        "other": "Thunderstorm",
         "remarks": {
-            "53014": "3-hour pressure difference: +/- 1.4 mb - Decreasing or steady, then increasing",
+            "$": "ASOS requires maintenance",
             "AO2": "Automated with precipitation sensor",
-            "SLP204": "Sea level pressure: 1020.4 hPa",
-            "T02670239": "Temperature 26.7\u00b0C and dewpoint 23.9\u00b0C"
+            "P0000": "Trace amount of rain in the last hour",
+            "T02390233": "Temperature 23.9\u00b0C and dewpoint 23.3\u00b0C"
         },
-        "temperature": "27\u00b0C (81\u00b0F)",
+        "temperature": "24\u00b0C (75\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "SE-130 at 5kt"
+        "wind": "NW-320 at 9kt"
     }
 }

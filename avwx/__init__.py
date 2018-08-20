@@ -145,3 +145,12 @@ class Taf(Report):
         if not self.translations:
             self.update()
         return [summary.taf(trans) for trans in self.translations.forecast]
+
+    @property
+    def speech(self) -> str:
+        """
+        Report summary designed to be read by a text-to-speech program
+        """
+        if not self.data:
+            self.update()
+        return speech.taf(self.data, self.units)

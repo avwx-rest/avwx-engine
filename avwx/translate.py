@@ -86,6 +86,7 @@ def wind(direction: Number,
     Ex: NNE-020 (variable 010 to 040) at 14kt gusting to 20kt
     """
     ret = ''
+    target = 'spoken' if spoken else 'repr'
     # Wind direction
     if direction:
         if direction.repr in WIND_DIR_REPR:
@@ -95,13 +96,10 @@ def wind(direction: Number,
         else:
             if cardinals:
                 ret += get_cardinal_direction(direction.value) + '-'
-            ret += core.spoken_number(direction.repr) if spoken else direction.repr
+            ret += getattr(direction, target)
     # Variable direction
     if vardir and isinstance(vardir, list):
-        if spoken:
-            vardir = [core.spoken_number(d.repr) for d in vardir]
-        else:
-            vardir = [d.repr for d in vardir]
+        vardir = [getattr(var, target) for var in vardir]
         ret += ' (variable {} to {})'.format(*vardir)
     # Speed
     if speed and speed.value:
@@ -187,6 +185,8 @@ def clouds(clds: [Cloud], unit: str = 'ft') -> str:
 
     Ex: Broken layer at 2200ft (Cumulonimbus), Overcast layer at 3600ft - Reported AGL
     """
+    if clds is None:
+        return ''
     ret = []
     for cloud in clds:
         if cloud.altitude is None:
@@ -236,7 +236,7 @@ def other_list(wxcodes: [str]) -> str:
     return ', '.join([wxcode(code) for code in wxcodes])
 
 
-def wind_shear(shear: str, unit_alt: str = 'ft', unit_wnd: str = 'kt') -> str:
+def wind_shear(shear: str, unit_alt: str = 'ft', unit_wind: str = 'kt', spoken: bool = False) -> str:
     """
     Translate wind shear into a readable string
 
@@ -244,10 +244,9 @@ def wind_shear(shear: str, unit_alt: str = 'ft', unit_wnd: str = 'kt') -> str:
     """
     if not shear or 'WS' not in shear or '/' not in shear:
         return ''
-    shear = shear[2:].rstrip(unit_wnd.upper()).split('/')
-    return 'Wind shear {alt}{unit_alt} from {winddir} at {speed}{unit_wind}'.format(
-        alt=int(shear[0]) * 100, unit_alt=unit_alt, winddir=shear[1][:3],
-        speed=shear[1][3:], unit_wind=unit_wnd)
+    shear = shear[2:].rstrip(unit_wind.upper()).split('/')
+    wdir = core.spoken_number(shear[1][:3]) if spoken else shear[1][:3]
+    return f'Wind shear {int(shear[0])*100}{unit_alt} from {wdir} at {shear[1][3:]}{unit_wind}'
 
 
 def turb_ice(turbice: [str], unit: str = 'ft') -> str:

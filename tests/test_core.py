@@ -148,6 +148,9 @@ class TestGlobal(BaseTest):
             self.assertEqual(number.denominator, dnm)
             self.assertEqual(number.normalized, norm)
         self.assertEqual(core.make_number('1234', 'A1234').repr, 'A1234')
+        number = core.make_number('040', speak='040')
+        self.assertEqual(number.value, 40)
+        self.assertEqual(number.spoken, 'zero four zero')
 
     def test_find_first_in_list(self):
         """
