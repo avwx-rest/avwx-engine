@@ -10,6 +10,7 @@ import os
 import unittest
 from copy import deepcopy
 from dataclasses import asdict
+from datetime import datetime
 from glob import glob
 # module
 from avwx import core, taf, structs, Taf
@@ -98,7 +99,9 @@ class TestTaf(unittest.TestCase):
         for path in glob(os.path.dirname(os.path.realpath(__file__))+'/taf/*.json'):
             ref = json.load(open(path))
             station = Taf(path.split('/')[-1][:4])
+            self.assertIsNone(station.last_updated)
             self.assertTrue(station.update(ref['data']['raw']))
+            self.assertIsInstance(station.last_updated, datetime)
             # Clear timestamp due to parse_date limitations
             nodt = deepcopy(station.data)
             for key in ('time', 'start_time', 'end_time'):

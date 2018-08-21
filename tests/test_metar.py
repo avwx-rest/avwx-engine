@@ -8,6 +8,7 @@ import json
 import os
 import unittest
 from dataclasses import asdict
+from datetime import datetime
 from glob import glob
 # module
 from avwx import metar, structs, Metar
@@ -40,7 +41,9 @@ class TestMetar(unittest.TestCase):
         for path in glob(os.path.dirname(os.path.realpath(__file__))+'/metar/*.json'):
             ref = json.load(open(path))
             station = Metar(path.split('/')[-1][:4])
+            self.assertIsNone(station.last_updated)
             self.assertTrue(station.update(ref['data']['raw']))
+            self.assertIsInstance(station.last_updated, datetime)
             # Clear timestamp due to parse_date limitations
             station.data.time = None
             self.assertEqual(asdict(station.data), ref['data'])
