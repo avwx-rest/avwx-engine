@@ -1,0 +1,80 @@
+{
+    "data": {
+        "altimeter": {
+            "repr": "1020",
+            "spoken": "one zero two zero",
+            "value": 1020
+        },
+        "clouds": [
+            {
+                "altitude": 31,
+                "modifier": null,
+                "repr": "OVC031",
+                "type": "OVC"
+            }
+        ],
+        "dewpoint": {
+            "repr": "16",
+            "spoken": "one six",
+            "value": 16
+        },
+        "flight_rules": "VFR",
+        "other": [],
+        "raw": "EGLL 192350Z AUTO 28008KT 9999 OVC031 19/16 Q1020 NOSIG",
+        "remarks": "NOSIG",
+        "remarks_info": {
+            "dewpoint_decimal": null,
+            "temperature_decimal": null
+        },
+        "runway_visibility": [],
+        "sanitized": "EGLL 192350Z AUTO 28008KT 9999 OVC031 19/16 Q1020 NOSIG",
+        "station": "EGLL",
+        "temperature": {
+            "repr": "19",
+            "spoken": "one nine",
+            "value": 19
+        },
+        "time": null,
+        "visibility": {
+            "repr": "9999",
+            "spoken": "nine nine nine nine",
+            "value": 9999
+        },
+        "wind_direction": {
+            "repr": "280",
+            "spoken": "two eight zero",
+            "value": 280
+        },
+        "wind_gust": null,
+        "wind_speed": {
+            "repr": "08",
+            "spoken": "eight",
+            "value": 8
+        },
+        "wind_variable_direction": []
+    },
+    "speech": "Winds two eight zero at 8kt. Visibility one zero kilometers. Temperature one nine degrees Celsius. Dew point one six degrees Celsius. Altimeter one zero two zero. Overcast layer at 3100ft",
+    "station_info": {
+        "city": "London",
+        "country": "GBR",
+        "elevation": 24.4,
+        "iata": "LHR",
+        "icao": "EGLL",
+        "latitude": 51.47916667,
+        "longitude": -0.450555556,
+        "name": "Heathrow",
+        "priority": 6,
+        "state": "ENG"
+    },
+    "summary": "Winds W-280 at 8kt, Vis 10km, Temp 19\u00b0C, Dew 16\u00b0C, Alt 1020 hPa, Overcast layer at 3100ft",
+    "translations": {
+        "altimeter": "1020 hPa (30.12 inHg)",
+        "clouds": "Overcast layer at 3100ft - Reported AGL",
+        "dewpoint": "16\u00b0C (61\u00b0F)",
+        "other": "",
+        "remarks": {},
+        "temperature": "19\u00b0C (66\u00b0F)",
+        "visibility": "10km (6.2sm)",
+        "wind": "W-280 at 8kt"
+    }
+}

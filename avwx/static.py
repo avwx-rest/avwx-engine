@@ -14,24 +14,24 @@ M_NA_REGIONS = ['MB', 'MM', 'MT', 'MY']
 M_IN_REGIONS = ['MD', 'MG', 'MH', 'MK', 'MN', 'MP', 'MR', 'MS', 'MU', 'MW', 'MZ']
 
 #: Station info keys
-INFO_KEYS = ['ICAO', 'Country', 'State', 'City', 'Name', 'IATA',
-             'Elevation', 'Latitude', 'Longitude', 'Priority']
+INFO_KEYS = ['icao', 'country', 'state', 'city', 'name', 'iata',
+             'elevation', 'latitude', 'longitude', 'priority']
 
 #: North American variant units
 NA_UNITS = {
-    'Wind-Speed': 'kt',
-    'Visibility': 'sm',
-    'Altitude': 'ft',
-    'Temperature': 'C',
-    'Altimeter': 'inHg'
+    'altimeter': 'inHg',
+    'altitude': 'ft',
+    'temperature': 'C',
+    'visibility': 'sm',
+    'wind_speed': 'kt'
 }
 #: International variant units
 IN_UNITS = {
-    'Wind-Speed': 'kt',
-    'Visibility': 'm',
-    'Altitude': 'ft',
-    'Temperature': 'C',
-    'Altimeter': 'hPa'
+    'altimeter': 'hPa',
+    'altitude': 'ft',
+    'temperature': 'C',
+    'visibility': 'm',
+    'wind_speed': 'kt'
 }
 
 #: List of flight rules abreviations
@@ -179,9 +179,17 @@ NUMBER_REPL = {
 
 #: Dictionary associating fraction strings with their spoken version
 FRACTIONS = {
-    '1/4': 'one quarter of a',
+    '1/4': 'one quarter',
     '1/2': 'one half',
-    '3/4': 'three quarters of a'
+    '3/4': 'three quarters'
+}
+
+#: Dictionary associating special number values with their spoken version
+SPECIAL_NUMBERS = {
+    'P6': 'greater than six',
+    'P6SM': 'greater than six',
+    'M1/4': 'less than one quarter',
+    'VRB': 'variable',
 }
 
 #: Static remarks translation elements

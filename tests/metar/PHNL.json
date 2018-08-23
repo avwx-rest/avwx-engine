@@ -1,0 +1,107 @@
+{
+    "data": {
+        "altimeter": {
+            "repr": "2995",
+            "spoken": "two nine point nine five",
+            "value": 29.95
+        },
+        "clouds": [
+            {
+                "altitude": 25,
+                "modifier": null,
+                "repr": "FEW025",
+                "type": "FEW"
+            },
+            {
+                "altitude": 38,
+                "modifier": null,
+                "repr": "SCT038",
+                "type": "SCT"
+            },
+            {
+                "altitude": 55,
+                "modifier": null,
+                "repr": "SCT055",
+                "type": "SCT"
+            }
+        ],
+        "dewpoint": {
+            "repr": "22",
+            "spoken": "two two",
+            "value": 22
+        },
+        "flight_rules": "VFR",
+        "other": [],
+        "raw": "PHNL 192353Z 09013KT 10SM FEW025 SCT038 SCT055 32/22 A2995 RMK AO2 SLP142 T03220217 10328 20278 58014",
+        "remarks": "RMK AO2 SLP142 T03220217 10328 20278 58014",
+        "remarks_info": {
+            "dewpoint_decimal": {
+                "repr": "21.7",
+                "spoken": "two one point seven",
+                "value": 21.7
+            },
+            "temperature_decimal": {
+                "repr": "32.2",
+                "spoken": "three two point two",
+                "value": 32.2
+            }
+        },
+        "runway_visibility": [],
+        "sanitized": "PHNL 192353Z 09013KT 10SM FEW025 SCT038 SCT055 32/22 A2995 RMK AO2 SLP142 T03220217 10328 20278 58014",
+        "station": "PHNL",
+        "temperature": {
+            "repr": "32",
+            "spoken": "three two",
+            "value": 32
+        },
+        "time": null,
+        "visibility": {
+            "repr": "10",
+            "spoken": "one zero",
+            "value": 10
+        },
+        "wind_direction": {
+            "repr": "090",
+            "spoken": "zero nine zero",
+            "value": 90
+        },
+        "wind_gust": null,
+        "wind_speed": {
+            "repr": "13",
+            "spoken": "one three",
+            "value": 13
+        },
+        "wind_variable_direction": []
+    },
+    "speech": "Winds zero nine zero at 13kt. Visibility one zero miles. Temperature three two degrees Celsius. Dew point two two degrees Celsius. Altimeter two nine point nine five. Few clouds at 2500ft. Scattered clouds at 3800ft. Scattered clouds at 5500ft",
+    "station_info": {
+        "city": "Honolulu",
+        "country": "USA",
+        "elevation": 4.0,
+        "iata": "HNL",
+        "icao": "PHNL",
+        "latitude": 21.31868128,
+        "longitude": -157.9224287,
+        "name": "International Airport",
+        "priority": 6,
+        "state": "HI"
+    },
+    "summary": "Winds E-090 at 13kt, Vis 10sm, Temp 32\u00b0C, Dew 22\u00b0C, Alt 29.95 inHg, Few clouds at 2500ft, Scattered clouds at 3800ft, Scattered clouds at 5500ft",
+    "translations": {
+        "altimeter": "29.95 inHg (1014 hPa)",
+        "clouds": "Few clouds at 2500ft, Scattered clouds at 3800ft, Scattered clouds at 5500ft - Reported AGL",
+        "dewpoint": "22\u00b0C (72\u00b0F)",
+        "other": "",
+        "remarks": {
+            "10328": "6-hour maximum temperature 32.8\u00b0C",
+            "20278": "6-hour minimum temperature 27.8\u00b0C",
+            "58014": "3-hour pressure difference: +/- 1.4 mb - Steady or increasing, then decreasing",
+            "AO2": "Automated with precipitation sensor",
+            "SLP142": "Sea level pressure: 1014.2 hPa",
+            "T03220217": "Temperature 32.2\u00b0C and dewpoint 21.7\u00b0C"
+        },
+        "temperature": "32\u00b0C (90\u00b0F)",
+        "visibility": "10sm (16.1km)",
+        "wind": "E-090 at 13kt"
+    }
+}

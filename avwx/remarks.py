@@ -2,16 +2,21 @@
 Contains functions for handling and translating remarks
 """
 
+# module
+from avwx import core
 from avwx.static import PRESSURE_TENDENCIES, REMARKS_ELEMENTS, REMARKS_GROUPS, WX_TRANSLATIONS
-
+from avwx.structs import RemarksData
 
 def _tdec(code: str, unit: str = 'C') -> str:
     """
     Translates a 4-digit decimal temperature representation
 
-    Ex: 1045 -> -04.5°C    0237 -> 23.7°C
+    Ex: 1045 -> -4.5°C    0237 -> 23.7°C
     """
-    return f"{'-' if code[0] == '1' else ''}{int(code[1:3])}.{code[3]}°{unit}"
+    ret = f"{'-' if code[0] == '1' else ''}{int(code[1:3])}.{code[3]}"
+    if unit:
+        ret += f'°{unit}'
+    return ret
 
 
 def temp_minmax(code: str) -> str:
@@ -65,6 +70,18 @@ LEN5_DECODE = {
 }
 
 
+def parse(rmk: str) -> RemarksData:
+    """
+    Finds temperature and dewpoint decimal values from the remarks
+    """
+    rmkdata = {}
+    for item in rmk.split(' '):
+        if len(item) in [5, 9] and item[0] == 'T' and item[1:].isdigit():
+            rmkdata['temperature_decimal'] = core.make_number(_tdec(item[1:5], None))
+            rmkdata['dewpoint_decimal'] = core.make_number(_tdec(item[5:], None))
+    return RemarksData(**rmkdata)
+
+
 def translate(remarks: str) -> {str: str}:
     """
     Translates elements in the remarks string
@@ -73,7 +90,7 @@ def translate(remarks: str) -> {str: str}:
     # Add and replace static multi-word elements
     for key in REMARKS_GROUPS:
         if key in remarks:
-            ret[key] = REMARKS_GROUPS[key]
+            ret[key.strip()] = REMARKS_GROUPS[key]
             remarks.replace(key, ' ')
     # For each remaining element
     for rmk in remarks.split()[1:]:

@@ -1,0 +1,173 @@
+{
+    "data": {
+        "alts": null,
+        "end_time": null,
+        "forecast": [
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "altitude": 35,
+                        "modifier": null,
+                        "repr": "BKN035",
+                        "type": "BKN"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": null,
+                "raw": "2000/2106 28006KT 9999 BKN035 PROB30 TEMPO 2004/2009 BKN012 PROB30 TEMPO 2105/2106 8000 BKN006",
+                "sanitized": "2000/2106 28006KT 9999 BKN035",
+                "start_time": null,
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": {
+                    "repr": "9999",
+                    "spoken": "nine nine nine nine",
+                    "value": 9999
+                },
+                "wind_direction": {
+                    "repr": "280",
+                    "spoken": "two eight zero",
+                    "value": 280
+                },
+                "wind_gust": null,
+                "wind_shear": "",
+                "wind_speed": {
+                    "repr": "06",
+                    "spoken": "six",
+                    "value": 6
+                }
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "altitude": 12,
+                        "modifier": null,
+                        "repr": "BKN012",
+                        "type": "BKN"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "IFR",
+                "icing": [],
+                "other": [],
+                "probability": {
+                    "repr": "30",
+                    "spoken": "three zero",
+                    "value": 30
+                },
+                "raw": "TEMPO 2004/2009 BKN012 PROB30 TEMPO 2105/2106 8000 BKN006",
+                "sanitized": "PROB30 TEMPO 2004/2009 BKN012",
+                "start_time": null,
+                "turbulance": [],
+                "type": "TEMPO",
+                "visibility": null,
+                "wind_direction": null,
+                "wind_gust": null,
+                "wind_shear": "",
+                "wind_speed": null
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "altitude": 6,
+                        "modifier": null,
+                        "repr": "BKN006",
+                        "type": "BKN"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "IFR",
+                "icing": [],
+                "other": [],
+                "probability": {
+                    "repr": "30",
+                    "spoken": "three zero",
+                    "value": 30
+                },
+                "raw": "TEMPO 2105/2106 8000 BKN006",
+                "sanitized": "PROB30 TEMPO 2105/2106 8000 BKN006",
+                "start_time": null,
+                "turbulance": [],
+                "type": "TEMPO",
+                "visibility": {
+                    "repr": "8000",
+                    "spoken": "eight zero zero zero",
+                    "value": 8000
+                },
+                "wind_direction": null,
+                "wind_gust": null,
+                "wind_shear": "",
+                "wind_speed": null
+            }
+        ],
+        "max_temp": "",
+        "min_temp": "",
+        "raw": "EGLL 192253Z 2000/2106 28006KT 9999 BKN035 PROB30 TEMPO 2004/2009 BKN012 PROB30 TEMPO 2105/2106 8000 BKN006",
+        "remarks": "",
+        "start_time": null,
+        "station": "EGLL",
+        "temps": null,
+        "time": null
+    },
+    "speech": "Starting on August 20th - From midnight to 6 zulu, Winds two eight zero at 6kt. Visibility one zero kilometers. Broken layer at 3500ft. From 4 to 9 zulu, there's a 30% chance for temporary Broken layer at 1200ft. From 5 to 6 zulu, there's a 30% chance for temporary Visibility eight kilometers. Broken layer at 600ft",
+    "station_info": {
+        "city": "London",
+        "country": "GBR",
+        "elevation": 24.4,
+        "iata": "LHR",
+        "icao": "EGLL",
+        "latitude": 51.47916667,
+        "longitude": -0.450555556,
+        "name": "Heathrow",
+        "priority": 6,
+        "state": "ENG"
+    },
+    "summary": [
+        "Winds W-280 at 6kt, Vis 10km, Broken layer at 3500ft",
+        "Broken layer at 1200ft",
+        "Vis 8km, Broken layer at 600ft"
+    ],
+    "translations": {
+        "forecast": [
+            {
+                "altimeter": "",
+                "clouds": "Broken layer at 3500ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "10km (6.2sm)",
+                "wind": "W-280 at 6kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Broken layer at 1200ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "",
+                "wind": "",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Broken layer at 600ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "8km (5sm)",
+                "wind": "",
+                "wind_shear": ""
+            }
+        ],
+        "max_temp": "",
+        "min_temp": "",
+        "remarks": {}
+    }
+}

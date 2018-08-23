@@ -9,22 +9,22 @@ from setuptools import setup
 
 setup(
     name='avwx-engine',
-    version='0.11.6',
+    version='1.0.0',
     description='Aviation weather report parsing library',
     url='https://github.com/flyinactor91/AVWX-Engine',
     author='Michael duPont',
     author_email='michael@mdupont.com',
     license='MIT',
+    classifiers=[
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+    ],
+    python_requires='>= 3.6',
     install_requires=[
-        'requests~=2.18.4',
-        'xmltodict~=0.11.0'
+        'dataclasses>=0.6;python_version<"3.7"',
+        'requests~=2.19',
+        'xmltodict~=0.11'
     ],
-    packages=[
-        'avwx'
-    ],
-    package_data={
-        'avwx': [
-            'stations.json'
-        ]
-    }
+    packages=['avwx'],
+    package_data={'avwx': ['stations.json']}
 )

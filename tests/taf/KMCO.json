@@ -1,0 +1,386 @@
+{
+    "data": {
+        "alts": null,
+        "end_time": null,
+        "forecast": [
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "altitude": 30,
+                        "modifier": "CB",
+                        "repr": "SCT030CB",
+                        "type": "SCT"
+                    },
+                    {
+                        "altitude": 80,
+                        "modifier": null,
+                        "repr": "BKN080",
+                        "type": "BKN"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [
+                    "VCTS"
+                ],
+                "probability": null,
+                "raw": "2000/2106 19008KT P6SM VCTS SCT030CB BKN080 TEMPO 2000/2001 5SM -TSRA FM200200 VRB04KT P6SM SCT080 OVC200 FM201400 16006KT P6SM SCT025 FM201900 15008KT P6SM VCTS SCT040CB TEMPO 2020/2023 3SM TSRA BKN030CB FM210100 16003KT P6SM VCSH SCT050 BKN100",
+                "sanitized": "2000/2106 19008KT P6SM VCTS SCT030CB BKN080",
+                "start_time": null,
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": {
+                    "repr": "P6",
+                    "spoken": "greater than six",
+                    "value": null
+                },
+                "wind_direction": {
+                    "repr": "190",
+                    "spoken": "one nine zero",
+                    "value": 190
+                },
+                "wind_gust": null,
+                "wind_shear": "",
+                "wind_speed": {
+                    "repr": "08",
+                    "spoken": "eight",
+                    "value": 8
+                }
+            },
+            {
+                "altimeter": "",
+                "clouds": [],
+                "end_time": null,
+                "flight_rules": "MVFR",
+                "icing": [],
+                "other": [
+                    "-TSRA"
+                ],
+                "probability": null,
+                "raw": "TEMPO 2000/2001 5SM -TSRA FM200200 VRB04KT P6SM SCT080 OVC200 FM201400 16006KT P6SM SCT025 FM201900 15008KT P6SM VCTS SCT040CB TEMPO 2020/2023 3SM TSRA BKN030CB FM210100 16003KT P6SM VCSH SCT050 BKN100",
+                "sanitized": "TEMPO 2000/2001 5SM -TSRA",
+                "start_time": null,
+                "turbulance": [],
+                "type": "TEMPO",
+                "visibility": {
+                    "repr": "5",
+                    "spoken": "five",
+                    "value": 5
+                },
+                "wind_direction": null,
+                "wind_gust": null,
+                "wind_shear": "",
+                "wind_speed": null
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "altitude": 80,
+                        "modifier": null,
+                        "repr": "SCT080",
+                        "type": "SCT"
+                    },
+                    {
+                        "altitude": 200,
+                        "modifier": null,
+                        "repr": "OVC200",
+                        "type": "OVC"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": null,
+                "raw": "FM200200 VRB04KT P6SM SCT080 OVC200 FM201400 16006KT P6SM SCT025 FM201900 15008KT P6SM VCTS SCT040CB TEMPO 2020/2023 3SM TSRA BKN030CB FM210100 16003KT P6SM VCSH SCT050 BKN100",
+                "sanitized": "FM200200 VRB04KT P6SM SCT080 OVC200",
+                "start_time": null,
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": {
+                    "repr": "P6",
+                    "spoken": "greater than six",
+                    "value": null
+                },
+                "wind_direction": {
+                    "repr": "VRB",
+                    "spoken": "variable",
+                    "value": null
+                },
+                "wind_gust": null,
+                "wind_shear": "",
+                "wind_speed": {
+                    "repr": "04",
+                    "spoken": "four",
+                    "value": 4
+                }
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "altitude": 25,
+                        "modifier": null,
+                        "repr": "SCT025",
+                        "type": "SCT"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": null,
+                "raw": "FM201400 16006KT P6SM SCT025 FM201900 15008KT P6SM VCTS SCT040CB TEMPO 2020/2023 3SM TSRA BKN030CB FM210100 16003KT P6SM VCSH SCT050 BKN100",
+                "sanitized": "FM201400 16006KT P6SM SCT025",
+                "start_time": null,
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": {
+                    "repr": "P6",
+                    "spoken": "greater than six",
+                    "value": null
+                },
+                "wind_direction": {
+                    "repr": "160",
+                    "spoken": "one six zero",
+                    "value": 160
+                },
+                "wind_gust": null,
+                "wind_shear": "",
+                "wind_speed": {
+                    "repr": "06",
+                    "spoken": "six",
+                    "value": 6
+                }
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "altitude": 40,
+                        "modifier": "CB",
+                        "repr": "SCT040CB",
+                        "type": "SCT"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [
+                    "VCTS"
+                ],
+                "probability": null,
+                "raw": "FM201900 15008KT P6SM VCTS SCT040CB TEMPO 2020/2023 3SM TSRA BKN030CB FM210100 16003KT P6SM VCSH SCT050 BKN100",
+                "sanitized": "FM201900 15008KT P6SM VCTS SCT040CB",
+                "start_time": null,
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": {
+                    "repr": "P6",
+                    "spoken": "greater than six",
+                    "value": null
+                },
+                "wind_direction": {
+                    "repr": "150",
+                    "spoken": "one five zero",
+                    "value": 150
+                },
+                "wind_gust": null,
+                "wind_shear": "",
+                "wind_speed": {
+                    "repr": "08",
+                    "spoken": "eight",
+                    "value": 8
+                }
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "altitude": 30,
+                        "modifier": "CB",
+                        "repr": "BKN030CB",
+                        "type": "BKN"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "MVFR",
+                "icing": [],
+                "other": [
+                    "TSRA"
+                ],
+                "probability": null,
+                "raw": "TEMPO 2020/2023 3SM TSRA BKN030CB FM210100 16003KT P6SM VCSH SCT050 BKN100",
+                "sanitized": "TEMPO 2020/2023 3SM TSRA BKN030CB",
+                "start_time": null,
+                "turbulance": [],
+                "type": "TEMPO",
+                "visibility": {
+                    "repr": "3",
+                    "spoken": "three",
+                    "value": 3
+                },
+                "wind_direction": null,
+                "wind_gust": null,
+                "wind_shear": "",
+                "wind_speed": null
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "altitude": 50,
+                        "modifier": null,
+                        "repr": "SCT050",
+                        "type": "SCT"
+                    },
+                    {
+                        "altitude": 100,
+                        "modifier": null,
+                        "repr": "BKN100",
+                        "type": "BKN"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [
+                    "VCSH"
+                ],
+                "probability": null,
+                "raw": "FM210100 16003KT P6SM VCSH SCT050 BKN100",
+                "sanitized": "FM210100 16003KT P6SM VCSH SCT050 BKN100",
+                "start_time": null,
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": {
+                    "repr": "P6",
+                    "spoken": "greater than six",
+                    "value": null
+                },
+                "wind_direction": {
+                    "repr": "160",
+                    "spoken": "one six zero",
+                    "value": 160
+                },
+                "wind_gust": null,
+                "wind_shear": "",
+                "wind_speed": {
+                    "repr": "03",
+                    "spoken": "three",
+                    "value": 3
+                }
+            }
+        ],
+        "max_temp": "",
+        "min_temp": "",
+        "raw": "KMCO 192348Z 2000/2106 19008KT P6SM VCTS SCT030CB BKN080 TEMPO 2000/2001 5SM -TSRA FM200200 VRB04KT P6SM SCT080 OVC200 FM201400 16006KT P6SM SCT025 FM201900 15008KT P6SM VCTS SCT040CB TEMPO 2020/2023 3SM TSRA BKN030CB FM210100 16003KT P6SM VCSH SCT050 BKN100",
+        "remarks": "",
+        "start_time": null,
+        "station": "KMCO",
+        "temps": null,
+        "time": null
+    },
+    "speech": "Starting on August 20th - From midnight to 2 zulu, Winds one nine zero at 8kt. Visibility greater than six miles. Thunderstorm in the Vicinity. Scattered clouds at 3000ft (Cumulonimbus). Broken layer at 8000ft. From midnight to 1 zulu, temporary Visibility five miles. Light Thunderstorm Rain. Sky clear. From 2 to 14 zulu, Winds Variable at 4kt. Visibility greater than six miles. Scattered clouds at 8000ft. Overcast layer at 20000ft. From 14 to 19 zulu, Winds one six zero at 6kt. Visibility greater than six miles. Scattered clouds at 2500ft. From 19 to 1 zulu, Winds one five zero at 8kt. Visibility greater than six miles. Thunderstorm in the Vicinity. Scattered clouds at 4000ft (Cumulonimbus). From 20 to 23 zulu, temporary Visibility three miles. Thunderstorm Rain. Broken layer at 3000ft (Cumulonimbus). From 1 to 6 zulu, Winds one six zero at 3kt. Visibility greater than six miles. Showers in the Vicinity. Scattered clouds at 5000ft. Broken layer at 10000ft",
+    "station_info": {
+        "city": "Orlando",
+        "country": "USA",
+        "elevation": 29.3,
+        "iata": "MCO",
+        "icao": "KMCO",
+        "latitude": 28.42939361,
+        "longitude": -81.30899306,
+        "name": "International Airport",
+        "priority": 2,
+        "state": "FL"
+    },
+    "summary": [
+        "Winds S-190 at 8kt, Vis greater than 6sm, Vicinity Thunderstorm, Scattered clouds at 3000ft (Cumulonimbus), Broken layer at 8000ft",
+        "Vis 5sm, Light Thunderstorm Rain, Sky clear",
+        "Winds Variable at 4kt, Vis greater than 6sm, Scattered clouds at 8000ft, Overcast layer at 20000ft",
+        "Winds SSE-160 at 6kt, Vis greater than 6sm, Scattered clouds at 2500ft",
+        "Winds SSE-150 at 8kt, Vis greater than 6sm, Vicinity Thunderstorm, Scattered clouds at 4000ft (Cumulonimbus)",
+        "Vis 3sm, Thunderstorm Rain, Broken layer at 3000ft (Cumulonimbus)",
+        "Winds SSE-160 at 3kt, Vis greater than 6sm, Vicinity Showers, Scattered clouds at 5000ft, Broken layer at 10000ft"
+    ],
+    "translations": {
+        "forecast": [
+            {
+                "altimeter": "",
+                "clouds": "Scattered clouds at 3000ft (Cumulonimbus), Broken layer at 8000ft - Reported AGL",
+                "icing": "",
+                "other": "Vicinity Thunderstorm",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "S-190 at 8kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Sky clear",
+                "icing": "",
+                "other": "Light Thunderstorm Rain",
+                "turbulance": "",
+                "visibility": "5sm (8km)",
+                "wind": "",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Scattered clouds at 8000ft, Overcast layer at 20000ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "Variable at 4kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Scattered clouds at 2500ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "SSE-160 at 6kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Scattered clouds at 4000ft (Cumulonimbus) - Reported AGL",
+                "icing": "",
+                "other": "Vicinity Thunderstorm",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "SSE-150 at 8kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Broken layer at 3000ft (Cumulonimbus) - Reported AGL",
+                "icing": "",
+                "other": "Thunderstorm Rain",
+                "turbulance": "",
+                "visibility": "3sm (4.8km)",
+                "wind": "",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Scattered clouds at 5000ft, Broken layer at 10000ft - Reported AGL",
+                "icing": "",
+                "other": "Vicinity Showers",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "SSE-160 at 3kt",
+                "wind_shear": ""
+            }
+        ],
+        "max_temp": "",
+        "min_temp": "",
+        "remarks": {}
+    }
+}

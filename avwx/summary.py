@@ -2,48 +2,51 @@
 Contains functions for combining translations into a summary string
 """
 
+# module
+from avwx.structs import MetarTrans, TafLineTrans
 
-def metar(trans: {str: object}) -> str:
+
+def metar(trans: MetarTrans) -> str:
     """
     Condense the translation strings into a single report summary string
     """
     summary = []
-    if 'Wind' in trans and trans['Wind']:
-        summary.append('Winds ' + trans['Wind'])
-    if 'Visibility' in trans and trans['Visibility']:
-        summary.append('Vis ' + trans['Visibility'][:trans['Visibility'].find(' (')].lower())
-    if 'Temperature' in trans and trans['Temperature']:
-        summary.append('Temp ' + trans['Temperature'][:trans['Temperature'].find(' (')])
-    if 'Dewpoint' in trans and trans['Dewpoint']:
-        summary.append('Dew ' + trans['Dewpoint'][:trans['Dewpoint'].find(' (')])
-    if 'Altimeter' in trans and trans['Altimeter']:
-        summary.append('Alt ' + trans['Altimeter'][:trans['Altimeter'].find(' (')])
-    if 'Other' in trans and trans['Other']:
-        summary.append(trans['Other'])
-    if 'Clouds' in trans and trans['Clouds']:
-        summary.append(trans['Clouds'].replace(' - Reported AGL', ''))
+    if trans.wind:
+        summary.append('Winds ' + trans.wind)
+    if trans.visibility:
+        summary.append('Vis ' + trans.visibility[:trans.visibility.find(' (')].lower())
+    if trans.temperature:
+        summary.append('Temp ' + trans.temperature[:trans.temperature.find(' (')])
+    if trans.dewpoint:
+        summary.append('Dew ' + trans.dewpoint[:trans.dewpoint.find(' (')])
+    if trans.altimeter:
+        summary.append('Alt ' + trans.altimeter[:trans.altimeter.find(' (')])
+    if trans.other:
+        summary.append(trans.other)
+    if trans.clouds:
+        summary.append(trans.clouds.replace(' - Reported AGL', ''))
     return ', '.join(summary)
 
 
-def taf(trans: {str: object}) -> str:
+def taf(trans: TafLineTrans) -> str:
     """
     Condense the translation strings into a single forecast summary string
     """
     summary = []
-    if 'Wind' in trans and trans['Wind']:
-        summary.append('Winds ' + trans['Wind'])
-    if 'Visibility' in trans and trans['Visibility']:
-        summary.append('Vis ' + trans['Visibility'][:trans['Visibility'].find(' (')].lower())
-    if 'Altimeter' in trans and trans['Altimeter']:
-        summary.append('Alt ' + trans['Altimeter'][:trans['Altimeter'].find(' (')])
-    if 'Other' in trans and trans['Other']:
-        summary.append(trans['Other'])
-    if 'Clouds' in trans and trans['Clouds']:
-        summary.append(trans['Clouds'].replace(' - Reported AGL', ''))
-    if 'Wind-Shear' in trans and trans['Wind-Shear']:
-        summary.append(trans['Wind-Shear'])
-    if 'Turbulance' in trans and trans['Turbulance']:
-        summary.append(trans['Turbulance'])
-    if 'Icing' in trans and trans['Icing']:
-        summary.append(trans['Icing'])
+    if trans.wind:
+        summary.append('Winds ' + trans.wind)
+    if trans.visibility:
+        summary.append('Vis ' + trans.visibility[:trans.visibility.find(' (')].lower())
+    if trans.altimeter:
+        summary.append('Alt ' + trans.altimeter[:trans.altimeter.find(' (')])
+    if trans.other:
+        summary.append(trans.other)
+    if trans.clouds:
+        summary.append(trans.clouds.replace(' - Reported AGL', ''))
+    if trans.wind_shear:
+        summary.append(trans.wind_shear)
+    if trans.turbulance:
+        summary.append(trans.turbulance)
+    if trans.icing:
+        summary.append(trans.icing)
     return ', '.join(summary)

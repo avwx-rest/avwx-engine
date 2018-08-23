@@ -1,0 +1,270 @@
+{
+    "data": {
+        "alts": null,
+        "end_time": null,
+        "forecast": [
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "altitude": 25,
+                        "modifier": null,
+                        "repr": "FEW025",
+                        "type": "FEW"
+                    },
+                    {
+                        "altitude": 40,
+                        "modifier": null,
+                        "repr": "SCT040",
+                        "type": "SCT"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": null,
+                "raw": "2001/2106 05012G17KT P6SM FEW025 SCT040 FM200500 06008KT P6SM FEW025 SCT040 FM202000 05012G18KT P6SM FEW025 SCT040 FM202300 05017G25KT P6SM FEW025 SCT050",
+                "sanitized": "2001/2106 05012G17KT P6SM FEW025 SCT040",
+                "start_time": null,
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": {
+                    "repr": "P6",
+                    "spoken": "greater than six",
+                    "value": null
+                },
+                "wind_direction": {
+                    "repr": "050",
+                    "spoken": "zero five zero",
+                    "value": 50
+                },
+                "wind_gust": {
+                    "repr": "17",
+                    "spoken": "one seven",
+                    "value": 17
+                },
+                "wind_shear": "",
+                "wind_speed": {
+                    "repr": "12",
+                    "spoken": "one two",
+                    "value": 12
+                }
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "altitude": 25,
+                        "modifier": null,
+                        "repr": "FEW025",
+                        "type": "FEW"
+                    },
+                    {
+                        "altitude": 40,
+                        "modifier": null,
+                        "repr": "SCT040",
+                        "type": "SCT"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": null,
+                "raw": "FM200500 06008KT P6SM FEW025 SCT040 FM202000 05012G18KT P6SM FEW025 SCT040 FM202300 05017G25KT P6SM FEW025 SCT050",
+                "sanitized": "FM200500 06008KT P6SM FEW025 SCT040",
+                "start_time": null,
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": {
+                    "repr": "P6",
+                    "spoken": "greater than six",
+                    "value": null
+                },
+                "wind_direction": {
+                    "repr": "060",
+                    "spoken": "zero six zero",
+                    "value": 60
+                },
+                "wind_gust": null,
+                "wind_shear": "",
+                "wind_speed": {
+                    "repr": "08",
+                    "spoken": "eight",
+                    "value": 8
+                }
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "altitude": 25,
+                        "modifier": null,
+                        "repr": "FEW025",
+                        "type": "FEW"
+                    },
+                    {
+                        "altitude": 40,
+                        "modifier": null,
+                        "repr": "SCT040",
+                        "type": "SCT"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": null,
+                "raw": "FM202000 05012G18KT P6SM FEW025 SCT040 FM202300 05017G25KT P6SM FEW025 SCT050",
+                "sanitized": "FM202000 05012G18KT P6SM FEW025 SCT040",
+                "start_time": null,
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": {
+                    "repr": "P6",
+                    "spoken": "greater than six",
+                    "value": null
+                },
+                "wind_direction": {
+                    "repr": "050",
+                    "spoken": "zero five zero",
+                    "value": 50
+                },
+                "wind_gust": {
+                    "repr": "18",
+                    "spoken": "one eight",
+                    "value": 18
+                },
+                "wind_shear": "",
+                "wind_speed": {
+                    "repr": "12",
+                    "spoken": "one two",
+                    "value": 12
+                }
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "altitude": 25,
+                        "modifier": null,
+                        "repr": "FEW025",
+                        "type": "FEW"
+                    },
+                    {
+                        "altitude": 50,
+                        "modifier": null,
+                        "repr": "SCT050",
+                        "type": "SCT"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": null,
+                "raw": "FM202300 05017G25KT P6SM FEW025 SCT050",
+                "sanitized": "FM202300 05017G25KT P6SM FEW025 SCT050",
+                "start_time": null,
+                "turbulance": [],
+                "type": "FROM",
+                "visibility": {
+                    "repr": "P6",
+                    "spoken": "greater than six",
+                    "value": null
+                },
+                "wind_direction": {
+                    "repr": "050",
+                    "spoken": "zero five zero",
+                    "value": 50
+                },
+                "wind_gust": {
+                    "repr": "25",
+                    "spoken": "two five",
+                    "value": 25
+                },
+                "wind_shear": "",
+                "wind_speed": {
+                    "repr": "17",
+                    "spoken": "one seven",
+                    "value": 17
+                }
+            }
+        ],
+        "max_temp": "",
+        "min_temp": "",
+        "raw": "PHNL 200123Z 2001/2106 05012G17KT P6SM FEW025 SCT040 FM200500 06008KT P6SM FEW025 SCT040 FM202000 05012G18KT P6SM FEW025 SCT040 FM202300 05017G25KT P6SM FEW025 SCT050",
+        "remarks": "",
+        "start_time": null,
+        "station": "PHNL",
+        "temps": null,
+        "time": null
+    },
+    "speech": "Starting on August 20th - From 1 to 5 zulu, Winds zero five zero at 12kt gusting to 17kt. Visibility greater than six miles. Few clouds at 2500ft. Scattered clouds at 4000ft. From 5 to 20 zulu, Winds zero six zero at 8kt. Visibility greater than six miles. Few clouds at 2500ft. Scattered clouds at 4000ft. From 20 to 23 zulu, Winds zero five zero at 12kt gusting to 18kt. Visibility greater than six miles. Few clouds at 2500ft. Scattered clouds at 4000ft. From 23 to 6 zulu, Winds zero five zero at 17kt gusting to 25kt. Visibility greater than six miles. Few clouds at 2500ft. Scattered clouds at 5000ft",
+    "station_info": {
+        "city": "Honolulu",
+        "country": "USA",
+        "elevation": 4.0,
+        "iata": "HNL",
+        "icao": "PHNL",
+        "latitude": 21.31868128,
+        "longitude": -157.9224287,
+        "name": "International Airport",
+        "priority": 6,
+        "state": "HI"
+    },
+    "summary": [
+        "Winds NE-050 at 12kt gusting to 17kt, Vis greater than 6sm, Few clouds at 2500ft, Scattered clouds at 4000ft",
+        "Winds ENE-060 at 8kt, Vis greater than 6sm, Few clouds at 2500ft, Scattered clouds at 4000ft",
+        "Winds NE-050 at 12kt gusting to 18kt, Vis greater than 6sm, Few clouds at 2500ft, Scattered clouds at 4000ft",
+        "Winds NE-050 at 17kt gusting to 25kt, Vis greater than 6sm, Few clouds at 2500ft, Scattered clouds at 5000ft"
+    ],
+    "translations": {
+        "forecast": [
+            {
+                "altimeter": "",
+                "clouds": "Few clouds at 2500ft, Scattered clouds at 4000ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "NE-050 at 12kt gusting to 17kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Few clouds at 2500ft, Scattered clouds at 4000ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "ENE-060 at 8kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Few clouds at 2500ft, Scattered clouds at 4000ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "NE-050 at 12kt gusting to 18kt",
+                "wind_shear": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Few clouds at 2500ft, Scattered clouds at 5000ft - Reported AGL",
+                "icing": "",
+                "other": "",
+                "turbulance": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "NE-050 at 17kt gusting to 25kt",
+                "wind_shear": ""
+            }
+        ],
+        "max_temp": "",
+        "min_temp": "",
+        "remarks": {}
+    }
+}
