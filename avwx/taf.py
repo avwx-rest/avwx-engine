@@ -22,19 +22,9 @@ def fetch(station: str) -> str:
 
 def parse(station: str, txt: str, delim: str = '<br/>&nbsp;&nbsp;') -> TafData:
     """
-    Returns a dictionary of parsed TAF data
+    Returns TafData and Units dataclasses with parsed data and their associated units
 
     'delim' is the divider between forecast lines. Ex: aviationweather.gov uses '<br/>&nbsp;&nbsp;'
-
-    Keys: Station, Time, Forecast, Remarks, Min-Temp, Max-Temp, Units
-
-    Oceania stations also have the following keys: Temp-List, Alt-List
-
-    Forecast is list of report dicts in order of time with the following keys:
-    Type, Start-Time, End-Time, Flight-Rules, Wind-Direction, Wind-Speed, Wind-Gust, Wind-Shear,
-    Visibility, Altimeter, Cloud-List, Icing-List, Turb-List, Other-List, Probability, Raw-Line
-
-    Units is dict of identified units of measurement for each field
     """
     core.valid_station(station)
     while len(txt) > 3 and txt[:4] in ('TAF ', 'AMD ', 'COR '):

@@ -20,13 +20,8 @@ def fetch(station: str) -> str:
 
 
 def parse(station: str, txt: str) -> (MetarData, Units):
-    """Returns a dictionary of parsed METAR data
-
-    Keys: Station, Time, Wind-Direction, Wind-Speed, Wind-Gust, Wind-Variable-Dir,
-          Visibility, Runway-Vis-List, Altimeter, Temperature, Dewpoint,
-          Cloud-List, Other-List, Remarks, Units
-
-    Units is dict of identified units of measurement for each field
+    """
+    Returns MetarData and Units dataclasses with parsed data and their associated units
     """
     core.valid_station(station)
     return parse_na(txt) if core.uses_na_format(station[:2]) else parse_in(txt)

@@ -19,7 +19,7 @@ Below is typical usage for fetching and pulling METAR data for KJFK.
 
   >>> from avwx import Metar
   >>> kjfk = Metar('KJFK')
-  >>> kjfk.station_info['Name']
+  >>> kjfk.station_info.name
   'John F Kennedy International Airport'
   >>> kjfk.update()
   True
@@ -27,9 +27,9 @@ Below is typical usage for fetching and pulling METAR data for KJFK.
   datetime.datetime(2018, 3, 4, 23, 36, 6, 62376)
   >>> kjfk.raw
   'KJFK 042251Z 32023G32KT 10SM BKN060 04/M08 A3008 RMK AO2 PK WND 32032/2251 SLP184 T00441078'
-  >>> kjfk.data['Flight-Rules']
+  >>> kjfk.data.flight_rules
   'VFR'
-  >>> kjfk.translations['Remarks']
+  >>> kjfk.translations.remarks
   {'AO2': 'Automated with precipitation sensor', 'SLP184': 'Sea level pressure: 1018.4 hPa', 'T00441078': 'Temperature 4.4°C and dewpoint -7.8°C'}
 
 The update function can also accept a given report string if you want to override to normal fetching process. Here's an example of a really bad day.
@@ -38,16 +38,16 @@ The update function can also accept a given report string if you want to overrid
 
   >>> from avwx import Metar
   >>> ksfo = Metar('KSFO')
-  >>> ksfo.station_info['City']
+  >>> ksfo.station_info.city
   'San Francisco'
   >>> report = 'KSFO 031254Z 36024G55KT 320V040 1/8SM R06/0200D +TS VCFC OVC050 BKN040TCU 14/10 A2978 RMK AIRPORT CLOSED'
   >>> ksfo.update(report)
   True
   >>> ksfo.last_updated
   datetime.datetime(2018, 3, 4, 23, 54, 4, 353757)
-  >>> ksfo.data['Flight-Rules']
+  >>> ksfo.data.flight_rules
   'LIFR'
-  >>> ksfo.translations['Clouds']
+  >>> ksfo.translations.clouds
   'Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft - Reported AGL'
   >>> ksfo.summary
   'Winds N-360 (variable 320 to 040) at 24kt gusting to 55kt, Vis 0.125sm, Temp 14C, Dew 10C, Alt 29.78inHg, Heavy Thunderstorm, Vicinity Funnel Cloud, Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft'
@@ -55,9 +55,9 @@ The update function can also accept a given report string if you want to overrid
 .. autoclass:: avwx.Metar
   :members: update
 
-  .. attribute:: data: {str: object}
+  .. attribute:: data: avwx.structs.MetarData
 
-    Dictionary of parsed data values and units. Parsed on update()
+    MetarData dataclass of parsed data values and units. Parsed on update()
 
   .. attribute:: last_updated: datetime.datetime
 
@@ -79,17 +79,17 @@ The update function can also accept a given report string if you want to overrid
 
     Report summary designed to be read by a text-to-speech program
 
-  .. attribute:: station_info: {str: object}
+  .. attribute:: station_info: avwx.structs.StationInfo
 
-    Provide basic station info. Raises a BadStation exception if the station's info cannot be found
+    Provides basic station info. Raises a BadStation exception if the station's info cannot be found
 
   .. attribute:: summary: str
 
     Condensed report summary created from translations
 
-  .. attribute:: translations: {str: object}
+  .. attribute:: translations: avwx.structs.MetarTrans
 
-    Dictionary of translation strings from data. Parsed on update()
+    MetarTrans dataclass of translation strings from data. Parsed on update()
 
 Standalone Functions
 --------------------

@@ -71,3 +71,18 @@ pytest
 ```
 
 The end-to-end test files were generated using `utils/testMaker.py` and placed into `tests/metar` and `tests/taf` respectively. Because Timestamp generation interprets the text based on the current date, Timestamp objects are nullified in the end-to-end tests.
+
+# Docs
+
+AVWX uses Sphinx to build its documentation. It's just another install:
+
+```bash
+pip install sphinx
+```
+
+To build the docs:
+
+```bash
+cd docs
+make html
+```

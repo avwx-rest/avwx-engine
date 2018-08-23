@@ -10,11 +10,10 @@ import json
 from datetime import datetime
 from os import path
 # module
-from avwx import metar, taf, translate, summary, speech, service
+from avwx import metar, taf, translate, summary, speech, service, structs
 from avwx.core import valid_station
 from avwx.exceptions import BadStation
 from avwx.static import INFO_KEYS
-from avwx.structs import MetarData, ReportData, StationInfo, Units
 
 INFO_PATH = path.dirname(path.realpath(__file__)) + '/stations.json'
 STATIONS = json.load(open(INFO_PATH))
@@ -31,16 +30,16 @@ class Report(object):
     #: The unparsed report string. Fetched on update()
     raw: str = None
 
-    #: Dictionary of parsed data values and units. Parsed on update()
-    data: ReportData = None
+    #: ReportData dataclass of parsed data values and units. Parsed on update()
+    data: structs.ReportData = None
 
-    #: Dictionary of translation strings from data. Parsed on update()
-    translations: dict = None
+    #: ReportTrans dataclass of translation strings from data. Parsed on update()
+    translations: structs.ReportTrans = None
 
     #: Units inferred from the station location and report contents
-    units: Units = None
+    units: structs.Units = None
 
-    _station_info: StationInfo = None
+    _station_info: structs.StationInfo = None
 
     def __init__(self, station: str):
         # Raises a BadStation error if needed
@@ -53,7 +52,7 @@ class Report(object):
         self.station = station
 
     @property
-    def station_info(self) -> StationInfo:
+    def station_info(self) -> structs.StationInfo:
         """
         Provide basic station info
 
@@ -63,7 +62,7 @@ class Report(object):
             if not self.station in STATIONS:
                 raise BadStation('Could not find station in the info dict. Check avwx.STATIONS')
             info = [self.station] + STATIONS[self.station]
-            self._station_info = StationInfo(**dict(zip(INFO_KEYS, info)))
+            self._station_info = structs.StationInfo(**dict(zip(INFO_KEYS, info)))
         return self._station_info
 
     def update(self, report: str = None) -> bool:
@@ -138,7 +137,7 @@ class Taf(Report):
         return True
 
     @property
-    def summary(self) -> str:
+    def summary(self) -> [str]:
         """
         Condensed summary for each forecast created from translations
         """
