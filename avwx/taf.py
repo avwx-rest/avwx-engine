@@ -123,7 +123,7 @@ def parse_na_line(txt: str, units: Units) -> {str: str}:
     """
     retwx = {}
     wxdata = txt.split(' ')
-    wxdata, _, retwx['wind_shear'] = core.sanitize_report_list(wxdata, remove_clr_and_skc=False)
+    wxdata, _, retwx['wind_shear'] = core.sanitize_report_list(wxdata)
     wxdata, retwx['type'], retwx['start_time'], retwx['end_time'] = core.get_type_and_times(wxdata)
     wxdata, retwx['wind_direction'], retwx['wind_speed'],\
         retwx['wind_gust'], _ = core.get_wind(wxdata, units)
@@ -140,7 +140,7 @@ def parse_in_line(txt: str, units: Units) -> {str: str}:
     """
     retwx = {}
     wxdata = txt.split(' ')
-    wxdata, _, retwx['wind_shear'] = core.sanitize_report_list(wxdata, remove_clr_and_skc=False)
+    wxdata, _, retwx['wind_shear'] = core.sanitize_report_list(wxdata)
     wxdata, retwx['type'], retwx['start_time'], retwx['end_time'] = core.get_type_and_times(wxdata)
     wxdata, retwx['wind_direction'], retwx['wind_speed'],\
         retwx['wind_gust'], _ = core.get_wind(wxdata, units)
