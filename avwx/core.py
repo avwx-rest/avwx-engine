@@ -12,7 +12,8 @@ from dateutil.relativedelta import relativedelta
 from avwx.exceptions import BadStation
 from avwx.static import CLOUD_LIST, CLOUD_TRANSLATIONS, METAR_RMK, \
     NA_REGIONS, IN_REGIONS, M_NA_REGIONS, M_IN_REGIONS, FLIGHT_RULES, \
-    NUMBER_REPL, FRACTIONS, SPECIAL_NUMBERS
+    NUMBER_REPL, FRACTIONS, SPECIAL_NUMBERS, TAF_NEWLINE, \
+    TAF_NEWLINE_STARTSWITH, TAF_RMK
 from avwx.structs import Cloud, Fraction, Number, Timestamp, Units
 
 def valid_station(station: str):
@@ -133,7 +134,7 @@ def get_remarks(txt: str) -> ([str], str):
 
     Remarks can include items like RMK and on, NOSIG and on, and BECMG and on
     """
-    txt = txt.replace('?', '').strip(' ')
+    txt = txt.replace('?', '').strip()
     # First look for Altimeter in txt
     alt_index = len(txt) + 1
     for item in [' A2', ' A3', ' Q1', ' Q0', ' Q9']:
@@ -149,6 +150,18 @@ def get_remarks(txt: str) -> ([str], str):
     elif alt_index > sig_index > -1:
         return txt[:sig_index].strip().split(' '), txt[sig_index + 1:]
     return txt.strip().split(' '), ''
+
+
+def get_taf_remarks(txt: str) -> (str, str):
+    """
+    Returns report and remarks separated if found
+    """
+    remarks_start = find_first_in_list(txt, TAF_RMK)
+    if remarks_start == -1:
+        return txt, ''
+    remarks = txt[remarks_start:]
+    txt = txt[:remarks_start].strip()
+    return txt, remarks
 
 
 STR_REPL = {' C A V O K ': ' CAVOK ', '?': ' '}
@@ -535,6 +548,34 @@ def get_visibility(wxdata: [str], units: Units) -> ([str], Number):
     return wxdata, make_number(visibility)
 
 
+def starts_new_line(item: str) -> bool:
+    """
+    Returns True if the given element should start a new report line
+    """
+    if item in TAF_NEWLINE:
+        return True
+    else:
+        for start in TAF_NEWLINE_STARTSWITH:
+            if item.startswith(start):
+                return True
+    return False
+
+
+def split_taf(txt: str) -> [str]:
+    """
+    Splits a TAF report into each distinct time period
+    """
+    lines = []
+    split = txt.split()
+    last_index = 0
+    for i, item in enumerate(split):
+        if starts_new_line(item) and i != 0 and not split[i-1].startswith('PROB'):
+            lines.append(' '.join(split[last_index:i]))
+            last_index = i
+    lines.append(' '.join(split[last_index:]))
+    return lines
+
+
 # TAF line report type and start/end times
 def get_type_and_times(wxdata: [str]) -> ([str], str, str, str):
     """
@@ -544,7 +585,7 @@ def get_type_and_times(wxdata: [str]) -> ([str], str, str, str):
     report_type, start_time, end_time = 'FROM', '', ''
     if wxdata:
         #TEMPO, BECMG, INTER
-        if wxdata[0] in ('TEMPO', 'BECMG', 'INTER'):
+        if wxdata[0] in TAF_NEWLINE:
             report_type = wxdata.pop(0)
         #PROB[30,40]
         elif len(wxdata[0]) == 6 and wxdata[0].startswith('PROB'):

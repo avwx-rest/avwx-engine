@@ -20,11 +20,9 @@ def fetch(station: str) -> str:
     return service.get_service(station)('taf').fetch(station)
 
 
-def parse(station: str, txt: str, delim: str = '<br/>&nbsp;&nbsp;') -> TafData:
+def parse(station: str, txt: str) -> TafData:
     """
     Returns TafData and Units dataclasses with parsed data and their associated units
-
-    'delim' is the divider between forecast lines. Ex: aviationweather.gov uses '<br/>&nbsp;&nbsp;'
     """
     core.valid_station(station)
     while len(txt) > 3 and txt[:4] in ('TAF ', 'AMD ', 'COR '):
@@ -39,14 +37,18 @@ def parse(station: str, txt: str, delim: str = '<br/>&nbsp;&nbsp;') -> TafData:
         'time': core.make_timestamp(time)
     }
     txt = txt.replace(station, '')
-    txt = txt.replace(time, '')
+    txt = txt.replace(time, '').strip()
     if core.uses_na_format(station):
         use_na = True
         units = Units(**NA_UNITS)
     else:
         use_na = False
         units = Units(**IN_UNITS)
-    parsed_lines, retwx['remarks'] = parse_lines(txt.strip().split(delim), units, use_na)
+    # Find and remove remarks
+    txt, retwx['remarks'] = core.get_taf_remarks(txt)
+    # Split and parse each line
+    lines = core.split_taf(txt)
+    parsed_lines = parse_lines(lines, units, use_na)
     # Perform additional info extract and corrections
     if parsed_lines:
         parsed_lines[-1]['other'], retwx['max_temp'], retwx['min_temp'] \
@@ -69,26 +71,15 @@ def parse(station: str, txt: str, delim: str = '<br/>&nbsp;&nbsp;') -> TafData:
     return TafData(**retwx), units
 
 
-def parse_lines(lines: [str], units: Units, use_na: bool = True) -> ([dict], str):
+def parse_lines(lines: [str], units: Units, use_na: bool = True) -> [dict]:
     """
-    Returns a list of parsed line dictionaries and the remarks string if found
+    Returns a list of parsed line dictionaries
     """
     parsed_lines = []
     prob = ''
-    remarks = ''
     while lines:
-        raw_line = lines[0].strip(' ')
+        raw_line = lines[0].strip()
         line = core.sanitize_line(raw_line)
-        #Remove Remarks from line
-        index = core.find_first_in_list(line, TAF_RMK)
-        if index != -1:
-            remarks = line[index:]
-            line = line[:index].strip(' ')
-        #Separate new lines fixed by sanitizeLine
-        index = core.find_first_in_list(line, TAF_NEWLINE)
-        if index != -1:
-            lines.insert(1, line[index + 1:])
-            line = line[:index]
         # Remove prob from the beginning of a line
         if line.startswith('PROB'):
             # Add standalone prob to next line
@@ -100,11 +91,6 @@ def parse_lines(lines: [str], units: Units, use_na: bool = True) -> ([dict], str
                 prob = line[:6]
                 line = line[6:].strip()
         if line:
-            # Separate full prob forecast into its own line
-            if ' PROB' in line:
-                probindex = line.index(' PROB')
-                lines.insert(1, line[probindex + 1:])
-                line = line[:probindex]
             parsed_line = (parse_na_line if use_na else parse_in_line)(line, units)
             for key in ('start_time', 'end_time'):
                 parsed_line[key] = core.make_timestamp(parsed_line[key])
@@ -114,7 +100,7 @@ def parse_lines(lines: [str], units: Units, use_na: bool = True) -> ([dict], str
             prob = ''
             parsed_lines.append(parsed_line)
         lines.pop(0)
-    return parsed_lines, remarks
+    return parsed_lines
 
 
 def parse_na_line(txt: str, units: Units) -> {str: str}:
