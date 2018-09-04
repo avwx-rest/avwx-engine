@@ -26,7 +26,7 @@
                     "VCTS"
                 ],
                 "probability": null,
-                "raw": "2000/2106 19008KT P6SM VCTS SCT030CB BKN080 TEMPO 2000/2001 5SM -TSRA FM200200 VRB04KT P6SM SCT080 OVC200 FM201400 16006KT P6SM SCT025 FM201900 15008KT P6SM VCTS SCT040CB TEMPO 2020/2023 3SM TSRA BKN030CB FM210100 16003KT P6SM VCSH SCT050 BKN100",
+                "raw": "2000/2106 19008KT P6SM VCTS SCT030CB BKN080",
                 "sanitized": "2000/2106 19008KT P6SM VCTS SCT030CB BKN080",
                 "start_time": null,
                 "turbulance": [],
@@ -59,7 +59,7 @@
                     "-TSRA"
                 ],
                 "probability": null,
-                "raw": "TEMPO 2000/2001 5SM -TSRA FM200200 VRB04KT P6SM SCT080 OVC200 FM201400 16006KT P6SM SCT025 FM201900 15008KT P6SM VCTS SCT040CB TEMPO 2020/2023 3SM TSRA BKN030CB FM210100 16003KT P6SM VCSH SCT050 BKN100",
+                "raw": "TEMPO 2000/2001 5SM -TSRA",
                 "sanitized": "TEMPO 2000/2001 5SM -TSRA",
                 "start_time": null,
                 "turbulance": [],
@@ -95,7 +95,7 @@
                 "icing": [],
                 "other": [],
                 "probability": null,
-                "raw": "FM200200 VRB04KT P6SM SCT080 OVC200 FM201400 16006KT P6SM SCT025 FM201900 15008KT P6SM VCTS SCT040CB TEMPO 2020/2023 3SM TSRA BKN030CB FM210100 16003KT P6SM VCSH SCT050 BKN100",
+                "raw": "FM200200 VRB04KT P6SM SCT080 OVC200",
                 "sanitized": "FM200200 VRB04KT P6SM SCT080 OVC200",
                 "start_time": null,
                 "turbulance": [],
@@ -133,7 +133,7 @@
                 "icing": [],
                 "other": [],
                 "probability": null,
-                "raw": "FM201400 16006KT P6SM SCT025 FM201900 15008KT P6SM VCTS SCT040CB TEMPO 2020/2023 3SM TSRA BKN030CB FM210100 16003KT P6SM VCSH SCT050 BKN100",
+                "raw": "FM201400 16006KT P6SM SCT025",
                 "sanitized": "FM201400 16006KT P6SM SCT025",
                 "start_time": null,
                 "turbulance": [],
@@ -173,7 +173,7 @@
                     "VCTS"
                 ],
                 "probability": null,
-                "raw": "FM201900 15008KT P6SM VCTS SCT040CB TEMPO 2020/2023 3SM TSRA BKN030CB FM210100 16003KT P6SM VCSH SCT050 BKN100",
+                "raw": "FM201900 15008KT P6SM VCTS SCT040CB",
                 "sanitized": "FM201900 15008KT P6SM VCTS SCT040CB",
                 "start_time": null,
                 "turbulance": [],
@@ -213,7 +213,7 @@
                     "TSRA"
                 ],
                 "probability": null,
-                "raw": "TEMPO 2020/2023 3SM TSRA BKN030CB FM210100 16003KT P6SM VCSH SCT050 BKN100",
+                "raw": "TEMPO 2020/2023 3SM TSRA BKN030CB",
                 "sanitized": "TEMPO 2020/2023 3SM TSRA BKN030CB",
                 "start_time": null,
                 "turbulance": [],

@@ -503,6 +503,20 @@ class TestMetar(BaseTest):
 
 class TestTaf(unittest.TestCase):
 
+    def test_get_taf_remarks(self):
+        """
+        Tests that remarks are removed from a TAF report
+        """
+        for txt, rmk in (
+            ('KJFK test', ''),
+            ('KJFK test RMK test', 'RMK test'),
+            ('KJFK test FCST test', 'FCST test'),
+            ('KJFK test AUTOMATED test', 'AUTOMATED test'),
+        ):
+            report, remarks = core.get_taf_remarks(txt)
+            self.assertEqual(report, 'KJFK test')
+            self.assertEqual(remarks, rmk)
+
     def test_sanitize_line(self):
         """
         Tests a function which fixes common new-line signifiers in TAF reports
@@ -532,6 +546,31 @@ class TestTaf(unittest.TestCase):
             (['QNH1234', '1', '612345'], '1234', ['612345'], [])
         ):
             self.assertEqual(core.get_taf_alt_ice_turb(wx), (['1'], *data))
+
+    def test_starts_new_line(self):
+        """
+        Tests that certain items are identified as new line markers in TAFs
+        """
+        for item in [*static.TAF_NEWLINE, 'PROB30', 'PROB45', 'PROBNA', 'FM12345678']:
+            self.assertTrue(core.starts_new_line(item))
+        for item in ('KJFK', '12345Z', '2010/2020', 'FEW060', 'RMK'):
+            self.assertFalse(core.starts_new_line(item))
+
+    def test_split_taf(self):
+        """
+        Tests that TAF reports are split into the correct time periods
+        """
+        for report, num in (
+            ('KJFK test', 1),
+            ('KJFK test FM12345678 test', 2),
+            ('KJFK test TEMPO test', 2),
+            ('KJFK test TEMPO test TEMPO test', 3),
+            ('KJFK test PROB30 test TEMPO test', 3),
+            ('KJFK test PROB30 TEMPO test TEMPO test', 3),
+        ):
+            split = core.split_taf(report)
+            self.assertEqual(len(split), num)
+            self.assertEqual(split[0], 'KJFK test')
 
     def test_get_type_and_times(self):
         """

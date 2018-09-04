@@ -224,7 +224,7 @@ def wxcode(code: str) -> str:
         else:
             ret += code[:2]
         code = code[2:]
-    return ret.strip(' ')
+    return ret.strip()
 
 
 def other_list(wxcodes: [str]) -> str:

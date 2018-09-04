@@ -18,7 +18,7 @@
                 "icing": [],
                 "other": [],
                 "probability": null,
-                "raw": "2000/2106 28006KT 9999 BKN035 PROB30 TEMPO 2004/2009 BKN012 PROB30 TEMPO 2105/2106 8000 BKN006",
+                "raw": "2000/2106 28006KT 9999 BKN035",
                 "sanitized": "2000/2106 28006KT 9999 BKN035",
                 "start_time": null,
                 "turbulance": [],
@@ -60,7 +60,7 @@
                     "spoken": "three zero",
                     "value": 30
                 },
-                "raw": "TEMPO 2004/2009 BKN012 PROB30 TEMPO 2105/2106 8000 BKN006",
+                "raw": "PROB30 TEMPO 2004/2009 BKN012",
                 "sanitized": "PROB30 TEMPO 2004/2009 BKN012",
                 "start_time": null,
                 "turbulance": [],
@@ -90,7 +90,7 @@
                     "spoken": "three zero",
                     "value": 30
                 },
-                "raw": "TEMPO 2105/2106 8000 BKN006",
+                "raw": "PROB30 TEMPO 2105/2106 8000 BKN006",
                 "sanitized": "PROB30 TEMPO 2105/2106 8000 BKN006",
                 "start_time": null,
                 "turbulance": [],

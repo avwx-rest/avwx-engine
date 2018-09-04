@@ -150,7 +150,9 @@ METAR_RMK = [' BLU', ' BLU+', ' WHT', ' GRN', ' YLO', ' AMB', ' RED', ' BECMG', 
 TAF_RMK = ['RMK ', 'AUTOMATED ', 'COR ', 'AMD ', 'LAST ', 'FCST ',
            'CANCEL ', 'CHECK ', 'WND ', 'MOD ', ' BY', ' QFE', ' QFF']
 #: Strings signifying the start of a new TAF time period
-TAF_NEWLINE = [' INTER ', ' FM', ' BECMG ', ' TEMPO ']
+TAF_NEWLINE = ['INTER', 'BECMG', 'TEMPO']
+#: Addendum to TAF_NEWLINE but string startswith and the rest are only digits
+TAF_NEWLINE_STARTSWITH = ['FM', 'PROB']
 
 #: Units required to be translated in order to be spoken properly
 SPOKEN_UNITS = {

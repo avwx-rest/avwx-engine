@@ -40,7 +40,7 @@ class TestTaf(unittest.TestCase):
     def test_prob_line(self):
         """
         Even though PROB__ is not in TAF_NEWLINE, it should still separate,
-        add a new line, and include the prob value in line['Probability']
+        add a new line, and include the prob value in line.probability
         """
         report = ("TAF AMD CYBC 271356Z 2714/2802 23015G25KT P6SM BKN090 "
                   "TEMPO 2714/2718 P6SM -SHRA BKN060 OVC090 "
