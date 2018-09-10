@@ -16,6 +16,7 @@ class Service(object):
 
     # Service URL must accept report type and station via .format()
     url: str = None
+    method: str = 'GET'
 
     def __init__(self, request_type: str):
         self.rtype = request_type
@@ -27,7 +28,7 @@ class Service(object):
         msg = f'Could not find {key} in {self.__class__.__name__} response\n'
         return InvalidRequest(msg + body)
 
-    def _extract(self, raw: str) -> str:
+    def _extract(self, raw: str, station: str = None) -> str:
         """
         Extracts report from response. Implemented by child classes
         """
@@ -39,12 +40,14 @@ class Service(object):
         """
         valid_station(station)
         try:
-            resp = requests.get(self.url.format(self.rtype, station))
+            resp = getattr(requests, self.method.lower())(self.url.format(self.rtype, station))
             if resp.status_code != 200:
                 raise SourceError(f'{self.__class__.__name__} server returned {resp.status_code}')
         except requests.exceptions.ConnectionError:
             raise ConnectionError(f'Unable to connect to {self.__class__.__name__} server')
-        return self._extract(resp.text)
+        report = self._extract(resp.text, station)
+        # This split join replaces all *whitespace elements with a single space
+        return ' '.join(report.split())
 
 
 class NOAA(Service):
@@ -61,7 +64,7 @@ class NOAA(Service):
         '&hoursBeforeNow=2'
     )
 
-    def _extract(self, raw: str) -> str:
+    def _extract(self, raw: str, station: str = None) -> str:
         """
         Extracts the raw_report element from XML response
         """
@@ -91,7 +94,7 @@ class AMO(Service):
 
     url = 'http://amoapi.kma.go.kr/amoApi/{0}?icao={1}'
 
-    def _extract(self, raw: str) -> str:
+    def _extract(self, raw: str, station: str = None) -> str:
         """
         Extracts the report message from XML response
         """
@@ -111,8 +114,26 @@ class AMO(Service):
         return ' '.join(report.split())
 
 
+class MAC(Service):
+    """
+    Requests data from Meteorologia Aeronautica Civil for Columbian stations
+    """
+
+    url = 'http://meteorologia.aerocivil.gov.co/expert_text_query/parse?query={0}%20{1}'
+    method = 'POST'
+
+    def _extract(self, raw: str, station: str) -> str:
+        """
+        Extracts the reports message using string finding
+        """
+        report = raw[raw.find(station.upper() + ' '):]
+        report = report[:report.find(' =')]
+        return report
+
+
 PREFERRED = {
-    'RK': AMO
+    'RK': AMO,
+    'SK': MAC,
 }
 
 

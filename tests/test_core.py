@@ -324,6 +324,7 @@ class TestGlobal(BaseTest):
             ('SCT060', 'SCT060'),
             ('FEWO03', 'FEW003'),
             ('BKNC015', 'BKN015C'),
+            ('FEW027///', 'FEW027///'),
         ):
             self.assertEqual(core.sanitize_cloud(bad), good)
 
@@ -338,6 +339,7 @@ class TestGlobal(BaseTest):
             ('OVC120TS', ['OVC', 120, 'TS']),
             ('VV002', ['VV', 2]),
             ('SCT', ['SCT', None]),
+            ('FEW027///', ['FEW', 27, None]),
         ):
             self.assertEqual(core.split_cloud(cloud), out)
 
@@ -352,6 +354,9 @@ class TestGlobal(BaseTest):
             ('OVC120TS', ['OVC', 120, 'TS']),
             ('VV002', ['VV', 2, None]),
             ('SCT', ['SCT', None, None]),
+            ('FEW027///', ['FEW', 27, None]),
+            ('FEW//////', ['FEW', None, None]),
+            ('FEW///TS', ['FEW', None, 'TS']),
         ):
             ret_cloud = core.make_cloud(cloud)
             self.assertIsInstance(ret_cloud, structs.Cloud)

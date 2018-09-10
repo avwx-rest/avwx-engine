@@ -28,9 +28,14 @@ class TestService(unittest.TestCase):
         """
         Tests that the base Service class has no URL and throws NotImplemented errors
         """
-        self.assertIsNone(self.serv.url)
-        with self.assertRaises(NotImplementedError):
-            self.serv._extract(None)
+        if type(self.serv) == service.Service:
+            self.assertIsNone(self.serv.url)
+            with self.assertRaises(NotImplementedError):
+                self.serv._extract(None)
+        else:
+            self.assertIsInstance(self.serv.url, str)
+        self.assertIsInstance(self.serv.method, str)
+        self.assertIn(self.serv.method, ('GET', 'POST'))
 
     def test_make_err(self):
         """
@@ -60,12 +65,6 @@ class TestNOAA(TestService):
         super().__init__(*args, **kwargs)
         self.serv = service.NOAA('metar')
 
-    def test_service(self):
-        """
-        Tests that the NOAA class has a URL
-        """
-        self.assertIsInstance(self.serv.url, str)
-
     def test_fetch(self):
         """
         Tests that reports are fetched from NOAA ADDS
@@ -84,12 +83,6 @@ class TestAMO(TestService):
         super().__init__(*args, **kwargs)
         self.serv = service.AMO('metar')
 
-    def test_service(self):
-        """
-        Tests that the AMO class has a URL
-        """
-        self.assertIsInstance(self.serv.url, str)
-
     def test_fetch(self):
         """
         Tests that reports are fetched from AMO for Korean stations
@@ -98,6 +91,24 @@ class TestAMO(TestService):
             with self.assertRaises(exceptions.BadStation):
                 self.serv.fetch(station)
         for station in ('RKSI', 'RKSS', 'RKNY'):
+            report = self.serv.fetch(station)
+            self.assertIsInstance(report, str)
+            self.assertTrue(report.startswith(station))
+
+class TestMAC(TestService):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.serv = service.MAC('metar')
+
+    def test_fetch(self):
+        """
+        Tests that reports are fetched from AMO for Korean stations
+        """
+        for station in ('12K', 'MAYT'):
+            with self.assertRaises(exceptions.BadStation):
+                self.serv.fetch(station)
+        for station in ('SKBO',):
             report = self.serv.fetch(station)
             self.assertIsInstance(report, str)
             self.assertTrue(report.startswith(station))
@@ -111,6 +122,7 @@ class TestModule(unittest.TestCase):
         for stations, serv in (
             (('KJFK', 'EGLL', 'PHNL'), service.NOAA),
             (('RKSI',), service.AMO),
+            (('SKBO', 'SKPP'), service.MAC),
         ):
             for station in stations:
                 self.assertIsInstance(service.get_service(station)(station), serv)
