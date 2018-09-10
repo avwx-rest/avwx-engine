@@ -117,5 +117,5 @@ def translate(remarks: str) -> {str: str}:
         # Weather began/ended
         elif rlen == 5 and rmk[2] in ('B', 'E') and rmk[3:].isdigit() and rmk[:2] in WX_TRANSLATIONS:
             state = 'began' if rmk[2] == 'B' else 'ended'
-            ret[rmk] = f'{WX_TRANSLATIONS[rmk[:2]]} {state} at :{int(rmk[3:])}'
+            ret[rmk] = f'{WX_TRANSLATIONS[rmk[:2]]} {state} at :{rmk[3:]}'
     return ret

@@ -131,7 +131,7 @@ def parse_in_line(txt: str, units: Units) -> {str: str}:
     wxdata, retwx['wind_direction'], retwx['wind_speed'],\
         retwx['wind_gust'], _ = core.get_wind(wxdata, units)
     if 'CAVOK' in wxdata:
-        retwx['visibility'] = '9999'
+        retwx['visibility'] = core.make_number('CAVOK')
         retwx['clouds'] = []
         wxdata.pop(wxdata.index('CAVOK'))
     else:

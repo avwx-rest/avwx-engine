@@ -48,7 +48,10 @@ def is_unknown(val: str) -> bool:
     """
     Returns True if val contains only '/' characters
     """
-    return val == '/' * len(val)
+    for char in ('/', 'X'):
+        if val == char * len(val):
+            return True
+    return False
 
 
 def unpack_fraction(num: str) -> str:
@@ -100,6 +103,9 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
     """
     if not num or is_unknown(num):
         return
+    # Check CAVOK
+    if num == 'CAVOK':
+        return Number('CAVOK', 9999, 'ceiling and visibility ok')
     # Check special
     if num in SPECIAL_NUMBERS:
         return Number(repr or num, None, SPECIAL_NUMBERS[num])
@@ -175,6 +181,8 @@ def sanitize_report_string(txt: str) -> str:
     """
     if len(txt) < 4:
         return txt
+    # Standardize whitespace
+    txt = ' '.join(txt.split())
     # Prevent changes to station ID
     stid, txt = txt[:4], txt[4:]
     # Replace invalid key-value pairs
@@ -739,9 +747,14 @@ def split_cloud(cloud: str) -> [str]:
         cloud = cloud[3:]
     if cloud:
         split.append(cloud)
+    # Nullify unknown elements
+    for i, item in enumerate(split):
+        if is_unknown(item):
+            split[i] = None
+    # Add null altitude or convert to int
     if len(split) == 1:
         split.append(None)
-    else:
+    elif isinstance(split[1], str) and split[1].isdigit():
         split[1] = int(split[1])
     return split
 
@@ -778,7 +791,7 @@ def get_flight_rules(vis: Number, ceiling: Cloud) -> int:
     # Parse visibility
     if not vis:
         return 2
-    elif vis.repr.startswith('P6'):
+    elif vis.repr == 'CAVOK' or vis.repr.startswith('P6'):
         vis = 10
     elif vis.repr.startswith('M'):
         vis = 0

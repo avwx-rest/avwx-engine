@@ -66,7 +66,7 @@ def parse_in(txt: str) -> (MetarData, Units):
         wxresp['wind_gust'], wxresp['wind_variable_direction'] = core.get_wind(wxdata, units)
     wxdata, wxresp['altimeter'] = core.get_altimeter(wxdata, units, 'IN')
     if 'CAVOK' in wxdata:
-        wxresp['visibility'] = '9999'
+        wxresp['visibility'] = core.make_number('CAVOK')
         wxresp['clouds'] = []
         wxdata.remove('CAVOK')
     else:
