@@ -56,6 +56,29 @@ class TestTaf(unittest.TestCase):
         self.assertEqual(lines[4].probability, core.make_number('30'))
         self.assertTrue(lines[4].raw.startswith('PROB30'))
 
+    def test_prob_end(self):
+        """
+        PROB and TEMPO lines are discrete times and should not affect FROM times
+        """
+        report = ("MMMX 242331Z 2500/2606 24005KT P6SM VC RA SCT020CB SCT080 BKN200 TX25/2521Z TN14/2513Z "
+                  "TEMPO 2500/2504 6SM TSRA BKN020CB "
+                  "FM250600 04010KT P6SM SCT020 BKN080 "
+                  "TEMPO 2512/2515 3SM HZ BKN015 "
+                  "FM251600 22005KT 4SM HZ BKN020 "
+                  "FM251800 22010KT 6SM HZ SCT020 BKN200 "
+                  "PROB40 2522/2602 P6SM TSRA BKN020CB")
+        taf = Taf('CYBC')
+        taf.update(report)
+        lines = taf.data.forecast
+        self.assertEqual(lines[0].start_time.repr, '2500')
+        self.assertEqual(lines[0].end_time.repr, '2506')
+        self.assertEqual(lines[1].start_time.repr, '2500')
+        self.assertEqual(lines[1].end_time.repr, '2504')
+        self.assertEqual(lines[-2].start_time.repr, '2518')
+        self.assertEqual(lines[-2].end_time.repr, '2606')
+        self.assertEqual(lines[-1].start_time.repr, '2522')
+        self.assertEqual(lines[-1].end_time.repr, '2602')
+
     def test_wind_shear(self):
         """
         Wind shear should be recognized as its own element in addition to wind
