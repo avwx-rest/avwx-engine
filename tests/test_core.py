@@ -536,10 +536,18 @@ class TestTaf(unittest.TestCase):
         """
         Tests a function which checks that an item signifies a new time period
         """
-        for rtype in ('TEMPO', 'PROB30', 'PROBNA'):
-            self.assertTrue(core._is_tempo_or_prob(rtype))
-        for rtype in ('1', 'TEMPORARY', 'TEMP0', 'PROBABLY', 'PROB'):
-            self.assertFalse(core._is_tempo_or_prob(rtype))
+        for line in (
+            {'type': 'TEMPO'},
+            {'probability': 30},
+            {'probability': 'PROBNA'},
+            {'type': 'FROM', 'probability': 30},
+        ):
+            self.assertTrue(core._is_tempo_or_prob(line))
+        for line in (
+            {'type': 'FROM'},
+            {'type': 'FROM', 'probability': None},
+        ):
+            self.assertFalse(core._is_tempo_or_prob(line))
 
     def test_get_taf_alt_ice_turb(self):
         """

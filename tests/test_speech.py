@@ -213,7 +213,7 @@ class TestSpeech(unittest.TestCase):
             end_time=core.make_timestamp('0414Z')
         )
         ret = speech.taf(taf, units)
-        spoken = ("Starting on September 4th - From 10 to 14 zulu, "
+        spoken = (f"Starting on {taf.start_time.dt.strftime('%B')} 4th - From 10 to 14 zulu, "
                   "Winds three six zero at 12kt gusting to 20kt. Visibility three miles. "
                   r"From 12 to 14 zulu, there's a 45% chance for Visibility "
                   "less than one quarter of a mile")
