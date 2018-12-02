@@ -2,8 +2,10 @@
 Classes for retrieving raw report strings
 """
 
+# stdlib
+from urllib import request
+from urllib.error import URLError
 # library
-import requests
 from xmltodict import parse as parsexml
 # module
 from avwx.core import valid_station
@@ -40,12 +42,15 @@ class Service(object):
         """
         valid_station(station)
         try:
-            resp = getattr(requests, self.method.lower())(self.url.format(self.rtype, station))
-            if resp.status_code != 200:
-                raise SourceError(f'{self.__class__.__name__} server returned {resp.status_code}')
-        except requests.exceptions.ConnectionError:
+            url = self.url.format(self.rtype, station)
+            # Non-null data signals a POST request
+            data = {} if self.method == 'POST' else None
+            resp = request.urlopen(request.Request(url, data=data))
+            if resp.status != 200:
+                raise SourceError(f'{self.__class__.__name__} server returned {resp.status}')
+        except URLError:
             raise ConnectionError(f'Unable to connect to {self.__class__.__name__} server')
-        report = self._extract(resp.text, station)
+        report = self._extract(resp.read().decode('utf-8'), station)
         # This split join replaces all *whitespace elements with a single space
         return ' '.join(report.split())
 
