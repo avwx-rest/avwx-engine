@@ -21,6 +21,7 @@ setup(
     ],
     python_requires='>= 3.6',
     install_requires=[
+        'aiohttp~=3.4',
         'dataclasses>=0.6;python_version<"3.7"',
         'python-dateutil~=2.7',
         'xmltodict~=0.11',

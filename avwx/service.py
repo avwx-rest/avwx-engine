@@ -6,6 +6,7 @@ Classes for retrieving raw report strings
 from urllib import request
 from urllib.error import URLError
 # library
+import aiohttp
 from xmltodict import parse as parsexml
 # module
 from avwx.core import valid_station
@@ -51,6 +52,24 @@ class Service(object):
         except URLError:
             raise ConnectionError(f'Unable to connect to {self.__class__.__name__} server')
         report = self._extract(resp.read().decode('utf-8'), station)
+        # This split join replaces all *whitespace elements with a single space
+        return ' '.join(report.split())
+
+    async def async_fetch(self, station: str) -> str:
+        """
+        Asynchronously fetch a report string from the service
+        """
+        valid_station(station)
+        url = self.url.format(self.rtype, station)
+        try:
+            async with aiohttp.ClientSession() as sess:
+                async with getattr(sess, self.method.lower())(url) as resp:
+                    if resp.status != 200:
+                        raise SourceError(f'{self.__class__.__name__} server returned {resp.status}')
+                    text = await resp.text()
+        except aiohttp.ClientConnectionError:
+            raise ConnectionError(f'Unable to connect to {self.__class__.__name__} server')
+        report = self._extract(text, station)
         # This split join replaces all *whitespace elements with a single space
         return ' '.join(report.split())
 

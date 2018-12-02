@@ -7,6 +7,7 @@ Contains the primary report classes of avwx: Metar and Taf
 
 # stdlib
 import json
+from abc import abstractmethod
 from datetime import datetime
 from os import path
 # module
@@ -65,11 +66,35 @@ class Report(object):
             self._station_info = structs.StationInfo(**dict(zip(INFO_KEYS, info)))
         return self._station_info
 
+    @abstractmethod
+    def _post_update(self):
+        pass
+
     def update(self, report: str = None) -> bool:
+        """Updates raw, data, and translations by fetching and parsing the report
+
+        Can accept a report string to parse instead
+
+        Returns True is a new report is available, else False
         """
-        Updates report elements. Not implemented
+        if not report:
+            report = self.service.fetch(self.station)
+        if report == self.raw:
+            return False
+        self.raw = report
+        self._post_update()
+        return True
+
+    async def async_update(self) -> bool:
         """
-        raise NotImplementedError()
+        Async version of update
+        """
+        report = await self.service.async_fetch(self.station)
+        if report == self.raw:
+            return False
+        self.raw = report
+        self._post_update()
+        return True
 
 
 class Metar(Report):
@@ -77,22 +102,10 @@ class Metar(Report):
     Class to handle METAR report data
     """
 
-    def update(self, report: str = None) -> bool:
-        """Updates raw, data, and translations by fetching and parsing the METAR report
-
-        Returns True is a new report is available, else False
-        """
-        if report is not None:
-            self.raw = report
-        else:
-            raw = self.service.fetch(self.station)
-            if raw == self.raw:
-                return False
-            self.raw = raw
+    def _post_update(self):
         self.data, self.units = metar.parse(self.station, self.raw)
         self.translations = translate.metar(self.data, self.units)
         self.last_updated = datetime.utcnow()
-        return True
 
     @property
     def summary(self) -> str:
@@ -118,23 +131,10 @@ class Taf(Report):
     Class to handle TAF report data
     """
 
-    def update(self, report: str = None) -> bool:
-        """
-        Updates raw, data, and translations by fetching and parsing the TAF report
-
-        Returns True is a new report is available, else False
-        """
-        if report is not None:
-            self.raw = report
-        else:
-            raw = self.service.fetch(self.station)
-            if raw == self.raw:
-                return False
-            self.raw = raw
+    def _post_update(self):
         self.data, self.units = taf.parse(self.station, self.raw)
         self.translations = translate.taf(self.data, self.units)
         self.last_updated = datetime.utcnow()
-        return True
 
     @property
     def summary(self) -> [str]:
