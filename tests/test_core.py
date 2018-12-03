@@ -163,7 +163,7 @@ class TestGlobal(BaseTest):
             ('This is weird', ('me', 'you', 'we'), 8),
             ('KJFK NOPE LOL RMK HAHAHA', static.METAR_RMK, 13)
         ):
-            self.assertEquals(core.find_first_in_list(string, targets), index)
+            self.assertEqual(core.find_first_in_list(string, targets), index)
 
     def test_extra_space_exists(self):
         """
@@ -239,7 +239,7 @@ class TestGlobal(BaseTest):
             self.assertEqual(retwx, ['1', '2'])
             self.assert_number(ret_temp, *temp)
             self.assert_number(ret_dew, *dew)
-        self.assertEquals(core.get_temp_and_dew(['MX/01']), (['MX/01'], None, None))
+        self.assertEqual(core.get_temp_and_dew(['MX/01']), (['MX/01'], None, None))
 
     def test_get_station_and_time(self):
         """
