@@ -27,5 +27,6 @@ setup(
         'xmltodict~=0.11',
     ],
     packages=['avwx'],
-    package_data={'avwx': ['stations.json']}
+    package_data={'avwx': ['stations.json']},
+    tests_require=['pytest-asyncio~=0.9']
 )

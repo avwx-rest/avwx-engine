@@ -87,6 +87,7 @@ class TestService(unittest.TestCase):
             self.assertIsInstance(report, str)
             self.assertTrue(report.startswith(station))
 
+    @pytest.mark.asyncio
     async def test_async_fetch(self):
         """
         Tests that reports are fetched from async service
