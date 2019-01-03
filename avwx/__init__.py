@@ -1,9 +1,8 @@
 """
-Michael duPont - michael@mdupont.com
-AVWX-Engine : avwx/__init__.py
-
-Contains the primary report classes of avwx: Metar and Taf
+Aviation weather report parsing library
 """
+
+__version__ = '1.0.6'
 
 # stdlib
 import json
