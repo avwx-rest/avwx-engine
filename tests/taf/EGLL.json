@@ -52,7 +52,7 @@
                     }
                 ],
                 "end_time": null,
-                "flight_rules": "IFR",
+                "flight_rules": "MVFR",
                 "icing": [],
                 "other": [],
                 "probability": {

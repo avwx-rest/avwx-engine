@@ -4,6 +4,7 @@ tests/test_service.py
 """
 
 # library
+import pytest
 import unittest
 # module
 from avwx import exceptions, service
@@ -11,10 +12,14 @@ from avwx import exceptions, service
 class TestService(unittest.TestCase):
 
     serv: service.Service
+    name: str = 'Service'
+    stations: [str] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.serv = service.Service('metar')
+        self.serv = getattr(service, self.name)('metar')
+        if not self.stations:
+            self.stations = []
 
     def test_init(self):
         """
@@ -48,7 +53,7 @@ class TestService(unittest.TestCase):
         self.assertEqual(err.args, (err_str,))
         self.assertEqual(str(err), err_str)
 
-    def test_fetch(self):
+    def test_fetch_exceptions(self):
         """
         Tests fetch exception handling
         """
@@ -56,62 +61,56 @@ class TestService(unittest.TestCase):
             with self.assertRaises(exceptions.BadStation):
                 self.serv.fetch(station)
         # Should raise exception due to empty url
-        with self.assertRaises(AttributeError):
-            self.serv.fetch('KJFK')
+        if self.name == 'Service':
+            with self.assertRaises(AttributeError):
+                self.serv.fetch('KJFK')
+
+    @pytest.mark.asyncio
+    async def test_async_fetch_exceptions(self):
+        """
+        Tests async fetch exception handling
+        """
+        for station in ('12K', 'MAYT'):
+            with self.assertRaises(exceptions.BadStation):
+                await self.serv.async_fetch(station)
+        # Should raise exception due to empty url
+        if self.name == 'Service':
+            with self.assertRaises(AttributeError):
+                await self.serv.async_fetch('KJFK')
+
+    def test_fetch(self):
+        """
+        Tests that reports are fetched from service
+        """
+        for station in self.stations:
+            report = self.serv.fetch(station)
+            self.assertIsInstance(report, str)
+            self.assertTrue(report.startswith(station))
+
+    @pytest.mark.asyncio
+    async def test_async_fetch(self):
+        """
+        Tests that reports are fetched from async service
+        """
+        for station in self.stations:
+            report = await self.serv.async_fetch(station)
+            self.assertIsInstance(report, str)
+            self.assertTrue(report.startswith(station))
 
 class TestNOAA(TestService):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.serv = service.NOAA('metar')
-
-    def test_fetch(self):
-        """
-        Tests that reports are fetched from NOAA ADDS
-        """
-        for station in ('12K', 'MAYT'):
-            with self.assertRaises(exceptions.BadStation):
-                self.serv.fetch(station)
-        for station in ('KJFK', 'EGLL', 'PHNL'):
-            report = self.serv.fetch(station)
-            self.assertIsInstance(report, str)
-            self.assertTrue(report.startswith(station))
+    name = 'NOAA'
+    stations = ['KJFK', 'EGLL', 'PHNL']
 
 class TestAMO(TestService):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.serv = service.AMO('metar')
-
-    def test_fetch(self):
-        """
-        Tests that reports are fetched from AMO for Korean stations
-        """
-        for station in ('12K', 'MAYT'):
-            with self.assertRaises(exceptions.BadStation):
-                self.serv.fetch(station)
-        for station in ('RKSI', 'RKSS', 'RKNY'):
-            report = self.serv.fetch(station)
-            self.assertIsInstance(report, str)
-            self.assertTrue(report.startswith(station))
+    name = 'AMO'
+    stations = ['RKSI', 'RKSS', 'RKNY']
 
 class TestMAC(TestService):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.serv = service.MAC('metar')
-
-    def test_fetch(self):
-        """
-        Tests that reports are fetched from AMO for Korean stations
-        """
-        for station in ('12K', 'MAYT'):
-            with self.assertRaises(exceptions.BadStation):
-                self.serv.fetch(station)
-        for station in ('SKBO',):
-            report = self.serv.fetch(station)
-            self.assertIsInstance(report, str)
-            self.assertTrue(report.startswith(station))
+    name = 'MAC'
+    stations = ['SKBO']
 
 class TestModule(unittest.TestCase):
 

@@ -816,13 +816,13 @@ def get_taf_flight_rules(lines: [dict]) -> [dict]:
         temp_vis, temp_cloud = line['visibility'], line['clouds']
         for report in reversed(lines[:i]):
             if not _is_tempo_or_prob(report):
-                if temp_vis == '':
+                if not temp_vis:
                     temp_vis = report['visibility']
                 if 'SKC' in report['other'] or 'CLR' in report['other']:
                     temp_cloud = 'temp-clear'
                 elif temp_cloud == []:
                     temp_cloud = report['clouds']
-                if temp_vis != '' and temp_cloud != []:
+                if temp_vis and temp_cloud != []:
                     break
         if temp_cloud == 'temp-clear':
             temp_cloud = []

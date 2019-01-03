@@ -17,6 +17,8 @@ from avwx import core, taf, structs, Taf
 
 class TestTaf(unittest.TestCase):
 
+    maxDiff = None
+
     def test_fetch(self):
         """
         Tests if the old fetch function returns a report from a Service object
@@ -104,16 +106,16 @@ class TestTaf(unittest.TestCase):
         report = ("EGLL 192253Z 2000/2106 28006KT 9999 BKN035 "
                   "PROB30 TEMPO 2004/2009 BKN012 "
                   "PROB30 TEMPO 2105/2106 8000 BKN006")
-        taf = Taf('EGLL')
-        taf.update(report)
-        lines = taf.data.forecast
+        tafobj = Taf('EGLL')
+        tafobj.update(report)
+        lines = tafobj.data.forecast
         for line in lines:
             self.assertIsInstance(line.start_time, structs.Timestamp)
             self.assertIsInstance(line.end_time, structs.Timestamp)
         for i in range(1, 3):
             self.assertEqual(lines[i].type, 'TEMPO')
             self.assertEqual(lines[i].probability.value, 30)
-    maxDiff = None
+
     def test_taf_ete(self):
         """
         Performs an end-to-end test of all TAF JSON files
@@ -137,3 +139,19 @@ class TestTaf(unittest.TestCase):
             self.assertEqual(station.summary, ref['summary'])
             self.assertEqual(nodate(station.speech), nodate(ref['speech']))
             self.assertEqual(asdict(station.station_info), ref['station_info'])
+
+    def test_rule_inherit(self):
+        """
+        Tests if TAF forecast periods selectively inherit features to calculate flight rules
+        """
+        report = (
+            "CYKF 020738Z 0208/0220 34005KT P6SM FEW015 BKN070 "
+            "FM020900 VRB03KT P6SM FEW070 SCT120 "
+            "BECMG 0214/0216 12006KT "
+            "FM021800 14008KT P6SM BKN025 OVC090"
+        )
+        expected_rules = ('VFR', 'VFR', 'VFR', 'MVFR',)
+        tafobj = Taf(report[:4])
+        tafobj.update(report)
+        for i, line in enumerate(tafobj.data.forecast):
+            self.assertEqual(line.flight_rules, expected_rules[i])
