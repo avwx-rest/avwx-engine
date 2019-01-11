@@ -13,7 +13,6 @@ from os import path
 from avwx import metar, taf, translate, summary, speech, service, structs
 from avwx.core import valid_station
 from avwx.exceptions import BadStation
-from avwx.static import INFO_KEYS
 
 INFO_PATH = path.dirname(path.realpath(__file__)) + '/stations.json'
 STATIONS = json.load(open(INFO_PATH))
@@ -61,8 +60,9 @@ class Report(object):
         if self._station_info is None:
             if not self.station in STATIONS:
                 raise BadStation('Could not find station in the info dict. Check avwx.STATIONS')
-            info = [self.station] + STATIONS[self.station]
-            self._station_info = structs.StationInfo(**dict(zip(INFO_KEYS, info)))
+            info = STATIONS[self.station]
+            info['runways'] = [structs.Runway(**r) for r in info['runways']]
+            self._station_info = structs.StationInfo(**info)
         return self._station_info
 
     @abstractmethod

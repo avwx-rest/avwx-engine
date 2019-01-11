@@ -14,21 +14,21 @@ classifiers = [
     "License :: OSI Approved :: MIT License"
 ]
 requires-python = ">=3.6"
-requires=[
+requires = [
     "aiohttp~=3.4",
     "dataclasses>=0.6;python_version<'3.7'",
     "python-dateutil~=2.7",
     "xmltodict~=0.11",
 ]
 
-[tool.flit.metadata.requires-extra]
-test = [
-    "pytest~=4.0",
-    "pytest-asyncio~=0.9",
-]
-doc = [
-    "sphinx"
-]
+# [tool.flit.metadata.requires-extra]
+# test = [
+#     "pytest~=4.0",
+#     "pytest-asyncio~=0.9",
+# ]
+# doc = [
+#     "sphinx"
+# ]
 
 [tool.flit.metadata.urls]
 Documentation = "https://avwx-engine.readthedocs.io/en/latest/"
