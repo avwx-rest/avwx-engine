@@ -1,20 +1,19 @@
 """
-Michael duPont - michael@mdupont.com
-AVWX-Engine : avwx/__init__.py
-
-Contains the primary report classes of avwx: Metar and Taf
+Aviation weather report parsing library
 """
+
+__version__ = '1.0.8'
 
 # stdlib
 import json
 from abc import abstractmethod
+from copy import copy
 from datetime import datetime
 from os import path
 # module
 from avwx import metar, taf, translate, summary, speech, service, structs
 from avwx.core import valid_station
 from avwx.exceptions import BadStation
-from avwx.static import INFO_KEYS
 
 INFO_PATH = path.dirname(path.realpath(__file__)) + '/stations.json'
 STATIONS = json.load(open(INFO_PATH))
@@ -62,8 +61,9 @@ class Report(object):
         if self._station_info is None:
             if not self.station in STATIONS:
                 raise BadStation('Could not find station in the info dict. Check avwx.STATIONS')
-            info = [self.station] + STATIONS[self.station]
-            self._station_info = structs.StationInfo(**dict(zip(INFO_KEYS, info)))
+            info = copy(STATIONS[self.station])
+            info['runways'] = [structs.Runway(**r) for r in info['runways']]
+            self._station_info = structs.StationInfo(**info)
         return self._station_info
 
     @abstractmethod

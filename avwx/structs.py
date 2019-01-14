@@ -7,6 +7,14 @@ from dataclasses import asdict, dataclass
 from datetime import datetime
 
 @dataclass
+class Runway(object):
+    length: int
+    width: int
+    ident1: str
+    ident2: str
+
+
+@dataclass
 class StationInfo(object):
     city: str
     country: str
@@ -18,6 +26,7 @@ class StationInfo(object):
     name: str
     priority: int
     state: str
+    runways: [Runway]
 
 
 @dataclass
