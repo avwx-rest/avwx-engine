@@ -773,7 +773,12 @@ def get_clouds(wxdata: [str]) -> ([str], list):
         if item[:3] in CLOUD_LIST or item[:2] == 'VV':
             cloud = wxdata.pop(i)
             clouds.append(make_cloud(cloud))
-    return wxdata, sorted(clouds, key=lambda cloud: (cloud.altitude, cloud.type))
+    # Attempt cloud sort. Fails if None values are present
+    try:
+        clouds.sort(key=lambda cloud: (cloud.altitude, cloud.type))
+    except TypeError:
+        clouds.reverse() # Restores original report order
+    return wxdata, clouds
 
 
 def get_flight_rules(vis: Number, ceiling: Cloud) -> int:

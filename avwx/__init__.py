@@ -2,7 +2,7 @@
 Aviation weather report parsing library
 """
 
-__version__ = '1.0.8'
+__version__ = '1.0.9'
 
 # stdlib
 import json
@@ -62,7 +62,8 @@ class Report(object):
             if not self.station in STATIONS:
                 raise BadStation('Could not find station in the info dict. Check avwx.STATIONS')
             info = copy(STATIONS[self.station])
-            info['runways'] = [structs.Runway(**r) for r in info['runways']]
+            if info['runways']:
+                info['runways'] = [structs.Runway(**r) for r in info['runways']]
             self._station_info = structs.StationInfo(**info)
         return self._station_info
 
