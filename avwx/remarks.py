@@ -13,6 +13,8 @@ def _tdec(code: str, unit: str = 'C') -> str:
 
     Ex: 1045 -> -4.5°C    0237 -> 23.7°C
     """
+    if not code:
+        return
     ret = f"{'-' if code[0] == '1' else ''}{int(code[1:3])}.{code[3]}"
     if unit:
         ret += f'°{unit}'
@@ -107,7 +109,10 @@ def translate(remarks: str) -> {str: str}:
                 ret[rmk] = f'24-hour temperature: max {_tdec(rmk[1:5])} min {_tdec(rmk[5:])}'
         # Sea level pressure: SLP218
         elif rmk.startswith('SLP'):
-            ret[rmk] = f'Sea level pressure: 10{rmk[3:5]}.{rmk[5]} hPa'
+            if rmk == 'SLPNO':
+                ret[rmk] = 'Sea level pressure not available'
+            else:
+                ret[rmk] = f'Sea level pressure: 10{rmk[3:5]}.{rmk[5]} hPa'
         # Temp/Dew with decimal: T02220183
         elif rlen == 9 and rmk[0] == 'T' and rmk[1:].isdigit():
             ret[rmk] = f'Temperature {_tdec(rmk[1:5])} and dewpoint {_tdec(rmk[5:])}'

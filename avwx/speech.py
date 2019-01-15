@@ -96,10 +96,12 @@ def type_and_times(type: str, start: Timestamp, end: Timestamp, probability: Num
     Format line type and times into the beginning of a spoken line string
     """
     if not type:
-        return ''    
+        return ''
+    start_time = start.dt.hour if start else 'an unknown start time'
+    end_time = end.dt.hour if end else 'an unknown end time'
     if type == 'BECMG':
-        return f"At {start.dt.hour or 'midnight'} zulu becoming"
-    ret = f"From {start.dt.hour or 'midnight'} to {end.dt.hour or 'midnight'} zulu,"
+        return f"At {start_time or 'midnight'} zulu becoming"
+    ret = f"From {start_time or 'midnight'} to {end_time or 'midnight'} zulu,"
     if probability and probability.value:
         ret += f" there's a {probability.value}% chance for"
     if type == 'INTER':
