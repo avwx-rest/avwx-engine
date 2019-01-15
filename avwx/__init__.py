@@ -2,8 +2,6 @@
 Aviation weather report parsing library
 """
 
-__version__ = '1.0.9'
-
 # stdlib
 import json
 from abc import abstractmethod
