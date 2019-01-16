@@ -69,6 +69,15 @@ class Report(object):
     def _post_update(self):
         pass
 
+    @classmethod
+    def from_report(cls, report: str) -> 'Report':
+        """
+        Returns an updated report object based on an existing report
+        """
+        obj = cls(report[:4])
+        obj.update(report)
+        return obj
+
     def update(self, report: str = None) -> bool:
         """Updates raw, data, and translations by fetching and parsing the report
 
@@ -94,6 +103,9 @@ class Report(object):
         self.raw = report
         self._post_update()
         return True
+
+    def __repr__(self) -> str:
+        return f'<avwx.{self.__class__.__name__} station={self.station}>'
 
 
 class Metar(Report):

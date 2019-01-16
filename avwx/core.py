@@ -109,6 +109,8 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
     # Check special
     if num in SPECIAL_NUMBERS:
         return Number(repr or num, None, SPECIAL_NUMBERS[num])
+    # Remove spurious characters from the end
+    num = num.rstrip('M.')
     # Create Fraction
     if '/' in num:
         nmr, dnm = [int(i) for i in num.split('/')]
@@ -324,6 +326,9 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
         # Fix inconsistant 'P6SM' Ex: TP6SM or 6PSM -> P6SM
         elif ilen > 3 and item[-4:] in VIS_PERMUTATIONS:
             wxdata[i] = 'P6SM'
+        # Fix misplaced KT 22022KTG40
+        elif ilen == 10 and 'KTG' in item and item[:5].isdigit():
+            wxdata[i] = item.replace('KTG', 'G') + 'KT'
         # Fix wind T
         elif (ilen == 6 and item[5] in ['K', 'T'] and (item[:5].isdigit() or item.startswith('VRB'))) \
             or (ilen == 9 and item[8] in ['K', 'T'] and item[5] == 'G' and (item[:5].isdigit() or item.startswith('VRB'))):
@@ -386,6 +391,7 @@ def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], N
     # convert to Number
     if not altimeter:
         return wxdata, None
+    altimeter = altimeter.replace('/', '')
     if units.altimeter == 'inHg':
         value = altimeter[:2] + '.' + altimeter[2:]
     else:
