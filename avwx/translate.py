@@ -192,7 +192,7 @@ def clouds(clds: [Cloud], unit: str = 'ft') -> str:
         if cloud.altitude is None:
             continue
         cloud_str = CLOUD_TRANSLATIONS[cloud.type]
-        if cloud.modifier:
+        if cloud.modifier and cloud.modifier in CLOUD_TRANSLATIONS:
             cloud_str += f' ({CLOUD_TRANSLATIONS[cloud.modifier]})'
         ret.append(cloud_str.format(cloud.altitude * 100, unit))
     if ret:

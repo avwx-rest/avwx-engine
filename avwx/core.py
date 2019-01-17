@@ -3,6 +3,7 @@ Contains the core parsing and indent functions of avwx
 """
 
 # stdlib
+import re
 from copy import copy
 from datetime import datetime, timedelta
 from itertools import permutations
@@ -219,10 +220,8 @@ def sanitize_line(txt: str) -> str:
     """
     Fixes common mistakes with 'new line' signifiers so that they can be recognized
     """
-    for key in LINE_FIXES:
-        index = txt.find(key)
-        if index > -1:
-            txt = txt[:index] + LINE_FIXES[key] + txt[index + len(key):]
+    for key, fix in LINE_FIXES.items():
+        txt = txt.replace(key, fix)
     #Fix when space is missing following new line signifiers
     for item in ['BECMG', 'TEMPO']:
         if item in txt and item + ' ' not in txt:
@@ -274,6 +273,27 @@ def extra_space_exists(str1: str, str2: str) -> bool:
     if str1 in ['TX', 'TN'] and str2.find('/') != -1:
         return True
     return False
+
+
+_cloud_group = '('+'|'.join(CLOUD_LIST)+')'
+CLOUD_SPACE_PATTERNS = [re.compile(pattern) for pattern in (
+    r'(?=.+)' + _cloud_group + r'\d{3}(\w{2,3})?$', # SCT010BKN021
+    r'M?\d{2}\/M?\d{2}$', # BKN01826/25
+)]
+
+
+def extra_space_needed(item: str) -> int:
+    """
+    Returns the index where a space must be inserted or None
+    """
+    # For items starting with cloud list
+    if item[:3] in CLOUD_LIST:
+        for pattern in CLOUD_SPACE_PATTERNS:
+            sep = pattern.search(item)
+            if sep is None:
+                continue
+            if sep.start():
+                return sep.start()
 
 
 ITEM_REMV = ['AUTO', 'COR', 'NSC', 'NCD', '$', 'KT', 'M', '.', 'RTD', 'SPECI', 'METAR', 'CORR']
@@ -329,6 +349,11 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
         # Fix misplaced KT 22022KTG40
         elif ilen == 10 and 'KTG' in item and item[:5].isdigit():
             wxdata[i] = item.replace('KTG', 'G') + 'KT'
+        # Fix leading character mistypes in wind
+        elif ilen > 7 and not item[0].isdigit() and item.endswith('KT'):
+            while not item[0].isdigit():
+                item = item[1:]
+            wxdata[i] = item
         # Fix wind T
         elif (ilen == 6 and item[5] in ['K', 'T'] and (item[:5].isdigit() or item.startswith('VRB'))) \
             or (ilen == 9 and item[8] in ['K', 'T'] and item[5] == 'G' and (item[:5].isdigit() or item.startswith('VRB'))):
@@ -343,6 +368,11 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
                 tx_index = item.find('TX')
                 wxdata.insert(i + 1, item[:tx_index])
                 wxdata[i] = item[tx_index:]
+        # Fix situations where a space is missing
+        sep = extra_space_needed(item)
+        if sep:
+            wxdata.insert(i + 1, item[sep:])
+            wxdata[i] = item[:sep]
     return wxdata, runway_vis, shear
 
 
@@ -362,7 +392,7 @@ def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], N
             altimeter = wxdata.pop()[1:]
         # Other version but prefer normal if available
         elif target[0] == 'Q':
-            if wxdata[-2][0] == 'A':
+            if len(wxdata) > 1 and wxdata[-2][0] == 'A':
                 wxdata.pop()
                 altimeter = wxdata.pop()[1:]
             else:
@@ -379,7 +409,7 @@ def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], N
                 altimeter = altimeter[:altimeter.find('/')]
         # Other version but prefer normal if available
         elif target[0] == 'A':
-            if wxdata[-2][0] == 'Q':
+            if len(wxdata) > 1 and wxdata[-2][0] == 'Q':
                 wxdata.pop()
                 altimeter = wxdata.pop()[1:]
             else:
