@@ -350,12 +350,12 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
         elif ilen == 10 and 'KTG' in item and item[:5].isdigit():
             wxdata[i] = item.replace('KTG', 'G') + 'KT'
         # Fix leading character mistypes in wind
-        elif ilen > 7 and not item[0].isdigit() and item.endswith('KT'):
-            while not item[0].isdigit():
+        elif ilen > 7 and not item[0].isdigit() and not item.startswith('VRB') and item.endswith('KT'):
+            while not item[0].isdigit() and item[:3] != 'VRB':
                 item = item[1:]
             wxdata[i] = item
         # Fix wind T
-        elif (ilen == 6 and item[5] in ['K', 'T'] and (item[:5].isdigit() or item.startswith('VRB'))) \
+        elif (ilen == 6 and item[5] in ['K', 'T'] and (item[:5].isdigit() or (item.startswith('VRB') and item[:3].isdigit()))) \
             or (ilen == 9 and item[8] in ['K', 'T'] and item[5] == 'G' and (item[:5].isdigit() or item.startswith('VRB'))):
             wxdata[i] = item[:-1] + 'KT'
         # Fix joined TX-TN

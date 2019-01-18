@@ -64,6 +64,7 @@ class Cloud(object):
     type: str
     altitude: int
     modifier: str = None
+    direction: str = None
 
 
 @dataclass

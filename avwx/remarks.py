@@ -111,7 +111,7 @@ def translate(remarks: str) -> {str: str}:
         elif rmk.startswith('SLP'):
             if rmk == 'SLPNO':
                 ret[rmk] = 'Sea level pressure not available'
-            else:
+            elif rlen == 6:
                 ret[rmk] = f'Sea level pressure: 10{rmk[3:5]}.{rmk[5]} hPa'
         # Temp/Dew with decimal: T02220183
         elif rlen == 9 and rmk[0] == 'T' and rmk[1:].isdigit():
