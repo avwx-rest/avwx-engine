@@ -12,6 +12,8 @@ from xmltodict import parse as parsexml
 from avwx.core import valid_station
 from avwx.exceptions import InvalidRequest, SourceError
 
+_atimeout = aiohttp.ClientTimeout(total=10)
+
 class Service(object):
     """
     Base Service class for fetching reports
@@ -46,7 +48,7 @@ class Service(object):
             url = self.url.format(self.rtype, station)
             # Non-null data signals a POST request
             data = {} if self.method == 'POST' else None
-            resp = request.urlopen(request.Request(url, data=data))
+            resp = request.urlopen(url, data=data, timeout=10)
             if resp.status != 200:
                 raise SourceError(f'{self.__class__.__name__} server returned {resp.status}')
         except URLError:
@@ -62,7 +64,7 @@ class Service(object):
         valid_station(station)
         url = self.url.format(self.rtype, station)
         try:
-            async with aiohttp.ClientSession() as sess:
+            async with aiohttp.ClientSession(timeout=_atimeout) as sess:
                 async with getattr(sess, self.method.lower())(url) as resp:
                     if resp.status != 200:
                         raise SourceError(f'{self.__class__.__name__} server returned {resp.status}')

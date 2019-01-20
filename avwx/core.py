@@ -510,7 +510,11 @@ def get_wind(wxdata: [str], units: Units) -> ([str], Number, Number, Number, [Nu
         item = copy(wxdata[0])
         for rep in ['(E)']:
             item = item.replace(rep, '')
-        item = item.replace('O', '0')
+        for replacements in (
+            ('O', '0'),
+            ('/', ''),
+        ):
+            item = item.replace(*replacements)
         #09010KT, 09010G15KT
         if item.endswith('KT') \
         or item.endswith('KTS') \
