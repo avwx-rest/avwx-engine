@@ -3,18 +3,12 @@ Aviation weather report parsing library
 """
 
 # stdlib
-import json
 from abc import abstractmethod
-from copy import copy
 from datetime import datetime
-from os import path
 # module
 from avwx import metar, taf, translate, summary, speech, service, structs
 from avwx.core import valid_station
-from avwx.exceptions import BadStation
-
-INFO_PATH = path.dirname(path.realpath(__file__)) + '/stations.json'
-STATIONS = json.load(open(INFO_PATH))
+from avwx.structs import Station
 
 
 class Report(object):
@@ -37,7 +31,7 @@ class Report(object):
     #: Units inferred from the station location and report contents
     units: structs.Units = None
 
-    _station_info: structs.StationInfo = None
+    _station_info: Station = None
 
     def __init__(self, station: str):
         # Raises a BadStation error if needed
@@ -50,19 +44,14 @@ class Report(object):
         self.station = station
 
     @property
-    def station_info(self) -> structs.StationInfo:
+    def station_info(self) -> Station:
         """
         Provide basic station info
 
         Raises a BadStation exception if the station's info cannot be found
         """
         if self._station_info is None:
-            if not self.station in STATIONS:
-                raise BadStation('Could not find station in the info dict. Check avwx.STATIONS')
-            info = copy(STATIONS[self.station])
-            if info['runways']:
-                info['runways'] = [structs.Runway(**r) for r in info['runways']]
-            self._station_info = structs.StationInfo(**info)
+            self._station_info = Station.from_icao(self.station)
         return self._station_info
 
     @abstractmethod
@@ -79,11 +68,12 @@ class Report(object):
         return obj
 
     def update(self, report: str = None) -> bool:
-        """Updates raw, data, and translations by fetching and parsing the report
+        """
+        Updates raw, data, and translations by fetching and parsing the report
 
         Can accept a report string to parse instead
 
-        Returns True is a new report is available, else False
+        Returns True if a new report is available, else False
         """
         if not report:
             report = self.service.fetch(self.station)
@@ -164,3 +154,59 @@ class Taf(Report):
         if not self.data:
             self.update()
         return speech.taf(self.data, self.units)
+
+
+class Airep(object):
+    """
+    Class to handle aircraft report data
+    """
+
+    #: UTC Datetime object when the report was last updated
+    last_updated: datetime = None
+
+    #: Provide basic station info if given at init
+    station_info: Station = None
+
+    raw_reports: [str] = None
+
+    def __init__(self, station: str = None, lat: float = None, lon: float = None):
+        if station:
+            station = Station.from_icao(station)
+            self.station_info = station
+            lat = station.latitude
+            lon = station.longitude
+        elif lat is None or lon is None:
+            raise ValueError('No station or valid coordinates given')
+        self.lat = lat
+        self.lon = lon
+        self.service = service.NOAA('aircraftreport')
+
+    def _post_update(self):
+        pass
+
+    def update(self, reports: [str] = None) -> bool:
+        """
+        Updates raw_reports and data by fetch recent aircraft reports
+
+        Can accept a list report strings to parse instead
+
+        Returns True if new reports are available, else False
+        """
+        if not reports:
+            reports = self.service.fetch(lat=self.lat, lon=self.lon)
+        if reports == self.raw_reports:
+            return False
+        self.raw_reports = reports
+        self._post_update()
+        return True
+
+    async def async_update(self) -> bool:
+        """
+        Async version of update
+        """
+        reports = await self.service.async_fetch(lat=self.lat, lon=self.lon)
+        if reports == self.raw_reports:
+            return False
+        self.raw_reports = reports
+        self._post_update()
+        return True

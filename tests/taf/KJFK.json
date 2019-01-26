@@ -8,12 +8,14 @@
                 "clouds": [
                     {
                         "altitude": 25,
+                        "direction": null,
                         "modifier": null,
                         "repr": "SCT025",
                         "type": "SCT"
                     },
                     {
                         "altitude": 50,
+                        "direction": null,
                         "modifier": null,
                         "repr": "BKN050",
                         "type": "BKN"
@@ -54,12 +56,14 @@
                 "clouds": [
                     {
                         "altitude": 15,
+                        "direction": null,
                         "modifier": null,
                         "repr": "SCT015",
                         "type": "SCT"
                     },
                     {
                         "altitude": 50,
+                        "direction": null,
                         "modifier": null,
                         "repr": "BKN050",
                         "type": "BKN"
@@ -100,12 +104,14 @@
                 "clouds": [
                     {
                         "altitude": 15,
+                        "direction": null,
                         "modifier": null,
                         "repr": "SCT015",
                         "type": "SCT"
                     },
                     {
                         "altitude": 35,
+                        "direction": null,
                         "modifier": null,
                         "repr": "BKN035",
                         "type": "BKN"
@@ -144,12 +150,14 @@
                 "clouds": [
                     {
                         "altitude": 15,
+                        "direction": null,
                         "modifier": null,
                         "repr": "SCT015",
                         "type": "SCT"
                     },
                     {
                         "altitude": 25,
+                        "direction": null,
                         "modifier": null,
                         "repr": "BKN025",
                         "type": "BKN"
@@ -188,12 +196,14 @@
                 "clouds": [
                     {
                         "altitude": 25,
+                        "direction": null,
                         "modifier": null,
                         "repr": "SCT025",
                         "type": "SCT"
                     },
                     {
                         "altitude": 35,
+                        "direction": null,
                         "modifier": null,
                         "repr": "BKN035",
                         "type": "BKN"
@@ -237,7 +247,7 @@
         "temps": null,
         "time": null
     },
-    "speech": "Starting on August 20th - From midnight to 1 zulu, Winds one two zero at 8kt. Visibility greater than six miles. Showers in the Vicinity. Scattered clouds at 2500ft. Broken layer at 5000ft. From 1 to 5 zulu, Winds zero seven zero at 7kt. Visibility greater than six miles. Showers in the Vicinity. Scattered clouds at 1500ft. Broken layer at 5000ft. From 5 to 9 zulu, Winds zero two zero at 8kt. Visibility greater than six miles. Scattered clouds at 1500ft. Broken layer at 3500ft. From 9 to 17 zulu, Winds zero four zero at 10kt. Visibility greater than six miles. Scattered clouds at 1500ft. Broken layer at 2500ft. From 17 to 6 zulu, Winds zero eight zero at 10kt. Visibility greater than six miles. Scattered clouds at 2500ft. Broken layer at 3500ft",
+    "speech": "Starting on January 20th - From midnight to 1 zulu, Winds one two zero at 8kt. Visibility greater than six miles. Showers in the Vicinity. Scattered clouds at 2500ft. Broken layer at 5000ft. From 1 to 5 zulu, Winds zero seven zero at 7kt. Visibility greater than six miles. Showers in the Vicinity. Scattered clouds at 1500ft. Broken layer at 5000ft. From 5 to 9 zulu, Winds zero two zero at 8kt. Visibility greater than six miles. Scattered clouds at 1500ft. Broken layer at 3500ft. From 9 to 17 zulu, Winds zero four zero at 10kt. Visibility greater than six miles. Scattered clouds at 1500ft. Broken layer at 2500ft. From 17 to 6 zulu, Winds zero eight zero at 10kt. Visibility greater than six miles. Scattered clouds at 2500ft. Broken layer at 3500ft",
     "station_info": {
         "city": "New York City",
         "country": "USA",
@@ -248,6 +258,32 @@
         "longitude": -73.77892556,
         "name": "John F Kennedy International Airport",
         "priority": 1,
+        "runways": [
+            {
+                "ident1": "13R",
+                "ident2": "31L",
+                "length": 14572,
+                "width": 150
+            },
+            {
+                "ident1": "04L",
+                "ident2": "22R",
+                "length": 11351,
+                "width": 150
+            },
+            {
+                "ident1": "13L",
+                "ident2": "31R",
+                "length": 10000,
+                "width": 150
+            },
+            {
+                "ident1": "04R",
+                "ident2": "22L",
+                "length": 8400,
+                "width": 200
+            }
+        ],
         "state": "NY"
     },
     "summary": [

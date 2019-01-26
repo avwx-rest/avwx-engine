@@ -8,12 +8,14 @@
                 "clouds": [
                     {
                         "altitude": 30,
+                        "direction": null,
                         "modifier": "CB",
                         "repr": "SCT030CB",
                         "type": "SCT"
                     },
                     {
                         "altitude": 80,
+                        "direction": null,
                         "modifier": null,
                         "repr": "BKN080",
                         "type": "BKN"
@@ -79,12 +81,14 @@
                 "clouds": [
                     {
                         "altitude": 80,
+                        "direction": null,
                         "modifier": null,
                         "repr": "SCT080",
                         "type": "SCT"
                     },
                     {
                         "altitude": 200,
+                        "direction": null,
                         "modifier": null,
                         "repr": "OVC200",
                         "type": "OVC"
@@ -123,6 +127,7 @@
                 "clouds": [
                     {
                         "altitude": 25,
+                        "direction": null,
                         "modifier": null,
                         "repr": "SCT025",
                         "type": "SCT"
@@ -161,6 +166,7 @@
                 "clouds": [
                     {
                         "altitude": 40,
+                        "direction": null,
                         "modifier": "CB",
                         "repr": "SCT040CB",
                         "type": "SCT"
@@ -201,6 +207,7 @@
                 "clouds": [
                     {
                         "altitude": 30,
+                        "direction": null,
                         "modifier": "CB",
                         "repr": "BKN030CB",
                         "type": "BKN"
@@ -233,12 +240,14 @@
                 "clouds": [
                     {
                         "altitude": 50,
+                        "direction": null,
                         "modifier": null,
                         "repr": "SCT050",
                         "type": "SCT"
                     },
                     {
                         "altitude": 100,
+                        "direction": null,
                         "modifier": null,
                         "repr": "BKN100",
                         "type": "BKN"
@@ -295,6 +304,31 @@
         "longitude": -81.30899306,
         "name": "International Airport",
         "priority": 2,
+        "runways": [
+            {
+                "ident1": "18L",
+                "ident2": "36R",
+                "length": 12005,
+                "width": 200},
+            {
+                "ident1": "18R",
+                "ident2": "36L",
+                "length": 12004,
+                "width": 200
+            },
+            {
+                "ident1": "17R",
+                "ident2": "35L",
+                "length": 10000,
+                "width": 150
+            },
+            {
+                "ident1": "17L",
+                "ident2": "35R",
+                "length": 9000,
+                "width": 150
+            }
+        ],
         "state": "FL"
     },
     "summary": [
