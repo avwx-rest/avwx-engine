@@ -6,7 +6,7 @@ Aviation weather report parsing library
 from abc import abstractmethod
 from datetime import datetime
 # module
-from avwx import metar, taf, translate, summary, speech, service, structs
+from avwx import metar, taf, airep, pirep, translate, summary, speech, service, static, structs
 from avwx.core import valid_station
 from avwx.structs import Station
 
@@ -155,10 +155,9 @@ class Taf(Report):
             self.update()
         return speech.taf(self.data, self.units)
 
-
-class Airep(object):
+class Reports(object):
     """
-    Class to handle aircraft report data
+    Base class containing multiple reports
     """
 
     #: UTC Datetime object when the report was last updated
@@ -168,6 +167,8 @@ class Airep(object):
     station_info: Station = None
 
     raw_reports: [str] = None
+    data: [structs.ReportData] = None
+    units: structs.Units = structs.Units(**static.NA_UNITS)
 
     def __init__(self, station: str = None, lat: float = None, lon: float = None):
         if station:
@@ -194,6 +195,8 @@ class Airep(object):
         """
         if not reports:
             reports = self.service.fetch(lat=self.lat, lon=self.lon)
+        if isinstance(reports, str):
+            reports = [reports]
         if reports == self.raw_reports:
             return False
         self.raw_reports = reports
@@ -210,3 +213,29 @@ class Airep(object):
         self.raw_reports = reports
         self._post_update()
         return True
+
+
+class Pireps(Reports):
+    """
+    Class to handle pilot report data
+    """
+
+    data: [structs.PirepData] = None
+
+    def _post_update(self):
+        self.data = []
+        for report in self.raw_reports:
+            pirep.parse(report)
+
+
+class Aireps(Reports):
+    """
+    Class to handle aircraft report data
+    """
+
+    data: [structs.AirepData] = None
+
+    def _post_update(self):
+        self.data = []
+        for report in self.raw_reports:
+            airep.parse(report)

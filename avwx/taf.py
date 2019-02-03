@@ -9,17 +9,6 @@ from avwx import core, service
 from avwx.static import NA_UNITS, IN_UNITS, TAF_RMK, TAF_NEWLINE
 from avwx.structs import TafData, TafLineData, Units
 
-
-def fetch(station: str) -> str:
-    """
-    Returns TAF report string or raises an error
-
-    Maintains backwards compatability but uses the new Service object.
-    It is recommended to use the Service class directly instead of this function
-    """
-    return service.get_service(station)('taf').fetch(station)
-
-
 def parse(station: str, txt: str) -> TafData:
     """
     Returns TafData and Units dataclasses with parsed data and their associated units

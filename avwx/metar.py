@@ -9,16 +9,6 @@ from avwx import core, remarks, service
 from avwx.static import NA_UNITS, IN_UNITS, FLIGHT_RULES
 from avwx.structs import MetarData, Units
 
-def fetch(station: str) -> str:
-    """
-    Returns METAR report string or raises an error
-    
-    Maintains backwards compatability but uses the new Service object.
-    It is recommended to use the Service class directly instead of this function
-    """
-    return service.get_service(station)('metar').fetch(station)
-
-
 def parse(station: str, txt: str) -> (MetarData, Units):
     """
     Returns MetarData and Units dataclasses with parsed data and their associated units

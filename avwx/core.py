@@ -4,6 +4,7 @@ Contains the core parsing and indent functions of avwx
 
 # stdlib
 import re
+from calendar import monthrange
 from copy import copy
 from datetime import datetime, timedelta
 from itertools import permutations
@@ -173,7 +174,11 @@ def get_taf_remarks(txt: str) -> (str, str):
     return txt, remarks
 
 
-STR_REPL = {' C A V O K ': ' CAVOK ', '?': ' '}
+STR_REPL = {
+    ' C A V O K ': ' CAVOK ',
+    '?': ' ',
+    ' VTB': ' VRB',
+}
 
 
 def sanitize_report_string(txt: str) -> str:
@@ -564,7 +569,7 @@ def get_visibility(wxdata: [str], units: Units) -> ([str], Number):
         item = copy(wxdata[0])
         # Vis reported in statue miles
         if item.endswith('SM'):  # 10SM
-            if item in ('P6SM', 'M1/4SM'):
+            if item in ('P6SM', 'M1/4SM', 'M1/8SM'):
                 visibility = item[:-2]
             elif '/' not in item:
                 visibility = str(int(item[:item.find('SM')]))
@@ -891,36 +896,57 @@ def get_ceiling(clouds: [Cloud]) -> Cloud:
     return None
 
 
-def parse_date(date: str, hour_threshold: int = 200) -> datetime:
+def parse_date(date: str, hour_threshold: int = 200, time_only: bool = False) -> datetime:
     """
     Parses a report timestamp in ddhhZ or ddhhmmZ format
+
+    If time_only, assumes hhmm format with current or previous day
 
     This function assumes the given timestamp is within the hour threshold from current date
     """
     # Format date string
     date = date.strip('Z')
-    if len(date) == 4:
-        date += '00'
-    if not (len(date) == 6 and date.isdigit()):
+    if not date.isdigit():
         return
+    if time_only:
+        if len(date) != 4:
+            return
+        ihour = 0
+    else:
+        if len(date) == 4:
+            date += '00'
+        if len(date) != 6:
+            return
+        ihour = 2
     # Create initial guess
     now = datetime.utcnow()
-    guess = now.replace(day=int(date[0:2]),
-                        hour=int(date[2:4])%24, 
-                        minute=int(date[4:6])%60,
-                        second=0, microsecond=0)
-    hourdiff = (guess-now) / timedelta(minutes=1) / 60
-    # Handle changing months
-    if hourdiff > hour_threshold:
-        guess += relativedelta(months=-1)
-    elif hourdiff < -hour_threshold:
-        guess += relativedelta(months=+1)
+    day = now.day if time_only else int(date[0:2])
+    # Handle situation where next month has less days than current month
+    # Shifted value makes sure that a month shift doesn't happen twice
+    shifted = False
+    if day > monthrange(now.year, now.month)[1]:
+        now += relativedelta(months=-1)
+        shifted = True
+    guess = now.replace(
+        day=day,
+        hour=int(date[ihour:ihour+2])%24,
+        minute=int(date[ihour+2:ihour+4])%60,
+        second=0,
+        microsecond=0
+    )
+    # Handle changing months if not already shifted
+    if not shifted:
+        hourdiff = (guess-now) / timedelta(minutes=1) / 60
+        if hourdiff > hour_threshold:
+            guess += relativedelta(months=-1)
+        elif hourdiff < -hour_threshold:
+            guess += relativedelta(months=+1)
     return guess
 
 
-def make_timestamp(timestamp: str) -> Timestamp:
+def make_timestamp(timestamp: str, time_only: bool = False) -> Timestamp:
     """
     Returns a Timestamp dataclass for a report timestamp in ddhhZ or ddhhmmZ format
     """
     if timestamp:
-        return Timestamp(timestamp, parse_date(timestamp))
+        return Timestamp(timestamp, parse_date(timestamp, time_only=time_only))

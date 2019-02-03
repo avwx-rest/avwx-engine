@@ -98,13 +98,13 @@ class RemarksData(object):
 @dataclass
 class ReportData(object):
     raw: str
-    remarks: str
-    station: str
     time: Timestamp
 
 
 @dataclass
 class SharedData(object):
+    remarks: str
+    station: str
     altimeter: Number
     clouds: [Cloud]
     flight_rules: str
@@ -178,3 +178,14 @@ class TafTrans(object):
     max_temp: str
     min_temp: str
     remarks: dict
+
+
+@dataclass
+class PirepData(ReportData):
+    clouds: [Cloud]
+    sanitized: str
+
+
+@dataclass
+class AirepData(ReportData):
+    pass

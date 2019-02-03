@@ -187,6 +187,7 @@ SPECIAL_NUMBERS = {
     'P6': 'greater than six',
     'P6SM': 'greater than six',
     'M1/4': 'less than one quarter',
+    'M1/8': 'less than one eighth',
     'VRB': 'variable',
 }
 

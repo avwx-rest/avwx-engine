@@ -19,15 +19,6 @@ class TestTaf(unittest.TestCase):
 
     maxDiff = None
 
-    def test_fetch(self):
-        """
-        Tests if the old fetch function returns a report from a Service object
-        """
-        for station in ('KJFK', 'PHNL', 'EGLL', 'RKSI'):
-            report = taf.fetch(station)
-            self.assertIsInstance(report, str)
-            self.assertTrue(report.startswith(station) or report.startswith('AMD '+station))
-
     def test_parse(self):
         """
         Tests returned structs from the parse function
