@@ -90,6 +90,14 @@ class Cloud(object):
 
 
 @dataclass
+class Location(object):
+    repr: str
+    station: str
+    direction: Number
+    distance: Number
+
+
+@dataclass
 class RemarksData(object):
     dewpoint_decimal: float = None
     temperature_decimal: float = None
@@ -98,13 +106,13 @@ class RemarksData(object):
 @dataclass
 class ReportData(object):
     raw: str
+    station: str
     time: Timestamp
+    remarks: str
 
 
 @dataclass
 class SharedData(object):
-    remarks: str
-    station: str
     altimeter: Number
     clouds: [Cloud]
     flight_rules: str
@@ -182,8 +190,16 @@ class TafTrans(object):
 
 @dataclass
 class PirepData(ReportData):
-    clouds: [Cloud]
-    sanitized: str
+    aircraft: str = None
+    altitude: Number = None
+    clouds: [Cloud] = None
+    flight_visibility: Number = None
+    location: Location = None
+    sanitized: str = None
+    temperature: Number = None
+    turbulance: str = None
+    type: str = None
+    wx: [str] = None
 
 
 @dataclass

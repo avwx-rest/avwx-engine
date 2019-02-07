@@ -225,7 +225,7 @@ class Pireps(Reports):
     def _post_update(self):
         self.data = []
         for report in self.raw_reports:
-            pirep.parse(report)
+            self.data.append(pirep.parse(report))
 
 
 class Aireps(Reports):

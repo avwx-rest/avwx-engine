@@ -12,7 +12,7 @@ from itertools import permutations
 from dateutil.relativedelta import relativedelta
 # module
 from avwx.exceptions import BadStation
-from avwx.static import CLOUD_LIST, CLOUD_TRANSLATIONS, METAR_RMK, \
+from avwx.static import CARDINALS, CLOUD_LIST, CLOUD_TRANSLATIONS, METAR_RMK, \
     NA_REGIONS, IN_REGIONS, M_NA_REGIONS, M_IN_REGIONS, FLIGHT_RULES, \
     NUMBER_REPL, FRACTIONS, SPECIAL_NUMBERS, TAF_NEWLINE, \
     TAF_NEWLINE_STARTSWITH, TAF_RMK
@@ -111,6 +111,11 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
     # Check special
     if num in SPECIAL_NUMBERS:
         return Number(repr or num, None, SPECIAL_NUMBERS[num])
+    # Check cardinal direction
+    if num in CARDINALS:
+        if not repr:
+            repr = num
+        num = str(CARDINALS[num])
     # Remove spurious characters from the end
     num = num.rstrip('M.')
     # Create Fraction

@@ -36,6 +36,18 @@ FLIGHT_RULES = ['VFR', 'MVFR', 'IFR', 'LIFR']
 #: List of cloud layer abreviations
 CLOUD_LIST = ['FEW', 'SCT', 'BKN', 'OVC']
 
+#: Dictionary of cardinal direction values
+CARDINALS = {
+    'N': 360,
+    'NE': 45,
+    'E': 90,
+    'SE': 135,
+    'S': 180,
+    'SW': 225,
+    'W': 270,
+    'NW': 315,
+}
+
 #: Dictionary associating WX codes with descriptions
 WX_TRANSLATIONS = {
     'BC': 'Patchy',
