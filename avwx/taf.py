@@ -16,7 +16,7 @@ def parse(station: str, txt: str) -> TafData:
     core.valid_station(station)
     while len(txt) > 3 and txt[:4] in ('TAF ', 'AMD ', 'COR '):
         txt = txt[4:]
-    _, station, time = core.get_station_and_time(txt[:20].split(' '))
+    _, station, time = core.get_station_and_time(txt[:20].split())
     retwx = {
         'end_time': None,
         'raw': txt,
@@ -97,7 +97,7 @@ def parse_na_line(txt: str, units: Units) -> {str: str}:
     Parser for the North American TAF forcast varient
     """
     retwx = {}
-    wxdata = txt.split(' ')
+    wxdata = txt.split()
     wxdata, _, retwx['wind_shear'] = core.sanitize_report_list(wxdata)
     wxdata, retwx['type'], retwx['start_time'], retwx['end_time'] = core.get_type_and_times(wxdata)
     wxdata, retwx['wind_direction'], retwx['wind_speed'],\
@@ -114,7 +114,7 @@ def parse_in_line(txt: str, units: Units) -> {str: str}:
     Parser for the International TAF forcast varient
     """
     retwx = {}
-    wxdata = txt.split(' ')
+    wxdata = txt.split()
     wxdata, _, retwx['wind_shear'] = core.sanitize_report_list(wxdata)
     wxdata, retwx['type'], retwx['start_time'], retwx['end_time'] = core.get_type_and_times(wxdata)
     wxdata, retwx['wind_direction'], retwx['wind_speed'],\

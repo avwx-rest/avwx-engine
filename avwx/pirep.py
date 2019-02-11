@@ -2,7 +2,8 @@
 """
 
 from avwx import core, static
-from avwx.structs import Cloud, Location, Number, PirepData, Timestamp, Units
+from avwx.exceptions import BadStation
+from avwx.structs import Cloud, Icing, Location, Number, PirepData, Timestamp, Turbulance, Units
 
 _units = Units(**static.NA_UNITS)
 
@@ -12,12 +13,22 @@ def _root(item: str) -> dict:
     """
     items = item.split()
     rtype = None
+    station = None
+    # Find valid station
+    for item in items:
+        try:
+            core.valid_station(item)
+            station = item
+            break
+        except BadStation:
+            continue
+    # Determine report type
     if 'UA' in items:
         rtype = 'routine'
     elif 'UUA' in items:
         rtype = 'urgent'
     return {
-        'station': items[0],
+        'station': station,
         'type': rtype,
     }
 
@@ -46,10 +57,12 @@ def _time(item: str) -> Timestamp:
     return core.make_timestamp(item, time_only=True)
 
 
-def _altitude(item: str) -> Number:
+def _altitude(item: str) -> 'Number|str':
     """
     """
-    return core.make_number(item)
+    if item.isdigit():
+        return core.make_number(item)
+    return item
 
 
 def _aircraft(item: str) -> str:
@@ -69,10 +82,29 @@ def _number(item: str) -> Number:
     """
     return core.make_number(item)
 
-def _turbulance(item: str) -> str:
+def _turbulance(item: str) -> Turbulance:
     """
     """
-    return item
+    items = item.split()
+    ret = {'severity': items.pop(0), 'floor': None, 'ceiling': None}
+    if items and '-' in items[0]:
+        for key, val in zip(('floor', 'ceiling'), items[0].split('-')):
+            ret[key] = core.make_number(val)
+    return Turbulance(**ret)
+
+
+def _icing(item: str) -> Icing:
+    """
+    """
+    items = item.split()
+    ret = {'severity': items.pop(0), 'type': None, 'floor': None, 'ceiling': None}
+    for item in items:
+        if '-' in item:
+            for key, val in zip(('floor', 'ceiling'), item.split('-')):
+                ret[key] = core.make_number(val)
+        else:
+            ret['type'] = item
+    return Icing(**ret)
 
 
 def _remarks(item: str) -> str:
@@ -104,6 +136,7 @@ _handlers = {
     'SK': ('clouds', _clouds),
     'TA': ('temperature', _number),
     'TB': ('turbulance', _turbulance),
+    'IC': ('icing', _icing),
     'RM': ('remarks', _remarks),
 }
 

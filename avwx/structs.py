@@ -189,15 +189,28 @@ class TafTrans(object):
 
 
 @dataclass
+class Turbulance(object):
+    severity: str
+    floor: Number = None
+    ceiling: Number = None
+
+
+@dataclass
+class Icing(Turbulance):
+    type: str = None
+
+
+@dataclass
 class PirepData(ReportData):
     aircraft: str = None
     altitude: Number = None
     clouds: [Cloud] = None
     flight_visibility: Number = None
+    icing: Icing = None
     location: Location = None
     sanitized: str = None
     temperature: Number = None
-    turbulance: str = None
+    turbulance: Turbulance = None
     type: str = None
     wx: [str] = None
 

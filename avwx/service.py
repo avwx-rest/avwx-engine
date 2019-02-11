@@ -144,13 +144,16 @@ class NOAA(Service):
                 report = report[len(item)+1:]
         return report
 
-    def _extract(self, raw: str, station: str = None) -> 'str/[str]':
+    def _extract(self, raw: str, station: str = None) -> 'str|[str]':
         """
         Extracts the raw_report element from XML response
         """
         resp = parsexml(raw)
         try:
-            reports = resp['response']['data'][self._targets[self.rtype]]
+            data = resp['response']['data']
+            if data['@num_results'] == '0':
+                return ''
+            reports = data[self._targets[self.rtype]]
         except KeyError:
             raise self.make_err(raw)
         # Only one report exists

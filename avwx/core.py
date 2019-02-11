@@ -91,7 +91,7 @@ def spoken_number(num: str) -> str:
         1 1/2 -> one and one half
     """
     ret = []
-    for part in num.split(' '):
+    for part in num.split():
         if part in FRACTIONS:
             ret.append(FRACTIONS[part])
         else:
@@ -161,10 +161,10 @@ def get_remarks(txt: str) -> ([str], str):
     if sig_index == -1:
         sig_index = len(txt) + 1
     if sig_index > alt_index > -1:
-        return txt[:alt_index + 6].strip().split(' '), txt[alt_index + 7:]
+        return txt[:alt_index + 6].strip().split(), txt[alt_index + 7:]
     elif alt_index > sig_index > -1:
-        return txt[:sig_index].strip().split(' '), txt[sig_index + 1:]
-    return txt.strip().split(' '), ''
+        return txt[:sig_index].strip().split(), txt[sig_index + 1:]
+    return txt.strip().split(), ''
 
 
 def get_taf_remarks(txt: str) -> (str, str):

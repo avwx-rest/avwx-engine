@@ -77,7 +77,7 @@ def parse(rmk: str) -> RemarksData:
     Finds temperature and dewpoint decimal values from the remarks
     """
     rmkdata = {}
-    for item in rmk.split(' '):
+    for item in rmk.split():
         if len(item) in [5, 9] and item[0] == 'T' and item[1:].isdigit():
             rmkdata['temperature_decimal'] = core.make_number(_tdec(item[1:5], None))
             rmkdata['dewpoint_decimal'] = core.make_number(_tdec(item[5:], None))

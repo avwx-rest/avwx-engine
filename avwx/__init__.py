@@ -195,6 +195,8 @@ class Reports(object):
         """
         if not reports:
             reports = self.service.fetch(lat=self.lat, lon=self.lon)
+        if not reports:
+            return False
         if isinstance(reports, str):
             reports = [reports]
         if reports == self.raw_reports:
@@ -208,7 +210,7 @@ class Reports(object):
         Async version of update
         """
         reports = await self.service.async_fetch(lat=self.lat, lon=self.lon)
-        if reports == self.raw_reports:
+        if not reports or reports == self.raw_reports:
             return False
         self.raw_reports = reports
         self._post_update()
