@@ -105,12 +105,9 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
     """
     if not num or is_unknown(num):
         return
-    # Check CAVOK
-    if num == 'CAVOK':
-        return Number('CAVOK', 9999, 'ceiling and visibility ok')
     # Check special
     if num in SPECIAL_NUMBERS:
-        return Number(repr or num, None, SPECIAL_NUMBERS[num])
+        return Number(repr or num, *SPECIAL_NUMBERS[num])
     # Check cardinal direction
     if num in CARDINALS:
         if not repr:
@@ -183,6 +180,7 @@ STR_REPL = {
     ' C A V O K ': ' CAVOK ',
     '?': ' ',
     ' VTB': ' VRB',
+    ' VBR': ' VRB',
 }
 
 
