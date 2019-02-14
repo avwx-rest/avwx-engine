@@ -185,6 +185,13 @@ class Reports(object):
     def _post_update(self):
         pass
 
+    @staticmethod
+    def _report_filter(reports: [str]) -> [str]:
+        """
+        Applies any report filtering before updating raw_reports
+        """
+        return reports
+
     def update(self, reports: [str] = None) -> bool:
         """
         Updates raw_reports and data by fetch recent aircraft reports
@@ -201,7 +208,7 @@ class Reports(object):
             reports = [reports]
         if reports == self.raw_reports:
             return False
-        self.raw_reports = reports
+        self.raw_reports = self._report_filter(reports)
         self._post_update()
         return True
 
@@ -224,6 +231,13 @@ class Pireps(Reports):
 
     data: [structs.PirepData] = None
 
+    @staticmethod
+    def _report_filter(reports: [str]) -> [str]:
+        """
+        Removes AIREPs before updating raw_reports
+        """
+        return [r for r in reports if not r.startswith('ARP')]
+
     def _post_update(self):
         self.data = []
         for report in self.raw_reports:
@@ -236,6 +250,13 @@ class Aireps(Reports):
     """
 
     data: [structs.AirepData] = None
+
+    @staticmethod
+    def _report_filter(reports: [str]) -> [str]:
+        """
+        Removes PIREPs before updating raw_reports
+        """
+        return [r for r in reports if r.startswith('ARP')]
 
     def _post_update(self):
         self.data = []

@@ -1,5 +1,5 @@
 """
-Contains TAF-specific functions for fetching and parsing
+Contains TAF-specific functions for report parsing
 """
 
 # stdlib

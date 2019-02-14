@@ -1,5 +1,5 @@
 """
-Contains METAR-specific functions for fetching and parsing
+Contains METAR-specific functions for report parsing
 """
 
 # stdlib
