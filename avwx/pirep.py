@@ -171,6 +171,8 @@ def parse(report: str) -> PirepData:
     """
     Returns a PirepData object based on the given report
     """
+    if not report:
+        return None
     clean = core.sanitize_report_string(report)
     wxdata, *_ = core.sanitize_report_list(clean.split())
     sanitized = ' '.join(wxdata)

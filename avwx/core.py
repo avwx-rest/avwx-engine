@@ -46,6 +46,17 @@ def uses_na_format(station: str) -> bool:
     raise BadStation("Station doesn't start with a recognized character set")
 
 
+def dedupe(items: list) -> list:
+    """
+    Deduplicates a list while keeping order
+    """
+    ret = []
+    for item in items:
+        if item not in ret:
+            ret.append(item)
+    return ret
+
+
 def is_unknown(val: str) -> bool:
     """
     Returns True if val contains only '/' characters
@@ -181,6 +192,7 @@ STR_REPL = {
     '?': ' ',
     ' VTB': ' VRB',
     ' VBR': ' VRB',
+    'Z/': 'Z ',
 }
 
 
@@ -496,6 +508,8 @@ def get_station_and_time(wxdata: [str]) -> ([str], str, str):
     """
     Returns the report list and removed station ident and time strings
     """
+    if not wxdata:
+        return wxdata, None, None
     station = wxdata.pop(0)
     qtime = wxdata[0]
     if wxdata and qtime.endswith('Z') and qtime[:-1].isdigit():
