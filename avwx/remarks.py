@@ -77,7 +77,7 @@ def parse(rmk: str) -> RemarksData:
     Finds temperature and dewpoint decimal values from the remarks
     """
     rmkdata = {}
-    for item in rmk.split(' '):
+    for item in rmk.split():
         if len(item) in [5, 9] and item[0] == 'T' and item[1:].isdigit():
             rmkdata['temperature_decimal'] = core.make_number(_tdec(item[1:5], None))
             rmkdata['dewpoint_decimal'] = core.make_number(_tdec(item[5:], None))
@@ -111,7 +111,7 @@ def translate(remarks: str) -> {str: str}:
         elif rmk.startswith('SLP'):
             if rmk == 'SLPNO':
                 ret[rmk] = 'Sea level pressure not available'
-            else:
+            elif rlen == 6:
                 ret[rmk] = f'Sea level pressure: 10{rmk[3:5]}.{rmk[5]} hPa'
         # Temp/Dew with decimal: T02220183
         elif rlen == 9 and rmk[0] == 'T' and rmk[1:].isdigit():

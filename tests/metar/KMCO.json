@@ -8,24 +8,28 @@
         "clouds": [
             {
                 "altitude": 14,
+                "direction": null,
                 "modifier": null,
                 "repr": "FEW014",
                 "type": "FEW"
             },
             {
                 "altitude": 55,
+                "direction": null,
                 "modifier": "CB",
                 "repr": "BKN055CB",
                 "type": "BKN"
             },
             {
                 "altitude": 90,
+                "direction": null,
                 "modifier": null,
                 "repr": "BKN090",
                 "type": "BKN"
             },
             {
                 "altitude": 250,
+                "direction": null,
                 "modifier": null,
                 "repr": "OVC250",
                 "type": "OVC"
@@ -92,6 +96,31 @@
         "longitude": -81.30899306,
         "name": "International Airport",
         "priority": 2,
+        "runways": [
+            {
+                "ident1": "18L",
+                "ident2": "36R",
+                "length": 12005,
+                "width": 200},
+            {
+                "ident1": "18R",
+                "ident2": "36L",
+                "length": 12004,
+                "width": 200
+            },
+            {
+                "ident1": "17R",
+                "ident2": "35L",
+                "length": 10000,
+                "width": 150
+            },
+            {
+                "ident1": "17L",
+                "ident2": "35R",
+                "length": 9000,
+                "width": 150
+            }
+        ],
         "state": "FL"
     },
     "summary": "Winds NW-320 at 9kt, Vis 10sm, Temp 24\u00b0C, Dew 23\u00b0C, Alt 30.09 inHg, Thunderstorm, Few clouds at 1400ft, Broken layer at 5500ft (Cumulonimbus), Broken layer at 9000ft, Overcast layer at 25000ft",

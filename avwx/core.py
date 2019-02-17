@@ -3,6 +3,8 @@ Contains the core parsing and indent functions of avwx
 """
 
 # stdlib
+import re
+from calendar import monthrange
 from copy import copy
 from datetime import datetime, timedelta
 from itertools import permutations
@@ -10,7 +12,7 @@ from itertools import permutations
 from dateutil.relativedelta import relativedelta
 # module
 from avwx.exceptions import BadStation
-from avwx.static import CLOUD_LIST, CLOUD_TRANSLATIONS, METAR_RMK, \
+from avwx.static import CARDINALS, CLOUD_LIST, CLOUD_TRANSLATIONS, METAR_RMK, \
     NA_REGIONS, IN_REGIONS, M_NA_REGIONS, M_IN_REGIONS, FLIGHT_RULES, \
     NUMBER_REPL, FRACTIONS, SPECIAL_NUMBERS, TAF_NEWLINE, \
     TAF_NEWLINE_STARTSWITH, TAF_RMK
@@ -42,6 +44,17 @@ def uses_na_format(station: str) -> bool:
     elif station[:2] in M_IN_REGIONS:
         return False
     raise BadStation("Station doesn't start with a recognized character set")
+
+
+def dedupe(items: list) -> list:
+    """
+    Deduplicates a list while keeping order
+    """
+    ret = []
+    for item in items:
+        if item not in ret:
+            ret.append(item)
+    return ret
 
 
 def is_unknown(val: str) -> bool:
@@ -89,7 +102,7 @@ def spoken_number(num: str) -> str:
         1 1/2 -> one and one half
     """
     ret = []
-    for part in num.split(' '):
+    for part in num.split():
         if part in FRACTIONS:
             ret.append(FRACTIONS[part])
         else:
@@ -103,12 +116,16 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
     """
     if not num or is_unknown(num):
         return
-    # Check CAVOK
-    if num == 'CAVOK':
-        return Number('CAVOK', 9999, 'ceiling and visibility ok')
     # Check special
     if num in SPECIAL_NUMBERS:
-        return Number(repr or num, None, SPECIAL_NUMBERS[num])
+        return Number(repr or num, *SPECIAL_NUMBERS[num])
+    # Check cardinal direction
+    if num in CARDINALS:
+        if not repr:
+            repr = num
+        num = str(CARDINALS[num])
+    # Remove spurious characters from the end
+    num = num.rstrip('M.')
     # Create Fraction
     if '/' in num:
         nmr, dnm = [int(i) for i in num.split('/')]
@@ -152,10 +169,10 @@ def get_remarks(txt: str) -> ([str], str):
     if sig_index == -1:
         sig_index = len(txt) + 1
     if sig_index > alt_index > -1:
-        return txt[:alt_index + 6].strip().split(' '), txt[alt_index + 7:]
+        return txt[:alt_index + 6].strip().split(), txt[alt_index + 7:]
     elif alt_index > sig_index > -1:
-        return txt[:sig_index].strip().split(' '), txt[sig_index + 1:]
-    return txt.strip().split(' '), ''
+        return txt[:sig_index].strip().split(), txt[sig_index + 1:]
+    return txt.strip().split(), ''
 
 
 def get_taf_remarks(txt: str) -> (str, str):
@@ -170,7 +187,13 @@ def get_taf_remarks(txt: str) -> (str, str):
     return txt, remarks
 
 
-STR_REPL = {' C A V O K ': ' CAVOK ', '?': ' '}
+STR_REPL = {
+    ' C A V O K ': ' CAVOK ',
+    '?': ' ',
+    ' VTB': ' VRB',
+    ' VBR': ' VRB',
+    'Z/': 'Z ',
+}
 
 
 def sanitize_report_string(txt: str) -> str:
@@ -217,10 +240,8 @@ def sanitize_line(txt: str) -> str:
     """
     Fixes common mistakes with 'new line' signifiers so that they can be recognized
     """
-    for key in LINE_FIXES:
-        index = txt.find(key)
-        if index > -1:
-            txt = txt[:index] + LINE_FIXES[key] + txt[index + len(key):]
+    for key, fix in LINE_FIXES.items():
+        txt = txt.replace(key, fix)
     #Fix when space is missing following new line signifiers
     for item in ['BECMG', 'TEMPO']:
         if item in txt and item + ' ' not in txt:
@@ -274,6 +295,27 @@ def extra_space_exists(str1: str, str2: str) -> bool:
     return False
 
 
+_cloud_group = '('+'|'.join(CLOUD_LIST)+')'
+CLOUD_SPACE_PATTERNS = [re.compile(pattern) for pattern in (
+    r'(?=.+)' + _cloud_group + r'\d{3}(\w{2,3})?$', # SCT010BKN021
+    r'M?\d{2}\/M?\d{2}$', # BKN01826/25
+)]
+
+
+def extra_space_needed(item: str) -> int:
+    """
+    Returns the index where a space must be inserted or None
+    """
+    # For items starting with cloud list
+    if item[:3] in CLOUD_LIST:
+        for pattern in CLOUD_SPACE_PATTERNS:
+            sep = pattern.search(item)
+            if sep is None:
+                continue
+            if sep.start():
+                return sep.start()
+
+
 ITEM_REMV = ['AUTO', 'COR', 'NSC', 'NCD', '$', 'KT', 'M', '.', 'RTD', 'SPECI', 'METAR', 'CORR']
 ITEM_REPL = {'CALM': '00000KT'}
 VIS_PERMUTATIONS = [''.join(p) for p in permutations('P6SM')]
@@ -324,8 +366,16 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
         # Fix inconsistant 'P6SM' Ex: TP6SM or 6PSM -> P6SM
         elif ilen > 3 and item[-4:] in VIS_PERMUTATIONS:
             wxdata[i] = 'P6SM'
+        # Fix misplaced KT 22022KTG40
+        elif ilen == 10 and 'KTG' in item and item[:5].isdigit():
+            wxdata[i] = item.replace('KTG', 'G') + 'KT'
+        # Fix leading character mistypes in wind
+        elif ilen > 7 and not item[0].isdigit() and not item.startswith('VRB') and item.endswith('KT'):
+            while not item[0].isdigit() and item[:3] != 'VRB':
+                item = item[1:]
+            wxdata[i] = item
         # Fix wind T
-        elif (ilen == 6 and item[5] in ['K', 'T'] and (item[:5].isdigit() or item.startswith('VRB'))) \
+        elif (ilen == 6 and item[5] in ['K', 'T'] and (item[:5].isdigit() or (item.startswith('VRB') and item[:3].isdigit()))) \
             or (ilen == 9 and item[8] in ['K', 'T'] and item[5] == 'G' and (item[:5].isdigit() or item.startswith('VRB'))):
             wxdata[i] = item[:-1] + 'KT'
         # Fix joined TX-TN
@@ -338,6 +388,11 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
                 tx_index = item.find('TX')
                 wxdata.insert(i + 1, item[:tx_index])
                 wxdata[i] = item[tx_index:]
+        # Fix situations where a space is missing
+        sep = extra_space_needed(item)
+        if sep:
+            wxdata.insert(i + 1, item[sep:])
+            wxdata[i] = item[:sep]
     return wxdata, runway_vis, shear
 
 
@@ -357,7 +412,7 @@ def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], N
             altimeter = wxdata.pop()[1:]
         # Other version but prefer normal if available
         elif target[0] == 'Q':
-            if wxdata[-2][0] == 'A':
+            if len(wxdata) > 1 and wxdata[-2][0] == 'A':
                 wxdata.pop()
                 altimeter = wxdata.pop()[1:]
             else:
@@ -374,7 +429,7 @@ def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], N
                 altimeter = altimeter[:altimeter.find('/')]
         # Other version but prefer normal if available
         elif target[0] == 'A':
-            if wxdata[-2][0] == 'Q':
+            if len(wxdata) > 1 and wxdata[-2][0] == 'Q':
                 wxdata.pop()
                 altimeter = wxdata.pop()[1:]
             else:
@@ -386,6 +441,7 @@ def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], N
     # convert to Number
     if not altimeter:
         return wxdata, None
+    altimeter = altimeter.replace('/', '')
     if units.altimeter == 'inHg':
         value = altimeter[:2] + '.' + altimeter[2:]
     else:
@@ -452,6 +508,8 @@ def get_station_and_time(wxdata: [str]) -> ([str], str, str):
     """
     Returns the report list and removed station ident and time strings
     """
+    if not wxdata:
+        return wxdata, None, None
     station = wxdata.pop(0)
     qtime = wxdata[0]
     if wxdata and qtime.endswith('Z') and qtime[:-1].isdigit():
@@ -474,7 +532,11 @@ def get_wind(wxdata: [str], units: Units) -> ([str], Number, Number, Number, [Nu
         item = copy(wxdata[0])
         for rep in ['(E)']:
             item = item.replace(rep, '')
-        item = item.replace('O', '0')
+        for replacements in (
+            ('O', '0'),
+            ('/', ''),
+        ):
+            item = item.replace(*replacements)
         #09010KT, 09010G15KT
         if item.endswith('KT') \
         or item.endswith('KTS') \
@@ -524,7 +586,7 @@ def get_visibility(wxdata: [str], units: Units) -> ([str], Number):
         item = copy(wxdata[0])
         # Vis reported in statue miles
         if item.endswith('SM'):  # 10SM
-            if item in ('P6SM', 'M1/4SM'):
+            if item in ('P6SM', 'M1/4SM', 'M1/8SM'):
                 visibility = item[:-2]
             elif '/' not in item:
                 visibility = str(int(item[:item.find('SM')]))
@@ -851,36 +913,57 @@ def get_ceiling(clouds: [Cloud]) -> Cloud:
     return None
 
 
-def parse_date(date: str, hour_threshold: int = 200) -> datetime:
+def parse_date(date: str, hour_threshold: int = 200, time_only: bool = False) -> datetime:
     """
     Parses a report timestamp in ddhhZ or ddhhmmZ format
+
+    If time_only, assumes hhmm format with current or previous day
 
     This function assumes the given timestamp is within the hour threshold from current date
     """
     # Format date string
     date = date.strip('Z')
-    if len(date) == 4:
-        date += '00'
-    if not (len(date) == 6 and date.isdigit()):
+    if not date.isdigit():
         return
+    if time_only:
+        if len(date) != 4:
+            return
+        ihour = 0
+    else:
+        if len(date) == 4:
+            date += '00'
+        if len(date) != 6:
+            return
+        ihour = 2
     # Create initial guess
     now = datetime.utcnow()
-    guess = now.replace(day=int(date[0:2]),
-                        hour=int(date[2:4])%24, 
-                        minute=int(date[4:6])%60,
-                        second=0, microsecond=0)
-    hourdiff = (guess-now) / timedelta(minutes=1) / 60
-    # Handle changing months
-    if hourdiff > hour_threshold:
-        guess += relativedelta(months=-1)
-    elif hourdiff < -hour_threshold:
-        guess += relativedelta(months=+1)
+    day = now.day if time_only else int(date[0:2])
+    # Handle situation where next month has less days than current month
+    # Shifted value makes sure that a month shift doesn't happen twice
+    shifted = False
+    if day > monthrange(now.year, now.month)[1]:
+        now += relativedelta(months=-1)
+        shifted = True
+    guess = now.replace(
+        day=day,
+        hour=int(date[ihour:ihour+2])%24,
+        minute=int(date[ihour+2:ihour+4])%60,
+        second=0,
+        microsecond=0
+    )
+    # Handle changing months if not already shifted
+    if not shifted:
+        hourdiff = (guess-now) / timedelta(minutes=1) / 60
+        if hourdiff > hour_threshold:
+            guess += relativedelta(months=-1)
+        elif hourdiff < -hour_threshold:
+            guess += relativedelta(months=+1)
     return guess
 
 
-def make_timestamp(timestamp: str) -> Timestamp:
+def make_timestamp(timestamp: str, time_only: bool = False) -> Timestamp:
     """
     Returns a Timestamp dataclass for a report timestamp in ddhhZ or ddhhmmZ format
     """
     if timestamp:
-        return Timestamp(timestamp, parse_date(timestamp))
+        return Timestamp(timestamp, parse_date(timestamp, time_only=time_only))

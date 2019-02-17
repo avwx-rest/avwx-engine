@@ -8,12 +8,14 @@
         "clouds": [
             {
                 "altitude": 55,
+                "direction": null,
                 "modifier": null,
                 "repr": "BKN055",
                 "type": "BKN"
             },
             {
                 "altitude": 80,
+                "direction": null,
                 "modifier": null,
                 "repr": "BKN080",
                 "type": "BKN"
@@ -78,6 +80,32 @@
         "longitude": -73.77892556,
         "name": "John F Kennedy International Airport",
         "priority": 1,
+        "runways": [
+            {
+                "ident1": "13R",
+                "ident2": "31L",
+                "length": 14572,
+                "width": 150
+            },
+            {
+                "ident1": "04L",
+                "ident2": "22R",
+                "length": 11351,
+                "width": 150
+            },
+            {
+                "ident1": "13L",
+                "ident2": "31R",
+                "length": 10000,
+                "width": 150
+            },
+            {
+                "ident1": "04R",
+                "ident2": "22L",
+                "length": 8400,
+                "width": 200
+            }
+        ],
         "state": "NY"
     },
     "summary": "Winds ESE-110 at 6kt, Vis 10sm, Temp 21\u00b0C, Dew 19\u00b0C, Alt 30.05 inHg, Broken layer at 5500ft, Broken layer at 8000ft",

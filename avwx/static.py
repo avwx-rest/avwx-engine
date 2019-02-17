@@ -36,6 +36,18 @@ FLIGHT_RULES = ['VFR', 'MVFR', 'IFR', 'LIFR']
 #: List of cloud layer abreviations
 CLOUD_LIST = ['FEW', 'SCT', 'BKN', 'OVC']
 
+#: Dictionary of cardinal direction values
+CARDINALS = {
+    'N': 360,
+    'NE': 45,
+    'E': 90,
+    'SE': 135,
+    'S': 180,
+    'SW': 225,
+    'W': 270,
+    'NW': 315,
+}
+
 #: Dictionary associating WX codes with descriptions
 WX_TRANSLATIONS = {
     'BC': 'Patchy',
@@ -184,10 +196,16 @@ FRACTIONS = {
 
 #: Dictionary associating special number values with their spoken version
 SPECIAL_NUMBERS = {
-    'P6': 'greater than six',
-    'P6SM': 'greater than six',
-    'M1/4': 'less than one quarter',
-    'VRB': 'variable',
+    'CAVOK': (9999, 'ceiling and visibility ok'),
+    'M1/4': (None, 'less than one quarter'),
+    'M1/4SM': (None, 'less than one quarter'),
+    'M1/8': (None, 'less than one eighth'),
+    'M1/8SM': (None, 'less than one eighth'),
+    'P49': (None, 'greater than four nine'),
+    'P6': (None, 'greater than six'),
+    'P6SM': (None, 'greater than six'),
+    'P99': (None, 'greater than nine nine'),
+    'VRB': (None, 'variable'),
 }
 
 #: Static remarks translation elements

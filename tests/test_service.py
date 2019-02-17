@@ -62,7 +62,7 @@ class TestService(unittest.TestCase):
                 self.serv.fetch(station)
         # Should raise exception due to empty url
         if self.name == 'Service':
-            with self.assertRaises(AttributeError):
+            with self.assertRaises(NotImplementedError):
                 self.serv.fetch('KJFK')
 
     @pytest.mark.asyncio
@@ -124,4 +124,4 @@ class TestModule(unittest.TestCase):
             (('SKBO', 'SKPP'), service.MAC),
         ):
             for station in stations:
-                self.assertIsInstance(service.get_service(station)(station), serv)
+                self.assertIsInstance(service.get_service(station)('metar'), serv)

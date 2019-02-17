@@ -8,18 +8,21 @@
         "clouds": [
             {
                 "altitude": 25,
+                "direction": null,
                 "modifier": null,
                 "repr": "FEW025",
                 "type": "FEW"
             },
             {
                 "altitude": 38,
+                "direction": null,
                 "modifier": null,
                 "repr": "SCT038",
                 "type": "SCT"
             },
             {
                 "altitude": 55,
+                "direction": null,
                 "modifier": null,
                 "repr": "SCT055",
                 "type": "SCT"
@@ -84,6 +87,44 @@
         "longitude": -157.9224287,
         "name": "International Airport",
         "priority": 6,
+        "runways": [
+            {
+                "length": 12300,
+                "width": 150,
+                "ident1": "08L",
+                "ident2": "26R"
+            },
+            {
+                "length": 12000,
+                "width": 200,
+                "ident1": "08R",
+                "ident2": "26L"
+            },
+            {
+                "length": 9000,
+                "width": 150,
+                "ident1": "04R",
+                "ident2": "22L"
+            },
+            {
+                "length": 6952,
+                "width": 150,
+                "ident1": "04L",
+                "ident2": "22R"
+            },
+            {
+                "length": 5000,
+                "width": 300,
+                "ident1": "08W",
+                "ident2": "26W"
+            },
+            {
+                "length": 3000,
+                "width": 150,
+                "ident1": "04W",
+                "ident2": "22W"
+            }
+        ],
         "state": "HI"
     },
     "summary": "Winds E-090 at 13kt, Vis 10sm, Temp 32\u00b0C, Dew 22\u00b0C, Alt 29.95 inHg, Few clouds at 2500ft, Scattered clouds at 3800ft, Scattered clouds at 5500ft",

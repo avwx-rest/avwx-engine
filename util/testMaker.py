@@ -26,12 +26,12 @@ def make_metar_test(station: str):
         'station_info': asdict(m.station_info)
     }
 
-def make_taf_test(station: str):
+def make_taf_test(station: str, report: str = None):
     """
     Builds TAF test files
     """
     t = avwx.Taf(station)
-    t.update()
+    t.update(report)
     data = asdict(t.data)
     # Clear timestamp due to parse_date limitations
     for key in ('time', 'start_time', 'end_time'):

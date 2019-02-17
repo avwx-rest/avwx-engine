@@ -8,6 +8,7 @@
                 "clouds": [
                     {
                         "altitude": 35,
+                        "direction": null,
                         "modifier": null,
                         "repr": "BKN035",
                         "type": "BKN"
@@ -46,6 +47,7 @@
                 "clouds": [
                     {
                         "altitude": 12,
+                        "direction": null,
                         "modifier": null,
                         "repr": "BKN012",
                         "type": "BKN"
@@ -76,6 +78,7 @@
                 "clouds": [
                     {
                         "altitude": 6,
+                        "direction": null,
                         "modifier": null,
                         "repr": "BKN006",
                         "type": "BKN"
@@ -126,6 +129,20 @@
         "longitude": -0.450555556,
         "name": "Heathrow",
         "priority": 6,
+        "runways": [
+            {
+                "length": 12799,
+                "width": 164,
+                "ident1": "09L",
+                "ident2": "27R"
+            },
+            {
+                "length": 12001,
+                "width": 148,
+                "ident1": "09R",
+                "ident2": "27L"
+            }
+        ],
         "state": "ENG"
     },
     "summary": [

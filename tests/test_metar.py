@@ -15,14 +15,7 @@ from avwx import metar, structs, Metar
 
 class TestMetar(unittest.TestCase):
 
-    def test_fetch(self):
-        """
-        Tests if the old fetch function returns a report from a Service object
-        """
-        for station in ('KJFK', 'PHNL', 'EGLL', 'RKSI'):
-            report = metar.fetch(station)
-            self.assertIsInstance(report, str)
-            self.assertTrue(report.startswith(station))
+    maxDiff = None
 
     def test_parse(self):
         """

@@ -1,5 +1,5 @@
 """
-Contains TAF-specific functions for fetching and parsing
+Contains TAF-specific functions for report parsing
 """
 
 # stdlib
@@ -9,35 +9,26 @@ from avwx import core, service
 from avwx.static import NA_UNITS, IN_UNITS, TAF_RMK, TAF_NEWLINE
 from avwx.structs import TafData, TafLineData, Units
 
-
-def fetch(station: str) -> str:
-    """
-    Returns TAF report string or raises an error
-
-    Maintains backwards compatability but uses the new Service object.
-    It is recommended to use the Service class directly instead of this function
-    """
-    return service.get_service(station)('taf').fetch(station)
-
-
-def parse(station: str, txt: str) -> TafData:
+def parse(station: str, report: str) -> TafData:
     """
     Returns TafData and Units dataclasses with parsed data and their associated units
     """
+    if not report:
+        return None, None
     core.valid_station(station)
-    while len(txt) > 3 and txt[:4] in ('TAF ', 'AMD ', 'COR '):
-        txt = txt[4:]
-    _, station, time = core.get_station_and_time(txt[:20].split(' '))
+    while len(report) > 3 and report[:4] in ('TAF ', 'AMD ', 'COR '):
+        report = report[4:]
+    _, station, time = core.get_station_and_time(report[:20].split())
     retwx = {
         'end_time': None,
-        'raw': txt,
+        'raw': report,
         'remarks': None,
         'start_time': None,
         'station': station,
         'time': core.make_timestamp(time)
     }
-    txt = txt.replace(station, '')
-    txt = txt.replace(time, '').strip()
+    report = report.replace(station, '')
+    report = report.replace(time, '').strip()
     if core.uses_na_format(station):
         use_na = True
         units = Units(**NA_UNITS)
@@ -45,9 +36,9 @@ def parse(station: str, txt: str) -> TafData:
         use_na = False
         units = Units(**IN_UNITS)
     # Find and remove remarks
-    txt, retwx['remarks'] = core.get_taf_remarks(txt)
+    report, retwx['remarks'] = core.get_taf_remarks(report)
     # Split and parse each line
-    lines = core.split_taf(txt)
+    lines = core.split_taf(report)
     parsed_lines = parse_lines(lines, units, use_na)
     # Perform additional info extract and corrections
     if parsed_lines:
@@ -103,12 +94,12 @@ def parse_lines(lines: [str], units: Units, use_na: bool = True) -> [dict]:
     return parsed_lines
 
 
-def parse_na_line(txt: str, units: Units) -> {str: str}:
+def parse_na_line(line: str, units: Units) -> {str: str}:
     """
     Parser for the North American TAF forcast varient
     """
     retwx = {}
-    wxdata = txt.split(' ')
+    wxdata = line.split()
     wxdata, _, retwx['wind_shear'] = core.sanitize_report_list(wxdata)
     wxdata, retwx['type'], retwx['start_time'], retwx['end_time'] = core.get_type_and_times(wxdata)
     wxdata, retwx['wind_direction'], retwx['wind_speed'],\
@@ -120,12 +111,12 @@ def parse_na_line(txt: str, units: Units) -> {str: str}:
     return retwx
 
 
-def parse_in_line(txt: str, units: Units) -> {str: str}:
+def parse_in_line(line: str, units: Units) -> {str: str}:
     """
     Parser for the International TAF forcast varient
     """
     retwx = {}
-    wxdata = txt.split(' ')
+    wxdata = line.split()
     wxdata, _, retwx['wind_shear'] = core.sanitize_report_list(wxdata)
     wxdata, retwx['type'], retwx['start_time'], retwx['end_time'] = core.get_type_and_times(wxdata)
     wxdata, retwx['wind_direction'], retwx['wind_speed'],\

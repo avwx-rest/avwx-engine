@@ -1,5 +1,5 @@
 """
-Contains METAR-specific functions for fetching and parsing
+Contains METAR-specific functions for report parsing
 """
 
 # stdlib
@@ -9,32 +9,25 @@ from avwx import core, remarks, service
 from avwx.static import NA_UNITS, IN_UNITS, FLIGHT_RULES
 from avwx.structs import MetarData, Units
 
-def fetch(station: str) -> str:
-    """
-    Returns METAR report string or raises an error
-    
-    Maintains backwards compatability but uses the new Service object.
-    It is recommended to use the Service class directly instead of this function
-    """
-    return service.get_service(station)('metar').fetch(station)
-
-
-def parse(station: str, txt: str) -> (MetarData, Units):
+def parse(station: str, report: str) -> (MetarData, Units):
     """
     Returns MetarData and Units dataclasses with parsed data and their associated units
     """
     core.valid_station(station)
-    return parse_na(txt) if core.uses_na_format(station[:2]) else parse_in(txt)
+    if not report:
+        return None, None
+    return parse_na(report) if core.uses_na_format(station[:2]) else parse_in(report)
 
 
-def parse_na(txt: str) -> (MetarData, Units):
+def parse_na(report: str) -> (MetarData, Units):
     """
     Parser for the North American METAR variant
     """
     units = Units(**NA_UNITS)
-    clean = core.sanitize_report_string(txt)
-    wxresp = {'raw': txt, 'sanitized': clean}
+    clean = core.sanitize_report_string(report)
+    wxresp = {'raw': report, 'sanitized': clean}
     wxdata, wxresp['remarks'] = core.get_remarks(clean)
+    wxdata = core.dedupe(wxdata)
     wxdata, wxresp['runway_visibility'], _ = core.sanitize_report_list(wxdata)
     wxdata, wxresp['station'], wxresp['time'] = core.get_station_and_time(wxdata)
     wxdata, wxresp['clouds'] = core.get_clouds(wxdata)
@@ -50,14 +43,15 @@ def parse_na(txt: str) -> (MetarData, Units):
     return MetarData(**wxresp), units
 
 
-def parse_in(txt: str) -> (MetarData, Units):
+def parse_in(report: str) -> (MetarData, Units):
     """
     Parser for the International METAR variant
     """
     units = Units(**IN_UNITS)
-    clean = core.sanitize_report_string(txt)
-    wxresp = {'raw': txt, 'sanitized': clean}
+    clean = core.sanitize_report_string(report)
+    wxresp = {'raw': report, 'sanitized': clean}
     wxdata, wxresp['remarks'] = core.get_remarks(clean)
+    wxdata = core.dedupe(wxdata)
     wxdata, wxresp['runway_visibility'], _ = core.sanitize_report_list(wxdata)
     wxdata, wxresp['station'], wxresp['time'] = core.get_station_and_time(wxdata)
     if 'CAVOK' not in wxdata:
