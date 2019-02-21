@@ -99,7 +99,7 @@ def parse_na_line(line: str, units: Units) -> {str: str}:
     Parser for the North American TAF forcast varient
     """
     retwx = {}
-    wxdata = line.split()
+    wxdata = core.dedupe(line.split())
     wxdata, _, retwx['wind_shear'] = core.sanitize_report_list(wxdata)
     wxdata, retwx['type'], retwx['start_time'], retwx['end_time'] = core.get_type_and_times(wxdata)
     wxdata, retwx['wind_direction'], retwx['wind_speed'],\
@@ -116,7 +116,7 @@ def parse_in_line(line: str, units: Units) -> {str: str}:
     Parser for the International TAF forcast varient
     """
     retwx = {}
-    wxdata = line.split()
+    wxdata = core.dedupe(line.split())
     wxdata, _, retwx['wind_shear'] = core.sanitize_report_list(wxdata)
     wxdata, retwx['type'], retwx['start_time'], retwx['end_time'] = core.get_type_and_times(wxdata)
     wxdata, retwx['wind_direction'], retwx['wind_speed'],\

@@ -104,10 +104,14 @@ def _turbulance(item: str) -> Turbulance:
     Convert reported turbulance to a Turbulance object
     """
     items = item.split()
-    ret = {'severity': items.pop(0), 'floor': None, 'ceiling': None}
-    if items and '-' in items[0]:
-        for key, val in zip(('floor', 'ceiling'), items[0].split('-')):
-            ret[key] = core.make_number(val)
+    ret = {'severity': None, 'floor': None, 'ceiling': None}
+    for i, item in enumerate(items):
+        hloc = item.find('-')
+        if hloc > -1 and item[:hloc].isdigit() and item[hloc+1:].isdigit():
+            for key, val in zip(('floor', 'ceiling'), items.pop(i).split('-')):
+                ret[key] = core.make_number(val)
+            break
+    ret['severity'] = ' '.join(items)
     return Turbulance(**ret)
 
 
@@ -117,12 +121,14 @@ def _icing(item: str) -> Icing:
     """
     items = item.split()
     ret = {'severity': items.pop(0), 'type': None, 'floor': None, 'ceiling': None}
-    for item in items:
-        if '-' in item:
-            for key, val in zip(('floor', 'ceiling'), item.split('-')):
+    for i, item in enumerate(items):
+        hloc = item.find('-')
+        if hloc > -1 and item[:hloc].isdigit() and item[hloc+1:].isdigit():
+            for key, val in zip(('floor', 'ceiling'), items.pop(i).split('-')):
                 ret[key] = core.make_number(val)
-        else:
-            ret['type'] = item
+            break
+    if items:
+        ret['type'] = items[0]
     return Icing(**ret)
 
 

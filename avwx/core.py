@@ -64,6 +64,9 @@ def is_unknown(val: str) -> bool:
     for char in ('/', 'X'):
         if val == char * len(val):
             return True
+    for item in ('UNKN',):
+        if val.upper() == item:
+            return True
     return False
 
 

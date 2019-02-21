@@ -11,7 +11,7 @@ from urllib.parse import urlencode
 import aiohttp
 from xmltodict import parse as parsexml
 # module
-from avwx.core import valid_station
+from avwx.core import dedupe, valid_station
 from avwx.exceptions import InvalidRequest, SourceError
 
 _atimeout = aiohttp.ClientTimeout(total=10)
@@ -68,7 +68,7 @@ class Service(object):
         report = self._extract(resp.read().decode('utf-8'), station)
         # This split join replaces all *whitespace elements with a single space
         if isinstance(report, list):
-            return [' '.join(r.split()) for r in report]
+            return dedupe(' '.join(r.split()) for r in report)
         return ' '.join(report.split())
 
     async def async_fetch(self, station: str = None, lat: float = None, lon: float = None) -> str:
@@ -91,7 +91,7 @@ class Service(object):
         report = self._extract(text, station)
         # This split join replaces all *whitespace elements with a single space
         if isinstance(report, list):
-            return [' '.join(r.split()) for r in report]
+            return dedupe(' '.join(r.split()) for r in report)
         return ' '.join(report.split())
 
 
