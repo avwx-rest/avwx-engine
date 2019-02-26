@@ -195,6 +195,8 @@ class AMO(Service):
             report = resp['response']['body']['items']['item'][self.rtype.lower() + 'Msg']
         except KeyError:
             raise self.make_err(raw)
+        if not report:
+            raise self.make_err('The station might not exist')
         # Replace line breaks
         report = report.replace('\n', '')
         # Remove excess leading and trailing data
