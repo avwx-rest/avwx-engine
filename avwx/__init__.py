@@ -67,7 +67,7 @@ class Report(object):
         obj.update(report)
         return obj
 
-    def update(self, report: str = None) -> bool:
+    def update(self, report: str = None, disable_post: bool = False) -> bool:
         """
         Updates raw, data, and translations by fetching and parsing the report
 
@@ -80,10 +80,11 @@ class Report(object):
         if not report or report == self.raw:
             return False
         self.raw = report
-        self._post_update()
+        if not disable_post:
+            self._post_update()
         return True
 
-    async def async_update(self) -> bool:
+    async def async_update(self, disable_post: bool = False) -> bool:
         """
         Async version of update
         """
@@ -91,7 +92,8 @@ class Report(object):
         if not report or report == self.raw:
             return False
         self.raw = report
-        self._post_update()
+        if not disable_post:
+            self._post_update()
         return True
 
     def __repr__(self) -> str:
@@ -166,7 +168,7 @@ class Reports(object):
     #: Provide basic station info if given at init
     station_info: Station = None
 
-    raw_reports: [str] = None
+    raw: [str] = None
     data: [structs.ReportData] = None
     units: structs.Units = structs.Units(**static.NA_UNITS)
 
@@ -192,7 +194,7 @@ class Reports(object):
         """
         return reports
 
-    def update(self, reports: [str] = None) -> bool:
+    def update(self, reports: [str] = None, disable_post: bool = False) -> bool:
         """
         Updates raw_reports and data by fetch recent aircraft reports
 
@@ -206,21 +208,23 @@ class Reports(object):
                 return False
         if isinstance(reports, str):
             reports = [reports]
-        if reports == self.raw_reports:
+        if reports == self.raw:
             return False
-        self.raw_reports = self._report_filter(reports)
-        self._post_update()
+        self.raw = self._report_filter(reports)
+        if not disable_post:
+            self._post_update()
         return True
 
-    async def async_update(self) -> bool:
+    async def async_update(self, disable_post: bool = False) -> bool:
         """
         Async version of update
         """
         reports = await self.service.async_fetch(lat=self.lat, lon=self.lon)
-        if not reports or reports == self.raw_reports:
+        if not reports or reports == self.raw:
             return False
-        self.raw_reports = reports
-        self._post_update()
+        self.raw = reports
+        if not disable_post:
+            self._post_update()
         return True
 
 
@@ -240,7 +244,7 @@ class Pireps(Reports):
 
     def _post_update(self):
         self.data = []
-        for report in self.raw_reports:
+        for report in self.raw:
             self.data.append(pirep.parse(report))
 
 
@@ -260,5 +264,5 @@ class Aireps(Reports):
 
     def _post_update(self):
         self.data = []
-        for report in self.raw_reports:
+        for report in self.raw:
             airep.parse(report)
