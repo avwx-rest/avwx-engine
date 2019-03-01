@@ -135,8 +135,14 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
         unpacked = unpack_fraction(num)
         spoken = spoken_number(unpacked)
         return Fraction(repr or num, nmr/dnm, spoken, nmr, dnm, unpacked)
+    # Handle Minus values with errors like 0M04
+    if 'M' in num:
+        val = num.replace('M', '-')
+        while val[0] != '-':
+            val = val[1:]
+    else:
+        val = num
     # Create Number
-    val = num.replace('M', '-')
     val = float(val) if '.' in num else int(val)
     return Number(repr or num, val, spoken_number(speak or str(val)))
 
@@ -195,6 +201,7 @@ STR_REPL = {
     '?': ' ',
     ' VTB': ' VRB',
     ' VBR': ' VRB',
+    ' ERB': ' VRB',
     'Z/': 'Z ',
 }
 
@@ -447,9 +454,9 @@ def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], N
     if wxdata and (wxdata[-1][0] == 'A' or wxdata[-1][0] == 'Q'):
         wxdata.pop()
     # convert to Number
+    altimeter = altimeter.replace('/', '')
     if not altimeter:
         return wxdata, None
-    altimeter = altimeter.replace('/', '')
     if units.altimeter == 'inHg':
         value = altimeter[:2] + '.' + altimeter[2:]
     else:
