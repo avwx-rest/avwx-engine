@@ -409,35 +409,40 @@ def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], N
         return wxdata, None
     altimeter = ''
     target = wxdata[-1]
+    # Handle QNH prefix:
+    buf = 1
+    if target.startswith('QNH'):
+        buf = 3
+        target = target.replace('QNH', 'Q')
     if version == 'NA':
         # Version target
         if target[0] == 'A':
-            altimeter = wxdata.pop()[1:]
+            altimeter = wxdata.pop()[buf:]
         # Other version but prefer normal if available
         elif target[0] == 'Q':
             if len(wxdata) > 1 and wxdata[-2][0] == 'A':
                 wxdata.pop()
-                altimeter = wxdata.pop()[1:]
+                altimeter = wxdata.pop()[buf:]
             else:
                 units.altimeter = 'hPa'
-                altimeter = wxdata.pop()[1:].lstrip('.')
+                altimeter = wxdata.pop()[buf:].lstrip('.')
         # Else grab the digits
         elif len(target) == 4 and target.isdigit():
             altimeter = wxdata.pop()
     elif version == 'IN':
         # Version target
         if target[0] == 'Q':
-            altimeter = wxdata.pop()[1:].lstrip('.')
+            altimeter = wxdata.pop()[buf:].lstrip('.')
             if '/' in altimeter:
                 altimeter = altimeter[:altimeter.find('/')]
         # Other version but prefer normal if available
         elif target[0] == 'A':
             if len(wxdata) > 1 and wxdata[-2][0] == 'Q':
                 wxdata.pop()
-                altimeter = wxdata.pop()[1:]
+                altimeter = wxdata.pop()[buf:]
             else:
                 units.altimeter = 'inHg'
-                altimeter = wxdata.pop()[1:]
+                altimeter = wxdata.pop()[buf:]
     #Some stations report both, but we only need one
     if wxdata and (wxdata[-1][0] == 'A' or wxdata[-1][0] == 'Q'):
         wxdata.pop()
@@ -461,6 +466,9 @@ def get_taf_alt_ice_turb(wxdata: [str]) -> ([str], str, [str], [str]):
     for i, item in reversed(list(enumerate(wxdata))):
         if len(item) > 6 and item.startswith('QNH') and item[3:7].isdigit():
             altimeter = wxdata.pop(i)[3:7]
+            if altimeter[0] in ('2', '3',):
+                altimeter = altimeter[:2] + '.' + altimeter[2:]
+            altimeter = make_number(altimeter)
         elif item.isdigit():
             if item[0] == '6':
                 icing.append(wxdata.pop(i))
@@ -947,13 +955,15 @@ def parse_date(date: str, hour_threshold: int = 200, time_only: bool = False) ->
     if day > monthrange(now.year, now.month)[1]:
         now += relativedelta(months=-1)
         shifted = True
-    guess = now.replace(
-        day=day,
-        hour=int(date[ihour:ihour+2])%24,
-        minute=int(date[ihour+2:ihour+4])%60,
-        second=0,
-        microsecond=0
-    )
+    try:
+        guess = now.replace(
+            day=day,
+            hour=int(date[ihour:ihour+2])%24,
+            minute=int(date[ihour+2:ihour+4])%60,
+            second=0, microsecond=0
+        )
+    except ValueError:
+        return
     # Handle changing months if not already shifted
     if not shifted:
         hourdiff = (guess-now) / timedelta(minutes=1) / 60
