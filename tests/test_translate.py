@@ -31,16 +31,16 @@ class TestShared(unittest.TestCase):
         """
         Tests altimeter translation and conversion
         """
-        for alt, unit, translation in (
-            ('', 'hPa', ''),
-            ('1020', 'hPa', '1020 hPa (30.12 inHg)'),
-            ('0999', 'hPa', '0999 hPa (29.5 inHg)'),
-            ('1012', 'hPa', '1012 hPa (29.88 inHg)'),
-            ('3000', 'inHg', '30.00 inHg (1016 hPa)'),
-            ('2992', 'inHg', '29.92 inHg (1013 hPa)'),
-            ('3005', 'inHg', '30.05 inHg (1018 hPa)'),
+        for alt, repr, unit, translation in (
+            ('', '', 'hPa', ''),
+            ('1020', '1020', 'hPa', '1020 hPa (30.12 inHg)'),
+            ('0999', '0999', 'hPa', '0999 hPa (29.5 inHg)'),
+            ('1012', '1012', 'hPa', '1012 hPa (29.88 inHg)'),
+            ('30.00', '3000', 'inHg', '30.00 inHg (1016 hPa)'),
+            ('29.92', '2992', 'inHg', '29.92 inHg (1013 hPa)'),
+            ('30.05', '3005', 'inHg', '30.05 inHg (1018 hPa)'),
         ):
-            self.assertEqual(translate.altimeter(core.make_number(alt), unit), translation)
+            self.assertEqual(translate.altimeter(core.make_number(alt, repr), unit), translation)
 
     def test_clouds(self):
         """
@@ -159,7 +159,7 @@ class TestMetar(unittest.TestCase):
         """
         units = structs.Units(**static.NA_UNITS)
         data = {
-            'altimeter': core.make_number('2992'),
+            'altimeter': core.make_number('29.92', '2992'),
             'clouds': [core.make_cloud('BKN015CB')],
             'dewpoint': core.make_number('M01'),
             'other': ['+RA'],
@@ -235,7 +235,7 @@ class TestTaf(unittest.TestCase):
         """
         units = structs.Units(**static.NA_UNITS)
         line_data = {
-            'altimeter': core.make_number('2992'),
+            'altimeter': core.make_number('29.92', '2992'),
             'clouds': [core.make_cloud('BKN015CB')],
             'icing': ['611005'],
             'other': ['+RA'],

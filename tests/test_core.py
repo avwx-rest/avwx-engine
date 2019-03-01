@@ -556,7 +556,7 @@ class TestTaf(unittest.TestCase):
         for wx, *data  in (
             (['1'], '', [], []),
             (['1', '512345', '612345'], '', ['612345'], ['512345']),
-            (['QNH1234', '1', '612345'], '1234', ['612345'], [])
+            (['QNH1234', '1', '612345'], core.make_number('1234'), ['612345'], [])
         ):
             self.assertEqual(core.get_taf_alt_ice_turb(wx), (['1'], *data))
 
