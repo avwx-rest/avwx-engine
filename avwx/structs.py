@@ -83,8 +83,9 @@ class Timestamp(object):
 @dataclass
 class Cloud(object):
     repr: str
-    type: str
-    altitude: int
+    type: str = None
+    base: int = None
+    top: int = None
     modifier: str = None
     direction: str = None
 

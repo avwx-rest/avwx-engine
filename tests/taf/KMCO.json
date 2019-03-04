@@ -7,17 +7,19 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 30,
+                        "base": 30,
                         "direction": null,
                         "modifier": "CB",
                         "repr": "SCT030CB",
+                        "top": null,
                         "type": "SCT"
                     },
                     {
-                        "altitude": 80,
+                        "base": 80,
                         "direction": null,
                         "modifier": null,
                         "repr": "BKN080",
+                        "top": null,
                         "type": "BKN"
                     }
                 ],
@@ -80,17 +82,19 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 80,
+                        "base": 80,
                         "direction": null,
                         "modifier": null,
                         "repr": "SCT080",
+                        "top": null,
                         "type": "SCT"
                     },
                     {
-                        "altitude": 200,
+                        "base": 200,
                         "direction": null,
                         "modifier": null,
                         "repr": "OVC200",
+                        "top": null,
                         "type": "OVC"
                     }
                 ],
@@ -126,10 +130,11 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 25,
+                        "base": 25,
                         "direction": null,
                         "modifier": null,
                         "repr": "SCT025",
+                        "top": null,
                         "type": "SCT"
                     }
                 ],
@@ -165,10 +170,11 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 40,
+                        "base": 40,
                         "direction": null,
                         "modifier": "CB",
                         "repr": "SCT040CB",
+                        "top": null,
                         "type": "SCT"
                     }
                 ],
@@ -206,10 +212,11 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 30,
+                        "base": 30,
                         "direction": null,
                         "modifier": "CB",
                         "repr": "BKN030CB",
+                        "top": null,
                         "type": "BKN"
                     }
                 ],
@@ -239,17 +246,19 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 50,
+                        "base": 50,
                         "direction": null,
                         "modifier": null,
                         "repr": "SCT050",
+                        "top": null,
                         "type": "SCT"
                     },
                     {
-                        "altitude": 100,
+                        "base": 100,
                         "direction": null,
                         "modifier": null,
                         "repr": "BKN100",
+                        "top": null,
                         "type": "BKN"
                     }
                 ],

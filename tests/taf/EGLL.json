@@ -7,10 +7,11 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 35,
+                        "base": 35,
                         "direction": null,
                         "modifier": null,
                         "repr": "BKN035",
+                        "top": null,
                         "type": "BKN"
                     }
                 ],
@@ -46,10 +47,11 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 12,
+                        "base": 12,
                         "direction": null,
                         "modifier": null,
                         "repr": "BKN012",
+                        "top": null,
                         "type": "BKN"
                     }
                 ],
@@ -77,10 +79,11 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 6,
+                        "base": 6,
                         "direction": null,
                         "modifier": null,
                         "repr": "BKN006",
+                        "top": null,
                         "type": "BKN"
                     }
                 ],

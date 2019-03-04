@@ -7,24 +7,27 @@
         },
         "clouds": [
             {
-                "altitude": 25,
+                "base": 25,
                 "direction": null,
                 "modifier": null,
                 "repr": "FEW025",
+                "top": null,
                 "type": "FEW"
             },
             {
-                "altitude": 38,
+                "base": 38,
                 "direction": null,
                 "modifier": null,
                 "repr": "SCT038",
+                "top": null,
                 "type": "SCT"
             },
             {
-                "altitude": 55,
+                "base": 55,
                 "direction": null,
                 "modifier": null,
                 "repr": "SCT055",
+                "top": null,
                 "type": "SCT"
             }
         ],

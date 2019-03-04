@@ -328,40 +328,29 @@ class TestGlobal(BaseTest):
         ):
             self.assertEqual(core.sanitize_cloud(bad), good)
 
-    def test_split_cloud(self):
-        """
-        Tests that cloud strings and fixed and split into their two or three elements
-        """
-        for cloud, out in (
-            ('SCT060', ['SCT', 60]),
-            ('FEWO03', ['FEW', 3]),
-            ('BKNC015', ['BKN', 15, 'C']),
-            ('OVC120TS', ['OVC', 120, 'TS']),
-            ('VV002', ['VV', 2]),
-            ('SCT', ['SCT', None]),
-            ('FEW027///', ['FEW', 27, None]),
-        ):
-            self.assertEqual(core.split_cloud(cloud), out)
 
     def test_make_cloud(self):
         """
         Tests helper function which returns a Cloud dataclass
         """
         for cloud, out in (
-            ('SCT060', ['SCT', 60, None]),
-            ('FEWO03', ['FEW', 3, None]),
-            ('BKNC015', ['BKN', 15, 'C']),
-            ('OVC120TS', ['OVC', 120, 'TS']),
-            ('VV002', ['VV', 2, None]),
-            ('SCT', ['SCT', None, None]),
-            ('FEW027///', ['FEW', 27, None]),
-            ('FEW//////', ['FEW', None, None]),
-            ('FEW///TS', ['FEW', None, 'TS']),
+            ('SCT060', ['SCT', 60, None, None]),
+            ('FEWO03', ['FEW', 3, None, None]),
+            ('BKNC015', ['BKN', 15, None, 'C']),
+            ('OVC120TS', ['OVC', 120, None, 'TS']),
+            ('VV002', ['VV', 2, None, None]),
+            ('SCT', ['SCT', None, None, None]),
+            ('FEW027///', ['FEW', 27, None, None]),
+            ('FEW//////', ['FEW', None, None, None]),
+            ('FEW///TS', ['FEW', None, None, 'TS']),
+            ('OVC100-TOP110', ['OVC', 100, 110, None]),
+            ('OVC065-TOPUNKN', ['OVC', 65, None, None]),
+            ('SCT-BKN050-TOP100', ['SCT-BKN', 50, 100, None]),
         ):
             ret_cloud = core.make_cloud(cloud)
             self.assertIsInstance(ret_cloud, structs.Cloud)
             self.assertEqual(ret_cloud.repr, cloud)
-            for i, key in enumerate(('type', 'altitude', 'modifier')):
+            for i, key in enumerate(('type', 'base', 'top', 'modifier')):
                 self.assertEqual(getattr(ret_cloud, key), out[i])
 
     def test_get_clouds(self):
@@ -378,7 +367,7 @@ class TestGlobal(BaseTest):
             self.assertEqual(wx, ['1'])
             for i, cloud in enumerate(ret_clouds):
                 self.assertIsInstance(cloud, structs.Cloud)
-                for j, key in enumerate(('type', 'altitude', 'modifier')):
+                for j, key in enumerate(('type', 'base', 'modifier')):
                     self.assertEqual(getattr(cloud, key), clouds[i][j])
 
     def test_get_flight_rules(self):

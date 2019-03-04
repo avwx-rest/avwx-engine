@@ -801,38 +801,12 @@ def sanitize_cloud(cloud: str) -> str:
     """
     if len(cloud) < 4:
         return cloud
-    if not cloud[3].isdigit() and cloud[3] != '/':
+    if not cloud[3].isdigit() and cloud[3] not in ('/', '-'):
         if cloud[3] == 'O':
             cloud = cloud[:3] + '0' + cloud[4:]  # Bad "O": FEWO03 -> FEW003
-        else:  # Move modifiers to end: BKNC015 -> BKN015C
+        elif cloud[3] != 'U':  # Move modifiers to end: BKNC015 -> BKN015C
             cloud = cloud[:3] + cloud[4:] + cloud[3]
     return cloud
-
-
-def split_cloud(cloud: str) -> [str]:
-    """
-    Transforms a cloud string into a list of strings: [Type, Height (, Optional Modifier)]
-    """
-    split = []
-    cloud = sanitize_cloud(cloud)
-    if cloud.startswith('VV'):
-        split.append(cloud[:2])
-        cloud = cloud[2:]
-    while len(cloud) >= 3:
-        split.append(cloud[:3])
-        cloud = cloud[3:]
-    if cloud:
-        split.append(cloud)
-    # Nullify unknown elements
-    for i, item in enumerate(split):
-        if is_unknown(item):
-            split[i] = None
-    # Add null altitude or convert to int
-    if len(split) == 1:
-        split.append(None)
-    elif isinstance(split[1], str) and split[1].isdigit():
-        split[1] = int(split[1])
-    return split
 
 
 def make_cloud(cloud: str) -> Cloud:
@@ -841,7 +815,41 @@ def make_cloud(cloud: str) -> Cloud:
 
     This function assumes the input is potentially valid
     """
-    return Cloud(cloud, *split_cloud(cloud))
+    els = {'type': None, 'base': None, 'top': None, 'modifier': None}
+    _c = sanitize_cloud(cloud).replace('/', '')
+    # Separate top
+    topi = _c.find('-TOP')
+    if topi > -1:
+        els['top'], _c = _c[topi+4:], _c[:topi]
+    # Separate type
+    ## VV003
+    if _c.startswith('VV'):
+        els['type'], _c = _c[:2], _c[2:]
+    ## FEW010
+    elif len(_c) >= 3 and _c[:3] in CLOUD_LIST:
+        els['type'], _c = _c[:3], _c[3:]
+    ## BKN-OVC065
+    if len(_c) > 4 and _c[0] == '-' and _c[1:4] in CLOUD_LIST:
+        els['type'] += _c[:4]
+        _c = _c[4:]
+    # Separate base
+    if len(_c) >= 3 and _c[:3].isdigit():
+        els['base'], _c = _c[:3], _c[3:]
+    elif len(_c) >= 4 and _c[:4] == 'UNKN':
+        _c = _c[4:]
+    # Remainder is considered modifiers
+    if _c:
+        els['modifier'] = _c
+    # Nullify unknown elements and convert ints
+    for k, v in els.items():
+        if not isinstance(v, str):
+            continue
+        if is_unknown(v):
+            els[k] = None
+        elif v.isdigit():
+            els[k] = int(v)
+    # Make Cloud
+    return Cloud(cloud, **els)
 
 
 def get_clouds(wxdata: [str]) -> ([str], list):
@@ -855,7 +863,7 @@ def get_clouds(wxdata: [str]) -> ([str], list):
             clouds.append(make_cloud(cloud))
     # Attempt cloud sort. Fails if None values are present
     try:
-        clouds.sort(key=lambda cloud: (cloud.altitude, cloud.type))
+        clouds.sort(key=lambda cloud: (cloud.base, cloud.type))
     except TypeError:
         clouds.reverse() # Restores original report order
     return wxdata, clouds
@@ -882,7 +890,7 @@ def get_flight_rules(vis: Number, ceiling: Cloud) -> int:
     else:
         vis = vis.value
     # Parse ceiling
-    cld = ceiling.altitude if ceiling else 99
+    cld = ceiling.base if ceiling else 99
     # Determine flight rules
     if (vis <= 5) or (cld <= 30):
         if (vis < 3) or (cld < 10):
@@ -926,7 +934,7 @@ def get_ceiling(clouds: [Cloud]) -> Cloud:
     Prevents errors due to lack of cloud information (eg. '' or 'FEW///')
     """
     for cloud in clouds:
-        if cloud.altitude and cloud.type in ('OVC', 'BKN', 'VV'):
+        if cloud.base and cloud.type in ('OVC', 'BKN', 'VV'):
             return cloud
     return None
 

@@ -7,10 +7,11 @@
         },
         "clouds": [
             {
-                "altitude": 31,
+                "base": 31,
                 "direction": null,
                 "modifier": null,
                 "repr": "OVC031",
+                "top": null,
                 "type": "OVC"
             }
         ],

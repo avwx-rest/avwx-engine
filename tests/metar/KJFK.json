@@ -7,17 +7,19 @@
         },
         "clouds": [
             {
-                "altitude": 55,
+                "base": 55,
                 "direction": null,
                 "modifier": null,
                 "repr": "BKN055",
+                "top": null,
                 "type": "BKN"
             },
             {
-                "altitude": 80,
+                "base": 80,
                 "direction": null,
                 "modifier": null,
                 "repr": "BKN080",
+                "top": null,
                 "type": "BKN"
             }
         ],

@@ -7,31 +7,35 @@
         },
         "clouds": [
             {
-                "altitude": 14,
+                "base": 14,
                 "direction": null,
                 "modifier": null,
                 "repr": "FEW014",
+                "top": null,
                 "type": "FEW"
             },
             {
-                "altitude": 55,
+                "base": 55,
                 "direction": null,
                 "modifier": "CB",
                 "repr": "BKN055CB",
+                "top": null,
                 "type": "BKN"
             },
             {
-                "altitude": 90,
+                "base": 90,
                 "direction": null,
                 "modifier": null,
                 "repr": "BKN090",
+                "top": null,
                 "type": "BKN"
             },
             {
-                "altitude": 250,
+                "base": 250,
                 "direction": null,
                 "modifier": null,
                 "repr": "OVC250",
+                "top": null,
                 "type": "OVC"
             }
         ],
