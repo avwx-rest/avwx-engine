@@ -202,7 +202,10 @@ STR_REPL = {
     ' VTB': ' VRB',
     ' VBR': ' VRB',
     ' ERB': ' VRB',
+    ' VRV': ' VRB',
     'Z/': 'Z ',
+    'KKT ': 'KT ',
+    ' /34SM': '3/4SM',
 }
 
 
@@ -590,7 +593,7 @@ def get_wind(wxdata: [str], units: Units) -> ([str], Number, Number, Number, [Nu
         variable = [make_number(i, speak=i) for i in wxdata.pop(0).split('V')]
     # Convert to Number
     direction = make_number(direction, speak=direction)
-    speed = make_number(speed)
+    speed = make_number(speed.strip('BV'))
     gust = make_number(gust)
     return wxdata, direction, speed, gust, variable
 
@@ -606,9 +609,9 @@ def get_visibility(wxdata: [str], units: Units) -> ([str], Number):
         if item.endswith('SM'):  # 10SM
             if item in ('P6SM', 'M1/4SM', 'M1/8SM'):
                 visibility = item[:-2]
-            elif '/' not in item:
-                visibility = str(int(item[:item.find('SM')]))
-            else:
+            elif item[:-2].isdigit():
+                visibility = str(int(item[:-2]))
+            elif '/' in item:
                 visibility = item[:item.find('SM')]  # 1/2SM
             wxdata.pop(0)
             units.visibility = 'sm'
@@ -623,8 +626,8 @@ def get_visibility(wxdata: [str], units: Units) -> ([str], Number):
         elif len(item) == 5 and item[1:].isdigit() and item[0] in ['M', 'P', 'B']:
             visibility = wxdata.pop(0)[1:]
             units.visibility = 'm'
-        elif item.endswith('KM') and item[:item.find('KM')].isdigit():
-            visibility = item[:item.find('KM')] + '000'
+        elif item.endswith('KM') and item[:-2].isdigit():
+            visibility = item[:-2] + '000'
             wxdata.pop(0)
             units.visibility = 'm'
         # Vis statute miles but split Ex: 2 1/2SM

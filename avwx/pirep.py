@@ -2,7 +2,7 @@
 Functions for parsing PIREPs
 """
 
-from avwx import core, static
+from avwx import core, static, structs
 from avwx.exceptions import BadStation
 from avwx.structs import Cloud, Icing, Location, Number, PirepData, Timestamp, Turbulance, Units
 
@@ -47,9 +47,9 @@ def _location(item: str) -> Location:
         # MLB
         if ilen < 5:
             station = item
-        # KLGA220015
-        elif ilen == 10 and item[4:].isdigit():
-            station, direction, distance = item[:4], item[4:7], item[7:]
+        # MKK360002 or KLGA220015
+        elif ilen in (9, 10,) and item[-6:].isdigit():
+            station, direction, distance = item[:-6], item[-6:-3], item[-3:]
     # 10 WGON
     elif items[0].isdigit():
         station, direction, distance = items[1][-3:], items[1][:-3], items[0]
@@ -90,7 +90,13 @@ def _clouds(item: str) -> [Cloud]:
     """
     Convert cloud element to a list of Clouds
     """
-    return [core.make_cloud(cloud) for cloud in item.split()]
+    clouds = item.split()
+    # BASES 004 TOPS 016
+    if 'BASES' in clouds and 'TOPS' in clouds:
+        base = clouds[clouds.index('BASES')+1]
+        top = clouds[clouds.index('TOPS')+1]
+        return [structs.Cloud(item, base=base, top=top)]
+    return [core.make_cloud(cloud) for cloud in clouds]
 
 
 def _number(item: str) -> Number:
