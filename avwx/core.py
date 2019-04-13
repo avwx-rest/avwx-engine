@@ -143,6 +143,8 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
     else:
         val = num
     # Create Number
+    if not val:
+        return
     val = float(val) if '.' in num else int(val)
     return Number(repr or num, val, spoken_number(speak or str(val)))
 
@@ -203,6 +205,9 @@ STR_REPL = {
     ' VBR': ' VRB',
     ' ERB': ' VRB',
     ' VRV': ' VRB',
+    ' VR0': ' VRB0',
+    ' VB0': ' VRB0',
+    ' 0I0': ' 090',
     'Z/': 'Z ',
     'KKT ': 'KT ',
     ' /34SM': '3/4SM',
@@ -327,6 +332,15 @@ def extra_space_needed(item: str) -> int:
                 continue
             if sep.start():
                 return sep.start()
+    # TAF newline connected to previous element
+    for key in TAF_NEWLINE:
+        if key in item and not item.startswith(key):
+            return item.find(key)
+    for key in TAF_NEWLINE_STARTSWITH:
+        if key in item and not item.startswith(key):
+            sep = item.find(key)
+            if item[sep+len(key):].isdigit():
+                return sep
 
 
 ITEM_REMV = ['AUTO', 'COR', 'NSC', 'NCD', '$', 'KT', 'M', '.', 'RTD', 'SPECI', 'METAR', 'CORR']
@@ -348,6 +362,7 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
     runway_vis = []
     for i, item in reversed(list(enumerate(wxdata))):
         ilen = len(item)
+        invi = len(wxdata) - i
         # Remove elements containing only '/'
         if is_unknown(item):
             wxdata.pop(i)
@@ -382,14 +397,19 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
         # Fix misplaced KT 22022KTG40
         elif ilen == 10 and 'KTG' in item and item[:5].isdigit():
             wxdata[i] = item.replace('KTG', 'G') + 'KT'
+        # Fix doubled timestamp 111200Z 111200Z11020KT
+        elif ilen > 7 and i < len(wxdata)-1 and len(wxdata[invi-1]) == 7 \
+            and wxdata[invi-1][-1] == 'Z' and item.startswith(wxdata[invi-1]):
+            wxdata[i] = item[7:]
         # Fix leading character mistypes in wind
         elif ilen > 7 and not item[0].isdigit() and not item.startswith('VRB') and item.endswith('KT'):
             while not item[0].isdigit() and item[:3] != 'VRB':
                 item = item[1:]
             wxdata[i] = item
         # Fix wind T
-        elif (ilen == 6 and item[5] in ['K', 'T'] and (item[:5].isdigit() or (item.startswith('VRB') and item[:3].isdigit()))) \
-            or (ilen == 9 and item[8] in ['K', 'T'] and item[5] == 'G' and (item[:5].isdigit() or item.startswith('VRB'))):
+        elif not item.endswith('KT') and (\
+            (ilen == 6 and item[5] in ['K', 'T'] and (item[:5].isdigit() or (item.startswith('VRB') and item[:3].isdigit()))) \
+            or (ilen == 9 and item[8] in ['K', 'T'] and item[5] == 'G' and (item[:5].isdigit() or item.startswith('VRB')))):
             wxdata[i] = item[:-1] + 'KT'
         # Fix joined TX-TN
         elif ilen > 16 and len(item.split('/')) == 3:

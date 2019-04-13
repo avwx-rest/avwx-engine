@@ -197,6 +197,18 @@ class TestGlobal(BaseTest):
         ):
             self.assertFalse(core.extra_space_exists(*strings))
 
+    def test_extra_space_needed(self):
+        """
+        Tests if two elements should be split and where
+        """
+        for item, sep in (
+            ('21016G28KTPROB40', 10),
+            ('VCSHINTER', 4),
+            ('PROB30', None),
+            ('A2992', None),
+        ):
+            self.assertEqual(core.extra_space_needed(item), sep)
+
     def test_sanitize_report_list(self):
         """
         Tests a function which fixes common mistakes while the report is a list
@@ -204,6 +216,7 @@ class TestGlobal(BaseTest):
         for line, fixed in (
             ('KJFK AUTO 123456Z ////// KT 10SM 20/10', 'KJFK 123456Z 10SM 20/10'),
             ('METAR EGLL CALM RETS 6SPM CLR Q 1000', 'EGLL 00000KT TS P6SM Q1000'),
+            ('TLPL 111200Z 111200Z11020KT Q1015', 'TLPL 111200Z 11020KT Q1015')
         ):
             line, fixed = line.split(), fixed.split()
             self.assertEqual(core.sanitize_report_list(line), (fixed, [], ''))
