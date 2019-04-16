@@ -30,6 +30,23 @@ class BaseTest(unittest.TestCase):
 
 class TestGlobal(BaseTest):
 
+    def test_dedupe(self):
+        """
+        Tests list deduplication
+        """
+        for before, after in (
+            ([1, 2, 3, 2, 1], [1, 2, 3]),
+            ([4, 4, 4, 4], [4]),
+            ([1, 5, 1, 1, 3, 5], [1, 5, 3])
+        ):
+            self.assertEqual(core.dedupe(before), after)
+        for before, after in (
+            ([1, 2, 3, 2, 1], [1, 2, 3, 2, 1]),
+            ([4, 4, 4, 4], [4]),
+            ([1, 5, 1, 1, 3, 5], [1, 5, 1, 3, 5])
+        ):
+            self.assertEqual(core.dedupe(before, only_neighbors=True), after)
+
     def test_valid_station(self):
         """
         While not designed to catch all non-existant station idents,
@@ -73,6 +90,15 @@ class TestGlobal(BaseTest):
         # Bad type
         with self.assertRaises(TypeError):
             core.is_unknown(None)
+
+    def test_is_timestamp(self):
+        """
+        Tests determining if a string is a timestamp element
+        """
+        for ts in ('123456Z', '987654Z',):
+            self.assertTrue(core.is_timestamp(ts))
+        for nts in ('', '123456Z123', '1234', '1234Z',):
+            self.assertFalse(core.is_timestamp(nts))
 
     def test_unpack_fraction(self):
         """
@@ -204,6 +230,7 @@ class TestGlobal(BaseTest):
         for item, sep in (
             ('21016G28KTPROB40', 10),
             ('VCSHINTER', 4),
+            ('151200Z18002KT', 7),
             ('PROB30', None),
             ('A2992', None),
         ):
@@ -216,7 +243,9 @@ class TestGlobal(BaseTest):
         for line, fixed in (
             ('KJFK AUTO 123456Z ////// KT 10SM 20/10', 'KJFK 123456Z 10SM 20/10'),
             ('METAR EGLL CALM RETS 6SPM CLR Q 1000', 'EGLL 00000KT TS P6SM Q1000'),
-            ('TLPL 111200Z 111200Z11020KT Q1015', 'TLPL 111200Z 11020KT Q1015')
+            ('TLPL 111200Z 111200Z11020KT Q1015', 'TLPL 111200Z 11020KT Q1015'),
+            ('SECU 151200Z 151200Z18002KT Q1027', 'SECU 151200Z 18002KT Q1027'),
+            ('KJFK 1 1 1 1 1 1 2 1', 'KJFK 1 2 1'),
         ):
             line, fixed = line.split(), fixed.split()
             self.assertEqual(core.sanitize_report_list(line), (fixed, [], ''))
@@ -262,8 +291,9 @@ class TestGlobal(BaseTest):
             (['KJFK', '123456Z', '1'], ['1'], 'KJFK', '123456Z'),
             (['KJFK', '123456', '1'], ['1'], 'KJFK', '123456Z'),
             (['KJFK', '1234Z', '1'], ['1'], 'KJFK', '1234Z'),
-            (['KJFK', '1234', '1'], ['1234', '1'], 'KJFK', ''),
-            (['KJFK', '1'], ['1'], 'KJFK', '')
+            (['KJFK', '1234', '1'], ['1234', '1'], 'KJFK', None),
+            (['KJFK', '1'], ['1'], 'KJFK', None),
+            (['KJFK'], [], 'KJFK', None),
         ):
             self.assertEqual(core.get_station_and_time(wx), (ret, station, time))
 

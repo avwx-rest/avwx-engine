@@ -46,13 +46,15 @@ def uses_na_format(station: str) -> bool:
     raise BadStation("Station doesn't start with a recognized character set")
 
 
-def dedupe(items: list) -> list:
+def dedupe(items: list, only_neighbors: bool = False) -> list:
     """
     Deduplicates a list while keeping order
+    
+    If only_neighbors is True, dedupe will only check neighboring values
     """
     ret = []
     for item in items:
-        if item not in ret:
+        if (only_neighbors and ret and ret[-1] != item) or item not in ret:
             ret.append(item)
     return ret
 
@@ -160,6 +162,13 @@ def find_first_in_list(txt: str, str_list: [str]) -> int:
         if start > txt.find(item) > -1:
             start = txt.find(item)
     return start if len(txt) + 1 > start > -1 else -1
+
+
+def is_timestamp(item: str) -> bool:
+    """
+    Returns True if the item matches the timestamp format
+    """
+    return len(item) == 7 and item[-1] == 'Z' and item[:-1].isdigit()
 
 
 def get_remarks(txt: str) -> ([str], str):
@@ -322,7 +331,7 @@ CLOUD_SPACE_PATTERNS = [re.compile(pattern) for pattern in (
 
 def extra_space_needed(item: str) -> int:
     """
-    Returns the index where a space must be inserted or None
+    Returns the index where the string should be separated or None
     """
     # For items starting with cloud list
     if item[:3] in CLOUD_LIST:
@@ -332,6 +341,9 @@ def extra_space_needed(item: str) -> int:
                 continue
             if sep.start():
                 return sep.start()
+    # Connected timestamp
+    if len(item) > 7 and is_timestamp(item[:7]):
+        return 7
     # TAF newline connected to previous element
     for key in TAF_NEWLINE:
         if key in item and not item.startswith(key):
@@ -397,10 +409,6 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
         # Fix misplaced KT 22022KTG40
         elif ilen == 10 and 'KTG' in item and item[:5].isdigit():
             wxdata[i] = item.replace('KTG', 'G') + 'KT'
-        # Fix doubled timestamp 111200Z 111200Z11020KT
-        elif ilen > 7 and i < len(wxdata)-1 and len(wxdata[invi-1]) == 7 \
-            and wxdata[invi-1][-1] == 'Z' and item.startswith(wxdata[invi-1]):
-            wxdata[i] = item[7:]
         # Fix leading character mistypes in wind
         elif ilen > 7 and not item[0].isdigit() and not item.startswith('VRB') and item.endswith('KT'):
             while not item[0].isdigit() and item[:3] != 'VRB':
@@ -426,6 +434,7 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
         if sep:
             wxdata.insert(i + 1, item[sep:])
             wxdata[i] = item[:sep]
+    wxdata = dedupe(wxdata, only_neighbors=True)
     return wxdata, runway_vis, shear
 
 
@@ -552,13 +561,15 @@ def get_station_and_time(wxdata: [str]) -> ([str], str, str):
     if not wxdata:
         return wxdata, None, None
     station = wxdata.pop(0)
+    if not wxdata:
+        return wxdata, station, None
     qtime = wxdata[0]
     if wxdata and qtime.endswith('Z') and qtime[:-1].isdigit():
         rtime = wxdata.pop(0)
     elif wxdata and len(qtime) == 6 and qtime.isdigit():
         rtime = wxdata.pop(0) + 'Z'
     else:
-        rtime = ''
+        rtime = None
     return wxdata, station, rtime
 
 
