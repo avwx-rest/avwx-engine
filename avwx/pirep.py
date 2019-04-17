@@ -86,8 +86,10 @@ def _aircraft(item: str) -> str:
     """
     Returns the Aircraft from the ICAO code
     """
-    if item:
+    try:
         return Aircraft.from_icao(item)
+    except ValueError:
+        return item
 
 
 def _clouds(item: str) -> [Cloud]:
