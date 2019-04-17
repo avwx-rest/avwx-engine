@@ -4,7 +4,10 @@ Functions for parsing PIREPs
 
 from avwx import core, static, structs
 from avwx.exceptions import BadStation
-from avwx.structs import Cloud, Icing, Location, Number, PirepData, Timestamp, Turbulance, Units
+from avwx.structs import (
+    Aircraft, Cloud, Icing, Location, Number,
+    PirepData, Timestamp, Turbulance, Units
+)
 
 _units = Units(**static.NA_UNITS)
 
@@ -81,9 +84,10 @@ def _altitude(item: str) -> 'Number|str':
 
 def _aircraft(item: str) -> str:
     """
-    Returns the aircraft string. Reserved for later parsing
+    Returns the Aircraft from the ICAO code
     """
-    return item
+    if item:
+        return Aircraft.from_icao(item)
 
 
 def _clouds(item: str) -> [Cloud]:

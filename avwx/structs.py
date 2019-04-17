@@ -12,8 +12,9 @@ from os import path
 from avwx.exceptions import BadStation
 
 
-_station_path = path.dirname(path.realpath(__file__)) + '/stations.json'
-STATIONS = json.load(open(_station_path))
+_dir = path.dirname(path.realpath(__file__))
+STATIONS = json.load(open(path.join(_dir, 'stations.json')))
+AIRCRAFT = json.load(open(path.join(_dir, 'aircraft.json')))
 
 
 @dataclass
@@ -43,12 +44,28 @@ class Station(object):
         """
         Load a Station from an ICAO station ident
         """
-        if not ident in STATIONS:
+        if ident not in STATIONS:
             raise BadStation('Could not find station in the info dict. Check avwx.structs.STATIONS')
         info = copy(STATIONS[ident])
         if info['runways']:
             info['runways'] = [Runway(**r) for r in info['runways']]
         return cls(**info)
+
+
+@dataclass
+class Aircraft(object):
+    code: str
+    type: str
+
+    @classmethod
+    def from_icao(cls, code: str) -> 'Aircraft':
+        """
+        Load an Aircraft from an ICAO aircraft code
+        """
+        try:
+            return cls(code=code, type=AIRCRAFT[code])
+        except KeyError:
+            raise ValueError(code + ' is not a known aircraft code')
 
 
 @dataclass

@@ -214,6 +214,7 @@ STR_REPL = {
     ' VBR': ' VRB',
     ' ERB': ' VRB',
     ' VRV': ' VRB',
+    ' BRV': ' VRB',
     ' VR0': ' VRB0',
     ' VB0': ' VRB0',
     ' 0I0': ' 090',
