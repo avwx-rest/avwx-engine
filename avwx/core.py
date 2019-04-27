@@ -118,10 +118,11 @@ def spoken_number(num: str) -> str:
 def make_number(num: str, repr: str = None, speak: str = None) -> Number:
     """
     Returns a Number or Fraction dataclass for a number string
+
+    NOTE: Numerators are assumed to have a single digit. Additional are whole numbers
     """
     if not num or is_unknown(num):
         return
-    num = num.replace('O', '0')
     # Check special
     if num in SPECIAL_NUMBERS:
         return Number(repr or num, *SPECIAL_NUMBERS[num])
@@ -132,9 +133,17 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
         num = str(CARDINALS[num])
     # Remove spurious characters from the end
     num = num.rstrip('M.')
+    num = num.replace('O', '0')
     # Create Fraction
     if '/' in num:
-        nmr, dnm = [int(i) for i in num.split('/')]
+        nmr, dnm = num.split('/')
+        dnm = int(dnm)
+        # Multiply multi-digit numerator
+        if len(nmr) > 1:
+            nmr = int(nmr[:-1]) * dnm + int(nmr[-1])
+            num = f'{nmr}/{dnm}'
+        else:
+            nmr = int(nmr)
         unpacked = unpack_fraction(num)
         spoken = spoken_number(unpacked)
         return Fraction(repr or num, nmr/dnm, spoken, nmr, dnm, unpacked)

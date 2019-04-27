@@ -9,7 +9,7 @@ from setuptools import setup
 
 setup(
     name='avwx-engine',
-    version='1.1a14',
+    version='1.1a16',
     description='Aviation weather report parsing library',
     url='https://github.com/flyinactor91/AVWX-Engine',
     author='Michael duPont',

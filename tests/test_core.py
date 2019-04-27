@@ -166,6 +166,8 @@ class TestGlobal(BaseTest):
             ('1/4', 0.25, 'one quarter', 1, 4, '1/4'),
             ('5/2', 2.5, 'two and one half', 5, 2, '2 1/2'),
             ('3/4', 0.75, 'three quarters', 3, 4, '3/4'),
+            ('5/4', 1.25, 'one and one quarter', 5, 4, '1 1/4'),
+            ('11/4', 1.25, 'one and one quarter', 5, 4, '1 1/4'),
         ):
             number = core.make_number(num)
             self.assertEqual(number.value, value)
