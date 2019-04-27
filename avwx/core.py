@@ -121,6 +121,7 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
     """
     if not num or is_unknown(num):
         return
+    num = num.replace('O', '0')
     # Check special
     if num in SPECIAL_NUMBERS:
         return Number(repr or num, *SPECIAL_NUMBERS[num])
@@ -215,6 +216,7 @@ STR_REPL = {
     ' ERB': ' VRB',
     ' VRV': ' VRB',
     ' BRV': ' VRB',
+    ' VRN': ' VRB',
     ' VR0': ' VRB0',
     ' VB0': ' VRB0',
     ' 0I0': ' 090',
@@ -588,6 +590,7 @@ def get_wind(wxdata: [str], units: Units) -> ([str], Number, Number, Number, [Nu
         for replacements in (
             ('O', '0'),
             ('/', ''),
+            ('LKT', 'KT'),
         ):
             item = item.replace(*replacements)
         #09010KT, 09010G15KT

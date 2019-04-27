@@ -28,7 +28,8 @@ def parse(station: str, report: str) -> TafData:
         'time': core.make_timestamp(time)
     }
     report = report.replace(station, '')
-    report = report.replace(time, '').strip()
+    if time:
+        report = report.replace(time, '').strip()
     if core.uses_na_format(station):
         use_na = True
         units = Units(**NA_UNITS)
