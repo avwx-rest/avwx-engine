@@ -48,7 +48,7 @@
                     "spoken": "one seven",
                     "value": 17
                 },
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "12",
                     "spoken": "one two",
@@ -96,7 +96,7 @@
                     "value": 60
                 },
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "08",
                     "spoken": "eight",
@@ -148,7 +148,7 @@
                     "spoken": "one eight",
                     "value": 18
                 },
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "12",
                     "spoken": "one two",
@@ -200,7 +200,7 @@
                     "spoken": "two five",
                     "value": 25
                 },
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "17",
                     "spoken": "one seven",

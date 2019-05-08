@@ -88,7 +88,8 @@ def parse_lines(lines: [str], units: Units, use_na: bool = True) -> [dict]:
                 parsed_line[key] = core.make_timestamp(parsed_line[key])
             parsed_line['probability'] = core.make_number(prob[4:])
             parsed_line['raw'] = raw_line
-            parsed_line['sanitized'] = prob + ' ' + line if prob else line
+            if prob:
+                parsed_line['sanitized'] = prob + ' ' + parsed_line['sanitized']
             prob = ''
             parsed_lines.append(parsed_line)
         lines.pop(0)
@@ -99,10 +100,11 @@ def parse_na_line(line: str, units: Units) -> {str: str}:
     """
     Parser for the North American TAF forcast varient
     """
-    retwx = {}
     wxdata = core.dedupe(line.split())
-    wxdata, _, retwx['wind_shear'] = core.sanitize_report_list(wxdata)
+    wxdata = core.sanitize_report_list(wxdata)
+    retwx = {'sanitized': ' '.join(wxdata)}
     wxdata, retwx['type'], retwx['start_time'], retwx['end_time'] = core.get_type_and_times(wxdata)
+    wxdata, retwx['wind_shear'] = core.get_wind_shear(wxdata)
     wxdata, retwx['wind_direction'], retwx['wind_speed'],\
         retwx['wind_gust'], _ = core.get_wind(wxdata, units)
     wxdata, retwx['visibility'] = core.get_visibility(wxdata, units)
@@ -116,10 +118,11 @@ def parse_in_line(line: str, units: Units) -> {str: str}:
     """
     Parser for the International TAF forcast varient
     """
-    retwx = {}
     wxdata = core.dedupe(line.split())
-    wxdata, _, retwx['wind_shear'] = core.sanitize_report_list(wxdata)
+    wxdata = core.sanitize_report_list(wxdata)
+    retwx = {'sanitized': ' '.join(wxdata)}
     wxdata, retwx['type'], retwx['start_time'], retwx['end_time'] = core.get_type_and_times(wxdata)
+    wxdata, retwx['wind_shear'] = core.get_wind_shear(wxdata)
     wxdata, retwx['wind_direction'], retwx['wind_speed'],\
         retwx['wind_gust'], _ = core.get_wind(wxdata, units)
     if 'CAVOK' in wxdata:

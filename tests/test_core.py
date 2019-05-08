@@ -233,6 +233,7 @@ class TestGlobal(BaseTest):
             ('21016G28KTPROB40', 10),
             ('VCSHINTER', 4),
             ('151200Z18002KT', 7),
+            ('33015G25KT4500', 10),
             ('PROB30', None),
             ('A2992', None),
         ):
@@ -250,11 +251,7 @@ class TestGlobal(BaseTest):
             ('KJFK 1 1 1 1 1 1 2 1', 'KJFK 1 2 1'),
         ):
             line, fixed = line.split(), fixed.split()
-            self.assertEqual(core.sanitize_report_list(line), (fixed, [], ''))
-        # Test extracting runway visibility and wind shear
-        line = 'EGLL 12345 KT R10/10 RETS WS020/07040KT 6SPM'.split()
-        fixed = 'EGLL 12345KT TS P6SM'.split()
-        self.assertEqual(core.sanitize_report_list(line), (fixed, ['R10/10'], 'WS020/07040'))
+            self.assertEqual(core.sanitize_report_list(line), fixed)
 
     def test_is_possible_temp(self):
         """
@@ -540,6 +537,18 @@ class TestMetar(BaseTest):
         # The last one should have changed the unit
         self.assertEqual(units.altimeter, 'inHg')
 
+    def test_get_runway_visibility(self):
+        """
+        Tests extracting runway visibility
+        """
+        for wx, rvis in (
+            (['1', '2'], []),
+            (['1', '2', 'R10/10'], ['R10/10']),
+            (['1', '2', 'R02/05', 'R34/04'], ['R02/05', 'R34/04']),
+        ):
+            self.assertEqual(core.get_runway_visibility(wx), (['1', '2'], rvis))
+
+
 class TestTaf(unittest.TestCase):
 
     def test_get_taf_remarks(self):
@@ -675,6 +684,17 @@ class TestTaf(unittest.TestCase):
         self.assertEqual(items, ['1', 'ODD','C'])
         self.assertEqual(tlist, ['2', '3'])
         self.assertEqual(qlist, ['4'])
+
+    def test_get_wind_shear(self):
+        """
+        Tests extracting wind shear
+        """
+        for wx, shear in (
+            (['1', '2'], None),
+            (['1', '2', 'WS020/07040'], 'WS020/07040'),
+        ):
+            self.assertEqual(core.get_wind_shear(wx), (['1', '2'], shear))
+
 
     # def test_get_taf_flight_rules(self):
     #     """

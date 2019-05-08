@@ -226,8 +226,10 @@ STR_REPL = {
     ' VRV': ' VRB',
     ' BRV': ' VRB',
     ' VRN': ' VRB',
+    ' BRB': ' VRB',
     ' VR0': ' VRB0',
     ' VB0': ' VRB0',
+    ' RB0': ' VRB0',
     ' 0I0': ' 090',
     'Z/': 'Z ',
     'KKT ': 'KT ',
@@ -356,6 +358,11 @@ def extra_space_needed(item: str) -> int:
     # Connected timestamp
     if len(item) > 7 and is_timestamp(item[:7]):
         return 7
+    # Connected to wind
+    if 'KT' in item and not item.endswith('KT'):
+        sep = item.find('KT')
+        if sep > 4:
+            return sep + 2
     # TAF newline connected to previous element
     for key in TAF_NEWLINE:
         if key in item and not item.startswith(key):
@@ -373,27 +380,17 @@ VIS_PERMUTATIONS = [''.join(p) for p in permutations('P6SM')]
 VIS_PERMUTATIONS.remove('6MPS')
 
 
-def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([str], [str], str):
+def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> [str]:
     """
     Sanitize wxData
 
     We can remove and identify "one-off" elements and fix other issues before parsing a line
-
-    We also return the runway visibility and wind shear since they are very easy to recognize
-    and their location in the report is non-standard
     """
-    shear = ''
-    runway_vis = []
     for i, item in reversed(list(enumerate(wxdata))):
         ilen = len(item)
-        invi = len(wxdata) - i
         # Remove elements containing only '/'
         if is_unknown(item):
             wxdata.pop(i)
-        # Identify Runway Visibility
-        elif ilen > 4 and item[0] == 'R' \
-            and (item[3] == '/' or item[4] == '/') and item[1:3].isdigit():
-            runway_vis.append(wxdata.pop(i))
         # Remove RE from wx codes, REVCTS -> VCTS
         elif ilen in [4, 6] and item.startswith('RE'):
             wxdata[i] = item[2:]
@@ -412,9 +409,6 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
         # Remove ammend signifier from start of report ('CCA', 'CCB',etc)
         elif ilen == 3 and item.startswith('CC') and item[2].isalpha():
             wxdata.pop(i)
-        # Identify Wind Shear
-        elif ilen > 6 and item.startswith('WS') and item[5] == '/':
-            shear = wxdata.pop(i).replace('KT', '')
         # Fix inconsistant 'P6SM' Ex: TP6SM or 6PSM -> P6SM
         elif ilen > 3 and item[-4:] in VIS_PERMUTATIONS:
             wxdata[i] = 'P6SM'
@@ -422,7 +416,8 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
         elif ilen == 10 and 'KTG' in item and item[:5].isdigit():
             wxdata[i] = item.replace('KTG', 'G') + 'KT'
         # Fix leading character mistypes in wind
-        elif ilen > 7 and not item[0].isdigit() and not item.startswith('VRB') and item.endswith('KT'):
+        elif ilen > 7 and not item[0].isdigit() and not item.startswith('VRB') \
+            and item.endswith('KT') and not item.startswith('WS'):
             while not item[0].isdigit() and item[:3] != 'VRB':
                 item = item[1:]
             wxdata[i] = item
@@ -447,7 +442,31 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
             wxdata.insert(i + 1, item[sep:])
             wxdata[i] = item[:sep]
     wxdata = dedupe(wxdata, only_neighbors=True)
-    return wxdata, runway_vis, shear
+    return wxdata
+
+
+def get_runway_visibility(wxdata: [str]) -> ([str], [str]):
+    """
+    Returns the report list and the remove runway visibility list
+    """
+    runway_vis = []
+    for i, item in reversed(list(enumerate(wxdata))):
+        if len(item) > 4 and item[0] == 'R' \
+            and (item[3] == '/' or item[4] == '/') and item[1:3].isdigit():
+            runway_vis.append(wxdata.pop(i))
+    runway_vis.sort()
+    return wxdata, runway_vis
+
+
+def get_wind_shear(wxdata: [str]) -> ([str], str):
+    """
+    Returns the report list and the remove wind shear
+    """
+    shear = None
+    for i, item in reversed(list(enumerate(wxdata))):
+        if len(item) > 6 and item.startswith('WS') and item[5] == '/':
+            shear = wxdata.pop(i).replace('KT', '')
+    return wxdata, shear
 
 
 def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], Number):

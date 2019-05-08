@@ -46,7 +46,7 @@
                     "value": 120
                 },
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "08",
                     "spoken": "eight",
@@ -96,7 +96,7 @@
                     "value": 70
                 },
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "07",
                     "spoken": "seven",
@@ -144,7 +144,7 @@
                     "value": 20
                 },
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "08",
                     "spoken": "eight",
@@ -192,7 +192,7 @@
                     "value": 40
                 },
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "10",
                     "spoken": "one zero",
@@ -240,7 +240,7 @@
                     "value": 80
                 },
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "10",
                     "spoken": "one zero",

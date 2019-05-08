@@ -36,7 +36,7 @@
                     "value": 280
                 },
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "06",
                     "spoken": "six",
@@ -72,7 +72,7 @@
                 "visibility": null,
                 "wind_direction": null,
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": null
             },
             {
@@ -108,7 +108,7 @@
                 },
                 "wind_direction": null,
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": null
             }
         ],
