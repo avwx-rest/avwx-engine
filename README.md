@@ -58,15 +58,23 @@ No other packages are necessary.
 
 # Test
 
-While there's no requirement to use a specific testing library, the test suite was built while using the `pytest` library.
+The easiest way to test the package is using `nox`. It will manage all tests, sessions, supported versions (when available), and cleanup. The tests will pick up the local version of `avwx`.
 
 ```bash
-pip install pytest
+# Install
+pip install nox
+
+# Run all tests
+nox
 ```
 
-To run the tests, run `pytest` from the project root. The tests should pick up the local version of `avwx` so a `pip install` is not necessary every time.
+If you want to run the tests directly, the test suite was built while using the `pytest` library.
 
 ```bash
+# Install
+pip install pytest
+
+# Run all unit tests
 pytest
 ```
 
