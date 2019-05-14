@@ -173,7 +173,7 @@ def altimeter(alt: Number, unit: str = 'hPa') -> str:
         converted = str(round(converted, 2)) + ' inHg'
     elif unit == 'inHg':
         value = alt.repr[:2] + '.' + alt.repr[2:]
-        converted = float(value) * 33.8638866667
+        converted = alt.value * 33.8638866667
         converted = str(int(round(converted))) + ' hPa'
     return f'{value} {unit} ({converted})'
 
@@ -190,12 +190,12 @@ def clouds(clds: [Cloud], unit: str = 'ft') -> str:
         return ''
     ret = []
     for cloud in clds:
-        if cloud.altitude is None:
+        if cloud.base is None:
             continue
         cloud_str = CLOUD_TRANSLATIONS[cloud.type]
         if cloud.modifier and cloud.modifier in CLOUD_TRANSLATIONS:
             cloud_str += f' ({CLOUD_TRANSLATIONS[cloud.modifier]})'
-        ret.append(cloud_str.format(cloud.altitude * 100, unit))
+        ret.append(cloud_str.format(cloud.base * 100, unit))
     if ret:
         return ', '.join(ret) + ' - Reported AGL'
     return 'Sky clear'

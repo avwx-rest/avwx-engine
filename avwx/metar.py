@@ -24,12 +24,14 @@ def parse_na(report: str) -> (MetarData, Units):
     Parser for the North American METAR variant
     """
     units = Units(**NA_UNITS)
+    wxresp = {'raw': report}
     clean = core.sanitize_report_string(report)
-    wxresp = {'raw': report, 'sanitized': clean}
     wxdata, wxresp['remarks'] = core.get_remarks(clean)
     wxdata = core.dedupe(wxdata)
-    wxdata, wxresp['runway_visibility'], _ = core.sanitize_report_list(wxdata)
+    wxdata = core.sanitize_report_list(wxdata)
+    wxresp['sanitized'] = ' '.join(wxdata + [wxresp['remarks']])
     wxdata, wxresp['station'], wxresp['time'] = core.get_station_and_time(wxdata)
+    wxdata, wxresp['runway_visibility'] = core.get_runway_visibility(wxdata)
     wxdata, wxresp['clouds'] = core.get_clouds(wxdata)
     wxdata, wxresp['wind_direction'], wxresp['wind_speed'], \
         wxresp['wind_gust'], wxresp['wind_variable_direction'] = core.get_wind(wxdata, units)
@@ -48,12 +50,14 @@ def parse_in(report: str) -> (MetarData, Units):
     Parser for the International METAR variant
     """
     units = Units(**IN_UNITS)
+    wxresp = {'raw': report}
     clean = core.sanitize_report_string(report)
-    wxresp = {'raw': report, 'sanitized': clean}
     wxdata, wxresp['remarks'] = core.get_remarks(clean)
     wxdata = core.dedupe(wxdata)
-    wxdata, wxresp['runway_visibility'], _ = core.sanitize_report_list(wxdata)
+    wxdata = core.sanitize_report_list(wxdata)
+    wxresp['sanitized'] = ' '.join(wxdata + [wxresp['remarks']])
     wxdata, wxresp['station'], wxresp['time'] = core.get_station_and_time(wxdata)
+    wxdata, wxresp['runway_visibility'] = core.get_runway_visibility(wxdata)
     if 'CAVOK' not in wxdata:
         wxdata, wxresp['clouds'] = core.get_clouds(wxdata)
     wxdata, wxresp['wind_direction'], wxresp['wind_speed'], \

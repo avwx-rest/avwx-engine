@@ -7,10 +7,11 @@
         },
         "clouds": [
             {
-                "altitude": 31,
+                "base": 31,
                 "direction": null,
                 "modifier": null,
                 "repr": "OVC031",
+                "top": null,
                 "type": "OVC"
             }
         ],
@@ -28,7 +29,7 @@
             "temperature_decimal": null
         },
         "runway_visibility": [],
-        "sanitized": "EGLL 192350Z AUTO 28008KT 9999 OVC031 19/16 Q1020 NOSIG",
+        "sanitized": "EGLL 192350Z 28008KT 9999 OVC031 19/16 Q1020 NOSIG",
         "station": "EGLL",
         "temperature": {
             "repr": "19",

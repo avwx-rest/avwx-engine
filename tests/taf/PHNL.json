@@ -7,17 +7,19 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 25,
+                        "base": 25,
                         "direction": null,
                         "modifier": null,
                         "repr": "FEW025",
+                        "top": null,
                         "type": "FEW"
                     },
                     {
-                        "altitude": 40,
+                        "base": 40,
                         "direction": null,
                         "modifier": null,
                         "repr": "SCT040",
+                        "top": null,
                         "type": "SCT"
                     }
                 ],
@@ -46,7 +48,7 @@
                     "spoken": "one seven",
                     "value": 17
                 },
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "12",
                     "spoken": "one two",
@@ -57,17 +59,19 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 25,
+                        "base": 25,
                         "direction": null,
                         "modifier": null,
                         "repr": "FEW025",
+                        "top": null,
                         "type": "FEW"
                     },
                     {
-                        "altitude": 40,
+                        "base": 40,
                         "direction": null,
                         "modifier": null,
                         "repr": "SCT040",
+                        "top": null,
                         "type": "SCT"
                     }
                 ],
@@ -92,7 +96,7 @@
                     "value": 60
                 },
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "08",
                     "spoken": "eight",
@@ -103,17 +107,19 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 25,
+                        "base": 25,
                         "direction": null,
                         "modifier": null,
                         "repr": "FEW025",
+                        "top": null,
                         "type": "FEW"
                     },
                     {
-                        "altitude": 40,
+                        "base": 40,
                         "direction": null,
                         "modifier": null,
                         "repr": "SCT040",
+                        "top": null,
                         "type": "SCT"
                     }
                 ],
@@ -142,7 +148,7 @@
                     "spoken": "one eight",
                     "value": 18
                 },
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "12",
                     "spoken": "one two",
@@ -153,17 +159,19 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 25,
+                        "base": 25,
                         "direction": null,
                         "modifier": null,
                         "repr": "FEW025",
+                        "top": null,
                         "type": "FEW"
                     },
                     {
-                        "altitude": 50,
+                        "base": 50,
                         "direction": null,
                         "modifier": null,
                         "repr": "SCT050",
+                        "top": null,
                         "type": "SCT"
                     }
                 ],
@@ -192,7 +200,7 @@
                     "spoken": "two five",
                     "value": 25
                 },
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "17",
                     "spoken": "one seven",

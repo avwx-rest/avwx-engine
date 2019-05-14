@@ -46,24 +46,32 @@ def uses_na_format(station: str) -> bool:
     raise BadStation("Station doesn't start with a recognized character set")
 
 
-def dedupe(items: list) -> list:
+def dedupe(items: list, only_neighbors: bool = False) -> list:
     """
     Deduplicates a list while keeping order
+    
+    If only_neighbors is True, dedupe will only check neighboring values
     """
     ret = []
     for item in items:
-        if item not in ret:
+        if (only_neighbors and ret and ret[-1] != item) or item not in ret:
             ret.append(item)
     return ret
 
 
 def is_unknown(val: str) -> bool:
     """
-    Returns True if val contains only '/' characters
+    Returns True if val represents and unknown value
     """
-    for char in ('/', 'X'):
-        if val == char * len(val):
-            return True
+    if not isinstance(val, str):
+        raise TypeError
+    if not val or val.upper() in ('UNKN',):
+        return True
+    for char in val:
+        if char not in ('/', 'X', '.',):
+            break
+    else:
+        return True
     return False
 
 
@@ -113,6 +121,8 @@ def spoken_number(num: str) -> str:
 def make_number(num: str, repr: str = None, speak: str = None) -> Number:
     """
     Returns a Number or Fraction dataclass for a number string
+
+    NOTE: Numerators are assumed to have a single digit. Additional are whole numbers
     """
     if not num or is_unknown(num):
         return
@@ -126,14 +136,30 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
         num = str(CARDINALS[num])
     # Remove spurious characters from the end
     num = num.rstrip('M.')
+    num = num.replace('O', '0')
     # Create Fraction
     if '/' in num:
-        nmr, dnm = [int(i) for i in num.split('/')]
+        nmr, dnm = num.split('/')
+        dnm = int(dnm)
+        # Multiply multi-digit numerator
+        if len(nmr) > 1:
+            nmr = int(nmr[:-1]) * dnm + int(nmr[-1])
+            num = f'{nmr}/{dnm}'
+        else:
+            nmr = int(nmr)
         unpacked = unpack_fraction(num)
         spoken = spoken_number(unpacked)
         return Fraction(repr or num, nmr/dnm, spoken, nmr, dnm, unpacked)
+    # Handle Minus values with errors like 0M04
+    if 'M' in num:
+        val = num.replace('M', '-')
+        while val[0] != '-':
+            val = val[1:]
+    else:
+        val = num
     # Create Number
-    val = num.replace('M', '-')
+    if not val:
+        return
     val = float(val) if '.' in num else int(val)
     return Number(repr or num, val, spoken_number(speak or str(val)))
 
@@ -149,6 +175,13 @@ def find_first_in_list(txt: str, str_list: [str]) -> int:
         if start > txt.find(item) > -1:
             start = txt.find(item)
     return start if len(txt) + 1 > start > -1 else -1
+
+
+def is_timestamp(item: str) -> bool:
+    """
+    Returns True if the item matches the timestamp format
+    """
+    return len(item) == 7 and item[-1] == 'Z' and item[:-1].isdigit()
 
 
 def get_remarks(txt: str) -> ([str], str):
@@ -192,7 +225,22 @@ STR_REPL = {
     '?': ' ',
     ' VTB': ' VRB',
     ' VBR': ' VRB',
+    ' ERB': ' VRB',
+    ' VRV': ' VRB',
+    ' BRV': ' VRB',
+    ' VRN': ' VRB',
+    ' BRB': ' VRB',
+    ' VEB': ' VRB',
+    ' VR0': ' VRB0',
+    ' VB0': ' VRB0',
+    ' RB0': ' VRB0',
+    ' 0I0': ' 090',
     'Z/': 'Z ',
+    'KKT ': 'KT ',
+    'KLT ': 'KT ',
+    'CALMKT ': 'CALM ',
+    ' /34SM': '3/4SM',
+    ' 1/.2': '1/2',
 }
 
 
@@ -304,7 +352,7 @@ CLOUD_SPACE_PATTERNS = [re.compile(pattern) for pattern in (
 
 def extra_space_needed(item: str) -> int:
     """
-    Returns the index where a space must be inserted or None
+    Returns the index where the string should be separated or None
     """
     # For items starting with cloud list
     if item[:3] in CLOUD_LIST:
@@ -314,6 +362,23 @@ def extra_space_needed(item: str) -> int:
                 continue
             if sep.start():
                 return sep.start()
+    # Connected timestamp
+    if len(item) > 7 and is_timestamp(item[:7]):
+        return 7
+    # Connected to wind
+    if len(item) > 5 and 'KT' in item and not item.endswith('KT'):
+        sep = item.find('KT')
+        if sep > 4:
+            return sep + 2
+    # TAF newline connected to previous element
+    for key in TAF_NEWLINE:
+        if key in item and not item.startswith(key):
+            return item.find(key)
+    for key in TAF_NEWLINE_STARTSWITH:
+        if key in item and not item.startswith(key):
+            sep = item.find(key)
+            if item[sep+len(key):].isdigit():
+                return sep
 
 
 ITEM_REMV = ['AUTO', 'COR', 'NSC', 'NCD', '$', 'KT', 'M', '.', 'RTD', 'SPECI', 'METAR', 'CORR']
@@ -322,26 +387,17 @@ VIS_PERMUTATIONS = [''.join(p) for p in permutations('P6SM')]
 VIS_PERMUTATIONS.remove('6MPS')
 
 
-def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([str], [str], str):
+def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> [str]:
     """
     Sanitize wxData
 
     We can remove and identify "one-off" elements and fix other issues before parsing a line
-
-    We also return the runway visibility and wind shear since they are very easy to recognize
-    and their location in the report is non-standard
     """
-    shear = ''
-    runway_vis = []
     for i, item in reversed(list(enumerate(wxdata))):
         ilen = len(item)
         # Remove elements containing only '/'
         if is_unknown(item):
             wxdata.pop(i)
-        # Identify Runway Visibility
-        elif ilen > 4 and item[0] == 'R' \
-            and (item[3] == '/' or item[4] == '/') and item[1:3].isdigit():
-            runway_vis.append(wxdata.pop(i))
         # Remove RE from wx codes, REVCTS -> VCTS
         elif ilen in [4, 6] and item.startswith('RE'):
             wxdata[i] = item[2:]
@@ -360,9 +416,6 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
         # Remove ammend signifier from start of report ('CCA', 'CCB',etc)
         elif ilen == 3 and item.startswith('CC') and item[2].isalpha():
             wxdata.pop(i)
-        # Identify Wind Shear
-        elif ilen > 6 and item.startswith('WS') and item[5] == '/':
-            shear = wxdata.pop(i).replace('KT', '')
         # Fix inconsistant 'P6SM' Ex: TP6SM or 6PSM -> P6SM
         elif ilen > 3 and item[-4:] in VIS_PERMUTATIONS:
             wxdata[i] = 'P6SM'
@@ -370,13 +423,15 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
         elif ilen == 10 and 'KTG' in item and item[:5].isdigit():
             wxdata[i] = item.replace('KTG', 'G') + 'KT'
         # Fix leading character mistypes in wind
-        elif ilen > 7 and not item[0].isdigit() and not item.startswith('VRB') and item.endswith('KT'):
+        elif ilen > 7 and not item[0].isdigit() and not item.startswith('VRB') \
+            and item.endswith('KT') and not item.startswith('WS'):
             while not item[0].isdigit() and item[:3] != 'VRB':
                 item = item[1:]
             wxdata[i] = item
         # Fix wind T
-        elif (ilen == 6 and item[5] in ['K', 'T'] and (item[:5].isdigit() or (item.startswith('VRB') and item[:3].isdigit()))) \
-            or (ilen == 9 and item[8] in ['K', 'T'] and item[5] == 'G' and (item[:5].isdigit() or item.startswith('VRB'))):
+        elif not item.endswith('KT') and (\
+            (ilen == 6 and item[5] in ['K', 'T'] and (item[:5].isdigit() or (item.startswith('VRB') and item[:3].isdigit()))) \
+            or (ilen == 9 and item[8] in ['K', 'T'] and item[5] == 'G' and (item[:5].isdigit() or item.startswith('VRB')))):
             wxdata[i] = item[:-1] + 'KT'
         # Fix joined TX-TN
         elif ilen > 16 and len(item.split('/')) == 3:
@@ -393,7 +448,32 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> ([st
         if sep:
             wxdata.insert(i + 1, item[sep:])
             wxdata[i] = item[:sep]
-    return wxdata, runway_vis, shear
+    wxdata = dedupe(wxdata, only_neighbors=True)
+    return wxdata
+
+
+def get_runway_visibility(wxdata: [str]) -> ([str], [str]):
+    """
+    Returns the report list and the remove runway visibility list
+    """
+    runway_vis = []
+    for i, item in reversed(list(enumerate(wxdata))):
+        if len(item) > 4 and item[0] == 'R' \
+            and (item[3] == '/' or item[4] == '/') and item[1:3].isdigit():
+            runway_vis.append(wxdata.pop(i))
+    runway_vis.sort()
+    return wxdata, runway_vis
+
+
+def get_wind_shear(wxdata: [str]) -> ([str], str):
+    """
+    Returns the report list and the remove wind shear
+    """
+    shear = None
+    for i, item in reversed(list(enumerate(wxdata))):
+        if len(item) > 6 and item.startswith('WS') and item[5] == '/':
+            shear = wxdata.pop(i).replace('KT', '')
+    return wxdata, shear
 
 
 def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], Number):
@@ -406,42 +486,47 @@ def get_altimeter(wxdata: [str], units: Units, version: str = 'NA') -> ([str], N
         return wxdata, None
     altimeter = ''
     target = wxdata[-1]
+    # Handle QNH prefix:
+    buf = 1
+    if target.startswith('QNH'):
+        buf = 3
+        target = target.replace('QNH', 'Q')
     if version == 'NA':
         # Version target
         if target[0] == 'A':
-            altimeter = wxdata.pop()[1:]
+            altimeter = wxdata.pop()[buf:]
         # Other version but prefer normal if available
         elif target[0] == 'Q':
             if len(wxdata) > 1 and wxdata[-2][0] == 'A':
                 wxdata.pop()
-                altimeter = wxdata.pop()[1:]
+                altimeter = wxdata.pop()[buf:]
             else:
                 units.altimeter = 'hPa'
-                altimeter = wxdata.pop()[1:].lstrip('.')
+                altimeter = wxdata.pop()[buf:].lstrip('.')
         # Else grab the digits
         elif len(target) == 4 and target.isdigit():
             altimeter = wxdata.pop()
     elif version == 'IN':
         # Version target
         if target[0] == 'Q':
-            altimeter = wxdata.pop()[1:].lstrip('.')
+            altimeter = wxdata.pop()[buf:].lstrip('.')
             if '/' in altimeter:
                 altimeter = altimeter[:altimeter.find('/')]
         # Other version but prefer normal if available
         elif target[0] == 'A':
             if len(wxdata) > 1 and wxdata[-2][0] == 'Q':
                 wxdata.pop()
-                altimeter = wxdata.pop()[1:]
+                altimeter = wxdata.pop()[buf:]
             else:
                 units.altimeter = 'inHg'
-                altimeter = wxdata.pop()[1:]
+                altimeter = wxdata.pop()[buf:]
     #Some stations report both, but we only need one
     if wxdata and (wxdata[-1][0] == 'A' or wxdata[-1][0] == 'Q'):
         wxdata.pop()
     # convert to Number
+    altimeter = altimeter.replace('/', '')
     if not altimeter:
         return wxdata, None
-    altimeter = altimeter.replace('/', '')
     if units.altimeter == 'inHg':
         value = altimeter[:2] + '.' + altimeter[2:]
     else:
@@ -458,6 +543,9 @@ def get_taf_alt_ice_turb(wxdata: [str]) -> ([str], str, [str], [str]):
     for i, item in reversed(list(enumerate(wxdata))):
         if len(item) > 6 and item.startswith('QNH') and item[3:7].isdigit():
             altimeter = wxdata.pop(i)[3:7]
+            if altimeter[0] in ('2', '3',):
+                altimeter = altimeter[:2] + '.' + altimeter[2:]
+            altimeter = make_number(altimeter)
         elif item.isdigit():
             if item[0] == '6':
                 icing.append(wxdata.pop(i))
@@ -511,13 +599,15 @@ def get_station_and_time(wxdata: [str]) -> ([str], str, str):
     if not wxdata:
         return wxdata, None, None
     station = wxdata.pop(0)
+    if not wxdata:
+        return wxdata, station, None
     qtime = wxdata[0]
     if wxdata and qtime.endswith('Z') and qtime[:-1].isdigit():
         rtime = wxdata.pop(0)
     elif wxdata and len(qtime) == 6 and qtime.isdigit():
         rtime = wxdata.pop(0) + 'Z'
     else:
-        rtime = ''
+        rtime = None
     return wxdata, station, rtime
 
 
@@ -535,6 +625,8 @@ def get_wind(wxdata: [str], units: Units) -> ([str], Number, Number, Number, [Nu
         for replacements in (
             ('O', '0'),
             ('/', ''),
+            ('LKT', 'KT'),
+            ('GG', 'G'),
         ):
             item = item.replace(*replacements)
         #09010KT, 09010G15KT
@@ -562,6 +654,7 @@ def get_wind(wxdata: [str], units: Units) -> ([str], Number, Number, Number, [Nu
                 speed = item[3:g_index]
             else:
                 speed = item[3:]
+            direction = item[:3]
             wxdata.pop(0)
     #Separated Gust
     if wxdata and 1 < len(wxdata[0]) < 4 and wxdata[0][0] == 'G' and wxdata[0][1:].isdigit():
@@ -572,7 +665,7 @@ def get_wind(wxdata: [str], units: Units) -> ([str], Number, Number, Number, [Nu
         variable = [make_number(i, speak=i) for i in wxdata.pop(0).split('V')]
     # Convert to Number
     direction = make_number(direction, speak=direction)
-    speed = make_number(speed)
+    speed = make_number(speed.strip('BV'))
     gust = make_number(gust)
     return wxdata, direction, speed, gust, variable
 
@@ -588,9 +681,9 @@ def get_visibility(wxdata: [str], units: Units) -> ([str], Number):
         if item.endswith('SM'):  # 10SM
             if item in ('P6SM', 'M1/4SM', 'M1/8SM'):
                 visibility = item[:-2]
-            elif '/' not in item:
-                visibility = str(int(item[:item.find('SM')]))
-            else:
+            elif item[:-2].isdigit():
+                visibility = str(int(item[:-2]))
+            elif '/' in item:
                 visibility = item[:item.find('SM')]  # 1/2SM
             wxdata.pop(0)
             units.visibility = 'sm'
@@ -605,8 +698,8 @@ def get_visibility(wxdata: [str], units: Units) -> ([str], Number):
         elif len(item) == 5 and item[1:].isdigit() and item[0] in ['M', 'P', 'B']:
             visibility = wxdata.pop(0)[1:]
             units.visibility = 'm'
-        elif item.endswith('KM') and item[:item.find('KM')].isdigit():
-            visibility = item[:item.find('KM')] + '000'
+        elif item.endswith('KM') and item[:-2].isdigit():
+            visibility = item[:-2] + '000'
             wxdata.pop(0)
             units.visibility = 'm'
         # Vis statute miles but split Ex: 2 1/2SM
@@ -783,38 +876,12 @@ def sanitize_cloud(cloud: str) -> str:
     """
     if len(cloud) < 4:
         return cloud
-    if not cloud[3].isdigit() and cloud[3] != '/':
+    if not cloud[3].isdigit() and cloud[3] not in ('/', '-'):
         if cloud[3] == 'O':
             cloud = cloud[:3] + '0' + cloud[4:]  # Bad "O": FEWO03 -> FEW003
-        else:  # Move modifiers to end: BKNC015 -> BKN015C
+        elif cloud[3] != 'U':  # Move modifiers to end: BKNC015 -> BKN015C
             cloud = cloud[:3] + cloud[4:] + cloud[3]
     return cloud
-
-
-def split_cloud(cloud: str) -> [str]:
-    """
-    Transforms a cloud string into a list of strings: [Type, Height (, Optional Modifier)]
-    """
-    split = []
-    cloud = sanitize_cloud(cloud)
-    if cloud.startswith('VV'):
-        split.append(cloud[:2])
-        cloud = cloud[2:]
-    while len(cloud) >= 3:
-        split.append(cloud[:3])
-        cloud = cloud[3:]
-    if cloud:
-        split.append(cloud)
-    # Nullify unknown elements
-    for i, item in enumerate(split):
-        if is_unknown(item):
-            split[i] = None
-    # Add null altitude or convert to int
-    if len(split) == 1:
-        split.append(None)
-    elif isinstance(split[1], str) and split[1].isdigit():
-        split[1] = int(split[1])
-    return split
 
 
 def make_cloud(cloud: str) -> Cloud:
@@ -823,7 +890,41 @@ def make_cloud(cloud: str) -> Cloud:
 
     This function assumes the input is potentially valid
     """
-    return Cloud(cloud, *split_cloud(cloud))
+    els = {'type': None, 'base': None, 'top': None, 'modifier': None}
+    _c = sanitize_cloud(cloud).replace('/', '')
+    # Separate top
+    topi = _c.find('-TOP')
+    if topi > -1:
+        els['top'], _c = _c[topi+4:], _c[:topi]
+    # Separate type
+    ## VV003
+    if _c.startswith('VV'):
+        els['type'], _c = _c[:2], _c[2:]
+    ## FEW010
+    elif len(_c) >= 3 and _c[:3] in CLOUD_LIST:
+        els['type'], _c = _c[:3], _c[3:]
+    ## BKN-OVC065
+    if len(_c) > 4 and _c[0] == '-' and _c[1:4] in CLOUD_LIST:
+        els['type'] += _c[:4]
+        _c = _c[4:]
+    # Separate base
+    if len(_c) >= 3 and _c[:3].isdigit():
+        els['base'], _c = _c[:3], _c[3:]
+    elif len(_c) >= 4 and _c[:4] == 'UNKN':
+        _c = _c[4:]
+    # Remainder is considered modifiers
+    if _c:
+        els['modifier'] = _c
+    # Nullify unknown elements and convert ints
+    for k, v in els.items():
+        if not isinstance(v, str):
+            continue
+        if is_unknown(v):
+            els[k] = None
+        elif v.isdigit():
+            els[k] = int(v)
+    # Make Cloud
+    return Cloud(cloud, **els)
 
 
 def get_clouds(wxdata: [str]) -> ([str], list):
@@ -837,7 +938,7 @@ def get_clouds(wxdata: [str]) -> ([str], list):
             clouds.append(make_cloud(cloud))
     # Attempt cloud sort. Fails if None values are present
     try:
-        clouds.sort(key=lambda cloud: (cloud.altitude, cloud.type))
+        clouds.sort(key=lambda cloud: (cloud.base, cloud.type))
     except TypeError:
         clouds.reverse() # Restores original report order
     return wxdata, clouds
@@ -864,7 +965,7 @@ def get_flight_rules(vis: Number, ceiling: Cloud) -> int:
     else:
         vis = vis.value
     # Parse ceiling
-    cld = ceiling.altitude if ceiling else 99
+    cld = ceiling.base if ceiling else 99
     # Determine flight rules
     if (vis <= 5) or (cld <= 30):
         if (vis < 3) or (cld < 10):
@@ -908,7 +1009,7 @@ def get_ceiling(clouds: [Cloud]) -> Cloud:
     Prevents errors due to lack of cloud information (eg. '' or 'FEW///')
     """
     for cloud in clouds:
-        if cloud.altitude and cloud.type in ('OVC', 'BKN', 'VV'):
+        if cloud.base and cloud.type in ('OVC', 'BKN', 'VV'):
             return cloud
     return None
 
@@ -944,13 +1045,15 @@ def parse_date(date: str, hour_threshold: int = 200, time_only: bool = False) ->
     if day > monthrange(now.year, now.month)[1]:
         now += relativedelta(months=-1)
         shifted = True
-    guess = now.replace(
-        day=day,
-        hour=int(date[ihour:ihour+2])%24,
-        minute=int(date[ihour+2:ihour+4])%60,
-        second=0,
-        microsecond=0
-    )
+    try:
+        guess = now.replace(
+            day=day,
+            hour=int(date[ihour:ihour+2])%24,
+            minute=int(date[ihour+2:ihour+4])%60,
+            second=0, microsecond=0
+        )
+    except ValueError:
+        return
     # Handle changing months if not already shifted
     if not shifted:
         hourdiff = (guess-now) / timedelta(minutes=1) / 60

@@ -7,17 +7,19 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 30,
+                        "base": 30,
                         "direction": null,
                         "modifier": "CB",
                         "repr": "SCT030CB",
+                        "top": null,
                         "type": "SCT"
                     },
                     {
-                        "altitude": 80,
+                        "base": 80,
                         "direction": null,
                         "modifier": null,
                         "repr": "BKN080",
+                        "top": null,
                         "type": "BKN"
                     }
                 ],
@@ -44,7 +46,7 @@
                     "value": 190
                 },
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "08",
                     "spoken": "eight",
@@ -73,24 +75,26 @@
                 },
                 "wind_direction": null,
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": null
             },
             {
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 80,
+                        "base": 80,
                         "direction": null,
                         "modifier": null,
                         "repr": "SCT080",
+                        "top": null,
                         "type": "SCT"
                     },
                     {
-                        "altitude": 200,
+                        "base": 200,
                         "direction": null,
                         "modifier": null,
                         "repr": "OVC200",
+                        "top": null,
                         "type": "OVC"
                     }
                 ],
@@ -115,7 +119,7 @@
                     "value": null
                 },
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "04",
                     "spoken": "four",
@@ -126,10 +130,11 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 25,
+                        "base": 25,
                         "direction": null,
                         "modifier": null,
                         "repr": "SCT025",
+                        "top": null,
                         "type": "SCT"
                     }
                 ],
@@ -154,7 +159,7 @@
                     "value": 160
                 },
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "06",
                     "spoken": "six",
@@ -165,10 +170,11 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 40,
+                        "base": 40,
                         "direction": null,
                         "modifier": "CB",
                         "repr": "SCT040CB",
+                        "top": null,
                         "type": "SCT"
                     }
                 ],
@@ -195,7 +201,7 @@
                     "value": 150
                 },
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "08",
                     "spoken": "eight",
@@ -206,10 +212,11 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 30,
+                        "base": 30,
                         "direction": null,
                         "modifier": "CB",
                         "repr": "BKN030CB",
+                        "top": null,
                         "type": "BKN"
                     }
                 ],
@@ -232,24 +239,26 @@
                 },
                 "wind_direction": null,
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": null
             },
             {
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 50,
+                        "base": 50,
                         "direction": null,
                         "modifier": null,
                         "repr": "SCT050",
+                        "top": null,
                         "type": "SCT"
                     },
                     {
-                        "altitude": 100,
+                        "base": 100,
                         "direction": null,
                         "modifier": null,
                         "repr": "BKN100",
+                        "top": null,
                         "type": "BKN"
                     }
                 ],
@@ -276,7 +285,7 @@
                     "value": 160
                 },
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "03",
                     "spoken": "three",

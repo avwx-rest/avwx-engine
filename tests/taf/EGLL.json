@@ -7,10 +7,11 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 35,
+                        "base": 35,
                         "direction": null,
                         "modifier": null,
                         "repr": "BKN035",
+                        "top": null,
                         "type": "BKN"
                     }
                 ],
@@ -35,7 +36,7 @@
                     "value": 280
                 },
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": {
                     "repr": "06",
                     "spoken": "six",
@@ -46,10 +47,11 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 12,
+                        "base": 12,
                         "direction": null,
                         "modifier": null,
                         "repr": "BKN012",
+                        "top": null,
                         "type": "BKN"
                     }
                 ],
@@ -70,17 +72,18 @@
                 "visibility": null,
                 "wind_direction": null,
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": null
             },
             {
                 "altimeter": "",
                 "clouds": [
                     {
-                        "altitude": 6,
+                        "base": 6,
                         "direction": null,
                         "modifier": null,
                         "repr": "BKN006",
+                        "top": null,
                         "type": "BKN"
                     }
                 ],
@@ -105,7 +108,7 @@
                 },
                 "wind_direction": null,
                 "wind_gust": null,
-                "wind_shear": "",
+                "wind_shear": null,
                 "wind_speed": null
             }
         ],

@@ -56,5 +56,6 @@ docs/_build/
 # PyBuilder
 target/
 
-.pytest_cache/
-notes.txt
+/pytest_cache/
+/.nox
+/notes.txt

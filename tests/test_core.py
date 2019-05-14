@@ -30,6 +30,23 @@ class BaseTest(unittest.TestCase):
 
 class TestGlobal(BaseTest):
 
+    def test_dedupe(self):
+        """
+        Tests list deduplication
+        """
+        for before, after in (
+            ([1, 2, 3, 2, 1], [1, 2, 3]),
+            ([4, 4, 4, 4], [4]),
+            ([1, 5, 1, 1, 3, 5], [1, 5, 3])
+        ):
+            self.assertEqual(core.dedupe(before), after)
+        for before, after in (
+            ([1, 2, 3, 2, 1], [1, 2, 3, 2, 1]),
+            ([4, 4, 4, 4], [4]),
+            ([1, 5, 1, 1, 3, 5], [1, 5, 1, 3, 5])
+        ):
+            self.assertEqual(core.dedupe(before, only_neighbors=True), after)
+
     def test_valid_station(self):
         """
         While not designed to catch all non-existant station idents,
@@ -73,6 +90,15 @@ class TestGlobal(BaseTest):
         # Bad type
         with self.assertRaises(TypeError):
             core.is_unknown(None)
+
+    def test_is_timestamp(self):
+        """
+        Tests determining if a string is a timestamp element
+        """
+        for ts in ('123456Z', '987654Z',):
+            self.assertTrue(core.is_timestamp(ts))
+        for nts in ('', '123456Z123', '1234', '1234Z',):
+            self.assertFalse(core.is_timestamp(nts))
 
     def test_unpack_fraction(self):
         """
@@ -140,6 +166,8 @@ class TestGlobal(BaseTest):
             ('1/4', 0.25, 'one quarter', 1, 4, '1/4'),
             ('5/2', 2.5, 'two and one half', 5, 2, '2 1/2'),
             ('3/4', 0.75, 'three quarters', 3, 4, '3/4'),
+            ('5/4', 1.25, 'one and one quarter', 5, 4, '1 1/4'),
+            ('11/4', 1.25, 'one and one quarter', 5, 4, '1 1/4'),
         ):
             number = core.make_number(num)
             self.assertEqual(number.value, value)
@@ -197,6 +225,20 @@ class TestGlobal(BaseTest):
         ):
             self.assertFalse(core.extra_space_exists(*strings))
 
+    def test_extra_space_needed(self):
+        """
+        Tests if two elements should be split and where
+        """
+        for item, sep in (
+            ('21016G28KTPROB40', 10),
+            ('VCSHINTER', 4),
+            ('151200Z18002KT', 7),
+            ('33015G25KT4500', 10),
+            ('PROB30', None),
+            ('A2992', None),
+        ):
+            self.assertEqual(core.extra_space_needed(item), sep)
+
     def test_sanitize_report_list(self):
         """
         Tests a function which fixes common mistakes while the report is a list
@@ -204,13 +246,12 @@ class TestGlobal(BaseTest):
         for line, fixed in (
             ('KJFK AUTO 123456Z ////// KT 10SM 20/10', 'KJFK 123456Z 10SM 20/10'),
             ('METAR EGLL CALM RETS 6SPM CLR Q 1000', 'EGLL 00000KT TS P6SM Q1000'),
+            ('TLPL 111200Z 111200Z11020KT Q1015', 'TLPL 111200Z 11020KT Q1015'),
+            ('SECU 151200Z 151200Z18002KT Q1027', 'SECU 151200Z 18002KT Q1027'),
+            ('KJFK 1 1 1 1 1 1 2 1', 'KJFK 1 2 1'),
         ):
             line, fixed = line.split(), fixed.split()
-            self.assertEqual(core.sanitize_report_list(line), (fixed, [], ''))
-        # Test extracting runway visibility and wind shear
-        line = 'EGLL 12345 KT R10/10 RETS WS020/07040KT 6SPM'.split()
-        fixed = 'EGLL 12345KT TS P6SM'.split()
-        self.assertEqual(core.sanitize_report_list(line), (fixed, ['R10/10'], 'WS020/07040'))
+            self.assertEqual(core.sanitize_report_list(line), fixed)
 
     def test_is_possible_temp(self):
         """
@@ -249,8 +290,9 @@ class TestGlobal(BaseTest):
             (['KJFK', '123456Z', '1'], ['1'], 'KJFK', '123456Z'),
             (['KJFK', '123456', '1'], ['1'], 'KJFK', '123456Z'),
             (['KJFK', '1234Z', '1'], ['1'], 'KJFK', '1234Z'),
-            (['KJFK', '1234', '1'], ['1234', '1'], 'KJFK', ''),
-            (['KJFK', '1'], ['1'], 'KJFK', '')
+            (['KJFK', '1234', '1'], ['1234', '1'], 'KJFK', None),
+            (['KJFK', '1'], ['1'], 'KJFK', None),
+            (['KJFK'], [], 'KJFK', None),
         ):
             self.assertEqual(core.get_station_and_time(wx), (ret, station, time))
 
@@ -328,40 +370,29 @@ class TestGlobal(BaseTest):
         ):
             self.assertEqual(core.sanitize_cloud(bad), good)
 
-    def test_split_cloud(self):
-        """
-        Tests that cloud strings and fixed and split into their two or three elements
-        """
-        for cloud, out in (
-            ('SCT060', ['SCT', 60]),
-            ('FEWO03', ['FEW', 3]),
-            ('BKNC015', ['BKN', 15, 'C']),
-            ('OVC120TS', ['OVC', 120, 'TS']),
-            ('VV002', ['VV', 2]),
-            ('SCT', ['SCT', None]),
-            ('FEW027///', ['FEW', 27, None]),
-        ):
-            self.assertEqual(core.split_cloud(cloud), out)
 
     def test_make_cloud(self):
         """
         Tests helper function which returns a Cloud dataclass
         """
         for cloud, out in (
-            ('SCT060', ['SCT', 60, None]),
-            ('FEWO03', ['FEW', 3, None]),
-            ('BKNC015', ['BKN', 15, 'C']),
-            ('OVC120TS', ['OVC', 120, 'TS']),
-            ('VV002', ['VV', 2, None]),
-            ('SCT', ['SCT', None, None]),
-            ('FEW027///', ['FEW', 27, None]),
-            ('FEW//////', ['FEW', None, None]),
-            ('FEW///TS', ['FEW', None, 'TS']),
+            ('SCT060', ['SCT', 60, None, None]),
+            ('FEWO03', ['FEW', 3, None, None]),
+            ('BKNC015', ['BKN', 15, None, 'C']),
+            ('OVC120TS', ['OVC', 120, None, 'TS']),
+            ('VV002', ['VV', 2, None, None]),
+            ('SCT', ['SCT', None, None, None]),
+            ('FEW027///', ['FEW', 27, None, None]),
+            ('FEW//////', ['FEW', None, None, None]),
+            ('FEW///TS', ['FEW', None, None, 'TS']),
+            ('OVC100-TOP110', ['OVC', 100, 110, None]),
+            ('OVC065-TOPUNKN', ['OVC', 65, None, None]),
+            ('SCT-BKN050-TOP100', ['SCT-BKN', 50, 100, None]),
         ):
             ret_cloud = core.make_cloud(cloud)
             self.assertIsInstance(ret_cloud, structs.Cloud)
             self.assertEqual(ret_cloud.repr, cloud)
-            for i, key in enumerate(('type', 'altitude', 'modifier')):
+            for i, key in enumerate(('type', 'base', 'top', 'modifier')):
                 self.assertEqual(getattr(ret_cloud, key), out[i])
 
     def test_get_clouds(self):
@@ -378,7 +409,7 @@ class TestGlobal(BaseTest):
             self.assertEqual(wx, ['1'])
             for i, cloud in enumerate(ret_clouds):
                 self.assertIsInstance(cloud, structs.Cloud)
-                for j, key in enumerate(('type', 'altitude', 'modifier')):
+                for j, key in enumerate(('type', 'base', 'modifier')):
                     self.assertEqual(getattr(cloud, key), clouds[i][j])
 
     def test_get_flight_rules(self):
@@ -506,6 +537,18 @@ class TestMetar(BaseTest):
         # The last one should have changed the unit
         self.assertEqual(units.altimeter, 'inHg')
 
+    def test_get_runway_visibility(self):
+        """
+        Tests extracting runway visibility
+        """
+        for wx, rvis in (
+            (['1', '2'], []),
+            (['1', '2', 'R10/10'], ['R10/10']),
+            (['1', '2', 'R02/05', 'R34/04'], ['R02/05', 'R34/04']),
+        ):
+            self.assertEqual(core.get_runway_visibility(wx), (['1', '2'], rvis))
+
+
 class TestTaf(unittest.TestCase):
 
     def test_get_taf_remarks(self):
@@ -556,7 +599,7 @@ class TestTaf(unittest.TestCase):
         for wx, *data  in (
             (['1'], '', [], []),
             (['1', '512345', '612345'], '', ['612345'], ['512345']),
-            (['QNH1234', '1', '612345'], '1234', ['612345'], [])
+            (['QNH1234', '1', '612345'], core.make_number('1234'), ['612345'], [])
         ):
             self.assertEqual(core.get_taf_alt_ice_turb(wx), (['1'], *data))
 
@@ -641,6 +684,17 @@ class TestTaf(unittest.TestCase):
         self.assertEqual(items, ['1', 'ODD','C'])
         self.assertEqual(tlist, ['2', '3'])
         self.assertEqual(qlist, ['4'])
+
+    def test_get_wind_shear(self):
+        """
+        Tests extracting wind shear
+        """
+        for wx, shear in (
+            (['1', '2'], None),
+            (['1', '2', 'WS020/07040'], 'WS020/07040'),
+        ):
+            self.assertEqual(core.get_wind_shear(wx), (['1', '2'], shear))
+
 
     # def test_get_taf_flight_rules(self):
     #     """
