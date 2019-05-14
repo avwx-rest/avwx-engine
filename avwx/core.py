@@ -61,14 +61,17 @@ def dedupe(items: list, only_neighbors: bool = False) -> list:
 
 def is_unknown(val: str) -> bool:
     """
-    Returns True if val contains only '/' characters
+    Returns True if val represents and unknown value
     """
-    for char in ('/', 'X'):
-        if val == char * len(val):
-            return True
-    for item in ('UNKN',):
-        if val.upper() == item:
-            return True
+    if not isinstance(val, str):
+        raise TypeError
+    if not val or val.upper() in ('UNKN',):
+        return True
+    for char in val:
+        if char not in ('/', 'X', '.',):
+            break
+    else:
+        return True
     return False
 
 
@@ -227,13 +230,17 @@ STR_REPL = {
     ' BRV': ' VRB',
     ' VRN': ' VRB',
     ' BRB': ' VRB',
+    ' VEB': ' VRB',
     ' VR0': ' VRB0',
     ' VB0': ' VRB0',
     ' RB0': ' VRB0',
     ' 0I0': ' 090',
     'Z/': 'Z ',
     'KKT ': 'KT ',
+    'KLT ': 'KT ',
+    'CALMKT ': 'CALM ',
     ' /34SM': '3/4SM',
+    ' 1/.2': '1/2',
 }
 
 
@@ -359,7 +366,7 @@ def extra_space_needed(item: str) -> int:
     if len(item) > 7 and is_timestamp(item[:7]):
         return 7
     # Connected to wind
-    if 'KT' in item and not item.endswith('KT'):
+    if len(item) > 5 and 'KT' in item and not item.endswith('KT'):
         sep = item.find('KT')
         if sep > 4:
             return sep + 2
@@ -619,6 +626,7 @@ def get_wind(wxdata: [str], units: Units) -> ([str], Number, Number, Number, [Nu
             ('O', '0'),
             ('/', ''),
             ('LKT', 'KT'),
+            ('GG', 'G'),
         ):
             item = item.replace(*replacements)
         #09010KT, 09010G15KT
@@ -646,6 +654,7 @@ def get_wind(wxdata: [str], units: Units) -> ([str], Number, Number, Number, [Nu
                 speed = item[3:g_index]
             else:
                 speed = item[3:]
+            direction = item[:3]
             wxdata.pop(0)
     #Separated Gust
     if wxdata and 1 < len(wxdata[0]) < 4 and wxdata[0][0] == 'G' and wxdata[0][1:].isdigit():
