@@ -13,7 +13,7 @@ jobs:
     steps:
       - checkout
 
-      Download and cache dependencies
+      # Download and cache dependencies
       - restore_cache:
           keys:
             - v1-dependencies-nox-2019.4.11
@@ -47,7 +47,7 @@ jobs:
     steps:
       - checkout
 
-      Download and cache dependencies
+      # Download and cache dependencies
       - restore_cache:
           keys:
             - v1-dependencies-nox-2019.4.11
