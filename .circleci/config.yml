@@ -8,7 +8,7 @@ jobs:
 
     steps:
       - checkout
-      - run: pip install --user nox
+      - run: sudo pip install nox
       - run: nox
 
       - store_artifacts:
