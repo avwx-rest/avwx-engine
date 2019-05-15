@@ -10,7 +10,3 @@ jobs:
       - checkout
       - run: sudo pip install nox
       - run: nox
-
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports
