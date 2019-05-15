@@ -1,43 +1,5 @@
-# Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-#
 version: 2
 jobs:
-  build:
-    docker:
-      - image: circleci/python:3.6.8
-
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-nox-2019.4.11
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run:
-          name: install nox
-          command: |
-            pip install nox==2019.4.11
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-nox-2019.4.11
-
-      - run:
-          name: run tests
-          command: |
-            nox
-
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports
   build:
     docker:
       - image: circleci/python:3.7.3
