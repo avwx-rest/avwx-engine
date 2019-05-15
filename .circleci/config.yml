@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  test:
     docker:
       - image: circleci/python:3.7.3
 
@@ -8,28 +8,8 @@ jobs:
 
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-nox-2019.4.11
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run:
-          name: install nox
-          command: |
-            pip install nox==2019.4.11
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-nox-2019.4.11
-
-      - run:
-          name: run tests
-          command: |
-            nox
+      - run: pip install --user nox
+      - run: nox
 
       - store_artifacts:
           path: test-reports
