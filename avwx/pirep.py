@@ -2,7 +2,7 @@
 Functions for parsing PIREPs
 """
 
-from avwx import core, static, structs
+from avwx import _core, static, structs
 from avwx.exceptions import BadStation
 from avwx.structs import (
     Aircraft, Cloud, Icing, Location, Number,
@@ -22,7 +22,7 @@ def _root(item: str) -> dict:
     # Find valid station
     for item in items:
         try:
-            core.valid_station(item)
+            _core.valid_station(item)
             station = item
             break
         except BadStation:
@@ -61,16 +61,16 @@ def _location(item: str) -> Location:
         station, direction, distance = items[0], items[1][:3], items[1][3:]
     # Convert non-null elements
     if direction:
-        direction = core.make_number(direction)
+        direction = _core.make_number(direction)
     if distance:
-        distance = core.make_number(distance)
+        distance = _core.make_number(distance)
     return Location(item, station, direction, distance)
 
 def _time(item: str) -> Timestamp:
     """
     Convert a time element to a Timestamp
     """
-    return core.make_timestamp(item, time_only=True)
+    return _core.make_timestamp(item, time_only=True)
 
 
 def _altitude(item: str) -> 'Number|str':
@@ -78,7 +78,7 @@ def _altitude(item: str) -> 'Number|str':
     Convert reporting altitude to a Number or string
     """
     if item.isdigit():
-        return core.make_number(item)
+        return _core.make_number(item)
     return item
 
 
@@ -102,14 +102,14 @@ def _clouds(item: str) -> [Cloud]:
         base = clouds[clouds.index('BASES')+1]
         top = clouds[clouds.index('TOPS')+1]
         return [structs.Cloud(item, base=base, top=top)]
-    return [core.make_cloud(cloud) for cloud in clouds]
+    return [_core.make_cloud(cloud) for cloud in clouds]
 
 
 def _number(item: str) -> Number:
     """
     Convert an element to a Number
     """
-    return core.make_number(item)
+    return _core.make_number(item)
 
 def _turbulance(item: str) -> Turbulance:
     """
@@ -121,7 +121,7 @@ def _turbulance(item: str) -> Turbulance:
         hloc = item.find('-')
         if hloc > -1 and item[:hloc].isdigit() and item[hloc+1:].isdigit():
             for key, val in zip(('floor', 'ceiling'), items.pop(i).split('-')):
-                ret[key] = core.make_number(val)
+                ret[key] = _core.make_number(val)
             break
     ret['severity'] = ' '.join(items)
     return Turbulance(**ret)
@@ -137,7 +137,7 @@ def _icing(item: str) -> Icing:
         hloc = item.find('-')
         if hloc > -1 and item[:hloc].isdigit() and item[hloc+1:].isdigit():
             for key, val in zip(('floor', 'ceiling'), items.pop(i).split('-')):
-                ret[key] = core.make_number(val)
+                ret[key] = _core.make_number(val)
             break
     if items:
         ret['type'] = items[0]
@@ -161,7 +161,7 @@ def _wx(item: str) -> dict:
         if len(item) < 3:
             ret['wx'].append(item)
         elif item.startswith('FV'):
-            _, ret['flight_visibility'] = core.get_visibility([item[2:]], _units)
+            _, ret['flight_visibility'] = _core.get_visibility([item[2:]], _units)
         else:
             ret['wx'].append(item)
     return ret
@@ -191,8 +191,8 @@ def parse(report: str) -> PirepData:
     """
     if not report:
         return None
-    clean = core.sanitize_report_string(report)
-    wxdata, *_ = core.sanitize_report_list(clean.split())
+    clean = _core.sanitize_report_string(report)
+    wxdata, *_ = _core.sanitize_report_list(clean.split())
     sanitized = ' '.join(wxdata)
     wxresp = {'raw': report, 'sanitized': sanitized, 'station': None, 'remarks': None}
     wxdata = sanitized.split('/')

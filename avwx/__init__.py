@@ -7,7 +7,7 @@ from abc import abstractmethod
 from datetime import datetime
 # module
 from avwx import metar, taf, airep, pirep, translate, summary, speech, service, static, structs
-from avwx.core import valid_station
+from avwx._core import valid_station
 from avwx.structs import Station
 
 

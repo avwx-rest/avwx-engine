@@ -11,7 +11,7 @@ from urllib.parse import urlencode
 import aiohttp
 from xmltodict import parse as parsexml
 # module
-from avwx.core import dedupe, valid_station
+from avwx._core import dedupe, valid_station
 from avwx.exceptions import InvalidRequest, SourceError
 
 _atimeout = aiohttp.ClientTimeout(total=10)

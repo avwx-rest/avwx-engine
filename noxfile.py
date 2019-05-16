@@ -4,4 +4,4 @@ import nox
 def tests(session):
     session.install('.')
     session.install('pytest')
-    session.run('pytest')
+    session.run('pytest', '--disable-warnings')

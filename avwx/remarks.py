@@ -3,7 +3,7 @@ Contains functions for handling and translating remarks
 """
 
 # module
-from avwx import core
+from avwx import _core
 from avwx.static import PRESSURE_TENDENCIES, REMARKS_ELEMENTS, REMARKS_GROUPS, WX_TRANSLATIONS
 from avwx.structs import RemarksData
 
@@ -79,8 +79,8 @@ def parse(rmk: str) -> RemarksData:
     rmkdata = {}
     for item in rmk.split():
         if len(item) in [5, 9] and item[0] == 'T' and item[1:].isdigit():
-            rmkdata['temperature_decimal'] = core.make_number(_tdec(item[1:5], None))
-            rmkdata['dewpoint_decimal'] = core.make_number(_tdec(item[5:], None))
+            rmkdata['temperature_decimal'] = _core.make_number(_tdec(item[1:5], None))
+            rmkdata['dewpoint_decimal'] = _core.make_number(_tdec(item[5:], None))
     return RemarksData(**rmkdata)
 
 

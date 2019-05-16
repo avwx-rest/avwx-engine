@@ -6,7 +6,7 @@ tests/test_speech.py
 # library
 import unittest
 # module
-from avwx import core, speech, static, structs
+from avwx import _core, speech, static, structs
 
 class TestSpeech(unittest.TestCase):
 
@@ -21,9 +21,9 @@ class TestSpeech(unittest.TestCase):
             ('VRB', '5', '12', None, 'Variable at 5kt gusting to 12kt'),
             ('270', '10', '', ['240', '300'], 'two seven zero (variable two four zero to three zero zero) at 10kt'),
         ):
-            wind = [core.make_number(i) for i in wind]
+            wind = [_core.make_number(i) for i in wind]
             if vardir:
-                vardir = [core.make_number(i, speak=i) for i in vardir]
+                vardir = [_core.make_number(i, speak=i) for i in vardir]
             self.assertEqual(speech.wind(*wind, vardir), 'Winds ' + spoken)
 
     def test_temperature(self):
@@ -37,7 +37,7 @@ class TestSpeech(unittest.TestCase):
             ('20', 'C', 'two zero degrees Celsius'),
             ('1', 'C', 'one degree Celsius'),
         ):
-            self.assertEqual(speech.temperature('Temp', core.make_number(temp), unit), 'Temp ' + spoken)
+            self.assertEqual(speech.temperature('Temp', _core.make_number(temp), unit), 'Temp ' + spoken)
 
     def test_visibility(self):
         """
@@ -54,7 +54,7 @@ class TestSpeech(unittest.TestCase):
             ('3/2', 'sm', 'one and one half miles'),
             ('3', 'sm', 'three miles'),
         ):
-            self.assertEqual(speech.visibility(core.make_number(vis), unit), 'Visibility ' + spoken)
+            self.assertEqual(speech.visibility(_core.make_number(vis), unit), 'Visibility ' + spoken)
 
     def test_altimeter(self):
         """
@@ -69,7 +69,7 @@ class TestSpeech(unittest.TestCase):
             ('2992', 'inHg', 'two nine point nine two'),
             ('3005', 'inHg', 'three zero point zero five'),
         ):
-            self.assertEqual(speech.altimeter(core.make_number(alt), unit), 'Altimeter ' + spoken)
+            self.assertEqual(speech.altimeter(_core.make_number(alt), unit), 'Altimeter ' + spoken)
 
     def test_other(self):
         """
@@ -89,18 +89,18 @@ class TestSpeech(unittest.TestCase):
         """
         units = structs.Units(**static.NA_UNITS)
         data = {
-            'altimeter': core.make_number('2992'),
-            'clouds': [core.make_cloud('BKN015CB')],
-            'dewpoint': core.make_number('M01'),
+            'altimeter': _core.make_number('2992'),
+            'clouds': [_core.make_cloud('BKN015CB')],
+            'dewpoint': _core.make_number('M01'),
             'other': ['+RA'],
-            'temperature': core.make_number('03'),
-            'visibility': core.make_number('3'),
-            'wind_direction': core.make_number('360'),
-            'wind_gust': core.make_number('20'),
-            'wind_speed': core.make_number('12'),
+            'temperature': _core.make_number('03'),
+            'visibility': _core.make_number('3'),
+            'wind_direction': _core.make_number('360'),
+            'wind_gust': _core.make_number('20'),
+            'wind_speed': _core.make_number('12'),
             'wind_variable_direction': [
-                core.make_number('340'),
-                core.make_number('020', speak='020')
+                _core.make_number('340'),
+                _core.make_number('020', speak='020')
             ]
         }
         data.update({k: None for k in (
@@ -131,9 +131,9 @@ class TestSpeech(unittest.TestCase):
             ('INTER', '2423', '2500', None, 'From 23 to midnight zulu, intermittent'),
             ('TEMPO', '0102', '0103', None, 'From 2 to 3 zulu, temporary'),
         ):
-            times = [core.make_timestamp(time) for time in times]
+            times = [_core.make_timestamp(time) for time in times]
             if prob is not None:
-                prob = core.make_number(prob)
+                prob = _core.make_number(prob)
             ret = speech.type_and_times(type, *times, prob)
             self.assertIsInstance(ret, str)
             self.assertEqual(ret, spoken)
@@ -156,19 +156,19 @@ class TestSpeech(unittest.TestCase):
         """
         units = structs.Units(**static.NA_UNITS)
         line = {
-            'altimeter': core.make_number('2992'),
-            'clouds': [core.make_cloud('BKN015CB')],
-            'end_time': core.make_timestamp('1206'),
+            'altimeter': _core.make_number('2992'),
+            'clouds': [_core.make_cloud('BKN015CB')],
+            'end_time': _core.make_timestamp('1206'),
             'icing': ['611005'],
             'other': ['+RA'],
-            'start_time': core.make_timestamp('1202'),
+            'start_time': _core.make_timestamp('1202'),
             'turbulance': ['540553'],
             'type': 'FROM',
-            'visibility': core.make_number('3'),
-            'wind_direction': core.make_number('360'),
-            'wind_gust': core.make_number('20'),
+            'visibility': _core.make_number('3'),
+            'wind_direction': _core.make_number('360'),
+            'wind_gust': _core.make_number('20'),
             'wind_shear': 'WS020/07040KT',
-            'wind_speed': core.make_number('12'),
+            'wind_speed': _core.make_number('12'),
         }
         line.update({k: None for k in ('flight_rules', 'probability', 'raw', 'sanitized')})
         line = structs.TafLineData(**line)
@@ -191,26 +191,26 @@ class TestSpeech(unittest.TestCase):
         forecast = [structs.TafLineData(**{**empty_line, **line}) for line in (
             {
                 'type': 'FROM',
-                'start_time': core.make_timestamp('0410Z'),
-                'end_time': core.make_timestamp('0414Z'),
-                'visibility': core.make_number('3'),
-                'wind_direction': core.make_number('360'),
-                'wind_gust': core.make_number('20'),
-                'wind_speed': core.make_number('12'),
+                'start_time': _core.make_timestamp('0410Z'),
+                'end_time': _core.make_timestamp('0414Z'),
+                'visibility': _core.make_number('3'),
+                'wind_direction': _core.make_number('360'),
+                'wind_gust': _core.make_number('20'),
+                'wind_speed': _core.make_number('12'),
             },
             {
                 'type': 'PROB',
-                'probability': core.make_number('45'),
-                'start_time': core.make_timestamp('0412Z'),
-                'end_time': core.make_timestamp('0414Z'),
-                'visibility': core.make_number('M1/4'),
+                'probability': _core.make_number('45'),
+                'start_time': _core.make_timestamp('0412Z'),
+                'end_time': _core.make_timestamp('0414Z'),
+                'visibility': _core.make_number('M1/4'),
             },
         )]
         taf = structs.TafData(
             raw=None, remarks=None, station=None, time=None,
             forecast=forecast,
-            start_time=core.make_timestamp('0410Z'),
-            end_time=core.make_timestamp('0414Z')
+            start_time=_core.make_timestamp('0410Z'),
+            end_time=_core.make_timestamp('0414Z')
         )
         ret = speech.taf(taf, units)
         spoken = (f"Starting on {taf.start_time.dt.strftime('%B')} 4th - From 10 to 14 zulu, "
