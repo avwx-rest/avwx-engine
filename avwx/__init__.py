@@ -5,8 +5,20 @@ Aviation weather report parsing library
 # stdlib
 from abc import abstractmethod
 from datetime import datetime
+
 # module
-from avwx import metar, taf, airep, pirep, translate, summary, speech, service, static, structs
+from avwx import (
+    metar,
+    taf,
+    airep,
+    pirep,
+    translate,
+    summary,
+    speech,
+    service,
+    static,
+    structs,
+)
 from avwx._core import valid_station
 from avwx.structs import Station
 
@@ -39,7 +51,7 @@ class Report(object):
 
         #: Service object used to fetch the report string
         self.service = service.get_service(station)(self.__class__.__name__.lower())
-        
+
         #: 4-character ICAO station ident code the report was initialized with
         self.station = station
 
@@ -59,7 +71,7 @@ class Report(object):
         pass
 
     @classmethod
-    def from_report(cls, report: str) -> 'Report':
+    def from_report(cls, report: str) -> "Report":
         """
         Returns an updated report object based on an existing report
         """
@@ -97,7 +109,7 @@ class Report(object):
         return True
 
     def __repr__(self) -> str:
-        return f'<avwx.{self.__class__.__name__} station={self.station}>'
+        return f"<avwx.{self.__class__.__name__} station={self.station}>"
 
 
 class Metar(Report):
@@ -157,6 +169,7 @@ class Taf(Report):
             self.update()
         return speech.taf(self.data, self.units)
 
+
 class Reports(object):
     """
     Base class containing multiple reports
@@ -179,10 +192,10 @@ class Reports(object):
             lat = station.latitude
             lon = station.longitude
         elif lat is None or lon is None:
-            raise ValueError('No station or valid coordinates given')
+            raise ValueError("No station or valid coordinates given")
         self.lat = lat
         self.lon = lon
-        self.service = service.NOAA('aircraftreport')
+        self.service = service.NOAA("aircraftreport")
 
     def _post_update(self):
         pass
@@ -240,7 +253,7 @@ class Pireps(Reports):
         """
         Removes AIREPs before updating raw_reports
         """
-        return [r for r in reports if not r.startswith('ARP')]
+        return [r for r in reports if not r.startswith("ARP")]
 
     def _post_update(self):
         self.data = []
@@ -260,7 +273,7 @@ class Aireps(Reports):
         """
         Removes PIREPs before updating raw_reports
         """
-        return [r for r in reports if r.startswith('ARP')]
+        return [r for r in reports if r.startswith("ARP")]
 
     def _post_update(self):
         self.data = []

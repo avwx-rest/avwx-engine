@@ -3,16 +3,10 @@
 ### Master
 
 [![PyPI version](https://badge.fury.io/py/avwx-engine.svg)](https://badge.fury.io/py/avwx-engine)
-[![Code Health](https://landscape.io/github/flyinactor91/AVWX-Engine/master/landscape.svg?style=flat)](https://landscape.io/github/flyinactor91/AVWX-Engine/master)
-[![Requirements Status](https://requires.io/github/flyinactor91/AVWX-Engine/requirements.svg?branch=master)](https://requires.io/github/flyinactor91/AVWX-Engine/requirements/?branch=master)
+[![Code Health](https://landscape.io/github/avwx-rest/AVWX-Engine/master/landscape.svg?style=flat)](https://landscape.io/github/avwx-rest/AVWX-Engine/master)
+[![Requirements Status](https://requires.io/github/avwx-rest/AVWX-Engine/requirements.svg?branch=master)](https://requires.io/github/avwx-rest/AVWX-Engine/requirements/?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/avwx-engine/badge/?version=latest)](http://avwx-engine.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/pypi/l/avwx-engine.svg)](https://pypi.org/project/avwx-engine/)
-
-### Dev
-
-[![Code Health](https://landscape.io/github/flyinactor91/AVWX-Engine/dev/landscape.svg?style=flat)](https://landscape.io/github/flyinactor91/AVWX-Engine/dev)
-[![Requirements Status](https://requires.io/github/flyinactor91/AVWX-Engine/requirements.svg?branch=dev)](https://requires.io/github/flyinactor91/AVWX-Engine/requirements/?branch=dev)
-<!-- [![Documentation Status](https://readthedocs.org/projects/avwx-engine/badge/?version=dev)](http://avwx-engine.readthedocs.io/en/latest/?badge=dev) -->
 
 Aviation Weather parsing engine. METAR &amp; TAF
 
@@ -54,7 +48,15 @@ cd AVWX-Engine
 pip install -U .
 ```
 
-No other packages are necessary.
+Code checked into this repository is expected to be run through the `black` code formatter first.
+
+```bash
+# Install black
+pip install black
+
+# Format py package files
+find avwx -iname "*.py" | xargs black
+```
 
 # Test
 

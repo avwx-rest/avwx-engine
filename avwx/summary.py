@@ -12,20 +12,20 @@ def metar(trans: MetarTrans) -> str:
     """
     summary = []
     if trans.wind:
-        summary.append('Winds ' + trans.wind)
+        summary.append("Winds " + trans.wind)
     if trans.visibility:
-        summary.append('Vis ' + trans.visibility[:trans.visibility.find(' (')].lower())
+        summary.append("Vis " + trans.visibility[: trans.visibility.find(" (")].lower())
     if trans.temperature:
-        summary.append('Temp ' + trans.temperature[:trans.temperature.find(' (')])
+        summary.append("Temp " + trans.temperature[: trans.temperature.find(" (")])
     if trans.dewpoint:
-        summary.append('Dew ' + trans.dewpoint[:trans.dewpoint.find(' (')])
+        summary.append("Dew " + trans.dewpoint[: trans.dewpoint.find(" (")])
     if trans.altimeter:
-        summary.append('Alt ' + trans.altimeter[:trans.altimeter.find(' (')])
+        summary.append("Alt " + trans.altimeter[: trans.altimeter.find(" (")])
     if trans.other:
         summary.append(trans.other)
     if trans.clouds:
-        summary.append(trans.clouds.replace(' - Reported AGL', ''))
-    return ', '.join(summary)
+        summary.append(trans.clouds.replace(" - Reported AGL", ""))
+    return ", ".join(summary)
 
 
 def taf(trans: TafLineTrans) -> str:
@@ -34,19 +34,19 @@ def taf(trans: TafLineTrans) -> str:
     """
     summary = []
     if trans.wind:
-        summary.append('Winds ' + trans.wind)
+        summary.append("Winds " + trans.wind)
     if trans.visibility:
-        summary.append('Vis ' + trans.visibility[:trans.visibility.find(' (')].lower())
+        summary.append("Vis " + trans.visibility[: trans.visibility.find(" (")].lower())
     if trans.altimeter:
-        summary.append('Alt ' + trans.altimeter[:trans.altimeter.find(' (')])
+        summary.append("Alt " + trans.altimeter[: trans.altimeter.find(" (")])
     if trans.other:
         summary.append(trans.other)
     if trans.clouds:
-        summary.append(trans.clouds.replace(' - Reported AGL', ''))
+        summary.append(trans.clouds.replace(" - Reported AGL", ""))
     if trans.wind_shear:
         summary.append(trans.wind_shear)
     if trans.turbulance:
         summary.append(trans.turbulance)
     if trans.icing:
         summary.append(trans.icing)
-    return ', '.join(summary)
+    return ", ".join(summary)

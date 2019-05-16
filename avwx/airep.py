@@ -4,6 +4,7 @@
 from avwx import _core
 from avwx.structs import AirepData
 
+
 def parse(report: str) -> AirepData:
     """
     """
@@ -11,7 +12,7 @@ def parse(report: str) -> AirepData:
         return None
     clean = _core.sanitize_report_string(report)
     wxdata, *_ = _core.sanitize_report_list(clean.split())
-    wxresp = {'raw': report, 'sanitized': ' '.join(wxdata)}
+    wxresp = {"raw": report, "sanitized": " ".join(wxdata)}
     print(wxdata)
     print(wxresp)
     return None
