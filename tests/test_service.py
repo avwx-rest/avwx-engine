@@ -6,18 +6,20 @@ tests/test_service.py
 # library
 import pytest
 import unittest
+
 # module
 from avwx import exceptions, service
+
 
 class TestService(unittest.TestCase):
 
     serv: service.Service
-    name: str = 'Service'
+    name: str = "Service"
     stations: [str] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.serv = getattr(service, self.name)('metar')
+        self.serv = getattr(service, self.name)("metar")
         if not self.stations:
             self.stations = []
 
@@ -25,9 +27,9 @@ class TestService(unittest.TestCase):
         """
         Tests that the Service class is initialized properly
         """
-        for attr in ('url', 'rtype', 'make_err', '_extract', 'fetch'):
+        for attr in ("url", "rtype", "make_err", "_extract", "fetch"):
             self.assertTrue(hasattr(self.serv, attr))
-        self.assertEqual(self.serv.rtype, 'metar')
+        self.assertEqual(self.serv.rtype, "metar")
 
     def test_service(self):
         """
@@ -40,15 +42,17 @@ class TestService(unittest.TestCase):
         else:
             self.assertIsInstance(self.serv.url, str)
         self.assertIsInstance(self.serv.method, str)
-        self.assertIn(self.serv.method, ('GET', 'POST'))
+        self.assertIn(self.serv.method, ("GET", "POST"))
 
     def test_make_err(self):
         """
         Tests that InvalidRequest exceptions are generated with the right message
         """
-        key, msg = 'test_key', 'testing'
+        key, msg = "test_key", "testing"
         err = self.serv.make_err(msg, key)
-        err_str = f'Could not find {key} in {self.serv.__class__.__name__} response\n{msg}'
+        err_str = (
+            f"Could not find {key} in {self.serv.__class__.__name__} response\n{msg}"
+        )
         self.assertIsInstance(err, exceptions.InvalidRequest)
         self.assertEqual(err.args, (err_str,))
         self.assertEqual(str(err), err_str)
@@ -57,26 +61,26 @@ class TestService(unittest.TestCase):
         """
         Tests fetch exception handling
         """
-        for station in ('12K', 'MAYT'):
+        for station in ("12K", "MAYT"):
             with self.assertRaises(exceptions.BadStation):
                 self.serv.fetch(station)
         # Should raise exception due to empty url
-        if self.name == 'Service':
+        if self.name == "Service":
             with self.assertRaises(NotImplementedError):
-                self.serv.fetch('KJFK')
+                self.serv.fetch("KJFK")
 
     @pytest.mark.asyncio
     async def test_async_fetch_exceptions(self):
         """
         Tests async fetch exception handling
         """
-        for station in ('12K', 'MAYT'):
+        for station in ("12K", "MAYT"):
             with self.assertRaises(exceptions.BadStation):
                 await self.serv.async_fetch(station)
         # Should raise exception due to empty url
-        if self.name == 'Service':
+        if self.name == "Service":
             with self.assertRaises(AttributeError):
-                await self.serv.async_fetch('KJFK')
+                await self.serv.async_fetch("KJFK")
 
     def test_fetch(self):
         """
@@ -97,31 +101,34 @@ class TestService(unittest.TestCase):
             self.assertIsInstance(report, str)
             self.assertTrue(report.startswith(station))
 
+
 class TestNOAA(TestService):
 
-    name = 'NOAA'
-    stations = ['KJFK', 'EGLL', 'PHNL']
+    name = "NOAA"
+    stations = ["KJFK", "EGLL", "PHNL"]
+
 
 class TestAMO(TestService):
 
-    name = 'AMO'
-    stations = ['RKSI', 'RKSS', 'RKNY']
+    name = "AMO"
+    stations = ["RKSI", "RKSS", "RKNY"]
+
 
 class TestMAC(TestService):
 
-    name = 'MAC'
-    stations = ['SKBO']
+    name = "MAC"
+    stations = ["SKBO"]
+
 
 class TestModule(unittest.TestCase):
-
     def test_get_service(self):
         """
         Tests that the correct service class is returned
         """
         for stations, serv in (
-            (('KJFK', 'EGLL', 'PHNL'), service.NOAA),
-            (('RKSI',), service.AMO),
-            (('SKBO', 'SKPP'), service.MAC),
+            (("KJFK", "EGLL", "PHNL"), service.NOAA),
+            (("RKSI",), service.AMO),
+            (("SKBO", "SKPP"), service.MAC),
         ):
             for station in stations:
-                self.assertIsInstance(service.get_service(station)('metar'), serv)
+                self.assertIsInstance(service.get_service(station)("metar"), serv)
