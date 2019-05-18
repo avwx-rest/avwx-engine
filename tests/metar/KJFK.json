@@ -1,56 +1,48 @@
 {
     "data": {
         "altimeter": {
-            "repr": "3005",
-            "spoken": "three zero point zero five",
-            "value": 30.05
+            "repr": "3001",
+            "spoken": "three zero point zero one",
+            "value": 30.01
         },
         "clouds": [
             {
-                "base": 55,
+                "base": 250,
                 "direction": null,
                 "modifier": null,
-                "repr": "BKN055",
-                "top": null,
-                "type": "BKN"
-            },
-            {
-                "base": 80,
-                "direction": null,
-                "modifier": null,
-                "repr": "BKN080",
+                "repr": "BKN250",
                 "top": null,
                 "type": "BKN"
             }
         ],
         "dewpoint": {
-            "repr": "19",
-            "spoken": "one nine",
-            "value": 19
+            "repr": "07",
+            "spoken": "seven",
+            "value": 7
         },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "KJFK 192351Z 11006KT 10SM BKN055 BKN080 21/19 A3005 RMK AO2 SLP176 60000 T02110194 10228 20211 51014",
-        "remarks": "RMK AO2 SLP176 60000 T02110194 10228 20211 51014",
+        "raw": "KJFK 181351Z 01007KT 10SM BKN250 18/07 A3001 RMK AO2 SLP163 T01780072",
+        "remarks": "RMK AO2 SLP163 T01780072",
         "remarks_info": {
             "dewpoint_decimal": {
-                "repr": "19.4",
-                "spoken": "one nine point four",
-                "value": 19.4
+                "repr": "7.2",
+                "spoken": "seven point two",
+                "value": 7.2
             },
             "temperature_decimal": {
-                "repr": "21.1",
-                "spoken": "two one point one",
-                "value": 21.1
+                "repr": "17.8",
+                "spoken": "one seven point eight",
+                "value": 17.8
             }
         },
         "runway_visibility": [],
-        "sanitized": "KJFK 192351Z 11006KT 10SM BKN055 BKN080 21/19 A3005 RMK AO2 SLP176 60000 T02110194 10228 20211 51014",
+        "sanitized": "KJFK 181351Z 01007KT 10SM BKN250 18/07 A3001 RMK AO2 SLP163 T01780072",
         "station": "KJFK",
         "temperature": {
-            "repr": "21",
-            "spoken": "two one",
-            "value": 21
+            "repr": "18",
+            "spoken": "one eight",
+            "value": 18
         },
         "time": null,
         "visibility": {
@@ -59,74 +51,74 @@
             "value": 10
         },
         "wind_direction": {
-            "repr": "110",
-            "spoken": "one one zero",
-            "value": 110
+            "repr": "010",
+            "spoken": "zero one zero",
+            "value": 10
         },
         "wind_gust": null,
         "wind_speed": {
-            "repr": "06",
-            "spoken": "six",
-            "value": 6
+            "repr": "07",
+            "spoken": "seven",
+            "value": 7
         },
         "wind_variable_direction": []
     },
-    "speech": "Winds one one zero at 6kt. Visibility one zero miles. Temperature two one degrees Celsius. Dew point one nine degrees Celsius. Altimeter three zero point zero five. Broken layer at 5500ft. Broken layer at 8000ft",
+    "speech": "Winds zero one zero at 7kt. Visibility one zero miles. Temperature one eight degrees Celsius. Dew point seven degrees Celsius. Altimeter three zero point zero one. Broken layer at 25000ft",
     "station_info": {
-        "city": "New York City",
-        "country": "USA",
-        "elevation": 4.3,
+        "city": "New York",
+        "country": "US",
+        "elevation_ft": 13,
+        "elevation_m": 4,
         "iata": "JFK",
         "icao": "KJFK",
-        "latitude": 40.63975111,
-        "longitude": -73.77892556,
+        "latitude": 40.63980103,
+        "longitude": -73.77890015,
         "name": "John F Kennedy International Airport",
-        "priority": 1,
+        "note": "Manhattan, New York City, NYC, Idlewild",
         "runways": [
             {
                 "ident1": "13R",
                 "ident2": "31L",
-                "length": 14572,
-                "width": 150
+                "length_ft": 14572,
+                "width_ft": 150
             },
             {
                 "ident1": "04L",
                 "ident2": "22R",
-                "length": 11351,
-                "width": 150
+                "length_ft": 11351,
+                "width_ft": 150
             },
             {
                 "ident1": "13L",
                 "ident2": "31R",
-                "length": 10000,
-                "width": 150
+                "length_ft": 10000,
+                "width_ft": 150
             },
             {
                 "ident1": "04R",
                 "ident2": "22L",
-                "length": 8400,
-                "width": 200
+                "length_ft": 8400,
+                "width_ft": 200
             }
         ],
-        "state": "NY"
+        "state": "NY",
+        "type": "large_airport",
+        "website": "http://www.panynj.gov/CommutingTravel/airports/html/kennedy.html",
+        "wiki": "http://en.wikipedia.org/wiki/John_F._Kennedy_International_Airport"
     },
-    "summary": "Winds ESE-110 at 6kt, Vis 10sm, Temp 21\u00b0C, Dew 19\u00b0C, Alt 30.05 inHg, Broken layer at 5500ft, Broken layer at 8000ft",
+    "summary": "Winds N-010 at 7kt, Vis 10sm, Temp 18\u00b0C, Dew 7\u00b0C, Alt 30.01 inHg, Broken layer at 25000ft",
     "translations": {
-        "altimeter": "30.05 inHg (1018 hPa)",
-        "clouds": "Broken layer at 5500ft, Broken layer at 8000ft - Reported AGL",
-        "dewpoint": "19\u00b0C (66\u00b0F)",
+        "altimeter": "30.01 inHg (1016 hPa)",
+        "clouds": "Broken layer at 25000ft - Reported AGL",
+        "dewpoint": "7\u00b0C (45\u00b0F)",
         "other": "",
         "remarks": {
-            "10228": "6-hour maximum temperature 22.8\u00b0C",
-            "20211": "6-hour minimum temperature 21.1\u00b0C",
-            "51014": "3-hour pressure difference: +/- 1.4 mb - Increasing, then steady",
-            "60000": "Precipitation in the last 3 hours: 0 in. - 6 hours: 0 in.",
             "AO2": "Automated with precipitation sensor",
-            "SLP176": "Sea level pressure: 1017.6 hPa",
-            "T02110194": "Temperature 21.1\u00b0C and dewpoint 19.4\u00b0C"
+            "SLP163": "Sea level pressure: 1016.3 hPa",
+            "T01780072": "Temperature 17.8\u00b0C and dewpoint 7.2\u00b0C"
         },
-        "temperature": "21\u00b0C (70\u00b0F)",
+        "temperature": "18\u00b0C (64\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "ESE-110 at 6kt"
+        "wind": "N-010 at 7kt"
     }
 }

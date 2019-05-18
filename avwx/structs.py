@@ -7,21 +7,23 @@ import json
 from copy import copy
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from os import path
+from pathlib import Path
 
 # module
 from avwx.exceptions import BadStation
 
 
-_dir = path.dirname(path.realpath(__file__))
-STATIONS = json.load(open(path.join(_dir, "stations.json")))
-AIRCRAFT = json.load(open(path.join(_dir, "aircraft.json")))
+_dir = Path(__file__).parent
+STATIONS = json.load(open(_dir.joinpath("stations.json")))
+AIRCRAFT = json.load(open(_dir.joinpath("aircraft.json")))
+
+STATION_UPDATED = "2019-05-17"
 
 
 @dataclass
 class Runway(object):
-    length: int
-    width: int
+    length_ft: int
+    width_ft: int
     ident1: str
     ident2: str
 
@@ -30,15 +32,19 @@ class Runway(object):
 class Station(object):
     city: str
     country: str
-    elevation: float
+    elevation_ft: int
+    elevation_m: int
     iata: str
     icao: str
     latitude: float
     longitude: float
     name: str
-    priority: int
-    state: str
+    note: str
     runways: [Runway]
+    state: str
+    type: str
+    website: str
+    wiki: str
 
     @classmethod
     def from_icao(cls, ident: str) -> "Station":

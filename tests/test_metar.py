@@ -5,11 +5,11 @@ tests/test_metar.py
 
 # library
 import json
-import os
 import unittest
 from dataclasses import asdict
 from datetime import datetime
 from glob import glob
+from pathlib import Path
 
 # module
 from avwx import metar, structs, Metar
@@ -35,7 +35,7 @@ class TestMetar(unittest.TestCase):
         """
         Performs an end-to-end test of all METAR JSON files
         """
-        for path in glob(os.path.dirname(os.path.realpath(__file__)) + "/metar/*.json"):
+        for path in glob(str(Path(__file__).parent.joinpath("metar", "*.json"))):
             ref = json.load(open(path))
             station = Metar(path.split("/")[-1][:4])
             self.assertIsNone(station.last_updated)

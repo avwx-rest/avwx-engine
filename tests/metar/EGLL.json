@@ -1,40 +1,40 @@
 {
     "data": {
         "altimeter": {
-            "repr": "1020",
-            "spoken": "one zero two zero",
-            "value": 1020
+            "repr": "1006",
+            "spoken": "one zero zero six",
+            "value": 1006
         },
         "clouds": [
             {
-                "base": 31,
+                "base": 36,
                 "direction": null,
                 "modifier": null,
-                "repr": "OVC031",
+                "repr": "BKN036",
                 "top": null,
-                "type": "OVC"
+                "type": "BKN"
             }
         ],
         "dewpoint": {
-            "repr": "16",
-            "spoken": "one six",
-            "value": 16
+            "repr": "09",
+            "spoken": "nine",
+            "value": 9
         },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "EGLL 192350Z AUTO 28008KT 9999 OVC031 19/16 Q1020 NOSIG",
-        "remarks": "NOSIG",
+        "raw": "EGLL 181350Z AUTO VRB02KT 9999 BKN036 17/09 Q1006",
+        "remarks": "",
         "remarks_info": {
             "dewpoint_decimal": null,
             "temperature_decimal": null
         },
         "runway_visibility": [],
-        "sanitized": "EGLL 192350Z 28008KT 9999 OVC031 19/16 Q1020 NOSIG",
+        "sanitized": "EGLL 181350Z VRB02KT 9999 BKN036 17/09 Q1006 ",
         "station": "EGLL",
         "temperature": {
-            "repr": "19",
-            "spoken": "one nine",
-            "value": 19
+            "repr": "17",
+            "spoken": "one seven",
+            "value": 17
         },
         "time": null,
         "visibility": {
@@ -43,54 +43,58 @@
             "value": 9999
         },
         "wind_direction": {
-            "repr": "280",
-            "spoken": "two eight zero",
-            "value": 280
+            "repr": "VRB",
+            "spoken": "variable",
+            "value": null
         },
         "wind_gust": null,
         "wind_speed": {
-            "repr": "08",
-            "spoken": "eight",
-            "value": 8
+            "repr": "02",
+            "spoken": "two",
+            "value": 2
         },
         "wind_variable_direction": []
     },
-    "speech": "Winds two eight zero at 8kt. Visibility one zero kilometers. Temperature one nine degrees Celsius. Dew point one six degrees Celsius. Altimeter one zero two zero. Overcast layer at 3100ft",
+    "speech": "Winds Variable at 2kt. Visibility one zero kilometers. Temperature one seven degrees Celsius. Dew point nine degrees Celsius. Altimeter one zero zero six. Broken layer at 3600ft",
     "station_info": {
         "city": "London",
-        "country": "GBR",
-        "elevation": 24.4,
+        "country": "GB",
+        "elevation_ft": 83,
+        "elevation_m": 25,
         "iata": "LHR",
         "icao": "EGLL",
-        "latitude": 51.47916667,
-        "longitude": -0.450555556,
-        "name": "Heathrow",
-        "priority": 6,
+        "latitude": 51.4706,
+        "longitude": -0.461941,
+        "name": "London Heathrow Airport",
+        "note": "LON, Londres",
         "runways": [
             {
-                "length": 12799,
-                "width": 164,
                 "ident1": "09L",
-                "ident2": "27R"
+                "ident2": "27R",
+                "length_ft": 12799,
+                "width_ft": 164
             },
             {
-                "length": 12001,
-                "width": 148,
                 "ident1": "09R",
-                "ident2": "27L"
+                "ident2": "27L",
+                "length_ft": 12001,
+                "width_ft": 148
             }
         ],
-        "state": "ENG"
+        "state": "ENG",
+        "type": "large_airport",
+        "website": "http://www.heathrowairport.com/",
+        "wiki": "https://en.wikipedia.org/wiki/Heathrow_Airport"
     },
-    "summary": "Winds W-280 at 8kt, Vis 10km, Temp 19\u00b0C, Dew 16\u00b0C, Alt 1020 hPa, Overcast layer at 3100ft",
+    "summary": "Winds Variable at 2kt, Vis 10km, Temp 17\u00b0C, Dew 9\u00b0C, Alt 1006 hPa, Broken layer at 3600ft",
     "translations": {
-        "altimeter": "1020 hPa (30.12 inHg)",
-        "clouds": "Overcast layer at 3100ft - Reported AGL",
-        "dewpoint": "16\u00b0C (61\u00b0F)",
+        "altimeter": "1006 hPa (29.71 inHg)",
+        "clouds": "Broken layer at 3600ft - Reported AGL",
+        "dewpoint": "9\u00b0C (48\u00b0F)",
         "other": "",
         "remarks": {},
-        "temperature": "19\u00b0C (66\u00b0F)",
+        "temperature": "17\u00b0C (63\u00b0F)",
         "visibility": "10km (6.2sm)",
-        "wind": "W-280 at 8kt"
+        "wind": "Variable at 2kt"
     }
 }

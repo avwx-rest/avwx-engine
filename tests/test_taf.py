@@ -6,12 +6,12 @@ tests/test_taf.py
 
 # library
 import json
-import os
 import unittest
 from copy import deepcopy
 from dataclasses import asdict
 from datetime import datetime
 from glob import glob
+from pathlib import Path
 
 # module
 from avwx import _core, taf, structs, Taf
@@ -124,7 +124,7 @@ class TestTaf(unittest.TestCase):
         Performs an end-to-end test of all TAF JSON files
         """
         nodate = lambda s: s[s.find("-") + 2 :]
-        for path in glob(os.path.dirname(os.path.realpath(__file__)) + "/taf/*.json"):
+        for path in glob(str(Path(__file__).parent.joinpath("taf", "*.json"))):
             ref = json.load(open(path))
             station = Taf(path.split("/")[-1][:4])
             self.assertIsNone(station.last_updated)

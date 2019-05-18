@@ -1,34 +1,34 @@
 {
     "data": {
         "altimeter": {
-            "repr": "2995",
-            "spoken": "two nine point nine five",
-            "value": 29.95
+            "repr": "3006",
+            "spoken": "three zero point zero six",
+            "value": 30.06
         },
         "clouds": [
             {
-                "base": 25,
+                "base": 17,
                 "direction": null,
                 "modifier": null,
-                "repr": "FEW025",
+                "repr": "FEW017",
                 "top": null,
                 "type": "FEW"
             },
             {
-                "base": 38,
+                "base": 27,
                 "direction": null,
                 "modifier": null,
-                "repr": "SCT038",
+                "repr": "SCT027",
                 "top": null,
                 "type": "SCT"
             },
             {
-                "base": 55,
+                "base": 34,
                 "direction": null,
                 "modifier": null,
-                "repr": "SCT055",
+                "repr": "BKN034",
                 "top": null,
-                "type": "SCT"
+                "type": "BKN"
             }
         ],
         "dewpoint": {
@@ -38,8 +38,8 @@
         },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "PHNL 192353Z 09013KT 10SM FEW025 SCT038 SCT055 32/22 A2995 RMK AO2 SLP142 T03220217 10328 20278 58014",
-        "remarks": "RMK AO2 SLP142 T03220217 10328 20278 58014",
+        "raw": "PHNL 181353Z 03003KT 10SM FEW017 SCT027 BKN034 23/22 A3006 RMK AO2 RAB11E41 SLP177 P0001 T02330217",
+        "remarks": "RMK AO2 RAB11E41 SLP177 P0001 T02330217",
         "remarks_info": {
             "dewpoint_decimal": {
                 "repr": "21.7",
@@ -47,18 +47,18 @@
                 "value": 21.7
             },
             "temperature_decimal": {
-                "repr": "32.2",
-                "spoken": "three two point two",
-                "value": 32.2
+                "repr": "23.3",
+                "spoken": "two three point three",
+                "value": 23.3
             }
         },
         "runway_visibility": [],
-        "sanitized": "PHNL 192353Z 09013KT 10SM FEW025 SCT038 SCT055 32/22 A2995 RMK AO2 SLP142 T03220217 10328 20278 58014",
+        "sanitized": "PHNL 181353Z 03003KT 10SM FEW017 SCT027 BKN034 23/22 A3006 RMK AO2 RAB11E41 SLP177 P0001 T02330217",
         "station": "PHNL",
         "temperature": {
-            "repr": "32",
-            "spoken": "three two",
-            "value": 32
+            "repr": "23",
+            "spoken": "two three",
+            "value": 23
         },
         "time": null,
         "visibility": {
@@ -67,85 +67,87 @@
             "value": 10
         },
         "wind_direction": {
-            "repr": "090",
-            "spoken": "zero nine zero",
-            "value": 90
+            "repr": "030",
+            "spoken": "zero three zero",
+            "value": 30
         },
         "wind_gust": null,
         "wind_speed": {
-            "repr": "13",
-            "spoken": "one three",
-            "value": 13
+            "repr": "03",
+            "spoken": "three",
+            "value": 3
         },
         "wind_variable_direction": []
     },
-    "speech": "Winds zero nine zero at 13kt. Visibility one zero miles. Temperature three two degrees Celsius. Dew point two two degrees Celsius. Altimeter two nine point nine five. Few clouds at 2500ft. Scattered clouds at 3800ft. Scattered clouds at 5500ft",
+    "speech": "Winds zero three zero at 3kt. Visibility one zero miles. Temperature two three degrees Celsius. Dew point two two degrees Celsius. Altimeter three zero point zero six. Few clouds at 1700ft. Scattered clouds at 2700ft. Broken layer at 3400ft",
     "station_info": {
         "city": "Honolulu",
-        "country": "USA",
-        "elevation": 4.0,
+        "country": "US",
+        "elevation_ft": 13,
+        "elevation_m": 4,
         "iata": "HNL",
         "icao": "PHNL",
-        "latitude": 21.31868128,
-        "longitude": -157.9224287,
-        "name": "International Airport",
-        "priority": 6,
+        "latitude": 21.32062,
+        "longitude": -157.924228,
+        "name": "Daniel K Inouye International Airport",
+        "note": "Hickam Air Force Base, HIK, PHIK, KHNL, Honolulu International",
         "runways": [
             {
-                "length": 12300,
-                "width": 150,
                 "ident1": "08L",
-                "ident2": "26R"
+                "ident2": "26R",
+                "length_ft": 12300,
+                "width_ft": 150
             },
             {
-                "length": 12000,
-                "width": 200,
                 "ident1": "08R",
-                "ident2": "26L"
+                "ident2": "26L",
+                "length_ft": 12000,
+                "width_ft": 200
             },
             {
-                "length": 9000,
-                "width": 150,
                 "ident1": "04R",
-                "ident2": "22L"
+                "ident2": "22L",
+                "length_ft": 9000,
+                "width_ft": 150
             },
             {
-                "length": 6952,
-                "width": 150,
                 "ident1": "04L",
-                "ident2": "22R"
+                "ident2": "22R",
+                "length_ft": 6952,
+                "width_ft": 150
             },
             {
-                "length": 5000,
-                "width": 300,
                 "ident1": "08W",
-                "ident2": "26W"
+                "ident2": "26W",
+                "length_ft": 5000,
+                "width_ft": 300
             },
             {
-                "length": 3000,
-                "width": 150,
                 "ident1": "04W",
-                "ident2": "22W"
+                "ident2": "22W",
+                "length_ft": 3000,
+                "width_ft": 150
             }
         ],
-        "state": "HI"
+        "state": "HI",
+        "type": "large_airport",
+        "website": "http://airports.hawaii.gov/hnl/",
+        "wiki": "https://en.wikipedia.org/wiki/Daniel_K._Inouye_International_Airport"
     },
-    "summary": "Winds E-090 at 13kt, Vis 10sm, Temp 32\u00b0C, Dew 22\u00b0C, Alt 29.95 inHg, Few clouds at 2500ft, Scattered clouds at 3800ft, Scattered clouds at 5500ft",
+    "summary": "Winds NNE-030 at 3kt, Vis 10sm, Temp 23\u00b0C, Dew 22\u00b0C, Alt 30.06 inHg, Few clouds at 1700ft, Scattered clouds at 2700ft, Broken layer at 3400ft",
     "translations": {
-        "altimeter": "29.95 inHg (1014 hPa)",
-        "clouds": "Few clouds at 2500ft, Scattered clouds at 3800ft, Scattered clouds at 5500ft - Reported AGL",
+        "altimeter": "30.06 inHg (1018 hPa)",
+        "clouds": "Few clouds at 1700ft, Scattered clouds at 2700ft, Broken layer at 3400ft - Reported AGL",
         "dewpoint": "22\u00b0C (72\u00b0F)",
         "other": "",
         "remarks": {
-            "10328": "6-hour maximum temperature 32.8\u00b0C",
-            "20278": "6-hour minimum temperature 27.8\u00b0C",
-            "58014": "3-hour pressure difference: +/- 1.4 mb - Steady or increasing, then decreasing",
             "AO2": "Automated with precipitation sensor",
-            "SLP142": "Sea level pressure: 1014.2 hPa",
-            "T03220217": "Temperature 32.2\u00b0C and dewpoint 21.7\u00b0C"
+            "P0001": "Hourly precipitation: 0.01 in.",
+            "SLP177": "Sea level pressure: 1017.7 hPa",
+            "T02330217": "Temperature 23.3\u00b0C and dewpoint 21.7\u00b0C"
         },
-        "temperature": "32\u00b0C (90\u00b0F)",
+        "temperature": "23\u00b0C (73\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "E-090 at 13kt"
+        "wind": "NNE-030 at 3kt"
     }
 }
