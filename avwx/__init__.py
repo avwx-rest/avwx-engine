@@ -8,16 +8,16 @@ from datetime import datetime
 
 # module
 from avwx import (
-    metar,
-    taf,
     airep,
+    metar,
     pirep,
-    translate,
-    summary,
-    speech,
     service,
+    speech,
     static,
     structs,
+    summary,
+    taf,
+    translate,
 )
 from avwx._core import valid_station
 from avwx.structs import Station
@@ -94,6 +94,7 @@ class Report(object):
         self.raw = report
         if not disable_post:
             self._post_update()
+        self.last_updated = datetime.utcnow()
         return True
 
     async def async_update(self, disable_post: bool = False) -> bool:
@@ -120,7 +121,6 @@ class Metar(Report):
     def _post_update(self):
         self.data, self.units = metar.parse(self.station, self.raw)
         self.translations = translate.metar(self.data, self.units)
-        self.last_updated = datetime.utcnow()
 
     @property
     def summary(self) -> str:
@@ -149,7 +149,6 @@ class Taf(Report):
     def _post_update(self):
         self.data, self.units = taf.parse(self.station, self.raw)
         self.translations = translate.taf(self.data, self.units)
-        self.last_updated = datetime.utcnow()
 
     @property
     def summary(self) -> [str]:
@@ -226,6 +225,7 @@ class Reports(object):
         self.raw = self._report_filter(reports)
         if not disable_post:
             self._post_update()
+        self.last_updated = datetime.utcnow()
         return True
 
     async def async_update(self, disable_post: bool = False) -> bool:

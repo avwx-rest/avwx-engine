@@ -23,22 +23,13 @@ def _root(item: str) -> dict:
     """
     Parses report root data including station and report type
     """
-    items = item.split()
     rtype = None
     station = None
-    # Find valid station
-    for item in items:
-        try:
-            _core.valid_station(item)
+    for item in item.split():
+        if item in ("UA", "UUA"):
+            rtype = item
+        elif not station:
             station = item
-            break
-        except BadStation:
-            continue
-    # Determine report type
-    if "UA" in items:
-        rtype = "UA"
-    elif "UUA" in items:
-        rtype = "UUA"
     return {"station": station, "type": rtype}
 
 
@@ -118,18 +109,39 @@ def _number(item: str) -> Number:
     return _core.make_number(item)
 
 
-def _turbulance(item: str) -> Turbulance:
+_DIR_SIG = {"BLO": "ceiling"}
+
+
+def _find_floor_ceiling(items: [str]) -> ([str], dict):
     """
-    Convert reported turbulance to a Turbulance object
+    Extracts the floor and ceiling from item list
     """
-    items = item.split()
-    ret = {"severity": None, "floor": None, "ceiling": None}
+    ret = {"floor": None, "ceiling": None}
     for i, item in enumerate(items):
         hloc = item.find("-")
+        # TRACE RIME 070-090
         if hloc > -1 and item[:hloc].isdigit() and item[hloc + 1 :].isdigit():
             for key, val in zip(("floor", "ceiling"), items.pop(i).split("-")):
                 ret[key] = _core.make_number(val)
             break
+        # CONT LGT CHOP BLO 250
+        elif item in _DIR_SIG:
+            ret[_DIR_SIG[item]] = _core.make_number(items[i + 1])
+            items = items[:i]
+            break
+        # LGT RIME 025
+        elif item.isdigit():
+            num = _core.make_number(item)
+            ret["floor"], ret["ceiling"] = num, num
+            break
+    return items, ret
+
+
+def _turbulance(item: str) -> Turbulance:
+    """
+    Convert reported turbulance to a Turbulance object
+    """
+    items, ret = _find_floor_ceiling(item.split())
     ret["severity"] = " ".join(items)
     return Turbulance(**ret)
 
@@ -138,16 +150,9 @@ def _icing(item: str) -> Icing:
     """
     Convert reported icing to an Icing object
     """
-    items = item.split()
-    ret = {"severity": items.pop(0), "type": None, "floor": None, "ceiling": None}
-    for i, item in enumerate(items):
-        hloc = item.find("-")
-        if hloc > -1 and item[:hloc].isdigit() and item[hloc + 1 :].isdigit():
-            for key, val in zip(("floor", "ceiling"), items.pop(i).split("-")):
-                ret[key] = _core.make_number(val)
-            break
-    if items:
-        ret["type"] = items[0]
+    items, ret = _find_floor_ceiling(item.split())
+    ret["severity"] = items.pop(0)
+    ret["type"] = items[0] if items else None
     return Icing(**ret)
 
 
@@ -165,9 +170,7 @@ def _wx(item: str) -> dict:
     ret = {"wx": []}
     items = item.split()
     for item in items:
-        if len(item) < 3:
-            ret["wx"].append(item)
-        elif item.startswith("FV"):
+        if len(item) > 2 and item.startswith("FV"):
             _, ret["flight_visibility"] = _core.get_visibility([item[2:]], _units)
         else:
             ret["wx"].append(item)
@@ -197,7 +200,7 @@ def parse(report: str) -> PirepData:
     if not report:
         return None
     clean = _core.sanitize_report_string(report)
-    wxdata, *_ = _core.sanitize_report_list(clean.split())
+    wxdata = _core.sanitize_report_list(clean.split())
     sanitized = " ".join(wxdata)
     wxresp = {"raw": report, "sanitized": sanitized, "station": None, "remarks": None}
     wxdata = sanitized.split("/")

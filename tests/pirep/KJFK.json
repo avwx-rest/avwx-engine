@@ -1,0 +1,672 @@
+{
+    "reports": [
+        {
+            "data": {
+                "aircraft": {
+                    "code": "A320",
+                    "type": "Airbus A320"
+                },
+                "altitude": {
+                    "repr": "290",
+                    "spoken": "two nine zero",
+                    "value": 290
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": {
+                        "repr": "225",
+                        "spoken": "two two five",
+                        "value": 225
+                    },
+                    "distance": {
+                        "repr": "125",
+                        "spoken": "one two five",
+                        "value": 125
+                    },
+                    "repr": "JFK225125",
+                    "station": "JFK"
+                },
+                "raw": "ACY UA /OV JFK225125/TM 2337/FL290/TP A320/TB MOD",
+                "remarks": null,
+                "sanitized": "ACY UA /OV JFK225125/TM 2337/FL290/TP A320/TB MOD",
+                "station": "ACY",
+                "temperature": null,
+                "time": null,
+                "turbulance": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "MOD"
+                },
+                "type": "UA",
+                "wx": null
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "E145",
+                    "type": "Embraer RJ145"
+                },
+                "altitude": "DURGD",
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": null,
+                    "distance": null,
+                    "repr": "ALB",
+                    "station": "ALB"
+                },
+                "raw": "ALB UUA /OV ALB/TM 2335/FLDURGD/TP E145/RM +/- 10KTS ON FINAL RY 28",
+                "remarks": "+",
+                "sanitized": "ALB UUA /OV ALB/TM 2335/FLDURGD/TP E145/RM +/- 10KTS ON FINAL RY 28",
+                "station": "ALB",
+                "temperature": null,
+                "time": null,
+                "turbulance": null,
+                "type": "UUA",
+                "wx": null
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "E190",
+                    "type": "Embraer 190"
+                },
+                "altitude": {
+                    "repr": "260",
+                    "spoken": "two six zero",
+                    "value": 260
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": null,
+                    "distance": null,
+                    "repr": "MXE",
+                    "station": "MXE"
+                },
+                "raw": "PTW UA /OV MXE/TM 2335/FL260/TP E190/TB MOD CONT 260-320",
+                "remarks": null,
+                "sanitized": "PTW UA /OV MXE/TM 2335/FL260/TP E190/TB MOD CONT 260-320",
+                "station": "PTW",
+                "temperature": null,
+                "time": null,
+                "turbulance": {
+                    "ceiling": {
+                        "repr": "320",
+                        "spoken": "three two zero",
+                        "value": 320
+                    },
+                    "floor": {
+                        "repr": "260",
+                        "spoken": "two six zero",
+                        "value": 260
+                    },
+                    "severity": "MOD CONT"
+                },
+                "type": "UA",
+                "wx": null
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "E145",
+                    "type": "Embraer RJ145"
+                },
+                "altitude": "UNKN",
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": null,
+                    "distance": null,
+                    "repr": "KSBY",
+                    "station": "KSBY"
+                },
+                "raw": "SBY UA /OV KSBY/TM 2318/FLUNKN/TP E145/WX RA",
+                "remarks": null,
+                "sanitized": "SBY UA /OV KSBY/TM 2318/FLUNKN/TP E145/WX RA",
+                "station": "SBY",
+                "temperature": null,
+                "time": null,
+                "turbulance": null,
+                "type": "UA",
+                "wx": [
+                    "RA"
+                ]
+            }
+        },
+        {
+            "data": {
+                "aircraft": "B767",
+                "altitude": {
+                    "repr": "330",
+                    "spoken": "three three zero",
+                    "value": 330
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": {
+                        "repr": "180",
+                        "spoken": "one eight zero",
+                        "value": 180
+                    },
+                    "distance": {
+                        "repr": "020",
+                        "spoken": "two zero",
+                        "value": 20
+                    },
+                    "repr": "CFB180020",
+                    "station": "CFB"
+                },
+                "raw": "BGM UA /OV CFB180020/TM 2318/FL330/TP B767/TB MOD CHOP",
+                "remarks": null,
+                "sanitized": "BGM UA /OV CFB180020/TM 2318/FL330/TP B767/TB MOD CHOP",
+                "station": "BGM",
+                "temperature": null,
+                "time": null,
+                "turbulance": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "MOD CHOP"
+                },
+                "type": "UA",
+                "wx": null
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "CRJ2",
+                    "type": "Canadair Regional Jet 200"
+                },
+                "altitude": "DURD",
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": null,
+                    "distance": null,
+                    "repr": "TEB",
+                    "station": "TEB"
+                },
+                "raw": "TEB UA /OV TEB/TM 2312/FLDURD/TP CRJ2/RM +/-10KT ON FINAL RWY 19",
+                "remarks": "+",
+                "sanitized": "TEB UA /OV TEB/TM 2312/FLDURD/TP CRJ2/RM +/-10KT ON FINAL RWY 19",
+                "station": "TEB",
+                "temperature": null,
+                "time": null,
+                "turbulance": null,
+                "type": "UA",
+                "wx": null
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "A321",
+                    "type": "Airbus A321"
+                },
+                "altitude": {
+                    "repr": "320",
+                    "spoken": "three two zero",
+                    "value": 320
+                },
+                "clouds": [
+                    {
+                        "base": null,
+                        "direction": null,
+                        "modifier": "TOP",
+                        "repr": "TOP",
+                        "top": null,
+                        "type": null
+                    },
+                    {
+                        "base": null,
+                        "direction": null,
+                        "modifier": "FL320",
+                        "repr": "FL320",
+                        "top": null,
+                        "type": null
+                    }
+                ],
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": null,
+                    "distance": null,
+                    "repr": "CMK",
+                    "station": "CMK"
+                },
+                "raw": "DXR UA /OV CMK/TM 2306/FL320/TP A321/SK TOP FL320/TB CONT LGT CAT FL320",
+                "remarks": null,
+                "sanitized": "DXR UA /OV CMK/TM 2306/FL320/TP A321/SK TOP FL320/TB CONT LGT CAT FL320",
+                "station": "DXR",
+                "temperature": null,
+                "time": null,
+                "turbulance": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "CONT LGT CAT FL320"
+                },
+                "type": "UA",
+                "wx": null
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "A319",
+                    "type": "Airbus A319"
+                },
+                "altitude": {
+                    "repr": "160",
+                    "spoken": "one six zero",
+                    "value": 160
+                },
+                "clouds": [
+                    {
+                        "base": null,
+                        "direction": null,
+                        "modifier": "TOP160",
+                        "repr": "TOP160",
+                        "top": null,
+                        "type": null
+                    }
+                ],
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": null,
+                    "distance": null,
+                    "repr": "BOS",
+                    "station": "BOS"
+                },
+                "raw": "BOS UA /OV BOS/TM 2301/FL160/TP A319/SK TOP160/TB LGT",
+                "remarks": null,
+                "sanitized": "BOS UA /OV BOS/TM 2301/FL160/TP A319/SK TOP160/TB LGT",
+                "station": "BOS",
+                "temperature": null,
+                "time": null,
+                "turbulance": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "LGT"
+                },
+                "type": "UA",
+                "wx": null
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "A320",
+                    "type": "Airbus A320"
+                },
+                "altitude": {
+                    "repr": "370",
+                    "spoken": "three seven zero",
+                    "value": 370
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": {
+                        "repr": "240",
+                        "spoken": "two four zero",
+                        "value": 240
+                    },
+                    "distance": {
+                        "repr": "055",
+                        "spoken": "five five",
+                        "value": 55
+                    },
+                    "repr": "SIE240055",
+                    "station": "SIE"
+                },
+                "raw": "ACY UA /OV SIE240055/TM 2256/FL370/TP A320/TB OCNL LGT-MOD",
+                "remarks": null,
+                "sanitized": "ACY UA /OV SIE240055/TM 2256/FL370/TP A320/TB OCNL LGT-MOD",
+                "station": "ACY",
+                "temperature": null,
+                "time": null,
+                "turbulance": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "OCNL LGT-MOD"
+                },
+                "type": "UA",
+                "wx": null
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "B764",
+                    "type": "Boeing 767-400ER"
+                },
+                "altitude": {
+                    "repr": "310",
+                    "spoken": "three one zero",
+                    "value": 310
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": {
+                        "repr": "180",
+                        "spoken": "one eight zero",
+                        "value": 180
+                    },
+                    "distance": {
+                        "repr": "010",
+                        "spoken": "one zero",
+                        "value": 10
+                    },
+                    "repr": "OOD180010",
+                    "station": "OOD"
+                },
+                "raw": "MIV UA /OV OOD180010/TM 2251/FL310/TP B764/TB MOD",
+                "remarks": null,
+                "sanitized": "MIV UA /OV OOD180010/TM 2251/FL310/TP B764/TB MOD",
+                "station": "MIV",
+                "temperature": null,
+                "time": null,
+                "turbulance": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "MOD"
+                },
+                "type": "UA",
+                "wx": null
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "E135",
+                    "type": "Embraer RJ135"
+                },
+                "altitude": {
+                    "repr": "100",
+                    "spoken": "one zero zero",
+                    "value": 100
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": {
+                        "repr": "220",
+                        "spoken": "two two zero",
+                        "value": 220
+                    },
+                    "distance": {
+                        "repr": "010",
+                        "spoken": "one zero",
+                        "value": 10
+                    },
+                    "repr": "JFK220010",
+                    "station": "JFK"
+                },
+                "raw": "JFK UA /OV JFK220010/TM 2234/FL100/TP E135/TB LIGHT CHOP/RM CONTINUOUS LIGHT CHOP ALL ALTITUDES BELOW 10,000",
+                "remarks": "CONTINUOUS LIGHT CHOP ALL ALTITUDES BELOW 10,000",
+                "sanitized": "JFK UA /OV JFK220010/TM 2234/FL100/TP E135/TB LIGHT CHOP/RM CONTINUOUS LIGHT CHOP ALL ALTITUDES BELOW 10,000",
+                "station": "JFK",
+                "temperature": null,
+                "time": null,
+                "turbulance": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "LIGHT CHOP"
+                },
+                "type": "UA",
+                "wx": null
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "E75S",
+                    "type": "Embraer 175 (short wing)"
+                },
+                "altitude": {
+                    "repr": "320",
+                    "spoken": "three two zero",
+                    "value": 320
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": {
+                        "repr": "160",
+                        "spoken": "one six zero",
+                        "value": 160
+                    },
+                    "distance": {
+                        "repr": "015",
+                        "spoken": "one five",
+                        "value": 15
+                    },
+                    "repr": "EMI160015",
+                    "station": "EMI"
+                },
+                "raw": "DMW UA /OV EMI160015/TM 2217/FL320/TP E75S/TB MOD CONT",
+                "remarks": null,
+                "sanitized": "DMW UA /OV EMI160015/TM 2217/FL320/TP E75S/TB MOD CONT",
+                "station": "DMW",
+                "temperature": null,
+                "time": null,
+                "turbulance": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "MOD CONT"
+                },
+                "type": "UA",
+                "wx": null
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "E170",
+                    "type": "Embraer 170"
+                },
+                "altitude": {
+                    "repr": "360",
+                    "spoken": "three six zero",
+                    "value": 360
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": {
+                        "repr": "090",
+                        "spoken": "nine zero",
+                        "value": 90
+                    },
+                    "distance": {
+                        "repr": "020",
+                        "spoken": "two zero",
+                        "value": 20
+                    },
+                    "repr": "EMI090020",
+                    "station": "EMI"
+                },
+                "raw": "BWI UA /OV EMI090020/TM 2216/FL360/TP E170/TB MOD CHOP",
+                "remarks": null,
+                "sanitized": "BWI UA /OV EMI090020/TM 2216/FL360/TP E170/TB MOD CHOP",
+                "station": "BWI",
+                "temperature": null,
+                "time": null,
+                "turbulance": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "MOD CHOP"
+                },
+                "type": "UA",
+                "wx": null
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "E75S",
+                    "type": "Embraer 175 (short wing)"
+                },
+                "altitude": {
+                    "repr": "320",
+                    "spoken": "three two zero",
+                    "value": 320
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": {
+                        "repr": "015",
+                        "spoken": "one five",
+                        "value": 15
+                    },
+                    "distance": {
+                        "repr": "020",
+                        "spoken": "two zero",
+                        "value": 20
+                    },
+                    "repr": "EMI015020",
+                    "station": "EMI"
+                },
+                "raw": "BWI UA /OV EMI015020/TM 2216/FL320/TP E75S/TB CONT MOD",
+                "remarks": null,
+                "sanitized": "BWI UA /OV EMI015020/TM 2216/FL320/TP E75S/TB CONT MOD",
+                "station": "BWI",
+                "temperature": null,
+                "time": null,
+                "turbulance": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "CONT MOD"
+                },
+                "type": "UA",
+                "wx": null
+            }
+        },
+        {
+            "data": {
+                "aircraft": "DH8",
+                "altitude": {
+                    "repr": "250",
+                    "spoken": "two five zero",
+                    "value": 250
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": null,
+                    "distance": null,
+                    "repr": "ALB",
+                    "station": "ALB"
+                },
+                "raw": "ALB UA /OV ALB/TM 2207/FL250/TP DH8/TB CONT LGT CHOP/RM BASE OF CLOUD LAYER",
+                "remarks": "BASE OF CLOUD LAYER",
+                "sanitized": "ALB UA /OV ALB/TM 2207/FL250/TP DH8/TB CONT LGT CHOP/RM BASE OF CLOUD LAYER",
+                "station": "ALB",
+                "temperature": null,
+                "time": null,
+                "turbulance": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "CONT LGT CHOP"
+                },
+                "type": "UA",
+                "wx": null
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "CRJ7",
+                    "type": "Canadair Regional Jet 700 | Regional Jet 550"
+                },
+                "altitude": {
+                    "repr": "020",
+                    "spoken": "two zero",
+                    "value": 20
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": null,
+                    "distance": null,
+                    "repr": "AVP",
+                    "station": "AVP"
+                },
+                "raw": "AVP UA /OV AVP/TM 2202/FL020/TP CRJ7/RM +/- 10 KTS SFC-20",
+                "remarks": "+",
+                "sanitized": "AVP UA /OV AVP/TM 2202/FL020/TP CRJ7/RM +/- 10 KTS SFC-20",
+                "station": "AVP",
+                "temperature": null,
+                "time": null,
+                "turbulance": null,
+                "type": "UA",
+                "wx": null
+            }
+        }
+    ],
+    "station_info": {
+        "city": "New York",
+        "country": "US",
+        "elevation_ft": 13,
+        "elevation_m": 4,
+        "iata": "JFK",
+        "icao": "KJFK",
+        "latitude": 40.63980103,
+        "longitude": -73.77890015,
+        "name": "John F Kennedy International Airport",
+        "note": "Manhattan, New York City, NYC, Idlewild",
+        "runways": [
+            {
+                "ident1": "13R",
+                "ident2": "31L",
+                "length_ft": 14572,
+                "width_ft": 150
+            },
+            {
+                "ident1": "04L",
+                "ident2": "22R",
+                "length_ft": 11351,
+                "width_ft": 150
+            },
+            {
+                "ident1": "13L",
+                "ident2": "31R",
+                "length_ft": 10000,
+                "width_ft": 150
+            },
+            {
+                "ident1": "04R",
+                "ident2": "22L",
+                "length_ft": 8400,
+                "width_ft": 200
+            }
+        ],
+        "state": "NY",
+        "type": "large_airport",
+        "website": "http://www.panynj.gov/CommutingTravel/airports/html/kennedy.html",
+        "wiki": "http://en.wikipedia.org/wiki/John_F._Kennedy_International_Airport"
+    }
+}

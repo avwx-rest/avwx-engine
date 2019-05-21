@@ -18,6 +18,9 @@ from avwx import _core, taf, structs, Taf
 
 
 class TestTaf(unittest.TestCase):
+    """
+    Tests Taf class and parsing
+    """
 
     maxDiff = None
 

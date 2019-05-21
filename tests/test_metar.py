@@ -16,6 +16,9 @@ from avwx import metar, structs, Metar
 
 
 class TestMetar(unittest.TestCase):
+    """
+    Tests Metar class and parsing
+    """
 
     maxDiff = None
 
@@ -36,8 +39,9 @@ class TestMetar(unittest.TestCase):
         Performs an end-to-end test of all METAR JSON files
         """
         for path in glob(str(Path(__file__).parent.joinpath("metar", "*.json"))):
+            path = Path(path)
             ref = json.load(open(path))
-            station = Metar(path.split("/")[-1][:4])
+            station = Metar(path.stem)
             self.assertIsNone(station.last_updated)
             self.assertTrue(station.update(ref["data"]["raw"]))
             self.assertIsInstance(station.last_updated, datetime)

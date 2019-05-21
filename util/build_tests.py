@@ -1,5 +1,7 @@
 """
 Creates files for end-to-end tests
+
+python util/build_tests.py
 """
 
 # stdlib
@@ -12,7 +14,7 @@ import avwx
 
 def make_metar_test(station: str) -> dict:
     """
-    Builds METAR test files
+    Builds METAR test file for station
     """
     m = avwx.Metar(station)
     m.update()
@@ -29,7 +31,7 @@ def make_metar_test(station: str) -> dict:
 
 def make_taf_test(station: str, report: str = None) -> dict:
     """
-    Builds TAF test files
+    Builds TAF test file for station
     """
     t = avwx.Taf(station)
     t.update(report)
@@ -49,11 +51,28 @@ def make_taf_test(station: str, report: str = None) -> dict:
     }
 
 
+def make_pirep_test(station: str) -> [dict]:
+    """
+    Builds PIREP test file for station
+    """
+    p = avwx.Pireps(station)
+    p.update()
+    ret = []
+    if not p.data:
+        return
+    for report in p.data:
+        # Clear timestamp due to parse_date limitations
+        report.time = None
+        ret.append({"data": asdict(report)})
+    return {"reports": ret, "station_info": asdict(p.station_info)}
+
+
 if __name__ == "__main__":
     from pathlib import Path
 
-    for target in ("metar", "taf"):
+    for target in ("metar", "taf", "pirep"):
         for station in ("KJFK", "KMCO", "PHNL", "EGLL"):
             data = locals()[f"make_{target}_test"](station)
-            path = Path("..", "tests", target, station + ".json")
-            json.dump(data, open(path, "w"), indent=4, sort_keys=True)
+            if data:
+                path = Path("tests", target, station + ".json")
+                json.dump(data, open(path, "w"), indent=4, sort_keys=True)

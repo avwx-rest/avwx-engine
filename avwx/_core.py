@@ -467,6 +467,9 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> [str
         # Remove elements containing only '/'
         if is_unknown(item):
             wxdata.pop(i)
+        # Remove empty wind /////KT
+        if item.endswith("KT") and is_unknown(item[:-2]):
+            wxdata.pop(i)
         # Remove RE from wx codes, REVCTS -> VCTS
         elif ilen in [4, 6] and item.startswith("RE"):
             wxdata[i] = item[2:]
