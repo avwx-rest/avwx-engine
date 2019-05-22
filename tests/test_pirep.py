@@ -203,10 +203,13 @@ class TestPirep(unittest.TestCase):
         """
         Tests returned structs from the parse function
         """
-        report = "EWR UA /OV SBJ090/010/TM 2108/FL060/TP B738/TB MOD"
-        data = pirep.parse(report)
-        self.assertIsInstance(data, structs.PirepData)
-        self.assertEqual(data.raw, report)
+        for report in (
+            "EWR UA /OV SBJ090/010/TM 2108/FL060/TP B738/TB MOD",
+            "SMQ UA /OV BWZ/TM 0050/FL280/TP A320/TB MOD",
+        ):
+            data = pirep.parse(report)
+            self.assertIsInstance(data, structs.PirepData)
+            self.assertEqual(data.raw, report)
 
     def test_pirep_ete(self):
         """

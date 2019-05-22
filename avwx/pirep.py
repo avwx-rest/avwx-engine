@@ -199,9 +199,8 @@ def parse(report: str) -> PirepData:
     """
     if not report:
         return None
-    clean = _core.sanitize_report_string(report)
-    wxdata = _core.sanitize_report_list(clean.split())
-    sanitized = " ".join(wxdata)
+    sanitized = _core.sanitize_report_string(report)
+    # NOTE: will need to implement PIREP-specific list clean
     wxresp = {"raw": report, "sanitized": sanitized, "station": None, "remarks": None}
     wxdata = sanitized.split("/")
     wxresp.update(_root(wxdata.pop(0).strip()))

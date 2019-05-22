@@ -42,8 +42,8 @@
                     "station": "PHNY"
                 },
                 "raw": "LNY UA /OV PHNY/TM 2214/FL015/TP C208/SK SCT-BKN030-TOP060/WX FV20SM/TB NEG/RM SKC OFFSHORE",
-                "remarks": "OFFSHORE",
-                "sanitized": "LNY UA /OV PHNY/TM 2214/FL015/TP C208/SK SCT- BKN030-TOP060/WX FV20SM/TB NEG/RM OFFSHORE",
+                "remarks": "SKC OFFSHORE",
+                "sanitized": "LNY UA /OV PHNY/TM 2214/FL015/TP C208/SK SCT- BKN030-TOP060/WX FV20SM/TB NEG/RM SKC OFFSHORE",
                 "station": "LNY",
                 "temperature": null,
                 "time": null,

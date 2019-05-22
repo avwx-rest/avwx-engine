@@ -249,11 +249,12 @@ STR_REPL = {
     " VRN": " VRB",
     " BRB": " VRB",
     " VEB": " VRB",
+    " VAR": " VRB",
     " VR0": " VRB0",
     " VB0": " VRB0",
     " RB0": " VRB0",
     " 0I0": " 090",
-    "Z/": "Z ",
+    # "Z/ ": "Z ", NOTE: Too broad re pirep
     "KKT ": "KT ",
     "KLT ": "KT ",
     "CALMKT ": "CALM ",
@@ -618,7 +619,7 @@ def get_altimeter(wxdata: [str], units: Units, version: str = "NA") -> ([str], N
     if wxdata and (wxdata[-1][0] == "A" or wxdata[-1][0] == "Q"):
         wxdata.pop()
     # convert to Number
-    altimeter = altimeter.replace("/", "")
+    altimeter = altimeter.replace("/", "").strip("AQ")
     if not altimeter:
         return wxdata, None
     if units.altimeter == "inHg":

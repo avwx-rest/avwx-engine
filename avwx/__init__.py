@@ -8,7 +8,7 @@ from datetime import datetime
 
 # module
 from avwx import (
-    airep,
+    # airep,
     metar,
     pirep,
     service,
@@ -261,21 +261,21 @@ class Pireps(Reports):
             self.data.append(pirep.parse(report))
 
 
-class Aireps(Reports):
-    """
-    Class to handle aircraft report data
-    """
+# class Aireps(Reports):
+#     """
+#     Class to handle aircraft report data
+#     """
 
-    data: [structs.AirepData] = None
+#     data: [structs.AirepData] = None
 
-    @staticmethod
-    def _report_filter(reports: [str]) -> [str]:
-        """
-        Removes PIREPs before updating raw_reports
-        """
-        return [r for r in reports if r.startswith("ARP")]
+#     @staticmethod
+#     def _report_filter(reports: [str]) -> [str]:
+#         """
+#         Removes PIREPs before updating raw_reports
+#         """
+#         return [r for r in reports if r.startswith("ARP")]
 
-    def _post_update(self):
-        self.data = []
-        for report in self.raw:
-            airep.parse(report)
+#     def _post_update(self):
+#         self.data = []
+#         for report in self.raw:
+#             airep.parse(report)
