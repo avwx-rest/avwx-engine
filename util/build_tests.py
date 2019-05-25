@@ -75,4 +75,4 @@ if __name__ == "__main__":
             data = locals()[f"make_{target}_test"](station)
             if data:
                 path = Path("tests", target, station + ".json")
-                json.dump(data, open(path, "w"), indent=4, sort_keys=True)
+                json.dump(data, path.open("w"), indent=4, sort_keys=True)

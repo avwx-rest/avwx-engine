@@ -8,7 +8,6 @@ import json
 import unittest
 from dataclasses import asdict
 from datetime import datetime
-from glob import glob
 from pathlib import Path
 
 # module
@@ -38,9 +37,9 @@ class TestMetar(unittest.TestCase):
         """
         Performs an end-to-end test of all METAR JSON files
         """
-        for path in glob(str(Path(__file__).parent.joinpath("metar", "*.json"))):
+        for path in Path(__file__).parent.joinpath("metar").glob("*.json"):
             path = Path(path)
-            ref = json.load(open(path))
+            ref = json.load(path.open())
             station = Metar(path.stem)
             self.assertIsNone(station.last_updated)
             self.assertTrue(station.update(ref["data"]["raw"]))

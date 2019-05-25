@@ -17,14 +17,12 @@ def main() -> int:
     """
     Builds/updates aircraft.json codes
     """
-    with open(AIRCRAFT_PATH) as fin:
-        lines = fin.readlines()
     craft = {}
-    for line in lines:
+    for line in AIRCRAFT_PATH.open().readlines():
         code, _, name = line.strip().split("\t")
         if code not in craft:
             craft[code] = name
-    json.dump(craft, open(OUTPUT_PATH, "w"))
+    json.dump(craft, OUTPUT_PATH.open("w"))
     return 0
 
 

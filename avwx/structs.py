@@ -14,8 +14,8 @@ from avwx.exceptions import BadStation
 
 
 _dir = Path(__file__).parent
-STATIONS = json.load(open(_dir.joinpath("stations.json")))
-AIRCRAFT = json.load(open(_dir.joinpath("aircraft.json")))
+STATIONS = json.load(_dir.joinpath("stations.json").open())
+AIRCRAFT = json.load(_dir.joinpath("aircraft.json").open())
 
 STATION_UPDATED = "2019-05-17"
 

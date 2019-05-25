@@ -65,7 +65,7 @@ def build_stations() -> dict:
     """
     stations = {}
     headers = None
-    for station in csv.reader(open(STATION_PATH)):
+    for station in csv.reader(STATION_PATH.open()):
         if headers is None:
             headers = station
             continue
@@ -80,7 +80,7 @@ def add_runways(stations: dict) -> dict:
     """
     # Add runway data subset to station data
     headers = None
-    for runway in csv.reader(open(RUNWAY_PATH)):
+    for runway in csv.reader(RUNWAY_PATH.open()):
         if headers is None:
             headers = runway
             continue
@@ -113,7 +113,7 @@ def main() -> int:
     """
     stations = build_stations()
     stations = add_runways(stations)
-    json.dump(stations, open(OUTPUT_PATH, "w"), sort_keys=True)
+    json.dump(stations, OUTPUT_PATH.open("w"), sort_keys=True)
     return 0
 
 

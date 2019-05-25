@@ -233,7 +233,7 @@ class MAC(Service):
         """
         Returns a formatted URL and parameters
         """
-        return self.url, {"query": "{0} {1}".format(self.rtype, station)}
+        return self.url, {"query": f"{self.rtype} {station}"}
 
     def _extract(self, raw: str, station: str) -> str:
         """

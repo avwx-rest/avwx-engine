@@ -10,7 +10,6 @@ import unittest
 from copy import deepcopy
 from dataclasses import asdict
 from datetime import datetime
-from glob import glob
 from pathlib import Path
 
 # module
@@ -127,9 +126,9 @@ class TestTaf(unittest.TestCase):
         Performs an end-to-end test of all TAF JSON files
         """
         nodate = lambda s: s[s.find("-") + 2 :]
-        for path in glob(str(Path(__file__).parent.joinpath("taf", "*.json"))):
-            ref = json.load(open(path))
-            station = Taf(path.split("/")[-1][:4])
+        for path in Path(__file__).parent.joinpath("taf").glob("*.json"):
+            ref = json.load(path.open())
+            station = Taf(path.stem)
             self.assertIsNone(station.last_updated)
             self.assertTrue(station.update(ref["data"]["raw"]))
             self.assertIsInstance(station.last_updated, datetime)

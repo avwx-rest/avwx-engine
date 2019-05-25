@@ -8,7 +8,6 @@ import json
 import unittest
 from dataclasses import asdict
 from datetime import datetime
-from glob import glob
 from pathlib import Path
 
 # module
@@ -215,9 +214,9 @@ class TestPirep(unittest.TestCase):
         """
         Performs an end-to-end test of all PIREP JSON files
         """
-        for path in glob(str(Path(__file__).parent.joinpath("pirep", "*.json"))):
+        for path in Path(__file__).parent.joinpath("pirep").glob("*.json"):
             path = Path(path)
-            ref = json.load(open(path))
+            ref = json.load(path.open())
             station = Pireps(path.stem)
             self.assertIsNone(station.last_updated)
             reports = [report["data"]["raw"] for report in ref["reports"]]
