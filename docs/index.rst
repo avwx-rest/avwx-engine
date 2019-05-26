@@ -12,15 +12,17 @@ An aviation weather parsing library.
   >>> jfk_metar.data.flight_rules
   'VFR'
 
-These docs could use some love, and I am not a writer. You can help by making a pull request on https://github.com/flyinactor91/AVWX-Engine
+These docs could use some love, and I am not a writer. You can help by making a pull request on https://github.com/avwx-rest/AVWX-Engine
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    getting-started.rst
+   station.rst
    metar.rst
    taf.rst
+   pirep.rst
    service.rst
    static.rst
    structs.rst

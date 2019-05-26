@@ -51,7 +51,7 @@ The update function can also accept a given report string if you want to overrid
   'Vis 7km, Light Rain, Scattered clouds at 2000ft, Frequent moderate turbulence in clear air from 8000ft to 12000ft, Moderate icing in clouds from 1000ft to 5000ft'
 
 .. autoclass:: avwx.Taf
-  :members: update
+  :members: async_update, update
 
   .. attribute:: data: avwx.structs.TafData
 

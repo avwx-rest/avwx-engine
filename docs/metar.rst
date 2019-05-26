@@ -53,7 +53,7 @@ The update function can also accept a given report string if you want to overrid
   'Winds N-360 (variable 320 to 040) at 24kt gusting to 55kt, Vis 0.125sm, Temp 14C, Dew 10C, Alt 29.78inHg, Heavy Thunderstorm, Vicinity Funnel Cloud, Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft'
 
 .. autoclass:: avwx.Metar
-  :members: update
+  :members: async_update, update
 
   .. attribute:: data: avwx.structs.MetarData
 

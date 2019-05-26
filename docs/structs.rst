@@ -1,5 +1,5 @@
 Structs
-==========
+=======
 
 .. toctree::
    :maxdepth: 2

@@ -30,6 +30,10 @@ class Runway(object):
 
 @dataclass
 class Station(object):
+    """
+    Stores basic station information
+    """
+
     city: str
     country: str
     elevation_ft: int
