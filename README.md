@@ -1,12 +1,13 @@
 # AVWX-Engine
 
-### Master
+![](https://avwx.rest/static/favicons/apple-icon-76x76.png)
 
 [![PyPI version](https://badge.fury.io/py/avwx-engine.svg)](https://badge.fury.io/py/avwx-engine)
-[![Code Health](https://landscape.io/github/avwx-rest/AVWX-Engine/master/landscape.svg?style=flat)](https://landscape.io/github/avwx-rest/AVWX-Engine/master)
 [![Requirements Status](https://requires.io/github/avwx-rest/AVWX-Engine/requirements.svg?branch=master)](https://requires.io/github/avwx-rest/AVWX-Engine/requirements/?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/avwx-engine/badge/?version=latest)](http://avwx-engine.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/pypi/l/avwx-engine.svg)](https://pypi.org/project/avwx-engine/)
+
+<!-- [![Code Health](https://landscape.io/github/avwx-rest/AVWX-Engine/master/landscape.svg?style=flat)](https://landscape.io/github/avwx-rest/AVWX-Engine/master) -->
 
 Aviation Weather parsing engine. METAR &amp; TAF
 
@@ -80,7 +81,7 @@ pip install pytest
 pytest
 ```
 
-The end-to-end test files were generated using `utils/testMaker.py` and placed into `tests/metar` and `tests/taf` respectively. Because Timestamp generation interprets the text based on the current date, Timestamp objects are nullified in the end-to-end tests.
+The end-to-end test files were generated using `util/build_tests.py` and placed into `tests/{report}`. Because Timestamp generation interprets the text based on the current date, Timestamp objects are nullified in the end-to-end tests.
 
 # Docs
 
