@@ -6,7 +6,7 @@ PIREP
    :maxdepth: 2
    :caption: Contents:
 
-A PIREP (Pilot Report) is an observation made by pilots inflight meant to aid controllers and pilots routing around adverse conditions and other condition of note. They typically contain icing, turbulance, cloud types/bases/tops, and other info at a known distance and radial from a ground station. They are released as they come in.
+A PIREP (Pilot Report) is an observation made by pilots inflight meant to aid controllers and pilots routing around adverse conditions and other conditions of note. They typically contain icing, turbulance, cloud types/bases/tops, and other info at a known distance and radial from a ground station. They are released as they come in.
 
 Pireps Class
 ------------

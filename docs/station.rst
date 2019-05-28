@@ -50,15 +50,8 @@ This is also the same information you'd get from calling Report.station_info.
    .. attribute:: longitude: float
    .. attribute:: name: str
    .. attribute:: note: str
-   .. attribute:: runways: [Runway]
+   .. attribute:: runways: [avwx.structs.Runway]
    .. attribute:: state: str
    .. attribute:: type: str
    .. attribute:: website: str
    .. attribute:: wiki: str
-
-.. autoclass:: avwx.structs.Runway
-
-   .. attribute:: ident1: str
-   .. attribute:: ident2: str
-   .. attribute:: length_ft: int
-   .. attribute:: width_ft: int
