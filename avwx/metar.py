@@ -8,6 +8,7 @@ from copy import copy
 # module
 from avwx import _core, remarks, service
 from avwx.static import NA_UNITS, IN_UNITS, FLIGHT_RULES
+from avwx.station import uses_na_format, valid_station
 from avwx.structs import MetarData, Units
 
 
@@ -15,10 +16,10 @@ def parse(station: str, report: str) -> (MetarData, Units):
     """
     Returns MetarData and Units dataclasses with parsed data and their associated units
     """
-    _core.valid_station(station)
+    valid_station(station)
     if not report:
         return None, None
-    return parse_na(report) if _core.uses_na_format(station[:2]) else parse_in(report)
+    return parse_na(report) if uses_na_format(station[:2]) else parse_in(report)
 
 
 def parse_na(report: str) -> (MetarData, Units):

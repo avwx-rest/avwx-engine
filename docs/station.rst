@@ -38,7 +38,7 @@ This is also the same information you'd get from calling Report.station_info.
   'Blue Grass Airport'
 
 .. autoclass:: avwx.Station
-   :members: from_icao
+   :members: from_icao, nearest, sends_reports
 
    .. attribute:: city: str
    .. attribute:: country: str

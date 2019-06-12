@@ -51,36 +51,6 @@ class TestGlobal(BaseTest):
         ):
             self.assertEqual(_core.dedupe(before, only_neighbors=True), after)
 
-    def test_valid_station(self):
-        """
-        While not designed to catch all non-existant station idents,
-        valid_station should catch non-ICAO strings and filter based on known prefixes
-        """
-        # Good stations
-        for station in ("KJFK", "K123", "EIGL", "PHNL", "MNAH"):
-            _core.valid_station(station)
-        # Bad stations
-        for station in ("12K", "MAYT"):
-            with self.assertRaises(exceptions.BadStation):
-                _core.valid_station(station)
-
-    def test_uses_na_format(self):
-        """
-        METAR and TAF reports come in two flavors: North American and International
-        
-        uses_na_format should determine the format based on the station ident using prefixes
-        """
-        # NA stations
-        for station in ("KJFK", "PHNL", "TNCM", "MYNN"):
-            self.assertTrue(_core.uses_na_format(station))
-        # IN stations
-        for station in ("EGLL", "MNAH", "MUHA"):
-            self.assertFalse(_core.uses_na_format(station))
-        # Bad stations
-        for station in ("12K", "MAYT"):
-            with self.assertRaises(exceptions.BadStation):
-                _core.uses_na_format(station)
-
     def test_is_unknown(self):
         """
         Tests unknown value when a string value contains only backspace characters or empty
