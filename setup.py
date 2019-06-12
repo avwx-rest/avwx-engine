@@ -1,20 +1,18 @@
 """
-Michael duPont - michael@mdupont.com
-AVWX-Engine : setup.py
-
 avwx package metadata
 """
 
 from setuptools import setup
+import avwx
 
 setup(
     name="avwx-engine",
-    version="1.1",
-    description="Aviation weather report parsing library",
-    url="https://github.com/flyinactor91/AVWX-Engine",
-    author="Michael duPont",
-    author_email="michael@mdupont.com",
-    license="MIT",
+    version=avwx.__version__,
+    description=avwx.__doc__,
+    url="https://github.com/avwx-rest/AVWX-Engine",
+    author=avwx.__author__,
+    author_email=avwx.__email__,
+    license=avwx.__license__,
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
@@ -29,4 +27,5 @@ setup(
     packages=["avwx"],
     package_data={"avwx": ["aircraft.json", "stations.json"]},
     tests_require=["pytest-asyncio~=0.10"],
+    extras_require={"scipy": ["scipy~=1.3"]},
 )

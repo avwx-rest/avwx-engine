@@ -2,6 +2,13 @@
 Aviation weather report parsing library
 """
 
+__author__ = "Michael duPont"
+__maintainer__ = "Michael duPont"
+__email__ = "michael@mdupont.com"
+__license__ = "MIT"
+__version__ = "1.2"
+__stations__ = "2019-05-17"
+
 # stdlib
 from abc import abstractmethod
 from datetime import datetime
@@ -14,13 +21,13 @@ from avwx import (
     service,
     speech,
     static,
+    station,
     structs,
     summary,
     taf,
     translate,
 )
-from avwx._core import valid_station
-from avwx.structs import Station
+from avwx.station import Station
 
 
 class Report(object):
@@ -43,17 +50,21 @@ class Report(object):
     #: Units inferred from the station location and report contents
     units: structs.Units = None
 
+    #: 4-character ICAO station ident code the report was initialized with
+    station: str = None
+
+    #: Service object used to fetch the report string
+    service: service.Service
+
     _station_info: Station = None
 
-    def __init__(self, station: str):
+    def __init__(self, station_ident: str):
         # Raises a BadStation error if needed
-        valid_station(station)
-
-        #: Service object used to fetch the report string
-        self.service = service.get_service(station)(self.__class__.__name__.lower())
-
-        #: 4-character ICAO station ident code the report was initialized with
-        self.station = station
+        station.valid_station(station_ident)
+        self.service = service.get_service(station_ident)(
+            self.__class__.__name__.lower()
+        )
+        self.station = station_ident
 
     @property
     def station_info(self) -> Station:
@@ -184,12 +195,12 @@ class Reports(object):
     data: [structs.ReportData] = None
     units: structs.Units = structs.Units(**static.NA_UNITS)
 
-    def __init__(self, station: str = None, lat: float = None, lon: float = None):
-        if station:
-            station = Station.from_icao(station)
-            self.station_info = station
-            lat = station.latitude
-            lon = station.longitude
+    def __init__(self, station_ident: str = None, lat: float = None, lon: float = None):
+        if station_ident:
+            station_obj = Station.from_icao(station_ident)
+            self.station_info = station_obj
+            lat = station_obj.latitude
+            lon = station_obj.longitude
         elif lat is None or lon is None:
             raise ValueError("No station or valid coordinates given")
         self.lat = lat

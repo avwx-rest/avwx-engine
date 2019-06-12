@@ -9,9 +9,9 @@
 
 <!-- [![Code Health](https://landscape.io/github/avwx-rest/AVWX-Engine/master/landscape.svg?style=flat)](https://landscape.io/github/avwx-rest/AVWX-Engine/master) -->
 
-Aviation Weather parsing engine. METAR &amp; TAF
+Aviation Weather parsing engine. METAR, TAF, and PIREP
 
-# Install
+## Install
 
 The easiest way to get started is to download the library from pypi using pip
 
@@ -19,13 +19,13 @@ The easiest way to get started is to download the library from pypi using pip
 pip install avwx-engine
 ```
 
-# Basic Usage
+## Basic Usage
 
 Reports use ICAO idents when specifying the desired station. Exceptions are thrown if a potentially invalid ident is given.
 
 ```python
 >>> import avwx
->>> 
+>>>
 >>> metar = avwx.Metar('KJFK')
 >>> metar.station_info.name
 'John F Kennedy International Airport'
@@ -39,7 +39,7 @@ You can learn more by reading the [project documentation](https://avwx-engine.re
 
 **Note**: This library requires Python 3.6 or above
 
-# Develop
+## Develop
 
 Download and install the source code and its dependencies:
 
@@ -59,7 +59,7 @@ pip install black
 find avwx -iname "*.py" | xargs black
 ```
 
-# Test
+## Test
 
 The easiest way to test the package is using `nox`. It will manage all tests, sessions, supported versions (when available), and cleanup. The tests will pick up the local version of `avwx`.
 
@@ -83,7 +83,7 @@ pytest
 
 The end-to-end test files were generated using `util/build_tests.py` and placed into `tests/{report}`. Because Timestamp generation interprets the text based on the current date, Timestamp objects are nullified in the end-to-end tests.
 
-# Docs
+## Docs
 
 AVWX uses Sphinx to build its documentation. It's just another install:
 

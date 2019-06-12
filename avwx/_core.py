@@ -19,10 +19,6 @@ from avwx.static import (
     CLOUD_LIST,
     CLOUD_TRANSLATIONS,
     METAR_RMK,
-    NA_REGIONS,
-    IN_REGIONS,
-    M_NA_REGIONS,
-    M_IN_REGIONS,
     FLIGHT_RULES,
     NUMBER_REPL,
     FRACTIONS,
@@ -32,34 +28,6 @@ from avwx.static import (
     TAF_RMK,
 )
 from avwx.structs import Cloud, Fraction, Number, Timestamp, Units
-
-
-def valid_station(station: str):
-    """
-    Checks the validity of a station ident
-
-    This function doesn't return anything. It merely raises a BadStation error if needed
-    """
-    station = station.strip()
-    if len(station) != 4:
-        raise BadStation("ICAO station idents must be four characters long")
-    uses_na_format(station)
-
-
-def uses_na_format(station: str) -> bool:
-    """
-    Returns True if the station uses the North American format,
-    False if the International format
-    """
-    if station[0] in NA_REGIONS:
-        return True
-    elif station[0] in IN_REGIONS:
-        return False
-    elif station[:2] in M_NA_REGIONS:
-        return True
-    elif station[:2] in M_IN_REGIONS:
-        return False
-    raise BadStation("Station doesn't start with a recognized character set")
 
 
 def dedupe(items: list, only_neighbors: bool = False) -> list:

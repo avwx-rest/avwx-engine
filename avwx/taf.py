@@ -8,6 +8,7 @@ from copy import copy
 # module
 from avwx import _core, service
 from avwx.static import NA_UNITS, IN_UNITS, TAF_RMK, TAF_NEWLINE
+from avwx.station import uses_na_format, valid_station
 from avwx.structs import TafData, TafLineData, Units
 
 
@@ -17,7 +18,7 @@ def parse(station: str, report: str) -> TafData:
     """
     if not report:
         return None, None
-    _core.valid_station(station)
+    valid_station(station)
     while len(report) > 3 and report[:4] in ("TAF ", "AMD ", "COR "):
         report = report[4:]
     _, station, time = _core.get_station_and_time(report[:20].split())
@@ -32,7 +33,7 @@ def parse(station: str, report: str) -> TafData:
     report = report.replace(station, "")
     if time:
         report = report.replace(time, "").strip()
-    if _core.uses_na_format(station):
+    if uses_na_format(station):
         use_na = True
         units = Units(**NA_UNITS)
     else:

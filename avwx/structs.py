@@ -4,65 +4,36 @@ Contains dataclasses to hold report data
 
 # stdlib
 import json
-from copy import copy
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
-# module
-from avwx.exceptions import BadStation
+
+class _LazyLoad:
+
+    source: Path
+    data: dict = None
+
+    def __init__(self, fname: str):
+        self.source = Path(__file__).parent.joinpath(f"{fname}.json")
+
+    def __getitem__(self, key: str) -> object:
+        if not self.data:
+            self.data = json.load(self.source.open())
+        return self.data[key]
+
+    def __contains__(self, key: str) -> bool:
+        if not self.data:
+            self.data = json.load(self.source.open())
+        return key in self.data
+
+    def values(self) -> list:
+        if not self.data:
+            self.data = json.load(self.source.open())
+        return self.data.values()
 
 
-_dir = Path(__file__).parent
-STATIONS = json.load(_dir.joinpath("stations.json").open())
-AIRCRAFT = json.load(_dir.joinpath("aircraft.json").open())
-
-STATION_UPDATED = "2019-05-17"
-
-
-@dataclass
-class Runway(object):
-    length_ft: int
-    width_ft: int
-    ident1: str
-    ident2: str
-
-
-@dataclass
-class Station(object):
-    """
-    Stores basic station information
-    """
-
-    city: str
-    country: str
-    elevation_ft: int
-    elevation_m: int
-    iata: str
-    icao: str
-    latitude: float
-    longitude: float
-    name: str
-    note: str
-    runways: [Runway]
-    state: str
-    type: str
-    website: str
-    wiki: str
-
-    @classmethod
-    def from_icao(cls, ident: str) -> "Station":
-        """
-        Load a Station from an ICAO station ident
-        """
-        if ident not in STATIONS:
-            raise BadStation(
-                "Could not find station in the info dict. Check avwx.structs.STATIONS"
-            )
-        info = copy(STATIONS[ident])
-        if info["runways"]:
-            info["runways"] = [Runway(**r) for r in info["runways"]]
-        return cls(**info)
+AIRCRAFT = _LazyLoad("aircraft")
 
 
 @dataclass
