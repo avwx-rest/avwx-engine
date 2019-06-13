@@ -21,15 +21,11 @@ def parse(station: str, report: str) -> TafData:
     valid_station(station)
     while len(report) > 3 and report[:4] in ("TAF ", "AMD ", "COR "):
         report = report[4:]
+    retwx = {"end_time": None, "raw": report, "remarks": None, "start_time": None}
+    report = _core.sanitize_report_string(report)
     _, station, time = _core.get_station_and_time(report[:20].split())
-    retwx = {
-        "end_time": None,
-        "raw": report,
-        "remarks": None,
-        "start_time": None,
-        "station": station,
-        "time": _core.make_timestamp(time),
-    }
+    retwx["station"] = station
+    retwx["time"] = _core.make_timestamp(time)
     report = report.replace(station, "")
     if time:
         report = report.replace(time, "").strip()

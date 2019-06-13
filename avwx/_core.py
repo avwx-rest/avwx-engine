@@ -123,6 +123,7 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
     # Remove spurious characters from the end
     num = num.rstrip("M.")
     num = num.replace("O", "0")
+    num = num.replace("+", "")
     # Create Fraction
     if "/" in num:
         nmr, dnm = num.split("/")
@@ -209,6 +210,8 @@ def get_taf_remarks(txt: str) -> (str, str):
 STR_REPL = {
     " C A V O K ": " CAVOK ",
     "?": " ",
+    '"': "",
+    "'": "",
     " VTB": " VRB",
     " VBR": " VRB",
     " ERB": " VRB",
@@ -218,9 +221,11 @@ STR_REPL = {
     " BRB": " VRB",
     " VEB": " VRB",
     " VAR": " VRB",
+    " VRR": " VRB",
     " VR0": " VRB0",
     " VB0": " VRB0",
     " RB0": " VRB0",
+    " V0": " VRB0",
     " 0I0": " 090",
     # "Z/ ": "Z ", NOTE: Too broad re pirep
     "KKT ": "KT ",

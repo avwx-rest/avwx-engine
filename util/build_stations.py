@@ -64,10 +64,10 @@ def build_stations() -> dict:
     Builds the station dict from source file
     """
     stations = {}
-    headers = None
-    for station in csv.reader(STATION_PATH.open()):
-        if headers is None:
-            headers = station
+    data = csv.reader(STATION_PATH.open())
+    next(data)  # Skip header
+    for station in data:
+        if len(station[1]) != 4:
             continue
         if station[2] in ACCEPTED_STATION_TYPES:
             stations[station[1]] = format_station(station)
@@ -78,12 +78,9 @@ def add_runways(stations: dict) -> dict:
     """
     Add runway information to station if availabale
     """
-    # Add runway data subset to station data
-    headers = None
-    for runway in csv.reader(RUNWAY_PATH.open()):
-        if headers is None:
-            headers = runway
-            continue
+    data = csv.reader(RUNWAY_PATH.open())
+    next(data)  # Skip header
+    for runway in data:
         data = {
             "length_ft": int(runway[3]) if runway[3] else 0,
             "width_ft": int(runway[4]) if runway[4] else 0,
