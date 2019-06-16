@@ -128,21 +128,18 @@ class Station(object):
 
     @classmethod
     def nearest(
-        cls, lat: float, lon: float, sends_reports: bool = True
+        cls,
+        lat: float,
+        lon: float,
+        sends_reports: bool = True,
+        max_distance: float = 50,
     ) -> ("Station", float):
         """
         Load the Station nearest to a lat,lon coordinate pair
 
         Returns the Station and coordinate distance from source
         """
-        k = 100 if sends_reports else 1
-        dist, index = _COORD_TREE.value.query([lat, lon], k)
-        if not sends_reports:
-            return cls.from_icao(_COORDS.value[index][0]), dist
-        for d, i in zip(dist, index):
-            stn = cls.from_icao(_COORDS.value[i][0])
-            if stn.sends_reports:
-                return stn, d
+        return nearest(lat, lon, 1, sends_reports, max_distance)
 
     @property
     def sends_reports(self) -> bool:
@@ -150,3 +147,59 @@ class Station(object):
         Returns whether or not a Station likely sends weather reports
         """
         return self.iata is not None
+
+
+def _query_coords(lat: float, lon: float, n: int, d: float) -> [(str, float)]:
+    """
+    Returns <= n number of ident, dist tuples <= d distance from lat, lon
+    """
+    dist, index = _COORD_TREE.value.query([lat, lon], n, distance_upper_bound=d)
+    if n == 1:
+        dist, index = [dist], [index]
+    # NOTE: index == len of list means Tree ran out of items
+    return [
+        (_COORDS.value[i][0], d) for i, d in zip(index, dist) if i < len(_COORDS.value)
+    ]
+
+
+def _n_reporting(lat: float, lon: float, n: int, d: float) -> (str, float):
+    """
+    Returns <= n number of reporting stations <= d distance from lat,lon
+    """
+    k = n * 20
+    last = 0
+    stations = []
+    while True:
+        nodes = _query_coords(lat, lon, k, d)[last:]
+        # Ran out of new stations
+        if not nodes:
+            return stations
+        for icao, d in nodes:
+            stn = Station.from_icao(icao)
+            if stn.sends_reports:
+                stations.append((stn, d))
+            # Reached the desired number of stations
+            if len(stations) >= n:
+                return stations
+        last = k
+        k += n * 100
+
+
+def nearest(
+    lat: float,
+    lon: float,
+    n: int = 1,
+    sends_reports: bool = True,
+    max_distance: float = 10,
+) -> (str, float):
+    """
+    Returns the nearest n Stations to a lat,lon coordinate pair
+
+    Returns the Station and coordinate distance from source
+    """
+    if not sends_reports:
+        stations = _query_coords(lat, lon, n, max_distance)
+        stations = [(Station.from_icao(icao), d) for icao, d in stations]
+    else:
+        stations = _n_reporting(lat, lon, n, max_distance)
+    return stations[0] if n == 1 else stations

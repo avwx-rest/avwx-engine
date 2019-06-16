@@ -55,3 +55,9 @@ This is also the same information you'd get from calling Report.station_info.
    .. attribute:: type: str
    .. attribute:: website: str
    .. attribute:: wiki: str
+
+Standalone Functions
+--------------------
+
+.. automodule:: avwx.station
+   :members: nearest, uses_na_format, valid_station

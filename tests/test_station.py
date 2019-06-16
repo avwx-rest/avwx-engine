@@ -42,6 +42,26 @@ class TestStationFuncs(TestCase):
             with self.assertRaises(exceptions.BadStation):
                 station.valid_station(ident)
 
+    def test_nearest(self):
+        """
+        Tests returning nearest Stations to lat, lon
+        """
+        stn, dist = station.nearest(28.43, -81.31)
+        self.assertIsInstance(stn, station.Station)
+        self.assertEqual(stn.icao, "KMCO")
+        self.assertIsInstance(dist, float)
+        for *params, count in (
+            (30, -82, 10, True, 0.1, 0),
+            (30, -82, 10, False, 0.1, 2),
+            (30, -82, 1000, True, 0.5, 4),
+            (30, -82, 1000, False, 0.5, 24),
+        ):
+            stations = station.nearest(*params)
+            self.assertEqual(len(stations), count)
+            for stn, dist in stations:
+                self.assertIsInstance(stn, station.Station)
+                self.assertIsInstance(dist, float)
+
 
 class TestStation(TestCase):
     """
