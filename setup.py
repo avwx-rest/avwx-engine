@@ -3,16 +3,23 @@ avwx package metadata
 """
 
 from setuptools import setup
-import avwx
+
+# Temp fix for not-yet-installed lib error on fresh install
+__author__ = "Michael duPont"
+__maintainer__ = "Michael duPont"
+__email__ = "michael@mdupont.com"
+__license__ = "MIT"
+__version__ = "1.2.2"
+__stations__ = "2019-05-17"
 
 setup(
     name="avwx-engine",
-    version=avwx.__version__,
-    description=avwx.__doc__,
+    version=__version__,
+    description=__doc__,
     url="https://github.com/avwx-rest/AVWX-Engine",
-    author=avwx.__author__,
-    author_email=avwx.__email__,
-    license=avwx.__license__,
+    author=__author__,
+    author_email=__email__,
+    license=__license__,
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",

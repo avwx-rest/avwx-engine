@@ -9,7 +9,7 @@
 
 <!-- [![Code Health](https://landscape.io/github/avwx-rest/AVWX-Engine/master/landscape.svg?style=flat)](https://landscape.io/github/avwx-rest/AVWX-Engine/master) -->
 
-Aviation Weather parsing engine. METAR, TAF, and PIREP
+Aviation weather for humans
 
 ## Install
 
