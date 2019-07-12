@@ -1,9 +1,11 @@
 """
-Michael duPont - michael@mdupont.com
-tests/test_station.py
+Station Data Tests
 """
 
+# stdlib
 from unittest import TestCase
+
+# module
 from avwx import exceptions, station
 
 

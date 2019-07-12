@@ -5,7 +5,7 @@ Currently only supports METAR
 
 # module
 from avwx import _core, translate
-from avwx.static import SPOKEN_UNITS, NUMBER_REPL, FRACTIONS
+from avwx.static import FRACTIONS, NUMBER_REPL, SPOKEN_UNITS
 from avwx.structs import (
     Cloud,
     MetarData,

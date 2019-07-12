@@ -8,7 +8,7 @@ from dataclasses import dataclass
 
 # module
 from avwx.exceptions import BadStation
-from avwx.static import NA_REGIONS, IN_REGIONS, M_NA_REGIONS, M_IN_REGIONS
+from avwx.static import IN_REGIONS, M_IN_REGIONS, M_NA_REGIONS, NA_REGIONS
 from avwx.structs import _LazyLoad
 
 # We catch this import error only if user attempts coord lookup

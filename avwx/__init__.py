@@ -15,7 +15,6 @@ from datetime import datetime
 
 # module
 from avwx import (
-    # airep,
     metar,
     pirep,
     service,

@@ -7,7 +7,7 @@ from copy import copy
 
 # module
 from avwx import _core, service
-from avwx.static import NA_UNITS, IN_UNITS, TAF_RMK, TAF_NEWLINE
+from avwx.static import IN_UNITS, NA_UNITS, TAF_NEWLINE, TAF_RMK
 from avwx.station import uses_na_format, valid_station
 from avwx.structs import TafData, TafLineData, Units
 

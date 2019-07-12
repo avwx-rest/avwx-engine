@@ -1,9 +1,8 @@
 """
-Michael duPont - michael@mdupont.com
-tests/test_pirep.py
+PIREP Report Tests
 """
 
-# library
+# stdlib
 import json
 import unittest
 from dataclasses import asdict
@@ -11,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 
 # module
-from avwx import pirep, structs, Pireps
+from avwx import Pireps, pirep, structs
 
 
 class TestPirepHandlers(unittest.TestCase):

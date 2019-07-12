@@ -1,11 +1,12 @@
 """
-Michael duPont - michael@mdupont.com
-tests/test_service.py
+Service API Tests
 """
+
+# stdlib
+import unittest
 
 # library
 import pytest
-import unittest
 
 # module
 from avwx import exceptions, service

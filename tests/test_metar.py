@@ -1,9 +1,8 @@
 """
-Michael duPont - michael@mdupont.com
-tests/test_metar.py
+METAR Report Tests
 """
 
-# library
+# stdlib
 import json
 import unittest
 from dataclasses import asdict
@@ -11,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 
 # module
-from avwx import metar, structs, Metar
+from avwx import Metar, metar, structs
 
 
 class TestMetar(unittest.TestCase):

@@ -5,9 +5,9 @@ Contains functions for translating report data
 from avwx import _core, remarks
 from avwx.static import (
     CLOUD_TRANSLATIONS,
-    WX_TRANSLATIONS,
-    TURBULANCE_CONDITIONS,
     ICING_CONDITIONS,
+    TURBULANCE_CONDITIONS,
+    WX_TRANSLATIONS,
 )
 from avwx.structs import (
     Cloud,

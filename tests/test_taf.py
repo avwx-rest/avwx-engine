@@ -1,10 +1,9 @@
 """
-Michael duPont - michael@mdupont.com
-tests/test_taf.py
+TAF Report Tests
 """
 
 
-# library
+# stdlib
 import json
 import unittest
 from copy import deepcopy
@@ -13,7 +12,7 @@ from datetime import datetime
 from pathlib import Path
 
 # module
-from avwx import _core, taf, structs, Taf
+from avwx import Taf, _core, structs, taf
 
 
 class TestTaf(unittest.TestCase):

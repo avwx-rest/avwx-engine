@@ -1,6 +1,4 @@
-# AVWX-Engine
-
-![](https://avwx.rest/static/favicons/apple-icon-76x76.png)
+# AVWX: Aviation Weather for Humans
 
 [![PyPI version](https://badge.fury.io/py/avwx-engine.svg)](https://badge.fury.io/py/avwx-engine)
 [![Requirements Status](https://requires.io/github/avwx-rest/AVWX-Engine/requirements.svg?branch=master)](https://requires.io/github/avwx-rest/AVWX-Engine/requirements/?branch=master)
@@ -9,7 +7,7 @@
 
 <!-- [![Code Health](https://landscape.io/github/avwx-rest/AVWX-Engine/master/landscape.svg?style=flat)](https://landscape.io/github/avwx-rest/AVWX-Engine/master) -->
 
-Aviation weather for humans
+![AVWX logo](https://avwx.rest/static/favicons/apple-icon-76x76.png)
 
 ## Install
 
@@ -41,43 +39,31 @@ You can learn more by reading the [project documentation](https://avwx-engine.re
 
 ## Develop
 
-Download and install the source code and its dependencies:
+Download and install the source code and its development dependencies:
 
 ```bash
-git clone github.com/flyinactor91/AVWX-Engine
+git clone github.com/avwx-rest/AVWX-Engine
 cd AVWX-Engine
-pip install -U .
+pip install -U .[dev,scipy]
 ```
 
-Code checked into this repository is expected to be run through the `black` code formatter first.
+Code formatting should be handled by hooks in pre-commit. Before committing any code, be should to install pre-commit into the local git project:
 
 ```bash
-# Install black
-pip install black
-
-# Format py package files
-find avwx -iname "*.py" | xargs black
+pre-commit install
 ```
 
 ## Test
 
-The easiest way to test the package is using `nox`. It will manage all tests, sessions, supported versions (when available), and cleanup. The tests will pick up the local version of `avwx`.
+The easiest way to test the package is using the `nox` library, which is installed as a dev dependencies. It will manage all tests, sessions, supported versions (when available), and cleanup. The tests will pick up the local version of `avwx`.
 
 ```bash
-# Install
-pip install nox
-
-# Run all tests
 nox
 ```
 
-If you want to run the tests directly, the test suite was built while using the `pytest` library.
+If you want to run the tests directly, the test suite was built while using the `pytest` library, which is also installed as a dev dependency.
 
 ```bash
-# Install
-pip install pytest
-
-# Run all unit tests
 pytest
 ```
 

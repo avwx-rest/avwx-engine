@@ -34,5 +34,8 @@ setup(
     packages=["avwx"],
     package_data={"avwx": ["aircraft.json", "stations.json"]},
     tests_require=["pytest-asyncio~=0.10"],
-    extras_require={"scipy": ["scipy~=1.3"]},
+    extras_require={
+        "scipy": ["scipy~=1.3"],
+        "dev": ["nox==2019.5.30", "pre-commit~=1.17", "pytest~=5.0"],
+    },
 )

@@ -1,16 +1,15 @@
 """
-Michael duPont - michael@mdupont.com
-tests/test__core.py
+Core Tests
 """
 
 # pylint: disable=E1101,C0103
 
 # stdlib
+import unittest
+
+# stdlib
 from copy import deepcopy
 from datetime import datetime, timedelta
-
-# library
-import unittest
 
 # module
 from avwx import _core, exceptions, static, structs

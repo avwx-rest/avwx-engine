@@ -7,7 +7,7 @@ from copy import copy
 
 # module
 from avwx import _core, remarks, service
-from avwx.static import NA_UNITS, IN_UNITS, FLIGHT_RULES
+from avwx.static import FLIGHT_RULES, IN_UNITS, NA_UNITS
 from avwx.station import uses_na_format, valid_station
 from avwx.structs import MetarData, Units
 
