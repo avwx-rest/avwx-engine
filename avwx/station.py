@@ -107,6 +107,7 @@ class Station(object):
     longitude: float
     name: str
     note: str
+    reporting: bool
     runways: [Runway]
     state: str
     type: str

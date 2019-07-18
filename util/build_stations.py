@@ -10,19 +10,41 @@ import csv
 import json
 from pathlib import Path
 
-STATION_PATH = Path("data", "airports.csv")
+# module
+from find_bad_stations import BAD_PATH, GOOD_PATH, load_stations
+
+AIRPORT_PATH = Path("data", "airports.csv")
+STATION_PATH = Path("data", "stations.txt")
 RUNWAY_PATH = Path("data", "runways.csv")
 OUTPUT_PATH = Path("..", "avwx", "stations.json")
 
 ACCEPTED_STATION_TYPES = [
-    # 'balloonport',
-    # 'closed',
-    # 'heliport',
+    "balloonport",
+    "closed",
+    "heliport",
     "large_airport",
     "medium_airport",
     "seaplane_base",
     "small_airport",
 ]
+
+
+def nullify(data: dict) -> dict:
+    """
+    Nullify empty strings in a dict
+    """
+    for key, val in data.items():
+        if val == "":
+            data[key] = None
+    return data
+
+
+def format_coord(coord: str) -> float:
+    """
+    Convert coord string to float
+    """
+    neg = -1 if coord[-1] in ("S", "W") else 1
+    return neg * float(coord[:-1].strip().replace(" ", "."))
 
 
 def format_station(station: [str]) -> dict:
@@ -39,6 +61,7 @@ def format_station(station: [str]) -> dict:
     ret = {
         "type": station[2],
         "name": station[3],
+        "reporting": None,
         "latitude": float(station[4]),
         "longitude": float(station[5]),
         "elevation_ft": elev_ft,
@@ -46,17 +69,13 @@ def format_station(station: [str]) -> dict:
         "country": station[9][:iloc],
         "state": station[9][iloc + 1 :],
         "city": station[10],
-        "icao": station[1],
-        "iata": station[13],
+        "icao": station[1].upper(),
+        "iata": station[13].upper(),
         "website": station[15],
         "wiki": station[16],
         "note": station[17],
     }
-    # Nullify empty strings
-    for key, val in ret.items():
-        if val == "":
-            ret[key] = None
-    return ret
+    return nullify(ret)
 
 
 def build_stations() -> dict:
@@ -64,13 +83,47 @@ def build_stations() -> dict:
     Builds the station dict from source file
     """
     stations = {}
-    data = csv.reader(STATION_PATH.open())
+    data = csv.reader(AIRPORT_PATH.open())
     next(data)  # Skip header
     for station in data:
-        if len(station[1]) != 4:
+        icao = station[1].upper()
+        if len(icao) != 4:
             continue
         if station[2] in ACCEPTED_STATION_TYPES:
-            stations[station[1]] = format_station(station)
+            stations[icao] = format_station(station)
+    return stations
+
+
+def add_missing_stations(stations: dict) -> dict:
+    """
+    Add non-airport stations from NOAA
+    """
+    for line in STATION_PATH.open().readlines():
+        # Must be data line with METAR reporting
+        if len(line) != 84 or line[0] == "!" or line[62] != "X":
+            continue
+        icao = line[20:24].strip().upper()
+        if not icao or icao in stations:  # or icao in BAD_STATIONS:
+            continue
+        elev_m = int(line[55:59].strip())
+        ret = {
+            "type": None,
+            "name": line[3:19].strip(),
+            "reporting": None,
+            "latitude": format_coord(line[39:45]),
+            "longitude": format_coord(line[47:54]),
+            "elevation_ft": round(elev_m * 3.28084),
+            "elevation_m": elev_m,
+            "country": line[81:83].strip(),
+            "state": line[:2],
+            "city": None,
+            "icao": icao,
+            "iata": line[26:29].strip().upper(),
+            "website": None,
+            "wiki": None,
+            "note": None,
+        }
+        stations[icao] = nullify(ret)
     return stations
 
 
@@ -87,20 +140,33 @@ def add_runways(stations: dict) -> dict:
             "ident1": runway[8],
             "ident2": runway[14],
         }
-        station = runway[2]
-        if station in stations:
-            if "runways" in stations[station]:
-                stations[station]["runways"].append(data)
+        icao = runway[2]
+        if icao in stations:
+            if "runways" in stations[icao]:
+                stations[icao]["runways"].append(data)
             else:
-                stations[station]["runways"] = [data]
+                stations[icao]["runways"] = [data]
     # Sort runways by longest length and add missing nulls
-    for station in stations:
-        if "runways" in stations[station]:
-            stations[station]["runways"].sort(
-                key=lambda x: x["length_ft"], reverse=True
-            )
+    for icao in stations:
+        if "runways" in stations[icao]:
+            stations[icao]["runways"].sort(key=lambda x: x["length_ft"], reverse=True)
         else:
-            stations[station]["runways"] = None
+            stations[icao]["runways"] = None
+    return stations
+
+
+def add_reporting(stations: dict) -> dict:
+    """
+    Add reporting boolean to station if available
+    """
+    good = load_stations(GOOD_PATH)
+    bad = load_stations(BAD_PATH)
+    for icao in stations:
+        if icao in good:
+            stations[icao]["reporting"] = True
+        elif icao in bad:
+            stations[icao]["reporting"] = False
+        # else unknown
     return stations
 
 
@@ -109,6 +175,8 @@ def main() -> int:
     Build/update the stations.json master file
     """
     stations = build_stations()
+    stations = add_missing_stations(stations)
+    stations = add_reporting(stations)
     stations = add_runways(stations)
     json.dump(stations, OUTPUT_PATH.open("w"), sort_keys=True)
     return 0

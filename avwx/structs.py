@@ -17,19 +17,33 @@ class _LazyLoad:
     def __init__(self, fname: str):
         self.source = Path(__file__).parent.joinpath(f"{fname}.json")
 
+    def _load(self):
+        self.data = json.load(self.source.open())
+
     def __getitem__(self, key: str) -> object:
         if not self.data:
-            self.data = json.load(self.source.open())
+            self._load()
         return self.data[key]
 
     def __contains__(self, key: str) -> bool:
         if not self.data:
-            self.data = json.load(self.source.open())
+            self._load()
         return key in self.data
+
+    def __len__(self) -> int:
+        if not self.data:
+            self._load()
+        return len(self.data)
+
+    def __iter__(self):
+        if not self.data:
+            self._load()
+        for key in self.data:
+            yield key
 
     def values(self) -> list:
         if not self.data:
-            self.data = json.load(self.source.open())
+            self._load()
         return self.data.values()
 
 
