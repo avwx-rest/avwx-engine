@@ -91,6 +91,7 @@
         "longitude": -157.924228,
         "name": "Daniel K Inouye International Airport",
         "note": "Hickam Air Force Base, HIK, PHIK, KHNL, Honolulu International",
+        "reporting": true,
         "runways": [
             {
                 "ident1": "08L",

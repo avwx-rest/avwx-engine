@@ -262,6 +262,7 @@
         "longitude": -81.30899810791016,
         "name": "Orlando International Airport",
         "note": "Disney World,Epcot Center",
+        "reporting": true,
         "runways": [
             {
                 "ident1": "18L",

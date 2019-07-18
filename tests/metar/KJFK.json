@@ -75,6 +75,7 @@
         "longitude": -73.77890015,
         "name": "John F Kennedy International Airport",
         "note": "Manhattan, New York City, NYC, Idlewild",
+        "reporting": true,
         "runways": [
             {
                 "ident1": "13R",

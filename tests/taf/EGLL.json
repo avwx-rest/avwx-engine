@@ -198,6 +198,7 @@
         "longitude": -0.461941,
         "name": "London Heathrow Airport",
         "note": "LON, Londres",
+        "reporting": true,
         "runways": [
             {
                 "ident1": "09L",

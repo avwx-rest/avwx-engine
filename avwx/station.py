@@ -147,7 +147,7 @@ class Station(object):
         """
         Returns whether or not a Station likely sends weather reports
         """
-        return self.iata is not None
+        return self.reporting is True
 
 
 def _query_coords(lat: float, lon: float, n: int, d: float) -> [(str, float)]:

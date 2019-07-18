@@ -55,8 +55,8 @@ class TestStationFuncs(TestCase):
         for *params, count in (
             (30, -82, 10, True, 0.1, 0),
             (30, -82, 10, False, 0.1, 2),
-            (30, -82, 1000, True, 0.5, 4),
-            (30, -82, 1000, False, 0.5, 24),
+            (30, -82, 1000, True, 0.5, 6),
+            (30, -82, 1000, False, 0.5, 38),
         ):
             stations = station.nearest(*params)
             self.assertEqual(len(stations), count)
