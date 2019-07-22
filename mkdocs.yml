@@ -1,0 +1,7 @@
+site_name: AVWX
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Station: station.md
+  - Report Types: metar.md
+  - Utilities: service.md
