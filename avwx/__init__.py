@@ -29,7 +29,7 @@ from avwx import (
 from avwx.station import Station
 
 
-class Report(object):
+class Report:
     """
     Base report to take care of service assignment and station info
     """
@@ -179,7 +179,7 @@ class Taf(Report):
         return speech.taf(self.data, self.units)
 
 
-class Reports(object):
+class Reports:
     """
     Base class containing multiple reports
     """
@@ -218,7 +218,7 @@ class Reports(object):
 
     def update(self, reports: [str] = None, disable_post: bool = False) -> bool:
         """
-        Updates raw_reports and data by fetch recent aircraft reports
+        Updates raw and data by fetch recent aircraft reports
 
         Can accept a list report strings to parse instead
 

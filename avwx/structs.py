@@ -51,7 +51,7 @@ AIRCRAFT = _LazyLoad("aircraft")
 
 
 @dataclass
-class Aircraft(object):
+class Aircraft:
     code: str
     type: str
 
@@ -67,7 +67,7 @@ class Aircraft(object):
 
 
 @dataclass
-class Units(object):
+class Units:
     altimeter: str
     altitude: str
     temperature: str
@@ -76,7 +76,7 @@ class Units(object):
 
 
 @dataclass
-class Number(object):
+class Number:
     repr: str
     value: float
     spoken: str
@@ -90,13 +90,13 @@ class Fraction(Number):
 
 
 @dataclass
-class Timestamp(object):
+class Timestamp:
     repr: str
     dt: datetime
 
 
 @dataclass
-class Cloud(object):
+class Cloud:
     repr: str
     type: str = None
     base: int = None
@@ -106,7 +106,7 @@ class Cloud(object):
 
 
 @dataclass
-class Location(object):
+class Location:
     repr: str
     station: str
     direction: Number
@@ -114,13 +114,13 @@ class Location(object):
 
 
 @dataclass
-class RemarksData(object):
+class RemarksData:
     dewpoint_decimal: float = None
     temperature_decimal: float = None
 
 
 @dataclass
-class ReportData(object):
+class ReportData:
     raw: str
     station: str
     time: Timestamp
@@ -128,7 +128,7 @@ class ReportData(object):
 
 
 @dataclass
-class SharedData(object):
+class SharedData:
     altimeter: Number
     clouds: [Cloud]
     flight_rules: str
@@ -173,7 +173,7 @@ class TafData(ReportData):
 
 
 @dataclass
-class ReportTrans(object):
+class ReportTrans:
     altimeter: str
     clouds: str
     other: str
@@ -197,7 +197,7 @@ class TafLineTrans(ReportTrans):
 
 
 @dataclass
-class TafTrans(object):
+class TafTrans:
     forecast: [TafLineTrans]
     max_temp: str
     min_temp: str
@@ -205,7 +205,7 @@ class TafTrans(object):
 
 
 @dataclass
-class Turbulance(object):
+class Turbulance:
     severity: str
     floor: Number = None
     ceiling: Number = None
@@ -218,7 +218,7 @@ class Icing(Turbulance):
 
 @dataclass
 class PirepData(ReportData):
-    aircraft: str = None
+    aircraft: Aircraft = None
     altitude: Number = None
     clouds: [Cloud] = None
     flight_visibility: Number = None

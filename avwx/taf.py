@@ -12,7 +12,7 @@ from avwx.station import uses_na_format, valid_station
 from avwx.structs import TafData, TafLineData, Units
 
 
-def parse(station: str, report: str) -> TafData:
+def parse(station: str, report: str) -> (TafData, Units):
     """
     Returns TafData and Units dataclasses with parsed data and their associated units
     """

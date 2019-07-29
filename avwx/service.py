@@ -20,7 +20,7 @@ from avwx.station import valid_station
 _atimeout = aiohttp.ClientTimeout(total=10)
 
 
-class Service(object):
+class Service:
     """
     Base Service class for fetching reports
     """
