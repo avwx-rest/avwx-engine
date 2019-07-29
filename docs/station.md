@@ -1,10 +1,12 @@
 # Station
 
-For the purposes of AVWX, a station is any location with an ICAO code. These are usually airports, but smaller locations might not generate certain report types or defer to larger stations nearby. For example, small airports with an AWOS system might not send the report to NOAA.
+This module contains station/airport dataclasses and search functions.
 
-## Station Class
+For the purposes of AVWX, a station is any location that might produce a METAR report. These are usually airports, but smaller locations might not generate certain report types or defer to larger stations nearby. For example, small airports with an AWOS system might not send the report to NOAA. They also include remote weather observation stations not associated with airports.
 
-The Station data class stores basic info about the desired station and available Runways.
+## class avwx.Station
+
+The Station dataclass stores basic info about the desired station and available Runways.
 
 The easiest way to get a station is to supply the ICAO code.
 
@@ -30,26 +32,88 @@ This is also the same information you'd get from calling Report.station_info.
 'Blue Grass Airport'
 ```
 
-.. autoclass:: avwx.Station
-   :members: from_icao, nearest, sends_reports
+### **city**: *str*
 
-   .. attribute:: city: str
-   .. attribute:: country: str
-   .. attribute:: elevation_ft: int
-   .. attribute:: elevation_m: int
-   .. attribute:: iata: str
-   .. attribute:: icao: str
-   .. attribute:: latitude: float
-   .. attribute:: longitude: float
-   .. attribute:: name: str
-   .. attribute:: note: str
-   .. attribute:: runways: [avwx.structs.Runway]
-   .. attribute:: state: str
-   .. attribute:: type: str
-   .. attribute:: website: str
-   .. attribute:: wiki: str
+### **country**: *str*
 
-## Standalone Functions
+### **elevation_ft**: *int*
 
-.. automodule:: avwx.station
-   :members: nearest, uses_na_format, valid_station
+Elevation in feet
+
+### **elevation_m**: *int*
+
+Elevation in meters
+
+### **from_icao**(*ident: str*) -> *Station*
+
+Load a Station from an ICAO station ident
+
+### **iata**: *str*
+
+Station's 3-char IATA ident
+
+### **icao**: *str*
+
+Station's 4-char ICAO ident
+
+### **latitude**: *float*
+
+### **longitude**: *float*
+
+### **name**: *str*
+
+Station / airport name
+
+### **nearest**(*lat: float, lon: float, sends_reports: bool = True max_distance: float = 50*) -> *(avwx.Station, float)*
+
+Load the Station nearest to a lat,lon coordinate pair
+
+Returns the Station and coordinate distance from source
+
+### **note**: *str*
+
+Location notes like nearby landmarks
+
+### **runways**: *[avwx.station.Runway]*
+
+List of available Runway objects sorted longest to shortest
+
+### **state**: *str*
+
+### **type**: *str*
+
+Station / airport type like `"large_airport"`
+
+### **website**: *str*
+
+Station / airport primary website
+
+### **wiki**: *str*
+
+Station Wikipedia page
+
+## class avwx.station.Runway
+
+Represents a runway at an airport
+
+### **length_ft**: *int*
+
+Runway length in feet
+
+### **width_ft**: *int*
+
+Runway width in feet
+
+### **ident1**: str
+
+Runway number 01-18 with modifiers. Ex: `"17L"`
+
+### **ident2**: str
+
+Runway number 19-36 with modifiers. Ex: `"35R"`
+
+## avwx.station.**nearest**(*lat: float, lon: float, n: int = 1, sends_reports: bool = True, max_distance: float = 10*) -> *(avwx.Station, float)*
+
+Finds the nearest n Stations to a lat,lon coordinate pair
+
+Returns the Station and coordinate distance from source

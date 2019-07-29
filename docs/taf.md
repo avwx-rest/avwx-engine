@@ -2,7 +2,7 @@
 
 A TAF (Terminal Aerodrome Forecast) is a 24-hour weather forecast for the area 5 statute miles from the reporting station. They are update once every three or six hours or when significant changes warrent an update, and the observations are valid for six hours or until the next report is issued
 
-## Taf Class
+## class avwx.**Taf**(*station_ident: str*)
 
 The Taf class offers an object-oriented approach to managing TAF data for a single station.
 
@@ -43,48 +43,70 @@ True
 'Vis 7km, Light Rain, Scattered clouds at 2000ft, Frequent moderate turbulence in clear air from 8000ft to 12000ft, Moderate icing in clouds from 1000ft to 5000ft'
 ```
 
-.. autoclass:: avwx.Taf
-  :members: async_update, update
+### **async_update**() -> *bool*
 
-  .. attribute:: data: avwx.structs.TafData
+Async version of `update`
 
-    TafData dataclass of parsed data values and units. Parsed on update()
+### **data**: *avwx.structs.TafData* = *None*
 
-  .. attribute:: last_updated: datetime.datetime
+TafData dataclass of parsed data values and units. Parsed on update()
 
-    UTC Datetime object when the report was last updated
+### **from_report**(*report: str*) -> *avwx.Taf*
 
-  .. attribute:: raw: str
+Returns an updated report object based on an existing report
 
-    The unparsed report string. Fetched on update()
+### **last_updated**: *datetime.datetime* = *None*
 
-  .. attribute:: station: str
+UTC Datetime object when the report was last updated
 
-    4-character ICAO station ident code the report was initialized with
+### **raw**: *str* = *None*
 
-  .. attribute:: service: avwx.service.Service
+The unparsed report string. Fetched on update()
 
-    Service object used to fetch the report string
+### **service**: *avwx.service.Service*
 
-  .. attribute:: speech: str
+Service object used to fetch the report string
 
-    Report summary designed to be read by a text-to-speech program
+### **speech**: *str*
 
-  .. attribute:: station_info: avwx.structs.StationInfo
+Report summary designed to be read by a text-to-speech program
 
-    Provides basic station info. Raises a BadStation exception if the station's info cannot be found
+### **station**: *str*
 
-  .. attribute:: summary: [str]
+4-character ICAO station ident code the report was initialized with
 
-    Condensed report summaries created from translations
+### **station_info**: *avwx.Station*
 
-  .. attribute:: translations: avwx.structs.TafTrans
+Provides basic station info. Raises a BadStation exception if the station's info cannot be found
 
-    TafTrans dataclass of translation strings from data. Parsed on update()
+### **summary**: *[str]*
 
-## Standalone Functions
+Condensed report summaries created from translations
+
+### **translations**: *avwx.structs.TafTrans*
+
+TafTrans dataclass of translation strings from data. Parsed on update()
+
+### **units**: *avwx.structs.Units*
+
+Units inferred from the station location and report contents
+
+### **update**(*report: str = None*) -> *bool*
+
+Updates `raw`, `data`, and `translations` by fetching and parsing the report
+
+Can accept a report string to parse instead
+
+Returns `True` if a new report is available, else `False`
+
+## Taf Module
 
 If you don't need or want the object-oriented handling provided by the Taf class, you can use the core TAF functions directly.
 
-.. automodule:: avwx.taf
-   :members:
+### avwx.taf.**parse**(*station: str, report: str*) -> (*avwx.structs.TafData, avwx.structs.Units*)
+
+Returns TafData and Units dataclasses with parsed data and their associated units
+
+<!-- ### avwx.taf.**parse_lines**(*lines: [str], units: avwx.structs.Units, use_na: bool = True*) -> *[dict]*
+
+Returns a list of parsed line dictionaries -->

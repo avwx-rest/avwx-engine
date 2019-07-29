@@ -2,7 +2,7 @@
 
 A PIREP (Pilot Report) is an observation made by pilots inflight meant to aid controllers and pilots routing around adverse conditions and other conditions of note. They typically contain icing, turbulance, cloud types/bases/tops, and other info at a known distance and radial from a ground station. They are released as they come in.
 
-## Pireps Class
+## class avwx.**Pireps**(*station_ident: str = None, lat: float = None, lon: float = None*)
 
 The Pireps class offers an object-oriented approach to managing multiple PIREP reports for a single station.
 
@@ -43,44 +43,54 @@ datetime.datetime(2018, 3, 4, 23, 54, 4, 353757)
 'Winds N-360 (variable 320 to 040) at 24kt gusting to 55kt, Vis 0.125sm, Temp 14C, Dew 10C, Alt 29.78inHg, Heavy Thunderstorm, Vicinity Funnel Cloud, Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft'
 ```
 
-.. autoclass:: avwx.Pireps
-  :members: async_update, update
+### **async_update**() -> *bool*
 
-  .. attribute:: data: [avwx.structs.PirepData]
+Async version of `update`
 
-    List of PirepData dataclasses of parsed data values and units. Parsed on update()
+### **data**: *[avwx.structs.PirepData]* = *None*
 
-  .. attribute:: last_updated: datetime.datetime
+List of PirepData dataclasses of parsed data values and units. Parsed on update()
 
-    UTC Datetime object when the reports were last updated
+### **last_updated**: *datetime.datetime* = *None*
 
-  .. attribute:: lat: float
+UTC Datetime object when the reports were last updated
 
-    Latitude of the radial center. This is supplied by the user or loaded from the station
+### **lat**: *float*
 
-  .. attribute:: lon: float
+Latitude of the radial center. This is supplied by the user or loaded from the station
 
-    Longitude of the radial center. This is supplied by the user or loaded from the station
+### **lon**: *float*
 
-  .. attribute:: raw: [str]
+Longitude of the radial center. This is supplied by the user or loaded from the station
 
-    The unparsed report strings. Fetched on update()
+### **raw**: *[str]* = *None*
 
-  .. attribute:: station: str
+The unparsed report strings. Fetched on update()
 
-    4-character ICAO station ident code the object was initialized with. Reports will fall within a certain radial distance of this station
+### **service**: *avwx.service.Service*
 
-  .. attribute:: service: avwx.service.Service
+Service object used to fetch the report strings
 
-    Service object used to fetch the report strings
+### **station_info**: *avwx.Station* = *None*
 
-  .. attribute:: station_info: avwx.structs.StationInfo
+Provides basic station info. Raises a BadStation exception if the station's info cannot be found
 
-    Provides basic station info. Raises a BadStation exception if the station's info cannot be found
+### **units**: *avwx.structs.Units*
 
-## Standalone Functions
+Units inferred from the station location and report contents
+
+### **update**(*reports: [str] = None*) -> *bool*
+
+Updates `raw` and `data` by fetch recent aircraft reports
+
+Can accept a list report strings to parse instead
+
+Returns `True` if new reports are available, else `False`
+
+## Pirep Module
 
 If you don't need or want the object-oriented handling provided by the Pireps class, you can use the core PIREP functions directly.
 
-.. automodule:: avwx.pirep
-   :members:
+### avwx.pirep.**parse**(*report: str*) -> *avwx.structs.PirepData*
+
+Returns a PirepData object based on the given report

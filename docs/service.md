@@ -2,11 +2,11 @@
 
 AVWX fetches the raw weather reports from third-party services via REST API calls. We use Service objects to handle the request and extraction for us.
 
-## Basic Usage
+## Basic Module Use
 
-.. autofunction:: avwx.service.get_service
+### avwx.service.**get_service**(*station: str*) -> *avwx.service.Service*
 
-Example:
+Returns the preferred service for a given station
 
 ```python
 station = 'KJFK'
@@ -20,14 +20,29 @@ report = service.fetch(station)
 
 Services are based off of the Service class and should all return the final report string with the fetch method.
 
-.. autoclass:: avwx.service.Service
-   :members: fetch, async_fetch
+### class avwx.service.**Service**(*request_type: str*)
 
-.. autoclass:: avwx.service.NOAA
+Base Service class for fetching reports
 
-.. autoclass:: avwx.service.AMO
+#### **fetch**(*station: str = None, lat: float = None, lon: float = None*) -> *str*
 
-.. autoclass:: avwx.service.MAC
+Fetches a report string from the service
+
+#### **async_fetch**(*station: str = None, lat: float = None, lon: float = None*) -> *str*
+
+Asynchronously fetch a report string from the service
+
+### class avwx.service.**NOAA**(*request_type: str*)
+
+Requests data from NOAA ADDS
+
+### avwx.service.**AMO**(*request_type: str*)
+
+Requests data from AMO KMA for Korean stations
+
+### avwx.service.**MAC**(*request_type: str*)
+
+Requests data from Meteorologia Aeronautica Civil for Columbian stations
 
 ## Adding a New Service
 
