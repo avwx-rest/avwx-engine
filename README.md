@@ -44,7 +44,7 @@ Download and install the source code and its development dependencies:
 ```bash
 git clone github.com/avwx-rest/AVWX-Engine
 cd AVWX-Engine
-pip install -U .[dev,scipy]
+pip install -Ur requirements.txt
 ```
 
 Code formatting should be handled by hooks in pre-commit. Before committing any code, be should to install pre-commit into the local git project:

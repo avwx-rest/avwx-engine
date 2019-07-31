@@ -37,5 +37,6 @@ setup(
     extras_require={
         "scipy": ["scipy~=1.3"],
         "dev": ["nox==2019.5.30", "pre-commit~=1.17", "pytest~=5.0"],
+        "docs": ["mkdocs~=1.0"],
     },
 )

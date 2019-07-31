@@ -84,7 +84,11 @@ def valid_station(station: str):
 
 
 @dataclass
-class Runway(object):
+class Runway:
+    """
+    Represents a runway at an airport
+    """
+
     length_ft: int
     width_ft: int
     ident1: str
@@ -92,7 +96,7 @@ class Runway(object):
 
 
 @dataclass
-class Station(object):
+class Station:
     """
     Stores basic station information
     """
@@ -192,9 +196,9 @@ def nearest(
     n: int = 1,
     sends_reports: bool = True,
     max_distance: float = 10,
-) -> (str, float):
+) -> (Station, float):
     """
-    Returns the nearest n Stations to a lat,lon coordinate pair
+    Finds the nearest n Stations to a lat,lon coordinate pair
 
     Returns the Station and coordinate distance from source
     """

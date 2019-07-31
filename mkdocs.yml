@@ -1,0 +1,14 @@
+site_name: AVWX
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Report Types:
+    - METAR: metar.md
+    - TAF: taf.md
+    - PIREP: pirep.md
+  - Utilities:
+    - Station: station.md
+    - Data Services: service.md
+    - Data Structures: structs.md
+    - Static Values: static.md
+    - Exceptions: exceptions.md
