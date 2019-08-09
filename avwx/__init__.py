@@ -6,7 +6,7 @@ __author__ = "Michael duPont"
 __maintainer__ = "Michael duPont"
 __email__ = "michael@mdupont.com"
 __license__ = "MIT"
-__version__ = "1.2.2"
+__version__ = "1.2.3"
 __stations__ = "2019-05-17"
 
 # stdlib
@@ -89,7 +89,9 @@ class Report:
         obj.update(report)
         return obj
 
-    def update(self, report: str = None, disable_post: bool = False) -> bool:
+    def update(
+        self, report: str = None, timeout: int = 10, disable_post: bool = False
+    ) -> bool:
         """
         Updates raw, data, and translations by fetching and parsing the report
 
@@ -98,7 +100,7 @@ class Report:
         Returns True if a new report is available, else False
         """
         if not report:
-            report = self.service.fetch(self.station)
+            report = self.service.fetch(self.station, timeout=timeout)
         if not report or report == self.raw:
             return False
         self.raw = report
@@ -107,11 +109,11 @@ class Report:
         self.last_updated = datetime.utcnow()
         return True
 
-    async def async_update(self, disable_post: bool = False) -> bool:
+    async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
         """
         Async version of update
         """
-        report = await self.service.async_fetch(self.station)
+        report = await self.service.async_fetch(self.station, timeout=timeout)
         if not report or report == self.raw:
             return False
         self.raw = report
@@ -216,7 +218,9 @@ class Reports:
         """
         return reports
 
-    def update(self, reports: [str] = None, disable_post: bool = False) -> bool:
+    def update(
+        self, reports: [str] = None, timeout: int = 10, disable_post: bool = False
+    ) -> bool:
         """
         Updates raw and data by fetch recent aircraft reports
 
@@ -225,7 +229,7 @@ class Reports:
         Returns True if new reports are available, else False
         """
         if not reports:
-            reports = self.service.fetch(lat=self.lat, lon=self.lon)
+            reports = self.service.fetch(lat=self.lat, lon=self.lon, timeout=timeout)
             if not reports:
                 return False
         if isinstance(reports, str):
@@ -238,11 +242,13 @@ class Reports:
         self.last_updated = datetime.utcnow()
         return True
 
-    async def async_update(self, disable_post: bool = False) -> bool:
+    async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
         """
         Async version of update
         """
-        reports = await self.service.async_fetch(lat=self.lat, lon=self.lon)
+        reports = await self.service.async_fetch(
+            lat=self.lat, lon=self.lon, timeout=timeout
+        )
         if not reports or reports == self.raw:
             return False
         self.raw = reports

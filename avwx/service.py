@@ -17,8 +17,6 @@ from avwx._core import dedupe
 from avwx.exceptions import InvalidRequest, SourceError
 from avwx.station import valid_station
 
-_atimeout = aiohttp.ClientTimeout(total=10)
-
 
 class Service:
     """
@@ -53,7 +51,13 @@ class Service:
     def _extract(self, raw: str, station: str = None) -> str:
         raise NotImplementedError()
 
-    def fetch(self, station: str = None, lat: float = None, lon: float = None) -> str:
+    def fetch(
+        self,
+        station: str = None,
+        lat: float = None,
+        lon: float = None,
+        timeout: int = 10,
+    ) -> str:
         """
         Fetches a report string from the service
         """
@@ -66,7 +70,7 @@ class Service:
             url += "?" + urlencode(params)
             # Non-null data signals a POST request
             data = {} if self.method == "POST" else None
-            resp = request.urlopen(url, data=data, timeout=10)
+            resp = request.urlopen(url, data=data, timeout=timeout)
             if resp.status != 200:
                 raise SourceError(
                     f"{self.__class__.__name__} server returned {resp.status}"
@@ -82,7 +86,11 @@ class Service:
         return " ".join(report.split())
 
     async def async_fetch(
-        self, station: str = None, lat: float = None, lon: float = None
+        self,
+        station: str = None,
+        lat: float = None,
+        lon: float = None,
+        timeout: int = 10,
     ) -> str:
         """
         Asynchronously fetch a report string from the service
@@ -93,7 +101,8 @@ class Service:
             raise ValueError("No valid fetch parameters")
         url, params = self._make_url(station, lat, lon)
         try:
-            async with aiohttp.ClientSession(timeout=_atimeout) as sess:
+            atimeout = aiohttp.ClientTimeout(total=timeout)
+            async with aiohttp.ClientSession(timeout=atimeout) as sess:
                 async with getattr(sess, self.method.lower())(
                     url, params=params
                 ) as resp:
