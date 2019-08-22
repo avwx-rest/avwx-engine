@@ -36,6 +36,10 @@ This is also the same information you'd get from calling Report.station_info.
 
 ### **country**: *str*
 
+### **distance**(*lat: float, lon: float*) -> *(float, float)*:
+
+Returns the distance in miles and kilometers from a given lat,lon
+
 ### **elevation_ft**: *int*
 
 Elevation in feet
@@ -64,11 +68,13 @@ Station's 4-char ICAO ident
 
 Station / airport name
 
-### **nearest**(*lat: float, lon: float, sends_reports: bool = True max_distance: float = 50*) -> *(avwx.Station, float)*
+### **nearest**(*lat: float, lon: float, is_airport: bool = False, sends_reports: bool = True max_distance: float = 50*) -> *(avwx.Station, dict)*
 
 Load the Station nearest to a lat,lon coordinate pair
 
 Returns the Station and coordinate distance from source
+
+NOTE: Becomes less accurate toward poles and doesn't cross +/-180
 
 ### **note**: *str*
 
@@ -112,8 +118,10 @@ Runway number 01-18 with modifiers. Ex: `"17L"`
 
 Runway number 19-36 with modifiers. Ex: `"35R"`
 
-## avwx.station.**nearest**(*lat: float, lon: float, n: int = 1, sends_reports: bool = True, max_distance: float = 10*) -> *(avwx.Station, float)*
+## avwx.station.**nearest**(*lat: float, lon: float, n: int = 1, is_airport: bool = False, sends_reports: bool = True, max_distance: float = 10*) -> *[dict]*
 
 Finds the nearest n Stations to a lat,lon coordinate pair
 
 Returns the Station and coordinate distance from source
+
+NOTE: Becomes less accurate toward poles and doesn't cross +/-180

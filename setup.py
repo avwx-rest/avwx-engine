@@ -9,8 +9,7 @@ __author__ = "Michael duPont"
 __maintainer__ = "Michael duPont"
 __email__ = "michael@mdupont.com"
 __license__ = "MIT"
-__version__ = "1.2.3"
-__stations__ = "2019-05-17"
+__version__ = "1.2.4"
 
 setup(
     name="avwx-engine",
@@ -36,7 +35,7 @@ setup(
     tests_require=["pytest-asyncio~=0.10"],
     extras_require={
         "scipy": ["scipy~=1.3"],
-        "dev": ["nox==2019.5.30", "pre-commit~=1.17", "pytest~=5.0"],
+        "dev": ["nox==2019.8.20", "pre-commit~=1.18", "pytest~=5.1"],
         "docs": ["mkdocs~=1.0"],
     },
 )

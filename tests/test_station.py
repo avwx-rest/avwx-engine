@@ -48,21 +48,39 @@ class TestStationFuncs(TestCase):
         """
         Tests returning nearest Stations to lat, lon
         """
-        stn, dist = station.nearest(28.43, -81.31)
+        dist = station.nearest(28.43, -81.31)
+        stn = dist.pop("station")
         self.assertIsInstance(stn, station.Station)
         self.assertEqual(stn.icao, "KMCO")
-        self.assertIsInstance(dist, float)
+        for val in dist.values():
+            self.assertIsInstance(val, float)
         for *params, count in (
-            (30, -82, 10, True, 0.1, 0),
-            (30, -82, 10, False, 0.1, 2),
-            (30, -82, 1000, True, 0.5, 6),
-            (30, -82, 1000, False, 0.5, 38),
+            (30, -82, 10, True, True, 0.1, 0),
+            (30, -82, 10, False, True, 0.1, 2),
+            (30, -82, 10, True, False, 0.1, 2),
+            (30, -82, 1000, True, True, 0.5, 6),
+            (30, -82, 1000, False, False, 0.5, 38),
         ):
             stations = station.nearest(*params)
             self.assertEqual(len(stations), count)
-            for stn, dist in stations:
+            for dist in stations:
+                stn = dist.pop("station")
                 self.assertIsInstance(stn, station.Station)
-                self.assertIsInstance(dist, float)
+                for val in dist.values():
+                    self.assertIsInstance(val, float)
+
+    def test_nearest_filter(self):
+        """
+        Tests filtering nearest stations
+        """
+        for airport, reports, count in (
+            (True, True, 5),
+            (True, False, 16),
+            (False, True, 28),
+            (False, False, 28),
+        ):
+            stations = station.nearest(30, -80, 30, airport, reports, 1.5)
+            self.assertEqual(len(stations), count)
 
 
 class TestStation(TestCase):
@@ -95,15 +113,17 @@ class TestStation(TestCase):
         Tests loading a Station nearest to a lat,lon coordinate pair
         """
         for lat, lon, icao in ((28.43, -81.31, "KMCO"), (28.43, -81, "KTIX")):
-            stn, dist = station.Station.nearest(lat, lon)
+            stn, dist = station.Station.nearest(lat, lon, is_airport=True)
             self.assertIsInstance(stn, station.Station)
-            self.assertIsInstance(dist, float)
             self.assertEqual(stn.icao, icao)
+            for val in dist.values():
+                self.assertIsInstance(val, float)
         # Test with IATA req disabled
         stn, dist = station.Station.nearest(28.43, -81, False)
         self.assertIsInstance(stn, station.Station)
-        self.assertIsInstance(dist, float)
         self.assertEqual(stn.icao, "FA18")
+        for val in dist.values():
+            self.assertIsInstance(val, float)
 
     def test_sends_reports(self):
         """

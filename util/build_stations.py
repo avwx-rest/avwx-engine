@@ -3,6 +3,9 @@ Builds the master station list
 
 Source file for airports.csv and runways.csv can be downloaded from
 http://ourairports.com/data/
+
+Source file for stations.txt can be downloaded from
+https://www.aviationweather.gov/docs/metar/stations.txt
 """
 
 # stdlib
@@ -107,7 +110,7 @@ def add_missing_stations(stations: dict) -> dict:
             continue
         elev_m = int(line[55:59].strip())
         ret = {
-            "type": None,
+            "type": "weather_station",
             "name": line[3:19].strip(),
             "reporting": None,
             "latitude": format_coord(line[39:45]),

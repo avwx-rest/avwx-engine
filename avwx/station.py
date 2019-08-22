@@ -3,6 +3,7 @@ Station handling and search
 """
 
 # stdlib
+import math
 from copy import copy
 from dataclasses import dataclass
 
@@ -136,15 +137,22 @@ class Station:
         cls,
         lat: float,
         lon: float,
+        is_airport: bool = False,
         sends_reports: bool = True,
         max_distance: float = 50,
-    ) -> ("Station", float):
+    ) -> ("Station", dict):
         """
         Load the Station nearest to a lat,lon coordinate pair
 
-        Returns the Station and coordinate distance from source
+        Returns the Station and distances from source
+
+        NOTE: Becomes less accurate toward poles and doesn't cross +/-180
         """
-        return nearest(lat, lon, 1, sends_reports, max_distance)
+        ret = nearest(lat, lon, 1, is_airport, sends_reports, max_distance)
+        if not isinstance(ret, dict):
+            return
+        station = ret.pop("station")
+        return station, ret
 
     @property
     def sends_reports(self) -> bool:
@@ -153,10 +161,18 @@ class Station:
         """
         return self.reporting is True
 
+    def distance(self, lat: float, lon: float) -> (float, float):
+        """
+        Returns the distance in miles and kilometers from a given lat,lon
+        """
+        dlat, dlon = abs(self.latitude - lat), abs(self.longitude - lon)
+        miles = math.cos(math.radians(dlat)) * dlon * 69.172
+        return miles, miles * 1.609344
+
 
 def _query_coords(lat: float, lon: float, n: int, d: float) -> [(str, float)]:
     """
-    Returns <= n number of ident, dist tuples <= d distance from lat, lon
+    Returns <= n number of ident, dist tuples <= d coord distance from lat,lon
     """
     dist, index = _COORD_TREE.value.query([lat, lon], n, distance_upper_bound=d)
     if n == 1:
@@ -167,9 +183,22 @@ def _query_coords(lat: float, lon: float, n: int, d: float) -> [(str, float)]:
     ]
 
 
-def _n_reporting(lat: float, lon: float, n: int, d: float) -> (str, float):
+def _station_filter(station: Station, is_airport: bool, reporting: bool) -> bool:
     """
-    Returns <= n number of reporting stations <= d distance from lat,lon
+    Return True if station matches given criteria
+    """
+    if is_airport and "airport" not in station.type:
+        return False
+    if reporting and not station.sends_reports:
+        return False
+    return True
+
+
+def _query_filter(
+    lat: float, lon: float, n: int, d: float, is_airport: bool, reporting: bool
+) -> str:
+    """
+    Returns <= n number of stations <= d distance from lat,lon matching the query params
     """
     k = n * 20
     last = 0
@@ -181,7 +210,7 @@ def _n_reporting(lat: float, lon: float, n: int, d: float) -> (str, float):
             return stations
         for icao, d in nodes:
             stn = Station.from_icao(icao)
-            if stn.sends_reports:
+            if _station_filter(stn, is_airport, reporting):
                 stations.append((stn, d))
             # Reached the desired number of stations
             if len(stations) >= n:
@@ -194,17 +223,39 @@ def nearest(
     lat: float,
     lon: float,
     n: int = 1,
+    is_airport: bool = False,
     sends_reports: bool = True,
-    max_distance: float = 10,
-) -> (Station, float):
+    max_coord_distance: float = 10,
+) -> "dict/[dict]":
     """
     Finds the nearest n Stations to a lat,lon coordinate pair
 
     Returns the Station and coordinate distance from source
+
+    NOTE: Becomes less accurate toward poles and doesn't cross +/-180
     """
-    if not sends_reports:
-        stations = _query_coords(lat, lon, n, max_distance)
+    # Default state, no filtering necessary
+    if sends_reports and not is_airport:
+        stations = _query_coords(lat, lon, n, max_coord_distance)
         stations = [(Station.from_icao(icao), d) for icao, d in stations]
     else:
-        stations = _n_reporting(lat, lon, n, max_distance)
-    return stations[0] if n == 1 else stations
+        stations = _query_filter(
+            lat, lon, n, max_coord_distance, is_airport, sends_reports
+        )
+    if not stations:
+        return []
+    ret = []
+    for station, coordd in stations:
+        miles, kms = station.distance(lat, lon)
+        ret.append(
+            {
+                "station": station,
+                "coordinate_distance": coordd,
+                "miles": miles,
+                "kilometers": kms,
+            }
+        )
+    if n == 1:
+        return ret[0]
+    ret.sort(key=lambda x: x["miles"])
+    return ret
