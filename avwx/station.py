@@ -7,6 +7,9 @@ import math
 from copy import copy
 from dataclasses import dataclass
 
+# library
+from geopy.distance import great_circle, Distance
+
 # module
 from avwx.exceptions import BadStation
 from avwx.static import IN_REGIONS, M_IN_REGIONS, M_NA_REGIONS, NA_REGIONS
@@ -161,13 +164,11 @@ class Station:
         """
         return self.reporting is True
 
-    def distance(self, lat: float, lon: float) -> (float, float):
+    def distance(self, lat: float, lon: float) -> Distance:
         """
-        Returns the distance in miles and kilometers from a given lat,lon
+        Returns a geopy Distance using the great circle method
         """
-        dlat, dlon = abs(self.latitude - lat), abs(self.longitude - lon)
-        miles = math.cos(math.radians(dlat)) * dlon * 69.172
-        return miles, miles * 1.609344
+        return great_circle((lat, lon), (self.latitude, self.longitude))
 
 
 def _query_coords(lat: float, lon: float, n: int, d: float) -> [(str, float)]:
@@ -246,13 +247,14 @@ def nearest(
         return []
     ret = []
     for station, coordd in stations:
-        miles, kms = station.distance(lat, lon)
+        dist = station.distance(lat, lon)
         ret.append(
             {
                 "station": station,
                 "coordinate_distance": coordd,
-                "miles": miles,
-                "kilometers": kms,
+                "nautical_miles": dist.nautical,
+                "miles": dist.miles,
+                "kilometers": dist.kilometers,
             }
         )
     if n == 1:

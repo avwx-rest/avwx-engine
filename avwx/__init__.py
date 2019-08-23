@@ -6,7 +6,7 @@ __author__ = "Michael duPont"
 __maintainer__ = "Michael duPont"
 __email__ = "michael@mdupont.com"
 __license__ = "MIT"
-__version__ = "1.2.4"
+__version__ = "1.2.5"
 __stations__ = "2019-05-17"
 
 # stdlib

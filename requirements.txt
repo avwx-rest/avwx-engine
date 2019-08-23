@@ -1,5 +1,6 @@
 aiohttp~=3.5
 dataclasses>=0.6;python_version<"3.7"
+geopy~=1.20
 mkdocs~=1.0
 nox==2019.8.20
 pre-commit~=1.18
