@@ -6,8 +6,8 @@ __author__ = "Michael duPont"
 __maintainer__ = "Michael duPont"
 __email__ = "michael@mdupont.com"
 __license__ = "MIT"
-__version__ = "1.2.5"
-__stations__ = "2019-05-17"
+__version__ = "1.2.6"
+__stations__ = "2019-08-27"
 
 # stdlib
 from abc import abstractmethod

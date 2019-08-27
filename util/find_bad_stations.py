@@ -37,6 +37,7 @@ async def worker(queue: aio.Queue):
             m = avwx.Metar(icao)
             if await m.async_update():
                 GOOD.append(icao)
+                BAD.remove(icao)
             elif icao not in BAD:
                 BAD.append(icao)
             i += 1
@@ -68,7 +69,7 @@ async def task_manager(queue: aio.Queue, n: int = 10):
     """
     tasks = []
     # Create three worker tasks to process the queue concurrently
-    for i in range(n):
+    for _ in range(n):
         task = aio.create_task(worker(queue))
         tasks.append(task)
     yield

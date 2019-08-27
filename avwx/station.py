@@ -142,7 +142,7 @@ class Station:
         lon: float,
         is_airport: bool = False,
         sends_reports: bool = True,
-        max_distance: float = 50,
+        max_coord_distance: float = 10,
     ) -> ("Station", dict):
         """
         Load the Station nearest to a lat,lon coordinate pair
@@ -151,7 +151,7 @@ class Station:
 
         NOTE: Becomes less accurate toward poles and doesn't cross +/-180
         """
-        ret = nearest(lat, lon, 1, is_airport, sends_reports, max_distance)
+        ret = nearest(lat, lon, 1, is_airport, sends_reports, max_coord_distance)
         if not isinstance(ret, dict):
             return
         station = ret.pop("station")
@@ -235,8 +235,8 @@ def nearest(
 
     NOTE: Becomes less accurate toward poles and doesn't cross +/-180
     """
-    # Default state, no filtering necessary
-    if sends_reports and not is_airport:
+    # Default state includes all, no filtering necessary
+    if not (is_airport or sends_reports):
         stations = _query_coords(lat, lon, n, max_coord_distance)
         stations = [(Station.from_icao(icao), d) for icao, d in stations]
     else:

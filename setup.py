@@ -9,7 +9,7 @@ __author__ = "Michael duPont"
 __maintainer__ = "Michael duPont"
 __email__ = "michael@mdupont.com"
 __license__ = "MIT"
-__version__ = "1.2.5"
+__version__ = "1.2.6"
 
 setup(
     name="avwx-engine",
