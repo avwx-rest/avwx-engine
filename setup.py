@@ -9,7 +9,7 @@ __author__ = "Michael duPont"
 __maintainer__ = "Michael duPont"
 __email__ = "michael@mdupont.com"
 __license__ = "MIT"
-__version__ = "1.2.6"
+__version__ = "1.3.0"
 
 setup(
     name="avwx-engine",
@@ -29,6 +29,7 @@ setup(
         'dataclasses>=0.6;python_version<"3.7"',
         "geopy~=1.20",
         "python-dateutil~=2.8",
+        "requests~=2.22.0",
         "xmltodict~=0.12",
     ],
     packages=["avwx"],

@@ -4,14 +4,17 @@ AVWX fetches the raw weather reports from third-party services via REST API call
 
 ## Basic Module Use
 
-### avwx.service.**get_service**(*station: str*) -> *avwx.service.Service*
+### avwx.service.**get_service**(*station: str, country: str*) -> *avwx.service.Service*
 
 Returns the preferred service for a given station
 
 ```python
-station = 'KJFK'
+# Fetch Australian reports
+station = 'YWOL'
+country = 'AU'
 # Get the station's preferred service and initialize to fetch METARs
-service = avwx.service.get_service(station)('metar')
+service = avwx.service.get_service(station, country)('metar')
+# service is now avwx.service.AUBOM init'd to fetch METARs
 # Fetch the current METAR
 report = service.fetch(station)
 ```
@@ -80,4 +83,4 @@ def _extract(self, raw: str, station: str) -> str:
 
 Our URL and query parameters are returned using Service._make_url so Service.fetch knows how to request the report. The result of this query is given to Service._extract which returns the report or list of reports.
 
-Once your service is created, it can optionally be added to the dictionary of preferred services, avwx.service.PREFERRED. This is how avwx.service.get_service determines the preferred service for a given station. This should only be done if it is the primary service for a group of station IDs with the same prefix. For example, the MAC service is better than NOAA for all ICAOs starting with "SK".
+Once your service is created, it can optionally be added to avwx.service.PREFERRED if the service covers all stations with a known ICAO prefix or avwx.service.BY_COUNTRY if the service covers all stations in a single country. This is how avwx.service.get_service determines the preferred service. For example, the MAC service is better than NOAA for all ICAOs starting with "SK" while AUBOM is better for all Australian stations.

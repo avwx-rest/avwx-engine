@@ -2,6 +2,12 @@
 
 Parsing and sanitization improvements are always ongoing and non-breaking
 
+## 1.3
+
+- Add Australian service as `avwx.service.AUBOM`
+- Added country code param to `avwx.service.get_service`
+- Nearest searches default to airports only
+
 ## 1.2
 
 - Added `nearest(lat, lon)` and `sends_reports` to `Station`

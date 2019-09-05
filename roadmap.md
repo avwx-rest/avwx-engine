@@ -1,6 +1,6 @@
 # AVWX Roadmap
 
-## 1.3
+## 1.x
 
 - Add `Aireps` class, module
 

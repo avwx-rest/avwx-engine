@@ -6,7 +6,7 @@ __author__ = "Michael duPont"
 __maintainer__ = "Michael duPont"
 __email__ = "michael@mdupont.com"
 __license__ = "MIT"
-__version__ = "1.2.6"
+__version__ = "1.3.0"
 __stations__ = "2019-08-27"
 
 # stdlib
@@ -50,31 +50,22 @@ class Report:
     units: structs.Units = None
 
     #: 4-character ICAO station ident code the report was initialized with
-    station: str = None
+    station: str
 
     #: Service object used to fetch the report string
     service: service.Service
 
-    _station_info: Station = None
+    #: Station object matching the ICAO ident
+    station_info: Station
 
-    def __init__(self, station_ident: str):
+    def __init__(self, icao: str):
         # Raises a BadStation error if needed
-        station.valid_station(station_ident)
-        self.service = service.get_service(station_ident)(
+        station.valid_station(icao)
+        self.station = icao
+        self.station_info = Station.from_icao(icao)
+        self.service = service.get_service(icao, self.station_info.country)(
             self.__class__.__name__.lower()
         )
-        self.station = station_ident
-
-    @property
-    def station_info(self) -> Station:
-        """
-        Provide basic station info
-
-        Raises a BadStation exception if the station's info cannot be found
-        """
-        if self._station_info is None:
-            self._station_info = Station.from_icao(self.station)
-        return self._station_info
 
     @abstractmethod
     def _post_update(self):

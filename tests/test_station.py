@@ -55,9 +55,9 @@ class TestStationFuncs(TestCase):
         for val in dist.values():
             self.assertIsInstance(val, float)
         for *params, count in (
-            (30, -82, 10, True, True, 0.1, 0),
-            (30, -82, 10, False, True, 0.1, 2),
-            (30, -82, 10, True, False, 0.1, 2),
+            (30, -82, 10, True, True, 0.2, 1),
+            (30, -82, 10, True, False, 0.2, 5),
+            (30, -82, 10, False, False, 0.2, 6),
             (30, -82, 1000, True, True, 0.5, 6),
             (30, -82, 1000, False, False, 0.5, 38),
         ):
@@ -76,7 +76,7 @@ class TestStationFuncs(TestCase):
         for airport, reports, count in (
             (True, True, 5),
             (True, False, 16),
-            (False, True, 28),
+            (False, True, 7),
             (False, False, 28),
         ):
             stations = station.nearest(30, -80, 30, airport, reports, 1.5)
@@ -119,7 +119,7 @@ class TestStation(TestCase):
             for val in dist.values():
                 self.assertIsInstance(val, float)
         # Test with IATA req disabled
-        stn, dist = station.Station.nearest(28.43, -81, False)
+        stn, dist = station.Station.nearest(28.43, -81, False, False)
         self.assertIsInstance(stn, station.Station)
         self.assertEqual(stn.icao, "FA18")
         for val in dist.values():

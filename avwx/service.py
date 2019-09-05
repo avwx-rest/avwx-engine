@@ -3,13 +3,12 @@ Classes for retrieving raw report strings
 """
 
 # stdlib
+import json
 from abc import abstractmethod
-from urllib import request
-from urllib.error import URLError
-from urllib.parse import urlencode
 
 # library
 import aiohttp
+import requests
 from xmltodict import parse as parsexml
 
 # module
@@ -23,7 +22,6 @@ class Service:
     Base Service class for fetching reports
     """
 
-    # Service URL must accept report type and station via .format()
     url: str = None
     method: str = "GET"
 
@@ -36,7 +34,7 @@ class Service:
             )
         self.rtype = request_type
 
-    def make_err(self, body: str, key: str = "report path") -> InvalidRequest:
+    def _make_err(self, body: str, key: str = "report path") -> InvalidRequest:
         """
         Returns an InvalidRequest exception with formatted error message
         """
@@ -45,11 +43,23 @@ class Service:
 
     @abstractmethod
     def _make_url(self, station: str, lat: float, lon: float) -> (str, dict):
+        """
+        Returns a formatted URL and parameters
+        """
         raise NotImplementedError()
 
     @abstractmethod
     def _extract(self, raw: str, station: str = None) -> str:
+        """
+        Extracts the report string from the service response
+        """
         raise NotImplementedError()
+
+    def _post_data(self, station: str) -> dict:
+        """
+        Returns the POST form/data payload
+        """
+        return {}
 
     def fetch(
         self,
@@ -67,19 +77,19 @@ class Service:
             raise ValueError("No valid fetch parameters")
         try:
             url, params = self._make_url(station, lat, lon)
-            url += "?" + urlencode(params)
-            # Non-null data signals a POST request
-            data = {} if self.method == "POST" else None
-            resp = request.urlopen(url, data=data, timeout=timeout)
-            if resp.status != 200:
+            if self.method.lower() == "post":
+                resp = requests.post(url, params=params, data=self._post_data(station))
+            else:
+                resp = requests.get(url, params)
+            if resp.status_code != 200:
                 raise SourceError(
-                    f"{self.__class__.__name__} server returned {resp.status}"
+                    f"{self.__class__.__name__} server returned {resp.status_code}"
                 )
-        except URLError:
+        except requests.exceptions.ConnectionError:
             raise ConnectionError(
                 f"Unable to connect to {self.__class__.__name__} server"
             )
-        report = self._extract(resp.read().decode("utf-8"), station)
+        report = self._extract(resp.text, station)
         # This split join replaces all *whitespace elements with a single space
         if isinstance(report, list):
             return dedupe(" ".join(r.split()) for r in report)
@@ -104,7 +114,7 @@ class Service:
             atimeout = aiohttp.ClientTimeout(total=timeout)
             async with aiohttp.ClientSession(timeout=atimeout) as sess:
                 async with getattr(sess, self.method.lower())(
-                    url, params=params
+                    url, params=params, data=self._post_data(station)
                 ) as resp:
                     if resp.status != 200:
                         raise SourceError(
@@ -176,7 +186,7 @@ class NOAA(Service):
                 return ""
             reports = data[self._targets[self.rtype]]
         except KeyError:
-            raise self.make_err(raw)
+            raise self._make_err(raw)
         # Only one report exists
         if isinstance(reports, dict):
             ret = self._report_strip(reports["raw_text"])
@@ -190,7 +200,7 @@ class NOAA(Service):
                 ret = self._report_strip(reports[0]["raw_text"])
         # Something went wrong
         else:
-            raise self.make_err(raw, '"raw_text"')
+            raise self._make_err(raw, '"raw_text"')
         return ret
 
 
@@ -217,9 +227,9 @@ class AMO(Service):
                 self.rtype.lower() + "Msg"
             ]
         except KeyError:
-            raise self.make_err(raw)
+            raise self._make_err(raw)
         if not report:
-            raise self.make_err("The station might not exist")
+            raise self._make_err("The station might not exist")
         # Replace line breaks
         report = report.replace("\n", "")
         # Remove excess leading and trailing data
@@ -254,14 +264,48 @@ class MAC(Service):
         return report
 
 
+class AUBOM(Service):
+    """
+    Requests data from the Australian Bureau of Meteorology
+    """
+
+    url = "http://www.bom.gov.au/aviation/php/process.php"
+    method = "POST"
+
+    def _make_url(self, *_, **__) -> (str, dict):
+        """
+        Returns a formatted URL and empty parameters
+        """
+        return self.url, None
+
+    def _post_data(self, station: str) -> dict:
+        """
+        Returns the POST form
+        """
+        return {"keyword": station, "type": "search", "page": "TAF"}
+
+    def _extract(self, raw: str, station: str) -> str:
+        """
+        Extracts the reports from HTML response
+        """
+        index = 1 if self.rtype == "taf" else 2
+        try:
+            report = raw.split('<p class="product">')[index]
+        except IndexError:
+            raise self._make_err("The station might not exist")
+        report = report[: report.find("</p>")]
+        return report.replace("<br />", " ")
+
+
 PREFERRED = {"RK": AMO, "SK": MAC}
+BY_COUNTRY = {"AU": AUBOM}
 
 
-def get_service(station: str) -> Service:
+def get_service(station: str, country_code: str) -> Service:
     """
     Returns the preferred service for a given station
     """
     for prefix in PREFERRED:
         if station.startswith(prefix):
             return PREFERRED[prefix]
-    return NOAA
+    return BY_COUNTRY.get(country_code, NOAA)

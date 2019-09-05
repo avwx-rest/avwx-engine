@@ -28,7 +28,7 @@ class TestService(unittest.TestCase):
         """
         Tests that the Service class is initialized properly
         """
-        for attr in ("url", "rtype", "make_err", "_extract", "fetch"):
+        for attr in ("url", "rtype", "_make_err", "_extract", "fetch"):
             self.assertTrue(hasattr(self.serv, attr))
         self.assertEqual(self.serv.rtype, "metar")
 
@@ -50,7 +50,7 @@ class TestService(unittest.TestCase):
         Tests that InvalidRequest exceptions are generated with the right message
         """
         key, msg = "test_key", "testing"
-        err = self.serv.make_err(msg, key)
+        err = self.serv._make_err(msg, key)
         err_str = (
             f"Could not find {key} in {self.serv.__class__.__name__} response\n{msg}"
         )
@@ -90,7 +90,7 @@ class TestService(unittest.TestCase):
         for station in self.stations:
             report = self.serv.fetch(station)
             self.assertIsInstance(report, str)
-            self.assertTrue(report.startswith(station))
+            self.assertTrue(station in report)
 
     @pytest.mark.asyncio
     async def test_async_fetch(self):
@@ -121,15 +121,25 @@ class TestMAC(TestService):
     stations = ["SKBO"]
 
 
+class TestAUBOM(TestService):
+
+    name = "AUBOM"
+    stations = ["YWOL", "YSSY"]
+
+
 class TestModule(unittest.TestCase):
     def test_get_service(self):
         """
         Tests that the correct service class is returned
         """
-        for stations, serv in (
-            (("KJFK", "EGLL", "PHNL"), service.NOAA),
-            (("RKSI",), service.AMO),
-            (("SKBO", "SKPP"), service.MAC),
+        for stations, country, serv in (
+            (("KJFK", "PHNL"), "US", service.NOAA),
+            (("EGLL",), "GB", service.NOAA),
+            (("RKSI",), "KR", service.AMO),
+            (("SKBO", "SKPP"), "CO", service.MAC),
+            (("YWOL", "YSSY"), "AU", service.AUBOM),
         ):
             for station in stations:
-                self.assertIsInstance(service.get_service(station)("metar"), serv)
+                self.assertIsInstance(
+                    service.get_service(station, country)("metar"), serv
+                )
