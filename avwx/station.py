@@ -209,10 +209,10 @@ def _query_filter(
         # Ran out of new stations
         if not nodes:
             return stations
-        for icao, d in nodes:
+        for icao, dist in nodes:
             stn = Station.from_icao(icao)
             if _station_filter(stn, is_airport, reporting):
-                stations.append((stn, d))
+                stations.append((stn, dist))
             # Reached the desired number of stations
             if len(stations) >= n:
                 return stations

@@ -116,8 +116,8 @@ def type_and_times(
     """
     if not type:
         return ""
-    start_time = start.dt.hour if start else "an unknown start time"
-    end_time = end.dt.hour if end else "an unknown end time"
+    start_time = start.dt.hour if start and start.dt else "an unknown start time"
+    end_time = end.dt.hour if end and end.dt else "an unknown end time"
     if type == "BECMG":
         return f"At {start_time or 'midnight'} zulu becoming"
     ret = f"From {start_time or 'midnight'} to {end_time or 'midnight'} zulu,"

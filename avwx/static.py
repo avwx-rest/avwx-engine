@@ -167,6 +167,7 @@ PRESSURE_TENDENCIES = {
     "6": "Decreasing, then steady",
     "7": "Decreasing steadily or unsteadily",
     "8": "Steady or increasing, then decreasing",
+    "9": "Unknown",
 }
 
 #: Strings signifying the start of the remarks section of a METAR
