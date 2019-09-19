@@ -11,7 +11,7 @@ __stations__ = "2019-08-27"
 
 # stdlib
 from abc import abstractmethod
-from datetime import datetime
+from datetime import datetime, timezone
 
 # module
 from avwx import (
@@ -97,7 +97,7 @@ class Report:
         self.raw = report
         if not disable_post:
             self._post_update()
-        self.last_updated = datetime.utcnow()
+        self.last_updated = datetime.utcnow().replace(tzinfo=timezone.utc)
         return True
 
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
@@ -230,7 +230,7 @@ class Reports:
         self.raw = self._report_filter(reports)
         if not disable_post:
             self._post_update()
-        self.last_updated = datetime.utcnow()
+        self.last_updated = datetime.utcnow().replace(tzinfo=timezone.utc)
         return True
 
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
