@@ -6,7 +6,7 @@ Contains the core parsing and indent functions of avwx
 import re
 from calendar import monthrange
 from copy import copy
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from itertools import permutations
 
 # library
@@ -1150,7 +1150,7 @@ def parse_date(
             return
         ihour = 2
     # Create initial guess
-    now = datetime.utcnow()
+    now = datetime.utcnow().replace(tzinfo=timezone.utc)
     day = now.day if time_only else int(date[0:2])
     # Handle situation where next month has less days than current month
     # Shifted value makes sure that a month shift doesn't happen twice
