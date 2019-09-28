@@ -206,6 +206,7 @@ class TestGlobal(BaseTest):
             ("21016G28KTPROB40", 10),
             ("VCSHINTER", 4),
             ("151200Z18002KT", 7),
+            ("2301/2303VRB02KT", 9),
             ("33015G25KT4500", 10),
             ("PROB30", None),
             ("A2992", None),
@@ -221,6 +222,8 @@ class TestGlobal(BaseTest):
             ("METAR EGLL CALM RETS 6SPM CLR Q 1000", "EGLL 00000KT TS P6SM Q1000"),
             ("TLPL 111200Z 111200Z11020KT Q1015", "TLPL 111200Z 11020KT Q1015"),
             ("SECU 151200Z 151200Z18002KT Q1027", "SECU 151200Z 18002KT Q1027"),
+            ("OAKB 211230Z 360G17G32KT Q1011", "OAKB 211230Z 36017G32KT Q1011"),
+            ("MHLC 090024Z 06012G22TK 5000", "MHLC 090024Z 06012G22KT 5000"),
             ("KJFK 1 1 1 1 1 1 2 1", "KJFK 1 2 1"),
         ):
             line, fixed = line.split(), fixed.split()

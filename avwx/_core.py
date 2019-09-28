@@ -171,6 +171,15 @@ def is_timestamp(item: str) -> bool:
     return len(item) == 7 and item[-1] == "Z" and item[:-1].isdigit()
 
 
+def is_timerange(item: str) -> bool:
+    """
+    Returns True if the item is a TAF to-from time range
+    """
+    return (
+        len(item) == 9 and item[4] == "/" and item[:4].isdigit() and item[5:].isdigit()
+    )
+
+
 def get_remarks(txt: str) -> ([str], str):
     """
     Returns the report split into components and the remarks string
@@ -212,7 +221,8 @@ STR_REPL = {
     "?": " ",
     '"': "",
     "'": "",
-    " vrb": " VRB",
+    "`": "",
+    ".": "",
     " VTB": " VRB",
     " VBR": " VRB",
     " ERB": " VRB",
@@ -237,7 +247,6 @@ STR_REPL = {
     "CALMKT ": "CALM ",
     " <1/": " M1/",  # <1/4SM <1/8SM
     " /34SM": "3/4SM",
-    " 1/.2": "1/2",
 }
 
 
@@ -247,6 +256,7 @@ def sanitize_report_string(txt: str) -> str:
 
     Returns the first pass sanitized report string
     """
+    txt = txt.upper()
     if len(txt) < 4:
         return txt
     # Standardize whitespace
@@ -398,8 +408,9 @@ def extra_space_needed(item: str) -> int:
             if sep.start():
                 return sep.start()
     # Connected timestamp
-    if len(item) > 7 and is_timestamp(item[:7]):
-        return 7
+    for loc, check in ((7, is_timestamp), (9, is_timerange)):
+        if len(item) > loc and check(item[:loc]):
+            return loc
     # Connected to wind
     if len(item) > 5 and "KT" in item and not item.endswith("KT"):
         sep = item.find("KT")
@@ -473,6 +484,16 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> [str
         # Fix misplaced KT 22022KTG40
         elif ilen == 10 and "KTG" in item and item[:5].isdigit():
             wxdata[i] = item.replace("KTG", "G") + "KT"
+        # Fix backwards KT Ex: 06012G22TK
+        if (
+            ilen >= 7
+            and (item[:3].isdigit() or item[:3] == "VRB")
+            and item.endswith("TK")
+        ):
+            wxdata[i] = item[:-2] + "KT"
+        # Fix gust double G Ex: 360G17G32KT
+        elif ilen > 10 and item.endswith("KT") and item[3] == "G":
+            wxdata[i] = item[:3] + item[4:]
         # Fix leading character mistypes in wind
         elif (
             ilen > 7
