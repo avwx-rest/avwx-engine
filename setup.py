@@ -1,24 +1,22 @@
 """
-avwx package metadata
+avwx Package Setup
 """
 
+from pathlib import Path
 from setuptools import setup
 
-# Temp fix for not-yet-installed lib error on fresh install
-__author__ = "Michael duPont"
-__maintainer__ = "Michael duPont"
-__email__ = "michael@mdupont.com"
-__license__ = "MIT"
-__version__ = "1.3.2"
+meta = {}
+with Path("avwx", "_meta.py").open() as fin:
+    exec(fin.read(), meta)
 
 setup(
     name="avwx-engine",
-    version=__version__,
-    description=__doc__,
+    version=meta["__version__"],
+    description=meta["__doc__"],
     url="https://github.com/avwx-rest/AVWX-Engine",
-    author=__author__,
-    author_email=__email__,
-    license=__license__,
+    author=meta["__author__"],
+    author_email=meta["__email__"],
+    license=meta["__license__"],
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
