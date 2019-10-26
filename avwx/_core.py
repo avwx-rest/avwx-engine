@@ -231,8 +231,11 @@ STR_REPL = {
     " VRN": " VRB",
     " BRB": " VRB",
     " VEB": " VRB",
+    " VFB": " VRB",
     " VAB": " VRB",
     " VAR": " VRB",
+    " VRC": " VRB",
+    " VRG": " VRB",
     " VRR": " VRB",
     " VGB": " VRB",
     " VRC": " VRB",
@@ -504,6 +507,14 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> [str
             and not item.startswith("WS")
         ):
             while not item[0].isdigit() and item[:3] != "VRB":
+                item = item[1:]
+            wxdata[i] = item
+        # Fix non-G gust Ex: 14010-15KT
+        elif ilen == 10 and item.endswith("KT") and item[5] != "G":
+            wxdata[i] = item[:5] + "G" + item[6:]
+        # Fix leading digits on VRB wind Ex: 2VRB02KT
+        elif ilen > 7 and item.endswith("KT") and "VRB" in item and item[0].isdigit():
+            while item[0].isdigit():
                 item = item[1:]
             wxdata[i] = item
         # Fix wind T
