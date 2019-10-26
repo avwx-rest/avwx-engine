@@ -5,10 +5,10 @@ Classes for retrieving raw report strings
 # stdlib
 import json
 from abc import abstractmethod
+from socket import gaierror
 
 # library
-import aiohttp
-import requests
+import httpx
 from xmltodict import parse as parsexml
 
 # module
@@ -78,14 +78,15 @@ class Service:
         try:
             url, params = self._make_url(station, lat, lon)
             if self.method.lower() == "post":
-                resp = requests.post(url, params=params, data=self._post_data(station))
+                resp = httpx.post(url, params=params, data=self._post_data(station))
             else:
-                resp = requests.get(url, params)
+                resp = httpx.get(url, params=params)
             if resp.status_code != 200:
                 raise SourceError(
                     f"{self.__class__.__name__} server returned {resp.status_code}"
                 )
-        except requests.exceptions.ConnectionError:
+        # except httpx.exceptions.ConnectionError:
+        except gaierror:
             raise ConnectionError(
                 f"Unable to connect to {self.__class__.__name__} server"
             )
@@ -111,17 +112,17 @@ class Service:
             raise ValueError("No valid fetch parameters")
         url, params = self._make_url(station, lat, lon)
         try:
-            atimeout = aiohttp.ClientTimeout(total=timeout)
-            async with aiohttp.ClientSession(timeout=atimeout) as sess:
-                async with getattr(sess, self.method.lower())(
+            async with httpx.AsyncClient(timeout=timeout) as client:
+                resp = await getattr(client, self.method.lower())(
                     url, params=params, data=self._post_data(station)
-                ) as resp:
-                    if resp.status != 200:
-                        raise SourceError(
-                            f"{self.__class__.__name__} server returned {resp.status}"
-                        )
-                    text = await resp.text()
-        except aiohttp.ClientConnectionError:
+                )
+                if resp.status_code != 200:
+                    raise SourceError(
+                        f"{self.__class__.__name__} server returned {resp.status}"
+                    )
+                text = await resp.text()
+        # except httpx.exceptions.ConnectionError:
+        except gaierror:
             raise ConnectionError(
                 f"Unable to connect to {self.__class__.__name__} server"
             )

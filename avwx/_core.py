@@ -32,7 +32,7 @@ from avwx.structs import Cloud, Fraction, Number, Timestamp, Units
 
 def dedupe(items: list, only_neighbors: bool = False) -> list:
     """
-    Deduplicates a list while keeping order
+    Deduplicate a list while keeping order
     
     If only_neighbors is True, dedupe will only check neighboring values
     """
@@ -153,7 +153,7 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
 
 def find_first_in_list(txt: str, str_list: [str]) -> int:
     """
-    Returns the index of the earliest occurence of an item from a list in a string
+    Returns the index of the earliest occurrence of an item from a list in a string
 
     Ex: find_first_in_list('foobar', ['bar', 'fin']) -> 3
     """
@@ -235,6 +235,7 @@ STR_REPL = {
     " VAR": " VRB",
     " VRR": " VRB",
     " VGB": " VRB",
+    " VRC": " VRB",
     " WBB": " VRB",
     " VR0": " VRB0",
     " VB0": " VRB0",
@@ -475,10 +476,10 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> [str
         # Replace certain items
         elif item in ITEM_REPL:
             wxdata[i] = ITEM_REPL[item]
-        # Remove ammend signifier from start of report ('CCA', 'CCB',etc)
+        # Remove amend signifier from start of report ('CCA', 'CCB',etc)
         elif ilen == 3 and item.startswith("CC") and item[2].isalpha():
             wxdata.pop(i)
-        # Fix inconsistant 'P6SM' Ex: TP6SM or 6PSM -> P6SM
+        # Fix inconsistent 'P6SM' Ex: TP6SM or 6PSM -> P6SM
         elif ilen > 3 and item[-4:] in VIS_PERMUTATIONS:
             wxdata[i] = "P6SM"
         # Fix misplaced KT 22022KTG40
@@ -630,7 +631,7 @@ def get_altimeter(wxdata: [str], units: Units, version: str = "NA") -> ([str], N
 
 def get_taf_alt_ice_turb(wxdata: [str]) -> ([str], str, [str], [str]):
     """
-    Returns the report list and removed: Altimeter string, Icing list, Turbulance list
+    Returns the report list and removed: Altimeter string, Icing list, Turbulence list
     """
     altimeter = ""
     icing, turbulence = [], []
@@ -1136,7 +1137,7 @@ def get_ceiling(clouds: [Cloud]) -> Cloud:
 
     Assumes that the clouds are already sorted lowest to highest
 
-    Only 'Broken', 'Overcast', and 'Vertical Visibility' are considdered ceilings
+    Only 'Broken', 'Overcast', and 'Vertical Visibility' are considered ceilings
 
     Prevents errors due to lack of cloud information (eg. '' or 'FEW///')
     """

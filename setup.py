@@ -25,11 +25,10 @@ setup(
     ],
     python_requires=">= 3.6",
     install_requires=[
-        "aiohttp~=3.6",
-        'dataclasses>=0.6;python_version<"3.7"',
+        'dataclasses>=0.7;python_version<"3.7"',
         "geopy~=1.20",
+        "httpx~=0.7",
         "python-dateutil~=2.8",
-        "requests~=2.22.0",
         "xmltodict~=0.12",
     ],
     packages=["avwx"],
