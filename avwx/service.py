@@ -9,6 +9,7 @@ from socket import gaierror
 
 # library
 import httpx
+from httpx.exceptions import ConnectTimeout, ReadTimeout
 from xmltodict import parse as parsexml
 
 # module
@@ -78,15 +79,16 @@ class Service:
         try:
             url, params = self._make_url(station, lat, lon)
             if self.method.lower() == "post":
-                resp = httpx.post(url, params=params, data=self._post_data(station))
+                resp = httpx.post(
+                    url, params=params, data=self._post_data(station), timeout=timeout
+                )
             else:
-                resp = httpx.get(url, params=params)
+                resp = httpx.get(url, params=params, timeout=timeout)
             if resp.status_code != 200:
                 raise SourceError(
                     f"{self.__class__.__name__} server returned {resp.status_code}"
                 )
-        # except httpx.exceptions.ConnectionError:
-        except gaierror:
+        except (gaierror, ConnectTimeout, ReadTimeout):
             raise ConnectionError(
                 f"Unable to connect to {self.__class__.__name__} server"
             )
@@ -121,10 +123,9 @@ class Service:
                     resp = await client.get(url, params=params)
                 if resp.status_code != 200:
                     raise SourceError(
-                        f"{self.__class__.__name__} server returned {resp.status}"
+                        f"{self.__class__.__name__} server returned {resp.status_code}"
                     )
-        # except httpx.exceptions.ConnectionError:
-        except gaierror:
+        except (gaierror, ConnectTimeout, ReadTimeout):
             raise ConnectionError(
                 f"Unable to connect to {self.__class__.__name__} server"
             )
