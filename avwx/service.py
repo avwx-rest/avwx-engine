@@ -113,20 +113,22 @@ class Service:
         url, params = self._make_url(station, lat, lon)
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:
-                resp = await getattr(client, self.method.lower())(
-                    url, params=params, data=self._post_data(station)
-                )
+                if self.method.lower() == "post":
+                    resp = await client.post(
+                        url, params=params, data=self._post_data(station)
+                    )
+                else:
+                    resp = await client.get(url, params=params)
                 if resp.status_code != 200:
                     raise SourceError(
                         f"{self.__class__.__name__} server returned {resp.status}"
                     )
-                text = await resp.text()
         # except httpx.exceptions.ConnectionError:
         except gaierror:
             raise ConnectionError(
                 f"Unable to connect to {self.__class__.__name__} server"
             )
-        report = self._extract(text, station)
+        report = self._extract(resp.text, station)
         # This split join replaces all *whitespace elements with a single space
         if isinstance(report, list):
             return dedupe(" ".join(r.split()) for r in report)

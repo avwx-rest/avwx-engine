@@ -25,7 +25,7 @@ setup(
     install_requires=[
         'dataclasses>=0.7;python_version<"3.7"',
         "geopy~=1.20",
-        "httpx~=0.7",
+        "httpx==0.7.5",
         "python-dateutil~=2.8",
         "xmltodict~=0.12",
     ],
