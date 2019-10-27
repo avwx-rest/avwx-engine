@@ -88,7 +88,9 @@ class Service:
                 raise SourceError(
                     f"{self.__class__.__name__} server returned {resp.status_code}"
                 )
-        except (gaierror, ConnectTimeout, ReadTimeout):
+        except (ConnectTimeout, ReadTimeout):
+            raise TimeoutError(f"Timeout from {self.__class__.__name__} server")
+        except gaierror:
             raise ConnectionError(
                 f"Unable to connect to {self.__class__.__name__} server"
             )
@@ -125,7 +127,9 @@ class Service:
                     raise SourceError(
                         f"{self.__class__.__name__} server returned {resp.status_code}"
                     )
-        except (gaierror, ConnectTimeout, ReadTimeout):
+        except (ConnectTimeout, ReadTimeout):
+            raise TimeoutError(f"Timeout from {self.__class__.__name__} server")
+        except gaierror:
             raise ConnectionError(
                 f"Unable to connect to {self.__class__.__name__} server"
             )
