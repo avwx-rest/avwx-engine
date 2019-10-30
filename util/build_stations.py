@@ -16,9 +16,10 @@ from pathlib import Path
 # module
 from find_bad_stations import BAD_PATH, GOOD_PATH, load_stations
 
-AIRPORT_PATH = Path("data", "airports.csv")
-STATION_PATH = Path("data", "stations.txt")
-RUNWAY_PATH = Path("data", "runways.csv")
+_DATA = Path("data")
+AIRPORT_PATH = _DATA / "airports.csv"
+STATION_PATH = _DATA / "stations.txt"
+RUNWAY_PATH = _DATA / "runways.csv"
 OUTPUT_PATH = Path("..", "avwx", "stations.json")
 
 ACCEPTED_STATION_TYPES = [
@@ -72,7 +73,7 @@ def format_station(station: [str]) -> dict:
         "country": station[9][:iloc],
         "state": station[9][iloc + 1 :],
         "city": station[10],
-        "icao": station[1].upper(),
+        "icao": station[12].upper(),
         "iata": station[13].upper(),
         "website": station[15],
         "wiki": station[16],
@@ -89,7 +90,7 @@ def build_stations() -> dict:
     data = csv.reader(AIRPORT_PATH.open())
     next(data)  # Skip header
     for station in data:
-        icao = station[1].upper()
+        icao = station[12].upper()
         if len(icao) != 4:
             continue
         if station[2] in ACCEPTED_STATION_TYPES:

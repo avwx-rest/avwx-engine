@@ -38,7 +38,7 @@
 !23456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
 !
 
-ALASKA             19-DEC-18
+ALASKA             19-DEC-18                                                  
 CD  STATION         ICAO  IATA  SYNOP   LAT     LONG   ELEV   M  N  V  U  A  C
 AK ADAK NAS         PADK  ADK   70454  51 53N  176 39W    4   X     T          7 US
 AK AKHIOK           PAKH  AKK          56 56N  154 11W   14   X                8 US
