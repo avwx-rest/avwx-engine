@@ -33,6 +33,9 @@ ACCEPTED_STATION_TYPES = [
 ]
 
 
+FILE_REPLACE = {"Ã©": "é", "È©": "ę"}
+
+
 def nullify(data: dict) -> dict:
     """
     Nullify empty strings in a dict
@@ -49,6 +52,18 @@ def format_coord(coord: str) -> float:
     """
     neg = -1 if coord[-1] in ("S", "W") else 1
     return neg * float(coord[:-1].strip().replace(" ", "."))
+
+
+def clean_source_file():
+    """
+    Cleans the source data files before parsing
+    """
+    with AIRPORT_PATH.open("r") as fin:
+        text = fin.read()
+    for find, replace in FILE_REPLACE.items():
+        text = text.replace(find, replace)
+    with AIRPORT_PATH.open("w") as fout:
+        fout.write(text)
 
 
 def format_station(station: [str]) -> dict:
@@ -178,6 +193,7 @@ def main() -> int:
     """
     Build/update the stations.json master file
     """
+    clean_source_file()
     stations = build_stations()
     stations = add_missing_stations(stations)
     stations = add_reporting(stations)
