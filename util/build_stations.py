@@ -33,7 +33,7 @@ ACCEPTED_STATION_TYPES = [
 ]
 
 
-FILE_REPLACE = {"Ã©": "é", "È©": "ę"}
+FILE_REPLACE = {"Ã©": "é", "È©": "ę", "Ã¨": "è"}
 
 
 def nullify(data: dict) -> dict:

@@ -225,6 +225,7 @@ STR_REPL = {
     ".": "",
     " VTB": " VRB",
     " VBR": " VRB",
+    " VBB": " VRB",
     " ERB": " VRB",
     " VRV": " VRB",
     " BRV": " VRB",
