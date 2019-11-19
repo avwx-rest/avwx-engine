@@ -179,6 +179,7 @@ METAR_RMK = [
     " YLO",
     " AMB",
     " RED",
+    " ALL",
     " BECMG",
     " TEMPO",
     " INTER",

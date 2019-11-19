@@ -48,7 +48,7 @@ async def worker(queue: aio.Queue):
         except avwx.exceptions.SourceError as exc:
             print(exc)
             sys.exit(3)
-        except avwx.exceptions.BadStation:
+        except (avwx.exceptions.BadStation, avwx.exceptions.InvalidRequest):
             pass
         except KeyboardInterrupt:
             sys.exit(1)

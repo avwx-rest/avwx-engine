@@ -3,7 +3,6 @@ Classes for retrieving raw report strings
 """
 
 # stdlib
-import json
 from abc import abstractmethod
 from socket import gaierror
 
