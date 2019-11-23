@@ -6,11 +6,12 @@ workflows:
     jobs:
       - test-3.6
       - test-3.7
+      - test-3.8
 
 jobs:
-  test-3.7: &test-template
+  test-3.8: &test-template
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:3.8
 
     working_directory: ~/repo
 
@@ -22,6 +23,11 @@ jobs:
       - run:
           name: Run Nox
           command: nox
+
+  test-3.7:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.7
 
   test-3.6:
     <<: *test-template
