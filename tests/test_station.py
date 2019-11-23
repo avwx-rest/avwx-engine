@@ -55,11 +55,11 @@ class TestStationFuncs(TestCase):
         for val in dist.values():
             self.assertIsInstance(val, float)
         for *params, count in (
-            (30, -82, 10, True, True, 0.2, 1),
-            (30, -82, 10, True, False, 0.2, 5),
-            (30, -82, 10, False, False, 0.2, 6),
-            (30, -82, 1000, True, True, 0.5, 6),
-            (30, -82, 1000, False, False, 0.5, 38),
+            (30, -82, 10, True, True, 0.2, 0),
+            (30, -82, 10, True, False, 0.2, 4),
+            (30, -82, 10, False, False, 0.2, 5),
+            (30, -82, 1000, True, True, 0.5, 5),
+            (30, -82, 1000, False, False, 0.5, 37),
         ):
             stations = station.nearest(*params)
             self.assertEqual(len(stations), count)
@@ -74,9 +74,9 @@ class TestStationFuncs(TestCase):
         Tests filtering nearest stations
         """
         for airport, reports, count in (
-            (True, True, 5),
+            (True, True, 6),
             (True, False, 16),
-            (False, True, 7),
+            (False, True, 6),
             (False, False, 28),
         ):
             stations = station.nearest(30, -80, 30, airport, reports, 1.5)
