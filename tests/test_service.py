@@ -124,7 +124,7 @@ class TestMAC(TestService):
 class TestAUBOM(TestService):
 
     name = "AUBOM"
-    stations = ["YWOL", "YSSY"]
+    stations = ["YBBN", "YSSY"]
 
 
 class TestModule(unittest.TestCase):
