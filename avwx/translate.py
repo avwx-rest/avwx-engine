@@ -6,7 +6,7 @@ from avwx import _core, remarks
 from avwx.static import (
     CLOUD_TRANSLATIONS,
     ICING_CONDITIONS,
-    TURBULANCE_CONDITIONS,
+    TURBULENCE_CONDITIONS,
     WX_TRANSLATIONS,
 )
 from avwx.structs import (
@@ -173,7 +173,7 @@ def temperature(temp: Number, unit: str = "C") -> str:
 
 def altimeter(alt: Number, unit: str = "hPa") -> str:
     """
-    Formats the altimter element into a string with hPa and inHg values
+    Formats the altimeter element into a string with hPa and inHg values
 
     Ex: 30.11 inHg (10.20 hPa)
     """
@@ -190,7 +190,7 @@ def altimeter(alt: Number, unit: str = "hPa") -> str:
     return f"{value} {unit} ({converted})"
 
 
-def clouds(clds: [Cloud], unit: str = "ft") -> str:
+def clouds(clouds: [Cloud], unit: str = "ft") -> str:
     """
     Format cloud list into a readable sentence
 
@@ -198,10 +198,10 @@ def clouds(clds: [Cloud], unit: str = "ft") -> str:
 
     Ex: Broken layer at 2200ft (Cumulonimbus), Overcast layer at 3600ft - Reported AGL
     """
-    if clds is None:
+    if clouds is None:
         return ""
     ret = []
-    for cloud in clds:
+    for cloud in clouds:
         if cloud.base is None:
             continue
         cloud_str = CLOUD_TRANSLATIONS[cloud.type]
@@ -264,24 +264,24 @@ def wind_shear(
     return f"Wind shear {int(shear[0])*100}{unit_alt} from {wdir} at {shear[1][3:]}{unit_wind}"
 
 
-def turb_ice(turbice: [str], unit: str = "ft") -> str:
+def turb_ice(turb_ice: [str], unit: str = "ft") -> str:
     """
-    Translate the list of turbulance or icing into a readable sentence
+    Translate the list of turbulence or icing into a readable sentence
 
     Ex: Occasional moderate turbulence in clouds from 3000ft to 14000ft
     """
-    if not turbice:
+    if not turb_ice:
         return ""
-    # Determine turbulance or icing
-    if turbice[0][0] == "5":
-        conditions = TURBULANCE_CONDITIONS
-    elif turbice[0][0] == "6":
+    # Determine turbulence or icing
+    if turb_ice[0][0] == "5":
+        conditions = TURBULENCE_CONDITIONS
+    elif turb_ice[0][0] == "6":
         conditions = ICING_CONDITIONS
     else:
         return ""
     # Create list of split items (type, floor, height)
     split = []
-    for item in turbice:
+    for item in turb_ice:
         if len(item) == 6:
             split.append([item[1:2], item[2:5], item[5]])
     # Combine items that cover a layer greater than 9000ft
@@ -307,7 +307,7 @@ def turb_ice(turbice: [str], unit: str = "ft") -> str:
 
 def min_max_temp(temp: str, unit: str = "C") -> str:
     """
-    Format the Min and Max temp elemets into a readable string
+    Format the Min and Max temp elements into a readable string
 
     Ex: Maximum temperature of 23°C (73°F) at 18-15:00Z
     """
@@ -364,7 +364,7 @@ def taf(wxdata: TafData, units: Units) -> TafTrans:
 
     Keys: Forecast, Min-Temp, Max-Temp
 
-    Forecast keys: Wind, Visibility, Clouds, Altimeter, Wind-Shear, Turbulance, Icing, Other
+    Forecast keys: Wind, Visibility, Clouds, Altimeter, Wind-Shear, Turbulence, Icing, Other
     """
     translations = {"forecast": []}
     for line in wxdata.forecast:
@@ -375,7 +375,7 @@ def taf(wxdata: TafData, units: Units) -> TafTrans:
         trans["wind_shear"] = wind_shear(
             line.wind_shear, units.altitude, units.wind_speed
         )
-        trans["turbulance"] = turb_ice(line.turbulance, units.altitude)
+        trans["turbulence"] = turb_ice(line.turbulence, units.altitude)
         trans["icing"] = turb_ice(line.icing, units.altitude)
         # Remove false 'Sky Clear' if line type is 'BECMG'
         if line.type == "BECMG" and trans["clouds"] == "Sky clear":

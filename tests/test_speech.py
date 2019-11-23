@@ -212,7 +212,7 @@ class TestSpeech(unittest.TestCase):
             "icing": ["611005"],
             "other": ["+RA"],
             "start_time": _core.make_timestamp("1202"),
-            "turbulance": ["540553"],
+            "turbulence": ["540553"],
             "type": "FROM",
             "visibility": _core.make_number("3"),
             "wind_direction": _core.make_number("360"),

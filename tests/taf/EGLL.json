@@ -23,7 +23,7 @@
                 "raw": "1812/1918 VRB03KT 9999 SCT030",
                 "sanitized": "1812/1918 VRB03KT 9999 SCT030",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "9999",
@@ -60,7 +60,7 @@
                 "raw": "PROB30 TEMPO 1812/1817 7000 SHRA",
                 "sanitized": "PROB30 TEMPO 1812/1817 7000 SHRA",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "TEMPO",
                 "visibility": {
                     "repr": "7000",
@@ -83,7 +83,7 @@
                 "raw": "BECMG 1822/1901 7000",
                 "sanitized": "BECMG 1822/1901 7000",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "BECMG",
                 "visibility": {
                     "repr": "7000",
@@ -112,7 +112,7 @@
                 "raw": "PROB40 1902/1907 4000 BR",
                 "sanitized": "PROB40 1902/1907 4000 BR",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "4000",
@@ -135,7 +135,7 @@
                 "raw": "BECMG 1907/1910 9999",
                 "sanitized": "BECMG 1907/1910 9999",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "BECMG",
                 "visibility": {
                     "repr": "9999",
@@ -164,7 +164,7 @@
                 "raw": "PROB30 TEMPO 1912/1918 6000 SHRA",
                 "sanitized": "PROB30 TEMPO 1912/1918 6000 SHRA",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "TEMPO",
                 "visibility": {
                     "repr": "6000",
@@ -233,7 +233,7 @@
                 "clouds": "Scattered clouds at 3000ft - Reported AGL",
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "10km (6.2sm)",
                 "wind": "Variable at 3kt",
                 "wind_shear": ""
@@ -243,7 +243,7 @@
                 "clouds": "Sky clear",
                 "icing": "",
                 "other": "Showers Rain",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "7km (4.3sm)",
                 "wind": "",
                 "wind_shear": ""
@@ -253,7 +253,7 @@
                 "clouds": null,
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "7km (4.3sm)",
                 "wind": "",
                 "wind_shear": ""
@@ -263,7 +263,7 @@
                 "clouds": "Sky clear",
                 "icing": "",
                 "other": "Mist",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "4km (2.5sm)",
                 "wind": "",
                 "wind_shear": ""
@@ -273,7 +273,7 @@
                 "clouds": null,
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "10km (6.2sm)",
                 "wind": "",
                 "wind_shear": ""
@@ -283,7 +283,7 @@
                 "clouds": "Sky clear",
                 "icing": "",
                 "other": "Showers Rain",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "6km (3.7sm)",
                 "wind": "",
                 "wind_shear": ""

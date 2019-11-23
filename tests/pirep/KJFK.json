@@ -34,7 +34,7 @@
                 "station": "ACY",
                 "temperature": null,
                 "time": null,
-                "turbulance": {
+                "turbulence": {
                     "ceiling": null,
                     "floor": null,
                     "severity": "MOD"
@@ -65,7 +65,7 @@
                 "station": "ALB",
                 "temperature": null,
                 "time": null,
-                "turbulance": null,
+                "turbulence": null,
                 "type": "UUA",
                 "wx": null
             }
@@ -96,7 +96,7 @@
                 "station": "PTW",
                 "temperature": null,
                 "time": null,
-                "turbulance": {
+                "turbulence": {
                     "ceiling": {
                         "repr": "320",
                         "spoken": "three two zero",
@@ -135,7 +135,7 @@
                 "station": "SBY",
                 "temperature": null,
                 "time": null,
-                "turbulance": null,
+                "turbulence": null,
                 "type": "UA",
                 "wx": [
                     "RA"
@@ -173,7 +173,7 @@
                 "station": "BGM",
                 "temperature": null,
                 "time": null,
-                "turbulance": {
+                "turbulence": {
                     "ceiling": null,
                     "floor": null,
                     "severity": "MOD CHOP"
@@ -204,7 +204,7 @@
                 "station": "TEB",
                 "temperature": null,
                 "time": null,
-                "turbulance": null,
+                "turbulence": null,
                 "type": "UA",
                 "wx": null
             }
@@ -252,7 +252,7 @@
                 "station": "DXR",
                 "temperature": null,
                 "time": null,
-                "turbulance": {
+                "turbulence": {
                     "ceiling": null,
                     "floor": null,
                     "severity": "CONT LGT CAT FL320"
@@ -296,7 +296,7 @@
                 "station": "BOS",
                 "temperature": null,
                 "time": null,
-                "turbulance": {
+                "turbulence": {
                     "ceiling": null,
                     "floor": null,
                     "severity": "LGT"
@@ -339,7 +339,7 @@
                 "station": "ACY",
                 "temperature": null,
                 "time": null,
-                "turbulance": {
+                "turbulence": {
                     "ceiling": null,
                     "floor": null,
                     "severity": "OCNL LGT-MOD"
@@ -382,7 +382,7 @@
                 "station": "MIV",
                 "temperature": null,
                 "time": null,
-                "turbulance": {
+                "turbulence": {
                     "ceiling": null,
                     "floor": null,
                     "severity": "MOD"
@@ -425,7 +425,7 @@
                 "station": "JFK",
                 "temperature": null,
                 "time": null,
-                "turbulance": {
+                "turbulence": {
                     "ceiling": null,
                     "floor": null,
                     "severity": "LIGHT CHOP"
@@ -468,7 +468,7 @@
                 "station": "DMW",
                 "temperature": null,
                 "time": null,
-                "turbulance": {
+                "turbulence": {
                     "ceiling": null,
                     "floor": null,
                     "severity": "MOD CONT"
@@ -511,7 +511,7 @@
                 "station": "BWI",
                 "temperature": null,
                 "time": null,
-                "turbulance": {
+                "turbulence": {
                     "ceiling": null,
                     "floor": null,
                     "severity": "MOD CHOP"
@@ -554,7 +554,7 @@
                 "station": "BWI",
                 "temperature": null,
                 "time": null,
-                "turbulance": {
+                "turbulence": {
                     "ceiling": null,
                     "floor": null,
                     "severity": "CONT MOD"
@@ -586,7 +586,7 @@
                 "station": "ALB",
                 "temperature": null,
                 "time": null,
-                "turbulance": {
+                "turbulence": {
                     "ceiling": null,
                     "floor": null,
                     "severity": "CONT LGT CHOP"
@@ -621,7 +621,7 @@
                 "station": "AVP",
                 "temperature": null,
                 "time": null,
-                "turbulance": null,
+                "turbulence": null,
                 "type": "UA",
                 "wx": null
             }

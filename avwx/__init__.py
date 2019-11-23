@@ -2,15 +2,6 @@
 Aviation weather report parsing library
 """
 
-from ._meta import (
-    __author__,
-    __maintainer__,
-    __email__,
-    __license__,
-    __version__,
-    __stations__,
-)
-
 # stdlib
 from abc import abstractmethod
 from datetime import datetime, timezone

@@ -199,8 +199,8 @@ def taf_line(line: TafLineData, units: Units) -> str:
     speech.append(
         translate.clouds(line.clouds, units.altitude).replace(" - Reported AGL", "")
     )
-    if line.turbulance:
-        speech.append(translate.turb_ice(line.turbulance, units.altitude))
+    if line.turbulence:
+        speech.append(translate.turb_ice(line.turbulence, units.altitude))
     if line.icing:
         speech.append(translate.turb_ice(line.icing, units.altitude))
     return start + " " + (". ".join([l for l in speech if l])).replace(",", ".")

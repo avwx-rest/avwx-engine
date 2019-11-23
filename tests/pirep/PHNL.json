@@ -47,7 +47,7 @@
                 "station": "LNY",
                 "temperature": null,
                 "time": null,
-                "turbulance": {
+                "turbulence": {
                     "ceiling": null,
                     "floor": null,
                     "severity": "NEG"

@@ -66,7 +66,7 @@ class TestShared(unittest.TestCase):
 
     def test_wxcode(self):
         """
-        Tests expenading weather codes or ignoring them
+        Tests expanding weather codes or ignoring them
         """
         for code, translation in (
             ("", ""),
@@ -92,7 +92,7 @@ class TestShared(unittest.TestCase):
 
     def test_shared(self):
         """
-        Tests availibility of shared values between the METAR and TAF translations
+        Tests availability of shared values between the METAR and TAF translations
         """
         units = structs.Units(**static.NA_UNITS)
         data = structs.SharedData(
@@ -254,9 +254,9 @@ class TestTaf(unittest.TestCase):
 
     def test_turb_ice(self):
         """
-        Tests turbulance and icing translations
+        Tests turbulence and icing translations
         """
-        for turbice, translation in (
+        for turb_ice, translation in (
             ([], ""),
             (
                 ["540553"],
@@ -268,7 +268,7 @@ class TestTaf(unittest.TestCase):
                 "Light icing from 200ft to 3200ft, Light icing from 600ft to 2600ft",
             ),
         ):
-            self.assertEqual(translate.turb_ice(turbice), translation)
+            self.assertEqual(translate.turb_ice(turb_ice), translation)
 
     def test_min_max_temp(self):
         """
@@ -292,7 +292,7 @@ class TestTaf(unittest.TestCase):
             "clouds": [_core.make_cloud("BKN015CB")],
             "icing": ["611005"],
             "other": ["+RA"],
-            "turbulance": ["540553"],
+            "turbulence": ["540553"],
             "visibility": _core.make_number("3"),
             "wind_direction": _core.make_number("360"),
             "wind_gust": _core.make_number("20"),
@@ -323,7 +323,7 @@ class TestTaf(unittest.TestCase):
             clouds="Broken layer at 1500ft (Cumulonimbus) - Reported AGL",
             icing="Light icing from 10000ft to 15000ft",
             other="Heavy Rain",
-            turbulance="Occasional moderate turbulence in clouds from 5500ft to 8500ft",
+            turbulence="Occasional moderate turbulence in clouds from 5500ft to 8500ft",
             visibility="3sm (4.8km)",
             wind_shear="Wind shear 2000ft from 070 at 40kt",
             wind="N-360 at 12kt gusting to 20kt",

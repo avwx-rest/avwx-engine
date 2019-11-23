@@ -48,10 +48,10 @@ IN_UNITS = {
     "wind_speed": "kt",
 }
 
-#: List of flight rules abreviations
+#: List of flight rules abbreviations
 FLIGHT_RULES = ["VFR", "MVFR", "IFR", "LIFR"]
 
-#: List of cloud layer abreviations
+#: List of cloud layer abbreviations
 CLOUD_LIST = ["FEW", "SCT", "BKN", "OVC"]
 
 #: Dictionary of cardinal direction values
@@ -127,8 +127,8 @@ CLOUD_TRANSLATIONS = {
     "TCU": "Towering Cumulus",
 }
 
-#: Dictionary associating turbulance report IDs with descriptions
-TURBULANCE_CONDITIONS = {
+#: Dictionary associating turbulence report IDs with descriptions
+TURBULENCE_CONDITIONS = {
     "0": "None",
     "1": "Light turbulence",
     "2": "Occasional moderate turbulence in clear air",

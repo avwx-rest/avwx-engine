@@ -71,15 +71,15 @@ The end-to-end test files were generated using `util/build_tests.py` and placed 
 
 ## Docs
 
-AVWX uses Sphinx to build its documentation. It's just another install:
+AVWX uses `mkdocs` to build its documentation. It's just another install:
 
 ```bash
-pip install sphinx
+pip install mkdocs
 ```
 
-To build the docs:
+To serve the docs during development:
 
 ```bash
 cd docs
-make html
+mkdocs serve
 ```

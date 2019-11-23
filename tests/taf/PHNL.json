@@ -31,7 +31,7 @@
                 "raw": "1812/1918 06007KT P6SM SCT025 SCT045",
                 "sanitized": "1812/1918 06007KT P6SM SCT025 SCT045",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "P6",
@@ -79,7 +79,7 @@
                 "raw": "FM182100 06013KT P6SM SCT025 SCT045",
                 "sanitized": "FM182100 06013KT P6SM SCT025 SCT045",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "P6",
@@ -127,7 +127,7 @@
                 "raw": "FM190600 07011KT P6SM FEW025 SCT040",
                 "sanitized": "FM190600 07011KT P6SM FEW025 SCT040",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "P6",
@@ -225,7 +225,7 @@
                 "clouds": "Scattered clouds at 2500ft, Scattered clouds at 4500ft - Reported AGL",
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "ENE-060 at 7kt",
                 "wind_shear": ""
@@ -235,7 +235,7 @@
                 "clouds": "Scattered clouds at 2500ft, Scattered clouds at 4500ft - Reported AGL",
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "ENE-060 at 13kt",
                 "wind_shear": ""
@@ -245,7 +245,7 @@
                 "clouds": "Few clouds at 2500ft, Scattered clouds at 4000ft - Reported AGL",
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "ENE-070 at 11kt",
                 "wind_shear": ""

@@ -142,7 +142,7 @@ Load an Aircraft from an ICAO aircraft code
 
 ### **time**: *avwx.structs.Timestamp*
 
-### **turbulance**: *avwx.structs.Turbulance* = *None*
+### **turbulence**: *avwx.structs.Turbulence* = *None*
 
 ### **type**: *str*
 
@@ -200,7 +200,7 @@ Load an Aircraft from an ICAO aircraft code
 
 ### **start_time**: *avwx.structs.Timestamp*
 
-### **turbulance**: *[str]*
+### **turbulence**: *[str]*
 
 ### **type**: *str*
 
@@ -224,7 +224,7 @@ Load an Aircraft from an ICAO aircraft code
 
 ### **other**: *str*
 
-### **turbulance**: *str*
+### **turbulence**: *str*
 
 ### **visibility**: *str*
 
@@ -248,7 +248,7 @@ Load an Aircraft from an ICAO aircraft code
 
 ### **repr**: *str*
 
-## class avwx.structs.**Turbulance**
+## class avwx.structs.**Turbulence**
 
 ### **ceiling**: *avwx.structs.Number* = *None*
 

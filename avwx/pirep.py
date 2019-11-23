@@ -12,7 +12,7 @@ from avwx.structs import (
     Number,
     PirepData,
     Timestamp,
-    Turbulance,
+    Turbulence,
     Units,
 )
 
@@ -23,14 +23,14 @@ def _root(item: str) -> dict:
     """
     Parses report root data including station and report type
     """
-    rtype = None
+    report_type = None
     station = None
     for item in item.split():
         if item in ("UA", "UUA"):
-            rtype = item
+            report_type = item
         elif not station:
             station = item
-    return {"station": station, "type": rtype}
+    return {"station": station, "type": report_type}
 
 
 def _location(item: str) -> Location:
@@ -137,13 +137,13 @@ def _find_floor_ceiling(items: [str]) -> ([str], dict):
     return items, ret
 
 
-def _turbulance(item: str) -> Turbulance:
+def _turbulence(item: str) -> Turbulence:
     """
-    Convert reported turbulance to a Turbulance object
+    Convert reported turbulence to a Turbulence object
     """
     items, ret = _find_floor_ceiling(item.split())
     ret["severity"] = " ".join(items)
-    return Turbulance(**ret)
+    return Turbulence(**ret)
 
 
 def _icing(item: str) -> Icing:
@@ -184,7 +184,7 @@ _handlers = {
     "TP": ("aircraft", _aircraft),
     "SK": ("clouds", _clouds),
     "TA": ("temperature", _number),
-    "TB": ("turbulance", _turbulance),
+    "TB": ("turbulence", _turbulence),
     "IC": ("icing", _icing),
     "RM": ("remarks", _remarks),
 }

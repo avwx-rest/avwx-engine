@@ -14,8 +14,8 @@ class _LazyLoad:
     source: Path
     data: dict = None
 
-    def __init__(self, fname: str):
-        self.source = Path(__file__).parent.joinpath(f"{fname}.json")
+    def __init__(self, filename: str):
+        self.source = Path(__file__).parent.joinpath(f"{filename}.json")
 
     def _load(self):
         self.data = json.load(self.source.open())
@@ -156,7 +156,7 @@ class TafLineData(SharedData):
     probability: Number
     raw: str
     start_time: Timestamp
-    turbulance: [str]
+    turbulence: [str]
     type: str
     wind_shear: str
 
@@ -191,7 +191,7 @@ class MetarTrans(ReportTrans):
 @dataclass
 class TafLineTrans(ReportTrans):
     icing: str
-    turbulance: str
+    turbulence: str
     wind: str
     wind_shear: str
 
@@ -205,14 +205,14 @@ class TafTrans:
 
 
 @dataclass
-class Turbulance:
+class Turbulence:
     severity: str
     floor: Number = None
     ceiling: Number = None
 
 
 @dataclass
-class Icing(Turbulance):
+class Icing(Turbulence):
     type: str = None
 
 
@@ -226,7 +226,7 @@ class PirepData(ReportData):
     location: Location = None
     sanitized: str = None
     temperature: Number = None
-    turbulance: Turbulance = None
+    turbulence: Turbulence = None
     type: str = None
     wx: [str] = None
 

@@ -31,7 +31,7 @@ class TestPirepHandlers(unittest.TestCase):
         """
         Tests station and type identification
         """
-        for root, station, rtype in (
+        for root, station, report_type in (
             ("JAX UA", "JAX", "UA"),
             ("DMW UUA", "DMW", "UUA"),
             ("UA", None, "UA"),
@@ -40,7 +40,7 @@ class TestPirepHandlers(unittest.TestCase):
             ret_root = pirep._root(root)
             self.assertIsInstance(ret_root, dict)
             self.assertEqual(ret_root["station"], station)
-            self.assertEqual(ret_root["type"], rtype)
+            self.assertEqual(ret_root["type"], report_type)
 
     def test_location(self):
         """
@@ -129,9 +129,9 @@ class TestPirepHandlers(unittest.TestCase):
             self.assertEqual(ret_num.value, value)
         self.assertIsNone(pirep._number(""))
 
-    def test_turbulance(self):
+    def test_turbulence(self):
         """
-        Tests converting turbulance string to Turbulance
+        Tests converting turbulence string to Turbulence
         """
         for turb, severity, floor, ceiling in (
             ("MOD CHOP", "MOD CHOP", None, None),
@@ -140,8 +140,8 @@ class TestPirepHandlers(unittest.TestCase):
             ("LGT", "LGT", None, None),
             ("CONT LGT CHOP BLO 250", "CONT LGT CHOP", None, 250),
         ):
-            ret_turb = pirep._turbulance(turb)
-            self.assertIsInstance(ret_turb, structs.Turbulance)
+            ret_turb = pirep._turbulence(turb)
+            self.assertIsInstance(ret_turb, structs.Turbulence)
             self.assertEqual(ret_turb.severity, severity)
             self._test_num(ret_turb.floor, floor)
             self._test_num(ret_turb.ceiling, ceiling)

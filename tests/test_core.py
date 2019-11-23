@@ -155,7 +155,7 @@ class TestGlobal(BaseTest):
 
     def test_find_first_in_list(self):
         """
-        Tests a function which finds the first occurence in a string from a list
+        Tests a function which finds the first occurrence in a string from a list
 
         This is used to find remarks and TAF time periods
         """
@@ -401,7 +401,7 @@ class TestGlobal(BaseTest):
         """
         Tests that the proper flight rule is calculated for a set visibility and ceiling
 
-        Note: Only 'Broken', 'Overcast', and 'Vertical Visibility' are considdered ceilings
+        Note: Only 'Broken', 'Overcast', and 'Vertical Visibility' are considered ceilings
         """
         for vis, ceiling, rule in (
             (None, None, "IFR"),
@@ -475,9 +475,9 @@ class TestMetar(BaseTest):
             ("1 2 Q0900 NOSIG", ["1", "2", "Q0900"], "NOSIG"),
             ("1 2 3 BLU+ Hello", ["1", "2", "3"], "BLU+ Hello"),
         ):
-            testwx, testrmk = _core.get_remarks(raw)
-            self.assertEqual(wx, testwx)
-            self.assertEqual(rmk, testrmk)
+            test_wx, test_rmk = _core.get_remarks(raw)
+            self.assertEqual(wx, test_wx)
+            self.assertEqual(rmk, test_rmk)
 
     def test_sanitize_report_string(self):
         """
@@ -577,7 +577,7 @@ class TestTaf(unittest.TestCase):
 
     def test_get_taf_alt_ice_turb(self):
         """
-        Tests that report global altimeter, icing, and turbulance get removed
+        Tests that report global altimeter, icing, and turbulence get removed
         """
         for wx, *data in (
             (["1"], "", [], []),

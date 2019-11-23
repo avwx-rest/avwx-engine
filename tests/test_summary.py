@@ -46,7 +46,7 @@ class TestSummary(unittest.TestCase):
                     clouds="Broken layer at 1500ft (Cumulonimbus) - Reported AGL",
                     icing="Light icing from 10000ft to 15000ft",
                     other="Heavy Rain",
-                    turbulance="Occasional moderate turbulence in clouds from 5500ft to 8500ft",
+                    turbulence="Occasional moderate turbulence in clouds from 5500ft to 8500ft",
                     visibility="3sm (4.8km)",
                     wind_shear="Wind shear 2000ft from 070 at 40kt",
                     wind="N-360 at 12kt gusting to 20kt",

@@ -23,7 +23,7 @@
                 "raw": "1812/1918 00000KT P6SM FEW070",
                 "sanitized": "1812/1918 00000KT P6SM FEW070",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "P6",
@@ -63,7 +63,7 @@
                 "raw": "FM181500 09010KT P6SM SCT040",
                 "sanitized": "FM181500 09010KT P6SM SCT040",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "P6",
@@ -94,7 +94,7 @@
                 "raw": "FM190300 08004KT P6SM SKC",
                 "sanitized": "FM190300 08004KT P6SM",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "P6",
@@ -134,7 +134,7 @@
                 "raw": "FM191500 11008KT P6SM FEW070",
                 "sanitized": "FM191500 11008KT P6SM FEW070",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "P6",
@@ -221,7 +221,7 @@
                 "clouds": "Few clouds at 7000ft - Reported AGL",
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "Calm",
                 "wind_shear": ""
@@ -231,7 +231,7 @@
                 "clouds": "Scattered clouds at 4000ft - Reported AGL",
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "E-090 at 10kt",
                 "wind_shear": ""
@@ -241,7 +241,7 @@
                 "clouds": "Sky clear",
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "E-080 at 4kt",
                 "wind_shear": ""
@@ -251,7 +251,7 @@
                 "clouds": "Few clouds at 7000ft - Reported AGL",
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "ESE-110 at 8kt",
                 "wind_shear": ""

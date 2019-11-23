@@ -36,9 +36,13 @@ def parse_na(report: str) -> (MetarData, Units):
     wxdata, wxresp["station"], wxresp["time"] = _core.get_station_and_time(wxdata)
     wxdata, wxresp["runway_visibility"] = _core.get_runway_visibility(wxdata)
     wxdata, wxresp["clouds"] = _core.get_clouds(wxdata)
-    wxdata, wxresp["wind_direction"], wxresp["wind_speed"], wxresp["wind_gust"], wxresp[
-        "wind_variable_direction"
-    ] = _core.get_wind(wxdata, units)
+    (
+        wxdata,
+        wxresp["wind_direction"],
+        wxresp["wind_speed"],
+        wxresp["wind_gust"],
+        wxresp["wind_variable_direction"],
+    ) = _core.get_wind(wxdata, units)
     wxdata, wxresp["altimeter"] = _core.get_altimeter(wxdata, units, "NA")
     wxdata, wxresp["visibility"] = _core.get_visibility(wxdata, units)
     wxresp["other"], wxresp["temperature"], wxresp["dewpoint"] = _core.get_temp_and_dew(
@@ -68,9 +72,13 @@ def parse_in(report: str) -> (MetarData, Units):
     wxdata, wxresp["runway_visibility"] = _core.get_runway_visibility(wxdata)
     if "CAVOK" not in wxdata:
         wxdata, wxresp["clouds"] = _core.get_clouds(wxdata)
-    wxdata, wxresp["wind_direction"], wxresp["wind_speed"], wxresp["wind_gust"], wxresp[
-        "wind_variable_direction"
-    ] = _core.get_wind(wxdata, units)
+    (
+        wxdata,
+        wxresp["wind_direction"],
+        wxresp["wind_speed"],
+        wxresp["wind_gust"],
+        wxresp["wind_variable_direction"],
+    ) = _core.get_wind(wxdata, units)
     wxdata, wxresp["altimeter"] = _core.get_altimeter(wxdata, units, "IN")
     if "CAVOK" in wxdata:
         wxresp["visibility"] = _core.make_number("CAVOK")

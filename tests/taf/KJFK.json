@@ -31,7 +31,7 @@
                 "raw": "1814/1918 36008KT P6SM FEW150 BKN250",
                 "sanitized": "1814/1918 36008KT P6SM FEW150 BKN250",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "P6",
@@ -71,7 +71,7 @@
                 "raw": "FM181600 31005KT P6SM FEW250",
                 "sanitized": "FM181600 31005KT P6SM FEW250",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "P6",
@@ -111,7 +111,7 @@
                 "raw": "FM181800 23008KT P6SM FEW120",
                 "sanitized": "FM181800 23008KT P6SM FEW120",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "P6",
@@ -151,7 +151,7 @@
                 "raw": "FM182000 19011KT P6SM FEW100",
                 "sanitized": "FM182000 19011KT P6SM FEW100",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "P6",
@@ -191,7 +191,7 @@
                 "raw": "FM190000 17007KT P6SM SCT080",
                 "sanitized": "FM190000 17007KT P6SM SCT080",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "P6",
@@ -231,7 +231,7 @@
                 "raw": "FM190400 18006KT P6SM BKN060",
                 "sanitized": "FM190400 18006KT P6SM BKN060",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "P6",
@@ -271,7 +271,7 @@
                 "raw": "FM191600 17012KT P6SM BKN060",
                 "sanitized": "FM191600 17012KT P6SM BKN060",
                 "start_time": null,
-                "turbulance": [],
+                "turbulence": [],
                 "type": "FROM",
                 "visibility": {
                     "repr": "P6",
@@ -361,7 +361,7 @@
                 "clouds": "Few clouds at 15000ft, Broken layer at 25000ft - Reported AGL",
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "N-360 at 8kt",
                 "wind_shear": ""
@@ -371,7 +371,7 @@
                 "clouds": "Few clouds at 25000ft - Reported AGL",
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "NW-310 at 5kt",
                 "wind_shear": ""
@@ -381,7 +381,7 @@
                 "clouds": "Few clouds at 12000ft - Reported AGL",
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "SW-230 at 8kt",
                 "wind_shear": ""
@@ -391,7 +391,7 @@
                 "clouds": "Few clouds at 10000ft - Reported AGL",
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "S-190 at 11kt",
                 "wind_shear": ""
@@ -401,7 +401,7 @@
                 "clouds": "Scattered clouds at 8000ft - Reported AGL",
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "S-170 at 7kt",
                 "wind_shear": ""
@@ -411,7 +411,7 @@
                 "clouds": "Broken layer at 6000ft - Reported AGL",
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "S-180 at 6kt",
                 "wind_shear": ""
@@ -421,7 +421,7 @@
                 "clouds": "Broken layer at 6000ft - Reported AGL",
                 "icing": "",
                 "other": "",
-                "turbulance": "",
+                "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "S-170 at 12kt",
                 "wind_shear": ""

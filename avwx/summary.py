@@ -45,8 +45,8 @@ def taf(trans: TafLineTrans) -> str:
         summary.append(trans.clouds.replace(" - Reported AGL", ""))
     if trans.wind_shear:
         summary.append(trans.wind_shear)
-    if trans.turbulance:
-        summary.append(trans.turbulance)
+    if trans.turbulence:
+        summary.append(trans.turbulence)
     if trans.icing:
         summary.append(trans.icing)
     return ", ".join(summary)

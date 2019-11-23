@@ -46,9 +46,9 @@ Static remarks translation elements
 
 Static remarks translation group strings
 
-### avwx.static.**TURBULANCE_CONDITIONS**: *{str: str}*
+### avwx.static.**TURBULENCE_CONDITIONS**: *{str: str}*
 
-Dictionary associating turbulance report IDs with descriptions
+Dictionary associating turbulence report IDs with descriptions
 
 ### avwx.static.**WX_TRANSLATIONS**: *{str: str}*
 
@@ -64,11 +64,11 @@ Dictionary of cardinal direction values
 
 ### avwx.static.**CLOUD_LIST**: *[str]*
 
-List of cloud layer abreviations
+List of cloud layer abbreviations
 
 ### avwx.static.**FLIGHT_RULES**: *[str]*
 
-List of flight rules abreviations
+List of flight rules abbreviations
 
 ### avwx.static.**FRACTIONS**: *{str: str}*
 

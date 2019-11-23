@@ -2,24 +2,22 @@
 avwx Package Setup
 """
 
-from pathlib import Path
 from setuptools import setup
-
-meta = {}
-with Path("avwx", "_meta.py").open() as fin:
-    exec(fin.read(), meta)
 
 setup(
     name="avwx-engine",
-    version=meta["__version__"],
-    description=meta["__doc__"],
-    url="https://github.com/avwx-rest/AVWX-Engine",
-    author=meta["__author__"],
-    author_email=meta["__email__"],
-    license=meta["__license__"],
+    version="1.3.10",
+    description="Aviation weather report parsing library",
+    url="https://github.com/avwx-rest/avwx-engine",
+    author="Michael duPont",
+    author_email="michael@mdupont.com",
+    license="MIT",
     classifiers=[
+        "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "License :: OSI Approved :: MIT License",
     ],
     python_requires=">= 3.6",
     install_requires=[
