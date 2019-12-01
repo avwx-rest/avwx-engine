@@ -59,4 +59,4 @@ target/
 /.pytest_cache/
 /.nox
 /notes.txt
-/site
+/.idea

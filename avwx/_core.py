@@ -250,6 +250,7 @@ STR_REPL = {
     "KKT ": "KT ",
     "KLT ": "KT ",
     "CALMKT ": "CALM ",
+    "N0SIG": "NOSIG",
     " <1/": " M1/",  # <1/4SM <1/8SM
     " /34SM": "3/4SM",
 }
