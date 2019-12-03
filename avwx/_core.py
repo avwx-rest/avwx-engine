@@ -446,6 +446,7 @@ ITEM_REMV = [
     "SPECI",
     "METAR",
     "CORR",
+    "TTF",
 ]
 ITEM_REPL = {"CALM": "00000KT"}
 VIS_PERMUTATIONS = ["".join(p) for p in permutations("P6SM")]
@@ -1185,7 +1186,7 @@ def parse_date(
             return
         ihour = 2
     # Create initial guess
-    now = datetime.utcnow().replace(tzinfo=timezone.utc)
+    now = datetime.now(tz=timezone.utc)
     day = now.day if time_only else int(date[0:2])
     # Handle situation where next month has less days than current month
     # Shifted value makes sure that a month shift doesn't happen twice

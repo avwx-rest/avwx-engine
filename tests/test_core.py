@@ -9,7 +9,7 @@ import unittest
 
 # stdlib
 from copy import deepcopy
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 # module
 from avwx import _core, exceptions, static, structs
@@ -443,7 +443,7 @@ class TestGlobal(BaseTest):
         """
         Tests that report timestamp is parsed into a datetime object
         """
-        today = datetime.utcnow()
+        today = datetime.now(tz=timezone.utc)
         rts = today.strftime(r"%d%H%MZ")
         parsed = _core.parse_date(rts)
         self.assertIsInstance(parsed, datetime)
@@ -455,7 +455,7 @@ class TestGlobal(BaseTest):
         """
         Tests that a report timestamp is converted into a Timestamp dataclass
         """
-        today = datetime.utcnow()
+        today = datetime.now(tz=timezone.utc)
         rts = today.strftime(r"%d%HZ")
         date = _core.make_timestamp(rts)
         self.assertIsInstance(date, structs.Timestamp)

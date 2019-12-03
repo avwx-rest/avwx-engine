@@ -90,7 +90,7 @@ class Report:
         self.raw = report
         if not disable_post:
             self._post_update()
-        self.last_updated = datetime.utcnow().replace(tzinfo=timezone.utc)
+        self.last_updated = datetime.now(tz=timezone.utc)
         return True
 
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
@@ -223,7 +223,7 @@ class Reports:
         self.raw = self._report_filter(reports)
         if not disable_post:
             self._post_update()
-        self.last_updated = datetime.utcnow().replace(tzinfo=timezone.utc)
+        self.last_updated = datetime.now(tz=timezone.utc)
         return True
 
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
