@@ -3,6 +3,7 @@ import re
 from typing import Optional, NamedTuple, Tuple, Dict
 
 
+# todo: add text
 class AtomSpan(NamedTuple):
     """
     Finding within a string. Can be used for slicing as `end` is non-inclusive.
@@ -23,6 +24,7 @@ class BaseAtom(abc.ABC):
     def __init__(self, name: str):
         self.name = name
 
+    # todo: decorate to return an empty atom string from a False return value
     @abc.abstractmethod
     def to_atom_span(self, item: str) -> AtomSpan:
         """Return an `AtomSpan`. If no match found, return `AtomSpan(None, None, None)`"""
@@ -84,6 +86,15 @@ class RegexAtom(BaseAtom):
     ) -> "RegexAtom":
         """
         Return a new instance of `RegexAtom` from a string pattern.
+
+        .. note::
+
+            It is important to ensure that patterns are raw strings, just like
+            you were creating a compiled regex pattern normally.
+
+        .. code-block::
+
+            aircraft_mishap_atom = RegexAtom.from_pattern_string(r"\bACFT MSHP\b")
 
         :param pattern: string to be compiled into regex pattern
         :param flags: flags to pass to `re.compile`

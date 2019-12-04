@@ -18,6 +18,7 @@ AUTOMATED_STATION_RE = re.compile(r"\bAO[12]\b")
 BEGINNING AND ENDING OF PRECIPITATION AND THUNDERSTORM
 w'w'B(hh)mmE(hh)mm; TSB(hh)mmE(hh)mm
 """
+# todo: Add other precip types
 BEGINNING_ENDING_OF_PRECIP_AND_TS = re.compile(
     r"""
 \b
