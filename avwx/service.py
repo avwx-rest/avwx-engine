@@ -139,7 +139,10 @@ class Service:
         return " ".join(report.split())
 
 
-class NOAA(Service):
+# Multiple sources for NOAA data
+
+
+class NOAA_ADDS(Service):
     """
     Requests data from NOAA ADDS
     """
@@ -152,9 +155,7 @@ class NOAA(Service):
     _coallate = ("aircraftreport",)
 
     def __init__(self, request_type: str):
-        if request_type in self._rtype_map:
-            request_type = self._rtype_map[request_type]
-        super().__init__(request_type)
+        super().__init__(self._rtype_map.get(request_type, request_type))
 
     def _make_url(self, station: str, lat: float, lon: float) -> (str, dict):
         """
@@ -173,15 +174,6 @@ class NOAA(Service):
             params["stationString"] = station
         return self.url, params
 
-    def _report_strip(self, report: str) -> str:
-        """
-        Remove excess leading and trailing data
-        """
-        for item in (self.rtype.upper(), "SPECI"):
-            if report.startswith(item + " "):
-                report = report[len(item) + 1 :]
-        return report
-
     def _extract(self, raw: str, station: str = None) -> "str|[str]":
         """
         Extracts the raw_report element from XML response
@@ -196,19 +188,69 @@ class NOAA(Service):
             raise self._make_err(raw)
         # Only one report exists
         if isinstance(reports, dict):
-            ret = self._report_strip(reports["raw_text"])
+            ret = reports["raw_text"]
             if self.rtype in self._coallate:
                 ret = [ret]
         # Multiple reports exist
         elif isinstance(reports, list) and reports:
             if self.rtype in self._coallate:
-                ret = [self._report_strip(r["raw_text"]) for r in reports]
+                ret = [r["raw_text"] for r in reports]
             else:
-                ret = self._report_strip(reports[0]["raw_text"])
+                ret = reports[0]["raw_text"]
         # Something went wrong
         else:
             raise self._make_err(raw, '"raw_text"')
         return ret
+
+
+class NOAA_FTP(Service):
+
+    url = "https://tgftp.nws.noaa.gov/data/{}/{}/stations/{}.TXT"
+
+    def _make_url(self, station: str, *_, **__) -> (str, dict):
+        """
+        Returns a formatted URL and parameters
+        """
+        root = "forecasts" if self.rtype == "taf" else "observations"
+        return self.url.format(root, self.rtype, station), None
+
+    def _extract(self, raw: str, station: str = None) -> str:
+        """
+        Extracts the report using string finding
+        """
+        raw = raw[raw.find(station) :]
+        return raw[: raw.find('"')]
+
+
+class NOAA_Scrape(Service):
+
+    url = "https://aviationweather.gov/{}/data"
+
+    def _make_url(self, station: str, *_, **__) -> (str, dict):
+        """
+        Returns a formatted URL and parameters
+        """
+        return (
+            self.url.format(self.rtype),
+            {"ids": station, "format": "raw", "date": None, "hours": 2},
+        )
+
+    def _extract(self, raw: str, station: str = None) -> str:
+        """
+        Extracts the report using string finding
+        """
+        raw = raw[raw.find("<code>") :]
+        raw = raw[raw.find(station) :]
+        return raw[: raw.find("<")]
+
+
+class NOAA(NOAA_Scrape):
+    """
+    Request data from NOAA as the default provider
+    """
+
+
+# Regional data sources
 
 
 class AMO(Service):
@@ -218,7 +260,7 @@ class AMO(Service):
 
     url = "http://amoapi.kma.go.kr/amoApi/{}"
 
-    def _make_url(self, station: str, lat: float, lon: float) -> (str, dict):
+    def _make_url(self, station: str, *_, **__) -> (str, dict):
         """
         Returns a formatted URL and parameters
         """
@@ -256,7 +298,7 @@ class MAC(Service):
     url = "http://meteorologia.aerocivil.gov.co/expert_text_query/parse"
     method = "POST"
 
-    def _make_url(self, station: str, lat: float, lon: float) -> (str, dict):
+    def _make_url(self, station: str, *_, **__) -> (str, dict):
         """
         Returns a formatted URL and parameters
         """
@@ -264,7 +306,7 @@ class MAC(Service):
 
     def _extract(self, raw: str, station: str) -> str:
         """
-        Extracts the reports message using string finding
+        Extracts the report message using string finding
         """
         report = raw[raw.find(station.upper() + " ") :]
         report = report[: report.find(" =")]
