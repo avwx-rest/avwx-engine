@@ -59,4 +59,6 @@ target/
 /.pytest_cache/
 /.nox
 /notes.txt
+/.idea
 /site
+.mypy_cache

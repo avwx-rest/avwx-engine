@@ -30,4 +30,5 @@ These docs could use some love, and I am not a writer. You can help by making a 
 * [Service](service.md)
 * [Static Values](static.md)
 * [Data Structures](structs.md)
+* [Parsing](parsing.md)
 * [Exceptions](exceptions.md)
