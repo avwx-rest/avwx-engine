@@ -190,7 +190,7 @@ class Reports:
             raise ValueError("No station or valid coordinates given")
         self.lat = lat
         self.lon = lon
-        self.service = service.NOAA("aircraftreport")
+        self.service = service.NOAA_ADDS("aircraftreport")
 
     def _post_update(self):
         pass
