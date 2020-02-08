@@ -2,8 +2,10 @@
 Functions for parsing PIREPs
 """
 
-from avwx import _core, static, structs
+from avwx.current.base import Reports
 from avwx.exceptions import BadStation
+from avwx.parsing import core
+from avwx.static import NA_UNITS
 from avwx.structs import (
     Aircraft,
     Cloud,
@@ -16,7 +18,7 @@ from avwx.structs import (
     Units,
 )
 
-_units = Units(**static.NA_UNITS)
+_units = Units(**NA_UNITS)
 
 
 def _root(item: str) -> dict:
@@ -57,9 +59,9 @@ def _location(item: str) -> Location:
         station, direction, distance = items[0], items[1][:3], items[1][3:]
     # Convert non-null elements
     if direction:
-        direction = _core.make_number(direction)
+        direction = core.make_number(direction)
     if distance:
-        distance = _core.make_number(distance)
+        distance = core.make_number(distance)
     return Location(item, station, direction, distance)
 
 
@@ -67,7 +69,7 @@ def _time(item: str) -> Timestamp:
     """
     Convert a time element to a Timestamp
     """
-    return _core.make_timestamp(item, time_only=True)
+    return core.make_timestamp(item, time_only=True)
 
 
 def _altitude(item: str) -> "Number|str":
@@ -75,7 +77,7 @@ def _altitude(item: str) -> "Number|str":
     Convert reporting altitude to a Number or string
     """
     if item.isdigit():
-        return _core.make_number(item)
+        return core.make_number(item)
     return item
 
 
@@ -98,15 +100,15 @@ def _clouds(item: str) -> [Cloud]:
     if "BASES" in clouds and "TOPS" in clouds:
         base = clouds[clouds.index("BASES") + 1]
         top = clouds[clouds.index("TOPS") + 1]
-        return [structs.Cloud(item, base=base, top=top)]
-    return [_core.make_cloud(cloud) for cloud in clouds]
+        return [Cloud(item, base=base, top=top)]
+    return [core.make_cloud(cloud) for cloud in clouds]
 
 
 def _number(item: str) -> Number:
     """
     Convert an element to a Number
     """
-    return _core.make_number(item)
+    return core.make_number(item)
 
 
 _DIR_SIG = {"BLO": "ceiling"}
@@ -122,16 +124,16 @@ def _find_floor_ceiling(items: [str]) -> ([str], dict):
         # TRACE RIME 070-090
         if hloc > -1 and item[:hloc].isdigit() and item[hloc + 1 :].isdigit():
             for key, val in zip(("floor", "ceiling"), items.pop(i).split("-")):
-                ret[key] = _core.make_number(val)
+                ret[key] = core.make_number(val)
             break
         # CONT LGT CHOP BLO 250
         elif item in _DIR_SIG:
-            ret[_DIR_SIG[item]] = _core.make_number(items[i + 1])
+            ret[_DIR_SIG[item]] = core.make_number(items[i + 1])
             items = items[:i]
             break
         # LGT RIME 025
         elif item.isdigit():
-            num = _core.make_number(item)
+            num = core.make_number(item)
             ret["floor"], ret["ceiling"] = num, num
             break
     return items, ret
@@ -171,7 +173,7 @@ def _wx(item: str) -> dict:
     items = item.split()
     for item in items:
         if len(item) > 2 and item.startswith("FV"):
-            _, ret["flight_visibility"] = _core.get_visibility([item[2:]], _units)
+            _, ret["flight_visibility"] = core.get_visibility([item[2:]], _units)
         else:
             ret["wx"].append(item)
     return ret
@@ -199,7 +201,7 @@ def parse(report: str) -> PirepData:
     """
     if not report:
         return None
-    sanitized = _core.sanitize_report_string(report)
+    sanitized = core.sanitize_report_string(report)
     # NOTE: will need to implement PIREP-specific list clean
     wxresp = {"raw": report, "sanitized": sanitized, "station": None, "remarks": None}
     wxdata = sanitized.split("/")
@@ -215,3 +217,23 @@ def parse(report: str) -> PirepData:
         elif tag in _dict_handlers:
             wxresp.update(_dict_handlers[tag](item))
     return PirepData(**wxresp)
+
+
+class Pireps(Reports):
+    """
+    Class to handle pilot report data
+    """
+
+    data: [PirepData] = None
+
+    @staticmethod
+    def _report_filter(reports: [str]) -> [str]:
+        """
+        Removes AIREPs before updating raw_reports
+        """
+        return [r for r in reports if not r.startswith("ARP")]
+
+    def _post_update(self):
+        self.data = []
+        for report in self.raw:
+            self.data.append(parse(report))

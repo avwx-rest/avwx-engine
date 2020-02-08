@@ -2,7 +2,7 @@
 Contains functions for translating report data
 """
 
-from avwx import _core, remarks
+from avwx.parsing import core, remarks
 from avwx.static import (
     CLOUD_TRANSLATIONS,
     ICING_CONDITIONS,
@@ -260,7 +260,7 @@ def wind_shear(
     if not shear or "WS" not in shear or "/" not in shear:
         return ""
     shear = shear[2:].rstrip(unit_wind.upper()).split("/")
-    wdir = _core.spoken_number(shear[1][:3]) if spoken else shear[1][:3]
+    wdir = core.spoken_number(shear[1][:3]) if spoken else shear[1][:3]
     return f"Wind shear {int(shear[0])*100}{unit_alt} from {wdir} at {shear[1][3:]}{unit_wind}"
 
 
@@ -322,7 +322,7 @@ def min_max_temp(temp: str, unit: str = "C") -> str:
     temp = temp[2:].replace("M", "-").replace("Z", "").split("/")
     if len(temp[1]) > 2:
         temp[1] = temp[1][:2] + "-" + temp[1][2:]
-    temp_value = temperature(_core.make_number(temp[0]), unit)
+    temp_value = temperature(core.make_number(temp[0]), unit)
     return f"{temp_type} temperature of {temp_value} at {temp[1]}:00Z"
 
 

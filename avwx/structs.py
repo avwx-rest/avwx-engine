@@ -15,7 +15,7 @@ class _LazyLoad:
     data: dict = None
 
     def __init__(self, filename: str):
-        self.source = Path(__file__).parent.joinpath(f"{filename}.json")
+        self.source = Path(__file__).parent.joinpath("data", f"{filename}.json")
 
     def _load(self):
         self.data = json.load(self.source.open())
@@ -231,6 +231,6 @@ class PirepData(ReportData):
     wx: [str] = None
 
 
-# @dataclass
-# class AirepData(ReportData):
-#     pass
+@dataclass
+class AirepData(ReportData):
+    pass

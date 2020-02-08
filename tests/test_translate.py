@@ -7,7 +7,8 @@ tests/test_translate.py
 import unittest
 
 # module
-from avwx import _core, static, structs, translate
+from avwx import static, structs
+from avwx.parsing import core, translate
 
 
 class TestShared(unittest.TestCase):
@@ -27,7 +28,7 @@ class TestShared(unittest.TestCase):
             ("3", "sm", "3sm (4.8km)"),
         ):
             self.assertEqual(
-                translate.visibility(_core.make_number(vis), unit), translation
+                translate.visibility(core.make_number(vis), unit), translation
             )
 
     def test_altimeter(self):
@@ -44,7 +45,7 @@ class TestShared(unittest.TestCase):
             ("30.05", "3005", "inHg", "30.05 inHg (1018 hPa)"),
         ):
             self.assertEqual(
-                translate.altimeter(_core.make_number(alt, repr), unit), translation
+                translate.altimeter(core.make_number(alt, repr), unit), translation
             )
 
     def test_clouds(self):
@@ -61,7 +62,7 @@ class TestShared(unittest.TestCase):
             ),
             (["BKN015CB"], "Broken layer at 1500ft (Cumulonimbus)"),
         ):
-            clouds = [_core.make_cloud(cloud) for cloud in clouds]
+            clouds = [core.make_cloud(cloud) for cloud in clouds]
             self.assertEqual(translate.clouds(clouds), translation + " - Reported AGL")
 
     def test_wxcode(self):
@@ -96,15 +97,15 @@ class TestShared(unittest.TestCase):
         """
         units = structs.Units(**static.NA_UNITS)
         data = structs.SharedData(
-            altimeter=_core.make_number("2992"),
-            clouds=[_core.make_cloud("OVC060")],
+            altimeter=core.make_number("2992"),
+            clouds=[core.make_cloud("OVC060")],
             flight_rules="",
             other=["RA"],
             sanitized="",
-            visibility=_core.make_number("10"),
-            wind_direction=_core.make_number("0"),
-            wind_gust=_core.make_number("0"),
-            wind_speed=_core.make_number("0"),
+            visibility=core.make_number("10"),
+            wind_direction=core.make_number("0"),
+            wind_gust=core.make_number("0"),
+            wind_speed=core.make_number("0"),
         )
         trans = translate.shared(data, units)
         self.assertIsInstance(trans, dict)
@@ -169,9 +170,9 @@ class TestMetar(unittest.TestCase):
             ("VRB", "5", "12", None, "Variable at 5kt gusting to 12kt"),
             ("270", "10", "", ["240", "300"], "W-270 (variable 240 to 300) at 10kt"),
         ):
-            wind = [_core.make_number(i) for i in wind]
+            wind = [core.make_number(i) for i in wind]
             if vardir:
-                vardir = [_core.make_number(i) for i in vardir]
+                vardir = [core.make_number(i) for i in vardir]
             self.assertEqual(translate.wind(*wind, vardir), translation)
 
     def test_temperature(self):
@@ -186,7 +187,7 @@ class TestMetar(unittest.TestCase):
             ("", "F", ""),
         ):
             self.assertEqual(
-                translate.temperature(_core.make_number(temp), unit), translation
+                translate.temperature(core.make_number(temp), unit), translation
             )
 
     def test_metar(self):
@@ -195,18 +196,18 @@ class TestMetar(unittest.TestCase):
         """
         units = structs.Units(**static.NA_UNITS)
         data = {
-            "altimeter": _core.make_number("29.92", "2992"),
-            "clouds": [_core.make_cloud("BKN015CB")],
-            "dewpoint": _core.make_number("M01"),
+            "altimeter": core.make_number("29.92", "2992"),
+            "clouds": [core.make_cloud("BKN015CB")],
+            "dewpoint": core.make_number("M01"),
             "other": ["+RA"],
-            "temperature": _core.make_number("03"),
-            "visibility": _core.make_number("3"),
-            "wind_direction": _core.make_number("360"),
-            "wind_gust": _core.make_number("20"),
-            "wind_speed": _core.make_number("12"),
+            "temperature": core.make_number("03"),
+            "visibility": core.make_number("3"),
+            "wind_direction": core.make_number("360"),
+            "wind_gust": core.make_number("20"),
+            "wind_speed": core.make_number("12"),
             "wind_variable_direction": [
-                _core.make_number("340"),
-                _core.make_number("020"),
+                core.make_number("340"),
+                core.make_number("020"),
             ],
         }
         data.update(
@@ -288,16 +289,16 @@ class TestTaf(unittest.TestCase):
         """
         units = structs.Units(**static.NA_UNITS)
         line_data = {
-            "altimeter": _core.make_number("29.92", "2992"),
-            "clouds": [_core.make_cloud("BKN015CB")],
+            "altimeter": core.make_number("29.92", "2992"),
+            "clouds": [core.make_cloud("BKN015CB")],
             "icing": ["611005"],
             "other": ["+RA"],
             "turbulence": ["540553"],
-            "visibility": _core.make_number("3"),
-            "wind_direction": _core.make_number("360"),
-            "wind_gust": _core.make_number("20"),
+            "visibility": core.make_number("3"),
+            "wind_direction": core.make_number("360"),
+            "wind_gust": core.make_number("20"),
             "wind_shear": "WS020/07040KT",
-            "wind_speed": _core.make_number("12"),
+            "wind_speed": core.make_number("12"),
         }
         line_data.update(
             {

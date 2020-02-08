@@ -7,7 +7,8 @@ tests/test_summary.py
 import unittest
 
 # module
-from avwx import structs, summary
+from avwx import structs
+from avwx.parsing import summary
 
 
 class TestSummary(unittest.TestCase):

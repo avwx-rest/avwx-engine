@@ -28,7 +28,7 @@ setup(
         "xmltodict~=0.12",
     ],
     packages=["avwx"],
-    package_data={"avwx": ["aircraft.json", "stations.json"]},
+    package_data={"avwx": ["data/*.json"]},
     tests_require=["pytest-asyncio~=0.10"],
     extras_require={
         "scipy": ["scipy~=1.3"],

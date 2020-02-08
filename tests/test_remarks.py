@@ -7,7 +7,8 @@ tests/test_remarks.py
 import unittest
 
 # module
-from avwx import _core, remarks, static, structs
+from avwx import static, structs
+from avwx.parsing import core, remarks
 
 
 class TestRemarks(unittest.TestCase):
@@ -76,7 +77,7 @@ class TestRemarks(unittest.TestCase):
             ("T09870123", ("12.3", "98.7")),
             ("RMK AO2 SLP141 T02670189 $", ("18.9", "26.7")),
         ):
-            data = [_core.make_number(d) for d in data]
+            data = [core.make_number(d) for d in data]
             self.assertEqual(remarks.parse(rmk), structs.RemarksData(*data))
 
     def test_translate(self):

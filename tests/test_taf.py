@@ -12,7 +12,9 @@ from datetime import datetime
 from pathlib import Path
 
 # module
-from avwx import Taf, _core, structs, taf
+from avwx import structs
+from avwx.current import taf
+from avwx.parsing import core
 
 
 class TestTaf(unittest.TestCase):
@@ -48,12 +50,12 @@ class TestTaf(unittest.TestCase):
             "PROB30 2718/2724 VRB25G35KT 1SM +TSRA BR BKN020 OVC040CB "
             "FM280000 23008KT P6SM BKN040 RMK FCST BASED ON AUTO OBS. NXT FCST BY 272000Z"
         )
-        taf = Taf("CYBC")
-        taf.update(report)
-        lines = taf.data.forecast
+        tafobj = taf.Taf("CYBC")
+        tafobj.update(report)
+        lines = tafobj.data.forecast
         self.assertEqual(len(lines), 6)
         self.assertEqual(lines[3].probability, None)
-        self.assertEqual(lines[4].probability, _core.make_number("30"))
+        self.assertEqual(lines[4].probability, core.make_number("30"))
         self.assertTrue(lines[4].raw.startswith("PROB30"))
 
     def test_prob_end(self):
@@ -69,9 +71,9 @@ class TestTaf(unittest.TestCase):
             "FM251800 22010KT 6SM HZ SCT020 BKN200 "
             "PROB40 2522/2602 P6SM TSRA BKN020CB"
         )
-        taf = Taf("CYBC")
-        taf.update(report)
-        lines = taf.data.forecast
+        tafobj = taf.Taf("CYBC")
+        tafobj.update(report)
+        lines = tafobj.data.forecast
         self.assertEqual(lines[0].start_time.repr, "2500")
         self.assertEqual(lines[0].end_time.repr, "2506")
         self.assertEqual(lines[1].start_time.repr, "2500")
@@ -94,12 +96,12 @@ class TestTaf(unittest.TestCase):
             "FM291300 32017G27KT P6SM OVC030 "
             "TEMPO 2913/2918 P6SM -SHRA OVC020 RMK NXT FCST BY 290000Z"
         )
-        taf = Taf("CYBC")
-        taf.update(report)
-        lines = taf.data.forecast
+        tafobj = taf.Taf("CYBC")
+        tafobj.update(report)
+        lines = tafobj.data.forecast
         self.assertEqual(len(lines), 7)
         self.assertEqual(lines[0].wind_shear, "WS015/20055")
-        self.assertEqual(taf.translations.forecast[1].clouds, None)
+        self.assertEqual(tafobj.translations.forecast[1].clouds, None)
 
     def test_prob_tempo(self):
         """
@@ -110,7 +112,7 @@ class TestTaf(unittest.TestCase):
             "PROB30 TEMPO 2004/2009 BKN012 "
             "PROB30 TEMPO 2105/2106 8000 BKN006"
         )
-        tafobj = Taf("EGLL")
+        tafobj = taf.Taf("EGLL")
         tafobj.update(report)
         lines = tafobj.data.forecast
         for line in lines:
@@ -127,7 +129,7 @@ class TestTaf(unittest.TestCase):
         nodate = lambda s: s[s.find("-") + 2 :]
         for path in Path(__file__).parent.joinpath("taf").glob("*.json"):
             ref = json.load(path.open())
-            station = Taf(path.stem)
+            station = taf.Taf(path.stem)
             self.assertIsNone(station.last_updated)
             self.assertTrue(station.update(ref["data"]["raw"]))
             self.assertIsInstance(station.last_updated, datetime)
@@ -155,7 +157,7 @@ class TestTaf(unittest.TestCase):
             "FM021800 14008KT P6SM BKN025 OVC090"
         )
         expected_rules = ("VFR", "VFR", "VFR", "MVFR")
-        tafobj = Taf(report[:4])
+        tafobj = taf.Taf(report[:4])
         tafobj.update(report)
         for i, line in enumerate(tafobj.data.forecast):
             self.assertEqual(line.flight_rules, expected_rules[i])

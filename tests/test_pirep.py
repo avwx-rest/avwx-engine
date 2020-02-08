@@ -10,7 +10,8 @@ from datetime import datetime
 from pathlib import Path
 
 # module
-from avwx import Pireps, pirep, structs
+from avwx import structs
+from avwx.current import pirep
 
 
 class TestPirepHandlers(unittest.TestCase):
@@ -216,7 +217,7 @@ class TestPirep(unittest.TestCase):
         for path in Path(__file__).parent.joinpath("pirep").glob("*.json"):
             path = Path(path)
             ref = json.load(path.open())
-            station = Pireps(path.stem)
+            station = pirep.Pireps(path.stem)
             self.assertIsNone(station.last_updated)
             reports = [report["data"]["raw"] for report in ref["reports"]]
             self.assertTrue(station.update(reports))

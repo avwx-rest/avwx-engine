@@ -10,7 +10,8 @@ from datetime import datetime
 from pathlib import Path
 
 # module
-from avwx import Metar, metar, structs
+from avwx import structs
+from avwx.current import metar
 
 
 class TestMetar(unittest.TestCase):
@@ -39,7 +40,7 @@ class TestMetar(unittest.TestCase):
         for path in Path(__file__).parent.joinpath("metar").glob("*.json"):
             path = Path(path)
             ref = json.load(path.open())
-            station = Metar(path.stem)
+            station = metar.Metar(path.stem)
             self.assertIsNone(station.last_updated)
             self.assertTrue(station.update(ref["data"]["raw"]))
             self.assertIsInstance(station.last_updated, datetime)

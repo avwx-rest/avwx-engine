@@ -12,7 +12,8 @@ from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 
 # module
-from avwx import _core, exceptions, static, structs
+from avwx import exceptions, static, structs
+from avwx.parsing import core
 
 
 class BaseTest(unittest.TestCase):
@@ -42,13 +43,13 @@ class TestGlobal(BaseTest):
             ([4, 4, 4, 4], [4]),
             ([1, 5, 1, 1, 3, 5], [1, 5, 3]),
         ):
-            self.assertEqual(_core.dedupe(before), after)
+            self.assertEqual(core.dedupe(before), after)
         for before, after in (
             ([1, 2, 3, 2, 1], [1, 2, 3, 2, 1]),
             ([4, 4, 4, 4], [4]),
             ([1, 5, 1, 1, 3, 5], [1, 5, 1, 3, 5]),
         ):
-            self.assertEqual(_core.dedupe(before, only_neighbors=True), after)
+            self.assertEqual(core.dedupe(before, only_neighbors=True), after)
 
     def test_is_unknown(self):
         """
@@ -56,22 +57,22 @@ class TestGlobal(BaseTest):
         """
         # Unknown values
         for i in range(10):
-            self.assertTrue(_core.is_unknown("/" * i))
+            self.assertTrue(core.is_unknown("/" * i))
         # Full or partially known values
         for value in ("abc", "/bc", "a/c", "ab/", "a//", "/b/", "//c"):
-            self.assertFalse(_core.is_unknown(value))
+            self.assertFalse(core.is_unknown(value))
         # Bad type
         with self.assertRaises(TypeError):
-            _core.is_unknown(None)
+            core.is_unknown(None)
 
     def test_is_timestamp(self):
         """
         Tests determining if a string is a timestamp element
         """
         for ts in ("123456Z", "987654Z"):
-            self.assertTrue(_core.is_timestamp(ts))
+            self.assertTrue(core.is_timestamp(ts))
         for nts in ("", "123456Z123", "1234", "1234Z"):
-            self.assertFalse(_core.is_timestamp(nts))
+            self.assertFalse(core.is_timestamp(nts))
 
     def test_unpack_fraction(self):
         """
@@ -84,7 +85,7 @@ class TestGlobal(BaseTest):
             ("3/2", "1 1/2"),
             ("10/3", "3 1/3"),
         ):
-            self.assertEqual(_core.unpack_fraction(fraction), unpacked)
+            self.assertEqual(core.unpack_fraction(fraction), unpacked)
 
     def test_remove_leading_zeros(self):
         """
@@ -100,7 +101,7 @@ class TestGlobal(BaseTest):
             ("000", "0"),
             ("M00", "0"),
         ):
-            self.assertEqual(_core.remove_leading_zeros(num), stripped)
+            self.assertEqual(core.remove_leading_zeros(num), stripped)
 
     def test_spoken_number(self):
         """
@@ -116,13 +117,13 @@ class TestGlobal(BaseTest):
             ("1/2", "one half"),
             ("3 3/4", "three and three quarters"),
         ):
-            self.assertEqual(_core.spoken_number(num), spoken)
+            self.assertEqual(core.spoken_number(num), spoken)
 
     def test_make_number(self):
         """
         Tests Number dataclass generation from a number string
         """
-        self.assertIsNone(_core.make_number(""))
+        self.assertIsNone(core.make_number(""))
         for num, value, spoken in (
             ("1", 1, "one"),
             ("1.5", 1.5, "one point five"),
@@ -131,7 +132,7 @@ class TestGlobal(BaseTest):
             ("P6SM", None, "greater than six"),
             ("M1/4", None, "less than one quarter"),
         ):
-            number = _core.make_number(num)
+            number = core.make_number(num)
             self.assertEqual(number.repr, num)
             self.assertEqual(number.value, value)
             self.assertEqual(number.spoken, spoken)
@@ -142,14 +143,14 @@ class TestGlobal(BaseTest):
             ("5/4", 1.25, "one and one quarter", 5, 4, "1 1/4"),
             ("11/4", 1.25, "one and one quarter", 5, 4, "1 1/4"),
         ):
-            number = _core.make_number(num)
+            number = core.make_number(num)
             self.assertEqual(number.value, value)
             self.assertEqual(number.spoken, spoken)
             self.assertEqual(number.numerator, nmr)
             self.assertEqual(number.denominator, dnm)
             self.assertEqual(number.normalized, norm)
-        self.assertEqual(_core.make_number("1234", "A1234").repr, "A1234")
-        number = _core.make_number("040", speak="040")
+        self.assertEqual(core.make_number("1234", "A1234").repr, "A1234")
+        number = core.make_number("040", speak="040")
         self.assertEqual(number.value, 40)
         self.assertEqual(number.spoken, "zero four zero")
 
@@ -164,7 +165,7 @@ class TestGlobal(BaseTest):
             ("This is weird", ("me", "you", "we"), 8),
             ("KJFK NOPE LOL RMK HAHAHA", static.METAR_RMK, 13),
         ):
-            self.assertEqual(_core.find_first_in_list(string, targets), index)
+            self.assertEqual(core.find_first_in_list(string, targets), index)
 
     def test_extra_space_exists(self):
         """
@@ -189,14 +190,14 @@ class TestGlobal(BaseTest):
             ("TX", "10/20"),
             ("TN", "05/10"),
         ):
-            self.assertTrue(_core.extra_space_exists(*strings))
+            self.assertTrue(core.extra_space_exists(*strings))
         for strings in (
             ("OVC020", "FEW"),
             ("BKN020", "SCT040"),
             ("Q", "12/34"),
             ("OVC", "12/34"),
         ):
-            self.assertFalse(_core.extra_space_exists(*strings))
+            self.assertFalse(core.extra_space_exists(*strings))
 
     def test_extra_space_needed(self):
         """
@@ -211,7 +212,7 @@ class TestGlobal(BaseTest):
             ("PROB30", None),
             ("A2992", None),
         ):
-            self.assertEqual(_core.extra_space_needed(item), sep)
+            self.assertEqual(core.extra_space_needed(item), sep)
 
     def test_sanitize_report_list(self):
         """
@@ -227,16 +228,16 @@ class TestGlobal(BaseTest):
             ("KJFK 1 1 1 1 1 1 2 1", "KJFK 1 2 1"),
         ):
             line, fixed = line.split(), fixed.split()
-            self.assertEqual(_core.sanitize_report_list(line), fixed)
+            self.assertEqual(core.sanitize_report_list(line), fixed)
 
     def test_is_possible_temp(self):
         """
         Tests if an element could be a formatted temperature
         """
         for is_temp in ("10", "22", "333", "M05", "5"):
-            self.assertTrue(_core.is_possible_temp(is_temp))
+            self.assertTrue(core.is_possible_temp(is_temp))
         for not_temp in ("A", "12.3", "MNA", "-13"):
-            self.assertFalse(_core.is_possible_temp(not_temp))
+            self.assertFalse(core.is_possible_temp(not_temp))
 
     def test_get_temp_and_dew(self):
         """
@@ -252,11 +253,11 @@ class TestGlobal(BaseTest):
             (["/////", "1", "2"], (None,), (None,)),
             (["XX/01", "1", "2"], (None,), ("01", 1)),
         ):
-            retwx, ret_temp, ret_dew = _core.get_temp_and_dew(wx)
+            retwx, ret_temp, ret_dew = core.get_temp_and_dew(wx)
             self.assertEqual(retwx, ["1", "2"])
             self.assert_number(ret_temp, *temp)
             self.assert_number(ret_dew, *dew)
-        self.assertEqual(_core.get_temp_and_dew(["MX/01"]), (["MX/01"], None, None))
+        self.assertEqual(core.get_temp_and_dew(["MX/01"]), (["MX/01"], None, None))
 
     def test_get_station_and_time(self):
         """
@@ -270,7 +271,7 @@ class TestGlobal(BaseTest):
             (["KJFK", "1"], ["1"], "KJFK", None),
             (["KJFK"], [], "KJFK", None),
         ):
-            self.assertEqual(_core.get_station_and_time(wx), (ret, station, time))
+            self.assertEqual(core.get_station_and_time(wx), (ret, station, time))
 
     def test_get_wind(self):
         """
@@ -293,7 +294,7 @@ class TestGlobal(BaseTest):
             (["VRB20G30KMH", "1"], "km/h", ("VRB",), ("20", 20), ("30", 30), []),
         ):
             units = structs.Units(**static.NA_UNITS)
-            wx, *winds, var = _core.get_wind(wx, units)
+            wx, *winds, var = core.get_wind(wx, units)
             self.assertEqual(wx, ["1"])
             for i in range(len(wind)):
                 self.assert_number(winds[i], *wind[i])
@@ -322,7 +323,7 @@ class TestGlobal(BaseTest):
             (["2KM", "1"], "m", ("2000", 2000)),
         ):
             units = structs.Units(**static.NA_UNITS)
-            wx, vis = _core.get_visibility(wx, units)
+            wx, vis = core.get_visibility(wx, units)
             self.assertEqual(wx, ["1"])
             self.assert_number(vis, *visibility)
             self.assertEqual(units.visibility, unit)
@@ -332,10 +333,10 @@ class TestGlobal(BaseTest):
         Tests that digits are removed after an index but before a non-digit item
         """
         items = ["1", "T", "2", "3", "ODD", "Q", "4", "C"]
-        items, ret = _core._get_digit_list(items, 1)
+        items, ret = core._get_digit_list(items, 1)
         self.assertEqual(items, ["1", "ODD", "Q", "4", "C"])
         self.assertEqual(ret, ["2", "3"])
-        items, ret = _core._get_digit_list(items, 2)
+        items, ret = core._get_digit_list(items, 2)
         self.assertEqual(items, ["1", "ODD", "C"])
         self.assertEqual(ret, ["4"])
 
@@ -351,7 +352,7 @@ class TestGlobal(BaseTest):
             ("BKNC015", "BKN015C"),
             ("FEW027///", "FEW027///"),
         ):
-            self.assertEqual(_core.sanitize_cloud(bad), good)
+            self.assertEqual(core.sanitize_cloud(bad), good)
 
     def test_make_cloud(self):
         """
@@ -371,7 +372,7 @@ class TestGlobal(BaseTest):
             ("OVC065-TOPUNKN", ["OVC", 65, None, None]),
             ("SCT-BKN050-TOP100", ["SCT-BKN", 50, 100, None]),
         ):
-            ret_cloud = _core.make_cloud(cloud)
+            ret_cloud = core.make_cloud(cloud)
             self.assertIsInstance(ret_cloud, structs.Cloud)
             self.assertEqual(ret_cloud.repr, cloud)
             for i, key in enumerate(("type", "base", "top", "modifier")):
@@ -390,7 +391,7 @@ class TestGlobal(BaseTest):
             ),
             (["1", "BKN020", "SCT050"], [["BKN", 20, None], ["SCT", 50, None]]),
         ):
-            wx, ret_clouds = _core.get_clouds(wx)
+            wx, ret_clouds = core.get_clouds(wx)
             self.assertEqual(wx, ["1"])
             for i, cloud in enumerate(ret_clouds):
                 self.assertIsInstance(cloud, structs.Cloud)
@@ -414,11 +415,11 @@ class TestGlobal(BaseTest):
             ("1/2", ["OVC", 30], "LIFR"),
             ("M1/4", ["OVC", 30], "LIFR"),
         ):
-            vis = _core.make_number(vis)
+            vis = core.make_number(vis)
             if ceiling:
                 ceiling = structs.Cloud(None, *ceiling)
             self.assertEqual(
-                static.FLIGHT_RULES[_core.get_flight_rules(vis, ceiling)], rule
+                static.FLIGHT_RULES[core.get_flight_rules(vis, ceiling)], rule
             )
 
     def test_get_ceiling(self):
@@ -437,7 +438,7 @@ class TestGlobal(BaseTest):
             clouds = [structs.Cloud(None, *cloud) for cloud in clouds]
             if ceiling:
                 ceiling = structs.Cloud(None, *ceiling)
-            self.assertEqual(_core.get_ceiling(clouds), ceiling)
+            self.assertEqual(core.get_ceiling(clouds), ceiling)
 
     def test_parse_date(self):
         """
@@ -445,7 +446,7 @@ class TestGlobal(BaseTest):
         """
         today = datetime.now(tz=timezone.utc)
         rts = today.strftime(r"%d%H%MZ")
-        parsed = _core.parse_date(rts)
+        parsed = core.parse_date(rts)
         self.assertIsInstance(parsed, datetime)
         self.assertEqual(parsed.day, today.day)
         self.assertEqual(parsed.hour, today.hour)
@@ -457,7 +458,7 @@ class TestGlobal(BaseTest):
         """
         today = datetime.now(tz=timezone.utc)
         rts = today.strftime(r"%d%HZ")
-        date = _core.make_timestamp(rts)
+        date = core.make_timestamp(rts)
         self.assertIsInstance(date, structs.Timestamp)
         self.assertEqual(date.repr, rts)
         self.assertEqual(date.dt.day, today.day)
@@ -475,7 +476,7 @@ class TestMetar(BaseTest):
             ("1 2 Q0900 NOSIG", ["1", "2", "Q0900"], "NOSIG"),
             ("1 2 3 BLU+ Hello", ["1", "2", "3"], "BLU+ Hello"),
         ):
-            test_wx, test_rmk = _core.get_remarks(raw)
+            test_wx, test_rmk = core.get_remarks(raw)
             self.assertEqual(wx, test_wx)
             self.assertEqual(rmk, test_rmk)
 
@@ -485,7 +486,7 @@ class TestMetar(BaseTest):
         """
         line = "KJFK 36010 ? TSFEW004SCT012FEW///CBBKN080 C A V O K A2992"
         fixed = "KJFK 36010   TS FEW004 SCT012 FEW///CB BKN080 CAVOK A2992"
-        self.assertEqual(_core.sanitize_report_string(line), fixed)
+        self.assertEqual(core.sanitize_report_string(line), fixed)
 
     def test_get_altimeter(self):
         """
@@ -502,7 +503,7 @@ class TestMetar(BaseTest):
             (["1", "2", "Q1000"], ("1000", 1000)),
         ):
             self.assertEqual(units.altimeter, "inHg")
-            retwx, ret_alt = _core.get_altimeter(wx, units)
+            retwx, ret_alt = core.get_altimeter(wx, units)
             self.assertEqual(retwx, ["1", "2"])
             self.assert_number(ret_alt, *alt)
         # The last one should have changed the unit
@@ -518,7 +519,7 @@ class TestMetar(BaseTest):
             (["1", "2", "A2992"], ("2992", 29.92)),
         ):
             self.assertEqual(units.altimeter, "hPa")
-            retwx, ret_alt = _core.get_altimeter(wx, units, "IN")
+            retwx, ret_alt = core.get_altimeter(wx, units, "IN")
             self.assertEqual(retwx, ["1", "2"])
             self.assert_number(ret_alt, *alt)
         # The last one should have changed the unit
@@ -533,7 +534,7 @@ class TestMetar(BaseTest):
             (["1", "2", "R10/10"], ["R10/10"]),
             (["1", "2", "R02/05", "R34/04"], ["R02/05", "R34/04"]),
         ):
-            self.assertEqual(_core.get_runway_visibility(wx), (["1", "2"], rvis))
+            self.assertEqual(core.get_runway_visibility(wx), (["1", "2"], rvis))
 
 
 class TestTaf(unittest.TestCase):
@@ -547,7 +548,7 @@ class TestTaf(unittest.TestCase):
             ("KJFK test FCST test", "FCST test"),
             ("KJFK test AUTOMATED test", "AUTOMATED test"),
         ):
-            report, remarks = _core.get_taf_remarks(txt)
+            report, remarks = core.get_taf_remarks(txt)
             self.assertEqual(report, "KJFK test")
             self.assertEqual(remarks, rmk)
 
@@ -556,10 +557,10 @@ class TestTaf(unittest.TestCase):
         Tests a function which fixes common new-line signifiers in TAF reports
         """
         for line in ("1 BEC 1", "1 BE CMG1", "1 BEMG 1"):
-            self.assertEqual(_core.sanitize_line(line), "1 BECMG 1")
+            self.assertEqual(core.sanitize_line(line), "1 BECMG 1")
         for line in ("1 TEMP0 1", "1 TEMP 1", "1 TEMO1", "1 T EMPO1"):
-            self.assertEqual(_core.sanitize_line(line), "1 TEMPO 1")
-        self.assertEqual(_core.sanitize_line("1 2 3 4 5"), "1 2 3 4 5")
+            self.assertEqual(core.sanitize_line(line), "1 TEMPO 1")
+        self.assertEqual(core.sanitize_line("1 2 3 4 5"), "1 2 3 4 5")
 
     def test_is_tempo_or_prob(self):
         """
@@ -571,9 +572,9 @@ class TestTaf(unittest.TestCase):
             {"probability": "PROBNA"},
             {"type": "FROM", "probability": 30},
         ):
-            self.assertTrue(_core._is_tempo_or_prob(line))
+            self.assertTrue(core._is_tempo_or_prob(line))
         for line in ({"type": "FROM"}, {"type": "FROM", "probability": None}):
-            self.assertFalse(_core._is_tempo_or_prob(line))
+            self.assertFalse(core._is_tempo_or_prob(line))
 
     def test_get_taf_alt_ice_turb(self):
         """
@@ -582,18 +583,18 @@ class TestTaf(unittest.TestCase):
         for wx, *data in (
             (["1"], "", [], []),
             (["1", "512345", "612345"], "", ["612345"], ["512345"]),
-            (["QNH1234", "1", "612345"], _core.make_number("1234"), ["612345"], []),
+            (["QNH1234", "1", "612345"], core.make_number("1234"), ["612345"], []),
         ):
-            self.assertEqual(_core.get_taf_alt_ice_turb(wx), (["1"], *data))
+            self.assertEqual(core.get_taf_alt_ice_turb(wx), (["1"], *data))
 
     def test_starts_new_line(self):
         """
         Tests that certain items are identified as new line markers in TAFs
         """
         for item in [*static.TAF_NEWLINE, "PROB30", "PROB45", "PROBNA", "FM12345678"]:
-            self.assertTrue(_core.starts_new_line(item))
+            self.assertTrue(core.starts_new_line(item))
         for item in ("KJFK", "12345Z", "2010/2020", "FEW060", "RMK"):
-            self.assertFalse(_core.starts_new_line(item))
+            self.assertFalse(core.starts_new_line(item))
 
     def test_split_taf(self):
         """
@@ -607,7 +608,7 @@ class TestTaf(unittest.TestCase):
             ("KJFK test PROB30 test TEMPO test", 3),
             ("KJFK test PROB30 TEMPO test TEMPO test", 3),
         ):
-            split = _core.split_taf(report)
+            split = core.split_taf(report)
             self.assertEqual(len(split), num)
             self.assertEqual(split[0], "KJFK test")
 
@@ -624,7 +625,7 @@ class TestTaf(unittest.TestCase):
             (["FM1200/1206", "1"], "FROM", "1200", "1206"),
             (["FM120000", "TL120600", "1"], "FROM", "1200", "1206"),
         ):
-            self.assertEqual(_core.get_type_and_times(wx), (["1"], *data))
+            self.assertEqual(core.get_type_and_times(wx), (["1"], *data))
 
     def test_find_missing_taf_times(self):
         """
@@ -638,16 +639,14 @@ class TestTaf(unittest.TestCase):
         ]
         for line in good_lines:
             for key in ("start_time", "end_time"):
-                line[key] = _core.make_timestamp(line[key])
+                line[key] = core.make_timestamp(line[key])
         bad_lines = deepcopy(good_lines)
         bad_lines[0]["start_time"] = None
         bad_lines[1]["start_time"] = None
         bad_lines[2]["end_time"] = None
         bad_lines[3]["end_time"] = None
         start, end = good_lines[0]["start_time"], good_lines[-1]["end_time"]
-        self.assertEqual(
-            _core.find_missing_taf_times(bad_lines, start, end), good_lines
-        )
+        self.assertEqual(core.find_missing_taf_times(bad_lines, start, end), good_lines)
 
     def test_get_temp_min_and_max(self):
         """
@@ -658,14 +657,14 @@ class TestTaf(unittest.TestCase):
             (["1", "TX12/1316Z", "TNM03/1404Z"], "TX12/1316Z", "TNM03/1404Z"),
             (["1", "TM03/1404Z", "T12/1316Z"], "TX12/1316Z", "TNM03/1404Z"),
         ):
-            self.assertEqual(_core.get_temp_min_and_max(wx), (["1"], *temps))
+            self.assertEqual(core.get_temp_min_and_max(wx), (["1"], *temps))
 
     def test_get_oceania_temp_and_alt(self):
         """
         Tests that Oceania-specific elements are identified and removed
         """
         items = ["1", "T", "2", "3", "ODD", "Q", "4", "C"]
-        items, tlist, qlist = _core.get_oceania_temp_and_alt(items)
+        items, tlist, qlist = core.get_oceania_temp_and_alt(items)
         self.assertEqual(items, ["1", "ODD", "C"])
         self.assertEqual(tlist, ["2", "3"])
         self.assertEqual(qlist, ["4"])
@@ -678,7 +677,7 @@ class TestTaf(unittest.TestCase):
             (["1", "2"], None),
             (["1", "2", "WS020/07040"], "WS020/07040"),
         ):
-            self.assertEqual(_core.get_wind_shear(wx), (["1", "2"], shear))
+            self.assertEqual(core.get_wind_shear(wx), (["1", "2"], shear))
 
     # def test_get_taf_flight_rules(self):
     #     """

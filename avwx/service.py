@@ -12,7 +12,7 @@ from httpx.exceptions import ConnectTimeout, ReadTimeout
 from xmltodict import parse as parsexml
 
 # module
-from avwx._core import dedupe
+from avwx.parsing.core import dedupe
 from avwx.exceptions import InvalidRequest, SourceError
 from avwx.station import valid_station
 

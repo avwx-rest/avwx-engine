@@ -4,7 +4,7 @@ Currently only supports METAR
 """
 
 # module
-from avwx import _core, translate
+from avwx.parsing import core, translate
 from avwx.static import FRACTIONS, NUMBER_REPL, SPOKEN_UNITS
 from avwx.structs import (
     Cloud,
@@ -68,7 +68,7 @@ def visibility(vis: Number, unit: str = "m") -> str:
         if unit == "m":
             unit = "km"
         ret_vis = ret_vis[: ret_vis.find(" (")].lower().replace(unit, "").strip()
-        ret_vis = _core.spoken_number(_core.remove_leading_zeros(ret_vis))
+        ret_vis = core.spoken_number(core.remove_leading_zeros(ret_vis))
     ret = "Visibility " + ret_vis
     if unit in SPOKEN_UNITS:
         if "/" in vis.repr and "half" not in ret:
@@ -89,9 +89,9 @@ def altimeter(alt: Number, unit: str = "inHg") -> str:
     if not alt:
         ret += "unknown"
     elif unit == "inHg":
-        ret += f"{_core.spoken_number(alt.repr[:2])} point {_core.spoken_number(alt.repr[2:])}"
+        ret += f"{core.spoken_number(alt.repr[:2])} point {core.spoken_number(alt.repr[2:])}"
     elif unit == "hPa":
-        ret += _core.spoken_number(alt.repr)
+        ret += core.spoken_number(alt.repr)
     return ret
 
 
