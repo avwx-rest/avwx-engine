@@ -2,14 +2,13 @@
 """
 
 # stdlib
-from abc import abstractmethod
 from datetime import datetime, timezone
 
 # module
 from avwx.base import AVWXBase
 from avwx.service import get_service, NOAA_ADDS
 from avwx.static import NA_UNITS
-from avwx.station import Station, valid_station
+from avwx.station import Station
 from avwx.structs import ReportData, ReportTrans, Units
 
 
@@ -21,65 +20,11 @@ class Report(AVWXBase):
     #: ReportTrans dataclass of translation strings from data. Parsed on update()
     translations: ReportTrans = None
 
-    #: 4-character ICAO station ident code the report was initialized with
-    station: str
-
     def __init__(self, icao: str):
-        # Raises a BadStation error if needed
-        valid_station(icao)
-        self.station = icao
-        self.station_info = Station.from_icao(icao)
+        super().__init__(icao)
         self.service = get_service(icao, self.station_info.country)(
             self.__class__.__name__.lower()
         )
-
-    @abstractmethod
-    def _post_update(self):
-        pass
-
-    @classmethod
-    def from_report(cls, report: str) -> "Report":
-        """
-        Returns an updated report object based on an existing report
-        """
-        obj = cls(report[:4])
-        obj.update(report)
-        return obj
-
-    def update(
-        self, report: str = None, timeout: int = 10, disable_post: bool = False
-    ) -> bool:
-        """
-        Updates raw, data, and translations by fetching and parsing the report
-
-        Can accept a report string to parse instead
-
-        Returns True if a new report is available, else False
-        """
-        if not report:
-            report = self.service.fetch(self.station, timeout=timeout)
-        if not report or report == self.raw:
-            return False
-        self.raw = report
-        if not disable_post:
-            self._post_update()
-        self.last_updated = datetime.now(tz=timezone.utc)
-        return True
-
-    async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
-        """
-        Async version of update
-        """
-        report = await self.service.async_fetch(self.station, timeout=timeout)
-        if not report or report == self.raw:
-            return False
-        self.raw = report
-        if not disable_post:
-            self._post_update()
-        return True
-
-    def __repr__(self) -> str:
-        return f"<avwx.{self.__class__.__name__} station={self.station}>"
 
 
 class Reports(AVWXBase):
@@ -103,8 +48,8 @@ class Reports(AVWXBase):
         self.lon = lon
         self.service = NOAA_ADDS("aircraftreport")
 
-    def _post_update(self):
-        pass
+    def __repr__(self) -> str:
+        return f"<avwx.{self.__class__.__name__} lat={self.lat} lon={self.lon}>"
 
     @staticmethod
     def _report_filter(reports: [str]) -> [str]:

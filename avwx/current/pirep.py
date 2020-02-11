@@ -3,7 +3,6 @@ Functions for parsing PIREPs
 """
 
 from avwx.current.base import Reports
-from avwx.exceptions import BadStation
 from avwx.parsing import core
 from avwx.static import NA_UNITS
 from avwx.structs import (

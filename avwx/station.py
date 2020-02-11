@@ -3,7 +3,6 @@ Station handling and search
 """
 
 # stdlib
-import math
 from copy import copy
 from dataclasses import dataclass
 

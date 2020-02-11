@@ -5,7 +5,7 @@ Contains TAF-specific functions for report parsing
 # module
 from avwx.current.base import Report
 from avwx.parsing import core, speech, summary, translate
-from avwx.static import IN_UNITS, NA_UNITS, TAF_NEWLINE, TAF_RMK
+from avwx.static import IN_UNITS, NA_UNITS
 from avwx.station import uses_na_format, valid_station
 from avwx.structs import TafData, TafLineData, Units
 

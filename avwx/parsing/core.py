@@ -13,7 +13,6 @@ from itertools import permutations
 from dateutil.relativedelta import relativedelta
 
 # module
-from avwx.exceptions import BadStation
 from avwx.static import (
     CARDINALS,
     CLOUD_LIST,
@@ -235,7 +234,6 @@ STR_REPL = {
     " VFB": " VRB",
     " VAB": " VRB",
     " VAR": " VRB",
-    " VRC": " VRB",
     " VRG": " VRB",
     " VRR": " VRB",
     " VGB": " VRB",
