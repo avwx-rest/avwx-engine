@@ -3,12 +3,8 @@ Contains functions for translating report data
 """
 
 from avwx.parsing import core, remarks
-from avwx.static import (
-    CLOUD_TRANSLATIONS,
-    ICING_CONDITIONS,
-    TURBULENCE_CONDITIONS,
-    WX_TRANSLATIONS,
-)
+from avwx.static.core import CLOUD_TRANSLATIONS, WX_TRANSLATIONS
+from avwx.static.taf import ICING_CONDITIONS, TURBULENCE_CONDITIONS
 from avwx.structs import (
     Cloud,
     MetarData,

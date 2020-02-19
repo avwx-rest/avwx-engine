@@ -38,7 +38,7 @@ class TestRemarks(unittest.TestCase):
         for code, pressure in (("50123", "12.3"), ("54987", "98.7"), ("51846", "84.6")):
             equals = (
                 "3-hour pressure difference: +/- "
-                f"{pressure} mb - {static.PRESSURE_TENDENCIES[code[1]]}"
+                f"{pressure} mb - {static.taf.PRESSURE_TENDENCIES[code[1]]}"
             )
             self.assertEqual(remarks.pressure_tendency(code), equals)
 

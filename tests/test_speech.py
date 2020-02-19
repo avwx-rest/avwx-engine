@@ -114,7 +114,7 @@ class TestSpeech(unittest.TestCase):
         """
         Tests converting METAR data into into a single spoken string
         """
-        units = structs.Units(**static.NA_UNITS)
+        units = structs.Units(**static.core.NA_UNITS)
         data = {
             "altimeter": core.make_number("2992"),
             "clouds": [core.make_cloud("BKN015CB")],
@@ -205,7 +205,7 @@ class TestSpeech(unittest.TestCase):
         """
         Tests converting TAF line data into into a single spoken string
         """
-        units = structs.Units(**static.NA_UNITS)
+        units = structs.Units(**static.core.NA_UNITS)
         line = {
             "altimeter": core.make_number("2992"),
             "clouds": [core.make_cloud("BKN015CB")],
@@ -241,7 +241,7 @@ class TestSpeech(unittest.TestCase):
         """
         Tests converting a TafData report into a single spoken string
         """
-        units = structs.Units(**static.NA_UNITS)
+        units = structs.Units(**static.core.NA_UNITS)
         empty_line = {k: None for k in structs.TafLineData.__dataclass_fields__.keys()}
         forecast = [
             structs.TafLineData(**{**empty_line, **line})

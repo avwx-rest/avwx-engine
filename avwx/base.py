@@ -54,6 +54,7 @@ class AVWXBase(metaclass=ABCMeta):
         """
         Returns an updated report object based on an existing report
         """
+        report = report.strip()
         obj = cls(report[:4])
         obj.update(report)
         return obj

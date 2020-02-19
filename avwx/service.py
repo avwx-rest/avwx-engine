@@ -3,7 +3,6 @@ Classes for retrieving raw report strings
 """
 
 # stdlib
-from abc import abstractmethod
 from socket import gaierror
 
 # library
@@ -42,14 +41,12 @@ class Service:
         msg = f"Could not find {key} in {self.__class__.__name__} response\n"
         return InvalidRequest(msg + body)
 
-    @abstractmethod
     def _make_url(self, station: str, lat: float, lon: float) -> (str, dict):
         """
         Returns a formatted URL and parameters
         """
         raise NotImplementedError()
 
-    @abstractmethod
     def _extract(self, raw: str, station: str = None) -> str:
         """
         Extracts the report string from the service response
@@ -389,4 +386,4 @@ class GFS_MOS(Service):
         Extracts the report using string finding
         """
         raw = raw[raw.find("<PRE>") + 5 :]
-        return raw[: raw.find("</PRE>")].strip()
+        return raw[: raw.find("</PRE>")].strip().replace("\n ", "\n")

@@ -8,11 +8,10 @@ Core Tests
 import unittest
 
 # stdlib
-from copy import deepcopy
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 
 # module
-from avwx import exceptions, static, structs
+from avwx import static, structs
 from avwx.parsing import core
 
 
@@ -163,7 +162,7 @@ class TestGlobal(BaseTest):
         for string, targets, index in (
             ("012345", ("5", "2", "3"), 2),
             ("This is weird", ("me", "you", "we"), 8),
-            ("KJFK NOPE LOL RMK HAHAHA", static.METAR_RMK, 13),
+            ("KJFK NOPE LOL RMK HAHAHA", static.metar.METAR_RMK, 13),
         ):
             self.assertEqual(core.find_first_in_list(string, targets), index)
 
@@ -239,26 +238,6 @@ class TestGlobal(BaseTest):
         for not_temp in ("A", "12.3", "MNA", "-13"):
             self.assertFalse(core.is_possible_temp(not_temp))
 
-    def test_get_temp_and_dew(self):
-        """
-        Tests temperature and dewpoint extraction
-        """
-        for wx, temp, dew in (
-            (["1", "2"], (None,), (None,)),
-            (["1", "2", "07/05"], ("07", 7), ("05", 5)),
-            (["07/05", "1", "2"], ("07", 7), ("05", 5)),
-            (["M05/M10", "1", "2"], ("M05", -5), ("M10", -10)),
-            (["///20", "1", "2"], (None,), ("20", 20)),
-            (["10///", "1", "2"], ("10", 10), (None,)),
-            (["/////", "1", "2"], (None,), (None,)),
-            (["XX/01", "1", "2"], (None,), ("01", 1)),
-        ):
-            retwx, ret_temp, ret_dew = core.get_temp_and_dew(wx)
-            self.assertEqual(retwx, ["1", "2"])
-            self.assert_number(ret_temp, *temp)
-            self.assert_number(ret_dew, *dew)
-        self.assertEqual(core.get_temp_and_dew(["MX/01"]), (["MX/01"], None, None))
-
     def test_get_station_and_time(self):
         """
         Tests removal of station (first item) and potential timestamp
@@ -293,7 +272,7 @@ class TestGlobal(BaseTest):
             (["VRB10MPS", "1"], "m/s", ("VRB",), ("10", 10), (None,), []),
             (["VRB20G30KMH", "1"], "km/h", ("VRB",), ("20", 20), ("30", 30), []),
         ):
-            units = structs.Units(**static.NA_UNITS)
+            units = structs.Units(**static.core.NA_UNITS)
             wx, *winds, var = core.get_wind(wx, units)
             self.assertEqual(wx, ["1"])
             for i in range(len(wind)):
@@ -322,7 +301,7 @@ class TestGlobal(BaseTest):
             (["M1000", "1"], "m", ("1000", 1000)),
             (["2KM", "1"], "m", ("2000", 2000)),
         ):
-            units = structs.Units(**static.NA_UNITS)
+            units = structs.Units(**static.core.NA_UNITS)
             wx, vis = core.get_visibility(wx, units)
             self.assertEqual(wx, ["1"])
             self.assert_number(vis, *visibility)
@@ -333,10 +312,10 @@ class TestGlobal(BaseTest):
         Tests that digits are removed after an index but before a non-digit item
         """
         items = ["1", "T", "2", "3", "ODD", "Q", "4", "C"]
-        items, ret = core._get_digit_list(items, 1)
+        items, ret = core.get_digit_list(items, 1)
         self.assertEqual(items, ["1", "ODD", "Q", "4", "C"])
         self.assertEqual(ret, ["2", "3"])
-        items, ret = core._get_digit_list(items, 2)
+        items, ret = core.get_digit_list(items, 2)
         self.assertEqual(items, ["1", "ODD", "C"])
         self.assertEqual(ret, ["4"])
 
@@ -419,7 +398,7 @@ class TestGlobal(BaseTest):
             if ceiling:
                 ceiling = structs.Cloud(None, *ceiling)
             self.assertEqual(
-                static.FLIGHT_RULES[core.get_flight_rules(vis, ceiling)], rule
+                static.core.FLIGHT_RULES[core.get_flight_rules(vis, ceiling)], rule
             )
 
     def test_get_ceiling(self):
@@ -464,22 +443,6 @@ class TestGlobal(BaseTest):
         self.assertEqual(date.dt.day, today.day)
         self.assertEqual(date.dt.hour, today.hour)
 
-
-class TestMetar(BaseTest):
-    def test_get_remarks(self):
-        """
-        Remarks get removed first with the remaining components split into a list
-        """
-        for raw, wx, rmk in (
-            ("1 2 3 A2992 RMK Hi", ["1", "2", "3", "A2992"], "RMK Hi"),
-            ("1 2 3 A2992 Hi", ["1", "2", "3", "A2992"], "Hi"),
-            ("1 2 Q0900 NOSIG", ["1", "2", "Q0900"], "NOSIG"),
-            ("1 2 3 BLU+ Hello", ["1", "2", "3"], "BLU+ Hello"),
-        ):
-            test_wx, test_rmk = core.get_remarks(raw)
-            self.assertEqual(wx, test_wx)
-            self.assertEqual(rmk, test_rmk)
-
     def test_sanitize_report_string(self):
         """
         Tests a function which fixes common mistakes while the report is a string
@@ -487,199 +450,3 @@ class TestMetar(BaseTest):
         line = "KJFK 36010 ? TSFEW004SCT012FEW///CBBKN080 C A V O K A2992"
         fixed = "KJFK 36010   TS FEW004 SCT012 FEW///CB BKN080 CAVOK A2992"
         self.assertEqual(core.sanitize_report_string(line), fixed)
-
-    def test_get_altimeter(self):
-        """
-        Tests that the correct alimeter item gets removed from the end of the wx list
-        """
-        # North American default
-        units = structs.Units(**static.NA_UNITS)
-        for wx, alt in (
-            (["1", "2"], (None,)),
-            (["1", "2", "A2992"], ("2992", 29.92)),
-            (["1", "2", "2992"], ("2992", 29.92)),
-            (["1", "2", "A2992", "Q1000"], ("2992", 29.92)),
-            (["1", "2", "Q1000", "A2992"], ("2992", 29.92)),
-            (["1", "2", "Q1000"], ("1000", 1000)),
-        ):
-            self.assertEqual(units.altimeter, "inHg")
-            retwx, ret_alt = core.get_altimeter(wx, units)
-            self.assertEqual(retwx, ["1", "2"])
-            self.assert_number(ret_alt, *alt)
-        # The last one should have changed the unit
-        self.assertEqual(units.altimeter, "hPa")
-        # International
-        units = structs.Units(**static.IN_UNITS)
-        for wx, alt in (
-            (["1", "2"], (None,)),
-            (["1", "2", "Q.1000"], ("1000", 1000)),
-            (["1", "2", "Q1000/10"], ("1000", 1000)),
-            (["1", "2", "A2992", "Q1000"], ("1000", 1000)),
-            (["1", "2", "Q1000", "A2992"], ("1000", 1000)),
-            (["1", "2", "A2992"], ("2992", 29.92)),
-        ):
-            self.assertEqual(units.altimeter, "hPa")
-            retwx, ret_alt = core.get_altimeter(wx, units, "IN")
-            self.assertEqual(retwx, ["1", "2"])
-            self.assert_number(ret_alt, *alt)
-        # The last one should have changed the unit
-        self.assertEqual(units.altimeter, "inHg")
-
-    def test_get_runway_visibility(self):
-        """
-        Tests extracting runway visibility
-        """
-        for wx, rvis in (
-            (["1", "2"], []),
-            (["1", "2", "R10/10"], ["R10/10"]),
-            (["1", "2", "R02/05", "R34/04"], ["R02/05", "R34/04"]),
-        ):
-            self.assertEqual(core.get_runway_visibility(wx), (["1", "2"], rvis))
-
-
-class TestTaf(unittest.TestCase):
-    def test_get_taf_remarks(self):
-        """
-        Tests that remarks are removed from a TAF report
-        """
-        for txt, rmk in (
-            ("KJFK test", ""),
-            ("KJFK test RMK test", "RMK test"),
-            ("KJFK test FCST test", "FCST test"),
-            ("KJFK test AUTOMATED test", "AUTOMATED test"),
-        ):
-            report, remarks = core.get_taf_remarks(txt)
-            self.assertEqual(report, "KJFK test")
-            self.assertEqual(remarks, rmk)
-
-    def test_sanitize_line(self):
-        """
-        Tests a function which fixes common new-line signifiers in TAF reports
-        """
-        for line in ("1 BEC 1", "1 BE CMG1", "1 BEMG 1"):
-            self.assertEqual(core.sanitize_line(line), "1 BECMG 1")
-        for line in ("1 TEMP0 1", "1 TEMP 1", "1 TEMO1", "1 T EMPO1"):
-            self.assertEqual(core.sanitize_line(line), "1 TEMPO 1")
-        self.assertEqual(core.sanitize_line("1 2 3 4 5"), "1 2 3 4 5")
-
-    def test_is_tempo_or_prob(self):
-        """
-        Tests a function which checks that an item signifies a new time period
-        """
-        for line in (
-            {"type": "TEMPO"},
-            {"probability": 30},
-            {"probability": "PROBNA"},
-            {"type": "FROM", "probability": 30},
-        ):
-            self.assertTrue(core._is_tempo_or_prob(line))
-        for line in ({"type": "FROM"}, {"type": "FROM", "probability": None}):
-            self.assertFalse(core._is_tempo_or_prob(line))
-
-    def test_get_taf_alt_ice_turb(self):
-        """
-        Tests that report global altimeter, icing, and turbulence get removed
-        """
-        for wx, *data in (
-            (["1"], "", [], []),
-            (["1", "512345", "612345"], "", ["612345"], ["512345"]),
-            (["QNH1234", "1", "612345"], core.make_number("1234"), ["612345"], []),
-        ):
-            self.assertEqual(core.get_taf_alt_ice_turb(wx), (["1"], *data))
-
-    def test_starts_new_line(self):
-        """
-        Tests that certain items are identified as new line markers in TAFs
-        """
-        for item in [*static.TAF_NEWLINE, "PROB30", "PROB45", "PROBNA", "FM12345678"]:
-            self.assertTrue(core.starts_new_line(item))
-        for item in ("KJFK", "12345Z", "2010/2020", "FEW060", "RMK"):
-            self.assertFalse(core.starts_new_line(item))
-
-    def test_split_taf(self):
-        """
-        Tests that TAF reports are split into the correct time periods
-        """
-        for report, num in (
-            ("KJFK test", 1),
-            ("KJFK test FM12345678 test", 2),
-            ("KJFK test TEMPO test", 2),
-            ("KJFK test TEMPO test TEMPO test", 3),
-            ("KJFK test PROB30 test TEMPO test", 3),
-            ("KJFK test PROB30 TEMPO test TEMPO test", 3),
-        ):
-            split = core.split_taf(report)
-            self.assertEqual(len(split), num)
-            self.assertEqual(split[0], "KJFK test")
-
-    def test_get_type_and_times(self):
-        """
-        Tests TAF line type, start time, and end time extraction
-        """
-        for wx, *data in (
-            (["1"], "FROM", "", ""),
-            (["INTER", "1"], "INTER", "", ""),
-            (["TEMPO", "0101/0103", "1"], "TEMPO", "0101", "0103"),
-            (["PROB30", "0101/0103", "1"], "PROB30", "0101", "0103"),
-            (["FM120000", "1"], "FROM", "1200", ""),
-            (["FM1200/1206", "1"], "FROM", "1200", "1206"),
-            (["FM120000", "TL120600", "1"], "FROM", "1200", "1206"),
-        ):
-            self.assertEqual(core.get_type_and_times(wx), (["1"], *data))
-
-    def test_find_missing_taf_times(self):
-        """
-        Tests that missing forecast times can be interpretted by 
-        """
-        good_lines = [
-            {"type": "FROM", "start_time": "3021", "end_time": "3023"},
-            {"type": "FROM", "start_time": "3023", "end_time": "0105"},
-            {"type": "FROM", "start_time": "0105", "end_time": "0108"},
-            {"type": "FROM", "start_time": "0108", "end_time": "0114"},
-        ]
-        for line in good_lines:
-            for key in ("start_time", "end_time"):
-                line[key] = core.make_timestamp(line[key])
-        bad_lines = deepcopy(good_lines)
-        bad_lines[0]["start_time"] = None
-        bad_lines[1]["start_time"] = None
-        bad_lines[2]["end_time"] = None
-        bad_lines[3]["end_time"] = None
-        start, end = good_lines[0]["start_time"], good_lines[-1]["end_time"]
-        self.assertEqual(core.find_missing_taf_times(bad_lines, start, end), good_lines)
-
-    def test_get_temp_min_and_max(self):
-        """
-        Tests that temp max and min times are extracted and assigned properly
-        """
-        for wx, *temps in (
-            (["1"], "", ""),
-            (["1", "TX12/1316Z", "TNM03/1404Z"], "TX12/1316Z", "TNM03/1404Z"),
-            (["1", "TM03/1404Z", "T12/1316Z"], "TX12/1316Z", "TNM03/1404Z"),
-        ):
-            self.assertEqual(core.get_temp_min_and_max(wx), (["1"], *temps))
-
-    def test_get_oceania_temp_and_alt(self):
-        """
-        Tests that Oceania-specific elements are identified and removed
-        """
-        items = ["1", "T", "2", "3", "ODD", "Q", "4", "C"]
-        items, tlist, qlist = core.get_oceania_temp_and_alt(items)
-        self.assertEqual(items, ["1", "ODD", "C"])
-        self.assertEqual(tlist, ["2", "3"])
-        self.assertEqual(qlist, ["4"])
-
-    def test_get_wind_shear(self):
-        """
-        Tests extracting wind shear
-        """
-        for wx, shear in (
-            (["1", "2"], None),
-            (["1", "2", "WS020/07040"], "WS020/07040"),
-        ):
-            self.assertEqual(core.get_wind_shear(wx), (["1", "2"], shear))
-
-    # def test_get_taf_flight_rules(self):
-    #     """
-    #     """
-    #     pass

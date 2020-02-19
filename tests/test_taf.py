@@ -12,7 +12,7 @@ from datetime import datetime
 from pathlib import Path
 
 # module
-from avwx import structs
+from avwx import static, structs
 from avwx.current import taf
 from avwx.parsing import core
 
@@ -23,6 +23,158 @@ class TestTaf(unittest.TestCase):
     """
 
     maxDiff = None
+
+    def test_get_taf_remarks(self):
+        """
+        Tests that remarks are removed from a TAF report
+        """
+        for txt, rmk in (
+            ("KJFK test", ""),
+            ("KJFK test RMK test", "RMK test"),
+            ("KJFK test FCST test", "FCST test"),
+            ("KJFK test AUTOMATED test", "AUTOMATED test"),
+        ):
+            report, remarks = taf.get_taf_remarks(txt)
+            self.assertEqual(report, "KJFK test")
+            self.assertEqual(remarks, rmk)
+
+    def test_sanitize_line(self):
+        """
+        Tests a function which fixes common new-line signifiers in TAF reports
+        """
+        for line in ("1 BEC 1", "1 BE CMG1", "1 BEMG 1"):
+            self.assertEqual(taf.sanitize_line(line), "1 BECMG 1")
+        for line in ("1 TEMP0 1", "1 TEMP 1", "1 TEMO1", "1 T EMPO1"):
+            self.assertEqual(taf.sanitize_line(line), "1 TEMPO 1")
+        self.assertEqual(taf.sanitize_line("1 2 3 4 5"), "1 2 3 4 5")
+
+    def test_is_tempo_or_prob(self):
+        """
+        Tests a function which checks that an item signifies a new time period
+        """
+        for line in (
+            {"type": "TEMPO"},
+            {"probability": 30},
+            {"probability": "PROBNA"},
+            {"type": "FROM", "probability": 30},
+        ):
+            self.assertTrue(taf._is_tempo_or_prob(line))
+        for line in ({"type": "FROM"}, {"type": "FROM", "probability": None}):
+            self.assertFalse(taf._is_tempo_or_prob(line))
+
+    def test_get_alt_ice_turb(self):
+        """
+        Tests that report global altimeter, icing, and turbulence get removed
+        """
+        for wx, *data in (
+            (["1"], "", [], []),
+            (["1", "512345", "612345"], "", ["612345"], ["512345"]),
+            (["QNH1234", "1", "612345"], core.make_number("1234"), ["612345"], []),
+        ):
+            self.assertEqual(taf.get_alt_ice_turb(wx), (["1"], *data))
+
+    def test_starts_new_line(self):
+        """
+        Tests that certain items are identified as new line markers in TAFs
+        """
+        for item in [
+            *static.taf.TAF_NEWLINE,
+            "PROB30",
+            "PROB45",
+            "PROBNA",
+            "FM12345678",
+        ]:
+            self.assertTrue(taf.starts_new_line(item))
+        for item in ("KJFK", "12345Z", "2010/2020", "FEW060", "RMK"):
+            self.assertFalse(taf.starts_new_line(item))
+
+    def test_split_taf(self):
+        """
+        Tests that TAF reports are split into the correct time periods
+        """
+        for report, num in (
+            ("KJFK test", 1),
+            ("KJFK test FM12345678 test", 2),
+            ("KJFK test TEMPO test", 2),
+            ("KJFK test TEMPO test TEMPO test", 3),
+            ("KJFK test PROB30 test TEMPO test", 3),
+            ("KJFK test PROB30 TEMPO test TEMPO test", 3),
+        ):
+            split = taf.split_taf(report)
+            self.assertEqual(len(split), num)
+            self.assertEqual(split[0], "KJFK test")
+
+    def test_get_type_and_times(self):
+        """
+        Tests TAF line type, start time, and end time extraction
+        """
+        for wx, *data in (
+            (["1"], "FROM", "", ""),
+            (["INTER", "1"], "INTER", "", ""),
+            (["TEMPO", "0101/0103", "1"], "TEMPO", "0101", "0103"),
+            (["PROB30", "0101/0103", "1"], "PROB30", "0101", "0103"),
+            (["FM120000", "1"], "FROM", "1200", ""),
+            (["FM1200/1206", "1"], "FROM", "1200", "1206"),
+            (["FM120000", "TL120600", "1"], "FROM", "1200", "1206"),
+        ):
+            self.assertEqual(taf.get_type_and_times(wx), (["1"], *data))
+
+    def test_find_missing_taf_times(self):
+        """
+        Tests that missing forecast times can be interpretted by 
+        """
+        good_lines = [
+            {"type": "FROM", "start_time": "3021", "end_time": "3023"},
+            {"type": "FROM", "start_time": "3023", "end_time": "0105"},
+            {"type": "FROM", "start_time": "0105", "end_time": "0108"},
+            {"type": "FROM", "start_time": "0108", "end_time": "0114"},
+        ]
+        for line in good_lines:
+            for key in ("start_time", "end_time"):
+                line[key] = core.make_timestamp(line[key])
+        bad_lines = deepcopy(good_lines)
+        bad_lines[0]["start_time"] = None
+        bad_lines[1]["start_time"] = None
+        bad_lines[2]["end_time"] = None
+        bad_lines[3]["end_time"] = None
+        start, end = good_lines[0]["start_time"], good_lines[-1]["end_time"]
+        self.assertEqual(taf.find_missing_taf_times(bad_lines, start, end), good_lines)
+
+    def test_get_temp_min_and_max(self):
+        """
+        Tests that temp max and min times are extracted and assigned properly
+        """
+        for wx, *temps in (
+            (["1"], "", ""),
+            (["1", "TX12/1316Z", "TNM03/1404Z"], "TX12/1316Z", "TNM03/1404Z"),
+            (["1", "TM03/1404Z", "T12/1316Z"], "TX12/1316Z", "TNM03/1404Z"),
+        ):
+            self.assertEqual(taf.get_temp_min_and_max(wx), (["1"], *temps))
+
+    def test_get_oceania_temp_and_alt(self):
+        """
+        Tests that Oceania-specific elements are identified and removed
+        """
+        items = ["1", "T", "2", "3", "ODD", "Q", "4", "C"]
+        items, tlist, qlist = taf.get_oceania_temp_and_alt(items)
+        self.assertEqual(items, ["1", "ODD", "C"])
+        self.assertEqual(tlist, ["2", "3"])
+        self.assertEqual(qlist, ["4"])
+
+    def test_get_wind_shear(self):
+        """
+        Tests extracting wind shear
+        """
+        for wx, shear in (
+            (["1", "2"], None),
+            (["1", "2", "WS020/07040"], "WS020/07040"),
+        ):
+            self.assertEqual(taf.get_wind_shear(wx), (["1", "2"], shear))
+
+    # def test_get_taf_flight_rules(self):
+    #     """
+    #     """
+    #     pass
 
     def test_parse(self):
         """

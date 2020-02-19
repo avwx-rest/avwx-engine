@@ -4,7 +4,7 @@ Functions for parsing PIREPs
 
 from avwx.current.base import Reports
 from avwx.parsing import core
-from avwx.static import NA_UNITS
+from avwx.static.core import NA_UNITS
 from avwx.structs import (
     Aircraft,
     Cloud,
@@ -202,20 +202,20 @@ def parse(report: str) -> PirepData:
         return None
     sanitized = core.sanitize_report_string(report)
     # NOTE: will need to implement PIREP-specific list clean
-    wxresp = {"raw": report, "sanitized": sanitized, "station": None, "remarks": None}
-    wxdata = sanitized.split("/")
-    wxresp.update(_root(wxdata.pop(0).strip()))
-    for item in wxdata:
+    resp = {"raw": report, "sanitized": sanitized, "station": None, "remarks": None}
+    data = sanitized.split("/")
+    resp.update(_root(data.pop(0).strip()))
+    for item in data:
         if not item or len(item) < 2:
             continue
         tag = item[:2]
         item = item[2:].strip()
         if tag in _handlers:
             key, handler = _handlers[tag]
-            wxresp[key] = handler(item)
+            resp[key] = handler(item)
         elif tag in _dict_handlers:
-            wxresp.update(_dict_handlers[tag](item))
-    return PirepData(**wxresp)
+            resp.update(_dict_handlers[tag](item))
+    return PirepData(**resp)
 
 
 class Pireps(Reports):

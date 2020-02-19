@@ -13,19 +13,15 @@ from itertools import permutations
 from dateutil.relativedelta import relativedelta
 
 # module
-from avwx.static import (
+from avwx.static.core import (
     CARDINALS,
     CLOUD_LIST,
     CLOUD_TRANSLATIONS,
-    FLIGHT_RULES,
     FRACTIONS,
-    METAR_RMK,
     NUMBER_REPL,
     SPECIAL_NUMBERS,
-    TAF_NEWLINE,
-    TAF_NEWLINE_STARTSWITH,
-    TAF_RMK,
 )
+from avwx.static.taf import TAF_NEWLINE, TAF_NEWLINE_STARTSWITH
 from avwx.structs import Cloud, Fraction, Number, Timestamp, Units
 
 
@@ -56,6 +52,18 @@ def is_unknown(val: str) -> bool:
     else:
         return True
     return False
+
+
+def get_digit_list(alist: [str], from_index: int) -> ([str], [str]):
+    """
+    Returns a list of items removed from a given list of strings
+    that are all digits from 'from_index' until hitting a non-digit item
+    """
+    ret = []
+    alist.pop(from_index)
+    while len(alist) > from_index and alist[from_index].isdigit():
+        ret.append(alist.pop(from_index))
+    return alist, ret
 
 
 def unpack_fraction(num: str) -> str:
@@ -179,42 +187,6 @@ def is_timerange(item: str) -> bool:
     )
 
 
-def get_remarks(txt: str) -> ([str], str):
-    """
-    Returns the report split into components and the remarks string
-
-    Remarks can include items like RMK and on, NOSIG and on, and BECMG and on
-    """
-    txt = txt.replace("?", "").strip()
-    # First look for Altimeter in txt
-    alt_index = len(txt) + 1
-    for item in [" A2", " A3", " Q1", " Q0", " Q9"]:
-        index = txt.find(item)
-        if len(txt) - 6 > index > -1 and txt[index + 2 : index + 6].isdigit():
-            alt_index = index
-    # Then look for earliest remarks 'signifier'
-    sig_index = find_first_in_list(txt, METAR_RMK)
-    if sig_index == -1:
-        sig_index = len(txt) + 1
-    if sig_index > alt_index > -1:
-        return txt[: alt_index + 6].strip().split(), txt[alt_index + 7 :]
-    elif alt_index > sig_index > -1:
-        return txt[:sig_index].strip().split(), txt[sig_index + 1 :]
-    return txt.strip().split(), ""
-
-
-def get_taf_remarks(txt: str) -> (str, str):
-    """
-    Returns report and remarks separated if found
-    """
-    remarks_start = find_first_in_list(txt, TAF_RMK)
-    if remarks_start == -1:
-        return txt, ""
-    remarks = txt[remarks_start:]
-    txt = txt[:remarks_start].strip()
-    return txt, remarks
-
-
 STR_REPL = {
     " C A V O K ": " CAVOK ",
     "?": " ",
@@ -289,39 +261,6 @@ def sanitize_report_string(txt: str) -> str:
                     break
                 counter += 1
     return stid + txt
-
-
-LINE_FIXES = {
-    "TEMP0": "TEMPO",
-    "TEMP O": "TEMPO",
-    "TMPO": "TEMPO",
-    "TE MPO": "TEMPO",
-    "TEMP ": "TEMPO ",
-    "T EMPO": "TEMPO",
-    " EMPO": " TEMPO",
-    "TEMO": "TEMPO",
-    "BECM G": "BECMG",
-    "BEMCG": "BECMG",
-    "BE CMG": "BECMG",
-    "B ECMG": "BECMG",
-    " BEC ": " BECMG ",
-    "BCEMG": "BECMG",
-    "BEMG": "BECMG",
-}
-
-
-def sanitize_line(txt: str) -> str:
-    """
-    Fixes common mistakes with 'new line' signifiers so that they can be recognized
-    """
-    for key, fix in LINE_FIXES.items():
-        txt = txt.replace(key, fix)
-    # Fix when space is missing following new line signifiers
-    for item in ["BECMG", "TEMPO"]:
-        if item in txt and item + " " not in txt:
-            index = txt.find(item) + len(item)
-            txt = txt[:index] + " " + txt[index:]
-    return txt
 
 
 def extra_space_exists(str1: str, str2: str) -> bool:
@@ -555,112 +494,6 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> [str
     return wxdata
 
 
-def get_runway_visibility(wxdata: [str]) -> ([str], [str]):
-    """
-    Returns the report list and the remove runway visibility list
-    """
-    runway_vis = []
-    for i, item in reversed(list(enumerate(wxdata))):
-        if (
-            len(item) > 4
-            and item[0] == "R"
-            and (item[3] == "/" or item[4] == "/")
-            and item[1:3].isdigit()
-        ):
-            runway_vis.append(wxdata.pop(i))
-    runway_vis.sort()
-    return wxdata, runway_vis
-
-
-def get_wind_shear(wxdata: [str]) -> ([str], str):
-    """
-    Returns the report list and the remove wind shear
-    """
-    shear = None
-    for i, item in reversed(list(enumerate(wxdata))):
-        if len(item) > 6 and item.startswith("WS") and item[5] == "/":
-            shear = wxdata.pop(i).replace("KT", "")
-    return wxdata, shear
-
-
-def get_altimeter(wxdata: [str], units: Units, version: str = "NA") -> ([str], Number):
-    """
-    Returns the report list and the removed altimeter item
-
-    Version is 'NA' (North American / default) or 'IN' (International)
-    """
-    if not wxdata:
-        return wxdata, None
-    altimeter = ""
-    target = wxdata[-1]
-    # Handle QNH prefix:
-    buf = 1
-    if target.startswith("QNH"):
-        buf = 3
-        target = target.replace("QNH", "Q")
-    if version == "NA":
-        # Version target
-        if target[0] == "A":
-            altimeter = wxdata.pop()[buf:]
-        # Other version but prefer normal if available
-        elif target[0] == "Q":
-            if len(wxdata) > 1 and wxdata[-2][0] == "A":
-                wxdata.pop()
-                altimeter = wxdata.pop()[buf:]
-            else:
-                units.altimeter = "hPa"
-                altimeter = wxdata.pop()[buf:].lstrip(".")
-        # Else grab the digits
-        elif len(target) == 4 and target.isdigit():
-            altimeter = wxdata.pop()
-    elif version == "IN":
-        # Version target
-        if target[0] == "Q":
-            altimeter = wxdata.pop()[buf:].lstrip(".")
-            if "/" in altimeter:
-                altimeter = altimeter[: altimeter.find("/")]
-        # Other version but prefer normal if available
-        elif target[0] == "A":
-            if len(wxdata) > 1 and wxdata[-2][0] == "Q":
-                wxdata.pop()
-                altimeter = wxdata.pop()[buf:]
-            else:
-                units.altimeter = "inHg"
-                altimeter = wxdata.pop()[buf:]
-    # Some stations report both, but we only need one
-    if wxdata and (wxdata[-1][0] == "A" or wxdata[-1][0] == "Q"):
-        wxdata.pop()
-    # convert to Number
-    altimeter = altimeter.replace("/", "").strip("AQ")
-    if not altimeter:
-        return wxdata, None
-    if units.altimeter == "inHg":
-        value = altimeter[:2] + "." + altimeter[2:]
-    else:
-        value = altimeter
-    return wxdata, make_number(value, altimeter)
-
-
-def get_taf_alt_ice_turb(wxdata: [str]) -> ([str], str, [str], [str]):
-    """
-    Returns the report list and removed: Altimeter string, Icing list, Turbulence list
-    """
-    altimeter = ""
-    icing, turbulence = [], []
-    for i, item in reversed(list(enumerate(wxdata))):
-        if len(item) > 6 and item.startswith("QNH") and item[3:7].isdigit():
-            altimeter = wxdata.pop(i)[3:7]
-            if altimeter[0] in ("2", "3"):
-                altimeter = altimeter[:2] + "." + altimeter[2:]
-            altimeter = make_number(altimeter)
-        elif item.isdigit():
-            if item[0] == "6":
-                icing.append(wxdata.pop(i))
-            elif item[0] == "5":
-                turbulence.append(wxdata.pop(i))
-    return wxdata, altimeter, icing, turbulence
-
-
 def is_possible_temp(temp: str) -> bool:
     """
     Returns True if all characters are digits or 'M' (for minus)
@@ -669,34 +502,6 @@ def is_possible_temp(temp: str) -> bool:
         if not (char.isdigit() or char == "M"):
             return False
     return True
-
-
-def get_temp_and_dew(wxdata: str) -> ([str], Number, Number):
-    """
-    Returns the report list and removed temperature and dewpoint strings
-    """
-    for i, item in reversed(list(enumerate(wxdata))):
-        if "/" in item:
-            # ///07
-            if item[0] == "/":
-                item = "/" + item.lstrip("/")
-            # 07///
-            elif item[-1] == "/":
-                item = item.rstrip("/") + "/"
-            tempdew = item.split("/")
-            if len(tempdew) != 2:
-                continue
-            valid = True
-            for j, temp in enumerate(tempdew):
-                if temp in ["MM", "XX"]:
-                    tempdew[j] = ""
-                elif not is_possible_temp(temp):
-                    valid = False
-                    break
-            if valid:
-                wxdata.pop(i)
-                return (wxdata, *[make_number(t) for t in tempdew])
-    return wxdata, None, None
 
 
 def get_station_and_time(wxdata: [str]) -> ([str], str, str):
@@ -842,177 +647,6 @@ def get_visibility(wxdata: [str], units: Units) -> ([str], Number):
     return wxdata, make_number(visibility)
 
 
-def starts_new_line(item: str) -> bool:
-    """
-    Returns True if the given element should start a new report line
-    """
-    if item in TAF_NEWLINE:
-        return True
-    else:
-        for start in TAF_NEWLINE_STARTSWITH:
-            if item.startswith(start):
-                return True
-    return False
-
-
-def split_taf(txt: str) -> [str]:
-    """
-    Splits a TAF report into each distinct time period
-    """
-    lines = []
-    split = txt.split()
-    last_index = 0
-    for i, item in enumerate(split):
-        if starts_new_line(item) and i != 0 and not split[i - 1].startswith("PROB"):
-            lines.append(" ".join(split[last_index:i]))
-            last_index = i
-    lines.append(" ".join(split[last_index:]))
-    return lines
-
-
-# TAF line report type and start/end times
-def get_type_and_times(wxdata: [str]) -> ([str], str, str, str):
-    """
-    Returns the report list and removed:
-    Report type string, start time string, end time string
-    """
-    report_type, start_time, end_time = "FROM", "", ""
-    if wxdata:
-        # TEMPO, BECMG, INTER
-        if wxdata[0] in TAF_NEWLINE:
-            report_type = wxdata.pop(0)
-        # PROB[30,40]
-        elif len(wxdata[0]) == 6 and wxdata[0].startswith("PROB"):
-            report_type = wxdata.pop(0)
-    if wxdata:
-        # 1200/1306
-        if (
-            len(wxdata[0]) == 9
-            and wxdata[0][4] == "/"
-            and wxdata[0][:4].isdigit()
-            and wxdata[0][5:].isdigit()
-        ):
-            start_time, end_time = wxdata.pop(0).split("/")
-        # FM120000
-        elif len(wxdata[0]) > 7 and wxdata[0].startswith("FM"):
-            report_type = "FROM"
-            if (
-                "/" in wxdata[0]
-                and wxdata[0][2:].split("/")[0].isdigit()
-                and wxdata[0][2:].split("/")[1].isdigit()
-            ):
-                start_time, end_time = wxdata.pop(0)[2:].split("/")
-            elif wxdata[0][2:8].isdigit():
-                start_time = wxdata.pop(0)[2:6]
-            # TL120600
-            if (
-                wxdata
-                and len(wxdata[0]) > 7
-                and wxdata[0].startswith("TL")
-                and wxdata[0][2:8].isdigit()
-            ):
-                end_time = wxdata.pop(0)[2:6]
-    return wxdata, report_type, start_time, end_time
-
-
-def _is_tempo_or_prob(line: dict) -> bool:
-    """
-    Returns True if report type is TEMPO or non-null probability
-    """
-    return line.get("type") == "TEMPO" or line.get("probability") is not None
-
-
-def _get_next_time(lines: [dict], target: str) -> str:
-    """
-    Returns the next FROM target value or empty
-    """
-    for line in lines:
-        if line[target] and not _is_tempo_or_prob(line):
-            return line[target]
-    return ""
-
-
-def find_missing_taf_times(lines: [dict], start: Timestamp, end: Timestamp) -> [dict]:
-    """
-    Fix any missing time issues (except for error/empty lines)
-    """
-    if not lines:
-        return lines
-    # Assign start time
-    lines[0]["start_time"] = start
-    # Fix other times
-    last_fm_line = 0
-    for i, line in enumerate(lines):
-        if _is_tempo_or_prob(line):
-            continue
-        last_fm_line = i
-        # Search remaining lines to fill empty end or previous for empty start
-        for target, other, direc in (("start", "end", -1), ("end", "start", 1)):
-            target += "_time"
-            if not line[target]:
-                line[target] = _get_next_time(lines[i::direc][1:], other + "_time")
-    # Special case for final forcast
-    if last_fm_line:
-        lines[last_fm_line]["end_time"] = end
-    # Reset original end time if still empty
-    if lines and not lines[0]["end_time"]:
-        lines[0]["end_time"] = end
-    return lines
-
-
-def get_temp_min_and_max(wxlist: [str]) -> ([str], str, str):
-    """
-    Pull out Max temp at time and Min temp at time items from wx list
-    """
-    temp_max, temp_min = "", ""
-    for i, item in reversed(list(enumerate(wxlist))):
-        if len(item) > 6 and item[0] == "T" and "/" in item:
-            # TX12/1316Z
-            if item[1] == "X":
-                temp_max = wxlist.pop(i)
-            # TNM03/1404Z
-            elif item[1] == "N":
-                temp_min = wxlist.pop(i)
-            # TM03/1404Z T12/1316Z -> Will fix TN/TX
-            elif item[1] == "M" or item[1].isdigit():
-                if temp_min:
-                    if int(temp_min[2 : temp_min.find("/")].replace("M", "-")) > int(
-                        item[1 : item.find("/")].replace("M", "-")
-                    ):
-                        temp_max = "TX" + temp_min[2:]
-                        temp_min = "TN" + item[1:]
-                    else:
-                        temp_max = "TX" + item[1:]
-                else:
-                    temp_min = "TN" + item[1:]
-                wxlist.pop(i)
-    return wxlist, temp_max, temp_min
-
-
-def _get_digit_list(alist: [str], from_index: int) -> ([str], [str]):
-    """
-    Returns a list of items removed from a given list of strings
-    that are all digits from 'from_index' until hitting a non-digit item
-    """
-    ret = []
-    alist.pop(from_index)
-    while len(alist) > from_index and alist[from_index].isdigit():
-        ret.append(alist.pop(from_index))
-    return alist, ret
-
-
-def get_oceania_temp_and_alt(wxlist: [str]) -> ([str], [str], [str]):
-    """
-    Get Temperature and Altimeter lists for Oceania TAFs
-    """
-    tlist, qlist = [], []
-    if "T" in wxlist:
-        wxlist, tlist = _get_digit_list(wxlist, wxlist.index("T"))
-    if "Q" in wxlist:
-        wxlist, qlist = _get_digit_list(wxlist, wxlist.index("Q"))
-    return wxlist, tlist, qlist
-
-
 def sanitize_cloud(cloud: str) -> str:
     """
     Fix rare cloud layer issues
@@ -1117,30 +751,6 @@ def get_flight_rules(vis: Number, ceiling: Cloud) -> int:
             return 2  # IFR
         return 1  # MVFR
     return 0  # VFR
-
-
-def get_taf_flight_rules(lines: [dict]) -> [dict]:
-    """
-    Get flight rules by looking for missing data in prior reports
-    """
-    for i, line in enumerate(lines):
-        temp_vis, temp_cloud = line["visibility"], line["clouds"]
-        for report in reversed(lines[:i]):
-            if not _is_tempo_or_prob(report):
-                if not temp_vis:
-                    temp_vis = report["visibility"]
-                if "SKC" in report["other"] or "CLR" in report["other"]:
-                    temp_cloud = "temp-clear"
-                elif temp_cloud == []:
-                    temp_cloud = report["clouds"]
-                if temp_vis and temp_cloud != []:
-                    break
-        if temp_cloud == "temp-clear":
-            temp_cloud = []
-        line["flight_rules"] = FLIGHT_RULES[
-            get_flight_rules(temp_vis, get_ceiling(temp_cloud))
-        ]
-    return lines
 
 
 def get_ceiling(clouds: [Cloud]) -> Cloud:

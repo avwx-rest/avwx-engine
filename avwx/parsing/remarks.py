@@ -4,12 +4,8 @@ Contains functions for handling and translating remarks
 
 # module
 from avwx.parsing import core
-from avwx.static import (
-    PRESSURE_TENDENCIES,
-    REMARKS_ELEMENTS,
-    REMARKS_GROUPS,
-    WX_TRANSLATIONS,
-)
+from avwx.static.core import REMARKS_ELEMENTS, REMARKS_GROUPS, WX_TRANSLATIONS
+from avwx.static.taf import PRESSURE_TENDENCIES
 from avwx.structs import RemarksData
 
 

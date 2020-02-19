@@ -11,7 +11,7 @@ from geopy.distance import great_circle, Distance
 
 # module
 from avwx.exceptions import BadStation
-from avwx.static import IN_REGIONS, M_IN_REGIONS, M_NA_REGIONS, NA_REGIONS
+from avwx.static.core import IN_REGIONS, M_IN_REGIONS, M_NA_REGIONS, NA_REGIONS
 from avwx.structs import _LazyLoad
 
 # We catch this import error only if user attempts coord lookup

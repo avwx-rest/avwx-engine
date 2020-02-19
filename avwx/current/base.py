@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 # module
 from avwx.base import AVWXBase
 from avwx.service import get_service, NOAA_ADDS
-from avwx.static import NA_UNITS
+from avwx.static.core import NA_UNITS
 from avwx.station import Station
 from avwx.structs import ReportData, ReportTrans, Units
 

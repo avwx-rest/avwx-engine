@@ -95,7 +95,7 @@ class TestShared(unittest.TestCase):
         """
         Tests availability of shared values between the METAR and TAF translations
         """
-        units = structs.Units(**static.NA_UNITS)
+        units = structs.Units(**static.core.NA_UNITS)
         data = structs.SharedData(
             altimeter=core.make_number("2992"),
             clouds=[core.make_cloud("OVC060")],
@@ -194,7 +194,7 @@ class TestMetar(unittest.TestCase):
         """
         Tests end-to-end METAR translation
         """
-        units = structs.Units(**static.NA_UNITS)
+        units = structs.Units(**static.core.NA_UNITS)
         data = {
             "altimeter": core.make_number("29.92", "2992"),
             "clouds": [core.make_cloud("BKN015CB")],
@@ -287,7 +287,7 @@ class TestTaf(unittest.TestCase):
         """
         Tests end-to-end TAF translation
         """
-        units = structs.Units(**static.NA_UNITS)
+        units = structs.Units(**static.core.NA_UNITS)
         line_data = {
             "altimeter": core.make_number("29.92", "2992"),
             "clouds": [core.make_cloud("BKN015CB")],

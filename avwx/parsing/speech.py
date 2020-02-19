@@ -5,7 +5,7 @@ Currently only supports METAR
 
 # module
 from avwx.parsing import core, translate
-from avwx.static import SPOKEN_UNITS
+from avwx.static.core import SPOKEN_UNITS
 from avwx.structs import MetarData, Number, TafData, TafLineData, Timestamp, Units
 
 
