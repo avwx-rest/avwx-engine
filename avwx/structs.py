@@ -234,3 +234,49 @@ class PirepData(ReportData):
 @dataclass
 class AirepData(ReportData):
     pass
+
+
+@dataclass
+class GfsPeriod:
+    time: Timestamp
+    temperature: Number
+    dewpoint: Number
+    cloud: str
+    precip_chance_12: Number = None
+    precip_amount_12: Number = None
+    thunder_storm_12: Number = None
+    severe_storm_12: Number = None
+    precip_type: str = None
+
+
+@dataclass
+class MavPeriod(GfsPeriod):
+    wind_direction: Number = None
+    wind_speed: Number = None
+    precip_chance_6: Number = None
+    precip_amount_6: Number = None
+    thunder_storm_6: Number = None
+    severe_storm_6: Number = None
+    freezing_precip: Number = None
+    snow: Number = None
+    ceiling: Number = None
+    visibility: Number = None
+    vis_obstruction: str = None
+
+
+@dataclass
+class MexPeriod(GfsPeriod):
+    precip_chance_24: Number = None
+    precip_amount_24: Number = None
+    thunder_storm_24: Number = None
+    severe_storm_24: Number = None
+
+
+@dataclass
+class MavData(ReportData):
+    forecast: [MavPeriod]
+
+
+@dataclass
+class MexData(ReportData):
+    forecast: [MexPeriod]
