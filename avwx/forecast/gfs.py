@@ -1,4 +1,5 @@
 """
+Parsing for NOAA GFS forecasts
 """
 
 # stdlib
@@ -12,6 +13,7 @@ from avwx.structs import MavData, MavPeriod, MexData, MexPeriod, Timestamp
 
 def _split_line(line: str, size: int = 3, prefix: int = 4, strip: str = " |") -> [str]:
     """
+    Evenly split a string while stripping elements
     """
     line = line[prefix:]
     ret = []
@@ -50,6 +52,7 @@ def _find_time_periods(line: [str], timestamp: datetime) -> [dict]:
 
 def _init_parse(report: str) -> (dict, [str]):
     """
+    Returns the meta data and lines from a report string
     """
     report = report.strip()
     lines = report.split("\n")
@@ -64,18 +67,21 @@ def _init_parse(report: str) -> (dict, [str]):
 
 def _numbers(line: str, size: int = 3, postfix: str = "") -> ["Number"]:
     """
+    Parse line into Number objects
     """
     return [core.make_number(item + postfix) for item in _split_line(line, size=size)]
 
 
 def _wind_direction(line: str, size: int = 3) -> ["Number"]:
     """
+    Parse wind direction line into Number objects
     """
     return _numbers(line, size, postfix="0")
 
 
-def _thunder(line: str, size: int = 3):
+def _thunder(line: str, size: int = 3) -> list:
     """
+    Parse thunder line into Number tuples
     """
     ret = []
     previous = None
@@ -103,12 +109,7 @@ _HANDLERS = {
     "Q06": ("precip_amount_6", _numbers),
     "Q12": ("precip_amount_12", _numbers),
     "Q24": ("precip_amount_24", _numbers),
-    "POZ": ("freezing_precip", _numbers),
-    "POS": ("snow", _numbers),
     "TYP": ("precip_type", _split_line),
-    "CIG": ("ceiling", _numbers),
-    "VIS": ("visibility", _numbers),
-    "OBV": ("vis_obstruction", _split_line),
 }
 
 
@@ -116,16 +117,28 @@ _HANDLERS = {
 _SHORT_HANDLERS = {
     "T06": ("thunder_storm_6", "severe_storm_6", _thunder),
     "T12": ("thunder_storm_12", "severe_storm_12", _thunder),
+    "POZ": ("freezing_precip", _numbers),
+    "POS": ("snow", _numbers),
+    "CIG": ("ceiling", _numbers),
+    "VIS": ("visibility", _numbers),
+    "OBV": ("vis_obstruction", _split_line),
 }
 
 _LONG_HANDLERS = {
     "T12": ("thunder_storm_12", _numbers),
     "T24": ("thunder_storm_24", _numbers),
+    "PZP": ("freezing_precip", _numbers),
+    "PRS": ("rain_snow_mix", _numbers),
+    "PSN": ("snow", _numbers),
+    "SNW": ("snow_amount_24", _numbers),
 }
 
 
 def _parse_lines(periods: [dict], lines: [str], size: int = 3, handlers: dict = None):
     """
+    Add data to time periods by parsing each line (element type)
+
+    Adds data in place
     """
     if handlers is not None:
         handlers = {**_HANDLERS, **handlers}
@@ -149,8 +162,9 @@ def _parse_lines(periods: [dict], lines: [str], size: int = 3, handlers: dict = 
                 periods[i][keys[0]] = value
 
 
-def parse_short(report: str) -> MavData:
+def parse_mav(report: str) -> MavData:
     """
+    Parser for GFS MAV reports
     """
     if not report:
         return
@@ -162,34 +176,42 @@ def parse_short(report: str) -> MavData:
     return MavData(**data)
 
 
-def parse_long(report: str):
+def parse_mex(report: str) -> MexData:
     """
+    Parser for GFS MEX reports
     """
     if not report:
         return
     data, lines = _init_parse(report)
+    # Remove CLIMO data for now
+    if len(lines) >= 3:
+        climo_index = lines[2].find(" CLIMO")
+        if climo_index >= 0:
+            lines = [l[:climo_index] for l in lines]
     periods = _split_line(lines[1], size=4, prefix=4)
     periods = _find_time_periods(periods, data["time"].dt)
     _parse_lines(periods, lines[3:], size=4, handlers=_LONG_HANDLERS)
-    data["forecast"] = periods
-    return data
+    data["forecast"] = [MexPeriod(**p) for p in periods]
+    return MexData(**data)
 
 
 class Mav(Forecast):
     """
+    Class to handle GFS MAV report data
     """
 
     report_type = "mav"
 
     def _post_update(self):
-        self.data = parse_short(self.raw)
+        self.data = parse_mav(self.raw)
 
 
 class Mex(Forecast):
     """
+    Class to handle GFS MAV report data
     """
 
     report_type = "mex"
 
     def _post_update(self):
-        self.data = parse_long(self.raw)
+        self.data = parse_mex(self.raw)

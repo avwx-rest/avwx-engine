@@ -246,7 +246,9 @@ class GfsPeriod:
     precip_amount_12: Number = None
     thunder_storm_12: Number = None
     severe_storm_12: Number = None
+    freezing_precip: Number = None
     precip_type: str = None
+    snow: Number = None
 
 
 @dataclass
@@ -257,8 +259,6 @@ class MavPeriod(GfsPeriod):
     precip_amount_6: Number = None
     thunder_storm_6: Number = None
     severe_storm_6: Number = None
-    freezing_precip: Number = None
-    snow: Number = None
     ceiling: Number = None
     visibility: Number = None
     vis_obstruction: str = None
@@ -270,6 +270,8 @@ class MexPeriod(GfsPeriod):
     precip_amount_24: Number = None
     thunder_storm_24: Number = None
     severe_storm_24: Number = None
+    rain_snow_mix: Number = None
+    snow_amount_24: Number = None
 
 
 @dataclass

@@ -39,6 +39,7 @@ CLOUD = {
     "CL": "clear",
     "FW": "few",
     "SC": "scattered",
+    "PC": "partly cloudy",
     "BK": "broken",
     "OV": "overcast",
 }
@@ -58,7 +59,8 @@ PRECIPITATION_AMOUNT = {
 PRECIPITATION_TYPE = {
     "S": "pure snow or snow grains",
     "Z": "freezing rain/drizzle, ice pellets, or anything mixed with freezing precipitation",
-    "R": "pure rain/drizzle or rain mixed with snow",
+    "RS": "rain/drizzle and snow mixed",
+    "R": "pure rain/drizzle",
 }
 
 #:
