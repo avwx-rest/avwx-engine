@@ -4,11 +4,13 @@ Parsing for NOAA GFS forecasts
 
 # stdlib
 from datetime import datetime, timedelta, timezone
+from typing import Callable
 
 # module
+import avwx.static.gfs as static
 from avwx.forecast.base import Forecast
 from avwx.parsing import core
-from avwx.structs import MavData, MavPeriod, MexData, MexPeriod, Timestamp
+from avwx.structs import Code, MavData, MavPeriod, MexData, MexPeriod, Timestamp
 
 
 def _split_line(line: str, size: int = 3, prefix: int = 4, strip: str = " |") -> [str]:
@@ -97,19 +99,40 @@ def _thunder(line: str, size: int = 3) -> list:
     return ret
 
 
+def _code(mapping: dict) -> Callable:
+    """
+    Generates a conditional code mapping function
+    """
+
+    def func(line: str, size: int = 3) -> list:
+        ret = []
+        for key in _split_line(line, size=size):
+            try:
+                value = Code(key, mapping[key])
+            except KeyError:
+                value = key or None
+            ret.append(value)
+        return ret
+
+    return func
+
+
+_precip_amount = _code(static.PRECIPITATION_AMOUNT)
+
+
 _HANDLERS = {
     "TMP": ("temperature", _numbers),
     "DPT": ("dewpoint", _numbers),
-    "CLD": ("cloud", _split_line),
+    "CLD": ("cloud", _code(static.CLOUD)),
     "WDR": ("wind_direction", _wind_direction),
     "WSP": ("wind_speed", _numbers),
     "P06": ("precip_chance_6", _numbers),
     "P12": ("precip_chance_12", _numbers),
     "P24": ("precip_chance_24", _numbers),
-    "Q06": ("precip_amount_6", _numbers),
-    "Q12": ("precip_amount_12", _numbers),
-    "Q24": ("precip_amount_24", _numbers),
-    "TYP": ("precip_type", _split_line),
+    "Q06": ("precip_amount_6", _precip_amount),
+    "Q12": ("precip_amount_12", _precip_amount),
+    "Q24": ("precip_amount_24", _precip_amount),
+    "TYP": ("precip_type", _code(static.PRECIPITATION_TYPE)),
 }
 
 
@@ -119,9 +142,9 @@ _SHORT_HANDLERS = {
     "T12": ("thunder_storm_12", "severe_storm_12", _thunder),
     "POZ": ("freezing_precip", _numbers),
     "POS": ("snow", _numbers),
-    "CIG": ("ceiling", _numbers),
-    "VIS": ("visibility", _numbers),
-    "OBV": ("vis_obstruction", _split_line),
+    "CIG": ("ceiling", _code(static.CEILING_HEIGHT)),
+    "VIS": ("visibility", _code(static.VISIBILITY)),
+    "OBV": ("vis_obstruction", _code(static.VISIBILITY_OBSTRUCTION)),
 }
 
 _LONG_HANDLERS = {
@@ -130,7 +153,7 @@ _LONG_HANDLERS = {
     "PZP": ("freezing_precip", _numbers),
     "PRS": ("rain_snow_mix", _numbers),
     "PSN": ("snow", _numbers),
-    "SNW": ("snow_amount_24", _numbers),
+    "SNW": ("snow_amount_24", _code(static.SNOWFALL_AMOUNT)),
 }
 
 

@@ -8,6 +8,7 @@ import unittest
 
 # module
 from avwx import static, structs
+from avwx.current.base import get_wx_codes
 from avwx.parsing import core, speech
 
 
@@ -92,13 +93,12 @@ class TestSpeech(unittest.TestCase):
                 speech.altimeter(core.make_number(alt), unit), "Altimeter " + spoken
             )
 
-    def test_other(self):
+    def test_wx_codes(self):
         """
-        Tests converting wxcodes into a spoken string
+        Tests converting WX codes into a spoken string
         """
-        for code, spoken in (
+        for codes, spoken in (
             ([], ""),
-            (["R03/03002V03"], "R03/03002V03"),
             (
                 ["+RATS", "VCFC"],
                 "Heavy Rain Thunderstorm. Funnel Cloud in the Vicinity",
@@ -108,7 +108,8 @@ class TestSpeech(unittest.TestCase):
                 "Light Hail. Freezing Fog. Patchy Blowing Snow",
             ),
         ):
-            self.assertEqual(speech.other(code), spoken)
+            codes = get_wx_codes(codes)[1]
+            self.assertEqual(speech.wx_codes(codes), spoken)
 
     def test_metar(self):
         """
@@ -119,7 +120,7 @@ class TestSpeech(unittest.TestCase):
             "altimeter": core.make_number("2992"),
             "clouds": [core.make_cloud("BKN015CB")],
             "dewpoint": core.make_number("M01"),
-            "other": ["+RA"],
+            "other": [],
             "temperature": core.make_number("03"),
             "visibility": core.make_number("3"),
             "wind_direction": core.make_number("360"),
@@ -129,6 +130,7 @@ class TestSpeech(unittest.TestCase):
                 core.make_number("340"),
                 core.make_number("020", speak="020"),
             ],
+            "wx_codes": get_wx_codes(["+RA"])[1],
         }
         data.update(
             {
@@ -211,7 +213,7 @@ class TestSpeech(unittest.TestCase):
             "clouds": [core.make_cloud("BKN015CB")],
             "end_time": core.make_timestamp("1206"),
             "icing": ["611005"],
-            "other": ["+RA"],
+            "other": [],
             "start_time": core.make_timestamp("1202"),
             "turbulence": ["540553"],
             "type": "FROM",
@@ -220,6 +222,7 @@ class TestSpeech(unittest.TestCase):
             "wind_gust": core.make_number("20"),
             "wind_shear": "WS020/07040KT",
             "wind_speed": core.make_number("12"),
+            "wx_codes": get_wx_codes(["+RA"])[1],
         }
         line.update(
             {k: None for k in ("flight_rules", "probability", "raw", "sanitized")}

@@ -206,6 +206,9 @@ class NOAA_ADDS(Service):
 
 
 class NOAA_FTP(Service):
+    """
+    Requests data from NOAA via FTP
+    """
 
     url = "https://tgftp.nws.noaa.gov/data/{}/{}/stations/{}.TXT"
 
@@ -225,6 +228,9 @@ class NOAA_FTP(Service):
 
 
 class NOAA_Scrape(Service):
+    """
+    Requests data from NOAA via site scraping
+    """
 
     url = "https://aviationweather.gov/{}/data"
 

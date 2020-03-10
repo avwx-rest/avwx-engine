@@ -96,6 +96,12 @@ class Timestamp:
 
 
 @dataclass
+class Code:
+    repr: str
+    value: str
+
+
+@dataclass
 class Cloud:
     repr: str
     type: str = None
@@ -138,6 +144,7 @@ class SharedData:
     wind_direction: Number
     wind_gust: Number
     wind_speed: Number
+    wx_codes: [Code]
 
 
 @dataclass
@@ -176,7 +183,7 @@ class TafData(ReportData):
 class ReportTrans:
     altimeter: str
     clouds: str
-    other: str
+    wx_codes: str
     visibility: str
 
 
@@ -241,13 +248,13 @@ class GfsPeriod:
     time: Timestamp
     temperature: Number
     dewpoint: Number
-    cloud: str
+    cloud: Code
     precip_chance_12: Number = None
-    precip_amount_12: Number = None
+    precip_amount_12: Code = None
     thunder_storm_12: Number = None
     severe_storm_12: Number = None
     freezing_precip: Number = None
-    precip_type: str = None
+    precip_type: Code = None
     snow: Number = None
 
 
@@ -256,22 +263,22 @@ class MavPeriod(GfsPeriod):
     wind_direction: Number = None
     wind_speed: Number = None
     precip_chance_6: Number = None
-    precip_amount_6: Number = None
+    precip_amount_6: Code = None
     thunder_storm_6: Number = None
     severe_storm_6: Number = None
-    ceiling: Number = None
-    visibility: Number = None
-    vis_obstruction: str = None
+    ceiling: Code = None
+    visibility: Code = None
+    vis_obstruction: Code = None
 
 
 @dataclass
 class MexPeriod(GfsPeriod):
     precip_chance_24: Number = None
-    precip_amount_24: Number = None
+    precip_amount_24: Code = None
     thunder_storm_24: Number = None
     severe_storm_24: Number = None
     rain_snow_mix: Number = None
-    snow_amount_24: Number = None
+    snow_amount_24: Code = None
 
 
 @dataclass
@@ -282,3 +289,40 @@ class MavData(ReportData):
 @dataclass
 class MexData(ReportData):
     forecast: [MexPeriod]
+
+
+# @dataclass
+# class GfsPeriodTrans:
+#     temperature: str
+#     dewpoint: str
+#     cloud: str
+#     precip_chance_12: str
+#     precip_amount_12: str
+#     thunder_storm_12: str
+#     severe_storm_12: str
+#     freezing_precip: str
+#     precip_type: str
+#     snow: str
+
+
+# @dataclass
+# class MavPeriodTrans(GfsPeriodTrans):
+#     wind_direction: str
+#     wind_speed: str
+#     precip_chance_6: str
+#     precip_amount_6: str
+#     thunder_storm_6: str
+#     severe_storm_6: str
+#     ceiling: str
+#     visibility: str
+#     vis_obstruction: str
+
+
+# @dataclass
+# class MexPeriodTrans(GfsPeriodTrans):
+#     precip_chance_24: str
+#     precip_amount_24: str
+#     thunder_storm_24: str
+#     severe_storm_24: str
+#     rain_snow_mix: str
+#     snow_amount_24: str

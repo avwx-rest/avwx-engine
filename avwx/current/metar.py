@@ -3,8 +3,9 @@ Contains METAR-specific functions for report parsing
 """
 
 # module
-from avwx.current.base import Report
-from avwx.parsing import core, remarks, speech, summary, translate
+from avwx.current.base import Report, get_wx_codes
+from avwx.parsing import core, remarks, speech, summary
+from avwx.parsing.translate.metar import translate_metar
 from avwx.static.core import FLIGHT_RULES, IN_UNITS, NA_UNITS
 from avwx.static.metar import METAR_RMK
 from avwx.station import uses_na_format, valid_station
@@ -30,7 +31,7 @@ def get_remarks(txt: str) -> ([str], str):
         sig_index = len(txt) + 1
     if sig_index > alt_index > -1:
         return txt[: alt_index + 6].strip().split(), txt[alt_index + 7 :]
-    elif alt_index > sig_index > -1:
+    if alt_index > sig_index > -1:
         return txt[:sig_index].strip().split(), txt[sig_index + 1 :]
     return txt.strip().split(), ""
 
@@ -171,12 +172,11 @@ def parse_na(report: str) -> (MetarData, Units):
     ) = core.get_wind(wxdata, units)
     wxdata, wxresp["altimeter"] = get_altimeter(wxdata, units, "NA")
     wxdata, wxresp["visibility"] = core.get_visibility(wxdata, units)
-    wxresp["other"], wxresp["temperature"], wxresp["dewpoint"] = get_temp_and_dew(
-        wxdata
-    )
+    wxdata, wxresp["temperature"], wxresp["dewpoint"] = get_temp_and_dew(wxdata)
     condition = core.get_flight_rules(
         wxresp["visibility"], core.get_ceiling(wxresp["clouds"])
     )
+    wxresp["other"], wxresp["wx_codes"] = get_wx_codes(wxdata)
     wxresp["flight_rules"] = FLIGHT_RULES[condition]
     wxresp["remarks_info"] = remarks.parse(wxresp["remarks"])
     wxresp["time"] = core.make_timestamp(wxresp["time"])
@@ -212,12 +212,11 @@ def parse_in(report: str) -> (MetarData, Units):
         wxdata.remove("CAVOK")
     else:
         wxdata, wxresp["visibility"] = core.get_visibility(wxdata, units)
-    wxresp["other"], wxresp["temperature"], wxresp["dewpoint"] = get_temp_and_dew(
-        wxdata
-    )
+    wxdata, wxresp["temperature"], wxresp["dewpoint"] = get_temp_and_dew(wxdata)
     condition = core.get_flight_rules(
         wxresp["visibility"], core.get_ceiling(wxresp["clouds"])
     )
+    wxresp["other"], wxresp["wx_codes"] = get_wx_codes(wxdata)
     wxresp["flight_rules"] = FLIGHT_RULES[condition]
     wxresp["remarks_info"] = remarks.parse(wxresp["remarks"])
     wxresp["time"] = core.make_timestamp(wxresp["time"])
@@ -231,7 +230,7 @@ class Metar(Report):
 
     def _post_update(self):
         self.data, self.units = parse(self.station, self.raw)
-        self.translations = translate.metar(self.data, self.units)
+        self.translations = translate_metar(self.data, self.units)
 
     @property
     def summary(self) -> str:

@@ -67,11 +67,11 @@ def uses_na_format(station: str) -> bool:
     """
     if station[0] in NA_REGIONS:
         return True
-    elif station[0] in IN_REGIONS:
+    if station[0] in IN_REGIONS:
         return False
-    elif station[:2] in M_NA_REGIONS:
+    if station[:2] in M_NA_REGIONS:
         return True
-    elif station[:2] in M_IN_REGIONS:
+    if station[:2] in M_IN_REGIONS:
         return False
     raise BadStation("Station doesn't start with a recognized character set")
 

@@ -1,4 +1,5 @@
 """
+Report parent classes
 """
 
 # stdlib
@@ -13,6 +14,7 @@ from avwx.structs import ReportData, Units
 
 class AVWXBase(metaclass=ABCMeta):
     """
+    Abstract base class for AVWX report types
     """
 
     #: UTC Datetime object when the report was last updated

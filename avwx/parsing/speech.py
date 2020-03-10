@@ -6,7 +6,7 @@ Currently only supports METAR
 # module
 from avwx.parsing import core, translate
 from avwx.static.core import SPOKEN_UNITS
-from avwx.structs import MetarData, Number, TafData, TafLineData, Timestamp, Units
+from avwx.structs import Code, MetarData, Number, TafData, TafLineData, Timestamp, Units
 
 
 def ordinal(n: int) -> str:
@@ -29,7 +29,7 @@ def wind(
     Format wind details into a spoken word string
     """
     unit = SPOKEN_UNITS.get(unit, unit)
-    val = translate.wind(
+    val = translate.base.wind(
         direction, speed, gust, vardir, unit, cardinals=False, spoken=True
     )
     return "Winds " + (val or "unknown")
@@ -41,8 +41,7 @@ def temperature(header: str, temp: Number, unit: str = "C") -> str:
     """
     if not (temp and temp.value):
         return header + " unknown"
-    if unit in SPOKEN_UNITS:
-        unit = SPOKEN_UNITS[unit]
+    unit = SPOKEN_UNITS.get(unit, unit)
     use_s = "" if temp.spoken in ("one", "minus one") else "s"
     return " ".join((header, temp.spoken, "degree" + use_s, unit))
 
@@ -56,7 +55,7 @@ def visibility(vis: Number, unit: str = "m") -> str:
     if vis.value is None or "/" in vis.repr:
         ret_vis = vis.spoken
     else:
-        ret_vis = translate.visibility(vis, unit=unit)
+        ret_vis = translate.base.visibility(vis, unit=unit)
         if unit == "m":
             unit = "km"
         ret_vis = ret_vis[: ret_vis.find(" (")].lower().replace(unit, "").strip()
@@ -87,13 +86,13 @@ def altimeter(alt: Number, unit: str = "inHg") -> str:
     return ret
 
 
-def other(wxcodes: [str]) -> str:
+def wx_codes(codes: [Code]) -> str:
     """
     Format wx codes into a spoken word string
     """
     ret = []
-    for code in wxcodes:
-        item = translate.wxcode(code)
+    for code in codes:
+        item = code.value
         if item.startswith("Vicinity"):
             item = item.lstrip("Vicinity ") + " in the Vicinity"
         ret.append(item)
@@ -129,7 +128,7 @@ def wind_shear(shear: str, unit_alt: str = "ft", unit_wind: str = "kt") -> str:
     unit_alt = SPOKEN_UNITS.get(unit_alt, unit_alt)
     unit_wind = SPOKEN_UNITS.get(unit_wind, unit_wind)
     return (
-        translate.wind_shear(shear, unit_alt, unit_wind, spoken=True)
+        translate.taf.wind_shear(shear, unit_alt, unit_wind, spoken=True)
         or "Wind shear unknown"
     )
 
@@ -157,10 +156,12 @@ def metar(data: MetarData, units: Units) -> str:
         speech.append(temperature("Dew point", data.dewpoint, units.temperature))
     if data.altimeter:
         speech.append(altimeter(data.altimeter, units.altimeter))
-    if data.other:
-        speech.append(other(data.other))
+    if data.wx_codes:
+        speech.append(wx_codes(data.wx_codes))
     speech.append(
-        translate.clouds(data.clouds, units.altitude).replace(" - Reported AGL", "")
+        translate.base.clouds(data.clouds, units.altitude).replace(
+            " - Reported AGL", ""
+        )
     )
     return (". ".join([l for l in speech if l])).replace(",", ".")
 
@@ -186,15 +187,17 @@ def taf_line(line: TafLineData, units: Units) -> str:
         speech.append(visibility(line.visibility, units.visibility))
     if line.altimeter:
         speech.append(altimeter(line.altimeter, units.altimeter))
-    if line.other:
-        speech.append(other(line.other))
+    if line.wx_codes:
+        speech.append(wx_codes(line.wx_codes))
     speech.append(
-        translate.clouds(line.clouds, units.altitude).replace(" - Reported AGL", "")
+        translate.base.clouds(line.clouds, units.altitude).replace(
+            " - Reported AGL", ""
+        )
     )
     if line.turbulence:
-        speech.append(translate.turb_ice(line.turbulence, units.altitude))
+        speech.append(translate.taf.turb_ice(line.turbulence, units.altitude))
     if line.icing:
-        speech.append(translate.turb_ice(line.icing, units.altitude))
+        speech.append(translate.taf.turb_ice(line.icing, units.altitude))
     return start + " " + (". ".join([l for l in speech if l])).replace(",", ".")
 
 

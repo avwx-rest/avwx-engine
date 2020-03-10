@@ -49,7 +49,8 @@
                     "repr": "07",
                     "spoken": "seven",
                     "value": 7
-                }
+                },
+                "wx_codes": []
             },
             {
                 "altimeter": "",
@@ -97,7 +98,8 @@
                     "repr": "13",
                     "spoken": "one three",
                     "value": 13
-                }
+                },
+                "wx_codes": []
             },
             {
                 "altimeter": "",
@@ -145,7 +147,8 @@
                     "repr": "11",
                     "spoken": "one one",
                     "value": 11
-                }
+                },
+                "wx_codes": []
             }
         ],
         "max_temp": "",
@@ -224,31 +227,31 @@
                 "altimeter": "",
                 "clouds": "Scattered clouds at 2500ft, Scattered clouds at 4500ft - Reported AGL",
                 "icing": "",
-                "other": "",
                 "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "ENE-060 at 7kt",
-                "wind_shear": ""
+                "wind_shear": "",
+                "wx_codes": ""
             },
             {
                 "altimeter": "",
                 "clouds": "Scattered clouds at 2500ft, Scattered clouds at 4500ft - Reported AGL",
                 "icing": "",
-                "other": "",
                 "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "ENE-060 at 13kt",
-                "wind_shear": ""
+                "wind_shear": "",
+                "wx_codes": ""
             },
             {
                 "altimeter": "",
                 "clouds": "Few clouds at 2500ft, Scattered clouds at 4000ft - Reported AGL",
                 "icing": "",
-                "other": "",
                 "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
                 "wind": "ENE-070 at 11kt",
-                "wind_shear": ""
+                "wind_shear": "",
+                "wx_codes": ""
             }
         ],
         "max_temp": "",

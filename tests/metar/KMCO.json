@@ -61,7 +61,8 @@
             "spoken": "four",
             "value": 4
         },
-        "wind_variable_direction": []
+        "wind_variable_direction": [],
+        "wx_codes": []
     },
     "speech": "Winds Variable at 4kt. Visibility one zero miles. Temperature two six degrees Celsius. Dew point one seven degrees Celsius. Altimeter three zero point zero six. Few clouds at 7500ft",
     "station_info": {
@@ -112,7 +113,6 @@
         "altimeter": "30.06 inHg (1018 hPa)",
         "clouds": "Few clouds at 7500ft - Reported AGL",
         "dewpoint": "17\u00b0C (63\u00b0F)",
-        "other": "",
         "remarks": {
             "AO2": "Automated with precipitation sensor",
             "SLP179": "Sea level pressure: 1017.9 hPa",
@@ -120,6 +120,7 @@
         },
         "temperature": "26\u00b0C (79\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "Variable at 4kt"
+        "wind": "Variable at 4kt",
+        "wx_codes": ""
     }
 }

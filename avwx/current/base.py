@@ -1,4 +1,5 @@
 """
+Current report shared resources
 """
 
 # stdlib
@@ -7,9 +8,47 @@ from datetime import datetime, timezone
 # module
 from avwx.base import AVWXBase
 from avwx.service import get_service, NOAA_ADDS
-from avwx.static.core import NA_UNITS
+from avwx.static.core import NA_UNITS, WX_TRANSLATIONS
 from avwx.station import Station
-from avwx.structs import ReportData, ReportTrans, Units
+from avwx.structs import Code, ReportData, ReportTrans, Units
+
+
+def wx_code(code: str) -> "Code/str":
+    """
+    Translates weather codes into readable strings
+
+    Returns translated string of variable length
+    """
+    if not code:
+        return ""
+    ret, code_copy = "", code
+    if code[0] == "+":
+        ret = "Heavy "
+        code = code[1:]
+    elif code[0] == "-":
+        ret = "Light "
+        code = code[1:]
+    # Return code if code is not a code, ex R03/03002V03
+    if len(code) not in [2, 4, 6]:
+        return code
+    while code:
+        if code[:2] in WX_TRANSLATIONS:
+            ret += WX_TRANSLATIONS[code[:2]] + " "
+        else:
+            ret += code[:2]
+        code = code[2:]
+    return Code(code_copy, ret.strip())
+
+
+def get_wx_codes(codes: [str]) -> ([Code], [str]):
+    """
+    Separates parsed WX codes
+    """
+    ret, other = [], []
+    for code in codes:
+        code = wx_code(code)
+        (ret if isinstance(code, Code) else other).append(code)
+    return other, ret
 
 
 class Report(AVWXBase):

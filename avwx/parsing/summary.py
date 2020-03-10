@@ -21,8 +21,8 @@ def metar(trans: MetarTrans) -> str:
         summary.append("Dew " + trans.dewpoint[: trans.dewpoint.find(" (")])
     if trans.altimeter:
         summary.append("Alt " + trans.altimeter[: trans.altimeter.find(" (")])
-    if trans.other:
-        summary.append(trans.other)
+    if trans.wx_codes:
+        summary.append(trans.wx_codes)
     if trans.clouds:
         summary.append(trans.clouds.replace(" - Reported AGL", ""))
     return ", ".join(summary)
@@ -39,8 +39,8 @@ def taf(trans: TafLineTrans) -> str:
         summary.append("Vis " + trans.visibility[: trans.visibility.find(" (")].lower())
     if trans.altimeter:
         summary.append("Alt " + trans.altimeter[: trans.altimeter.find(" (")])
-    if trans.other:
-        summary.append(trans.other)
+    if trans.wx_codes:
+        summary.append(trans.wx_codes)
     if trans.clouds:
         summary.append(trans.clouds.replace(" - Reported AGL", ""))
     if trans.wind_shear:

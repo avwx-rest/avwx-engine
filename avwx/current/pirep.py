@@ -126,12 +126,12 @@ def _find_floor_ceiling(items: [str]) -> ([str], dict):
                 ret[key] = core.make_number(val)
             break
         # CONT LGT CHOP BLO 250
-        elif item in _DIR_SIG:
+        if item in _DIR_SIG:
             ret[_DIR_SIG[item]] = core.make_number(items[i + 1])
             items = items[:i]
             break
         # LGT RIME 025
-        elif item.isdigit():
+        if item.isdigit():
             num = core.make_number(item)
             ret["floor"], ret["ceiling"] = num, num
             break

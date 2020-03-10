@@ -41,7 +41,8 @@
                     "repr": "03",
                     "spoken": "three",
                     "value": 3
-                }
+                },
+                "wx_codes": []
             },
             {
                 "altimeter": "",
@@ -49,9 +50,7 @@
                 "end_time": null,
                 "flight_rules": "MVFR",
                 "icing": [],
-                "other": [
-                    "SHRA"
-                ],
+                "other": [],
                 "probability": {
                     "repr": "30",
                     "spoken": "three zero",
@@ -70,7 +69,13 @@
                 "wind_direction": null,
                 "wind_gust": null,
                 "wind_shear": null,
-                "wind_speed": null
+                "wind_speed": null,
+                "wx_codes": [
+                    {
+                        "repr": "SHRA",
+                        "value": "Showers Rain"
+                    }
+                ]
             },
             {
                 "altimeter": "",
@@ -93,7 +98,8 @@
                 "wind_direction": null,
                 "wind_gust": null,
                 "wind_shear": null,
-                "wind_speed": null
+                "wind_speed": null,
+                "wx_codes": []
             },
             {
                 "altimeter": "",
@@ -101,9 +107,7 @@
                 "end_time": null,
                 "flight_rules": "IFR",
                 "icing": [],
-                "other": [
-                    "BR"
-                ],
+                "other": [],
                 "probability": {
                     "repr": "40",
                     "spoken": "four zero",
@@ -122,7 +126,13 @@
                 "wind_direction": null,
                 "wind_gust": null,
                 "wind_shear": null,
-                "wind_speed": null
+                "wind_speed": null,
+                "wx_codes": [
+                    {
+                        "repr": "BR",
+                        "value": "Mist"
+                    }
+                ]
             },
             {
                 "altimeter": "",
@@ -145,7 +155,8 @@
                 "wind_direction": null,
                 "wind_gust": null,
                 "wind_shear": null,
-                "wind_speed": null
+                "wind_speed": null,
+                "wx_codes": []
             },
             {
                 "altimeter": "",
@@ -153,9 +164,7 @@
                 "end_time": null,
                 "flight_rules": "MVFR",
                 "icing": [],
-                "other": [
-                    "SHRA"
-                ],
+                "other": [],
                 "probability": {
                     "repr": "30",
                     "spoken": "three zero",
@@ -174,7 +183,13 @@
                 "wind_direction": null,
                 "wind_gust": null,
                 "wind_shear": null,
-                "wind_speed": null
+                "wind_speed": null,
+                "wx_codes": [
+                    {
+                        "repr": "SHRA",
+                        "value": "Showers Rain"
+                    }
+                ]
             }
         ],
         "max_temp": "",
@@ -232,61 +247,61 @@
                 "altimeter": "",
                 "clouds": "Scattered clouds at 3000ft - Reported AGL",
                 "icing": "",
-                "other": "",
                 "turbulence": "",
                 "visibility": "10km (6.2sm)",
                 "wind": "Variable at 3kt",
-                "wind_shear": ""
+                "wind_shear": "",
+                "wx_codes": ""
             },
             {
                 "altimeter": "",
                 "clouds": "Sky clear",
                 "icing": "",
-                "other": "Showers Rain",
                 "turbulence": "",
                 "visibility": "7km (4.3sm)",
                 "wind": "",
-                "wind_shear": ""
+                "wind_shear": "",
+                "wx_codes": "Showers Rain"
             },
             {
                 "altimeter": "",
                 "clouds": null,
                 "icing": "",
-                "other": "",
                 "turbulence": "",
                 "visibility": "7km (4.3sm)",
                 "wind": "",
-                "wind_shear": ""
+                "wind_shear": "",
+                "wx_codes": ""
             },
             {
                 "altimeter": "",
                 "clouds": "Sky clear",
                 "icing": "",
-                "other": "Mist",
                 "turbulence": "",
                 "visibility": "4km (2.5sm)",
                 "wind": "",
-                "wind_shear": ""
+                "wind_shear": "",
+                "wx_codes": "Mist"
             },
             {
                 "altimeter": "",
                 "clouds": null,
                 "icing": "",
-                "other": "",
                 "turbulence": "",
                 "visibility": "10km (6.2sm)",
                 "wind": "",
-                "wind_shear": ""
+                "wind_shear": "",
+                "wx_codes": ""
             },
             {
                 "altimeter": "",
                 "clouds": "Sky clear",
                 "icing": "",
-                "other": "Showers Rain",
                 "turbulence": "",
                 "visibility": "6km (3.7sm)",
                 "wind": "",
-                "wind_shear": ""
+                "wind_shear": "",
+                "wx_codes": "Showers Rain"
             }
         ],
         "max_temp": "",

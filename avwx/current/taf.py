@@ -3,8 +3,9 @@ Contains TAF-specific functions for report parsing
 """
 
 # module
-from avwx.current.base import Report
-from avwx.parsing import core, speech, summary, translate
+from avwx.current.base import Report, get_wx_codes
+from avwx.parsing import core, speech, summary
+from avwx.parsing.translate.taf import translate_taf
 from avwx.static.core import FLIGHT_RULES, IN_UNITS, NA_UNITS
 from avwx.static.taf import TAF_RMK, TAF_NEWLINE, TAF_NEWLINE_STARTSWITH
 from avwx.station import uses_na_format, valid_station
@@ -82,10 +83,9 @@ def starts_new_line(item: str) -> bool:
     """
     if item in TAF_NEWLINE:
         return True
-    else:
-        for start in TAF_NEWLINE_STARTSWITH:
-            if item.startswith(start):
-                return True
+    for start in TAF_NEWLINE_STARTSWITH:
+        if item.startswith(start):
+            return True
     return False
 
 
@@ -324,6 +324,11 @@ def parse(station: str, report: str) -> (TafData, Units):
             retwx["alts"],
             retwx["temps"],
         ) = get_oceania_temp_and_alt(parsed_lines[-1]["other"])
+    # Convert wx codes
+    for i, line in enumerate(parsed_lines):
+        parsed_lines[i]["other"], parsed_lines[i]["wx_codes"] = get_wx_codes(
+            line["other"]
+        )
     # Convert to dataclass
     retwx["forecast"] = [TafLineData(**line) for line in parsed_lines]
     return TafData(**retwx), units
@@ -438,7 +443,7 @@ class Taf(Report):
 
     def _post_update(self):
         self.data, self.units = parse(self.station, self.raw)
-        self.translations = translate.taf(self.data, self.units)
+        self.translations = translate_taf(self.data, self.units)
 
     @property
     def summary(self) -> [str]:

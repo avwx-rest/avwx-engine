@@ -53,7 +53,8 @@
             "spoken": "two",
             "value": 2
         },
-        "wind_variable_direction": []
+        "wind_variable_direction": [],
+        "wx_codes": []
     },
     "speech": "Winds Variable at 2kt. Visibility one zero kilometers. Temperature one seven degrees Celsius. Dew point nine degrees Celsius. Altimeter one zero zero six. Broken layer at 3600ft",
     "station_info": {
@@ -92,10 +93,10 @@
         "altimeter": "1006 hPa (29.71 inHg)",
         "clouds": "Broken layer at 3600ft - Reported AGL",
         "dewpoint": "9\u00b0C (48\u00b0F)",
-        "other": "",
         "remarks": {},
         "temperature": "17\u00b0C (63\u00b0F)",
         "visibility": "10km (6.2sm)",
-        "wind": "Variable at 2kt"
+        "wind": "Variable at 2kt",
+        "wx_codes": ""
     }
 }

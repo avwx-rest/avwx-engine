@@ -77,7 +77,8 @@
             "spoken": "three",
             "value": 3
         },
-        "wind_variable_direction": []
+        "wind_variable_direction": [],
+        "wx_codes": []
     },
     "speech": "Winds zero three zero at 3kt. Visibility one zero miles. Temperature two three degrees Celsius. Dew point two two degrees Celsius. Altimeter three zero point zero six. Few clouds at 1700ft. Scattered clouds at 2700ft. Broken layer at 3400ft",
     "station_info": {
@@ -140,7 +141,6 @@
         "altimeter": "30.06 inHg (1018 hPa)",
         "clouds": "Few clouds at 1700ft, Scattered clouds at 2700ft, Broken layer at 3400ft - Reported AGL",
         "dewpoint": "22\u00b0C (72\u00b0F)",
-        "other": "",
         "remarks": {
             "AO2": "Automated with precipitation sensor",
             "P0001": "Hourly precipitation: 0.01 in.",
@@ -149,6 +149,7 @@
         },
         "temperature": "23\u00b0C (73\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "NNE-030 at 3kt"
+        "wind": "NNE-030 at 3kt",
+        "wx_codes": ""
     }
 }

@@ -1,4 +1,5 @@
 """
+Forecast report shared resources
 """
 
 from avwx.base import AVWXBase
@@ -7,6 +8,7 @@ from avwx.service import GFS_MOS
 
 class Forecast(AVWXBase):
     """
+    Forecast base class
     """
 
     report_type: str

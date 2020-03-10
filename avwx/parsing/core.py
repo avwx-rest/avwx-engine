@@ -732,7 +732,7 @@ def get_flight_rules(vis: Number, ceiling: Cloud) -> int:
     # Parse visibility
     if not vis:
         return 2
-    elif vis.repr == "CAVOK" or vis.repr.startswith("P6"):
+    if vis.repr == "CAVOK" or vis.repr.startswith("P6"):
         vis = 10
     elif vis.repr.startswith("M"):
         vis = 0

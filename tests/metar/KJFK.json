@@ -61,7 +61,8 @@
             "spoken": "seven",
             "value": 7
         },
-        "wind_variable_direction": []
+        "wind_variable_direction": [],
+        "wx_codes": []
     },
     "speech": "Winds zero one zero at 7kt. Visibility one zero miles. Temperature one eight degrees Celsius. Dew point seven degrees Celsius. Altimeter three zero point zero one. Broken layer at 25000ft",
     "station_info": {
@@ -112,7 +113,6 @@
         "altimeter": "30.01 inHg (1016 hPa)",
         "clouds": "Broken layer at 25000ft - Reported AGL",
         "dewpoint": "7\u00b0C (45\u00b0F)",
-        "other": "",
         "remarks": {
             "AO2": "Automated with precipitation sensor",
             "SLP163": "Sea level pressure: 1016.3 hPa",
@@ -120,6 +120,7 @@
         },
         "temperature": "18\u00b0C (64\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "N-010 at 7kt"
+        "wind": "N-010 at 7kt",
+        "wx_codes": ""
     }
 }
