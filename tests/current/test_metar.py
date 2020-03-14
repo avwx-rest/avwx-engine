@@ -13,7 +13,7 @@ from avwx import static, structs
 from avwx.current import metar
 
 # tests
-from tests.test_core import BaseTest
+from tests.util import BaseTest, get_data
 
 
 class TestMetar(BaseTest):
@@ -121,7 +121,7 @@ class TestMetar(BaseTest):
         """
         Performs an end-to-end test of all METAR JSON files
         """
-        for path in Path(__file__).parent.joinpath("metar").glob("*.json"):
+        for path in get_data(__file__, "metar"):
             path = Path(path)
             ref = json.load(path.open())
             station = metar.Metar(path.stem)

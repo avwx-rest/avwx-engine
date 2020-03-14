@@ -14,22 +14,7 @@ from datetime import datetime, timezone
 from avwx import static, structs
 from avwx.parsing import core
 
-
-class BaseTest(unittest.TestCase):
-    def assert_number(
-        self, num: structs.Number, repr: str, value: object = None, spoken: str = None
-    ):
-        """
-        Tests string conversion into a Number dataclass
-        """
-        if not repr:
-            self.assertIsNone(num)
-        else:
-            self.assertIsInstance(num, structs.Number)
-            self.assertEqual(num.repr, repr)
-            self.assertEqual(num.value, value)
-            if spoken:
-                self.assertEqual(num.spoken, spoken)
+from tests.util import BaseTest
 
 
 class TestGlobal(BaseTest):

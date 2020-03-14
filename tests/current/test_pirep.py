@@ -13,8 +13,10 @@ from pathlib import Path
 from avwx import structs
 from avwx.current import pirep
 
+from tests.util import BaseTest, get_data
 
-class TestPirepHandlers(unittest.TestCase):
+
+class TestPirepHandlers(BaseTest):
     """
     Tests PIREP element handlers
     """
@@ -124,10 +126,7 @@ class TestPirepHandlers(unittest.TestCase):
         Tests converting value into a Number
         """
         for num, value in (("01", 1), ("M01", -1), ("E", 90), ("1/4", 0.25)):
-            ret_num = pirep._number(num)
-            self.assertIsInstance(ret_num, structs.Number)
-            self.assertEqual(ret_num.repr, num)
-            self.assertEqual(ret_num.value, value)
+            self.assert_number(pirep._number(num), num, value)
         self.assertIsNone(pirep._number(""))
 
     def test_turbulence(self):
@@ -214,7 +213,7 @@ class TestPirep(unittest.TestCase):
         """
         Performs an end-to-end test of all PIREP JSON files
         """
-        for path in Path(__file__).parent.joinpath("pirep").glob("*.json"):
+        for path in get_data(__file__, "pirep"):
             path = Path(path)
             ref = json.load(path.open())
             station = pirep.Pireps(path.stem)

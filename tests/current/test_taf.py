@@ -16,6 +16,8 @@ from avwx import static, structs
 from avwx.current import taf
 from avwx.parsing import core
 
+from tests.util import get_data
+
 
 class TestTaf(unittest.TestCase):
     """
@@ -279,7 +281,7 @@ class TestTaf(unittest.TestCase):
         Performs an end-to-end test of all TAF JSON files
         """
         nodate = lambda s: s[s.find("-") + 2 :]
-        for path in Path(__file__).parent.joinpath("taf").glob("*.json"):
+        for path in get_data(__file__, "taf"):
             ref = json.load(path.open())
             station = taf.Taf(path.stem)
             self.assertIsNone(station.last_updated)
