@@ -29,7 +29,7 @@ def _timestamp(line: str) -> Timestamp:
     """
     Returns the report timestamp from the first line
     """
-    text = line[27:42]
+    text = line[26:43].strip()
     timestamp = datetime.strptime(text, r"%m/%d/%Y  %H%M")
     return Timestamp(text, timestamp.replace(tzinfo=timezone.utc))
 
@@ -137,7 +137,7 @@ _HANDLERS = {
 
 
 # Secondary dicts for conflicting handlers
-_SHORT_HANDLERS = {
+_MAV_HANDLERS = {
     "T06": ("thunder_storm_6", "severe_storm_6", _thunder),
     "T12": ("thunder_storm_12", "severe_storm_12", _thunder),
     "POZ": ("freezing_precip", _numbers),
@@ -147,7 +147,7 @@ _SHORT_HANDLERS = {
     "OBV": ("vis_obstruction", _code(static.VISIBILITY_OBSTRUCTION)),
 }
 
-_LONG_HANDLERS = {
+_MEX_HANDLERS = {
     "T12": ("thunder_storm_12", _numbers),
     "T24": ("thunder_storm_24", _numbers),
     "PZP": ("freezing_precip", _numbers),
@@ -194,7 +194,7 @@ def parse_mav(report: str) -> MavData:
     data, lines = _init_parse(report)
     periods = _split_line(lines[2])
     periods = _find_time_periods(periods, data["time"].dt)
-    _parse_lines(periods, lines[3:], handlers=_SHORT_HANDLERS)
+    _parse_lines(periods, lines[3:], handlers=_MAV_HANDLERS)
     data["forecast"] = [MavPeriod(**p) for p in periods]
     return MavData(**data)
 
@@ -213,7 +213,7 @@ def parse_mex(report: str) -> MexData:
             lines = [l[:climo_index] for l in lines]
     periods = _split_line(lines[1], size=4, prefix=4)
     periods = _find_time_periods(periods, data["time"].dt)
-    _parse_lines(periods, lines[3:], size=4, handlers=_LONG_HANDLERS)
+    _parse_lines(periods, lines[3:], size=4, handlers=_MEX_HANDLERS)
     data["forecast"] = [MexPeriod(**p) for p in periods]
     return MexData(**data)
 

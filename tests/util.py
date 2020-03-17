@@ -4,6 +4,7 @@ Testing utilities
 
 # stdlib
 import unittest
+from datetime import datetime
 from pathlib import Path
 
 # module
@@ -29,6 +30,17 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(num.value, value)
             if spoken:
                 self.assertEqual(num.spoken, spoken)
+
+    def assert_timestamp(self, ts: structs.Timestamp, repr: str, value: datetime):
+        """
+        Tests string conversion into a Timestamp dataclass
+        """
+        if not repr:
+            self.assertIsNone(ts)
+        else:
+            self.assertIsInstance(ts, structs.Timestamp)
+            self.assertEqual(ts.repr, repr)
+            self.assertEqual(ts.dt, value)
 
 
 def get_data(filepath: str, report_type: str) -> [Path]:
