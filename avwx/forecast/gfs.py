@@ -10,7 +10,7 @@ from typing import Callable
 import avwx.static.gfs as static
 from avwx.forecast.base import Forecast
 from avwx.parsing import core
-from avwx.structs import Code, MavData, MavPeriod, MexData, MexPeriod, Timestamp
+from avwx.structs import Code, MavData, MavPeriod, MexData, MexPeriod, Timestamp, Units
 
 
 def _split_line(line: str, size: int = 3, prefix: int = 4, strip: str = " |") -> [str]:
@@ -234,6 +234,7 @@ class Mav(Forecast):
 
     def _post_update(self):
         self.data = parse_mav(self.raw)
+        self.units = Units(**static.UNITS)
 
 
 class Mex(Forecast):
@@ -245,3 +246,4 @@ class Mex(Forecast):
 
     def _post_update(self):
         self.data = parse_mex(self.raw)
+        self.units = Units(**static.UNITS)

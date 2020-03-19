@@ -3,6 +3,15 @@ GFX service static values
 """
 
 #:
+UNITS = {
+    "altimeter": "inHg",
+    "altitude": "ft",
+    "temperature": "F",
+    "visibility": "sm",
+    "wind_speed": "kt",
+}
+
+#:
 CEILING_HEIGHT = {
     "1": "< 200 feet",
     "2": "200 - 400 feet",
