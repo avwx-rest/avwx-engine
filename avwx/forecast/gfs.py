@@ -22,6 +22,9 @@ def _split_line(line: str, size: int = 3, prefix: int = 4, strip: str = " |") ->
     while len(line) >= size:
         ret.append(line[:size].strip(strip))
         line = line[size:]
+    line = line.strip(strip)
+    if line:
+        ret.append(line)
     return ret
 
 
@@ -71,7 +74,10 @@ def _numbers(line: str, size: int = 3, postfix: str = "") -> ["Number"]:
     """
     Parse line into Number objects
     """
-    return [core.make_number(item + postfix) for item in _split_line(line, size=size)]
+    return [
+        core.make_number(item + postfix if item else item, repr=item)
+        for item in _split_line(line, size=size)
+    ]
 
 
 def _wind_direction(line: str, size: int = 3) -> ["Number"]:

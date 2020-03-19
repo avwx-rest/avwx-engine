@@ -42,6 +42,19 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(ts.repr, repr)
             self.assertEqual(ts.dt, value)
 
+    def assert_code(self, code: structs.Code, repr: object, value: object):
+        """
+        Tests string conversion into a conditional Code dataclass
+        """
+        if not repr:
+            self.assertIsNone(code)
+        elif isinstance(code, str):
+            self.assertEqual(code, repr)
+        else:
+            self.assertIsInstance(code, structs.Code)
+            self.assertEqual(code.repr, repr)
+            self.assertEqual(code.value, value)
+
 
 def get_data(filepath: str, report_type: str) -> [Path]:
     """
