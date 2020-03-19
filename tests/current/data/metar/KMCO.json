@@ -1,0 +1,126 @@
+{
+    "data": {
+        "altimeter": {
+            "repr": "3006",
+            "spoken": "three zero point zero six",
+            "value": 30.06
+        },
+        "clouds": [
+            {
+                "base": 75,
+                "direction": null,
+                "modifier": null,
+                "repr": "FEW075",
+                "top": null,
+                "type": "FEW"
+            }
+        ],
+        "dewpoint": {
+            "repr": "17",
+            "spoken": "one seven",
+            "value": 17
+        },
+        "flight_rules": "VFR",
+        "other": [],
+        "raw": "KMCO 181353Z VRB04KT 10SM FEW075 26/17 A3006 RMK AO2 SLP179 T02560172",
+        "remarks": "RMK AO2 SLP179 T02560172",
+        "remarks_info": {
+            "dewpoint_decimal": {
+                "repr": "17.2",
+                "spoken": "one seven point two",
+                "value": 17.2
+            },
+            "temperature_decimal": {
+                "repr": "25.6",
+                "spoken": "two five point six",
+                "value": 25.6
+            }
+        },
+        "runway_visibility": [],
+        "sanitized": "KMCO 181353Z VRB04KT 10SM FEW075 26/17 A3006 RMK AO2 SLP179 T02560172",
+        "station": "KMCO",
+        "temperature": {
+            "repr": "26",
+            "spoken": "two six",
+            "value": 26
+        },
+        "time": null,
+        "visibility": {
+            "repr": "10",
+            "spoken": "one zero",
+            "value": 10
+        },
+        "wind_direction": {
+            "repr": "VRB",
+            "spoken": "variable",
+            "value": null
+        },
+        "wind_gust": null,
+        "wind_speed": {
+            "repr": "04",
+            "spoken": "four",
+            "value": 4
+        },
+        "wind_variable_direction": [],
+        "wx_codes": []
+    },
+    "speech": "Winds Variable at 4kt. Visibility one zero miles. Temperature two six degrees Celsius. Dew point one seven degrees Celsius. Altimeter three zero point zero six. Few clouds at 7500ft",
+    "station_info": {
+        "city": "Orlando",
+        "country": "US",
+        "elevation_ft": 96,
+        "elevation_m": 29,
+        "iata": "MCO",
+        "icao": "KMCO",
+        "latitude": 28.429399490356445,
+        "longitude": -81.30899810791016,
+        "name": "Orlando International Airport",
+        "note": "Disney World,Epcot Center",
+        "reporting": true,
+        "runways": [
+            {
+                "ident1": "18L",
+                "ident2": "36R",
+                "length_ft": 12005,
+                "width_ft": 200
+            },
+            {
+                "ident1": "18R",
+                "ident2": "36L",
+                "length_ft": 12004,
+                "width_ft": 200
+            },
+            {
+                "ident1": "17R",
+                "ident2": "35L",
+                "length_ft": 10000,
+                "width_ft": 150
+            },
+            {
+                "ident1": "17L",
+                "ident2": "35R",
+                "length_ft": 9000,
+                "width_ft": 150
+            }
+        ],
+        "state": "FL",
+        "type": "large_airport",
+        "website": "http://www.orlandoairports.net/",
+        "wiki": "https://en.wikipedia.org/wiki/Orlando_International_Airport"
+    },
+    "summary": "Winds Variable at 4kt, Vis 10sm, Temp 26\u00b0C, Dew 17\u00b0C, Alt 30.06 inHg, Few clouds at 7500ft",
+    "translations": {
+        "altimeter": "30.06 inHg (1018 hPa)",
+        "clouds": "Few clouds at 7500ft - Reported AGL",
+        "dewpoint": "17\u00b0C (63\u00b0F)",
+        "remarks": {
+            "AO2": "Automated with precipitation sensor",
+            "SLP179": "Sea level pressure: 1017.9 hPa",
+            "T02560172": "Temperature 25.6\u00b0C and dewpoint 17.2\u00b0C"
+        },
+        "temperature": "26\u00b0C (79\u00b0F)",
+        "visibility": "10sm (16.1km)",
+        "wind": "Variable at 4kt",
+        "wx_codes": ""
+    }
+}

@@ -1,0 +1,102 @@
+{
+    "data": {
+        "altimeter": {
+            "repr": "1006",
+            "spoken": "one zero zero six",
+            "value": 1006
+        },
+        "clouds": [
+            {
+                "base": 36,
+                "direction": null,
+                "modifier": null,
+                "repr": "BKN036",
+                "top": null,
+                "type": "BKN"
+            }
+        ],
+        "dewpoint": {
+            "repr": "09",
+            "spoken": "nine",
+            "value": 9
+        },
+        "flight_rules": "VFR",
+        "other": [],
+        "raw": "EGLL 181350Z AUTO VRB02KT 9999 BKN036 17/09 Q1006",
+        "remarks": "",
+        "remarks_info": {
+            "dewpoint_decimal": null,
+            "temperature_decimal": null
+        },
+        "runway_visibility": [],
+        "sanitized": "EGLL 181350Z VRB02KT 9999 BKN036 17/09 Q1006 ",
+        "station": "EGLL",
+        "temperature": {
+            "repr": "17",
+            "spoken": "one seven",
+            "value": 17
+        },
+        "time": null,
+        "visibility": {
+            "repr": "9999",
+            "spoken": "nine nine nine nine",
+            "value": 9999
+        },
+        "wind_direction": {
+            "repr": "VRB",
+            "spoken": "variable",
+            "value": null
+        },
+        "wind_gust": null,
+        "wind_speed": {
+            "repr": "02",
+            "spoken": "two",
+            "value": 2
+        },
+        "wind_variable_direction": [],
+        "wx_codes": []
+    },
+    "speech": "Winds Variable at 2kt. Visibility one zero kilometers. Temperature one seven degrees Celsius. Dew point nine degrees Celsius. Altimeter one zero zero six. Broken layer at 3600ft",
+    "station_info": {
+        "city": "London",
+        "country": "GB",
+        "elevation_ft": 83,
+        "elevation_m": 25,
+        "iata": "LHR",
+        "icao": "EGLL",
+        "latitude": 51.4706,
+        "longitude": -0.461941,
+        "name": "London Heathrow Airport",
+        "note": "LON, Londres",
+        "reporting": true,
+        "runways": [
+            {
+                "ident1": "09L",
+                "ident2": "27R",
+                "length_ft": 12799,
+                "width_ft": 164
+            },
+            {
+                "ident1": "09R",
+                "ident2": "27L",
+                "length_ft": 12001,
+                "width_ft": 148
+            }
+        ],
+        "state": "ENG",
+        "type": "large_airport",
+        "website": "http://www.heathrowairport.com/",
+        "wiki": "https://en.wikipedia.org/wiki/Heathrow_Airport"
+    },
+    "summary": "Winds Variable at 2kt, Vis 10km, Temp 17\u00b0C, Dew 9\u00b0C, Alt 1006 hPa, Broken layer at 3600ft",
+    "translations": {
+        "altimeter": "1006 hPa (29.71 inHg)",
+        "clouds": "Broken layer at 3600ft - Reported AGL",
+        "dewpoint": "9\u00b0C (48\u00b0F)",
+        "remarks": {},
+        "temperature": "17\u00b0C (63\u00b0F)",
+        "visibility": "10km (6.2sm)",
+        "wind": "Variable at 2kt",
+        "wx_codes": ""
+    }
+}

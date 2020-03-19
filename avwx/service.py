@@ -3,7 +3,6 @@ Classes for retrieving raw report strings
 """
 
 # stdlib
-from abc import abstractmethod
 from socket import gaierror
 
 # library
@@ -12,7 +11,7 @@ from httpx.exceptions import ConnectTimeout, ReadTimeout
 from xmltodict import parse as parsexml
 
 # module
-from avwx._core import dedupe
+from avwx.parsing.core import dedupe
 from avwx.exceptions import InvalidRequest, SourceError
 from avwx.station import valid_station
 
@@ -25,7 +24,8 @@ class Service:
     url: str = None
     method: str = "GET"
 
-    _valid_types = ("metar", "taf")
+    _valid_types: (str,) = ("metar", "taf")
+    _strip_whitespace: bool = True
 
     def __init__(self, request_type: str):
         if request_type not in self._valid_types:
@@ -41,14 +41,12 @@ class Service:
         msg = f"Could not find {key} in {self.__class__.__name__} response\n"
         return InvalidRequest(msg + body)
 
-    @abstractmethod
     def _make_url(self, station: str, lat: float, lon: float) -> (str, dict):
         """
         Returns a formatted URL and parameters
         """
         raise NotImplementedError()
 
-    @abstractmethod
     def _extract(self, raw: str, station: str = None) -> str:
         """
         Extracts the report string from the service response
@@ -60,6 +58,16 @@ class Service:
         Returns the POST form/data payload
         """
         return {}
+
+    def _clean_report(self, report: str) -> str:
+        """
+        Replaces all *whitespace elements with a single space if enabled
+        """
+        if not self._strip_whitespace:
+            return report
+        if isinstance(report, list):
+            return dedupe(" ".join(r.split()) for r in report)
+        return " ".join(report.split())
 
     def fetch(
         self,
@@ -94,10 +102,7 @@ class Service:
                 f"Unable to connect to {self.__class__.__name__} server"
             )
         report = self._extract(resp.text, station)
-        # This split join replaces all *whitespace elements with a single space
-        if isinstance(report, list):
-            return dedupe(" ".join(r.split()) for r in report)
-        return " ".join(report.split())
+        return self._clean_report(report)
 
     async def async_fetch(
         self,
@@ -133,10 +138,7 @@ class Service:
                 f"Unable to connect to {self.__class__.__name__} server"
             )
         report = self._extract(resp.text, station)
-        # This split join replaces all *whitespace elements with a single space
-        if isinstance(report, list):
-            return dedupe(" ".join(r.split()) for r in report)
-        return " ".join(report.split())
+        return self._clean_report(report)
 
 
 # Multiple sources for NOAA data
@@ -204,6 +206,9 @@ class NOAA_ADDS(Service):
 
 
 class NOAA_FTP(Service):
+    """
+    Requests data from NOAA via FTP
+    """
 
     url = "https://tgftp.nws.noaa.gov/data/{}/{}/stations/{}.TXT"
 
@@ -223,6 +228,9 @@ class NOAA_FTP(Service):
 
 
 class NOAA_Scrape(Service):
+    """
+    Requests data from NOAA via site scraping
+    """
 
     url = "https://aviationweather.gov/{}/data"
 
@@ -241,10 +249,7 @@ class NOAA_Scrape(Service):
         """
         raw = raw[raw.find("<code>") :]
         raw = raw[raw.find(station) :]
-        raw = raw[: raw.find("</code>")]
-        for item in ("<br/>", "&nbsp;"):
-            raw = raw.replace(item, "")
-        return " ".join(raw.split())
+        return raw[: raw.find("<")]
 
 
 class NOAA(NOAA_Scrape):
@@ -361,3 +366,30 @@ def get_service(station: str, country_code: str) -> Service:
         if station.startswith(prefix):
             return PREFERRED[prefix]
     return BY_COUNTRY.get(country_code, NOAA)
+
+
+# Specialty Services
+
+
+class GFS_MOS(Service):
+    """
+    Requests medium and long-term forecasts from NOAA GFS MOS
+    """
+
+    url = "https://www.nws.noaa.gov/cgi-bin/mos/get{}.pl"
+
+    _valid_types = ("mav", "mex")
+    _strip_whitespace = False
+
+    def _make_url(self, station: str, *_, **__) -> (str, dict):
+        """
+        Returns a formatted URL and parameters
+        """
+        return (self.url.format(self.rtype), {"sta": station})
+
+    def _extract(self, raw: str, station: str = None) -> str:
+        """
+        Extracts the report using string finding
+        """
+        raw = raw[raw.find("<PRE>") + 5 :]
+        return raw[: raw.find("</PRE>")].strip().replace("\n ", "\n")

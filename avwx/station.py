@@ -3,7 +3,6 @@ Station handling and search
 """
 
 # stdlib
-import math
 from copy import copy
 from dataclasses import dataclass
 
@@ -12,7 +11,7 @@ from geopy.distance import great_circle, Distance
 
 # module
 from avwx.exceptions import BadStation
-from avwx.static import IN_REGIONS, M_IN_REGIONS, M_NA_REGIONS, NA_REGIONS
+from avwx.static.core import IN_REGIONS, M_IN_REGIONS, M_NA_REGIONS, NA_REGIONS
 from avwx.structs import _LazyLoad
 
 # We catch this import error only if user attempts coord lookup
@@ -68,11 +67,11 @@ def uses_na_format(station: str) -> bool:
     """
     if station[0] in NA_REGIONS:
         return True
-    elif station[0] in IN_REGIONS:
+    if station[0] in IN_REGIONS:
         return False
-    elif station[:2] in M_NA_REGIONS:
+    if station[:2] in M_NA_REGIONS:
         return True
-    elif station[:2] in M_IN_REGIONS:
+    if station[:2] in M_IN_REGIONS:
         return False
     raise BadStation("Station doesn't start with a recognized character set")
 
