@@ -62,3 +62,16 @@ def get_data(filepath: str, report_type: str) -> [Path]:
     """
     path = Path(filepath).parent.joinpath("data", report_type)
     return path.glob("*.json")
+
+
+def datetime_parser(data: dict) -> dict:
+    """
+    Convert ISO strings into datetime objects
+    """
+    for k, v in data.items():
+        if isinstance(v, str) and "+00:00" in v:
+            try:
+                data[k] = datetime.fromisoformat(v)
+            except:
+                pass
+    return data

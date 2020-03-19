@@ -159,7 +159,6 @@ class TestPirepHandlers(BaseTest):
             ("LGT RIME 220-260", "LGT", "RIME", 220, 260),
         ):
             ret_ice = pirep._icing(ice)
-            print(ret_ice)
             self.assertIsInstance(ret_ice, structs.Icing)
             self.assertEqual(ret_ice.severity, severity)
             self.assertEqual(ret_ice.type, itype)

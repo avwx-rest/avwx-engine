@@ -3,14 +3,17 @@ GFS service forecast parsing tests
 """
 
 # stdlib
+import json
+from dataclasses import asdict
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 # module
 from avwx import structs
 from avwx.forecast import gfs
 
 # tests
-from tests.util import BaseTest, get_data
+from tests.util import BaseTest, get_data, datetime_parser
 
 MAV_REPORT = """
 KMCO   GFS MOS GUIDANCE    2/11/2020  0000 UTC                      
@@ -163,7 +166,6 @@ class TestGfs(BaseTest):
         ):
             for i, number in enumerate(gfs._numbers(text, postfix=postfix)):
                 num = numbers[i]
-                print(num, number)
                 if num is None:
                     self.assertIsNone(number)
                 else:
@@ -192,7 +194,27 @@ class TestGfs(BaseTest):
             self.assert_code(code, *values[i])
 
 
-class TestMav(BaseTest):
+class GfsForecastBase(BaseTest):
+
+    maxDiff = None
+
+    def _test_gfs_ete(self, report: "Forecast"):
+        """
+        Performs an end-to-end test of all report JSON files
+        """
+        for path in get_data(__file__, report.__class__.__name__.lower()):
+            path = Path(path)
+            ref = json.load(path.open(), object_hook=datetime_parser)
+            station = report(path.stem)
+            self.assertIsNone(station.last_updated)
+            self.assertTrue(station.update(ref["data"]["raw"]))
+            self.assertIsInstance(station.last_updated, datetime)
+            # Clear timestamp due to parse_date limitations
+            self.assertEqual(asdict(station.data), ref["data"])
+            self.assertEqual(asdict(station.station_info), ref["station_info"])
+
+
+class TestMav(GfsForecastBase):
     def test_thunder(self):
         """
         Tests that a line is converted into Number tuples
@@ -206,16 +228,16 @@ class TestMav(BaseTest):
                 for code, value in zip(codes, values):
                     self.assert_number(code, *value)
 
+    def test_mav_ete(self):
+        """
+        Performs an end-to-end test of all MAV JSON files
+        """
+        self._test_gfs_ete(gfs.Mav)
 
-#     def test_mav_ete(self):
-#         """
-#         """
-#         pass
 
-
-# class TestMex(BaseTest):
-
-#     def test_mex_ete(self):
-#         """
-#         """
-#         pass
+class TestMex(GfsForecastBase):
+    def test_mex_ete(self):
+        """
+        Performs an end-to-end test of all MEX JSON files
+        """
+        self._test_gfs_ete(gfs.Mex)

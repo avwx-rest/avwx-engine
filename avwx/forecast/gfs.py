@@ -179,6 +179,7 @@ def _parse_lines(periods: [dict], lines: [str], size: int = 3, handlers: dict = 
         except (IndexError, KeyError):
             continue
         values = handler(line, size=size)
+        values += [None] * (len(periods) - len(values))
         for i in range(len(periods)):
             value = values[i]
             if not value:

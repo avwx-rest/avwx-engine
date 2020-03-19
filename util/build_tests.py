@@ -5,11 +5,17 @@ python util/build_tests.py
 """
 
 # stdlib
+import datetime
 import json
 from dataclasses import asdict
 
 # module
 import avwx
+
+
+def _default(o):
+    if isinstance(o, (datetime.date, datetime.datetime)):
+        return o.isoformat()
 
 
 def make_metar_test(station: str) -> dict:
@@ -67,12 +73,42 @@ def make_pirep_test(station: str) -> [dict]:
     return {"reports": ret, "station_info": asdict(p.station_info)}
 
 
+def make_gfs_test(report: "Forecast", station: str) -> dict:
+    """
+    Builds GFS service test file for station
+    """
+    g = report(station)
+    g.update()
+    if not g.data:
+        return
+    return {"data": asdict(g.data), "station_info": asdict(g.station_info)}
+
+
+def make_mav_test(station: str) -> dict:
+    """
+    Builds MAV test file for station
+    """
+    return make_gfs_test(avwx.Mav, station)
+
+
+def make_mex_test(station: str) -> dict:
+    """
+    Builds MEX test file for station
+    """
+    return make_gfs_test(avwx.Mex, station)
+
+
 if __name__ == "__main__":
     from pathlib import Path
 
-    for target in ("metar", "taf", "pirep"):
-        for station in ("KJFK", "KMCO", "PHNL", "EGLL"):
-            data = locals()[f"make_{target}_test"](station)
-            if data:
-                path = Path("tests", target, station + ".json")
-                json.dump(data, path.open("w"), indent=4, sort_keys=True)
+    targets = {"current": ("metar", "taf", "pirep"), "forecast": ("mav", "mex")}
+
+    for target, reports in targets.items():
+        for report_type in reports:
+            for station in ("KJFK", "KMCO", "PHNL", "EGLL"):
+                data = locals()[f"make_{report_type}_test"](station)
+                if data:
+                    path = Path("tests", target, "data", report_type, station + ".json")
+                    json.dump(
+                        data, path.open("w"), indent=4, sort_keys=True, default=_default
+                    )
