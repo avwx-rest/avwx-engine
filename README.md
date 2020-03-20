@@ -1,7 +1,7 @@
 # AVWX: Aviation Weather for Humans
 
 [![PyPI version](https://badge.fury.io/py/avwx-engine.svg)](https://badge.fury.io/py/avwx-engine)
-[![Requirements Status](https://requires.io/github/avwx-rest/AVWX-Engine/requirements.svg?branch=master)](https://requires.io/github/avwx-rest/AVWX-Engine/requirements/?branch=master)
+[![Requirements Status](https://requires.io/github/avwx-rest/avwx-engine/requirements.svg?branch=master)](https://requires.io/github/avwx-rest/avwx-engine/requirements/?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/avwx-engine/badge/?version=latest)](http://avwx-engine.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/pypi/l/avwx-engine.svg)](https://pypi.org/project/avwx-engine/)
 
