@@ -80,7 +80,7 @@ class TestService(unittest.TestCase):
                 await self.serv.async_fetch(station)
         # Should raise exception due to empty url
         if self.name == "Service":
-            with self.assertRaises(AttributeError):
+            with self.assertRaises(NotImplementedError):
                 await self.serv.async_fetch("KJFK")
 
     def test_fetch(self):
@@ -100,7 +100,7 @@ class TestService(unittest.TestCase):
         for station in self.stations:
             report = await self.serv.async_fetch(station)
             self.assertIsInstance(report, str)
-            self.assertTrue(report.startswith(station))
+            self.assertTrue(station in report)
 
 
 class TestNOAA(TestService):
@@ -124,7 +124,7 @@ class TestMAC(TestService):
 class TestAUBOM(TestService):
 
     name = "AUBOM"
-    stations = ["YBBN", "YSSY"]
+    stations = ["YBBN", "YSSY", "YCNK"]
 
 
 class TestModule(unittest.TestCase):

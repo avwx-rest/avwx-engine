@@ -347,9 +347,12 @@ class AUBOM(Service):
         """
         index = 1 if self.rtype == "taf" else 2
         try:
-            report = raw.split('<p class="product">')[index]
+            report = raw.split("<p")[index]
+            report = report[report.find(">") + 1 :]
         except IndexError:
             raise self._make_err("The station might not exist")
+        if report.startswith("<"):
+            return ""
         report = report[: report.find("</p>")]
         return report.replace("<br />", " ")
 
