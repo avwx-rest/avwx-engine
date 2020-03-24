@@ -21,10 +21,10 @@ class AVWXBase(metaclass=ABCMeta):
     last_updated: datetime = None
 
     #: 4-character ICAO station ident code the report was initialized with
-    station: str
+    icao: str
 
     #: Provide basic station info if given at init
-    station_info: Station = None
+    station: Station = None
 
     #: The original report string. Fetched on update()
     raw: str = None
@@ -41,11 +41,11 @@ class AVWXBase(metaclass=ABCMeta):
     def __init__(self, icao: str):
         # Raises a BadStation error if needed
         valid_station(icao)
-        self.station = icao
-        self.station_info = Station.from_icao(icao)
+        self.icao = icao
+        self.station = Station.from_icao(icao)
 
     def __repr__(self) -> str:
-        return f"<avwx.{self.__class__.__name__} station={self.station}>"
+        return f"<avwx.{self.__class__.__name__} icao={self.icao}>"
 
     @abstractmethod
     def _post_update(self):
@@ -72,7 +72,7 @@ class AVWXBase(metaclass=ABCMeta):
         Returns True if a new report is available, else False
         """
         if not report:
-            report = self.service.fetch(self.station, timeout=timeout)
+            report = self.service.fetch(self.icao, timeout=timeout)
         if not report or report == self.raw:
             return False
         self.raw = report
@@ -85,7 +85,7 @@ class AVWXBase(metaclass=ABCMeta):
         """
         Async version of update
         """
-        report = await self.service.async_fetch(self.station, timeout=timeout)
+        report = await self.service.async_fetch(self.icao, timeout=timeout)
         if not report or report == self.raw:
             return False
         self.raw = report

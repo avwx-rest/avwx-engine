@@ -23,12 +23,12 @@ The easiest way to get a station is to supply the ICAO code.
 'Its longest runway is 04/22 at 7003 feet'
 ```
 
-This is also the same information you'd get from calling Report.station_info.
+This is also the same information you'd get from calling Report.station.
 
 ```python
 >>> from avwx import Metar
 >>> klex = Metar('KLEX')
->>> klex.station_info.name
+>>> klex.station.name
 'Blue Grass Airport'
 ```
 

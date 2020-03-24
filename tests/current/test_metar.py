@@ -134,4 +134,4 @@ class TestMetar(BaseTest):
             self.assertEqual(asdict(station.translations), ref["translations"])
             self.assertEqual(station.summary, ref["summary"])
             self.assertEqual(station.speech, ref["speech"])
-            self.assertEqual(asdict(station.station_info), ref["station_info"])
+            self.assertEqual(asdict(station.station), ref["station"])

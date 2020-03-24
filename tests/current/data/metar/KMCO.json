@@ -65,7 +65,7 @@
         "wx_codes": []
     },
     "speech": "Winds Variable at 4kt. Visibility one zero miles. Temperature two six degrees Celsius. Dew point one seven degrees Celsius. Altimeter three zero point zero six. Few clouds at 7500ft",
-    "station_info": {
+    "station": {
         "city": "Orlando",
         "country": "US",
         "elevation_ft": 96,

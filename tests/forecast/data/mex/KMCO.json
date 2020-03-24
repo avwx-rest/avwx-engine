@@ -957,7 +957,7 @@
             "repr": "3/19/2020  0000"
         }
     },
-    "station_info": {
+    "station": {
         "city": "Orlando",
         "country": "US",
         "elevation_ft": 96,

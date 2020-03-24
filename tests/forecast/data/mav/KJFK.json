@@ -1586,7 +1586,7 @@
             "repr": "3/19/2020  1200"
         }
     },
-    "station_info": {
+    "station": {
         "city": "New York",
         "country": "US",
         "elevation_ft": 13,

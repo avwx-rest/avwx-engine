@@ -442,7 +442,7 @@ class Taf(Report):
     """
 
     def _post_update(self):
-        self.data, self.units = parse(self.station, self.raw)
+        self.data, self.units = parse(self.icao, self.raw)
         self.translations = translate_taf(self.data, self.units)
 
     @property

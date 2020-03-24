@@ -9,7 +9,7 @@ The Taf class offers an object-oriented approach to managing TAF data for a sing
 ```python
 >>> from avwx import Taf
 >>> kjfk = Taf('KJFK')
->>> kjfk.station_info.name
+>>> kjfk.station.name
 'John F Kennedy International Airport'
 >>> kjfk.update()
 True
@@ -32,7 +32,7 @@ The update function can also accept a given report string if you want to overrid
 ```python
 >>> from avwx import Taf
 >>> zyhb = Taf('ZYHB')
->>> zyhb.station_info.city
+>>> zyhb.station.city
 'Hulan'
 >>> report = "TAF ZYHB 082300Z 0823/0911 VRB03KT 9999 SCT018 BKN120 TX14/0907Z TN04/0921Z FM090100 09015KT 9999 -SHRA WS020/13045KT SCT018 BKN120 BECMG 0904/0906 34008KT PROB30 TEMPO 0906/0911 7000 -RA SCT020 650104 530804 RMK FCST BASED ON AUTO OBS. NXT FCST BY 090600Z"
 >>> zyhb.update(report)
@@ -71,11 +71,11 @@ Service object used to fetch the report string
 
 Report summary designed to be read by a text-to-speech program
 
-### **station**: *str*
+### **icao**: *str*
 
 4-character ICAO station ident code the report was initialized with
 
-### **station_info**: *avwx.Station*
+### **station**: *avwx.Station*
 
 Provides basic station info. Raises a BadStation exception if the station's info cannot be found
 

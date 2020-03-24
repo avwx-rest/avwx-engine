@@ -57,7 +57,7 @@
         "wx_codes": []
     },
     "speech": "Winds Variable at 2kt. Visibility one zero kilometers. Temperature one seven degrees Celsius. Dew point nine degrees Celsius. Altimeter one zero zero six. Broken layer at 3600ft",
-    "station_info": {
+    "station": {
         "city": "London",
         "country": "GB",
         "elevation_ft": 83,

@@ -25,7 +25,7 @@ True
 'VFR'
 >>> jfk_metar.summary
 'Winds NNW-330 at 21kt gusting to 25kt, Vis 10sm, Temp -08C, Dew -23C, Alt 30.54inHg, Few clouds at 6000ft'
->>> jfk_metar.station_info.name
+>>> jfk_metar.station.name
 'John F Kennedy International Airport'
 ```
 

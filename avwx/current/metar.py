@@ -229,7 +229,7 @@ class Metar(Report):
     """
 
     def _post_update(self):
-        self.data, self.units = parse(self.station, self.raw)
+        self.data, self.units = parse(self.icao, self.raw)
         self.translations = translate_metar(self.data, self.units)
 
     @property

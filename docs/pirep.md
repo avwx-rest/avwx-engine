@@ -11,7 +11,7 @@ Below is typical usage for fetching and pulling PIREP data for KJFK.
 ```python
 >>> from avwx import Pireps
 >>> kmco = Pireps('KMCO')
->>> kmco.station_info.name
+>>> kmco.station.name
 'Orlando International Airport'
 >>> kmco.update()
 True
@@ -28,7 +28,7 @@ The update function can also accept a given report string if you want to overrid
 ```python
 >>> from avwx import Metar
 >>> ksfo = Metar('KSFO')
->>> ksfo.station_info.city
+>>> ksfo.station.city
 'San Francisco'
 >>> report = 'KSFO 031254Z 36024G55KT 320V040 1/8SM R06/0200D +TS VCFC OVC050 BKN040TCU 14/10 A2978 RMK AIRPORT CLOSED'
 >>> ksfo.update(report)
@@ -71,7 +71,7 @@ The unparsed report strings. Fetched on update()
 
 Service object used to fetch the report strings
 
-### **station_info**: *avwx.Station* = *None*
+### **station**: *avwx.Station* = *None*
 
 Provides basic station info. Raises a BadStation exception if the station's info cannot be found
 

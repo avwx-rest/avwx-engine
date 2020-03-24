@@ -31,7 +31,7 @@ def make_metar_test(station: str) -> dict:
         "translations": asdict(m.translations),
         "summary": m.summary,
         "speech": m.speech,
-        "station_info": asdict(m.station_info),
+        "station": asdict(m.station),
     }
 
 
@@ -53,7 +53,7 @@ def make_taf_test(station: str, report: str = None) -> dict:
         "translations": asdict(t.translations),
         "summary": t.summary,
         "speech": t.speech,
-        "station_info": asdict(t.station_info),
+        "station": asdict(t.station),
     }
 
 
@@ -70,7 +70,7 @@ def make_pirep_test(station: str) -> [dict]:
         # Clear timestamp due to parse_date limitations
         report.time = None
         ret.append({"data": asdict(report)})
-    return {"reports": ret, "station_info": asdict(p.station_info)}
+    return {"reports": ret, "station": asdict(p.station)}
 
 
 def make_gfs_test(report: "Forecast", station: str) -> dict:
@@ -81,7 +81,7 @@ def make_gfs_test(report: "Forecast", station: str) -> dict:
     g.update()
     if not g.data:
         return
-    return {"data": asdict(g.data), "station_info": asdict(g.station_info)}
+    return {"data": asdict(g.data), "station": asdict(g.station)}
 
 
 def make_mav_test(station: str) -> dict:

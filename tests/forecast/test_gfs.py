@@ -211,7 +211,7 @@ class GfsForecastBase(BaseTest):
             self.assertIsInstance(station.last_updated, datetime)
             # Clear timestamp due to parse_date limitations
             self.assertEqual(asdict(station.data), ref["data"])
-            self.assertEqual(asdict(station.station_info), ref["station_info"])
+            self.assertEqual(asdict(station.station), ref["station"])
 
 
 class TestMav(GfsForecastBase):

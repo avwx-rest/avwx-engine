@@ -644,7 +644,7 @@
             "repr": "3/19/2020  0000"
         }
     },
-    "station_info": {
+    "station": {
         "city": "Honolulu",
         "country": "US",
         "elevation_ft": 13,

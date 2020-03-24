@@ -81,7 +81,7 @@
         "wx_codes": []
     },
     "speech": "Winds zero three zero at 3kt. Visibility one zero miles. Temperature two three degrees Celsius. Dew point two two degrees Celsius. Altimeter three zero point zero six. Few clouds at 1700ft. Scattered clouds at 2700ft. Broken layer at 3400ft",
-    "station_info": {
+    "station": {
         "city": "Honolulu",
         "country": "US",
         "elevation_ft": 13,

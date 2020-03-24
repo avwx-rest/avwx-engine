@@ -169,7 +169,7 @@
         "time": null
     },
     "speech": "Starting on May 18th - From 12 to 15 zulu, Winds Calm. Visibility greater than six miles. Few clouds at 7000ft. From 15 to 3 zulu, Winds zero nine zero at 10kt. Visibility greater than six miles. Scattered clouds at 4000ft. From 3 to 15 zulu, Winds zero eight zero at 4kt. Visibility greater than six miles. Sky clear. From 15 to 18 zulu, Winds one one zero at 8kt. Visibility greater than six miles. Few clouds at 7000ft",
-    "station_info": {
+    "station": {
         "city": "Orlando",
         "country": "US",
         "elevation_ft": 96,

@@ -251,7 +251,7 @@
             }
         }
     ],
-    "station_info": {
+    "station": {
         "city": "Orlando",
         "country": "US",
         "elevation_ft": 96,

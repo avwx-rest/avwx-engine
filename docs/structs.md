@@ -50,7 +50,7 @@ Load an Aircraft from an ICAO aircraft code
 
 ### **repr**: *str*
 
-### **station**: *str*
+### **icao**: *str*
 
 ## class avwx.structs.**MetarData**
 
@@ -74,7 +74,7 @@ Load an Aircraft from an ICAO aircraft code
 
 ### **sanitized**: *str*
 
-### **station**: *str*
+### **icao**: *str*
 
 ### **temperature**: *avwx.structs.Number*
 
@@ -136,7 +136,7 @@ Load an Aircraft from an ICAO aircraft code
 
 ### **sanitized**: *str*
 
-### **station**: *str*
+### **icao**: *str*
 
 ### **temperature**: *avwx.structs.Number* = *None*
 
@@ -172,7 +172,7 @@ Load an Aircraft from an ICAO aircraft code
 
 ### **start_time**: *avwx.structs.Timestamp*
 
-### **station**: *str*
+### **icao**: *str*
 
 ### **temps**: *[str]* = *None*
 

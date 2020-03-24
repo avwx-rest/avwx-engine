@@ -65,7 +65,7 @@
         "wx_codes": []
     },
     "speech": "Winds zero one zero at 7kt. Visibility one zero miles. Temperature one eight degrees Celsius. Dew point seven degrees Celsius. Altimeter three zero point zero one. Broken layer at 25000ft",
-    "station_info": {
+    "station": {
         "city": "New York",
         "country": "US",
         "elevation_ft": 13,

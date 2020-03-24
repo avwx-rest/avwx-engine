@@ -57,7 +57,7 @@
             }
         }
     ],
-    "station_info": {
+    "station": {
         "city": "Honolulu",
         "country": "US",
         "elevation_ft": 13,

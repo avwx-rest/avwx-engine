@@ -25,7 +25,7 @@ Reports use ICAO idents when specifying the desired station. Exceptions are thro
 >>> import avwx
 >>>
 >>> metar = avwx.Metar('KJFK')
->>> metar.station_info.name
+>>> metar.station.name
 'John F Kennedy International Airport'
 >>> metar.update()
 True

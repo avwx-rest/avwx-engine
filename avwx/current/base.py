@@ -61,7 +61,7 @@ class Report(AVWXBase):
 
     def __init__(self, icao: str):
         super().__init__(icao)
-        self.service = get_service(icao, self.station_info.country)(
+        self.service = get_service(icao, self.station.country)(
             self.__class__.__name__.lower()
         )
 
@@ -78,7 +78,7 @@ class Reports(AVWXBase):
     def __init__(self, station_ident: str = None, lat: float = None, lon: float = None):
         if station_ident:
             station_obj = Station.from_icao(station_ident)
-            self.station_info = station_obj
+            self.station = station_obj
             lat = station_obj.latitude
             lon = station_obj.longitude
         elif lat is None or lon is None:

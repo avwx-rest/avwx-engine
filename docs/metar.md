@@ -11,7 +11,7 @@ Below is typical usage for fetching and pulling METAR data for KJFK.
 ```python
 >>> from avwx import Metar
 >>> kjfk = Metar('KJFK')
->>> kjfk.station_info.name
+>>> kjfk.station.name
 'John F Kennedy International Airport'
 >>> kjfk.update()
 True
@@ -30,7 +30,7 @@ The update function can also accept a given report string if you want to overrid
 ```python
 >>> from avwx import Metar
 >>> ksfo = Metar('KSFO')
->>> ksfo.station_info.city
+>>> ksfo.station.city
 'San Francisco'
 >>> report = 'KSFO 031254Z 36024G55KT 320V040 1/8SM R06/0200D +TS VCFC OVC050 BKN040TCU 14/10 A2978 RMK AIRPORT CLOSED'
 >>> ksfo.update(report)
@@ -73,11 +73,11 @@ Service object used to fetch the report string
 
 Report summary designed to be read by a text-to-speech program
 
-### **station**: *str*
+### **icao**: *str*
 
 4-character ICAO station ident code the report was initialized with
 
-### **station_info**: *avwx.Station*
+### **station**: *avwx.Station*
 
 Provides basic station info. Raises a BadStation exception if the station's info cannot be found
 
