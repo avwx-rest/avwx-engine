@@ -21,7 +21,7 @@ class AVWXBase(metaclass=ABCMeta):
     last_updated: datetime = None
 
     #: 4-character ICAO station ident code the report was initialized with
-    icao: str
+    icao: str = None
 
     #: Provide basic station info if given at init
     station: Station = None
