@@ -7,7 +7,6 @@ from socket import gaierror
 
 # library
 import httpx
-from httpx.exceptions import ConnectTimeout, ReadTimeout
 from xmltodict import parse as parsexml
 
 # module
@@ -95,7 +94,7 @@ class Service:
                 raise SourceError(
                     f"{self.__class__.__name__} server returned {resp.status_code}"
                 )
-        except (ConnectTimeout, ReadTimeout):
+        except (httpx.ConnectTimeout, httpx.ReadTimeout):
             raise TimeoutError(f"Timeout from {self.__class__.__name__} server")
         except gaierror:
             raise ConnectionError(
@@ -131,7 +130,7 @@ class Service:
                     raise SourceError(
                         f"{self.__class__.__name__} server returned {resp.status_code}"
                     )
-        except (ConnectTimeout, ReadTimeout):
+        except (httpx.ConnectTimeout, httpx.ReadTimeout):
             raise TimeoutError(f"Timeout from {self.__class__.__name__} server")
         except gaierror:
             raise ConnectionError(

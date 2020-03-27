@@ -2,11 +2,11 @@
 avwx Package Setup
 """
 
-from setuptools import setup
+from setuptools import find_namespace_packages, setup
 
 setup(
     name="avwx-engine",
-    version="1.4.0a2",
+    version="1.4.0a9",
     description="Aviation weather report parsing library",
     url="https://github.com/avwx-rest/avwx-engine",
     author="Michael duPont",
@@ -27,8 +27,8 @@ setup(
         "python-dateutil~=2.8",
         "xmltodict~=0.12",
     ],
-    packages=["avwx"],
-    package_data={"avwx": ["aircraft.json", "stations.json"]},
+    packages=find_namespace_packages(include=["avwx*"]),
+    package_data={"avwx.data": ["aircraft.json", "stations.json"]},
     tests_require=["pytest-asyncio~=0.10"],
     extras_require={
         "scipy": ["scipy~=1.4"],

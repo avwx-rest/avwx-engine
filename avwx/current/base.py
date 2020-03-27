@@ -78,6 +78,7 @@ class Reports(AVWXBase):
     def __init__(self, station_ident: str = None, lat: float = None, lon: float = None):
         if station_ident:
             station_obj = Station.from_icao(station_ident)
+            self.icao = station_ident
             self.station = station_obj
             lat = station_obj.latitude
             lon = station_obj.longitude
