@@ -248,7 +248,10 @@ class NOAA_Scrape(Service):
         """
         raw = raw[raw.find("<code>") :]
         raw = raw[raw.find(station) :]
-        return raw[: raw.find("<")]
+        raw = raw[: raw.find("</code>")]
+        for char in ("<br/>", "&nbsp;"):
+            raw = raw.replace(char, " ")
+        return raw
 
 
 class NOAA(NOAA_Scrape):
