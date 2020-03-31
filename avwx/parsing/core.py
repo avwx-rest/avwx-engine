@@ -401,9 +401,11 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> [str
         # Remove elements containing only '/'
         if is_unknown(item):
             wxdata.pop(i)
+            continue
         # Remove empty wind /////KT
         if item.endswith("KT") and is_unknown(item[:-2]):
             wxdata.pop(i)
+            continue
         # Remove RE from wx codes, REVCTS -> VCTS
         elif ilen in [4, 6] and item.startswith("RE"):
             wxdata[i] = item[2:]
@@ -446,14 +448,20 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> [str
             and item.endswith("KT")
             and not item.startswith("WS")
         ):
-            while not item[0].isdigit() and item[:3] != "VRB":
+            while not item[0].isdigit() and not item.startswith("VRB"):
                 item = item[1:]
             wxdata[i] = item
         # Fix non-G gust Ex: 14010-15KT
         elif ilen == 10 and item.endswith("KT") and item[5] != "G":
             wxdata[i] = item[:5] + "G" + item[6:]
         # Fix leading digits on VRB wind Ex: 2VRB02KT
-        elif ilen > 7 and item.endswith("KT") and "VRB" in item and item[0].isdigit():
+        elif (
+            ilen > 7
+            and item.endswith("KT")
+            and "VRB" in item
+            and item[0].isdigit()
+            and "Z" not in item
+        ):
             while item[0].isdigit():
                 item = item[1:]
             wxdata[i] = item

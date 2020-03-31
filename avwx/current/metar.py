@@ -53,62 +53,52 @@ def get_runway_visibility(wxdata: [str]) -> ([str], [str]):
     return wxdata, runway_vis
 
 
+def parse_altimeter(value: str) -> Number:
+    """
+    Parse an altimeter string into a Number
+    """
+    if not value or len(value) < 4:
+        return
+    # QNH3003INS
+    if len(value) >= 7 and value.endswith("INS"):
+        return core.make_number(value[-7:-5] + "." + value[-5:-3], value)
+    number = value.replace(".", "")
+    # Q1000/10
+    if "/" in number:
+        number = number.split("/")[0]
+    if number.startswith("QNH"):
+        number = "Q" + number[1:]
+    if len(number) not in (4, 5) and number[-4:].isdigit():
+        return
+    number = number.lstrip("AQ")
+    if number[0] in ("2", "3"):
+        number = number[:2] + "." + number[2:]
+    elif number[0] not in ("0", "1"):
+        return
+    return core.make_number(number, value, number)
+
+
 def get_altimeter(wxdata: [str], units: Units, version: str = "NA") -> ([str], Number):
     """
     Returns the report list and the removed altimeter item
 
     Version is 'NA' (North American / default) or 'IN' (International)
     """
-    if not wxdata:
+    values = []
+    for _ in range(2):
+        if not wxdata:
+            break
+        value = parse_altimeter(wxdata[-1])
+        if value is None:
+            break
+        values.append(value)
+        wxdata.pop(-1)
+    if not values:
         return wxdata, None
-    altimeter = ""
-    target = wxdata[-1]
-    # Handle QNH prefix:
-    buf = 1
-    if target.startswith("QNH"):
-        buf = 3
-        target = target.replace("QNH", "Q")
-    if version == "NA":
-        # Version target
-        if target[0] == "A":
-            altimeter = wxdata.pop()[buf:]
-        # Other version but prefer normal if available
-        elif target[0] == "Q":
-            if len(wxdata) > 1 and wxdata[-2][0] == "A":
-                wxdata.pop()
-                altimeter = wxdata.pop()[buf:]
-            else:
-                units.altimeter = "hPa"
-                altimeter = wxdata.pop()[buf:].lstrip(".")
-        # Else grab the digits
-        elif len(target) == 4 and target.isdigit():
-            altimeter = wxdata.pop()
-    elif version == "IN":
-        # Version target
-        if target[0] == "Q":
-            altimeter = wxdata.pop()[buf:].lstrip(".")
-            if "/" in altimeter:
-                altimeter = altimeter[: altimeter.find("/")]
-        # Other version but prefer normal if available
-        elif target[0] == "A":
-            if len(wxdata) > 1 and wxdata[-2][0] == "Q":
-                wxdata.pop()
-                altimeter = wxdata.pop()[buf:]
-            else:
-                units.altimeter = "inHg"
-                altimeter = wxdata.pop()[buf:]
-    # Some stations report both, but we only need one
-    if wxdata and (wxdata[-1][0] == "A" or wxdata[-1][0] == "Q"):
-        wxdata.pop()
-    # convert to Number
-    altimeter = altimeter.replace("/", "").strip("AQ")
-    if not altimeter:
-        return wxdata, None
-    if units.altimeter == "inHg":
-        value = altimeter[:2] + "." + altimeter[2:]
-    else:
-        value = altimeter
-    return wxdata, core.make_number(value, altimeter)
+    values.sort(key=lambda x: x.value)
+    altimeter = values[0 if version == "NA" else -1]
+    units.altimeter = "inHg" if altimeter.value < 100 else "hPa"
+    return wxdata, altimeter
 
 
 def get_temp_and_dew(wxdata: str) -> ([str], Number, Number):

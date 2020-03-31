@@ -9,6 +9,7 @@ import unittest
 # module
 from avwx import static, structs
 from avwx.current.base import get_wx_codes
+from avwx.current.metar import parse_altimeter
 from avwx.parsing import core, speech
 
 
@@ -90,7 +91,7 @@ class TestSpeech(unittest.TestCase):
             ("3005", "inHg", "three zero point zero five"),
         ):
             self.assertEqual(
-                speech.altimeter(core.make_number(alt), unit), "Altimeter " + spoken
+                speech.altimeter(parse_altimeter(alt), unit), "Altimeter " + spoken
             )
 
     def test_wx_codes(self):
@@ -117,7 +118,7 @@ class TestSpeech(unittest.TestCase):
         """
         units = structs.Units(**static.core.NA_UNITS)
         data = {
-            "altimeter": core.make_number("2992"),
+            "altimeter": parse_altimeter("2992"),
             "clouds": [core.make_cloud("BKN015CB")],
             "dewpoint": core.make_number("M01"),
             "other": [],
@@ -209,7 +210,7 @@ class TestSpeech(unittest.TestCase):
         """
         units = structs.Units(**static.core.NA_UNITS)
         line = {
-            "altimeter": core.make_number("2992"),
+            "altimeter": parse_altimeter("2992"),
             "clouds": [core.make_cloud("BKN015CB")],
             "end_time": core.make_timestamp("1206"),
             "icing": ["611005"],
@@ -230,7 +231,7 @@ class TestSpeech(unittest.TestCase):
         line = structs.TafLineData(**line)
         spoken = (
             "From 2 to 6 zulu, Winds three six zero at 12kt gusting to 20kt. "
-            "Wind shear 2000inHg from zero seven zero at 40kt. Visibility three miles. "
+            "Wind shear 2000ft from zero seven zero at 40kt. Visibility three miles. "
             "Altimeter two nine point nine two. Heavy Rain. "
             "Broken layer at 1500ft (Cumulonimbus). "
             "Occasional moderate turbulence in clouds from 5500ft to 8500ft. "

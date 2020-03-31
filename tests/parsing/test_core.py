@@ -193,6 +193,7 @@ class TestGlobal(BaseTest):
             ("151200Z18002KT", 7),
             ("2301/2303VRB02KT", 9),
             ("33015G25KT4500", 10),
+            ("211600ZVRB04KT", 7),
             ("PROB30", None),
             ("A2992", None),
         ):
@@ -209,6 +210,11 @@ class TestGlobal(BaseTest):
             ("SECU 151200Z 151200Z18002KT Q1027", "SECU 151200Z 18002KT Q1027"),
             ("OAKB 211230Z 360G17G32KT Q1011", "OAKB 211230Z 36017G32KT Q1011"),
             ("MHLC 090024Z 06012G22TK 5000", "MHLC 090024Z 06012G22KT 5000"),
+            ("SKCL 211600Z 211600ZVRB04KT A3010", "SKCL 211600Z VRB04KT A3010"),
+            (
+                "SVMG 072200Z //////KT 9999 FEW010 XX/XX Q1012",
+                "SVMG 072200Z 9999 FEW010 Q1012",
+            ),
             ("KJFK 1 1 1 1 1 1 2 1", "KJFK 1 2 1"),
         ):
             line, fixed = line.split(), fixed.split()

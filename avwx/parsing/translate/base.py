@@ -164,11 +164,11 @@ def altimeter(alt: Number, unit: str = "hPa") -> str:
     if not (alt and unit in ("hPa", "inHg")):
         return ""
     if unit == "hPa":
-        value = alt.repr
-        converted = alt.value / 33.8638866667
-        converted = str(round(converted, 2)) + " inHg"
+        value = alt.value
+        converted = round(alt.value / 33.8638866667, 2)
+        converted = str(converted).ljust(5, "0") + " inHg"
     elif unit == "inHg":
-        value = alt.repr[:2] + "." + alt.repr[2:]
+        value = str(alt.value).ljust(5, "0")
         converted = alt.value * 33.8638866667
         converted = str(int(round(converted))) + " hPa"
     return f"{value} {unit} ({converted})"

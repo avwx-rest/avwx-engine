@@ -57,42 +57,80 @@ class TestMetar(BaseTest):
             self.assert_number(ret_dew, *dew)
         self.assertEqual(metar.get_temp_and_dew(["MX/01"]), (["MX/01"], None, None))
 
+    def test_parse_altimeter(self):
+        """
+        Tests that an atlimiter is correctly parsed into a Number
+        """
+        for text, alt in (
+            ("A2992", (29.92, "two nine point nine two")),
+            ("2992", (29.92, "two nine point nine two")),
+            ("A3000", (30.00, "three zero point zero zero")),
+            ("Q1000", (1000, "one zero zero zero")),
+            ("Q.1000", (1000, "one zero zero zero")),
+            ("Q0998", (998, "zero nine nine eight")),
+            ("Q1000/10", (1000, "one zero zero zero")),
+            ("QNH3003INS", (30.03, "three zero point zero three")),
+        ):
+            print(text)
+            self.assert_number(metar.parse_altimeter(text), text, *alt)
+        for text in (None, "12/10", "RMK", "ABCDE"):
+            self.assertIsNone(metar.parse_altimeter(text))
+
     def test_get_altimeter(self):
         """
         Tests that the correct alimeter item gets removed from the end of the wx list
         """
-        # North American default
-        units = structs.Units(**static.core.NA_UNITS)
-        for wx, alt in (
-            (["1", "2"], (None,)),
-            (["1", "2", "A2992"], ("2992", 29.92)),
-            (["1", "2", "2992"], ("2992", 29.92)),
-            (["1", "2", "A2992", "Q1000"], ("2992", 29.92)),
-            (["1", "2", "Q1000", "A2992"], ("2992", 29.92)),
-            (["1", "2", "Q1000"], ("1000", 1000)),
+        for version, wx, alt, unit in (
+            ("NA", ["1"], (None,), "inHg"),
+            ("NA", ["1", "A2992"], ("A2992", 29.92, "two nine point nine two"), "inHg"),
+            (
+                "NA",
+                ["1", "A3000"],
+                ("A3000", 30.00, "three zero point zero zero"),
+                "inHg",
+            ),
+            ("NA", ["1", "2992"], ("2992", 29.92, "two nine point nine two"), "inHg"),
+            (
+                "NA",
+                ["1", "A2992", "Q1000"],
+                ("A2992", 29.92, "two nine point nine two"),
+                "inHg",
+            ),
+            (
+                "NA",
+                ["1", "Q1000", "A2992"],
+                ("A2992", 29.92, "two nine point nine two"),
+                "inHg",
+            ),
+            ("NA", ["1", "Q1000"], ("Q1000", 1000, "one zero zero zero"), "hPa"),
+            ("IN", ["1"], (None,), "hPa"),
+            ("IN", ["1", "Q.1000"], ("Q.1000", 1000, "one zero zero zero"), "hPa"),
+            ("IN", ["1", "Q1000/10"], ("Q1000/10", 1000, "one zero zero zero"), "hPa"),
+            (
+                "IN",
+                ["1", "A2992", "Q1000"],
+                ("Q1000", 1000, "one zero zero zero"),
+                "hPa",
+            ),
+            (
+                "IN",
+                ["1", "Q1000", "A2992"],
+                ("Q1000", 1000, "one zero zero zero"),
+                "hPa",
+            ),
+            ("IN", ["1", "A2992"], ("A2992", 29.92, "two nine point nine two"), "inHg"),
+            (
+                "IN",
+                ["1", "QNH3003INS"],
+                ("QNH3003INS", 30.03, "three zero point zero three"),
+                "inHg",
+            ),
         ):
-            self.assertEqual(units.altimeter, "inHg")
-            retwx, ret_alt = metar.get_altimeter(wx, units)
-            self.assertEqual(retwx, ["1", "2"])
+            units = structs.Units(**getattr(static.core, version + "_UNITS"))
+            ret, ret_alt = metar.get_altimeter(wx, units, version)
+            self.assertEqual(ret, ["1"])
             self.assert_number(ret_alt, *alt)
-        # The last one should have changed the unit
-        self.assertEqual(units.altimeter, "hPa")
-        # International
-        units = structs.Units(**static.core.IN_UNITS)
-        for wx, alt in (
-            (["1", "2"], (None,)),
-            (["1", "2", "Q.1000"], ("1000", 1000)),
-            (["1", "2", "Q1000/10"], ("1000", 1000)),
-            (["1", "2", "A2992", "Q1000"], ("1000", 1000)),
-            (["1", "2", "Q1000", "A2992"], ("1000", 1000)),
-            (["1", "2", "A2992"], ("2992", 29.92)),
-        ):
-            self.assertEqual(units.altimeter, "hPa")
-            retwx, ret_alt = metar.get_altimeter(wx, units, "IN")
-            self.assertEqual(retwx, ["1", "2"])
-            self.assert_number(ret_alt, *alt)
-        # The last one should have changed the unit
-        self.assertEqual(units.altimeter, "inHg")
+            self.assertEqual(units.altimeter, unit)
 
     def test_get_runway_visibility(self):
         """

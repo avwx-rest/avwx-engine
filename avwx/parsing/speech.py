@@ -80,9 +80,9 @@ def altimeter(alt: Number, unit: str = "inHg") -> str:
     if not alt:
         ret += "unknown"
     elif unit == "inHg":
-        ret += f"{core.spoken_number(alt.repr[:2])} point {core.spoken_number(alt.repr[2:])}"
+        ret += core.spoken_number(str(alt.value).ljust(5, "0"))
     elif unit == "hPa":
-        ret += core.spoken_number(alt.repr)
+        ret += core.spoken_number(str(alt.value).zfill(4))
     return ret
 
 
@@ -182,7 +182,7 @@ def taf_line(line: TafLineData, units: Units) -> str:
             )
         )
     if line.wind_shear:
-        speech.append(wind_shear(line.wind_shear, units.altimeter, units.wind_speed))
+        speech.append(wind_shear(line.wind_shear, units.altitude, units.wind_speed))
     if line.visibility:
         speech.append(visibility(line.visibility, units.visibility))
     if line.altimeter:

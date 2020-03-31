@@ -39,7 +39,7 @@ class TestShared(unittest.TestCase):
         for alt, repr, unit, translation in (
             ("", "", "hPa", ""),
             ("1020", "1020", "hPa", "1020 hPa (30.12 inHg)"),
-            ("0999", "0999", "hPa", "0999 hPa (29.5 inHg)"),
+            ("0999", "0999", "hPa", "999 hPa (29.50 inHg)"),
             ("1012", "1012", "hPa", "1012 hPa (29.88 inHg)"),
             ("30.00", "3000", "inHg", "30.00 inHg (1016 hPa)"),
             ("29.92", "2992", "inHg", "29.92 inHg (1013 hPa)"),
