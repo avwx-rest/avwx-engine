@@ -6,7 +6,7 @@ from setuptools import find_namespace_packages, setup
 
 setup(
     name="avwx-engine",
-    version="1.4.0a9",
+    version="1.4.0a10",
     description="Aviation weather report parsing library",
     url="https://github.com/avwx-rest/avwx-engine",
     author="Michael duPont",
