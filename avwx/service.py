@@ -237,9 +237,10 @@ class NOAA_Scrape(Service):
         """
         Returns a formatted URL and parameters
         """
+        hours = 7 if self.rtype == "taf" else 2
         return (
             self.url.format(self.rtype),
-            {"ids": station, "format": "raw", "date": None, "hours": 2},
+            {"ids": station, "format": "raw", "hours": hours},
         )
 
     def _extract(self, raw: str, station: str = None) -> str:
