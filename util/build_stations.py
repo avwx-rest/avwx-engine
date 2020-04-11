@@ -20,7 +20,7 @@ _DATA = Path("data")
 AIRPORT_PATH = _DATA / "airports.csv"
 STATION_PATH = _DATA / "stations.txt"
 RUNWAY_PATH = _DATA / "runways.csv"
-OUTPUT_PATH = Path("..", "avwx", "stations.json")
+OUTPUT_PATH = Path("..", "avwx", "data", "stations.json")
 
 ACCEPTED_STATION_TYPES = [
     "balloonport",
@@ -327,7 +327,9 @@ def main() -> int:
     stations = add_missing_stations(stations)
     stations = add_reporting(stations)
     stations = add_runways(stations)
-    json.dump(stations, OUTPUT_PATH.open("w"), sort_keys=True)
+    json.dump(
+        stations, OUTPUT_PATH.open("w"), sort_keys=True, indent=2, ensure_ascii=False
+    )
     return 0
 
 
