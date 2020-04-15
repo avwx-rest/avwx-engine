@@ -250,48 +250,5 @@
                 "wx": null
             }
         }
-    ],
-    "station": {
-        "city": "Orlando",
-        "country": "US",
-        "elevation_ft": 96,
-        "elevation_m": 29,
-        "iata": "MCO",
-        "icao": "KMCO",
-        "latitude": 28.429399490356445,
-        "longitude": -81.30899810791016,
-        "name": "Orlando International Airport",
-        "note": "Disney World,Epcot Center",
-        "reporting": true,
-        "runways": [
-            {
-                "ident1": "18L",
-                "ident2": "36R",
-                "length_ft": 12005,
-                "width_ft": 200
-            },
-            {
-                "ident1": "18R",
-                "ident2": "36L",
-                "length_ft": 12004,
-                "width_ft": 200
-            },
-            {
-                "ident1": "17R",
-                "ident2": "35L",
-                "length_ft": 10000,
-                "width_ft": 150
-            },
-            {
-                "ident1": "17L",
-                "ident2": "35R",
-                "length_ft": 9000,
-                "width_ft": 150
-            }
-        ],
-        "state": "FL",
-        "type": "large_airport",
-        "website": "http://www.orlandoairports.net/",
-        "wiki": "https://en.wikipedia.org/wiki/Orlando_International_Airport"
-    }
+    ]
 }

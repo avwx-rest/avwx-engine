@@ -68,7 +68,7 @@ def parse_altimeter(value: str) -> Number:
         number = number.split("/")[0]
     if number.startswith("QNH"):
         number = "Q" + number[1:]
-    if len(number) not in (4, 5) and number[-4:].isdigit():
+    if not (len(number) in (4, 5) and number[-4:].isdigit()):
         return
     number = number.lstrip("AQ")
     if number[0] in ("2", "3"):

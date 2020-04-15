@@ -31,7 +31,6 @@ def make_metar_test(station: str) -> dict:
         "translations": asdict(m.translations),
         "summary": m.summary,
         "speech": m.speech,
-        "station": asdict(m.station),
     }
 
 
@@ -105,10 +104,10 @@ if __name__ == "__main__":
 
     for target, reports in targets.items():
         for report_type in reports:
-            for station in ("KJFK", "KMCO", "PHNL", "EGLL"):
-                data = locals()[f"make_{report_type}_test"](station)
+            for icao in ("KJFK", "KMCO", "PHNL", "EGLL"):
+                data = locals()[f"make_{report_type}_test"](icao)
                 if data:
-                    path = Path("tests", target, "data", report_type, station + ".json")
+                    path = Path("tests", target, "data", report_type, icao + ".json")
                     json.dump(
                         data, path.open("w"), indent=4, sort_keys=True, default=_default
                     )

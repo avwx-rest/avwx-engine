@@ -75,7 +75,7 @@ class TestStationFuncs(TestCase):
         """
         for airport, reports, count in (
             (True, True, 6),
-            (True, False, 16),
+            (True, False, 15),
             (False, True, 6),
             (False, False, 28),
         ):

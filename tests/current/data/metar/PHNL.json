@@ -81,61 +81,6 @@
         "wx_codes": []
     },
     "speech": "Winds zero three zero at 3kt. Visibility one zero miles. Temperature two three degrees Celsius. Dew point two two degrees Celsius. Altimeter three zero point zero six. Few clouds at 1700ft. Scattered clouds at 2700ft. Broken layer at 3400ft",
-    "station": {
-        "city": "Honolulu",
-        "country": "US",
-        "elevation_ft": 13,
-        "elevation_m": 4,
-        "iata": "HNL",
-        "icao": "PHNL",
-        "latitude": 21.32062,
-        "longitude": -157.924228,
-        "name": "Daniel K Inouye International Airport",
-        "note": "Hickam Air Force Base, HIK, PHIK, KHNL, Honolulu International",
-        "reporting": true,
-        "runways": [
-            {
-                "ident1": "08L",
-                "ident2": "26R",
-                "length_ft": 12300,
-                "width_ft": 150
-            },
-            {
-                "ident1": "08R",
-                "ident2": "26L",
-                "length_ft": 12000,
-                "width_ft": 200
-            },
-            {
-                "ident1": "04R",
-                "ident2": "22L",
-                "length_ft": 9000,
-                "width_ft": 150
-            },
-            {
-                "ident1": "04L",
-                "ident2": "22R",
-                "length_ft": 6952,
-                "width_ft": 150
-            },
-            {
-                "ident1": "08W",
-                "ident2": "26W",
-                "length_ft": 5000,
-                "width_ft": 300
-            },
-            {
-                "ident1": "04W",
-                "ident2": "22W",
-                "length_ft": 3000,
-                "width_ft": 150
-            }
-        ],
-        "state": "HI",
-        "type": "large_airport",
-        "website": "http://airports.hawaii.gov/hnl/",
-        "wiki": "https://en.wikipedia.org/wiki/Daniel_K._Inouye_International_Airport"
-    },
     "summary": "Winds NNE-030 at 3kt, Vis 10sm, Temp 23\u00b0C, Dew 22\u00b0C, Alt 30.06 inHg, Few clouds at 1700ft, Scattered clouds at 2700ft, Broken layer at 3400ft",
     "translations": {
         "altimeter": "30.06 inHg (1018 hPa)",

@@ -224,4 +224,3 @@ class TestPirep(unittest.TestCase):
                 # Clear timestamp due to parse_date limitations
                 station.data[i].time = None
                 self.assertEqual(asdict(station.data[i]), report["data"])
-            self.assertEqual(asdict(station.station), ref["station"])

@@ -202,37 +202,6 @@
         "time": null
     },
     "speech": "Starting on May 18th - From 12 to 22 zulu, Winds Variable at 3kt. Visibility one zero kilometers. Scattered clouds at 3000ft. From 12 to 17 zulu, there's a 30% chance for temporary Visibility seven kilometers. Showers Rain. Sky clear. At 22 zulu becoming Visibility seven kilometers. Sky clear. From 2 to 7 zulu, there's a 40% chance for Visibility four kilometers. Mist. Sky clear. At 7 zulu becoming Visibility one zero kilometers. Sky clear. From 12 to 18 zulu, there's a 30% chance for temporary Visibility six kilometers. Showers Rain. Sky clear",
-    "station": {
-        "city": "London",
-        "country": "GB",
-        "elevation_ft": 83,
-        "elevation_m": 25,
-        "iata": "LHR",
-        "icao": "EGLL",
-        "latitude": 51.4706,
-        "longitude": -0.461941,
-        "name": "London Heathrow Airport",
-        "note": "LON, Londres",
-        "reporting": true,
-        "runways": [
-            {
-                "ident1": "09L",
-                "ident2": "27R",
-                "length_ft": 12799,
-                "width_ft": 164
-            },
-            {
-                "ident1": "09R",
-                "ident2": "27L",
-                "length_ft": 12001,
-                "width_ft": 148
-            }
-        ],
-        "state": "ENG",
-        "type": "large_airport",
-        "website": "http://www.heathrowairport.com/",
-        "wiki": "https://en.wikipedia.org/wiki/Heathrow_Airport"
-    },
     "summary": [
         "Winds Variable at 3kt, Vis 10km, Scattered clouds at 3000ft",
         "Vis 7km, Showers Rain, Sky clear",

@@ -169,49 +169,6 @@
         "time": null
     },
     "speech": "Starting on May 18th - From 12 to 15 zulu, Winds Calm. Visibility greater than six miles. Few clouds at 7000ft. From 15 to 3 zulu, Winds zero nine zero at 10kt. Visibility greater than six miles. Scattered clouds at 4000ft. From 3 to 15 zulu, Winds zero eight zero at 4kt. Visibility greater than six miles. Sky clear. From 15 to 18 zulu, Winds one one zero at 8kt. Visibility greater than six miles. Few clouds at 7000ft",
-    "station": {
-        "city": "Orlando",
-        "country": "US",
-        "elevation_ft": 96,
-        "elevation_m": 29,
-        "iata": "MCO",
-        "icao": "KMCO",
-        "latitude": 28.429399490356445,
-        "longitude": -81.30899810791016,
-        "name": "Orlando International Airport",
-        "note": "Disney World,Epcot Center",
-        "reporting": true,
-        "runways": [
-            {
-                "ident1": "18L",
-                "ident2": "36R",
-                "length_ft": 12005,
-                "width_ft": 200
-            },
-            {
-                "ident1": "18R",
-                "ident2": "36L",
-                "length_ft": 12004,
-                "width_ft": 200
-            },
-            {
-                "ident1": "17R",
-                "ident2": "35L",
-                "length_ft": 10000,
-                "width_ft": 150
-            },
-            {
-                "ident1": "17L",
-                "ident2": "35R",
-                "length_ft": 9000,
-                "width_ft": 150
-            }
-        ],
-        "state": "FL",
-        "type": "large_airport",
-        "website": "http://www.orlandoairports.net/",
-        "wiki": "https://en.wikipedia.org/wiki/Orlando_International_Airport"
-    },
     "summary": [
         "Winds Calm, Vis greater than 6sm, Few clouds at 7000ft",
         "Winds E-090 at 10kt, Vis greater than 6sm, Scattered clouds at 4000ft",

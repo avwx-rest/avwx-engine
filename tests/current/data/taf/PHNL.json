@@ -161,61 +161,6 @@
         "time": null
     },
     "speech": "Starting on May 18th - From 12 to 21 zulu, Winds zero six zero at 7kt. Visibility greater than six miles. Scattered clouds at 2500ft. Scattered clouds at 4500ft. From 21 to 6 zulu, Winds zero six zero at 13kt. Visibility greater than six miles. Scattered clouds at 2500ft. Scattered clouds at 4500ft. From 6 to 18 zulu, Winds zero seven zero at 11kt. Visibility greater than six miles. Few clouds at 2500ft. Scattered clouds at 4000ft",
-    "station": {
-        "city": "Honolulu",
-        "country": "US",
-        "elevation_ft": 13,
-        "elevation_m": 4,
-        "iata": "HNL",
-        "icao": "PHNL",
-        "latitude": 21.32062,
-        "longitude": -157.924228,
-        "name": "Daniel K Inouye International Airport",
-        "note": "Hickam Air Force Base, HIK, PHIK, KHNL, Honolulu International",
-        "reporting": true,
-        "runways": [
-            {
-                "ident1": "08L",
-                "ident2": "26R",
-                "length_ft": 12300,
-                "width_ft": 150
-            },
-            {
-                "ident1": "08R",
-                "ident2": "26L",
-                "length_ft": 12000,
-                "width_ft": 200
-            },
-            {
-                "ident1": "04R",
-                "ident2": "22L",
-                "length_ft": 9000,
-                "width_ft": 150
-            },
-            {
-                "ident1": "04L",
-                "ident2": "22R",
-                "length_ft": 6952,
-                "width_ft": 150
-            },
-            {
-                "ident1": "08W",
-                "ident2": "26W",
-                "length_ft": 5000,
-                "width_ft": 300
-            },
-            {
-                "ident1": "04W",
-                "ident2": "22W",
-                "length_ft": 3000,
-                "width_ft": 150
-            }
-        ],
-        "state": "HI",
-        "type": "large_airport",
-        "website": "http://airports.hawaii.gov/hnl/",
-        "wiki": "https://en.wikipedia.org/wiki/Daniel_K._Inouye_International_Airport"
-    },
     "summary": [
         "Winds ENE-060 at 7kt, Vis greater than 6sm, Scattered clouds at 2500ft, Scattered clouds at 4500ft",
         "Winds ENE-060 at 13kt, Vis greater than 6sm, Scattered clouds at 2500ft, Scattered clouds at 4500ft",

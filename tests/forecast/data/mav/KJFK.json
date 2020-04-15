@@ -1585,48 +1585,5 @@
             "dt": "2020-03-19T12:00:00+00:00",
             "repr": "3/19/2020  1200"
         }
-    },
-    "station": {
-        "city": "New York",
-        "country": "US",
-        "elevation_ft": 13,
-        "elevation_m": 4,
-        "iata": "JFK",
-        "icao": "KJFK",
-        "latitude": 40.63980103,
-        "longitude": -73.77890015,
-        "name": "John F Kennedy International Airport",
-        "note": "Manhattan, New York City, NYC, Idlewild",
-        "reporting": true,
-        "runways": [
-            {
-                "ident1": "13R",
-                "ident2": "31L",
-                "length_ft": 14572,
-                "width_ft": 150
-            },
-            {
-                "ident1": "04L",
-                "ident2": "22R",
-                "length_ft": 11351,
-                "width_ft": 150
-            },
-            {
-                "ident1": "13L",
-                "ident2": "31R",
-                "length_ft": 10000,
-                "width_ft": 150
-            },
-            {
-                "ident1": "04R",
-                "ident2": "22L",
-                "length_ft": 8400,
-                "width_ft": 200
-            }
-        ],
-        "state": "NY",
-        "type": "large_airport",
-        "website": "http://www.panynj.gov/CommutingTravel/airports/html/kennedy.html",
-        "wiki": "https://en.wikipedia.org/wiki/John_F._Kennedy_International_Airport"
     }
 }

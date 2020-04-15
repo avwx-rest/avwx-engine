@@ -71,9 +71,8 @@ class TestMetar(BaseTest):
             ("Q1000/10", (1000, "one zero zero zero")),
             ("QNH3003INS", (30.03, "three zero point zero three")),
         ):
-            print(text)
             self.assert_number(metar.parse_altimeter(text), text, *alt)
-        for text in (None, "12/10", "RMK", "ABCDE"):
+        for text in (None, "12/10", "RMK", "ABCDE", "15KM", "10SM"):
             self.assertIsNone(metar.parse_altimeter(text))
 
     def test_get_altimeter(self):
@@ -172,4 +171,3 @@ class TestMetar(BaseTest):
             self.assertEqual(asdict(station.translations), ref["translations"])
             self.assertEqual(station.summary, ref["summary"])
             self.assertEqual(station.speech, ref["speech"])
-            self.assertEqual(asdict(station.station), ref["station"])

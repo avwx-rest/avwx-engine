@@ -298,7 +298,6 @@ class TestTaf(unittest.TestCase):
             self.assertEqual(asdict(station.translations), ref["translations"])
             self.assertEqual(station.summary, ref["summary"])
             self.assertEqual(nodate(station.speech), nodate(ref["speech"]))
-            self.assertEqual(asdict(station.station), ref["station"])
 
     def test_rule_inherit(self):
         """

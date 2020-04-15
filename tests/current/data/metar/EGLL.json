@@ -57,37 +57,6 @@
         "wx_codes": []
     },
     "speech": "Winds Variable at 2kt. Visibility one zero kilometers. Temperature one seven degrees Celsius. Dew point nine degrees Celsius. Altimeter one zero zero six. Broken layer at 3600ft",
-    "station": {
-        "city": "London",
-        "country": "GB",
-        "elevation_ft": 83,
-        "elevation_m": 25,
-        "iata": "LHR",
-        "icao": "EGLL",
-        "latitude": 51.4706,
-        "longitude": -0.461941,
-        "name": "London Heathrow Airport",
-        "note": "LON, Londres",
-        "reporting": true,
-        "runways": [
-            {
-                "ident1": "09L",
-                "ident2": "27R",
-                "length_ft": 12799,
-                "width_ft": 164
-            },
-            {
-                "ident1": "09R",
-                "ident2": "27L",
-                "length_ft": 12001,
-                "width_ft": 148
-            }
-        ],
-        "state": "ENG",
-        "type": "large_airport",
-        "website": "http://www.heathrowairport.com/",
-        "wiki": "https://en.wikipedia.org/wiki/Heathrow_Airport"
-    },
     "summary": "Winds Variable at 2kt, Vis 10km, Temp 17\u00b0C, Dew 9\u00b0C, Alt 1006 hPa, Broken layer at 3600ft",
     "translations": {
         "altimeter": "1006 hPa (29.71 inHg)",

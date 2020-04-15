@@ -309,49 +309,6 @@
         "time": null
     },
     "speech": "Starting on May 18th - From 14 to 16 zulu, Winds three six zero at 8kt. Visibility greater than six miles. Few clouds at 15000ft. Broken layer at 25000ft. From 16 to 18 zulu, Winds three one zero at 5kt. Visibility greater than six miles. Few clouds at 25000ft. From 18 to 20 zulu, Winds two three zero at 8kt. Visibility greater than six miles. Few clouds at 12000ft. From 20 to midnight zulu, Winds one nine zero at 11kt. Visibility greater than six miles. Few clouds at 10000ft. From midnight to 4 zulu, Winds one seven zero at 7kt. Visibility greater than six miles. Scattered clouds at 8000ft. From 4 to 16 zulu, Winds one eight zero at 6kt. Visibility greater than six miles. Broken layer at 6000ft. From 16 to 18 zulu, Winds one seven zero at 12kt. Visibility greater than six miles. Broken layer at 6000ft",
-    "station": {
-        "city": "New York",
-        "country": "US",
-        "elevation_ft": 13,
-        "elevation_m": 4,
-        "iata": "JFK",
-        "icao": "KJFK",
-        "latitude": 40.63980103,
-        "longitude": -73.77890015,
-        "name": "John F Kennedy International Airport",
-        "note": "Manhattan, New York City, NYC, Idlewild",
-        "reporting": true,
-        "runways": [
-            {
-                "ident1": "13R",
-                "ident2": "31L",
-                "length_ft": 14572,
-                "width_ft": 150
-            },
-            {
-                "ident1": "04L",
-                "ident2": "22R",
-                "length_ft": 11351,
-                "width_ft": 150
-            },
-            {
-                "ident1": "13L",
-                "ident2": "31R",
-                "length_ft": 10000,
-                "width_ft": 150
-            },
-            {
-                "ident1": "04R",
-                "ident2": "22L",
-                "length_ft": 8400,
-                "width_ft": 200
-            }
-        ],
-        "state": "NY",
-        "type": "large_airport",
-        "website": "http://www.panynj.gov/CommutingTravel/airports/html/kennedy.html",
-        "wiki": "https://en.wikipedia.org/wiki/John_F._Kennedy_International_Airport"
-    },
     "summary": [
         "Winds N-360 at 8kt, Vis greater than 6sm, Few clouds at 15000ft, Broken layer at 25000ft",
         "Winds NW-310 at 5kt, Vis greater than 6sm, Few clouds at 25000ft",

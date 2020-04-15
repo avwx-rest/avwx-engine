@@ -291,6 +291,7 @@ class TestGlobal(BaseTest):
             (["1000NDV", "1"], "m", ("1000", 1000)),
             (["M1000", "1"], "m", ("1000", 1000)),
             (["2KM", "1"], "m", ("2000", 2000)),
+            (["15KM", "1"], "m", ("15000", 15000)),
         ):
             units = structs.Units(**static.core.NA_UNITS)
             wx, vis = core.get_visibility(wx, units)
