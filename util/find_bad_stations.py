@@ -18,11 +18,27 @@ BAD_PATH = Path("data", "bad_stations.txt")
 
 
 def load_stations(path: Path) -> [str]:
-    return path.open().read().strip().split(",")
+    return path.read_text().strip().split(",")
+
+
+def save_stations(data: [str], path: Path):
+    path.write_text(",".join(sorted(set(data))))
 
 
 GOOD = load_stations(GOOD_PATH)
 BAD = load_stations(BAD_PATH)
+
+
+def should_test(icao: str) -> bool:
+    """
+    Returns False if an ident is known good or never good
+    """
+    if icao in GOOD:
+        return False
+    for char in icao:
+        if char.isdigit():
+            return False
+    return True
 
 
 async def worker(queue: aio.Queue):
@@ -87,7 +103,7 @@ async def loop():
     queue = aio.Queue()
     for station in avwx.station._STATIONS.values():
         icao = station["icao"]
-        if not station["reporting"] and icao not in GOOD:
+        if not station["reporting"] and should_test(icao):
             queue.put_nowait(icao)
     try:
         async with task_manager(queue, 2):
@@ -107,8 +123,8 @@ def main() -> int:
     while True:
         aio.run(loop())
         print()
-        print(",".join(sorted(set(BAD))), file=BAD_PATH.open("w"))
-        print(",".join(sorted(set(GOOD))), file=GOOD_PATH.open("w"))
+        save_stations(BAD, BAD_PATH)
+        save_stations(GOOD, GOOD_PATH)
         print("Looped", datetime.now())
         sleep(60 * 60)
     return 0
