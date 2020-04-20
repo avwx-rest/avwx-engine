@@ -2,9 +2,15 @@
 
 Parsing and sanitization improvements are always ongoing and non-breaking
 
+## 1.4
+
+- Added GFS MOS `Mav` and `Mex` implemented
+- Added `AVWXBase` and `Code` classes
+- Sub module structure for reports, parsing, and static
+
 ## 1.3
 
-- Add Australian service as `avwx.service.AUBOM`
+- Added Australian service as `avwx.service.AUBOM`
 - Added country code param to `avwx.service.get_service`
 - Nearest searches default to airports only
 
