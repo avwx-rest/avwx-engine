@@ -1,7 +1,7 @@
 # AVWX
 
 [![PyPI version](https://badge.fury.io/py/avwx-engine.svg)](https://badge.fury.io/py/avwx-engine)
-[![Requirements Status](https://requires.io/github/avwx-rest/AVWX-Engine/requirements.svg?branch=master)](https://requires.io/github/avwx-rest/AVWX-Engine/requirements/?branch=master)
+[![Requirements Status](https://requires.io/github/avwx-rest/avwx-engine/requirements.svg?branch=master)](https://requires.io/github/avwx-rest/avwx-engine/requirements/?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/avwx-engine/badge/?version=latest)](http://avwx-engine.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/pypi/l/avwx-engine.svg)](https://pypi.org/project/avwx-engine/)
 
@@ -23,11 +23,22 @@ These docs could use some love, and I am not a writer. You can help by making a 
 ## Contents
 
 * [Getting Started](getting-started.md)
-* [Station](station.md)
-* [METAR](metar.md)
-* [TAF](taf.md)
-* [PIREP](pirep.md)
-* [Service](service.md)
-* [Static Values](static.md)
-* [Data Structures](structs.md)
-* [Exceptions](exceptions.md)
+
+### Aviation Reports
+
+* [METAR](av/metar.md)
+* [TAF](av/taf.md)
+* [PIREP](av/pirep.md)
+
+### Model Forecasts
+
+* [GFS MOS MAV](gfs/mav.md)
+* [GFS MOS MEX](gfs/mex.md)
+
+### Utilities
+
+* [Station](util/station.md)
+* [Service](util/service.md)
+* [Other Data Structures](util/structs.md)
+* [Static Values](util/static.md)
+* [Exceptions](util/exceptions.md)

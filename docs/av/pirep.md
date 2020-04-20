@@ -43,43 +43,43 @@ datetime.datetime(2018, 3, 4, 23, 54, 4, 353757)
 'Winds N-360 (variable 320 to 040) at 24kt gusting to 55kt, Vis 0.125sm, Temp 14C, Dew 10C, Alt 29.78inHg, Heavy Thunderstorm, Vicinity Funnel Cloud, Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft'
 ```
 
-### **async_update**() -> *bool*
+#### **async_update**() -> *bool*
 
 Async version of `update`
 
-### **data**: *[avwx.structs.PirepData]* = *None*
+#### **data**: *[avwx.structs.PirepData]* = *None*
 
 List of PirepData dataclasses of parsed data values and units. Parsed on update()
 
-### **last_updated**: *datetime.datetime* = *None*
+#### **last_updated**: *datetime.datetime* = *None*
 
 UTC Datetime object when the reports were last updated
 
-### **lat**: *float*
+#### **lat**: *float*
 
 Latitude of the radial center. This is supplied by the user or loaded from the station
 
-### **lon**: *float*
+#### **lon**: *float*
 
 Longitude of the radial center. This is supplied by the user or loaded from the station
 
-### **raw**: *[str]* = *None*
+#### **raw**: *[str]* = *None*
 
 The unparsed report strings. Fetched on update()
 
-### **service**: *avwx.service.Service*
+#### **service**: *avwx.service.Service*
 
 Service object used to fetch the report strings
 
-### **station**: *avwx.Station* = *None*
+#### **station**: *avwx.Station* = *None*
 
-Provides basic station info. Raises a BadStation exception if the station's info cannot be found
+Provides basic station info
 
-### **units**: *avwx.structs.Units*
+#### **units**: *avwx.structs.Units*
 
 Units inferred from the station location and report contents
 
-### **update**(*reports: [str] = None*) -> *bool*
+#### **update**(*reports: [str] = None*) -> *bool*
 
 Updates `raw` and `data` by fetch recent aircraft reports
 
@@ -87,10 +87,34 @@ Can accept a list report strings to parse instead
 
 Returns `True` if new reports are available, else `False`
 
-## Pirep Module
+## class avwx.structs.**PirepData**
 
-If you don't need or want the object-oriented handling provided by the Pireps class, you can use the core PIREP functions directly.
+**aircraft**: *avwx.structs.Aircraft* = *None*
 
-### avwx.pirep.**parse**(*report: str*) -> *avwx.structs.PirepData*
+**altitude**: *avwx.structs.Number* = *None*
 
-Returns a PirepData object based on the given report
+**clouds**: *[avwx.structs.Cloud]*
+
+**flight_visibility**: *avwx.structs.Number* = *None*
+
+**icing**: *avwx.structs.Icing* = *None*
+
+**location**: *avwx.structs.Location* = *None*
+
+**raw**: *str*
+
+**remarks**: *str*
+
+**sanitized**: *str*
+
+**icao**: *str*
+
+**temperature**: *avwx.structs.Number* = *None*
+
+**time**: *avwx.structs.Timestamp*
+
+**turbulence**: *avwx.structs.Turbulence* = *None*
+
+**type**: *str*
+
+**wx**: *[str]*

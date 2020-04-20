@@ -45,55 +45,55 @@ datetime.datetime(2018, 3, 4, 23, 54, 4, 353757)
 'Winds N-360 (variable 320 to 040) at 24kt gusting to 55kt, Vis 0.125sm, Temp 14C, Dew 10C, Alt 29.78inHg, Heavy Thunderstorm, Vicinity Funnel Cloud, Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft'
 ```
 
-### **async_update**() -> *bool*
+#### **async_update**() -> *bool*
 
 Async version of `update`
 
-### **data**: *avwx.structs.MetarData* = *None*
+#### **data**: *avwx.structs.MetarData* = *None*
 
 MetarData dataclass of parsed data values and units. Parsed on update()
 
-### **from_report**(*report: str*) -> *avwx.Metar*
+#### **from_report**(*report: str*) -> *avwx.Metar*
 
 Returns an updated report object based on an existing report
 
-### **last_updated**: *datetime.datetime* = *None*
-
-UTC Datetime object when the report was last updated
-
-### **raw**: *str* = *None*
-
-The unparsed report string. Fetched on update()
-
-### **service**: *avwx.service.Service*
-
-Service object used to fetch the report string
-
-### **speech**: *str*
-
-Report summary designed to be read by a text-to-speech program
-
-### **icao**: *str*
+#### **icao**: *str*
 
 4-character ICAO station ident code the report was initialized with
 
-### **station**: *avwx.Station*
+#### **last_updated**: *datetime.datetime* = *None*
 
-Provides basic station info. Raises a BadStation exception if the station's info cannot be found
+UTC Datetime object when the report was last updated
 
-### **summary**: *str*
+#### **raw**: *str* = *None*
+
+The unparsed report string. Fetched on update()
+
+#### **service**: *avwx.service.Service*
+
+Service object used to fetch the report string
+
+#### **speech**: *str*
+
+Report summary designed to be read by a text-to-speech program
+
+#### **station**: *avwx.Station*
+
+Provides basic station info
+
+#### **summary**: *str*
 
 Condensed report summary created from translations
 
-### **translations**: *avwx.structs.MetarTrans* = *None*
+#### **translations**: *avwx.structs.MetarTrans* = *None*
 
 MetarTrans dataclass of translation strings from data. Parsed on update()
 
-### **units**: *avwx.structs.Units*
+#### **units**: *avwx.structs.Units*
 
 Units inferred from the station location and report contents
 
-### **update**(*report: str = None*) -> *bool*
+#### **update**(*report: str = None*) -> *bool*
 
 Updates `raw`, `data`, and `translations` by fetching and parsing the report
 
@@ -101,10 +101,58 @@ Can accept a report string to parse instead
 
 Returns `True` if a new report is available, else `False`
 
-## Metar Module
+## class avwx.structs.**MetarData**
 
-If you don't need or want the object-oriented handling provided by the Metar class, you can use the core METAR functions directly.
+**altimeter**: *avwx.structs.Number*
 
-### avwx.metar.**parse**(*station: str, report: str*) -> (*avwx.structs.MetarData, avwx.structs.Units*)
+**clouds**: *[avwx.structs.Cloud]*
 
-Returns MetarData and Units dataclasses with parsed data and their associated units
+**dewpoint**: *avwx.structs.Number*
+
+**flight_rules**: *str*
+
+**other**: *[str]*
+
+**raw**: *str*
+
+**remarks**: *str*
+
+**remarks_info**: *avwx.structs.RemarksData*
+
+**runway_visibility**: *[str]*
+
+**sanitized**: *str*
+
+**icao**: *str*
+
+**temperature**: *avwx.structs.Number*
+
+**time**: *avwx.structs.Timestamp*
+
+**visibility**: *avwx.structs.Number*
+
+**wind_direction**: *avwx.structs.Number*
+
+**wind_gust**: *avwx.structs.Number*
+
+**wind_speed**: *avwx.structs.Number*
+
+**wind_variable_direction**: *avwx.structs.Number*
+
+## class avwx.structs.**MetarTrans**
+
+**altimeter**: *str*
+
+**clouds**: *str*
+
+**dewpoint**: *str*
+
+**other**: *str*
+
+**remarks**: *dict*
+
+**temperature**: *str*
+
+**visibility**: *str*
+
+**wind**: *str*

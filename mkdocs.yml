@@ -1,14 +1,30 @@
 site_name: AVWX
+site_author: Michael duPont
+repo_url: https://github.com/avwx-rest/avwx-engine
+
 nav:
-  - Home: index.md
   - Getting Started: getting-started.md
-  - Report Types:
-    - METAR: metar.md
-    - TAF: taf.md
-    - PIREP: pirep.md
+  - Aviation:
+    - METAR: av/metar.md
+    - TAF: av/taf.md
+    - PIREP: av/pirep.md
+  - Models:
+    - GFS MOS MAV: gfs/mav.md
+    - GFS MOS MEX: gfs/mex.md
   - Utilities:
-    - Station: station.md
-    - Data Services: service.md
-    - Data Structures: structs.md
-    - Static Values: static.md
-    - Exceptions: exceptions.md
+    - Station: util/station.md
+    - Data Services: util/service.md
+    - Data Structures: util/structs.md
+    - Static Values: util/static.md
+    - Exceptions: util/exceptions.md
+
+# theme:
+#   name: 'material'
+#   language: 'en'
+#   logo:
+#     icon: 'flight'
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
