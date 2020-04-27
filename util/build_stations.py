@@ -24,7 +24,7 @@ OUTPUT_PATH = Path("..", "avwx", "data", "stations.json")
 
 ACCEPTED_STATION_TYPES = [
     "balloonport",
-    "closed",
+    # "closed",
     "heliport",
     "large_airport",
     "medium_airport",
@@ -282,6 +282,9 @@ def add_runways(stations: dict) -> dict:
     data = csv.reader(RUNWAY_PATH.open())
     next(data)  # Skip header
     for runway in data:
+        # if runway is closed
+        if runway[7] != "0":
+            continue
         data = {
             "length_ft": int(runway[3]) if runway[3] else 0,
             "width_ft": int(runway[4]) if runway[4] else 0,
