@@ -1,11 +1,19 @@
 {
     "data": {
         "altimeter": {
-            "repr": "A3001",
-            "spoken": "three zero point zero one",
-            "value": 30.01
+            "repr": "A2999",
+            "spoken": "two nine point nine nine",
+            "value": 29.99
         },
         "clouds": [
+            {
+                "base": 160,
+                "direction": null,
+                "modifier": null,
+                "repr": "SCT160",
+                "top": null,
+                "type": "SCT"
+            },
             {
                 "base": 250,
                 "direction": null,
@@ -16,33 +24,33 @@
             }
         ],
         "dewpoint": {
-            "repr": "07",
-            "spoken": "seven",
-            "value": 7
+            "repr": "06",
+            "spoken": "six",
+            "value": 6
         },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "KJFK 181351Z 01007KT 10SM BKN250 18/07 A3001 RMK AO2 SLP163 T01780072",
-        "remarks": "RMK AO2 SLP163 T01780072",
+        "raw": "KJFK 110351Z 21011KT 10SM SCT160 BKN250 11/06 A2999 RMK AO2 SLP155 T01060061",
+        "remarks": "RMK AO2 SLP155 T01060061",
         "remarks_info": {
             "dewpoint_decimal": {
-                "repr": "7.2",
-                "spoken": "seven point two",
-                "value": 7.2
+                "repr": "6.1",
+                "spoken": "six point one",
+                "value": 6.1
             },
             "temperature_decimal": {
-                "repr": "17.8",
-                "spoken": "one seven point eight",
-                "value": 17.8
+                "repr": "10.6",
+                "spoken": "one zero point six",
+                "value": 10.6
             }
         },
         "runway_visibility": [],
-        "sanitized": "KJFK 181351Z 01007KT 10SM BKN250 18/07 A3001 RMK AO2 SLP163 T01780072",
+        "sanitized": "KJFK 110351Z 21011KT 10SM SCT160 BKN250 11/06 A2999 RMK AO2 SLP155 T01060061",
         "station": "KJFK",
         "temperature": {
-            "repr": "18",
-            "spoken": "one eight",
-            "value": 18
+            "repr": "11",
+            "spoken": "one one",
+            "value": 11
         },
         "time": null,
         "visibility": {
@@ -51,33 +59,33 @@
             "value": 10
         },
         "wind_direction": {
-            "repr": "010",
-            "spoken": "zero one zero",
-            "value": 10
+            "repr": "210",
+            "spoken": "two one zero",
+            "value": 210
         },
         "wind_gust": null,
         "wind_speed": {
-            "repr": "07",
-            "spoken": "seven",
-            "value": 7
+            "repr": "11",
+            "spoken": "one one",
+            "value": 11
         },
         "wind_variable_direction": [],
         "wx_codes": []
     },
-    "speech": "Winds zero one zero at 7kt. Visibility one zero miles. Temperature one eight degrees Celsius. Dew point seven degrees Celsius. Altimeter three zero point zero one. Broken layer at 25000ft",
-    "summary": "Winds N-010 at 7kt, Vis 10sm, Temp 18\u00b0C, Dew 7\u00b0C, Alt 30.01 inHg, Broken layer at 25000ft",
+    "speech": "Winds two one zero at 11kt. Visibility one zero miles. Temperature one one degrees Celsius. Dew point six degrees Celsius. Altimeter two nine point nine nine. Scattered clouds at 16000ft. Broken layer at 25000ft",
+    "summary": "Winds SSW-210 at 11kt, Vis 10sm, Temp 11\u00b0C, Dew 6\u00b0C, Alt 29.99 inHg, Scattered clouds at 16000ft, Broken layer at 25000ft",
     "translations": {
-        "altimeter": "30.01 inHg (1016 hPa)",
-        "clouds": "Broken layer at 25000ft - Reported AGL",
-        "dewpoint": "7\u00b0C (45\u00b0F)",
+        "altimeter": "29.99 inHg (1016 hPa)",
+        "clouds": "Scattered clouds at 16000ft, Broken layer at 25000ft - Reported AGL",
+        "dewpoint": "6\u00b0C (43\u00b0F)",
         "remarks": {
             "AO2": "Automated with precipitation sensor",
-            "SLP163": "Sea level pressure: 1016.3 hPa",
-            "T01780072": "Temperature 17.8\u00b0C and dewpoint 7.2\u00b0C"
+            "SLP155": "Sea level pressure: 1015.5 hPa",
+            "T01060061": "Temperature 10.6\u00b0C and dewpoint 6.1\u00b0C"
         },
-        "temperature": "18\u00b0C (64\u00b0F)",
+        "temperature": "11\u00b0C (52\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "N-010 at 7kt",
+        "wind": "SSW-210 at 11kt",
         "wx_codes": ""
     }
 }

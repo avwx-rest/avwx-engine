@@ -163,6 +163,7 @@ class TafLineData(SharedData):
     probability: Number
     raw: str
     start_time: Timestamp
+    transition_start: Timestamp
     turbulence: [str]
     type: str
     wind_shear: str

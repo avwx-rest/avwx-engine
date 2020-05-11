@@ -1,48 +1,56 @@
 {
     "data": {
         "altimeter": {
-            "repr": "A3006",
-            "spoken": "three zero point zero six",
-            "value": 30.06
+            "repr": "A3009",
+            "spoken": "three zero point zero nine",
+            "value": 30.09
         },
         "clouds": [
             {
-                "base": 75,
+                "base": 130,
                 "direction": null,
                 "modifier": null,
-                "repr": "FEW075",
+                "repr": "FEW130",
+                "top": null,
+                "type": "FEW"
+            },
+            {
+                "base": 250,
+                "direction": null,
+                "modifier": null,
+                "repr": "FEW250",
                 "top": null,
                 "type": "FEW"
             }
         ],
         "dewpoint": {
-            "repr": "17",
-            "spoken": "one seven",
-            "value": 17
+            "repr": "18",
+            "spoken": "one eight",
+            "value": 18
         },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "KMCO 181353Z VRB04KT 10SM FEW075 26/17 A3006 RMK AO2 SLP179 T02560172",
-        "remarks": "RMK AO2 SLP179 T02560172",
+        "raw": "KMCO 110353Z 00000KT 10SM FEW130 FEW250 20/18 A3009 RMK AO2 SLP187 T02000178",
+        "remarks": "RMK AO2 SLP187 T02000178",
         "remarks_info": {
             "dewpoint_decimal": {
-                "repr": "17.2",
-                "spoken": "one seven point two",
-                "value": 17.2
+                "repr": "17.8",
+                "spoken": "one seven point eight",
+                "value": 17.8
             },
             "temperature_decimal": {
-                "repr": "25.6",
-                "spoken": "two five point six",
-                "value": 25.6
+                "repr": "20.0",
+                "spoken": "two zero point zero",
+                "value": 20.0
             }
         },
         "runway_visibility": [],
-        "sanitized": "KMCO 181353Z VRB04KT 10SM FEW075 26/17 A3006 RMK AO2 SLP179 T02560172",
+        "sanitized": "KMCO 110353Z 00000KT 10SM FEW130 FEW250 20/18 A3009 RMK AO2 SLP187 T02000178",
         "station": "KMCO",
         "temperature": {
-            "repr": "26",
-            "spoken": "two six",
-            "value": 26
+            "repr": "20",
+            "spoken": "two zero",
+            "value": 20
         },
         "time": null,
         "visibility": {
@@ -51,33 +59,33 @@
             "value": 10
         },
         "wind_direction": {
-            "repr": "VRB",
-            "spoken": "variable",
-            "value": null
+            "repr": "000",
+            "spoken": "zero zero zero",
+            "value": 0
         },
         "wind_gust": null,
         "wind_speed": {
-            "repr": "04",
-            "spoken": "four",
-            "value": 4
+            "repr": "00",
+            "spoken": "zero",
+            "value": 0
         },
         "wind_variable_direction": [],
         "wx_codes": []
     },
-    "speech": "Winds Variable at 4kt. Visibility one zero miles. Temperature two six degrees Celsius. Dew point one seven degrees Celsius. Altimeter three zero point zero six. Few clouds at 7500ft",
-    "summary": "Winds Variable at 4kt, Vis 10sm, Temp 26\u00b0C, Dew 17\u00b0C, Alt 30.06 inHg, Few clouds at 7500ft",
+    "speech": "Winds Calm. Visibility one zero miles. Temperature two zero degrees Celsius. Dew point one eight degrees Celsius. Altimeter three zero point zero nine. Few clouds at 13000ft. Few clouds at 25000ft",
+    "summary": "Winds Calm, Vis 10sm, Temp 20\u00b0C, Dew 18\u00b0C, Alt 30.09 inHg, Few clouds at 13000ft, Few clouds at 25000ft",
     "translations": {
-        "altimeter": "30.06 inHg (1018 hPa)",
-        "clouds": "Few clouds at 7500ft - Reported AGL",
-        "dewpoint": "17\u00b0C (63\u00b0F)",
+        "altimeter": "30.09 inHg (1019 hPa)",
+        "clouds": "Few clouds at 13000ft, Few clouds at 25000ft - Reported AGL",
+        "dewpoint": "18\u00b0C (64\u00b0F)",
         "remarks": {
             "AO2": "Automated with precipitation sensor",
-            "SLP179": "Sea level pressure: 1017.9 hPa",
-            "T02560172": "Temperature 25.6\u00b0C and dewpoint 17.2\u00b0C"
+            "SLP187": "Sea level pressure: 1018.7 hPa",
+            "T02000178": "Temperature 20.0\u00b0C and dewpoint 17.8\u00b0C"
         },
-        "temperature": "26\u00b0C (79\u00b0F)",
+        "temperature": "20\u00b0C (68\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "Variable at 4kt",
+        "wind": "Calm",
         "wx_codes": ""
     }
 }

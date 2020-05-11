@@ -216,6 +216,7 @@ class TestSpeech(unittest.TestCase):
             "icing": ["611005"],
             "other": [],
             "start_time": core.make_timestamp("1202"),
+            "transition_start": None,
             "turbulence": ["540553"],
             "type": "FROM",
             "visibility": core.make_number("3"),

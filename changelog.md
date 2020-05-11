@@ -6,6 +6,7 @@ Parsing and sanitization improvements are always ongoing and non-breaking
 
 - Added GFS MOS `Mav` and `Mex` implemented
 - Added `AVWXBase` and `Code` classes
+- Added `transition_start` to `TafLineData`
 - Sub module structure for reports, parsing, and static
 
 ## 1.3

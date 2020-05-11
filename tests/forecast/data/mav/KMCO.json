@@ -3,17 +3,17 @@
         "forecast": [
             {
                 "ceiling": {
-                    "repr": "8",
-                    "value": "> 12,000 feet or unlimited ceiling"
+                    "repr": "4",
+                    "value": "1000 - 1900 feet"
                 },
                 "cloud": {
-                    "repr": "SC",
-                    "value": "scattered"
+                    "repr": "OV",
+                    "value": "overcast"
                 },
                 "dewpoint": {
-                    "repr": "64",
-                    "spoken": "six four",
-                    "value": 64
+                    "repr": "67",
+                    "spoken": "six seven",
+                    "value": 67
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -36,157 +36,14 @@
                     "value": 0
                 },
                 "temperature": {
-                    "repr": "86",
-                    "spoken": "eight six",
-                    "value": 86
+                    "repr": "70",
+                    "spoken": "seven zero",
+                    "value": 70
                 },
                 "thunder_storm_12": null,
                 "thunder_storm_6": null,
                 "time": {
-                    "dt": "2020-03-19T18:00:00+00:00",
-                    "repr": "18"
-                },
-                "vis_obstruction": {
-                    "repr": "N",
-                    "value": "none"
-                },
-                "visibility": {
-                    "repr": "7",
-                    "value": "> 6 miles"
-                },
-                "wind_direction": {
-                    "repr": "13",
-                    "spoken": "one three zero",
-                    "value": 130
-                },
-                "wind_speed": {
-                    "repr": "10",
-                    "spoken": "one zero",
-                    "value": 10
-                }
-            },
-            {
-                "ceiling": {
-                    "repr": "8",
-                    "value": "> 12,000 feet or unlimited ceiling"
-                },
-                "cloud": {
-                    "repr": "SC",
-                    "value": "scattered"
-                },
-                "dewpoint": {
-                    "repr": "64",
-                    "spoken": "six four",
-                    "value": 64
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": null,
-                "precip_amount_6": null,
-                "precip_chance_12": null,
-                "precip_chance_6": null,
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "severe_storm_12": null,
-                "severe_storm_6": null,
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "temperature": {
-                    "repr": "84",
-                    "spoken": "eight four",
-                    "value": 84
-                },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
-                "time": {
-                    "dt": "2020-03-19T21:00:00+00:00",
-                    "repr": "21"
-                },
-                "vis_obstruction": {
-                    "repr": "N",
-                    "value": "none"
-                },
-                "visibility": {
-                    "repr": "7",
-                    "value": "> 6 miles"
-                },
-                "wind_direction": {
-                    "repr": "12",
-                    "spoken": "one two zero",
-                    "value": 120
-                },
-                "wind_speed": {
-                    "repr": "09",
-                    "spoken": "nine",
-                    "value": 9
-                }
-            },
-            {
-                "ceiling": {
-                    "repr": "8",
-                    "value": "> 12,000 feet or unlimited ceiling"
-                },
-                "cloud": {
-                    "repr": "FW",
-                    "value": "few"
-                },
-                "dewpoint": {
-                    "repr": "65",
-                    "spoken": "six five",
-                    "value": 65
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": null,
-                "precip_amount_6": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_chance_12": null,
-                "precip_chance_6": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "severe_storm_12": null,
-                "severe_storm_6": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "temperature": {
-                    "repr": "77",
-                    "spoken": "seven seven",
-                    "value": 77
-                },
-                "thunder_storm_12": null,
-                "thunder_storm_6": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "time": {
-                    "dt": "2020-03-20T00:00:00+00:00",
+                    "dt": "2020-05-11T00:00:00+00:00",
                     "repr": "00"
                 },
                 "vis_obstruction": {
@@ -198,9 +55,9 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
-                    "repr": "11",
-                    "spoken": "one one zero",
-                    "value": 110
+                    "repr": "06",
+                    "spoken": "six zero",
+                    "value": 60
                 },
                 "wind_speed": {
                     "repr": "08",
@@ -210,12 +67,12 @@
             },
             {
                 "ceiling": {
-                    "repr": "8",
-                    "value": "> 12,000 feet or unlimited ceiling"
+                    "repr": "3",
+                    "value": "500 - 900 feet"
                 },
                 "cloud": {
-                    "repr": "FW",
-                    "value": "few"
+                    "repr": "OV",
+                    "value": "overcast"
                 },
                 "dewpoint": {
                     "repr": "66",
@@ -243,14 +100,14 @@
                     "value": 0
                 },
                 "temperature": {
-                    "repr": "73",
-                    "spoken": "seven three",
-                    "value": 73
+                    "repr": "68",
+                    "spoken": "six eight",
+                    "value": 68
                 },
                 "thunder_storm_12": null,
                 "thunder_storm_6": null,
                 "time": {
-                    "dt": "2020-03-20T03:00:00+00:00",
+                    "dt": "2020-05-11T03:00:00+00:00",
                     "repr": "03"
                 },
                 "vis_obstruction": {
@@ -262,29 +119,29 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
-                    "repr": "13",
-                    "spoken": "one three zero",
-                    "value": 130
+                    "repr": "05",
+                    "spoken": "five zero",
+                    "value": 50
                 },
                 "wind_speed": {
-                    "repr": "05",
-                    "spoken": "five",
-                    "value": 5
+                    "repr": "06",
+                    "spoken": "six",
+                    "value": 6
                 }
             },
             {
                 "ceiling": {
-                    "repr": "8",
-                    "value": "> 12,000 feet or unlimited ceiling"
+                    "repr": "4",
+                    "value": "1000 - 1900 feet"
                 },
                 "cloud": {
-                    "repr": "FW",
-                    "value": "few"
+                    "repr": "OV",
+                    "value": "overcast"
                 },
                 "dewpoint": {
-                    "repr": "65",
-                    "spoken": "six five",
-                    "value": 65
+                    "repr": "66",
+                    "spoken": "six six",
+                    "value": 66
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -298,19 +155,165 @@
                 },
                 "precip_chance_12": null,
                 "precip_chance_6": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
+                    "repr": "29",
+                    "spoken": "two nine",
+                    "value": 29
                 },
                 "precip_type": {
                     "repr": "R",
                     "value": "pure rain/drizzle"
                 },
-                "severe_storm_12": {
+                "severe_storm_12": null,
+                "severe_storm_6": {
                     "repr": "0",
                     "spoken": "zero",
                     "value": 0
                 },
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "temperature": {
+                    "repr": "67",
+                    "spoken": "six seven",
+                    "value": 67
+                },
+                "thunder_storm_12": null,
+                "thunder_storm_6": {
+                    "repr": "6",
+                    "spoken": "six",
+                    "value": 6
+                },
+                "time": {
+                    "dt": "2020-05-11T06:00:00+00:00",
+                    "repr": "06"
+                },
+                "vis_obstruction": {
+                    "repr": "N",
+                    "value": "none"
+                },
+                "visibility": {
+                    "repr": "7",
+                    "value": "> 6 miles"
+                },
+                "wind_direction": {
+                    "repr": "02",
+                    "spoken": "two zero",
+                    "value": 20
+                },
+                "wind_speed": {
+                    "repr": "03",
+                    "spoken": "three",
+                    "value": 3
+                }
+            },
+            {
+                "ceiling": {
+                    "repr": "7",
+                    "value": "6600 - 12,000 feet"
+                },
+                "cloud": {
+                    "repr": "BK",
+                    "value": "broken"
+                },
+                "dewpoint": {
+                    "repr": "65",
+                    "spoken": "six five",
+                    "value": 65
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": null,
+                "precip_amount_6": null,
+                "precip_chance_12": null,
+                "precip_chance_6": null,
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "severe_storm_12": null,
+                "severe_storm_6": null,
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "temperature": {
+                    "repr": "66",
+                    "spoken": "six six",
+                    "value": 66
+                },
+                "thunder_storm_12": null,
+                "thunder_storm_6": null,
+                "time": {
+                    "dt": "2020-05-11T09:00:00+00:00",
+                    "repr": "09"
+                },
+                "vis_obstruction": {
+                    "repr": "N",
+                    "value": "none"
+                },
+                "visibility": {
+                    "repr": "7",
+                    "value": "> 6 miles"
+                },
+                "wind_direction": {
+                    "repr": "34",
+                    "spoken": "three four zero",
+                    "value": 340
+                },
+                "wind_speed": {
+                    "repr": "05",
+                    "spoken": "five",
+                    "value": 5
+                }
+            },
+            {
+                "ceiling": {
+                    "repr": "7",
+                    "value": "6600 - 12,000 feet"
+                },
+                "cloud": {
+                    "repr": "BK",
+                    "value": "broken"
+                },
+                "dewpoint": {
+                    "repr": "66",
+                    "spoken": "six six",
+                    "value": 66
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
+                "precip_amount_6": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
+                "precip_chance_12": {
+                    "repr": "29",
+                    "spoken": "two nine",
+                    "value": 29
+                },
+                "precip_chance_6": {
+                    "repr": "5",
+                    "spoken": "five",
+                    "value": 5
+                },
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "severe_storm_12": null,
                 "severe_storm_6": {
                     "repr": "0",
                     "spoken": "zero",
@@ -326,160 +329,6 @@
                     "spoken": "six nine",
                     "value": 69
                 },
-                "thunder_storm_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "thunder_storm_6": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "time": {
-                    "dt": "2020-03-20T06:00:00+00:00",
-                    "repr": "06"
-                },
-                "vis_obstruction": {
-                    "repr": "N",
-                    "value": "none"
-                },
-                "visibility": {
-                    "repr": "7",
-                    "value": "> 6 miles"
-                },
-                "wind_direction": {
-                    "repr": "14",
-                    "spoken": "one four zero",
-                    "value": 140
-                },
-                "wind_speed": {
-                    "repr": "02",
-                    "spoken": "two",
-                    "value": 2
-                }
-            },
-            {
-                "ceiling": {
-                    "repr": "8",
-                    "value": "> 12,000 feet or unlimited ceiling"
-                },
-                "cloud": {
-                    "repr": "CL",
-                    "value": "clear"
-                },
-                "dewpoint": {
-                    "repr": "64",
-                    "spoken": "six four",
-                    "value": 64
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": null,
-                "precip_amount_6": null,
-                "precip_chance_12": null,
-                "precip_chance_6": null,
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "severe_storm_12": null,
-                "severe_storm_6": null,
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "temperature": {
-                    "repr": "67",
-                    "spoken": "six seven",
-                    "value": 67
-                },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
-                "time": {
-                    "dt": "2020-03-20T09:00:00+00:00",
-                    "repr": "09"
-                },
-                "vis_obstruction": {
-                    "repr": "N",
-                    "value": "none"
-                },
-                "visibility": {
-                    "repr": "7",
-                    "value": "> 6 miles"
-                },
-                "wind_direction": {
-                    "repr": "13",
-                    "spoken": "one three zero",
-                    "value": 130
-                },
-                "wind_speed": {
-                    "repr": "03",
-                    "spoken": "three",
-                    "value": 3
-                }
-            },
-            {
-                "ceiling": {
-                    "repr": "8",
-                    "value": "> 12,000 feet or unlimited ceiling"
-                },
-                "cloud": {
-                    "repr": "FW",
-                    "value": "few"
-                },
-                "dewpoint": {
-                    "repr": "63",
-                    "spoken": "six three",
-                    "value": 63
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_amount_6": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_chance_12": {
-                    "repr": "2",
-                    "spoken": "two",
-                    "value": 2
-                },
-                "precip_chance_6": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "severe_storm_12": null,
-                "severe_storm_6": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "temperature": {
-                    "repr": "66",
-                    "spoken": "six six",
-                    "value": 66
-                },
                 "thunder_storm_12": null,
                 "thunder_storm_6": {
                     "repr": "0",
@@ -487,7 +336,7 @@
                     "value": 0
                 },
                 "time": {
-                    "dt": "2020-03-20T12:00:00+00:00",
+                    "dt": "2020-05-11T12:00:00+00:00",
                     "repr": "12"
                 },
                 "vis_obstruction": {
@@ -499,160 +348,9 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
-                    "repr": "13",
-                    "spoken": "one three zero",
-                    "value": 130
-                },
-                "wind_speed": {
-                    "repr": "02",
-                    "spoken": "two",
-                    "value": 2
-                }
-            },
-            {
-                "ceiling": {
-                    "repr": "8",
-                    "value": "> 12,000 feet or unlimited ceiling"
-                },
-                "cloud": {
-                    "repr": "FW",
-                    "value": "few"
-                },
-                "dewpoint": {
-                    "repr": "66",
-                    "spoken": "six six",
-                    "value": 66
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": null,
-                "precip_amount_6": null,
-                "precip_chance_12": null,
-                "precip_chance_6": null,
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "severe_storm_12": null,
-                "severe_storm_6": null,
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "temperature": {
-                    "repr": "79",
-                    "spoken": "seven nine",
-                    "value": 79
-                },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
-                "time": {
-                    "dt": "2020-03-20T15:00:00+00:00",
-                    "repr": "15"
-                },
-                "vis_obstruction": {
-                    "repr": "N",
-                    "value": "none"
-                },
-                "visibility": {
-                    "repr": "7",
-                    "value": "> 6 miles"
-                },
-                "wind_direction": {
-                    "repr": "14",
-                    "spoken": "one four zero",
-                    "value": 140
-                },
-                "wind_speed": {
-                    "repr": "07",
-                    "spoken": "seven",
-                    "value": 7
-                }
-            },
-            {
-                "ceiling": {
-                    "repr": "8",
-                    "value": "> 12,000 feet or unlimited ceiling"
-                },
-                "cloud": {
-                    "repr": "FW",
-                    "value": "few"
-                },
-                "dewpoint": {
-                    "repr": "63",
-                    "spoken": "six three",
-                    "value": 63
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": null,
-                "precip_amount_6": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_chance_12": null,
-                "precip_chance_6": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "severe_storm_12": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
-                "severe_storm_6": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "temperature": {
-                    "repr": "86",
-                    "spoken": "eight six",
-                    "value": 86
-                },
-                "thunder_storm_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "thunder_storm_6": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "time": {
-                    "dt": "2020-03-20T18:00:00+00:00",
-                    "repr": "18"
-                },
-                "vis_obstruction": {
-                    "repr": "N",
-                    "value": "none"
-                },
-                "visibility": {
-                    "repr": "7",
-                    "value": "> 6 miles"
-                },
-                "wind_direction": {
-                    "repr": "15",
-                    "spoken": "one five zero",
-                    "value": 150
+                    "repr": "35",
+                    "spoken": "three five zero",
+                    "value": 350
                 },
                 "wind_speed": {
                     "repr": "08",
@@ -670,460 +368,9 @@
                     "value": "scattered"
                 },
                 "dewpoint": {
-                    "repr": "62",
-                    "spoken": "six two",
-                    "value": 62
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": null,
-                "precip_amount_6": null,
-                "precip_chance_12": null,
-                "precip_chance_6": null,
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "severe_storm_12": null,
-                "severe_storm_6": null,
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "temperature": {
-                    "repr": "87",
-                    "spoken": "eight seven",
-                    "value": 87
-                },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
-                "time": {
-                    "dt": "2020-03-20T21:00:00+00:00",
-                    "repr": "21"
-                },
-                "vis_obstruction": {
-                    "repr": "N",
-                    "value": "none"
-                },
-                "visibility": {
-                    "repr": "7",
-                    "value": "> 6 miles"
-                },
-                "wind_direction": {
-                    "repr": "14",
-                    "spoken": "one four zero",
-                    "value": 140
-                },
-                "wind_speed": {
-                    "repr": "08",
-                    "spoken": "eight",
-                    "value": 8
-                }
-            },
-            {
-                "ceiling": {
-                    "repr": "8",
-                    "value": "> 12,000 feet or unlimited ceiling"
-                },
-                "cloud": {
-                    "repr": "FW",
-                    "value": "few"
-                },
-                "dewpoint": {
-                    "repr": "64",
-                    "spoken": "six four",
-                    "value": 64
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_amount_6": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_chance_12": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
-                "precip_chance_6": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "severe_storm_12": null,
-                "severe_storm_6": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "temperature": {
-                    "repr": "77",
-                    "spoken": "seven seven",
-                    "value": 77
-                },
-                "thunder_storm_12": null,
-                "thunder_storm_6": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "time": {
-                    "dt": "2020-03-21T00:00:00+00:00",
-                    "repr": "00"
-                },
-                "vis_obstruction": {
-                    "repr": "N",
-                    "value": "none"
-                },
-                "visibility": {
-                    "repr": "7",
-                    "value": "> 6 miles"
-                },
-                "wind_direction": {
-                    "repr": "11",
-                    "spoken": "one one zero",
-                    "value": 110
-                },
-                "wind_speed": {
-                    "repr": "07",
-                    "spoken": "seven",
-                    "value": 7
-                }
-            },
-            {
-                "ceiling": {
-                    "repr": "8",
-                    "value": "> 12,000 feet or unlimited ceiling"
-                },
-                "cloud": {
-                    "repr": "CL",
-                    "value": "clear"
-                },
-                "dewpoint": {
-                    "repr": "65",
-                    "spoken": "six five",
-                    "value": 65
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": null,
-                "precip_amount_6": null,
-                "precip_chance_12": null,
-                "precip_chance_6": null,
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "severe_storm_12": null,
-                "severe_storm_6": null,
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "temperature": {
-                    "repr": "71",
-                    "spoken": "seven one",
-                    "value": 71
-                },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
-                "time": {
-                    "dt": "2020-03-21T03:00:00+00:00",
-                    "repr": "03"
-                },
-                "vis_obstruction": {
-                    "repr": "N",
-                    "value": "none"
-                },
-                "visibility": {
-                    "repr": "7",
-                    "value": "> 6 miles"
-                },
-                "wind_direction": {
-                    "repr": "13",
-                    "spoken": "one three zero",
-                    "value": 130
-                },
-                "wind_speed": {
-                    "repr": "04",
-                    "spoken": "four",
-                    "value": 4
-                }
-            },
-            {
-                "ceiling": {
-                    "repr": "8",
-                    "value": "> 12,000 feet or unlimited ceiling"
-                },
-                "cloud": {
-                    "repr": "CL",
-                    "value": "clear"
-                },
-                "dewpoint": {
-                    "repr": "64",
-                    "spoken": "six four",
-                    "value": 64
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": null,
-                "precip_amount_6": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_chance_12": null,
-                "precip_chance_6": {
-                    "repr": "2",
-                    "spoken": "two",
-                    "value": 2
-                },
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "severe_storm_12": {
-                    "repr": "2",
-                    "spoken": "two",
-                    "value": 2
-                },
-                "severe_storm_6": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "temperature": {
-                    "repr": "68",
-                    "spoken": "six eight",
-                    "value": 68
-                },
-                "thunder_storm_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "thunder_storm_6": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "time": {
-                    "dt": "2020-03-21T06:00:00+00:00",
-                    "repr": "06"
-                },
-                "vis_obstruction": {
-                    "repr": "N",
-                    "value": "none"
-                },
-                "visibility": {
-                    "repr": "7",
-                    "value": "> 6 miles"
-                },
-                "wind_direction": {
-                    "repr": "17",
-                    "spoken": "one seven zero",
-                    "value": 170
-                },
-                "wind_speed": {
-                    "repr": "02",
-                    "spoken": "two",
-                    "value": 2
-                }
-            },
-            {
-                "ceiling": {
-                    "repr": "8",
-                    "value": "> 12,000 feet or unlimited ceiling"
-                },
-                "cloud": {
-                    "repr": "CL",
-                    "value": "clear"
-                },
-                "dewpoint": {
-                    "repr": "64",
-                    "spoken": "six four",
-                    "value": 64
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": null,
-                "precip_amount_6": null,
-                "precip_chance_12": null,
-                "precip_chance_6": null,
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "severe_storm_12": null,
-                "severe_storm_6": null,
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "temperature": {
-                    "repr": "67",
-                    "spoken": "six seven",
-                    "value": 67
-                },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
-                "time": {
-                    "dt": "2020-03-21T09:00:00+00:00",
-                    "repr": "09"
-                },
-                "vis_obstruction": {
-                    "repr": "N",
-                    "value": "none"
-                },
-                "visibility": {
-                    "repr": "7",
-                    "value": "> 6 miles"
-                },
-                "wind_direction": {
-                    "repr": "16",
-                    "spoken": "one six zero",
-                    "value": 160
-                },
-                "wind_speed": {
-                    "repr": "02",
-                    "spoken": "two",
-                    "value": 2
-                }
-            },
-            {
-                "ceiling": {
-                    "repr": "8",
-                    "value": "> 12,000 feet or unlimited ceiling"
-                },
-                "cloud": {
-                    "repr": "FW",
-                    "value": "few"
-                },
-                "dewpoint": {
-                    "repr": "65",
-                    "spoken": "six five",
-                    "value": 65
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_amount_6": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_chance_12": {
-                    "repr": "6",
-                    "spoken": "six",
-                    "value": 6
-                },
-                "precip_chance_6": {
-                    "repr": "4",
-                    "spoken": "four",
-                    "value": 4
-                },
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "severe_storm_12": null,
-                "severe_storm_6": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "temperature": {
-                    "repr": "67",
-                    "spoken": "six seven",
-                    "value": 67
-                },
-                "thunder_storm_12": null,
-                "thunder_storm_6": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "time": {
-                    "dt": "2020-03-21T12:00:00+00:00",
-                    "repr": "12"
-                },
-                "vis_obstruction": {
-                    "repr": "N",
-                    "value": "none"
-                },
-                "visibility": {
-                    "repr": "7",
-                    "value": "> 6 miles"
-                },
-                "wind_direction": {
-                    "repr": "00",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "wind_speed": {
-                    "repr": "00",
-                    "spoken": "zero",
-                    "value": 0
-                }
-            },
-            {
-                "ceiling": {
-                    "repr": "8",
-                    "value": "> 12,000 feet or unlimited ceiling"
-                },
-                "cloud": {
-                    "repr": "FW",
-                    "value": "few"
-                },
-                "dewpoint": {
-                    "repr": "66",
-                    "spoken": "six six",
-                    "value": 66
+                    "repr": "63",
+                    "spoken": "six three",
+                    "value": 63
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -1153,7 +400,7 @@
                 "thunder_storm_12": null,
                 "thunder_storm_6": null,
                 "time": {
-                    "dt": "2020-03-21T15:00:00+00:00",
+                    "dt": "2020-05-11T15:00:00+00:00",
                     "repr": "15"
                 },
                 "vis_obstruction": {
@@ -1165,14 +412,14 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
-                    "repr": "20",
-                    "spoken": "two zero zero",
-                    "value": 200
+                    "repr": "01",
+                    "spoken": "one zero",
+                    "value": 10
                 },
                 "wind_speed": {
-                    "repr": "04",
-                    "spoken": "four",
-                    "value": 4
+                    "repr": "13",
+                    "spoken": "one three",
+                    "value": 13
                 }
             },
             {
@@ -1181,13 +428,13 @@
                     "value": "> 12,000 feet or unlimited ceiling"
                 },
                 "cloud": {
-                    "repr": "SC",
-                    "value": "scattered"
+                    "repr": "FW",
+                    "value": "few"
                 },
                 "dewpoint": {
-                    "repr": "63",
-                    "spoken": "six three",
-                    "value": 63
+                    "repr": "58",
+                    "spoken": "five eight",
+                    "value": 58
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -1210,14 +457,14 @@
                     "value": "pure rain/drizzle"
                 },
                 "severe_storm_12": {
-                    "repr": "4",
-                    "spoken": "four",
-                    "value": 4
+                    "repr": "2",
+                    "spoken": "two",
+                    "value": 2
                 },
                 "severe_storm_6": {
-                    "repr": "4",
-                    "spoken": "four",
-                    "value": 4
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
                 },
                 "snow": {
                     "repr": "0",
@@ -1225,9 +472,9 @@
                     "value": 0
                 },
                 "temperature": {
-                    "repr": "84",
-                    "spoken": "eight four",
-                    "value": 84
+                    "repr": "82",
+                    "spoken": "eight two",
+                    "value": 82
                 },
                 "thunder_storm_12": {
                     "repr": "0",
@@ -1240,7 +487,7 @@
                     "value": 0
                 },
                 "time": {
-                    "dt": "2020-03-21T18:00:00+00:00",
+                    "dt": "2020-05-11T18:00:00+00:00",
                     "repr": "18"
                 },
                 "vis_obstruction": {
@@ -1252,14 +499,14 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
-                    "repr": "17",
-                    "spoken": "one seven zero",
-                    "value": 170
+                    "repr": "02",
+                    "spoken": "two zero",
+                    "value": 20
                 },
                 "wind_speed": {
-                    "repr": "04",
-                    "spoken": "four",
-                    "value": 4
+                    "repr": "14",
+                    "spoken": "one four",
+                    "value": 14
                 }
             },
             {
@@ -1268,13 +515,13 @@
                     "value": "> 12,000 feet or unlimited ceiling"
                 },
                 "cloud": {
-                    "repr": "SC",
-                    "value": "scattered"
+                    "repr": "CL",
+                    "value": "clear"
                 },
                 "dewpoint": {
-                    "repr": "62",
-                    "spoken": "six two",
-                    "value": 62
+                    "repr": "57",
+                    "spoken": "five seven",
+                    "value": 57
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -1304,7 +551,7 @@
                 "thunder_storm_12": null,
                 "thunder_storm_6": null,
                 "time": {
-                    "dt": "2020-03-21T21:00:00+00:00",
+                    "dt": "2020-05-11T21:00:00+00:00",
                     "repr": "21"
                 },
                 "vis_obstruction": {
@@ -1316,14 +563,14 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
-                    "repr": "12",
-                    "spoken": "one two zero",
-                    "value": 120
+                    "repr": "03",
+                    "spoken": "three zero",
+                    "value": 30
                 },
                 "wind_speed": {
-                    "repr": "06",
-                    "spoken": "six",
-                    "value": 6
+                    "repr": "13",
+                    "spoken": "one three",
+                    "value": 13
                 }
             },
             {
@@ -1332,13 +579,13 @@
                     "value": "> 12,000 feet or unlimited ceiling"
                 },
                 "cloud": {
-                    "repr": "FW",
-                    "value": "few"
+                    "repr": "CL",
+                    "value": "clear"
                 },
                 "dewpoint": {
-                    "repr": "63",
-                    "spoken": "six three",
-                    "value": 63
+                    "repr": "57",
+                    "spoken": "five seven",
+                    "value": 57
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -1354,14 +601,14 @@
                     "value": "no precipitation"
                 },
                 "precip_chance_12": {
-                    "repr": "6",
-                    "spoken": "six",
-                    "value": 6
+                    "repr": "3",
+                    "spoken": "three",
+                    "value": 3
                 },
                 "precip_chance_6": {
-                    "repr": "2",
-                    "spoken": "two",
-                    "value": 2
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
                 },
                 "precip_type": {
                     "repr": "R",
@@ -1369,9 +616,9 @@
                 },
                 "severe_storm_12": null,
                 "severe_storm_6": {
-                    "repr": "7",
-                    "spoken": "seven",
-                    "value": 7
+                    "repr": "4",
+                    "spoken": "four",
+                    "value": 4
                 },
                 "snow": {
                     "repr": "0",
@@ -1390,7 +637,7 @@
                     "value": 0
                 },
                 "time": {
-                    "dt": "2020-03-22T00:00:00+00:00",
+                    "dt": "2020-05-12T00:00:00+00:00",
                     "repr": "00"
                 },
                 "vis_obstruction": {
@@ -1402,14 +649,14 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
-                    "repr": "11",
-                    "spoken": "one one zero",
-                    "value": 110
+                    "repr": "07",
+                    "spoken": "seven zero",
+                    "value": 70
                 },
                 "wind_speed": {
-                    "repr": "06",
-                    "spoken": "six",
-                    "value": 6
+                    "repr": "15",
+                    "spoken": "one five",
+                    "value": 15
                 }
             },
             {
@@ -1422,9 +669,374 @@
                     "value": "clear"
                 },
                 "dewpoint": {
+                    "repr": "59",
+                    "spoken": "five nine",
+                    "value": 59
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": null,
+                "precip_amount_6": null,
+                "precip_chance_12": null,
+                "precip_chance_6": null,
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "severe_storm_12": null,
+                "severe_storm_6": null,
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "temperature": {
+                    "repr": "70",
+                    "spoken": "seven zero",
+                    "value": 70
+                },
+                "thunder_storm_12": null,
+                "thunder_storm_6": null,
+                "time": {
+                    "dt": "2020-05-12T03:00:00+00:00",
+                    "repr": "03"
+                },
+                "vis_obstruction": {
+                    "repr": "N",
+                    "value": "none"
+                },
+                "visibility": {
+                    "repr": "7",
+                    "value": "> 6 miles"
+                },
+                "wind_direction": {
+                    "repr": "07",
+                    "spoken": "seven zero",
+                    "value": 70
+                },
+                "wind_speed": {
+                    "repr": "05",
+                    "spoken": "five",
+                    "value": 5
+                }
+            },
+            {
+                "ceiling": {
+                    "repr": "8",
+                    "value": "> 12,000 feet or unlimited ceiling"
+                },
+                "cloud": {
+                    "repr": "CL",
+                    "value": "clear"
+                },
+                "dewpoint": {
+                    "repr": "58",
+                    "spoken": "five eight",
+                    "value": 58
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": null,
+                "precip_amount_6": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
+                "precip_chance_12": null,
+                "precip_chance_6": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "severe_storm_12": {
+                    "repr": "9",
+                    "spoken": "nine",
+                    "value": 9
+                },
+                "severe_storm_6": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "temperature": {
                     "repr": "66",
                     "spoken": "six six",
                     "value": 66
+                },
+                "thunder_storm_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "thunder_storm_6": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "time": {
+                    "dt": "2020-05-12T06:00:00+00:00",
+                    "repr": "06"
+                },
+                "vis_obstruction": {
+                    "repr": "N",
+                    "value": "none"
+                },
+                "visibility": {
+                    "repr": "7",
+                    "value": "> 6 miles"
+                },
+                "wind_direction": {
+                    "repr": "01",
+                    "spoken": "one zero",
+                    "value": 10
+                },
+                "wind_speed": {
+                    "repr": "03",
+                    "spoken": "three",
+                    "value": 3
+                }
+            },
+            {
+                "ceiling": {
+                    "repr": "8",
+                    "value": "> 12,000 feet or unlimited ceiling"
+                },
+                "cloud": {
+                    "repr": "CL",
+                    "value": "clear"
+                },
+                "dewpoint": {
+                    "repr": "57",
+                    "spoken": "five seven",
+                    "value": 57
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": null,
+                "precip_amount_6": null,
+                "precip_chance_12": null,
+                "precip_chance_6": null,
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "severe_storm_12": null,
+                "severe_storm_6": null,
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "temperature": {
+                    "repr": "63",
+                    "spoken": "six three",
+                    "value": 63
+                },
+                "thunder_storm_12": null,
+                "thunder_storm_6": null,
+                "time": {
+                    "dt": "2020-05-12T09:00:00+00:00",
+                    "repr": "09"
+                },
+                "vis_obstruction": {
+                    "repr": "N",
+                    "value": "none"
+                },
+                "visibility": {
+                    "repr": "7",
+                    "value": "> 6 miles"
+                },
+                "wind_direction": {
+                    "repr": "01",
+                    "spoken": "one zero",
+                    "value": 10
+                },
+                "wind_speed": {
+                    "repr": "04",
+                    "spoken": "four",
+                    "value": 4
+                }
+            },
+            {
+                "ceiling": {
+                    "repr": "8",
+                    "value": "> 12,000 feet or unlimited ceiling"
+                },
+                "cloud": {
+                    "repr": "FW",
+                    "value": "few"
+                },
+                "dewpoint": {
+                    "repr": "59",
+                    "spoken": "five nine",
+                    "value": 59
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
+                "precip_amount_6": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
+                "precip_chance_12": {
+                    "repr": "3",
+                    "spoken": "three",
+                    "value": 3
+                },
+                "precip_chance_6": {
+                    "repr": "2",
+                    "spoken": "two",
+                    "value": 2
+                },
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "severe_storm_12": null,
+                "severe_storm_6": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "temperature": {
+                    "repr": "67",
+                    "spoken": "six seven",
+                    "value": 67
+                },
+                "thunder_storm_12": null,
+                "thunder_storm_6": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "time": {
+                    "dt": "2020-05-12T12:00:00+00:00",
+                    "repr": "12"
+                },
+                "vis_obstruction": {
+                    "repr": "N",
+                    "value": "none"
+                },
+                "visibility": {
+                    "repr": "7",
+                    "value": "> 6 miles"
+                },
+                "wind_direction": {
+                    "repr": "01",
+                    "spoken": "one zero",
+                    "value": 10
+                },
+                "wind_speed": {
+                    "repr": "08",
+                    "spoken": "eight",
+                    "value": 8
+                }
+            },
+            {
+                "ceiling": {
+                    "repr": "8",
+                    "value": "> 12,000 feet or unlimited ceiling"
+                },
+                "cloud": {
+                    "repr": "CL",
+                    "value": "clear"
+                },
+                "dewpoint": {
+                    "repr": "55",
+                    "spoken": "five five",
+                    "value": 55
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": null,
+                "precip_amount_6": null,
+                "precip_chance_12": null,
+                "precip_chance_6": null,
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "severe_storm_12": null,
+                "severe_storm_6": null,
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "temperature": {
+                    "repr": "78",
+                    "spoken": "seven eight",
+                    "value": 78
+                },
+                "thunder_storm_12": null,
+                "thunder_storm_6": null,
+                "time": {
+                    "dt": "2020-05-12T15:00:00+00:00",
+                    "repr": "15"
+                },
+                "vis_obstruction": {
+                    "repr": "N",
+                    "value": "none"
+                },
+                "visibility": {
+                    "repr": "7",
+                    "value": "> 6 miles"
+                },
+                "wind_direction": {
+                    "repr": "05",
+                    "spoken": "five zero",
+                    "value": 50
+                },
+                "wind_speed": {
+                    "repr": "10",
+                    "spoken": "one zero",
+                    "value": 10
+                }
+            },
+            {
+                "ceiling": {
+                    "repr": "8",
+                    "value": "> 12,000 feet or unlimited ceiling"
+                },
+                "cloud": {
+                    "repr": "FW",
+                    "value": "few"
+                },
+                "dewpoint": {
+                    "repr": "54",
+                    "spoken": "five four",
+                    "value": 54
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -1447,30 +1059,38 @@
                     "value": "pure rain/drizzle"
                 },
                 "severe_storm_12": {
-                    "repr": "10",
-                    "spoken": "one zero",
-                    "value": 10
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
                 },
-                "severe_storm_6": null,
+                "severe_storm_6": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
                 "snow": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
                 },
                 "temperature": {
-                    "repr": "71",
-                    "spoken": "seven one",
-                    "value": 71
+                    "repr": "81",
+                    "spoken": "eight one",
+                    "value": 81
                 },
                 "thunder_storm_12": {
                     "repr": "0",
                     "spoken": "zero",
                     "value": 0
                 },
-                "thunder_storm_6": null,
+                "thunder_storm_6": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
                 "time": {
-                    "dt": "2020-03-22T06:00:00+00:00",
-                    "repr": "06"
+                    "dt": "2020-05-12T18:00:00+00:00",
+                    "repr": "18"
                 },
                 "vis_obstruction": {
                     "repr": "N",
@@ -1481,14 +1101,14 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
-                    "repr": "18",
-                    "spoken": "one eight zero",
-                    "value": 180
+                    "repr": "06",
+                    "spoken": "six zero",
+                    "value": 60
                 },
                 "wind_speed": {
-                    "repr": "02",
-                    "spoken": "two",
-                    "value": 2
+                    "repr": "12",
+                    "spoken": "one two",
+                    "value": 12
                 }
             },
             {
@@ -1497,13 +1117,77 @@
                     "value": "> 12,000 feet or unlimited ceiling"
                 },
                 "cloud": {
-                    "repr": "BK",
-                    "value": "broken"
+                    "repr": "CL",
+                    "value": "clear"
                 },
                 "dewpoint": {
-                    "repr": "65",
-                    "spoken": "six five",
-                    "value": 65
+                    "repr": "55",
+                    "spoken": "five five",
+                    "value": 55
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": null,
+                "precip_amount_6": null,
+                "precip_chance_12": null,
+                "precip_chance_6": null,
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "severe_storm_12": null,
+                "severe_storm_6": null,
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "temperature": {
+                    "repr": "81",
+                    "spoken": "eight one",
+                    "value": 81
+                },
+                "thunder_storm_12": null,
+                "thunder_storm_6": null,
+                "time": {
+                    "dt": "2020-05-12T21:00:00+00:00",
+                    "repr": "21"
+                },
+                "vis_obstruction": {
+                    "repr": "N",
+                    "value": "none"
+                },
+                "visibility": {
+                    "repr": "7",
+                    "value": "> 6 miles"
+                },
+                "wind_direction": {
+                    "repr": "07",
+                    "spoken": "seven zero",
+                    "value": 70
+                },
+                "wind_speed": {
+                    "repr": "14",
+                    "spoken": "one four",
+                    "value": 14
+                }
+            },
+            {
+                "ceiling": {
+                    "repr": "8",
+                    "value": "> 12,000 feet or unlimited ceiling"
+                },
+                "cloud": {
+                    "repr": "CL",
+                    "value": "clear"
+                },
+                "dewpoint": {
+                    "repr": "57",
+                    "spoken": "five seven",
+                    "value": 57
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -1519,14 +1203,14 @@
                     "value": "no precipitation"
                 },
                 "precip_chance_12": {
-                    "repr": "9",
-                    "spoken": "nine",
-                    "value": 9
+                    "repr": "4",
+                    "spoken": "four",
+                    "value": 4
                 },
                 "precip_chance_6": {
-                    "repr": "7",
-                    "spoken": "seven",
-                    "value": 7
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
                 },
                 "precip_type": {
                     "repr": "R",
@@ -1534,9 +1218,9 @@
                 },
                 "severe_storm_12": null,
                 "severe_storm_6": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
+                    "repr": "4",
+                    "spoken": "four",
+                    "value": 4
                 },
                 "snow": {
                     "repr": "0",
@@ -1544,18 +1228,247 @@
                     "value": 0
                 },
                 "temperature": {
+                    "repr": "75",
+                    "spoken": "seven five",
+                    "value": 75
+                },
+                "thunder_storm_12": null,
+                "thunder_storm_6": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "time": {
+                    "dt": "2020-05-13T00:00:00+00:00",
+                    "repr": "00"
+                },
+                "vis_obstruction": {
+                    "repr": "N",
+                    "value": "none"
+                },
+                "visibility": {
+                    "repr": "7",
+                    "value": "> 6 miles"
+                },
+                "wind_direction": {
+                    "repr": "08",
+                    "spoken": "eight zero",
+                    "value": 80
+                },
+                "wind_speed": {
+                    "repr": "14",
+                    "spoken": "one four",
+                    "value": 14
+                }
+            },
+            {
+                "ceiling": {
+                    "repr": "8",
+                    "value": "> 12,000 feet or unlimited ceiling"
+                },
+                "cloud": {
+                    "repr": "CL",
+                    "value": "clear"
+                },
+                "dewpoint": {
+                    "repr": "61",
+                    "spoken": "six one",
+                    "value": 61
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": null,
+                "precip_amount_6": null,
+                "precip_chance_12": null,
+                "precip_chance_6": null,
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "severe_storm_12": null,
+                "severe_storm_6": null,
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "temperature": {
+                    "repr": "70",
+                    "spoken": "seven zero",
+                    "value": 70
+                },
+                "thunder_storm_12": null,
+                "thunder_storm_6": null,
+                "time": {
+                    "dt": "2020-05-13T03:00:00+00:00",
+                    "repr": "03"
+                },
+                "vis_obstruction": {
+                    "repr": "N",
+                    "value": "none"
+                },
+                "visibility": {
+                    "repr": "7",
+                    "value": "> 6 miles"
+                },
+                "wind_direction": {
+                    "repr": "08",
+                    "spoken": "eight zero",
+                    "value": 80
+                },
+                "wind_speed": {
+                    "repr": "05",
+                    "spoken": "five",
+                    "value": 5
+                }
+            },
+            {
+                "ceiling": {
+                    "repr": "8",
+                    "value": "> 12,000 feet or unlimited ceiling"
+                },
+                "cloud": {
+                    "repr": "FW",
+                    "value": "few"
+                },
+                "dewpoint": {
+                    "repr": "61",
+                    "spoken": "six one",
+                    "value": 61
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": null,
+                "precip_amount_6": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
+                "precip_chance_12": null,
+                "precip_chance_6": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "severe_storm_12": {
+                    "repr": "4",
+                    "spoken": "four",
+                    "value": 4
+                },
+                "severe_storm_6": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "temperature": {
+                    "repr": "67",
+                    "spoken": "six seven",
+                    "value": 67
+                },
+                "thunder_storm_12": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "thunder_storm_6": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "time": {
+                    "dt": "2020-05-13T06:00:00+00:00",
+                    "repr": "06"
+                },
+                "vis_obstruction": {
+                    "repr": "N",
+                    "value": "none"
+                },
+                "visibility": {
+                    "repr": "7",
+                    "value": "> 6 miles"
+                },
+                "wind_direction": {
+                    "repr": "06",
+                    "spoken": "six zero",
+                    "value": 60
+                },
+                "wind_speed": {
+                    "repr": "06",
+                    "spoken": "six",
+                    "value": 6
+                }
+            },
+            {
+                "ceiling": {
+                    "repr": "8",
+                    "value": "> 12,000 feet or unlimited ceiling"
+                },
+                "cloud": {
+                    "repr": "FW",
+                    "value": "few"
+                },
+                "dewpoint": {
+                    "repr": "64",
+                    "spoken": "six four",
+                    "value": 64
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
+                "precip_amount_6": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
+                "precip_chance_12": {
+                    "repr": "4",
+                    "spoken": "four",
+                    "value": 4
+                },
+                "precip_chance_6": {
+                    "repr": "4",
+                    "spoken": "four",
+                    "value": 4
+                },
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "severe_storm_12": null,
+                "severe_storm_6": null,
+                "snow": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "temperature": {
                     "repr": "69",
                     "spoken": "six nine",
                     "value": 69
                 },
                 "thunder_storm_12": null,
-                "thunder_storm_6": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
+                "thunder_storm_6": null,
                 "time": {
-                    "dt": "2020-03-22T12:00:00+00:00",
+                    "dt": "2020-05-13T12:00:00+00:00",
                     "repr": "12"
                 },
                 "vis_obstruction": {
@@ -1567,23 +1480,153 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
-                    "repr": "00",
+                    "repr": "06",
+                    "spoken": "six zero",
+                    "value": 60
+                },
+                "wind_speed": {
+                    "repr": "09",
+                    "spoken": "nine",
+                    "value": 9
+                }
+            },
+            {
+                "ceiling": {
+                    "repr": "8",
+                    "value": "> 12,000 feet or unlimited ceiling"
+                },
+                "cloud": {
+                    "repr": "BK",
+                    "value": "broken"
+                },
+                "dewpoint": {
+                    "repr": "59",
+                    "spoken": "five nine",
+                    "value": 59
+                },
+                "freezing_precip": {
+                    "repr": "0",
                     "spoken": "zero",
                     "value": 0
                 },
-                "wind_speed": {
-                    "repr": "00",
+                "precip_amount_12": null,
+                "precip_amount_6": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
+                "precip_chance_12": null,
+                "precip_chance_6": {
+                    "repr": "4",
+                    "spoken": "four",
+                    "value": 4
+                },
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "severe_storm_12": {
+                    "repr": "3",
+                    "spoken": "three",
+                    "value": 3
+                },
+                "severe_storm_6": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "snow": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "temperature": {
+                    "repr": "83",
+                    "spoken": "eight three",
+                    "value": 83
+                },
+                "thunder_storm_12": {
+                    "repr": "0",
                     "spoken": "zero",
                     "value": 0
+                },
+                "thunder_storm_6": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "time": {
+                    "dt": "2020-05-13T18:00:00+00:00",
+                    "repr": "18"
+                },
+                "vis_obstruction": {
+                    "repr": "N",
+                    "value": "none"
+                },
+                "visibility": {
+                    "repr": "7",
+                    "value": "> 6 miles"
+                },
+                "wind_direction": {
+                    "repr": "09",
+                    "spoken": "nine zero",
+                    "value": 90
+                },
+                "wind_speed": {
+                    "repr": "19",
+                    "spoken": "one nine",
+                    "value": 19
                 }
             }
         ],
-        "raw": "KMCO   GFS MOS GUIDANCE    3/19/2020  1200 UTC                      \nDT /MAR  19/MAR  20                /MAR  21                /MAR  22 \nHR   18 21 00 03 06 09 12 15 18 21 00 03 06 09 12 15 18 21 00 06 12 \nN/X                    65          89          65          87    67 \nTMP  86 84 77 73 69 67 66 79 86 87 77 71 68 67 67 78 84 85 77 71 69 \nDPT  64 64 65 66 65 64 63 66 63 62 64 65 64 64 65 66 63 62 63 66 65 \nCLD  SC SC FW FW FW CL FW FW FW SC FW CL CL CL FW FW SC SC FW CL BK \nWDR  13 12 11 13 14 13 13 14 15 14 11 13 17 16 00 20 17 12 11 18 00 \nWSP  10 09 08 05 02 03 02 07 08 08 07 04 02 02 00 04 04 06 06 02 00 \nP06         0     1     1     0     1     2     4     3     2  4  7 \nP12                     2           1           6           6     9 \nQ06         0     0     0     0     0     0     0     0     0  0  0 \nQ12                     0           0           0           0     0 \nT06      0/ 0  0/ 0  0/ 0  0/ 1  0/ 0  0/ 0  0/ 0  0/ 4  0/ 7  1/ 1 \nT12            0/ 0        0/ 1        0/ 2        0/ 4     0/10    \nPOZ   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 \nPOS   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0 \nTYP   R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R \nCIG   8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8 \nVIS   7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7 \nOBV   N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N",
+        "raw": "KMCO   GFS MOS GUIDANCE    5/10/2020  1800 UTC                      \nDT /MAY  11                  /MAY  12                /MAY  13       \nHR   00 03 06 09 12 15 18 21 00 03 06 09 12 15 18 21 00 03 06 12 18 \nN/X              65          85          61          84       64    \nTMP  70 68 67 66 69 78 82 85 77 70 66 63 67 78 81 81 75 70 67 69 83 \nDPT  67 66 66 65 66 63 58 57 57 59 58 57 59 55 54 55 57 61 61 64 59 \nCLD  OV OV OV BK BK SC FW CL CL CL CL CL FW CL FW CL CL CL FW FW BK \nWDR  06 05 02 34 35 01 02 03 07 07 01 01 01 05 06 07 08 08 06 06 09 \nWSP  08 06 03 05 08 13 14 13 15 05 03 04 08 10 12 14 14 05 06 09 19 \nP06        29     5     3     0     0     2     4     0     1  4  4 \nP12              29           3           3           4        4    \nQ06         0     0     0     0     0     0     0     0     0  0  0 \nQ12               0           0           0           0        0    \nT06      6/ 0  0/ 0  0/ 0  0/ 4  0/ 0  0/ 0  0/ 0  0/ 4  0/ 0  0/ 1 \nT12                  0/ 2        0/ 9        0/ 0        1/ 4  0/ 3 \nPOZ   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 \nPOS   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1 \nTYP   R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R  R \nCIG   4  3  4  7  7  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8 \nVIS   7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7  7 \nOBV   N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N",
         "remarks": null,
         "station": "KMCO",
         "time": {
-            "dt": "2020-03-19T12:00:00+00:00",
-            "repr": "3/19/2020  1200"
+            "dt": "2020-05-10T18:00:00+00:00",
+            "repr": "5/10/2020  1800"
         }
+    },
+    "station": {
+        "city": "Orlando",
+        "country": "US",
+        "elevation_ft": 96,
+        "elevation_m": 29,
+        "iata": "MCO",
+        "icao": "KMCO",
+        "latitude": 28.429399490356445,
+        "longitude": -81.30899810791016,
+        "name": "Orlando International Airport",
+        "note": "Disney World,Epcot Center",
+        "reporting": true,
+        "runways": [
+            {
+                "ident1": "18L",
+                "ident2": "36R",
+                "length_ft": 12005,
+                "width_ft": 200
+            },
+            {
+                "ident1": "18R",
+                "ident2": "36L",
+                "length_ft": 12004,
+                "width_ft": 200
+            },
+            {
+                "ident1": "17R",
+                "ident2": "35L",
+                "length_ft": 10000,
+                "width_ft": 150
+            },
+            {
+                "ident1": "17L",
+                "ident2": "35R",
+                "length_ft": 9000,
+                "width_ft": 150
+            }
+        ],
+        "state": "FL",
+        "type": "large_airport",
+        "website": "http://www.orlandoairports.net/",
+        "wiki": "https://en.wikipedia.org/wiki/Orlando_International_Airport"
     }
 }

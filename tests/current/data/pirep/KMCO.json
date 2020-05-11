@@ -3,77 +3,39 @@
         {
             "data": {
                 "aircraft": {
-                    "code": "P28A",
-                    "type": "Piper PA-28 (up to 180 hp)"
+                    "code": "B738",
+                    "type": "Boeing 737-800"
                 },
                 "altitude": {
-                    "repr": "055",
-                    "spoken": "five five",
-                    "value": 55
+                    "repr": "022",
+                    "spoken": "two two",
+                    "value": 22
                 },
-                "clouds": null,
+                "clouds": [
+                    {
+                        "base": null,
+                        "direction": null,
+                        "modifier": null,
+                        "repr": "BKN",
+                        "top": null,
+                        "type": "BKN"
+                    }
+                ],
                 "flight_visibility": null,
                 "icing": null,
                 "location": {
                     "direction": null,
                     "distance": null,
-                    "repr": "2IS",
-                    "station": "2IS"
+                    "repr": "FLL",
+                    "station": "FLL"
                 },
-                "raw": "IMM UA /OV 2IS/TM 2258/FL055/TP P28A/TB NEG BLO 055/RM DURC",
-                "remarks": "DURC",
-                "sanitized": "IMM UA /OV 2IS/TM 2258/FL055/TP P28A/TB NEG BLO 055/RM DURC",
-                "station": "IMM",
-                "temperature": null,
-                "time": null,
-                "turbulence": {
-                    "ceiling": {
-                        "repr": "055",
-                        "spoken": "five five",
-                        "value": 55
-                    },
-                    "floor": null,
-                    "severity": "NEG"
-                },
-                "type": "UA",
-                "wx": null
-            }
-        },
-        {
-            "data": {
-                "aircraft": {
-                    "code": "C182",
-                    "type": "Cessna 182 Skylane"
-                },
-                "altitude": {
-                    "repr": "025",
-                    "spoken": "two five",
-                    "value": 25
-                },
-                "clouds": null,
-                "flight_visibility": null,
-                "icing": null,
-                "location": {
-                    "direction": null,
-                    "distance": null,
-                    "repr": "MYBS",
-                    "station": "MYBS"
-                },
-                "raw": "FLL UA /OV MYBS/TM 2226/FL025/TP C182/TB NEG BLO 025/RM DURC",
-                "remarks": "DURC",
-                "sanitized": "FLL UA /OV MYBS/TM 2226/FL025/TP C182/TB NEG BLO 025/RM DURC",
+                "raw": "FLL UA /OV FLL/TM 0327/FL022/TP B738/SK BKN",
+                "remarks": null,
+                "sanitized": "FLL UA /OV FLL/TM 0327/FL022/TP B738/SK BKN",
                 "station": "FLL",
                 "temperature": null,
                 "time": null,
-                "turbulence": {
-                    "ceiling": {
-                        "repr": "025",
-                        "spoken": "two five",
-                        "value": 25
-                    },
-                    "floor": null,
-                    "severity": "NEG"
-                },
+                "turbulence": null,
                 "type": "UA",
                 "wx": null
             }
@@ -81,47 +43,8 @@
         {
             "data": {
                 "aircraft": {
-                    "code": "P28A",
-                    "type": "Piper PA-28 (up to 180 hp)"
-                },
-                "altitude": {
-                    "repr": "035",
-                    "spoken": "three five",
-                    "value": 35
-                },
-                "clouds": null,
-                "flight_visibility": null,
-                "icing": null,
-                "location": {
-                    "direction": null,
-                    "distance": null,
-                    "repr": "APF",
-                    "station": "APF"
-                },
-                "raw": "APF UA /OV APF/TM 2224/FL035/TP P28A/TB LGT BLO 035/RM DURC",
-                "remarks": "DURC",
-                "sanitized": "APF UA /OV APF/TM 2224/FL035/TP P28A/TB LGT BLO 035/RM DURC",
-                "station": "APF",
-                "temperature": null,
-                "time": null,
-                "turbulence": {
-                    "ceiling": {
-                        "repr": "035",
-                        "spoken": "three five",
-                        "value": 35
-                    },
-                    "floor": null,
-                    "severity": "LGT"
-                },
-                "type": "UA",
-                "wx": null
-            }
-        },
-        {
-            "data": {
-                "aircraft": {
-                    "code": "B737",
-                    "type": "Boeing 737-700"
+                    "code": "H25B",
+                    "type": "British Aerospace 125 series / Hawker/Raytheon 700/800/800XP/850/900"
                 },
                 "altitude": {
                     "repr": "020",
@@ -132,123 +55,89 @@
                     {
                         "base": null,
                         "direction": null,
-                        "modifier": "BASE",
-                        "repr": "BASE",
+                        "modifier": "BASSE",
+                        "repr": "BASES",
                         "top": null,
                         "type": null
                     },
                     {
-                        "base": 35,
+                        "base": 20,
                         "direction": null,
                         "modifier": null,
-                        "repr": "BKN035",
+                        "repr": "OVC020",
                         "top": null,
-                        "type": "BKN"
+                        "type": "OVC"
                     }
                 ],
                 "flight_visibility": null,
                 "icing": null,
                 "location": {
                     "direction": {
-                        "repr": "280",
-                        "spoken": "two eight zero",
-                        "value": 280
+                        "repr": "045",
+                        "spoken": "four five",
+                        "value": 45
                     },
                     "distance": {
-                        "repr": "008",
-                        "spoken": "eight",
-                        "value": 8
+                        "repr": "010",
+                        "spoken": "one zero",
+                        "value": 10
                     },
-                    "repr": "PBI280008",
+                    "repr": "PBI045010",
                     "station": "PBI"
                 },
-                "raw": "PBI UA /OV PBI280008/TM 2206/FL020/TP B737/SK BASE BKN035/TB SMOOTH",
+                "raw": "PBI UA /OV PBI045010/TM 0234/FL020/TP H25B/SK BASES OVC020",
                 "remarks": null,
-                "sanitized": "PBI UA /OV PBI280008/TM 2206/FL020/TP B737/SK BASE BKN035/TB SMOOTH",
+                "sanitized": "PBI UA /OV PBI045010/TM 0234/FL020/TP H25B/SK BASES OVC020",
                 "station": "PBI",
-                "temperature": null,
-                "time": null,
-                "turbulence": {
-                    "ceiling": null,
-                    "floor": null,
-                    "severity": "SMOOTH"
-                },
-                "type": "UA",
-                "wx": null
-            }
-        },
-        {
-            "data": {
-                "aircraft": "B06",
-                "altitude": {
-                    "repr": "015",
-                    "spoken": "one five",
-                    "value": 15
-                },
-                "clouds": [
-                    {
-                        "base": 15,
-                        "direction": null,
-                        "modifier": null,
-                        "repr": "SCT015",
-                        "top": null,
-                        "type": "SCT"
-                    }
-                ],
-                "flight_visibility": null,
-                "icing": null,
-                "location": {
-                    "direction": null,
-                    "distance": null,
-                    "repr": "VRB",
-                    "station": "VRB"
-                },
-                "raw": "VRB UA /OV VRB/TM 2154/FL015/TP B06/SK SCT015/RM SEV CLEAR",
-                "remarks": "SEV CLEAR",
-                "sanitized": "VRB UA /OV VRB/TM 2154/FL015/TP B06/SK SCT015/RM SEV CLEAR",
-                "station": "VRB",
                 "temperature": null,
                 "time": null,
                 "turbulence": null,
                 "type": "UA",
                 "wx": null
             }
-        },
-        {
-            "data": {
-                "aircraft": "PA27",
-                "altitude": {
-                    "repr": "065",
-                    "spoken": "six five",
-                    "value": 65
-                },
-                "clouds": null,
-                "flight_visibility": null,
-                "icing": null,
-                "location": {
-                    "direction": null,
-                    "distance": null,
-                    "repr": "MYAM",
-                    "station": "MYAM"
-                },
-                "raw": "PBI UA /OV MYAM/TM 2154/FL065/TP PA27/TB NEG BLO 065/RM DURC",
-                "remarks": "DURC",
-                "sanitized": "PBI UA /OV MYAM/TM 2154/FL065/TP PA27/TB NEG BLO 065/RM DURC",
-                "station": "PBI",
-                "temperature": null,
-                "time": null,
-                "turbulence": {
-                    "ceiling": {
-                        "repr": "065",
-                        "spoken": "six five",
-                        "value": 65
-                    },
-                    "floor": null,
-                    "severity": "NEG"
-                },
-                "type": "UA",
-                "wx": null
-            }
         }
-    ]
+    ],
+    "station": {
+        "city": "Orlando",
+        "country": "US",
+        "elevation_ft": 96,
+        "elevation_m": 29,
+        "iata": "MCO",
+        "icao": "KMCO",
+        "latitude": 28.429399490356445,
+        "longitude": -81.30899810791016,
+        "name": "Orlando International Airport",
+        "note": "Disney World,Epcot Center",
+        "reporting": true,
+        "runways": [
+            {
+                "ident1": "18L",
+                "ident2": "36R",
+                "length_ft": 12005,
+                "width_ft": 200
+            },
+            {
+                "ident1": "18R",
+                "ident2": "36L",
+                "length_ft": 12004,
+                "width_ft": 200
+            },
+            {
+                "ident1": "17R",
+                "ident2": "35L",
+                "length_ft": 10000,
+                "width_ft": 150
+            },
+            {
+                "ident1": "17L",
+                "ident2": "35R",
+                "length_ft": 9000,
+                "width_ft": 150
+            }
+        ],
+        "state": "FL",
+        "type": "large_airport",
+        "website": "http://www.orlandoairports.net/",
+        "wiki": "https://en.wikipedia.org/wiki/Orlando_International_Airport"
+    }
 }

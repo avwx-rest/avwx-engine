@@ -111,13 +111,14 @@ class TestTaf(unittest.TestCase):
         Tests TAF line type, start time, and end time extraction
         """
         for wx, *data in (
-            (["1"], "FROM", "", ""),
-            (["INTER", "1"], "INTER", "", ""),
-            (["TEMPO", "0101/0103", "1"], "TEMPO", "0101", "0103"),
-            (["PROB30", "0101/0103", "1"], "PROB30", "0101", "0103"),
-            (["FM120000", "1"], "FROM", "1200", ""),
-            (["FM1200/1206", "1"], "FROM", "1200", "1206"),
-            (["FM120000", "TL120600", "1"], "FROM", "1200", "1206"),
+            (["1"], "FROM", None, None, None),
+            (["INTER", "1"], "INTER", None, None, None),
+            (["TEMPO", "0101/0103", "1"], "TEMPO", "0101", "0103", None),
+            (["PROB30", "0101/0103", "1"], "PROB30", "0101", "0103", None),
+            (["BECMG", "0101/0103", "1"], "BECMG", "0103", None, "0101"),
+            (["FM120000", "1"], "FROM", "1200", None, None),
+            (["FM1200/1206", "1"], "FROM", "1200", "1206", None),
+            (["FM120000", "TL120600", "1"], "FROM", "1200", "1206", None),
         ):
             self.assertEqual(taf.get_type_and_times(wx), (["1"], *data))
 
@@ -126,18 +127,39 @@ class TestTaf(unittest.TestCase):
         Tests that missing forecast times can be interpretted by 
         """
         good_lines = [
-            {"type": "FROM", "start_time": "3021", "end_time": "3023"},
-            {"type": "FROM", "start_time": "3023", "end_time": "0105"},
-            {"type": "FROM", "start_time": "0105", "end_time": "0108"},
-            {"type": "FROM", "start_time": "0108", "end_time": "0114"},
+            {
+                "type": "FROM",
+                "transition_start": None,
+                "start_time": "3021",
+                "end_time": "3023",
+            },
+            {
+                "type": "FROM",
+                "transition_start": None,
+                "start_time": "3023",
+                "end_time": "0105",
+            },
+            {
+                "type": "BECMG",
+                "transition_start": "0105",
+                "start_time": "0107",
+                "end_time": "0108",
+            },
+            {
+                "type": "FROM",
+                "transition_start": None,
+                "start_time": "0108",
+                "end_time": "0114",
+            },
         ]
         for line in good_lines:
-            for key in ("start_time", "end_time"):
+            for key in ("start_time", "end_time", "transition_start"):
                 line[key] = core.make_timestamp(line[key])
         bad_lines = deepcopy(good_lines)
         bad_lines[0]["start_time"] = None
         bad_lines[1]["start_time"] = None
-        bad_lines[2]["end_time"] = None
+        bad_lines[1]["end_time"] = None
+        bad_lines[2]["end_time"] = None  # This None implies normal parsing
         bad_lines[3]["end_time"] = None
         start, end = good_lines[0]["start_time"], good_lines[-1]["end_time"]
         self.assertEqual(taf.find_missing_taf_times(bad_lines, start, end), good_lines)
@@ -289,10 +311,10 @@ class TestTaf(unittest.TestCase):
             self.assertIsInstance(station.last_updated, datetime)
             # Clear timestamp due to parse_date limitations
             nodt = deepcopy(station.data)
-            for key in ("time", "start_time", "end_time"):
+            for key in ("time", "start_time", "end_time", "transition_start"):
                 setattr(nodt, key, None)
             for i in range(len(nodt.forecast)):
-                for key in ("start_time", "end_time"):
+                for key in ("start_time", "end_time", "transition_start"):
                     setattr(nodt.forecast[i], key, None)
             self.assertEqual(asdict(nodt), ref["data"])
             self.assertEqual(asdict(station.translations), ref["translations"])

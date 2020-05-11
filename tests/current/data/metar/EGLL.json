@@ -1,40 +1,31 @@
 {
     "data": {
         "altimeter": {
-            "repr": "Q1006",
-            "spoken": "one zero zero six",
-            "value": 1006
+            "repr": "Q1017",
+            "spoken": "one zero one seven",
+            "value": 1017
         },
-        "clouds": [
-            {
-                "base": 36,
-                "direction": null,
-                "modifier": null,
-                "repr": "BKN036",
-                "top": null,
-                "type": "BKN"
-            }
-        ],
+        "clouds": [],
         "dewpoint": {
-            "repr": "09",
-            "spoken": "nine",
-            "value": 9
+            "repr": "M02",
+            "spoken": "minus two",
+            "value": -2
         },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "EGLL 181350Z AUTO VRB02KT 9999 BKN036 17/09 Q1006",
+        "raw": "EGLL 110350Z AUTO 04009KT 9999 NCD 05/M02 Q1017",
         "remarks": "",
         "remarks_info": {
             "dewpoint_decimal": null,
             "temperature_decimal": null
         },
         "runway_visibility": [],
-        "sanitized": "EGLL 181350Z VRB02KT 9999 BKN036 17/09 Q1006 ",
+        "sanitized": "EGLL 110350Z 04009KT 9999 05/M02 Q1017 ",
         "station": "EGLL",
         "temperature": {
-            "repr": "17",
-            "spoken": "one seven",
-            "value": 17
+            "repr": "05",
+            "spoken": "five",
+            "value": 5
         },
         "time": null,
         "visibility": {
@@ -43,29 +34,29 @@
             "value": 9999
         },
         "wind_direction": {
-            "repr": "VRB",
-            "spoken": "variable",
-            "value": null
+            "repr": "040",
+            "spoken": "zero four zero",
+            "value": 40
         },
         "wind_gust": null,
         "wind_speed": {
-            "repr": "02",
-            "spoken": "two",
-            "value": 2
+            "repr": "09",
+            "spoken": "nine",
+            "value": 9
         },
         "wind_variable_direction": [],
         "wx_codes": []
     },
-    "speech": "Winds Variable at 2kt. Visibility one zero kilometers. Temperature one seven degrees Celsius. Dew point nine degrees Celsius. Altimeter one zero zero six. Broken layer at 3600ft",
-    "summary": "Winds Variable at 2kt, Vis 10km, Temp 17\u00b0C, Dew 9\u00b0C, Alt 1006 hPa, Broken layer at 3600ft",
+    "speech": "Winds zero four zero at 9kt. Visibility one zero kilometers. Temperature five degrees Celsius. Dew point minus two degrees Celsius. Altimeter one zero one seven. Sky clear",
+    "summary": "Winds NE-040 at 9kt, Vis 10km, Temp 5\u00b0C, Dew -2\u00b0C, Alt 1017 hPa, Sky clear",
     "translations": {
-        "altimeter": "1006 hPa (29.71 inHg)",
-        "clouds": "Broken layer at 3600ft - Reported AGL",
-        "dewpoint": "9\u00b0C (48\u00b0F)",
+        "altimeter": "1017 hPa (30.03 inHg)",
+        "clouds": "Sky clear",
+        "dewpoint": "-2\u00b0C (28\u00b0F)",
         "remarks": {},
-        "temperature": "17\u00b0C (63\u00b0F)",
+        "temperature": "5\u00b0C (41\u00b0F)",
         "visibility": "10km (6.2sm)",
-        "wind": "Variable at 2kt",
+        "wind": "NE-040 at 9kt",
         "wx_codes": ""
     }
 }

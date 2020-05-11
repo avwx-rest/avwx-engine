@@ -301,6 +301,7 @@ class TestTaf(unittest.TestCase):
                     "raw",
                     "end_time",
                     "start_time",
+                    "transition_start",
                     "probability",
                     "type",
                     "flight_rules",

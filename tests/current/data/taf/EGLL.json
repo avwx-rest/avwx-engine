@@ -7,10 +7,10 @@
                 "altimeter": "",
                 "clouds": [
                     {
-                        "base": 30,
+                        "base": 45,
                         "direction": null,
                         "modifier": null,
-                        "repr": "SCT030",
+                        "repr": "SCT045",
                         "top": null,
                         "type": "SCT"
                     }
@@ -20,9 +20,10 @@
                 "icing": [],
                 "other": [],
                 "probability": null,
-                "raw": "1812/1918 VRB03KT 9999 SCT030",
-                "sanitized": "1812/1918 VRB03KT 9999 SCT030",
+                "raw": "1100/1206 03012KT 9999 SCT045",
+                "sanitized": "1100/1206 03012KT 9999 SCT045",
                 "start_time": null,
+                "transition_start": null,
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
@@ -31,108 +32,18 @@
                     "value": 9999
                 },
                 "wind_direction": {
-                    "repr": "VRB",
-                    "spoken": "variable",
-                    "value": null
+                    "repr": "030",
+                    "spoken": "zero three zero",
+                    "value": 30
                 },
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
-                    "repr": "03",
-                    "spoken": "three",
-                    "value": 3
+                    "repr": "12",
+                    "spoken": "one two",
+                    "value": 12
                 },
                 "wx_codes": []
-            },
-            {
-                "altimeter": "",
-                "clouds": [],
-                "end_time": null,
-                "flight_rules": "MVFR",
-                "icing": [],
-                "other": [],
-                "probability": {
-                    "repr": "30",
-                    "spoken": "three zero",
-                    "value": 30
-                },
-                "raw": "PROB30 TEMPO 1812/1817 7000 SHRA",
-                "sanitized": "PROB30 TEMPO 1812/1817 7000 SHRA",
-                "start_time": null,
-                "turbulence": [],
-                "type": "TEMPO",
-                "visibility": {
-                    "repr": "7000",
-                    "spoken": "seven zero zero zero",
-                    "value": 7000
-                },
-                "wind_direction": null,
-                "wind_gust": null,
-                "wind_shear": null,
-                "wind_speed": null,
-                "wx_codes": [
-                    {
-                        "repr": "SHRA",
-                        "value": "Showers Rain"
-                    }
-                ]
-            },
-            {
-                "altimeter": "",
-                "clouds": [],
-                "end_time": null,
-                "flight_rules": "MVFR",
-                "icing": [],
-                "other": [],
-                "probability": null,
-                "raw": "BECMG 1822/1901 7000",
-                "sanitized": "BECMG 1822/1901 7000",
-                "start_time": null,
-                "turbulence": [],
-                "type": "BECMG",
-                "visibility": {
-                    "repr": "7000",
-                    "spoken": "seven zero zero zero",
-                    "value": 7000
-                },
-                "wind_direction": null,
-                "wind_gust": null,
-                "wind_shear": null,
-                "wind_speed": null,
-                "wx_codes": []
-            },
-            {
-                "altimeter": "",
-                "clouds": [],
-                "end_time": null,
-                "flight_rules": "IFR",
-                "icing": [],
-                "other": [],
-                "probability": {
-                    "repr": "40",
-                    "spoken": "four zero",
-                    "value": 40
-                },
-                "raw": "PROB40 1902/1907 4000 BR",
-                "sanitized": "PROB40 1902/1907 4000 BR",
-                "start_time": null,
-                "turbulence": [],
-                "type": "FROM",
-                "visibility": {
-                    "repr": "4000",
-                    "spoken": "four zero zero zero",
-                    "value": 4000
-                },
-                "wind_direction": null,
-                "wind_gust": null,
-                "wind_shear": null,
-                "wind_speed": null,
-                "wx_codes": [
-                    {
-                        "repr": "BR",
-                        "value": "Mist"
-                    }
-                ]
             },
             {
                 "altimeter": "",
@@ -142,83 +53,180 @@
                 "icing": [],
                 "other": [],
                 "probability": null,
-                "raw": "BECMG 1907/1910 9999",
-                "sanitized": "BECMG 1907/1910 9999",
+                "raw": "TEMPO 1100/1106 04015G25KT",
+                "sanitized": "TEMPO 1100/1106 04015G25KT",
                 "start_time": null,
+                "transition_start": null,
                 "turbulence": [],
-                "type": "BECMG",
-                "visibility": {
-                    "repr": "9999",
-                    "spoken": "nine nine nine nine",
-                    "value": 9999
+                "type": "TEMPO",
+                "visibility": null,
+                "wind_direction": {
+                    "repr": "040",
+                    "spoken": "zero four zero",
+                    "value": 40
                 },
-                "wind_direction": null,
-                "wind_gust": null,
+                "wind_gust": {
+                    "repr": "25",
+                    "spoken": "two five",
+                    "value": 25
+                },
                 "wind_shear": null,
-                "wind_speed": null,
+                "wind_speed": {
+                    "repr": "15",
+                    "spoken": "one five",
+                    "value": 15
+                },
                 "wx_codes": []
             },
             {
                 "altimeter": "",
                 "clouds": [],
                 "end_time": null,
-                "flight_rules": "MVFR",
+                "flight_rules": "VFR",
                 "icing": [],
                 "other": [],
-                "probability": {
+                "probability": null,
+                "raw": "BECMG 1106/1109 04018G30KT",
+                "sanitized": "BECMG 1106/1109 04018G30KT",
+                "start_time": null,
+                "transition_start": null,
+                "turbulence": [],
+                "type": "BECMG",
+                "visibility": null,
+                "wind_direction": {
+                    "repr": "040",
+                    "spoken": "zero four zero",
+                    "value": 40
+                },
+                "wind_gust": {
                     "repr": "30",
                     "spoken": "three zero",
                     "value": 30
                 },
-                "raw": "PROB30 TEMPO 1912/1918 6000 SHRA",
-                "sanitized": "PROB30 TEMPO 1912/1918 6000 SHRA",
-                "start_time": null,
-                "turbulence": [],
-                "type": "TEMPO",
-                "visibility": {
-                    "repr": "6000",
-                    "spoken": "six zero zero zero",
-                    "value": 6000
+                "wind_shear": null,
+                "wind_speed": {
+                    "repr": "18",
+                    "spoken": "one eight",
+                    "value": 18
                 },
-                "wind_direction": null,
+                "wx_codes": []
+            },
+            {
+                "altimeter": "",
+                "clouds": [],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": null,
+                "raw": "BECMG 1117/1120 03010KT",
+                "sanitized": "BECMG 1117/1120 03010KT",
+                "start_time": null,
+                "transition_start": null,
+                "turbulence": [],
+                "type": "BECMG",
+                "visibility": null,
+                "wind_direction": {
+                    "repr": "030",
+                    "spoken": "zero three zero",
+                    "value": 30
+                },
                 "wind_gust": null,
                 "wind_shear": null,
-                "wind_speed": null,
-                "wx_codes": [
-                    {
-                        "repr": "SHRA",
-                        "value": "Showers Rain"
-                    }
-                ]
+                "wind_speed": {
+                    "repr": "10",
+                    "spoken": "one zero",
+                    "value": 10
+                },
+                "wx_codes": []
+            },
+            {
+                "altimeter": "",
+                "clouds": [],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": null,
+                "raw": "BECMG 1203/1206 33005KT",
+                "sanitized": "BECMG 1203/1206 33005KT",
+                "start_time": null,
+                "transition_start": null,
+                "turbulence": [],
+                "type": "BECMG",
+                "visibility": null,
+                "wind_direction": {
+                    "repr": "330",
+                    "spoken": "three three zero",
+                    "value": 330
+                },
+                "wind_gust": null,
+                "wind_shear": null,
+                "wind_speed": {
+                    "repr": "05",
+                    "spoken": "five",
+                    "value": 5
+                },
+                "wx_codes": []
             }
         ],
         "max_temp": "",
         "min_temp": "",
-        "raw": "EGLL 181103Z 1812/1918 VRB03KT 9999 SCT030 PROB30 TEMPO 1812/1817 7000 SHRA BECMG 1822/1901 7000 PROB40 1902/1907 4000 BR BECMG 1907/1910 9999 PROB30 TEMPO 1912/1918 6000 SHRA",
+        "raw": "EGLL 102255Z 1100/1206 03012KT 9999 SCT045 TEMPO 1100/1106 04015G25KT BECMG 1106/1109 04018G30KT BECMG 1117/1120 03010KT BECMG 1203/1206 33005KT",
         "remarks": "",
         "start_time": null,
         "station": "EGLL",
         "temps": null,
         "time": null
     },
-    "speech": "Starting on May 18th - From 12 to 22 zulu, Winds Variable at 3kt. Visibility one zero kilometers. Scattered clouds at 3000ft. From 12 to 17 zulu, there's a 30% chance for temporary Visibility seven kilometers. Showers Rain. Sky clear. At 22 zulu becoming Visibility seven kilometers. Sky clear. From 2 to 7 zulu, there's a 40% chance for Visibility four kilometers. Mist. Sky clear. At 7 zulu becoming Visibility one zero kilometers. Sky clear. From 12 to 18 zulu, there's a 30% chance for temporary Visibility six kilometers. Showers Rain. Sky clear",
+    "speech": "Starting on May 11st - From midnight to 6 zulu, Winds zero three zero at 12kt. Visibility one zero kilometers. Scattered clouds at 4500ft. From midnight to 6 zulu, temporary Winds zero four zero at 15kt gusting to 25kt. Sky clear. At 9 zulu becoming Winds zero four zero at 18kt gusting to 30kt. Sky clear. At 20 zulu becoming Winds zero three zero at 10kt. Sky clear. At 6 zulu becoming Winds three three zero at 5kt. Sky clear",
+    "station": {
+        "city": "London",
+        "country": "GB",
+        "elevation_ft": 83,
+        "elevation_m": 25,
+        "iata": "LHR",
+        "icao": "EGLL",
+        "latitude": 51.4706,
+        "longitude": -0.461941,
+        "name": "London Heathrow Airport",
+        "note": "LON, Londres",
+        "reporting": true,
+        "runways": [
+            {
+                "ident1": "09L",
+                "ident2": "27R",
+                "length_ft": 12799,
+                "width_ft": 164
+            },
+            {
+                "ident1": "09R",
+                "ident2": "27L",
+                "length_ft": 12001,
+                "width_ft": 148
+            }
+        ],
+        "state": "ENG",
+        "type": "large_airport",
+        "website": "http://www.heathrowairport.com/",
+        "wiki": "https://en.wikipedia.org/wiki/Heathrow_Airport"
+    },
     "summary": [
-        "Winds Variable at 3kt, Vis 10km, Scattered clouds at 3000ft",
-        "Vis 7km, Showers Rain, Sky clear",
-        "Vis 7km",
-        "Vis 4km, Mist, Sky clear",
-        "Vis 10km",
-        "Vis 6km, Showers Rain, Sky clear"
+        "Winds NNE-030 at 12kt, Vis 10km, Scattered clouds at 4500ft",
+        "Winds NE-040 at 15kt gusting to 25kt, Sky clear",
+        "Winds NE-040 at 18kt gusting to 30kt",
+        "Winds NNE-030 at 10kt",
+        "Winds NNW-330 at 5kt"
     ],
     "translations": {
         "forecast": [
             {
                 "altimeter": "",
-                "clouds": "Scattered clouds at 3000ft - Reported AGL",
+                "clouds": "Scattered clouds at 4500ft - Reported AGL",
                 "icing": "",
                 "turbulence": "",
                 "visibility": "10km (6.2sm)",
-                "wind": "Variable at 3kt",
+                "wind": "NNE-030 at 12kt",
                 "wind_shear": "",
                 "wx_codes": ""
             },
@@ -227,50 +235,40 @@
                 "clouds": "Sky clear",
                 "icing": "",
                 "turbulence": "",
-                "visibility": "7km (4.3sm)",
-                "wind": "",
+                "visibility": "",
+                "wind": "NE-040 at 15kt gusting to 25kt",
                 "wind_shear": "",
-                "wx_codes": "Showers Rain"
+                "wx_codes": ""
             },
             {
                 "altimeter": "",
                 "clouds": null,
                 "icing": "",
                 "turbulence": "",
-                "visibility": "7km (4.3sm)",
-                "wind": "",
+                "visibility": "",
+                "wind": "NE-040 at 18kt gusting to 30kt",
                 "wind_shear": "",
                 "wx_codes": ""
-            },
-            {
-                "altimeter": "",
-                "clouds": "Sky clear",
-                "icing": "",
-                "turbulence": "",
-                "visibility": "4km (2.5sm)",
-                "wind": "",
-                "wind_shear": "",
-                "wx_codes": "Mist"
             },
             {
                 "altimeter": "",
                 "clouds": null,
                 "icing": "",
                 "turbulence": "",
-                "visibility": "10km (6.2sm)",
-                "wind": "",
+                "visibility": "",
+                "wind": "NNE-030 at 10kt",
                 "wind_shear": "",
                 "wx_codes": ""
             },
             {
                 "altimeter": "",
-                "clouds": "Sky clear",
+                "clouds": null,
                 "icing": "",
                 "turbulence": "",
-                "visibility": "6km (3.7sm)",
-                "wind": "",
+                "visibility": "",
+                "wind": "NNW-330 at 5kt",
                 "wind_shear": "",
-                "wx_codes": "Showers Rain"
+                "wx_codes": ""
             }
         ],
         "max_temp": "",

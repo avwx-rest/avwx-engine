@@ -45,7 +45,7 @@ def make_taf_test(station: str, report: str = None) -> dict:
     for key in ("time", "start_time", "end_time"):
         data[key] = None
     for i in range(len(data["forecast"])):
-        for key in ("start_time", "end_time"):
+        for key in ("start_time", "end_time", "transition_start"):
             data["forecast"][i][key] = None
     return {
         "data": data,

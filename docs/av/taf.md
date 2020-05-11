@@ -155,6 +155,8 @@ Returns `True` if a new report is available, else `False`
 
 **start_time**: *avwx.structs.Timestamp*
 
+**transition_start**: *avwx.structs.Timestamp*
+
 **turbulence**: *[str]*
 
 **type**: *str*

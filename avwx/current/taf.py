@@ -110,7 +110,7 @@ def get_type_and_times(wxdata: [str]) -> ([str], str, str, str):
     Returns the report list and removed:
     Report type string, start time string, end time string
     """
-    report_type, start_time, end_time = "FROM", "", ""
+    report_type, start_time, end_time, transition = "FROM", None, None, None
     if wxdata:
         # TEMPO, BECMG, INTER
         if wxdata[0] in TAF_NEWLINE:
@@ -146,7 +146,9 @@ def get_type_and_times(wxdata: [str]) -> ([str], str, str, str):
                 and wxdata[0][2:8].isdigit()
             ):
                 end_time = wxdata.pop(0)[2:6]
-    return wxdata, report_type, start_time, end_time
+    if report_type == "BECMG":
+        transition, start_time, end_time = start_time, end_time, None
+    return wxdata, report_type, start_time, end_time, transition
 
 
 def _is_tempo_or_prob(line: dict) -> bool:
@@ -158,11 +160,17 @@ def _is_tempo_or_prob(line: dict) -> bool:
 
 def _get_next_time(lines: [dict], target: str) -> str:
     """
-    Returns the next FROM target value or empty
+    Returns the next normal time target value or empty
     """
     for line in lines:
-        if line[target] and not _is_tempo_or_prob(line):
-            return line[target]
+        if _is_tempo_or_prob(line):
+            continue
+        if target == "start_time":
+            time = line["transition_start"] or line[target]
+        else:
+            time = line[target]
+        if time:
+            return time
     return ""
 
 
@@ -179,6 +187,7 @@ def find_missing_taf_times(lines: [dict], start: Timestamp, end: Timestamp) -> [
     for i, line in enumerate(lines):
         if _is_tempo_or_prob(line):
             continue
+        # TODO: BECMG handling
         last_fm_line = i
         # Search remaining lines to fill empty end or previous for empty start
         for target, other, direc in (("start", "end", -1), ("end", "start", 1)):
@@ -355,7 +364,7 @@ def parse_lines(lines: [str], units: Units, use_na: bool = True) -> [dict]:
                 line = line[6:].strip()
         if line:
             parsed_line = (parse_na_line if use_na else parse_in_line)(line, units)
-            for key in ("start_time", "end_time"):
+            for key in ("start_time", "end_time", "transition_start"):
                 parsed_line[key] = core.make_timestamp(parsed_line[key])
             parsed_line["probability"] = core.make_number(prob[4:])
             parsed_line["raw"] = raw_line
@@ -379,6 +388,7 @@ def parse_na_line(line: str, units: Units) -> {str: str}:
         retwx["type"],
         retwx["start_time"],
         retwx["end_time"],
+        retwx["transition_start"],
     ) = get_type_and_times(wxdata)
     wxdata, retwx["wind_shear"] = get_wind_shear(wxdata)
     (
@@ -411,6 +421,7 @@ def parse_in_line(line: str, units: Units) -> {str: str}:
         retwx["type"],
         retwx["start_time"],
         retwx["end_time"],
+        retwx["transition_start"],
     ) = get_type_and_times(wxdata)
     wxdata, retwx["wind_shear"] = get_wind_shear(wxdata)
     (

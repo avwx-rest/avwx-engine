@@ -10,17 +10,17 @@
                         "base": 25,
                         "direction": null,
                         "modifier": null,
-                        "repr": "SCT025",
+                        "repr": "FEW025",
                         "top": null,
-                        "type": "SCT"
+                        "type": "FEW"
                     },
                     {
-                        "base": 45,
+                        "base": 50,
                         "direction": null,
                         "modifier": null,
-                        "repr": "SCT045",
+                        "repr": "FEW050",
                         "top": null,
-                        "type": "SCT"
+                        "type": "FEW"
                     }
                 ],
                 "end_time": null,
@@ -28,9 +28,10 @@
                 "icing": [],
                 "other": [],
                 "probability": null,
-                "raw": "1812/1918 06007KT P6SM SCT025 SCT045",
-                "sanitized": "1812/1918 06007KT P6SM SCT025 SCT045",
+                "raw": "1103/1206 05012KT P6SM FEW025 FEW050",
+                "sanitized": "1103/1206 05012KT P6SM FEW025 FEW050",
                 "start_time": null,
+                "transition_start": null,
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
@@ -39,65 +40,16 @@
                     "value": null
                 },
                 "wind_direction": {
-                    "repr": "060",
-                    "spoken": "zero six zero",
-                    "value": 60
+                    "repr": "050",
+                    "spoken": "zero five zero",
+                    "value": 50
                 },
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
-                    "repr": "07",
-                    "spoken": "seven",
-                    "value": 7
-                },
-                "wx_codes": []
-            },
-            {
-                "altimeter": "",
-                "clouds": [
-                    {
-                        "base": 25,
-                        "direction": null,
-                        "modifier": null,
-                        "repr": "SCT025",
-                        "top": null,
-                        "type": "SCT"
-                    },
-                    {
-                        "base": 45,
-                        "direction": null,
-                        "modifier": null,
-                        "repr": "SCT045",
-                        "top": null,
-                        "type": "SCT"
-                    }
-                ],
-                "end_time": null,
-                "flight_rules": "VFR",
-                "icing": [],
-                "other": [],
-                "probability": null,
-                "raw": "FM182100 06013KT P6SM SCT025 SCT045",
-                "sanitized": "FM182100 06013KT P6SM SCT025 SCT045",
-                "start_time": null,
-                "turbulence": [],
-                "type": "FROM",
-                "visibility": {
-                    "repr": "P6",
-                    "spoken": "greater than six",
-                    "value": null
-                },
-                "wind_direction": {
-                    "repr": "060",
-                    "spoken": "zero six zero",
-                    "value": 60
-                },
-                "wind_gust": null,
-                "wind_shear": null,
-                "wind_speed": {
-                    "repr": "13",
-                    "spoken": "one three",
-                    "value": 13
+                    "repr": "12",
+                    "spoken": "one two",
+                    "value": 12
                 },
                 "wx_codes": []
             },
@@ -126,9 +78,60 @@
                 "icing": [],
                 "other": [],
                 "probability": null,
-                "raw": "FM190600 07011KT P6SM FEW025 SCT040",
-                "sanitized": "FM190600 07011KT P6SM FEW025 SCT040",
+                "raw": "FM110500 05009KT P6SM FEW025 SCT040",
+                "sanitized": "FM110500 05009KT P6SM FEW025 SCT040",
                 "start_time": null,
+                "transition_start": null,
+                "turbulence": [],
+                "type": "FROM",
+                "visibility": {
+                    "repr": "P6",
+                    "spoken": "greater than six",
+                    "value": null
+                },
+                "wind_direction": {
+                    "repr": "050",
+                    "spoken": "zero five zero",
+                    "value": 50
+                },
+                "wind_gust": null,
+                "wind_shear": null,
+                "wind_speed": {
+                    "repr": "09",
+                    "spoken": "nine",
+                    "value": 9
+                },
+                "wx_codes": []
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "base": 25,
+                        "direction": null,
+                        "modifier": null,
+                        "repr": "SCT025",
+                        "top": null,
+                        "type": "SCT"
+                    },
+                    {
+                        "base": 35,
+                        "direction": null,
+                        "modifier": null,
+                        "repr": "BKN035",
+                        "top": null,
+                        "type": "BKN"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": null,
+                "raw": "FM112100 07015G22KT P6SM VCSH SCT025 BKN035",
+                "sanitized": "FM112100 07015G22KT P6SM VCSH SCT025 BKN035",
+                "start_time": null,
+                "transition_start": null,
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
@@ -141,50 +144,160 @@
                     "spoken": "zero seven zero",
                     "value": 70
                 },
+                "wind_gust": {
+                    "repr": "22",
+                    "spoken": "two two",
+                    "value": 22
+                },
+                "wind_shear": null,
+                "wind_speed": {
+                    "repr": "15",
+                    "spoken": "one five",
+                    "value": 15
+                },
+                "wx_codes": [
+                    {
+                        "repr": "VCSH",
+                        "value": "Vicinity Showers"
+                    }
+                ]
+            },
+            {
+                "altimeter": "",
+                "clouds": [
+                    {
+                        "base": 25,
+                        "direction": null,
+                        "modifier": null,
+                        "repr": "SCT025",
+                        "top": null,
+                        "type": "SCT"
+                    },
+                    {
+                        "base": 40,
+                        "direction": null,
+                        "modifier": null,
+                        "repr": "BKN040",
+                        "top": null,
+                        "type": "BKN"
+                    }
+                ],
+                "end_time": null,
+                "flight_rules": "VFR",
+                "icing": [],
+                "other": [],
+                "probability": null,
+                "raw": "FM120500 06009KT P6SM VCSH SCT025 BKN040",
+                "sanitized": "FM120500 06009KT P6SM VCSH SCT025 BKN040",
+                "start_time": null,
+                "transition_start": null,
+                "turbulence": [],
+                "type": "FROM",
+                "visibility": {
+                    "repr": "P6",
+                    "spoken": "greater than six",
+                    "value": null
+                },
+                "wind_direction": {
+                    "repr": "060",
+                    "spoken": "zero six zero",
+                    "value": 60
+                },
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
-                    "repr": "11",
-                    "spoken": "one one",
-                    "value": 11
+                    "repr": "09",
+                    "spoken": "nine",
+                    "value": 9
                 },
-                "wx_codes": []
+                "wx_codes": [
+                    {
+                        "repr": "VCSH",
+                        "value": "Vicinity Showers"
+                    }
+                ]
             }
         ],
         "max_temp": "",
         "min_temp": "",
-        "raw": "PHNL 181135Z 1812/1918 06007KT P6SM SCT025 SCT045 FM182100 06013KT P6SM SCT025 SCT045 FM190600 07011KT P6SM FEW025 SCT040",
+        "raw": "PHNL 110301Z 1103/1206 05012KT P6SM FEW025 FEW050 FM110500 05009KT P6SM FEW025 SCT040 FM112100 07015G22KT P6SM VCSH SCT025 BKN035 FM120500 06009KT P6SM VCSH SCT025 BKN040",
         "remarks": "",
         "start_time": null,
         "station": "PHNL",
         "temps": null,
         "time": null
     },
-    "speech": "Starting on May 18th - From 12 to 21 zulu, Winds zero six zero at 7kt. Visibility greater than six miles. Scattered clouds at 2500ft. Scattered clouds at 4500ft. From 21 to 6 zulu, Winds zero six zero at 13kt. Visibility greater than six miles. Scattered clouds at 2500ft. Scattered clouds at 4500ft. From 6 to 18 zulu, Winds zero seven zero at 11kt. Visibility greater than six miles. Few clouds at 2500ft. Scattered clouds at 4000ft",
+    "speech": "Starting on May 11st - From 3 to 5 zulu, Winds zero five zero at 12kt. Visibility greater than six miles. Few clouds at 2500ft. Few clouds at 5000ft. From 5 to 21 zulu, Winds zero five zero at 9kt. Visibility greater than six miles. Few clouds at 2500ft. Scattered clouds at 4000ft. From 21 to 5 zulu, Winds zero seven zero at 15kt gusting to 22kt. Visibility greater than six miles. Showers in the Vicinity. Scattered clouds at 2500ft. Broken layer at 3500ft. From 5 to 6 zulu, Winds zero six zero at 9kt. Visibility greater than six miles. Showers in the Vicinity. Scattered clouds at 2500ft. Broken layer at 4000ft",
+    "station": {
+        "city": "Honolulu",
+        "country": "US",
+        "elevation_ft": 13,
+        "elevation_m": 4,
+        "iata": "HNL",
+        "icao": "PHNL",
+        "latitude": 21.32062,
+        "longitude": -157.924228,
+        "name": "Daniel K Inouye International Airport",
+        "note": "Hickam Air Force Base, HIK, PHIK, KHNL, Honolulu International",
+        "reporting": true,
+        "runways": [
+            {
+                "ident1": "08L",
+                "ident2": "26R",
+                "length_ft": 12300,
+                "width_ft": 150
+            },
+            {
+                "ident1": "08R",
+                "ident2": "26L",
+                "length_ft": 12000,
+                "width_ft": 200
+            },
+            {
+                "ident1": "04R",
+                "ident2": "22L",
+                "length_ft": 9000,
+                "width_ft": 150
+            },
+            {
+                "ident1": "04L",
+                "ident2": "22R",
+                "length_ft": 6952,
+                "width_ft": 150
+            },
+            {
+                "ident1": "08W",
+                "ident2": "26W",
+                "length_ft": 5000,
+                "width_ft": 300
+            },
+            {
+                "ident1": "04W",
+                "ident2": "22W",
+                "length_ft": 3000,
+                "width_ft": 150
+            }
+        ],
+        "state": "HI",
+        "type": "large_airport",
+        "website": "http://airports.hawaii.gov/hnl/",
+        "wiki": "https://en.wikipedia.org/wiki/Daniel_K._Inouye_International_Airport"
+    },
     "summary": [
-        "Winds ENE-060 at 7kt, Vis greater than 6sm, Scattered clouds at 2500ft, Scattered clouds at 4500ft",
-        "Winds ENE-060 at 13kt, Vis greater than 6sm, Scattered clouds at 2500ft, Scattered clouds at 4500ft",
-        "Winds ENE-070 at 11kt, Vis greater than 6sm, Few clouds at 2500ft, Scattered clouds at 4000ft"
+        "Winds NE-050 at 12kt, Vis greater than 6sm, Few clouds at 2500ft, Few clouds at 5000ft",
+        "Winds NE-050 at 9kt, Vis greater than 6sm, Few clouds at 2500ft, Scattered clouds at 4000ft",
+        "Winds ENE-070 at 15kt gusting to 22kt, Vis greater than 6sm, Vicinity Showers, Scattered clouds at 2500ft, Broken layer at 3500ft",
+        "Winds ENE-060 at 9kt, Vis greater than 6sm, Vicinity Showers, Scattered clouds at 2500ft, Broken layer at 4000ft"
     ],
     "translations": {
         "forecast": [
             {
                 "altimeter": "",
-                "clouds": "Scattered clouds at 2500ft, Scattered clouds at 4500ft - Reported AGL",
+                "clouds": "Few clouds at 2500ft, Few clouds at 5000ft - Reported AGL",
                 "icing": "",
                 "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
-                "wind": "ENE-060 at 7kt",
-                "wind_shear": "",
-                "wx_codes": ""
-            },
-            {
-                "altimeter": "",
-                "clouds": "Scattered clouds at 2500ft, Scattered clouds at 4500ft - Reported AGL",
-                "icing": "",
-                "turbulence": "",
-                "visibility": "Greater than 6sm ( >10km )",
-                "wind": "ENE-060 at 13kt",
+                "wind": "NE-050 at 12kt",
                 "wind_shear": "",
                 "wx_codes": ""
             },
@@ -194,9 +307,29 @@
                 "icing": "",
                 "turbulence": "",
                 "visibility": "Greater than 6sm ( >10km )",
-                "wind": "ENE-070 at 11kt",
+                "wind": "NE-050 at 9kt",
                 "wind_shear": "",
                 "wx_codes": ""
+            },
+            {
+                "altimeter": "",
+                "clouds": "Scattered clouds at 2500ft, Broken layer at 3500ft - Reported AGL",
+                "icing": "",
+                "turbulence": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "ENE-070 at 15kt gusting to 22kt",
+                "wind_shear": "",
+                "wx_codes": "Vicinity Showers"
+            },
+            {
+                "altimeter": "",
+                "clouds": "Scattered clouds at 2500ft, Broken layer at 4000ft - Reported AGL",
+                "icing": "",
+                "turbulence": "",
+                "visibility": "Greater than 6sm ( >10km )",
+                "wind": "ENE-060 at 9kt",
+                "wind_shear": "",
+                "wx_codes": "Vicinity Showers"
             }
         ],
         "max_temp": "",
