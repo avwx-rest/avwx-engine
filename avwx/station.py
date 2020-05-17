@@ -2,6 +2,8 @@
 Station handling and search
 """
 
+# pylint: disable=invalid-name,too-many-arguments
+
 # stdlib
 from copy import copy
 from dataclasses import dataclass
@@ -29,6 +31,7 @@ _STATIONS = _LazyLoad("stations")
 
 # LazyCalc lets us avoid the global keyword
 class _LazyCalc:
+    # pylint: disable=too-few-public-methods,missing-function-docstring
 
     func: "Callable"
     _value: object = None
@@ -54,7 +57,7 @@ def _make_coord_tree():
     try:
         return KDTree([c[1:] for c in _COORDS.value])
     except NameError:
-        raise ModuleNotFoundError("Scipy must be installed to use coordinate lookup")
+        raise ModuleNotFoundError("scipy must be installed to use coordinate lookup")
 
 
 _COORD_TREE = _LazyCalc(_make_coord_tree)
@@ -84,7 +87,7 @@ def valid_station(station: str):
     """
     station = station.strip()
     if len(station) != 4:
-        raise BadStation("ICAO station idents must be four characters long")
+        raise BadStation("ICAO station ident must be four characters long")
     uses_na_format(station)
 
 
@@ -105,6 +108,8 @@ class Station:
     """
     Stores basic station information
     """
+
+    # pylint: disable=too-many-instance-attributes
 
     city: str
     country: str
@@ -154,7 +159,7 @@ class Station:
         """
         ret = nearest(lat, lon, 1, is_airport, sends_reports, max_coord_distance)
         if not isinstance(ret, dict):
-            return
+            return None
         station = ret.pop("station")
         return station, ret
 
@@ -198,7 +203,7 @@ def _station_filter(station: Station, is_airport: bool, reporting: bool) -> bool
 
 def _query_filter(
     lat: float, lon: float, n: int, d: float, is_airport: bool, reporting: bool
-) -> str:
+) -> [Station]:
     """
     Returns <= n number of stations <= d distance from lat,lon matching the query params
     """
@@ -247,12 +252,12 @@ def nearest(
     if not stations:
         return []
     ret = []
-    for station, coordd in stations:
+    for station, coord_dist in stations:
         dist = station.distance(lat, lon)
         ret.append(
             {
                 "station": station,
-                "coordinate_distance": coordd,
+                "coordinate_distance": coord_dist,
                 "nautical_miles": dist.nautical,
                 "miles": dist.miles,
                 "kilometers": dist.kilometers,

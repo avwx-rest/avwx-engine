@@ -123,6 +123,7 @@ def _code(mapping: dict) -> Callable:
     return func
 
 
+# pylint: disable=invalid-name
 _precip_amount = _code(static.PRECIPITATION_AMOUNT)
 
 
@@ -180,6 +181,7 @@ def _parse_lines(periods: [dict], lines: [str], size: int = 3, handlers: dict = 
             continue
         values = handler(line, size=size)
         values += [None] * (len(periods) - len(values))
+        # pylint: disable=consider-using-enumerate
         for i in range(len(periods)):
             value = values[i]
             if not value:
@@ -197,7 +199,7 @@ def parse_mav(report: str) -> MavData:
     Parser for GFS MAV reports
     """
     if not report:
-        return
+        return None
     data, lines = _init_parse(report)
     periods = _split_line(lines[2])
     periods = _find_time_periods(periods, data["time"].dt)
@@ -211,7 +213,7 @@ def parse_mex(report: str) -> MexData:
     Parser for GFS MEX reports
     """
     if not report:
-        return
+        return None
     data, lines = _init_parse(report)
     # Remove CLIMO data for now
     if len(lines) >= 3:

@@ -4,12 +4,26 @@ Report parent classes
 
 # stdlib
 from abc import ABCMeta, abstractmethod
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
 # module
+from avwx.exceptions import BadStation
 from avwx.service import Service
-from avwx.station import Station, valid_station
+from avwx.station import Station
 from avwx.structs import ReportData, Units
+
+
+def find_station(report: str) -> Station:
+    """
+    Returns the first ICAO ident found in a report string
+    """
+    for item in report.split():
+        if len(item) == 4:
+            try:
+                return Station.from_icao(item.upper())
+            except BadStation:
+                pass
+    return None
 
 
 class AVWXBase(metaclass=ABCMeta):
@@ -17,8 +31,11 @@ class AVWXBase(metaclass=ABCMeta):
     Abstract base class for AVWX report types
     """
 
-    #: UTC Datetime object when the report was last updated
+    #: UTC datetime object when the report was last updated
     last_updated: datetime = None
+
+    #: UTC date object when the report was issued
+    issued: date = None
 
     #: 4-character ICAO station ident code the report was initialized with
     icao: str = None
@@ -40,7 +57,6 @@ class AVWXBase(metaclass=ABCMeta):
 
     def __init__(self, icao: str):
         # Raises a BadStation error if needed
-        valid_station(icao)
         self.icao = icao
         self.station = Station.from_icao(icao)
 
@@ -52,17 +68,34 @@ class AVWXBase(metaclass=ABCMeta):
         pass
 
     @classmethod
-    def from_report(cls, report: str) -> "AVWXBase":
+    def from_report(cls, report: str, issued: date = None) -> "AVWXBase":
         """
         Returns an updated report object based on an existing report
         """
         report = report.strip()
-        obj = cls(report[:4])
-        obj.update(report)
+        station = find_station(report)
+        if not station:
+            return None
+        obj = cls(station.icao)
+        obj.update(report, issued=issued)
         return obj
 
+    def _set_meta(self):
+        """
+        Update timestamps after parsing
+        """
+        self.last_updated = datetime.now(tz=timezone.utc)
+        try:
+            self.issued = self.data.time.dt.date()
+        except AttributeError:
+            pass
+
     def update(
-        self, report: str = None, timeout: int = 10, disable_post: bool = False
+        self,
+        report: str = None,
+        issued: date = None,
+        timeout: int = 10,
+        disable_post: bool = False,
     ) -> bool:
         """
         Updates raw, data, and translations by fetching and parsing the report
@@ -73,12 +106,14 @@ class AVWXBase(metaclass=ABCMeta):
         """
         if not report:
             report = self.service.fetch(self.icao, timeout=timeout)
+            issued = None
         if not report or report == self.raw:
             return False
         self.raw = report
+        self.issued = issued
         if not disable_post:
             self._post_update()
-        self.last_updated = datetime.now(tz=timezone.utc)
+        self._set_meta()
         return True
 
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
@@ -89,6 +124,8 @@ class AVWXBase(metaclass=ABCMeta):
         if not report or report == self.raw:
             return False
         self.raw = report
+        self.issued = None
         if not disable_post:
             self._post_update()
+        self._set_meta()
         return True

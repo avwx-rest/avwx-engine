@@ -2,6 +2,9 @@
 Contains METAR-specific functions for report parsing
 """
 
+# stdlib
+from datetime import date
+
 # module
 from avwx.current.base import Report, get_wx_codes
 from avwx.parsing import core, remarks, speech, summary
@@ -58,7 +61,7 @@ def parse_altimeter(value: str) -> Number:
     Parse an altimeter string into a Number
     """
     if not value or len(value) < 4:
-        return
+        return None
     # QNH3003INS
     if len(value) >= 7 and value.endswith("INS"):
         return core.make_number(value[-7:-5] + "." + value[-5:-3], value)
@@ -69,12 +72,12 @@ def parse_altimeter(value: str) -> Number:
     if number.startswith("QNH"):
         number = "Q" + number[1:]
     if not (len(number) in (4, 5) and number[-4:].isdigit()):
-        return
+        return None
     number = number.lstrip("AQ")
     if number[0] in ("2", "3"):
         number = number[:2] + "." + number[2:]
     elif number[0] not in ("0", "1"):
-        return
+        return None
     return core.make_number(number, value, number)
 
 
@@ -129,17 +132,18 @@ def get_temp_and_dew(wxdata: str) -> ([str], Number, Number):
     return wxdata, None, None
 
 
-def parse(station: str, report: str) -> (MetarData, Units):
+def parse(station: str, report: str, issued: date = None) -> (MetarData, Units):
     """
     Returns MetarData and Units dataclasses with parsed data and their associated units
     """
     valid_station(station)
     if not report:
         return None, None
-    return parse_na(report) if uses_na_format(station[:2]) else parse_in(report)
+    parser = parse_na if uses_na_format(station[:2]) else parse_in
+    return parser(report, issued)
 
 
-def parse_na(report: str) -> (MetarData, Units):
+def parse_na(report: str, issued: date = None) -> (MetarData, Units):
     """
     Parser for the North American METAR variant
     """
@@ -169,11 +173,11 @@ def parse_na(report: str) -> (MetarData, Units):
     wxresp["other"], wxresp["wx_codes"] = get_wx_codes(wxdata)
     wxresp["flight_rules"] = FLIGHT_RULES[condition]
     wxresp["remarks_info"] = remarks.parse(wxresp["remarks"])
-    wxresp["time"] = core.make_timestamp(wxresp["time"])
+    wxresp["time"] = core.make_timestamp(wxresp["time"], target_date=issued)
     return MetarData(**wxresp), units
 
 
-def parse_in(report: str) -> (MetarData, Units):
+def parse_in(report: str, issued: date = None) -> (MetarData, Units):
     """
     Parser for the International METAR variant
     """
@@ -209,7 +213,7 @@ def parse_in(report: str) -> (MetarData, Units):
     wxresp["other"], wxresp["wx_codes"] = get_wx_codes(wxdata)
     wxresp["flight_rules"] = FLIGHT_RULES[condition]
     wxresp["remarks_info"] = remarks.parse(wxresp["remarks"])
-    wxresp["time"] = core.make_timestamp(wxresp["time"])
+    wxresp["time"] = core.make_timestamp(wxresp["time"], target_date=issued)
     return MetarData(**wxresp), units
 
 
@@ -219,7 +223,7 @@ class Metar(Report):
     """
 
     def _post_update(self):
-        self.data, self.units = parse(self.icao, self.raw)
+        self.data, self.units = parse(self.icao, self.raw, self.issued)
         self.translations = translate_metar(self.data, self.units)
 
     @property

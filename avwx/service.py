@@ -2,7 +2,10 @@
 Classes for retrieving raw report strings
 """
 
+# pylint: disable=arguments-differ,invalid-name
+
 # stdlib
+from abc import ABCMeta, abstractmethod
 from socket import gaierror
 
 # library
@@ -15,7 +18,7 @@ from avwx.exceptions import InvalidRequest, SourceError
 from avwx.station import valid_station
 
 
-class Service:
+class Service(metaclass=ABCMeta):
     """
     Base Service class for fetching reports
     """
@@ -40,19 +43,23 @@ class Service:
         msg = f"Could not find {key} in {self.__class__.__name__} response\n"
         return InvalidRequest(msg + body)
 
+    @abstractmethod
     def _make_url(self, station: str, lat: float, lon: float) -> (str, dict):
         """
         Returns a formatted URL and parameters
         """
         raise NotImplementedError()
 
+    @abstractmethod
     def _extract(self, raw: str, station: str = None) -> str:
         """
         Extracts the report string from the service response
         """
         raise NotImplementedError()
 
-    def _post_data(self, station: str) -> dict:
+    # pylint: disable=unused-argument
+    @staticmethod
+    def _post_data(station: str) -> dict:
         """
         Returns the POST form/data payload
         """
@@ -315,7 +322,7 @@ class MAC(Service):
         """
         return self.url, {"query": f"{self.rtype} {station}"}
 
-    def _extract(self, raw: str, station: str) -> str:
+    def _extract(self, raw: str, station: str = None) -> str:
         """
         Extracts the report message using string finding
         """
@@ -338,13 +345,14 @@ class AUBOM(Service):
         """
         return self.url, None
 
-    def _post_data(self, station: str) -> dict:
+    @staticmethod
+    def _post_data(station: str) -> dict:
         """
         Returns the POST form
         """
         return {"keyword": station, "type": "search", "page": "TAF"}
 
-    def _extract(self, raw: str, station: str) -> str:
+    def _extract(self, raw: str, station: str = None) -> str:
         """
         Extracts the reports from HTML response
         """

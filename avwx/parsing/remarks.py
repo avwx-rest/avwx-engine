@@ -16,7 +16,7 @@ def _tdec(code: str, unit: str = "C") -> str:
     Ex: 1045 -> -4.5°C    0237 -> 23.7°C
     """
     if not code:
-        return
+        return None
     ret = f"{'-' if code[0] == '1' else ''}{int(code[1:3])}.{code[3]}"
     if unit:
         ret += f"°{unit}"

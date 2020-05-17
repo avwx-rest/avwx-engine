@@ -4,9 +4,9 @@ Contains the core parsing and indent functions of avwx
 
 # stdlib
 import re
+import datetime as dt
 from calendar import monthrange
 from copy import copy
-from datetime import datetime, timedelta, timezone
 from itertools import permutations
 
 # library
@@ -118,7 +118,7 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
     NOTE: Numerators are assumed to have a single digit. Additional are whole numbers
     """
     if not num or is_unknown(num):
-        return
+        return None
     # Check special
     if num in SPECIAL_NUMBERS:
         return Number(repr or num, *SPECIAL_NUMBERS[num])
@@ -153,7 +153,7 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
         val = num
     # Create Number
     if not val:
-        return
+        return None
     val = float(val) if "." in num else int(val)
     return Number(repr or num, val, spoken_number(speak or str(val)))
 
@@ -328,11 +328,11 @@ def extra_space_exists(str1: str, str2: str) -> bool:
     return False
 
 
-_cloud_group = "(" + "|".join(CLOUD_LIST) + ")"
+_CLOUD_GROUP = "(" + "|".join(CLOUD_LIST) + ")"
 CLOUD_SPACE_PATTERNS = [
     re.compile(pattern)
     for pattern in (
-        r"(?=.+)" + _cloud_group + r"\d{3}(\w{2,3})?$",  # SCT010BKN021
+        r"(?=.+)" + _CLOUD_GROUP + r"\d{3}(\w{2,3})?$",  # SCT010BKN021
         r"M?\d{2}\/M?\d{2}$",  # BKN01826/25
     )
 ]
@@ -368,6 +368,7 @@ def extra_space_needed(item: str) -> int:
             sep = item.find(key)
             if item[sep + len(key) :].isdigit():
                 return sep
+    return None
 
 
 ITEM_REMV = [
@@ -407,7 +408,7 @@ def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> [str
             wxdata.pop(i)
             continue
         # Remove RE from wx codes, REVCTS -> VCTS
-        elif ilen in [4, 6] and item.startswith("RE"):
+        if ilen in [4, 6] and item.startswith("RE"):
             wxdata[i] = item[2:]
         # Fix a slew of easily identifiable conditions where a space does not belong
         elif i and extra_space_exists(wxdata[i - 1], item):
@@ -778,8 +779,11 @@ def get_ceiling(clouds: [Cloud]) -> Cloud:
 
 
 def parse_date(
-    date: str, hour_threshold: int = 200, time_only: bool = False
-) -> datetime:
+    date: str,
+    hour_threshold: int = 200,
+    time_only: bool = False,
+    target: dt.date = None,
+) -> dt.datetime:
     """
     Parses a report timestamp in ddhhZ or ddhhmmZ format
 
@@ -790,28 +794,33 @@ def parse_date(
     # Format date string
     date = date.strip("Z")
     if not date.isdigit():
-        return
+        return None
     if time_only:
         if len(date) != 4:
-            return
+            return None
         ihour = 0
     else:
         if len(date) == 4:
             date += "00"
         if len(date) != 6:
-            return
+            return None
         ihour = 2
     # Create initial guess
-    now = datetime.now(tz=timezone.utc)
-    day = now.day if time_only else int(date[0:2])
+    if target:
+        target = dt.datetime(
+            target.year, target.month, target.day, tzinfo=dt.timezone.utc
+        )
+    else:
+        target = dt.datetime.now(tz=dt.timezone.utc)
+    day = target.day if time_only else int(date[0:2])
     # Handle situation where next month has less days than current month
     # Shifted value makes sure that a month shift doesn't happen twice
     shifted = False
-    if day > monthrange(now.year, now.month)[1]:
-        now += relativedelta(months=-1)
+    if day > monthrange(target.year, target.month)[1]:
+        target += relativedelta(months=-1)
         shifted = True
     try:
-        guess = now.replace(
+        guess = target.replace(
             day=day,
             hour=int(date[ihour : ihour + 2]) % 24,
             minute=int(date[ihour + 2 : ihour + 4]) % 60,
@@ -819,10 +828,10 @@ def parse_date(
             microsecond=0,
         )
     except ValueError:
-        return
+        return None
     # Handle changing months if not already shifted
     if not shifted:
-        hourdiff = (guess - now) / timedelta(minutes=1) / 60
+        hourdiff = (guess - target) / dt.timedelta(minutes=1) / 60
         if hourdiff > hour_threshold:
             guess += relativedelta(months=-1)
         elif hourdiff < -hour_threshold:
@@ -830,9 +839,13 @@ def parse_date(
     return guess
 
 
-def make_timestamp(timestamp: str, time_only: bool = False) -> Timestamp:
+def make_timestamp(
+    timestamp: str, time_only: bool = False, target_date: dt.date = None
+) -> Timestamp:
     """
     Returns a Timestamp dataclass for a report timestamp in ddhhZ or ddhhmmZ format
     """
-    if timestamp:
-        return Timestamp(timestamp, parse_date(timestamp, time_only=time_only))
+    if not timestamp:
+        return None
+    date_obj = parse_date(timestamp, time_only=time_only, target=target_date)
+    return Timestamp(timestamp, date_obj)

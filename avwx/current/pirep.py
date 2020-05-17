@@ -2,6 +2,10 @@
 Functions for parsing PIREPs
 """
 
+# stdlib
+from datetime import date
+
+# module
 from avwx.current.base import Reports
 from avwx.parsing import core
 from avwx.static.core import NA_UNITS
@@ -17,13 +21,14 @@ from avwx.structs import (
     Units,
 )
 
-_units = Units(**NA_UNITS)
+_UNITS = Units(**NA_UNITS)
 
 
 def _root(item: str) -> dict:
     """
     Parses report root data including station and report type
     """
+    # pylint: disable=redefined-argument-from-local
     report_type = None
     station = None
     for item in item.split():
@@ -40,7 +45,7 @@ def _location(item: str) -> Location:
     """
     items = item.split()
     if not items:
-        return
+        return None
     station, direction, distance = None, None, None
     if len(items) == 1:
         ilen = len(item)
@@ -64,11 +69,11 @@ def _location(item: str) -> Location:
     return Location(item, station, direction, distance)
 
 
-def _time(item: str) -> Timestamp:
+def _time(item: str, target: date = None) -> Timestamp:
     """
     Convert a time element to a Timestamp
     """
-    return core.make_timestamp(item, time_only=True)
+    return core.make_timestamp(item, time_only=True, target_date=target)
 
 
 def _altitude(item: str) -> "Number|str":
@@ -168,19 +173,19 @@ def _wx(item: str) -> dict:
     """
     Parses remaining weather elements
     """
+    # pylint: disable=redefined-argument-from-local
     ret = {"wx": []}
     items = item.split()
     for item in items:
         if len(item) > 2 and item.startswith("FV"):
-            _, ret["flight_visibility"] = core.get_visibility([item[2:]], _units)
+            _, ret["flight_visibility"] = core.get_visibility([item[2:]], _UNITS)
         else:
             ret["wx"].append(item)
     return ret
 
 
-_handlers = {
+_HANDLERS = {
     "OV": ("location", _location),
-    "TM": ("time", _time),
     "FL": ("altitude", _altitude),
     "TP": ("aircraft", _aircraft),
     "SK": ("clouds", _clouds),
@@ -191,10 +196,10 @@ _handlers = {
 }
 
 
-_dict_handlers = {"WX": _wx}
+_DICT_HANDLERS = {"WX": _wx}
 
 
-def parse(report: str) -> PirepData:
+def parse(report: str, issued: date = None) -> PirepData:
     """
     Returns a PirepData object based on the given report
     """
@@ -210,11 +215,13 @@ def parse(report: str) -> PirepData:
             continue
         tag = item[:2]
         item = item[2:].strip()
-        if tag in _handlers:
-            key, handler = _handlers[tag]
+        if tag == "TM":
+            resp["time"] = _time(item, issued)
+        elif tag in _HANDLERS:
+            key, handler = _HANDLERS[tag]
             resp[key] = handler(item)
-        elif tag in _dict_handlers:
-            resp.update(_dict_handlers[tag](item))
+        elif tag in _DICT_HANDLERS:
+            resp.update(_DICT_HANDLERS[tag](item))
     return PirepData(**resp)
 
 

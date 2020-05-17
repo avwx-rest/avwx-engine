@@ -11,6 +11,8 @@ class Forecast(AVWXBase):
     Forecast base class
     """
 
+    # pylint: disable=abstract-method
+
     report_type: str
 
     def __init__(self, icao: str):

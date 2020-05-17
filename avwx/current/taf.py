@@ -2,6 +2,9 @@
 Contains TAF-specific functions for report parsing
 """
 
+# stdlib
+from datetime import date
+
 # module
 from avwx.current.base import Report, get_wx_codes
 from avwx.parsing import core, speech, summary
@@ -187,7 +190,6 @@ def find_missing_taf_times(lines: [dict], start: Timestamp, end: Timestamp) -> [
     for i, line in enumerate(lines):
         if _is_tempo_or_prob(line):
             continue
-        # TODO: BECMG handling
         last_fm_line = i
         # Search remaining lines to fill empty end or previous for empty start
         for target, other, direc in (("start", "end", -1), ("end", "start", 1)):
@@ -279,7 +281,7 @@ def get_taf_flight_rules(lines: [dict]) -> [dict]:
     return lines
 
 
-def parse(station: str, report: str) -> (TafData, Units):
+def parse(station: str, report: str, issued: date = None) -> (TafData, Units):
     """
     Returns TafData and Units dataclasses with parsed data and their associated units
     """
@@ -292,7 +294,7 @@ def parse(station: str, report: str) -> (TafData, Units):
     report = core.sanitize_report_string(report)
     _, station, time = core.get_station_and_time(report[:20].split())
     retwx["station"] = station
-    retwx["time"] = core.make_timestamp(time)
+    retwx["time"] = core.make_timestamp(time, target_date=issued)
     report = report.replace(station, "")
     if time:
         report = report.replace(time, "").strip()
@@ -306,7 +308,7 @@ def parse(station: str, report: str) -> (TafData, Units):
     report, retwx["remarks"] = get_taf_remarks(report)
     # Split and parse each line
     lines = split_taf(report)
-    parsed_lines = parse_lines(lines, units, use_na)
+    parsed_lines = parse_lines(lines, units, use_na, issued)
     # Perform additional info extract and corrections
     if parsed_lines:
         (
@@ -343,7 +345,9 @@ def parse(station: str, report: str) -> (TafData, Units):
     return TafData(**retwx), units
 
 
-def parse_lines(lines: [str], units: Units, use_na: bool = True) -> [dict]:
+def parse_lines(
+    lines: [str], units: Units, use_na: bool = True, issued: date = None
+) -> [dict]:
     """
     Returns a list of parsed line dictionaries
     """
@@ -365,7 +369,9 @@ def parse_lines(lines: [str], units: Units, use_na: bool = True) -> [dict]:
         if line:
             parsed_line = (parse_na_line if use_na else parse_in_line)(line, units)
             for key in ("start_time", "end_time", "transition_start"):
-                parsed_line[key] = core.make_timestamp(parsed_line[key])
+                parsed_line[key] = core.make_timestamp(
+                    parsed_line[key], target_date=issued
+                )
             parsed_line["probability"] = core.make_number(prob[4:])
             parsed_line["raw"] = raw_line
             if prob:
@@ -453,7 +459,7 @@ class Taf(Report):
     """
 
     def _post_update(self):
-        self.data, self.units = parse(self.icao, self.raw)
+        self.data, self.units = parse(self.icao, self.raw, self.issued)
         self.translations = translate_taf(self.data, self.units)
 
     @property

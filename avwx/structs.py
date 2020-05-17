@@ -2,6 +2,8 @@
 Contains dataclasses to hold report data
 """
 
+# pylint: disable=missing-class-docstring,missing-function-docstring,too-many-instance-attributes
+
 # stdlib
 import json
 from dataclasses import dataclass
@@ -91,6 +93,7 @@ class Fraction(Number):
 
 @dataclass
 class Timestamp:
+    # pylint: disable=invalid-name
     repr: str
     dt: datetime
 
@@ -226,6 +229,7 @@ class Icing(Turbulence):
 
 @dataclass
 class PirepData(ReportData):
+    # pylint: disable=invalid-name
     aircraft: Aircraft = None
     altitude: Number = None
     clouds: [Cloud] = None

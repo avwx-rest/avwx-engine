@@ -2,14 +2,15 @@
 Current report shared resources
 """
 
+# pylint: disable=abstract-method,arguments-differ
+
 # stdlib
-from datetime import datetime, timezone
+from datetime import date
 
 # module
 from avwx.base import AVWXBase
 from avwx.service import get_service, NOAA_ADDS
 from avwx.static.core import NA_UNITS, WX_TRANSLATIONS
-from avwx.station import Station
 from avwx.structs import Code, ReportData, ReportTrans, Units
 
 
@@ -75,13 +76,11 @@ class Reports(AVWXBase):
     data: [ReportData] = None
     units: Units = Units(**NA_UNITS)
 
-    def __init__(self, station_ident: str = None, lat: float = None, lon: float = None):
-        if station_ident:
-            station_obj = Station.from_icao(station_ident)
-            self.icao = station_ident
-            self.station = station_obj
-            lat = station_obj.latitude
-            lon = station_obj.longitude
+    def __init__(self, icao: str = None, lat: float = None, lon: float = None):
+        if icao:
+            super().__init__(icao)
+            lat = self.station.latitude
+            lon = self.station.longitude
         elif lat is None or lon is None:
             raise ValueError("No station or valid coordinates given")
         self.lat = lat
@@ -99,7 +98,11 @@ class Reports(AVWXBase):
         return reports
 
     def update(
-        self, reports: [str] = None, timeout: int = 10, disable_post: bool = False
+        self,
+        reports: [str] = None,
+        issued: date = None,
+        timeout: int = 10,
+        disable_post: bool = False,
     ) -> bool:
         """
         Updates raw and data by fetch recent aircraft reports
@@ -112,14 +115,16 @@ class Reports(AVWXBase):
             reports = self.service.fetch(lat=self.lat, lon=self.lon, timeout=timeout)
             if not reports:
                 return False
+            issued = None
         if isinstance(reports, str):
             reports = [reports]
         if reports == self.raw:
             return False
         self.raw = self._report_filter(reports)
+        self.issued = issued
         if not disable_post:
             self._post_update()
-        self.last_updated = datetime.now(tz=timezone.utc)
+        self._set_meta()
         return True
 
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
@@ -132,6 +137,8 @@ class Reports(AVWXBase):
         if not reports or reports == self.raw:
             return False
         self.raw = reports
+        self.issued = None
         if not disable_post:
             self._post_update()
+        self._set_meta()
         return True

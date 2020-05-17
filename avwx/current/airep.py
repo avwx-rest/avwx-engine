@@ -1,12 +1,16 @@
 """
 """
 
+# stdlib
+from datetime import date
+
+# module
 from avwx.current.base import Reports
 from avwx.parsing import core
 from avwx.structs import AirepData
 
 
-def parse(report: str) -> AirepData:
+def parse(report: str, issued: date = None) -> AirepData:
     """
     """
     if not report:
@@ -36,4 +40,4 @@ class Aireps(Reports):
     def _post_update(self):
         self.data = []
         for report in self.raw:
-            parse(report)
+            parse(report, self.issued)
