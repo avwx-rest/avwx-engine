@@ -9,7 +9,7 @@ and place in data/aircraft.txt
 import json
 from pathlib import Path
 
-AIRCRAFT_PATH = Path("data", "aircraft.txt")
+AIRCRAFT_PATH = Path("data", "aircraft.tsv")
 OUTPUT_PATH = Path("..", "avwx", "aircraft.json")
 
 

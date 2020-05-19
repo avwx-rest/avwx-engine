@@ -23,7 +23,7 @@ except ModuleNotFoundError:
     pass
 
 
-__LAST_UPDATED__ = "2019-04-27"
+__LAST_UPDATED__ = "2019-05-18"
 
 # Lazy data loading to speed up import times for unused features
 _STATIONS = _LazyLoad("stations")
