@@ -1,4 +1,5 @@
 """
+Current Report Base Tests
 """
 
 # stdlib
@@ -10,6 +11,10 @@ from avwx.structs import Code
 
 
 class BaseTest(unittest.TestCase):
+    """
+    Current report base test class
+    """
+
     def test_wxcode(self):
         """
         Tests expanding weather codes or ignoring them

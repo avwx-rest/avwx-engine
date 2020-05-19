@@ -1,6 +1,5 @@
 """
-Michael duPont - michael@mdupont.com
-tests/test_summary.py
+Test summary functions
 """
 
 # library
@@ -12,6 +11,10 @@ from avwx.parsing import summary
 
 
 class TestSummary(unittest.TestCase):
+    """
+    Test summary functions
+    """
+
     def test_metar(self):
         """
         Tests that METAR translations are summarized in the proper order

@@ -2,6 +2,8 @@
 Service API Tests
 """
 
+# pylint: disable=protected-access,missing-class-docstring
+
 # stdlib
 import unittest
 
@@ -36,6 +38,7 @@ class TestService(unittest.TestCase):
         """
         Tests that the base Service class has no URL and throws NotImplemented errors
         """
+        # pylint: disable=unidiomatic-typecheck
         if type(self.serv) == service.Service:
             self.assertIsNone(self.serv.url)
             with self.assertRaises(NotImplementedError):

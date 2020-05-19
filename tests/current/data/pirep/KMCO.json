@@ -1,22 +1,75 @@
 {
+    "created": "2020-05-17",
+    "icao": "KMCO",
     "reports": [
         {
             "data": {
                 "aircraft": {
-                    "code": "B738",
-                    "type": "Boeing 737-800"
+                    "code": "C152",
+                    "type": "Cessna 152"
                 },
                 "altitude": {
-                    "repr": "022",
-                    "spoken": "two two",
-                    "value": 22
+                    "repr": "025",
+                    "spoken": "two five",
+                    "value": 25
                 },
                 "clouds": [
                     {
-                        "base": null,
+                        "base": 30,
                         "direction": null,
                         "modifier": null,
-                        "repr": "BKN",
+                        "repr": "FEW030",
+                        "top": null,
+                        "type": "FEW"
+                    }
+                ],
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": null,
+                    "distance": null,
+                    "repr": "KGNV",
+                    "station": "KGNV"
+                },
+                "raw": "GNV UA /OV KGNV/TM 2323/FL025/TP C152/SK FEW030/TB NEG BLO 025/RM DURC",
+                "remarks": "DURC",
+                "sanitized": "GNV UA /OV KGNV/TM 2323/FL025/TP C152/SK FEW030/TB NEG BLO 025/RM DURC",
+                "station": "GNV",
+                "temperature": null,
+                "time": {
+                    "dt": "2020-05-17T23:23:00+00:00",
+                    "repr": "2323"
+                },
+                "turbulence": {
+                    "ceiling": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "floor": null,
+                    "severity": "NEG"
+                },
+                "type": "UA",
+                "wx": null
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "C172",
+                    "type": "Cessna 172"
+                },
+                "altitude": {
+                    "repr": "010",
+                    "spoken": "one zero",
+                    "value": 10
+                },
+                "clouds": [
+                    {
+                        "base": 6,
+                        "direction": null,
+                        "modifier": null,
+                        "repr": "BKN006",
                         "top": null,
                         "type": "BKN"
                     }
@@ -26,72 +79,67 @@
                 "location": {
                     "direction": null,
                     "distance": null,
-                    "repr": "FLL",
-                    "station": "FLL"
+                    "repr": "EVB",
+                    "station": "EVB"
                 },
-                "raw": "FLL UA /OV FLL/TM 0327/FL022/TP B738/SK BKN",
-                "remarks": null,
-                "sanitized": "FLL UA /OV FLL/TM 0327/FL022/TP B738/SK BKN",
-                "station": "FLL",
+                "raw": "EVB UA /OV EVB/TM 2258/FL010/TP C172/SK BKN006/WX 10/RM PILOT REPORTS BKN010 2 MILES WEST OF AIRPORT LOWERING TO BKN006 OVER THE AIRPORT",
+                "remarks": "PILOT REPORTS BKN010 2 MILES WEST OF AIRPORT LOWERING TO BKN006 OVER THE AIRPORT",
+                "sanitized": "EVB UA /OV EVB/TM 2258/FL010/TP C172/SK BKN006/WX 10/RM PILOT REPORTS BKN010 2 MILES WEST OF AIRPORT LOWERING TO BKN006 OVER THE AIRPORT",
+                "station": "EVB",
                 "temperature": null,
-                "time": null,
+                "time": {
+                    "dt": "2020-05-17T22:58:00+00:00",
+                    "repr": "2258"
+                },
                 "turbulence": null,
                 "type": "UA",
-                "wx": null
+                "wx": [
+                    "10"
+                ]
             }
         },
         {
             "data": {
                 "aircraft": {
-                    "code": "H25B",
-                    "type": "British Aerospace 125 series / Hawker/Raytheon 700/800/800XP/850/900"
+                    "code": "CL30",
+                    "type": "Bombardier BD-100 Challenger 300"
                 },
                 "altitude": {
-                    "repr": "020",
-                    "spoken": "two zero",
-                    "value": 20
+                    "repr": "430",
+                    "spoken": "four three zero",
+                    "value": 430
                 },
-                "clouds": [
-                    {
-                        "base": null,
-                        "direction": null,
-                        "modifier": "BASSE",
-                        "repr": "BASES",
-                        "top": null,
-                        "type": null
-                    },
-                    {
-                        "base": 20,
-                        "direction": null,
-                        "modifier": null,
-                        "repr": "OVC020",
-                        "top": null,
-                        "type": "OVC"
-                    }
-                ],
+                "clouds": null,
                 "flight_visibility": null,
                 "icing": null,
                 "location": {
                     "direction": {
-                        "repr": "045",
-                        "spoken": "four five",
-                        "value": 45
+                        "repr": "120",
+                        "spoken": "one two zero",
+                        "value": 120
                     },
                     "distance": {
-                        "repr": "010",
-                        "spoken": "one zero",
-                        "value": 10
+                        "repr": "040",
+                        "spoken": "four zero",
+                        "value": 40
                     },
-                    "repr": "PBI045010",
-                    "station": "PBI"
+                    "repr": "VLD120040",
+                    "station": "VLD"
                 },
-                "raw": "PBI UA /OV PBI045010/TM 0234/FL020/TP H25B/SK BASES OVC020",
+                "raw": "VLD UA /OV VLD120040/TM 2234/FL430/TP CL30/TB OCNL MOD",
                 "remarks": null,
-                "sanitized": "PBI UA /OV PBI045010/TM 0234/FL020/TP H25B/SK BASES OVC020",
-                "station": "PBI",
+                "sanitized": "VLD UA /OV VLD120040/TM 2234/FL430/TP CL30/TB OCNL MOD",
+                "station": "VLD",
                 "temperature": null,
-                "time": null,
-                "turbulence": null,
+                "time": {
+                    "dt": "2020-05-17T22:34:00+00:00",
+                    "repr": "2234"
+                },
+                "turbulence": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "OCNL MOD"
+                },
                 "type": "UA",
                 "wx": null
             }

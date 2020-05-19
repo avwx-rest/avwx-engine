@@ -1,95 +1,99 @@
 {
+    "created": "2020-05-18",
     "data": {
         "altimeter": {
-            "repr": "A3005",
-            "spoken": "three zero point zero five",
-            "value": 30.05
+            "repr": "A3008",
+            "spoken": "three zero point zero eight",
+            "value": 30.08
         },
         "clouds": [
             {
-                "base": 25,
+                "base": 33,
                 "direction": null,
                 "modifier": null,
-                "repr": "FEW025",
+                "repr": "FEW033",
                 "top": null,
                 "type": "FEW"
             },
             {
-                "base": 50,
+                "base": 48,
                 "direction": null,
                 "modifier": null,
-                "repr": "FEW050",
+                "repr": "FEW048",
                 "top": null,
                 "type": "FEW"
             }
         ],
         "dewpoint": {
-            "repr": "16",
-            "spoken": "one six",
-            "value": 16
+            "repr": "18",
+            "spoken": "one eight",
+            "value": 18
         },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "PHNL 110353Z 07014G21KT 10SM FEW025 FEW050 27/16 A3005 RMK AO2 SLP174 T02670156",
-        "remarks": "RMK AO2 SLP174 T02670156",
+        "raw": "PHNL 180553Z 04006KT 10SM FEW033 FEW048 26/18 A3008 RMK AO2 SLP186 T02560178 10311 20256 52018",
+        "remarks": "RMK AO2 SLP186 T02560178 10311 20256 52018",
         "remarks_info": {
             "dewpoint_decimal": {
-                "repr": "15.6",
-                "spoken": "one five point six",
-                "value": 15.6
+                "repr": "17.8",
+                "spoken": "one seven point eight",
+                "value": 17.8
             },
             "temperature_decimal": {
-                "repr": "26.7",
-                "spoken": "two six point seven",
-                "value": 26.7
+                "repr": "25.6",
+                "spoken": "two five point six",
+                "value": 25.6
             }
         },
         "runway_visibility": [],
-        "sanitized": "PHNL 110353Z 07014G21KT 10SM FEW025 FEW050 27/16 A3005 RMK AO2 SLP174 T02670156",
+        "sanitized": "PHNL 180553Z 04006KT 10SM FEW033 FEW048 26/18 A3008 RMK AO2 SLP186 T02560178 10311 20256 52018",
         "station": "PHNL",
         "temperature": {
-            "repr": "27",
-            "spoken": "two seven",
-            "value": 27
+            "repr": "26",
+            "spoken": "two six",
+            "value": 26
         },
-        "time": null,
+        "time": {
+            "dt": "2020-05-18T05:53:00+00:00",
+            "repr": "180553Z"
+        },
         "visibility": {
             "repr": "10",
             "spoken": "one zero",
             "value": 10
         },
         "wind_direction": {
-            "repr": "070",
-            "spoken": "zero seven zero",
-            "value": 70
+            "repr": "040",
+            "spoken": "zero four zero",
+            "value": 40
         },
-        "wind_gust": {
-            "repr": "21",
-            "spoken": "two one",
-            "value": 21
-        },
+        "wind_gust": null,
         "wind_speed": {
-            "repr": "14",
-            "spoken": "one four",
-            "value": 14
+            "repr": "06",
+            "spoken": "six",
+            "value": 6
         },
         "wind_variable_direction": [],
         "wx_codes": []
     },
-    "speech": "Winds zero seven zero at 14kt gusting to 21kt. Visibility one zero miles. Temperature two seven degrees Celsius. Dew point one six degrees Celsius. Altimeter three zero point zero five. Few clouds at 2500ft. Few clouds at 5000ft",
-    "summary": "Winds ENE-070 at 14kt gusting to 21kt, Vis 10sm, Temp 27\u00b0C, Dew 16\u00b0C, Alt 30.05 inHg, Few clouds at 2500ft, Few clouds at 5000ft",
+    "icao": "PHNL",
+    "speech": "Winds zero four zero at 6kt. Visibility one zero miles. Temperature two six degrees Celsius. Dew point one eight degrees Celsius. Altimeter three zero point zero eight. Few clouds at 3300ft. Few clouds at 4800ft",
+    "summary": "Winds NE-040 at 6kt, Vis 10sm, Temp 26\u00b0C, Dew 18\u00b0C, Alt 30.08 inHg, Few clouds at 3300ft, Few clouds at 4800ft",
     "translations": {
-        "altimeter": "30.05 inHg (1018 hPa)",
-        "clouds": "Few clouds at 2500ft, Few clouds at 5000ft - Reported AGL",
-        "dewpoint": "16\u00b0C (61\u00b0F)",
+        "altimeter": "30.08 inHg (1019 hPa)",
+        "clouds": "Few clouds at 3300ft, Few clouds at 4800ft - Reported AGL",
+        "dewpoint": "18\u00b0C (64\u00b0F)",
         "remarks": {
+            "10311": "6-hour maximum temperature 31.1\u00b0C",
+            "20256": "6-hour minimum temperature 25.6\u00b0C",
+            "52018": "3-hour pressure difference: +/- 1.8 mb - Increasing steadily or unsteadily",
             "AO2": "Automated with precipitation sensor",
-            "SLP174": "Sea level pressure: 1017.4 hPa",
-            "T02670156": "Temperature 26.7\u00b0C and dewpoint 15.6\u00b0C"
+            "SLP186": "Sea level pressure: 1018.6 hPa",
+            "T02560178": "Temperature 25.6\u00b0C and dewpoint 17.8\u00b0C"
         },
-        "temperature": "27\u00b0C (81\u00b0F)",
+        "temperature": "26\u00b0C (79\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "ENE-070 at 14kt gusting to 21kt",
+        "wind": "NE-040 at 6kt",
         "wx_codes": ""
     }
 }

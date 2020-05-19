@@ -2,10 +2,7 @@
 Core Tests
 """
 
-# pylint: disable=E1101,C0103
-
-# stdlib
-import unittest
+# pylint: disable=too-many-public-methods,invalid-name
 
 # stdlib
 from datetime import datetime, timezone
@@ -17,7 +14,11 @@ from avwx.parsing import core
 from tests.util import BaseTest
 
 
-class TestGlobal(BaseTest):
+class TestCore(BaseTest):
+    """
+    Test core parsing functions
+    """
+
     def test_dedupe(self):
         """
         Tests list deduplication
@@ -266,8 +267,8 @@ class TestGlobal(BaseTest):
             units = structs.Units(**static.core.NA_UNITS)
             wx, *winds, var = core.get_wind(wx, units)
             self.assertEqual(wx, ["1"])
-            for i in range(len(wind)):
-                self.assert_number(winds[i], *wind[i])
+            for parsed, ref in zip(winds, wind):
+                self.assert_number(parsed, *ref)
             if varv:
                 self.assertIsInstance(varv, list)
                 for i in range(2):
@@ -427,13 +428,19 @@ class TestGlobal(BaseTest):
         """
         Tests that a report timestamp is converted into a Timestamp dataclass
         """
-        today = datetime.now(tz=timezone.utc)
-        rts = today.strftime(r"%d%HZ")
-        date = core.make_timestamp(rts)
-        self.assertIsInstance(date, structs.Timestamp)
-        self.assertEqual(date.repr, rts)
-        self.assertEqual(date.dt.day, today.day)
-        self.assertEqual(date.dt.hour, today.hour)
+        for dt, fmt, target in (
+            (datetime.now(tz=timezone.utc), r"%d%HZ", False),
+            (datetime.now(tz=timezone.utc), r"%d%H%MZ", False),
+            (datetime(2010, 2, 2, 2, 2, tzinfo=timezone.utc), r"%d%HZ", True),
+            (datetime(2010, 2, 2, 2, 2, tzinfo=timezone.utc), r"%d%H%MZ", True),
+        ):
+            dt_repr = dt.strftime(fmt)
+            target = dt.date() if target else None
+            dt = dt.replace(second=0, microsecond=0)
+            if "%M" not in fmt:
+                dt = dt.replace(minute=0)
+            ts = core.make_timestamp(dt_repr, target_date=target)
+            self.assert_timestamp(ts, dt_repr, dt)
 
     def test_sanitize_report_string(self):
         """

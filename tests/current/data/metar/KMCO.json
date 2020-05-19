@@ -1,16 +1,25 @@
 {
+    "created": "2020-05-18",
     "data": {
         "altimeter": {
-            "repr": "A3009",
-            "spoken": "three zero point zero nine",
-            "value": 30.09
+            "repr": "A2995",
+            "spoken": "two nine point nine five",
+            "value": 29.95
         },
         "clouds": [
             {
-                "base": 130,
+                "base": 20,
                 "direction": null,
                 "modifier": null,
-                "repr": "FEW130",
+                "repr": "FEW020",
+                "top": null,
+                "type": "FEW"
+            },
+            {
+                "base": 180,
+                "direction": null,
+                "modifier": null,
+                "repr": "FEW180",
                 "top": null,
                 "type": "FEW"
             },
@@ -18,41 +27,44 @@
                 "base": 250,
                 "direction": null,
                 "modifier": null,
-                "repr": "FEW250",
+                "repr": "SCT250",
                 "top": null,
-                "type": "FEW"
+                "type": "SCT"
             }
         ],
         "dewpoint": {
-            "repr": "18",
-            "spoken": "one eight",
-            "value": 18
+            "repr": "21",
+            "spoken": "two one",
+            "value": 21
         },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "KMCO 110353Z 00000KT 10SM FEW130 FEW250 20/18 A3009 RMK AO2 SLP187 T02000178",
-        "remarks": "RMK AO2 SLP187 T02000178",
+        "raw": "KMCO 180553Z 00000KT 10SM FEW020 FEW180 SCT250 23/21 A2995 RMK AO2 SLP140 60000 T02330211 10283 20228 50002",
+        "remarks": "RMK AO2 SLP140 60000 T02330211 10283 20228 50002",
         "remarks_info": {
             "dewpoint_decimal": {
-                "repr": "17.8",
-                "spoken": "one seven point eight",
-                "value": 17.8
+                "repr": "21.1",
+                "spoken": "two one point one",
+                "value": 21.1
             },
             "temperature_decimal": {
-                "repr": "20.0",
-                "spoken": "two zero point zero",
-                "value": 20.0
+                "repr": "23.3",
+                "spoken": "two three point three",
+                "value": 23.3
             }
         },
         "runway_visibility": [],
-        "sanitized": "KMCO 110353Z 00000KT 10SM FEW130 FEW250 20/18 A3009 RMK AO2 SLP187 T02000178",
+        "sanitized": "KMCO 180553Z 00000KT 10SM FEW020 FEW180 SCT250 23/21 A2995 RMK AO2 SLP140 60000 T02330211 10283 20228 50002",
         "station": "KMCO",
         "temperature": {
-            "repr": "20",
-            "spoken": "two zero",
-            "value": 20
+            "repr": "23",
+            "spoken": "two three",
+            "value": 23
         },
-        "time": null,
+        "time": {
+            "dt": "2020-05-18T05:53:00+00:00",
+            "repr": "180553Z"
+        },
         "visibility": {
             "repr": "10",
             "spoken": "one zero",
@@ -72,18 +84,23 @@
         "wind_variable_direction": [],
         "wx_codes": []
     },
-    "speech": "Winds Calm. Visibility one zero miles. Temperature two zero degrees Celsius. Dew point one eight degrees Celsius. Altimeter three zero point zero nine. Few clouds at 13000ft. Few clouds at 25000ft",
-    "summary": "Winds Calm, Vis 10sm, Temp 20\u00b0C, Dew 18\u00b0C, Alt 30.09 inHg, Few clouds at 13000ft, Few clouds at 25000ft",
+    "icao": "KMCO",
+    "speech": "Winds Calm. Visibility one zero miles. Temperature two three degrees Celsius. Dew point two one degrees Celsius. Altimeter two nine point nine five. Few clouds at 2000ft. Few clouds at 18000ft. Scattered clouds at 25000ft",
+    "summary": "Winds Calm, Vis 10sm, Temp 23\u00b0C, Dew 21\u00b0C, Alt 29.95 inHg, Few clouds at 2000ft, Few clouds at 18000ft, Scattered clouds at 25000ft",
     "translations": {
-        "altimeter": "30.09 inHg (1019 hPa)",
-        "clouds": "Few clouds at 13000ft, Few clouds at 25000ft - Reported AGL",
-        "dewpoint": "18\u00b0C (64\u00b0F)",
+        "altimeter": "29.95 inHg (1014 hPa)",
+        "clouds": "Few clouds at 2000ft, Few clouds at 18000ft, Scattered clouds at 25000ft - Reported AGL",
+        "dewpoint": "21\u00b0C (70\u00b0F)",
         "remarks": {
+            "10283": "6-hour maximum temperature 28.3\u00b0C",
+            "20228": "6-hour minimum temperature 22.8\u00b0C",
+            "50002": "3-hour pressure difference: +/- 0.2 mb - Increasing, then decreasing",
+            "60000": "Precipitation in the last 3 hours: 0 in. - 6 hours: 0 in.",
             "AO2": "Automated with precipitation sensor",
-            "SLP187": "Sea level pressure: 1018.7 hPa",
-            "T02000178": "Temperature 20.0\u00b0C and dewpoint 17.8\u00b0C"
+            "SLP140": "Sea level pressure: 1014.0 hPa",
+            "T02330211": "Temperature 23.3\u00b0C and dewpoint 21.1\u00b0C"
         },
-        "temperature": "20\u00b0C (68\u00b0F)",
+        "temperature": "23\u00b0C (73\u00b0F)",
         "visibility": "10sm (16.1km)",
         "wind": "Calm",
         "wx_codes": ""

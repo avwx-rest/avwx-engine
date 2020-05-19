@@ -2,14 +2,13 @@
 TAF Report Tests
 """
 
+# pylint: disable=protected-access,invalid-name
 
 # stdlib
-import json
 import unittest
 from copy import deepcopy
 from dataclasses import asdict
 from datetime import datetime
-from pathlib import Path
 
 # module
 from avwx import static, structs
@@ -302,24 +301,17 @@ class TestTaf(unittest.TestCase):
         """
         Performs an end-to-end test of all TAF JSON files
         """
-        nodate = lambda s: s[s.find("-") + 2 :]
-        for path in get_data(__file__, "taf"):
-            ref = json.load(path.open())
-            station = taf.Taf(path.stem)
+        for ref, icao, issued in get_data(__file__, "taf"):
+            station = taf.Taf(icao)
             self.assertIsNone(station.last_updated)
-            self.assertTrue(station.update(ref["data"]["raw"]))
+            self.assertIsNone(station.issued)
+            self.assertTrue(station.update(ref["data"]["raw"], issued=issued))
             self.assertIsInstance(station.last_updated, datetime)
-            # Clear timestamp due to parse_date limitations
-            nodt = deepcopy(station.data)
-            for key in ("time", "start_time", "end_time", "transition_start"):
-                setattr(nodt, key, None)
-            for i in range(len(nodt.forecast)):
-                for key in ("start_time", "end_time", "transition_start"):
-                    setattr(nodt.forecast[i], key, None)
-            self.assertEqual(asdict(nodt), ref["data"])
+            self.assertEqual(station.issued, issued)
+            self.assertEqual(asdict(station.data), ref["data"])
             self.assertEqual(asdict(station.translations), ref["translations"])
             self.assertEqual(station.summary, ref["summary"])
-            self.assertEqual(nodate(station.speech), nodate(ref["speech"]))
+            self.assertEqual(station.speech, ref["speech"])
 
     def test_rule_inherit(self):
         """

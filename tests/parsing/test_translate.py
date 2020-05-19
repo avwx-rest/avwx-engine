@@ -1,7 +1,8 @@
 """
-Michael duPont - michael@mdupont.com
-tests/test_translate.py
+Test translation functions
 """
+
+# pytest: disable=redefined-builtin
 
 # library
 import unittest
@@ -13,6 +14,10 @@ from avwx.parsing import core, translate
 
 
 class TestShared(unittest.TestCase):
+    """
+    Test shared translation functions
+    """
+
     def test_visibility(self):
         """
         Tests visibility translation and conversion
@@ -105,6 +110,10 @@ class TestShared(unittest.TestCase):
 
 
 class TestMetar(unittest.TestCase):
+    """
+    Test METAR translations
+    """
+
     def test_cardinal_direction(self):
         """
         Tests that a direction int returns the correct cardinal direction string
@@ -235,6 +244,10 @@ class TestMetar(unittest.TestCase):
 
 
 class TestTaf(unittest.TestCase):
+    """
+    Test TAF translations
+    """
+
     def test_wind_shear(self):
         """
         Tests wind shear unpacking and translation

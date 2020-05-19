@@ -2,10 +2,14 @@
 Testing utilities
 """
 
+# pylint: disable=redefined-builtin,invalid-name
+
 # stdlib
+import json
 import unittest
 from datetime import datetime
 from pathlib import Path
+from typing import Iterator
 
 # module
 from avwx import structs
@@ -56,22 +60,31 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(code.value, value)
 
 
-def get_data(filepath: str, report_type: str) -> [Path]:
+def get_data(filepath: str, report_type: str) -> Iterator:
     """
     Returns a glob iterable of JSON files
     """
     path = Path(filepath).parent.joinpath("data", report_type)
-    return path.glob("*.json")
+    for result in path.glob("*.json"):
+        data = json.load(result.open(), object_hook=datetime_parser)
+        icao = data.pop("icao")
+        created = data.pop("created").date()
+        yield data, icao, created
 
 
 def datetime_parser(data: dict) -> dict:
     """
     Convert ISO strings into datetime objects
     """
-    for k, v in data.items():
-        if isinstance(v, str) and "+00:00" in v:
+    for key, val in data.items():
+        if isinstance(val, str):
+            if "+00:00" in val:
+                try:
+                    data[key] = datetime.fromisoformat(val)
+                except ValueError:
+                    pass
             try:
-                data[k] = datetime.fromisoformat(v)
-            except:
+                data[key] = datetime.strptime(val, r"%Y-%m-%d")
+            except ValueError:
                 pass
     return data

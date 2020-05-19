@@ -1,91 +1,99 @@
 {
+    "created": "2020-05-18",
     "data": {
         "altimeter": {
-            "repr": "A2999",
-            "spoken": "two nine point nine nine",
-            "value": 29.99
+            "repr": "A3019",
+            "spoken": "three zero point one nine",
+            "value": 30.19
         },
         "clouds": [
             {
-                "base": 160,
+                "base": 15,
                 "direction": null,
                 "modifier": null,
-                "repr": "SCT160",
+                "repr": "FEW015",
                 "top": null,
-                "type": "SCT"
+                "type": "FEW"
             },
             {
-                "base": 250,
+                "base": 70,
                 "direction": null,
                 "modifier": null,
-                "repr": "BKN250",
+                "repr": "OVC070",
                 "top": null,
-                "type": "BKN"
+                "type": "OVC"
             }
         ],
         "dewpoint": {
-            "repr": "06",
-            "spoken": "six",
-            "value": 6
+            "repr": "09",
+            "spoken": "nine",
+            "value": 9
         },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "KJFK 110351Z 21011KT 10SM SCT160 BKN250 11/06 A2999 RMK AO2 SLP155 T01060061",
-        "remarks": "RMK AO2 SLP155 T01060061",
+        "raw": "KJFK 180551Z 10007KT 10SM FEW015 OVC070 12/09 A3019 RMK AO2 SLP223 T01220094 10122 20117 56016",
+        "remarks": "RMK AO2 SLP223 T01220094 10122 20117 56016",
         "remarks_info": {
             "dewpoint_decimal": {
-                "repr": "6.1",
-                "spoken": "six point one",
-                "value": 6.1
+                "repr": "9.4",
+                "spoken": "nine point four",
+                "value": 9.4
             },
             "temperature_decimal": {
-                "repr": "10.6",
-                "spoken": "one zero point six",
-                "value": 10.6
+                "repr": "12.2",
+                "spoken": "one two point two",
+                "value": 12.2
             }
         },
         "runway_visibility": [],
-        "sanitized": "KJFK 110351Z 21011KT 10SM SCT160 BKN250 11/06 A2999 RMK AO2 SLP155 T01060061",
+        "sanitized": "KJFK 180551Z 10007KT 10SM FEW015 OVC070 12/09 A3019 RMK AO2 SLP223 T01220094 10122 20117 56016",
         "station": "KJFK",
         "temperature": {
-            "repr": "11",
-            "spoken": "one one",
-            "value": 11
+            "repr": "12",
+            "spoken": "one two",
+            "value": 12
         },
-        "time": null,
+        "time": {
+            "dt": "2020-05-18T05:51:00+00:00",
+            "repr": "180551Z"
+        },
         "visibility": {
             "repr": "10",
             "spoken": "one zero",
             "value": 10
         },
         "wind_direction": {
-            "repr": "210",
-            "spoken": "two one zero",
-            "value": 210
+            "repr": "100",
+            "spoken": "one zero zero",
+            "value": 100
         },
         "wind_gust": null,
         "wind_speed": {
-            "repr": "11",
-            "spoken": "one one",
-            "value": 11
+            "repr": "07",
+            "spoken": "seven",
+            "value": 7
         },
         "wind_variable_direction": [],
         "wx_codes": []
     },
-    "speech": "Winds two one zero at 11kt. Visibility one zero miles. Temperature one one degrees Celsius. Dew point six degrees Celsius. Altimeter two nine point nine nine. Scattered clouds at 16000ft. Broken layer at 25000ft",
-    "summary": "Winds SSW-210 at 11kt, Vis 10sm, Temp 11\u00b0C, Dew 6\u00b0C, Alt 29.99 inHg, Scattered clouds at 16000ft, Broken layer at 25000ft",
+    "icao": "KJFK",
+    "speech": "Winds one zero zero at 7kt. Visibility one zero miles. Temperature one two degrees Celsius. Dew point nine degrees Celsius. Altimeter three zero point one nine. Few clouds at 1500ft. Overcast layer at 7000ft",
+    "summary": "Winds E-100 at 7kt, Vis 10sm, Temp 12\u00b0C, Dew 9\u00b0C, Alt 30.19 inHg, Few clouds at 1500ft, Overcast layer at 7000ft",
     "translations": {
-        "altimeter": "29.99 inHg (1016 hPa)",
-        "clouds": "Scattered clouds at 16000ft, Broken layer at 25000ft - Reported AGL",
-        "dewpoint": "6\u00b0C (43\u00b0F)",
+        "altimeter": "30.19 inHg (1022 hPa)",
+        "clouds": "Few clouds at 1500ft, Overcast layer at 7000ft - Reported AGL",
+        "dewpoint": "9\u00b0C (48\u00b0F)",
         "remarks": {
+            "10122": "6-hour maximum temperature 12.2\u00b0C",
+            "20117": "6-hour minimum temperature 11.7\u00b0C",
+            "56016": "3-hour pressure difference: +/- 1.6 mb - Decreasing, then steady",
             "AO2": "Automated with precipitation sensor",
-            "SLP155": "Sea level pressure: 1015.5 hPa",
-            "T01060061": "Temperature 10.6\u00b0C and dewpoint 6.1\u00b0C"
+            "SLP223": "Sea level pressure: 1022.3 hPa",
+            "T01220094": "Temperature 12.2\u00b0C and dewpoint 9.4\u00b0C"
         },
-        "temperature": "11\u00b0C (52\u00b0F)",
+        "temperature": "12\u00b0C (54\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "SSW-210 at 11kt",
+        "wind": "E-100 at 7kt",
         "wx_codes": ""
     }
 }

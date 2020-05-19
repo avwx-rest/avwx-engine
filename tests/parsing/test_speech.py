@@ -1,7 +1,8 @@
 """
-Michael duPont - michael@mdupont.com
-tests/test_speech.py
+Tests speech parsing
 """
+
+# pylint: disable=redefined-builtin
 
 # library
 import unittest
@@ -14,6 +15,10 @@ from avwx.parsing import core, speech
 
 
 class TestSpeech(unittest.TestCase):
+    """
+    Tests speech parsing
+    """
+
     def test_wind(self):
         """
         Tests converting wind data into a spoken string
@@ -247,6 +252,7 @@ class TestSpeech(unittest.TestCase):
         Tests converting a TafData report into a single spoken string
         """
         units = structs.Units(**static.core.NA_UNITS)
+        # pylint: disable=no-member
         empty_line = {k: None for k in structs.TafLineData.__dataclass_fields__.keys()}
         forecast = [
             structs.TafLineData(**{**empty_line, **line})

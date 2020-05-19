@@ -242,4 +242,4 @@ class Pireps(Reports):
     def _post_update(self):
         self.data = []
         for report in self.raw:
-            self.data.append(parse(report))
+            self.data.append(parse(report, issued=self.issued))

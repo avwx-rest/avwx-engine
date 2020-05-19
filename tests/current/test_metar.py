@@ -2,11 +2,11 @@
 METAR Report Tests
 """
 
+# pylint: disable=invalid-name
+
 # stdlib
-import json
 from dataclasses import asdict
 from datetime import datetime
-from pathlib import Path
 
 # module
 from avwx import static, structs
@@ -158,15 +158,13 @@ class TestMetar(BaseTest):
         """
         Performs an end-to-end test of all METAR JSON files
         """
-        for path in get_data(__file__, "metar"):
-            path = Path(path)
-            ref = json.load(path.open())
-            station = metar.Metar(path.stem)
+        for ref, icao, issued in get_data(__file__, "metar"):
+            station = metar.Metar(icao)
             self.assertIsNone(station.last_updated)
-            self.assertTrue(station.update(ref["data"]["raw"]))
+            self.assertIsNone(station.issued)
+            self.assertTrue(station.update(ref["data"]["raw"], issued=issued))
             self.assertIsInstance(station.last_updated, datetime)
-            # Clear timestamp due to parse_date limitations
-            station.data.time = None
+            self.assertEqual(station.issued, issued)
             self.assertEqual(asdict(station.data), ref["data"])
             self.assertEqual(asdict(station.translations), ref["translations"])
             self.assertEqual(station.summary, ref["summary"])

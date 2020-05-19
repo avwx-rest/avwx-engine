@@ -1,42 +1,46 @@
 {
+    "created": "2020-05-18",
     "data": {
         "altimeter": {
-            "repr": "Q1017",
-            "spoken": "one zero one seven",
-            "value": 1017
+            "repr": "Q1024",
+            "spoken": "one zero two four",
+            "value": 1024
         },
         "clouds": [],
         "dewpoint": {
-            "repr": "M02",
-            "spoken": "minus two",
-            "value": -2
+            "repr": "08",
+            "spoken": "eight",
+            "value": 8
         },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "EGLL 110350Z AUTO 04009KT 9999 NCD 05/M02 Q1017",
+        "raw": "EGLL 180550Z AUTO 26009KT 9999 NCD 11/08 Q1024",
         "remarks": "",
         "remarks_info": {
             "dewpoint_decimal": null,
             "temperature_decimal": null
         },
         "runway_visibility": [],
-        "sanitized": "EGLL 110350Z 04009KT 9999 05/M02 Q1017 ",
+        "sanitized": "EGLL 180550Z 26009KT 9999 11/08 Q1024 ",
         "station": "EGLL",
         "temperature": {
-            "repr": "05",
-            "spoken": "five",
-            "value": 5
+            "repr": "11",
+            "spoken": "one one",
+            "value": 11
         },
-        "time": null,
+        "time": {
+            "dt": "2020-05-18T05:50:00+00:00",
+            "repr": "180550Z"
+        },
         "visibility": {
             "repr": "9999",
             "spoken": "nine nine nine nine",
             "value": 9999
         },
         "wind_direction": {
-            "repr": "040",
-            "spoken": "zero four zero",
-            "value": 40
+            "repr": "260",
+            "spoken": "two six zero",
+            "value": 260
         },
         "wind_gust": null,
         "wind_speed": {
@@ -47,16 +51,17 @@
         "wind_variable_direction": [],
         "wx_codes": []
     },
-    "speech": "Winds zero four zero at 9kt. Visibility one zero kilometers. Temperature five degrees Celsius. Dew point minus two degrees Celsius. Altimeter one zero one seven. Sky clear",
-    "summary": "Winds NE-040 at 9kt, Vis 10km, Temp 5\u00b0C, Dew -2\u00b0C, Alt 1017 hPa, Sky clear",
+    "icao": "EGLL",
+    "speech": "Winds two six zero at 9kt. Visibility one zero kilometers. Temperature one one degrees Celsius. Dew point eight degrees Celsius. Altimeter one zero two four. Sky clear",
+    "summary": "Winds W-260 at 9kt, Vis 10km, Temp 11\u00b0C, Dew 8\u00b0C, Alt 1024 hPa, Sky clear",
     "translations": {
-        "altimeter": "1017 hPa (30.03 inHg)",
+        "altimeter": "1024 hPa (30.24 inHg)",
         "clouds": "Sky clear",
-        "dewpoint": "-2\u00b0C (28\u00b0F)",
+        "dewpoint": "8\u00b0C (46\u00b0F)",
         "remarks": {},
-        "temperature": "5\u00b0C (41\u00b0F)",
+        "temperature": "11\u00b0C (52\u00b0F)",
         "visibility": "10km (6.2sm)",
-        "wind": "NE-040 at 9kt",
+        "wind": "W-260 at 9kt",
         "wx_codes": ""
     }
 }

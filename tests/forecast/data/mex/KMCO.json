@@ -1,4 +1,5 @@
 {
+    "created": "2020-05-18",
     "data": {
         "forecast": [
             {
@@ -7,9 +8,9 @@
                     "value": "overcast"
                 },
                 "dewpoint": {
-                    "repr": "65",
-                    "spoken": "six five",
-                    "value": 65
+                    "repr": "68",
+                    "spoken": "six eight",
+                    "value": 68
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -17,14 +18,14 @@
                     "value": 0
                 },
                 "precip_amount_12": {
-                    "repr": "0",
-                    "value": "no precipitation"
+                    "repr": "4",
+                    "value": "0.50 to 0.99 inches"
                 },
                 "precip_amount_24": null,
                 "precip_chance_12": {
-                    "repr": "30",
-                    "spoken": "three zero",
-                    "value": 30
+                    "repr": "58",
+                    "spoken": "five eight",
+                    "value": 58
                 },
                 "precip_chance_24": null,
                 "precip_type": {
@@ -45,30 +46,30 @@
                 },
                 "snow_amount_24": null,
                 "temperature": {
-                    "repr": "69",
-                    "spoken": "six nine",
-                    "value": 69
+                    "repr": "76",
+                    "spoken": "seven six",
+                    "value": 76
                 },
                 "thunder_storm_12": {
-                    "repr": "4",
-                    "spoken": "four",
-                    "value": 4
+                    "repr": "68",
+                    "spoken": "six eight",
+                    "value": 68
                 },
                 "thunder_storm_24": null,
                 "time": {
-                    "dt": "2020-05-11T00:00:00+00:00",
+                    "dt": "2020-05-19T00:00:00+00:00",
                     "repr": "24"
                 }
             },
             {
                 "cloud": {
-                    "repr": "CL",
-                    "value": "clear"
+                    "repr": "PC",
+                    "value": "partly cloudy"
                 },
                 "dewpoint": {
-                    "repr": "58",
-                    "spoken": "five eight",
-                    "value": 58
+                    "repr": "70",
+                    "spoken": "seven zero",
+                    "value": 70
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -76,80 +77,14 @@
                     "value": 0
                 },
                 "precip_amount_12": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_amount_24": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_chance_12": {
                     "repr": "4",
-                    "spoken": "four",
-                    "value": 4
-                },
-                "precip_chance_24": {
-                    "repr": "30",
-                    "spoken": "three zero",
-                    "value": 30
-                },
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "rain_snow_mix": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "severe_storm_12": null,
-                "severe_storm_24": null,
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": null,
-                "temperature": {
-                    "repr": "77",
-                    "spoken": "seven seven",
-                    "value": 77
-                },
-                "thunder_storm_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "thunder_storm_24": null,
-                "time": {
-                    "dt": "2020-05-11T12:00:00+00:00",
-                    "repr": "36"
-                }
-            },
-            {
-                "cloud": {
-                    "repr": "CL",
-                    "value": "clear"
-                },
-                "dewpoint": {
-                    "repr": "56",
-                    "spoken": "five six",
-                    "value": 56
-                },
-                "freezing_precip": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "value": "no precipitation"
+                    "value": "0.50 to 0.99 inches"
                 },
                 "precip_amount_24": null,
                 "precip_chance_12": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
+                    "repr": "60",
+                    "spoken": "six zero",
+                    "value": 60
                 },
                 "precip_chance_24": null,
                 "precip_type": {
@@ -170,89 +105,23 @@
                 },
                 "snow_amount_24": null,
                 "temperature": {
-                    "repr": "65",
-                    "spoken": "six five",
-                    "value": 65
+                    "repr": "74",
+                    "spoken": "seven four",
+                    "value": 74
                 },
                 "thunder_storm_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
+                    "repr": "57",
+                    "spoken": "five seven",
+                    "value": 57
                 },
                 "thunder_storm_24": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
+                    "repr": "79",
+                    "spoken": "seven nine",
+                    "value": 79
                 },
                 "time": {
-                    "dt": "2020-05-12T00:00:00+00:00",
-                    "repr": "48"
-                }
-            },
-            {
-                "cloud": {
-                    "repr": "CL",
-                    "value": "clear"
-                },
-                "dewpoint": {
-                    "repr": "55",
-                    "spoken": "five five",
-                    "value": 55
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_amount_24": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_chance_12": {
-                    "repr": "4",
-                    "spoken": "four",
-                    "value": 4
-                },
-                "precip_chance_24": {
-                    "repr": "4",
-                    "spoken": "four",
-                    "value": 4
-                },
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "rain_snow_mix": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "severe_storm_12": null,
-                "severe_storm_24": null,
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": null,
-                "temperature": {
-                    "repr": "75",
-                    "spoken": "seven five",
-                    "value": 75
-                },
-                "thunder_storm_12": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
-                "thunder_storm_24": null,
-                "time": {
-                    "dt": "2020-05-12T12:00:00+00:00",
-                    "repr": "60"
+                    "dt": "2020-05-19T12:00:00+00:00",
+                    "repr": "36"
                 }
             },
             {
@@ -274,83 +143,20 @@
                     "repr": "0",
                     "value": "no precipitation"
                 },
-                "precip_amount_24": null,
-                "precip_chance_12": {
-                    "repr": "5",
-                    "spoken": "five",
-                    "value": 5
-                },
-                "precip_chance_24": null,
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "rain_snow_mix": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
-                "severe_storm_12": null,
-                "severe_storm_24": null,
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": null,
-                "temperature": {
-                    "repr": "68",
-                    "spoken": "six eight",
-                    "value": 68
-                },
-                "thunder_storm_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "thunder_storm_24": {
-                    "repr": "2",
-                    "spoken": "two",
-                    "value": 2
-                },
-                "time": {
-                    "dt": "2020-05-13T00:00:00+00:00",
-                    "repr": "72"
-                }
-            },
-            {
-                "cloud": {
-                    "repr": "PC",
-                    "value": "partly cloudy"
-                },
-                "dewpoint": {
-                    "repr": "60",
-                    "spoken": "six zero",
-                    "value": 60
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
                 "precip_amount_24": {
-                    "repr": "0",
-                    "value": "no precipitation"
+                    "repr": "3",
+                    "value": "0.25 to 0.49 inches"
                 },
                 "precip_chance_12": {
-                    "repr": "5",
-                    "spoken": "five",
-                    "value": 5
-                },
-                "precip_chance_24": {
                     "repr": "11",
                     "spoken": "one one",
                     "value": 11
                 },
+                "precip_chance_24": {
+                    "repr": "66",
+                    "spoken": "six six",
+                    "value": 66
+                },
                 "precip_type": {
                     "repr": "R",
                     "value": "pure rain/drizzle"
@@ -369,35 +175,35 @@
                 },
                 "snow_amount_24": null,
                 "temperature": {
-                    "repr": "77",
-                    "spoken": "seven seven",
-                    "value": 77
+                    "repr": "81",
+                    "spoken": "eight one",
+                    "value": 81
                 },
                 "thunder_storm_12": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
+                    "repr": "7",
+                    "spoken": "seven",
+                    "value": 7
                 },
                 "thunder_storm_24": null,
                 "time": {
-                    "dt": "2020-05-13T12:00:00+00:00",
-                    "repr": "84"
+                    "dt": "2020-05-20T00:00:00+00:00",
+                    "repr": "48"
                 }
             },
             {
                 "cloud": {
-                    "repr": "OV",
-                    "value": "overcast"
+                    "repr": "CL",
+                    "value": "clear"
                 },
                 "dewpoint": {
-                    "repr": "65",
-                    "spoken": "six five",
-                    "value": 65
+                    "repr": "66",
+                    "spoken": "six six",
+                    "value": 66
                 },
                 "freezing_precip": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
                 },
                 "precip_amount_12": {
                     "repr": "0",
@@ -428,34 +234,163 @@
                 },
                 "snow_amount_24": null,
                 "temperature": {
-                    "repr": "70",
-                    "spoken": "seven zero",
-                    "value": 70
+                    "repr": "71",
+                    "spoken": "seven one",
+                    "value": 71
                 },
                 "thunder_storm_12": {
-                    "repr": "2",
-                    "spoken": "two",
-                    "value": 2
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
                 },
                 "thunder_storm_24": {
-                    "repr": "4",
-                    "spoken": "four",
-                    "value": 4
+                    "repr": "18",
+                    "spoken": "one eight",
+                    "value": 18
                 },
                 "time": {
-                    "dt": "2020-05-14T00:00:00+00:00",
-                    "repr": "96"
+                    "dt": "2020-05-20T12:00:00+00:00",
+                    "repr": "60"
                 }
             },
             {
                 "cloud": {
-                    "repr": "OV",
-                    "value": "overcast"
+                    "repr": "PC",
+                    "value": "partly cloudy"
                 },
                 "dewpoint": {
-                    "repr": "63",
-                    "spoken": "six three",
-                    "value": 63
+                    "repr": "64",
+                    "spoken": "six four",
+                    "value": 64
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
+                "precip_amount_24": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
+                "precip_chance_12": {
+                    "repr": "11",
+                    "spoken": "one one",
+                    "value": 11
+                },
+                "precip_chance_24": {
+                    "repr": "13",
+                    "spoken": "one three",
+                    "value": 13
+                },
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "rain_snow_mix": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "severe_storm_12": null,
+                "severe_storm_24": null,
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_24": null,
+                "temperature": {
+                    "repr": "82",
+                    "spoken": "eight two",
+                    "value": 82
+                },
+                "thunder_storm_12": {
+                    "repr": "28",
+                    "spoken": "two eight",
+                    "value": 28
+                },
+                "thunder_storm_24": null,
+                "time": {
+                    "dt": "2020-05-21T00:00:00+00:00",
+                    "repr": "72"
+                }
+            },
+            {
+                "cloud": {
+                    "repr": "CL",
+                    "value": "clear"
+                },
+                "dewpoint": {
+                    "repr": "69",
+                    "spoken": "six nine",
+                    "value": 69
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
+                "precip_amount_24": null,
+                "precip_chance_12": {
+                    "repr": "12",
+                    "spoken": "one two",
+                    "value": 12
+                },
+                "precip_chance_24": null,
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "rain_snow_mix": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "severe_storm_12": null,
+                "severe_storm_24": null,
+                "snow": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "snow_amount_24": null,
+                "temperature": {
+                    "repr": "74",
+                    "spoken": "seven four",
+                    "value": 74
+                },
+                "thunder_storm_12": {
+                    "repr": "13",
+                    "spoken": "one three",
+                    "value": 13
+                },
+                "thunder_storm_24": {
+                    "repr": "28",
+                    "spoken": "two eight",
+                    "value": 28
+                },
+                "time": {
+                    "dt": "2020-05-21T12:00:00+00:00",
+                    "repr": "84"
+                }
+            },
+            {
+                "cloud": {
+                    "repr": "PC",
+                    "value": "partly cloudy"
+                },
+                "dewpoint": {
+                    "repr": "67",
+                    "spoken": "six seven",
+                    "value": 67
                 },
                 "freezing_precip": {
                     "repr": "1",
@@ -471,23 +406,82 @@
                     "value": "no precipitation"
                 },
                 "precip_chance_12": {
-                    "repr": "13",
-                    "spoken": "one three",
-                    "value": 13
+                    "repr": "24",
+                    "spoken": "two four",
+                    "value": 24
                 },
                 "precip_chance_24": {
-                    "repr": "18",
-                    "spoken": "one eight",
-                    "value": 18
+                    "repr": "25",
+                    "spoken": "two five",
+                    "value": 25
                 },
                 "precip_type": {
                     "repr": "R",
                     "value": "pure rain/drizzle"
                 },
                 "rain_snow_mix": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "severe_storm_12": null,
+                "severe_storm_24": null,
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_24": null,
+                "temperature": {
+                    "repr": "82",
+                    "spoken": "eight two",
+                    "value": 82
+                },
+                "thunder_storm_12": {
+                    "repr": "36",
+                    "spoken": "three six",
+                    "value": 36
+                },
+                "thunder_storm_24": null,
+                "time": {
+                    "dt": "2020-05-22T00:00:00+00:00",
+                    "repr": "96"
+                }
+            },
+            {
+                "cloud": {
+                    "repr": "PC",
+                    "value": "partly cloudy"
+                },
+                "dewpoint": {
+                    "repr": "72",
+                    "spoken": "seven two",
+                    "value": 72
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
+                "precip_amount_24": null,
+                "precip_chance_12": {
+                    "repr": "22",
+                    "spoken": "two two",
+                    "value": 22
+                },
+                "precip_chance_24": null,
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "rain_snow_mix": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
                 },
                 "severe_storm_12": null,
                 "severe_storm_24": null,
@@ -503,13 +497,17 @@
                     "value": 75
                 },
                 "thunder_storm_12": {
-                    "repr": "9",
-                    "spoken": "nine",
-                    "value": 9
+                    "repr": "23",
+                    "spoken": "two three",
+                    "value": 23
                 },
-                "thunder_storm_24": null,
+                "thunder_storm_24": {
+                    "repr": "38",
+                    "spoken": "three eight",
+                    "value": 38
+                },
                 "time": {
-                    "dt": "2020-05-14T12:00:00+00:00",
+                    "dt": "2020-05-22T12:00:00+00:00",
                     "repr": "108"
                 }
             },
@@ -519,72 +517,9 @@
                     "value": "partly cloudy"
                 },
                 "dewpoint": {
-                    "repr": "67",
-                    "spoken": "six seven",
-                    "value": 67
-                },
-                "freezing_precip": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_amount_24": null,
-                "precip_chance_12": {
-                    "repr": "16",
-                    "spoken": "one six",
-                    "value": 16
-                },
-                "precip_chance_24": null,
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "rain_snow_mix": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "severe_storm_12": null,
-                "severe_storm_24": null,
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": null,
-                "temperature": {
-                    "repr": "72",
-                    "spoken": "seven two",
-                    "value": 72
-                },
-                "thunder_storm_12": {
-                    "repr": "5",
-                    "spoken": "five",
-                    "value": 5
-                },
-                "thunder_storm_24": {
-                    "repr": "15",
-                    "spoken": "one five",
-                    "value": 15
-                },
-                "time": {
-                    "dt": "2020-05-15T00:00:00+00:00",
-                    "repr": "120"
-                }
-            },
-            {
-                "cloud": {
-                    "repr": "PC",
-                    "value": "partly cloudy"
-                },
-                "dewpoint": {
-                    "repr": "64",
-                    "spoken": "six four",
-                    "value": 64
+                    "repr": "69",
+                    "spoken": "six nine",
+                    "value": 69
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -600,263 +535,14 @@
                     "value": "no precipitation"
                 },
                 "precip_chance_12": {
-                    "repr": "30",
-                    "spoken": "three zero",
-                    "value": 30
+                    "repr": "23",
+                    "spoken": "two three",
+                    "value": 23
                 },
                 "precip_chance_24": {
-                    "repr": "36",
-                    "spoken": "three six",
-                    "value": 36
-                },
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "rain_snow_mix": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
-                "severe_storm_12": null,
-                "severe_storm_24": null,
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": null,
-                "temperature": {
-                    "repr": "76",
-                    "spoken": "seven six",
-                    "value": 76
-                },
-                "thunder_storm_12": {
-                    "repr": "28",
-                    "spoken": "two eight",
-                    "value": 28
-                },
-                "thunder_storm_24": null,
-                "time": {
-                    "dt": "2020-05-15T12:00:00+00:00",
-                    "repr": "132"
-                }
-            },
-            {
-                "cloud": {
-                    "repr": "CL",
-                    "value": "clear"
-                },
-                "dewpoint": {
-                    "repr": "67",
-                    "spoken": "six seven",
-                    "value": 67
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_amount_24": null,
-                "precip_chance_12": {
-                    "repr": "14",
-                    "spoken": "one four",
-                    "value": 14
-                },
-                "precip_chance_24": null,
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "rain_snow_mix": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "severe_storm_12": null,
-                "severe_storm_24": null,
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": null,
-                "temperature": {
-                    "repr": "72",
-                    "spoken": "seven two",
-                    "value": 72
-                },
-                "thunder_storm_12": {
-                    "repr": "9",
-                    "spoken": "nine",
-                    "value": 9
-                },
-                "thunder_storm_24": {
-                    "repr": "28",
-                    "spoken": "two eight",
-                    "value": 28
-                },
-                "time": {
-                    "dt": "2020-05-16T00:00:00+00:00",
-                    "repr": "144"
-                }
-            },
-            {
-                "cloud": {
-                    "repr": "PC",
-                    "value": "partly cloudy"
-                },
-                "dewpoint": {
-                    "repr": "63",
-                    "spoken": "six three",
-                    "value": 63
-                },
-                "freezing_precip": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_amount_24": {
-                    "repr": "0",
-                    "value": "no precipitation"
-                },
-                "precip_chance_12": {
-                    "repr": "16",
-                    "spoken": "one six",
-                    "value": 16
-                },
-                "precip_chance_24": {
-                    "repr": "25",
-                    "spoken": "two five",
-                    "value": 25
-                },
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "rain_snow_mix": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
-                "severe_storm_12": null,
-                "severe_storm_24": null,
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": null,
-                "temperature": {
-                    "repr": "78",
-                    "spoken": "seven eight",
-                    "value": 78
-                },
-                "thunder_storm_12": {
-                    "repr": "15",
-                    "spoken": "one five",
-                    "value": 15
-                },
-                "thunder_storm_24": null,
-                "time": {
-                    "dt": "2020-05-16T12:00:00+00:00",
-                    "repr": "156"
-                }
-            },
-            {
-                "cloud": {
-                    "repr": "CL",
-                    "value": "clear"
-                },
-                "dewpoint": {
-                    "repr": "66",
-                    "spoken": "six six",
-                    "value": 66
-                },
-                "freezing_precip": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
-                "precip_amount_12": null,
-                "precip_amount_24": null,
-                "precip_chance_12": {
-                    "repr": "9",
-                    "spoken": "nine",
-                    "value": 9
-                },
-                "precip_chance_24": null,
-                "precip_type": {
-                    "repr": "R",
-                    "value": "pure rain/drizzle"
-                },
-                "rain_snow_mix": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
-                "severe_storm_12": null,
-                "severe_storm_24": null,
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": null,
-                "temperature": {
-                    "repr": "71",
-                    "spoken": "seven one",
-                    "value": 71
-                },
-                "thunder_storm_12": {
-                    "repr": "5",
-                    "spoken": "five",
-                    "value": 5
-                },
-                "thunder_storm_24": {
-                    "repr": "16",
-                    "spoken": "one six",
-                    "value": 16
-                },
-                "time": {
-                    "dt": "2020-05-17T00:00:00+00:00",
-                    "repr": "168"
-                }
-            },
-            {
-                "cloud": {
-                    "repr": "CL",
-                    "value": "clear"
-                },
-                "dewpoint": {
-                    "repr": "64",
-                    "spoken": "six four",
-                    "value": 64
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": null,
-                "precip_amount_24": null,
-                "precip_chance_12": {
-                    "repr": "13",
-                    "spoken": "one three",
-                    "value": 13
-                },
-                "precip_chance_24": {
-                    "repr": "24",
-                    "spoken": "two four",
-                    "value": 24
+                    "repr": "40",
+                    "spoken": "four zero",
+                    "value": 40
                 },
                 "precip_type": {
                     "repr": "R",
@@ -881,14 +567,14 @@
                     "value": 80
                 },
                 "thunder_storm_12": {
-                    "repr": "15",
-                    "spoken": "one five",
-                    "value": 15
+                    "repr": "43",
+                    "spoken": "four three",
+                    "value": 43
                 },
                 "thunder_storm_24": null,
                 "time": {
-                    "dt": "2020-05-17T12:00:00+00:00",
-                    "repr": "180"
+                    "dt": "2020-05-23T00:00:00+00:00",
+                    "repr": "120"
                 }
             },
             {
@@ -897,21 +583,24 @@
                     "value": "clear"
                 },
                 "dewpoint": {
-                    "repr": "67",
-                    "spoken": "six seven",
-                    "value": 67
+                    "repr": "73",
+                    "spoken": "seven three",
+                    "value": 73
                 },
                 "freezing_precip": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
+                    "repr": "2",
+                    "spoken": "two",
+                    "value": 2
                 },
-                "precip_amount_12": null,
+                "precip_amount_12": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
                 "precip_amount_24": null,
                 "precip_chance_12": {
-                    "repr": "11",
-                    "spoken": "one one",
-                    "value": 11
+                    "repr": "26",
+                    "spoken": "two six",
+                    "value": 26
                 },
                 "precip_chance_24": null,
                 "precip_type": {
@@ -932,34 +621,344 @@
                 },
                 "snow_amount_24": null,
                 "temperature": {
-                    "repr": "73",
-                    "spoken": "seven three",
-                    "value": 73
+                    "repr": "76",
+                    "spoken": "seven six",
+                    "value": 76
                 },
                 "thunder_storm_12": {
-                    "repr": "7",
-                    "spoken": "seven",
-                    "value": 7
+                    "repr": "28",
+                    "spoken": "two eight",
+                    "value": 28
                 },
                 "thunder_storm_24": {
-                    "repr": "17",
-                    "spoken": "one seven",
-                    "value": 17
+                    "repr": "50",
+                    "spoken": "five zero",
+                    "value": 50
                 },
                 "time": {
-                    "dt": "2020-05-18T00:00:00+00:00",
+                    "dt": "2020-05-23T12:00:00+00:00",
+                    "repr": "132"
+                }
+            },
+            {
+                "cloud": {
+                    "repr": "PC",
+                    "value": "partly cloudy"
+                },
+                "dewpoint": {
+                    "repr": "69",
+                    "spoken": "six nine",
+                    "value": 69
+                },
+                "freezing_precip": {
+                    "repr": "2",
+                    "spoken": "two",
+                    "value": 2
+                },
+                "precip_amount_12": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
+                "precip_amount_24": {
+                    "repr": "1",
+                    "value": "0.01 to 0.09 inches"
+                },
+                "precip_chance_12": {
+                    "repr": "31",
+                    "spoken": "three one",
+                    "value": 31
+                },
+                "precip_chance_24": {
+                    "repr": "44",
+                    "spoken": "four four",
+                    "value": 44
+                },
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "rain_snow_mix": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "severe_storm_12": null,
+                "severe_storm_24": null,
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_24": null,
+                "temperature": {
+                    "repr": "82",
+                    "spoken": "eight two",
+                    "value": 82
+                },
+                "thunder_storm_12": {
+                    "repr": "44",
+                    "spoken": "four four",
+                    "value": 44
+                },
+                "thunder_storm_24": null,
+                "time": {
+                    "dt": "2020-05-24T00:00:00+00:00",
+                    "repr": "144"
+                }
+            },
+            {
+                "cloud": {
+                    "repr": "CL",
+                    "value": "clear"
+                },
+                "dewpoint": {
+                    "repr": "71",
+                    "spoken": "seven one",
+                    "value": 71
+                },
+                "freezing_precip": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "precip_amount_12": {
+                    "repr": "0",
+                    "value": "no precipitation"
+                },
+                "precip_amount_24": null,
+                "precip_chance_12": {
+                    "repr": "22",
+                    "spoken": "two two",
+                    "value": 22
+                },
+                "precip_chance_24": null,
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "rain_snow_mix": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "severe_storm_12": null,
+                "severe_storm_24": null,
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_24": null,
+                "temperature": {
+                    "repr": "75",
+                    "spoken": "seven five",
+                    "value": 75
+                },
+                "thunder_storm_12": {
+                    "repr": "24",
+                    "spoken": "two four",
+                    "value": 24
+                },
+                "thunder_storm_24": {
+                    "repr": "55",
+                    "spoken": "five five",
+                    "value": 55
+                },
+                "time": {
+                    "dt": "2020-05-24T12:00:00+00:00",
+                    "repr": "156"
+                }
+            },
+            {
+                "cloud": {
+                    "repr": "PC",
+                    "value": "partly cloudy"
+                },
+                "dewpoint": {
+                    "repr": "67",
+                    "spoken": "six seven",
+                    "value": 67
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": null,
+                "precip_amount_24": null,
+                "precip_chance_12": {
+                    "repr": "27",
+                    "spoken": "two seven",
+                    "value": 27
+                },
+                "precip_chance_24": {
+                    "repr": "39",
+                    "spoken": "three nine",
+                    "value": 39
+                },
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "rain_snow_mix": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "severe_storm_12": null,
+                "severe_storm_24": null,
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_24": null,
+                "temperature": {
+                    "repr": "80",
+                    "spoken": "eight zero",
+                    "value": 80
+                },
+                "thunder_storm_12": {
+                    "repr": "40",
+                    "spoken": "four zero",
+                    "value": 40
+                },
+                "thunder_storm_24": null,
+                "time": {
+                    "dt": "2020-05-25T00:00:00+00:00",
+                    "repr": "168"
+                }
+            },
+            {
+                "cloud": {
+                    "repr": "CL",
+                    "value": "clear"
+                },
+                "dewpoint": {
+                    "repr": "70",
+                    "spoken": "seven zero",
+                    "value": 70
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": null,
+                "precip_amount_24": null,
+                "precip_chance_12": {
+                    "repr": "18",
+                    "spoken": "one eight",
+                    "value": 18
+                },
+                "precip_chance_24": null,
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "rain_snow_mix": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "severe_storm_12": null,
+                "severe_storm_24": null,
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_24": null,
+                "temperature": {
+                    "repr": "74",
+                    "spoken": "seven four",
+                    "value": 74
+                },
+                "thunder_storm_12": {
+                    "repr": "18",
+                    "spoken": "one eight",
+                    "value": 18
+                },
+                "thunder_storm_24": {
+                    "repr": "43",
+                    "spoken": "four three",
+                    "value": 43
+                },
+                "time": {
+                    "dt": "2020-05-25T12:00:00+00:00",
+                    "repr": "180"
+                }
+            },
+            {
+                "cloud": {
+                    "repr": "PC",
+                    "value": "partly cloudy"
+                },
+                "dewpoint": {
+                    "repr": "70",
+                    "spoken": "seven zero",
+                    "value": 70
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": null,
+                "precip_amount_24": null,
+                "precip_chance_12": {
+                    "repr": "27",
+                    "spoken": "two seven",
+                    "value": 27
+                },
+                "precip_chance_24": {
+                    "repr": "38",
+                    "spoken": "three eight",
+                    "value": 38
+                },
+                "precip_type": {
+                    "repr": "R",
+                    "value": "pure rain/drizzle"
+                },
+                "rain_snow_mix": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "severe_storm_12": null,
+                "severe_storm_24": null,
+                "snow": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "snow_amount_24": null,
+                "temperature": {
+                    "repr": "80",
+                    "spoken": "eight zero",
+                    "value": 80
+                },
+                "thunder_storm_12": {
+                    "repr": "39",
+                    "spoken": "three nine",
+                    "value": 39
+                },
+                "thunder_storm_24": null,
+                "time": {
+                    "dt": "2020-05-26T00:00:00+00:00",
                     "repr": "192"
                 }
             }
         ],
-        "raw": "KMCO   GFSX MOS GUIDANCE   5/10/2020  1200 UTC                       \nFHR  24  36| 48  60| 72  84| 96 108|120 132|144 156|168 180|192      \n     MON 11| TUE 12| WED 13| THU 14| FRI 15| SAT 16| SUN 17|MON CLIMO\nN/X  64  86| 61  84| 63  86| 66  85| 67  86| 68  87| 67  89| 68 65 88\nTMP  69  77| 65  75| 68  77| 70  75| 72  76| 72  78| 71  80| 73      \nDPT  65  58| 56  55| 63  60| 65  63| 67  64| 67  63| 66  64| 67      \nCLD  OV  CL| CL  CL| CL  PC| OV  OV| PC  PC| CL  PC| CL  CL| CL      \nWND   9  14| 14  13| 13  20| 19  17| 17  16| 10  15| 11   9|  8      \nP12  30   4|  1   4|  5   5|  6  13| 16  30| 14  16|  9  13| 11 16 26\nP24      30|      4|     11|     18|     36|     25|     24|       33\nQ12   0   0|  0   0|  0   0|  0   0|  0   0|  0   0|       |         \nQ24       0|      0|      0|      0|      0|      0|       |         \nT12   4   0|  0   1|  0   1|  2   9|  5  28|  9  15|  5  15|  7      \nT24        |  0    |  2    |  4    | 15    | 28    | 16    | 17      \nPZP   0   0|  1   0|  0   0|  1   1|  1   0|  0   1|  1   0|  1      \nPSN   0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0      \nPRS   0   0|  0   0|  1   0|  0   1|  0   1|  0   1|  1   1|  0      \nTYP   R   R|  R   R|  R   R|  R   R|  R   R|  R   R|  R   R|  R",
+        "raw": "KMCO   GFSX MOS GUIDANCE   5/18/2020  0000 UTC                       \nFHR  24| 36  48| 60  72| 84  96|108 120|132 144|156 168|180 192      \nMON  18| TUE 19| WED 20| THU 21| FRI 22| SAT 23| SUN 24| MON 25 CLIMO\nX/N  89| 69  91| 67  91| 70  93| 71  94| 72  95| 71  93| 70  92 67 89\nTMP  76| 74  81| 71  82| 74  82| 75  80| 76  82| 75  80| 74  80      \nDPT  68| 70  63| 66  64| 69  67| 72  69| 73  69| 71  67| 70  70      \nCLD  OV| PC  CL| CL  PC| CL  PC| PC  PC| CL  PC| CL  PC| CL  PC      \nWND  11| 10  14|  9   8|  7   8|  7   7|  7   8|  7   8|  8   9      \nP12  58| 60  11|  6  11| 12  24| 22  23| 26  31| 22  27| 18  27 17 31\nP24    |     66|     13|     25|     40|     44|     39|     38    37\nQ12   4|  4   0|  0   0|  0   0|  0   0|  0   0|  0    |             \nQ24    |      3|      0|      0|      0|      1|       |             \nT12  68| 57   7|  0  28| 13  36| 23  43| 28  44| 24  40| 18  39      \nT24    | 79    | 18    | 28    | 38    | 50    | 55    | 43          \nPZP   0|  0   0|  0   0|  0   1|  0   0|  2   2|  1   0|  0   0      \nPSN   0|  0   0|  0   0|  1   0|  0   0|  0   0|  0   0|  0   1      \nPRS   0|  0   0|  0   0|  1   0|  0   1|  0   0|  0   1|  1   0      \nTYP   R|  R   R|  R   R|  R   R|  R   R|  R   R|  R   R|  R   R",
         "remarks": null,
         "station": "KMCO",
         "time": {
-            "dt": "2020-05-10T12:00:00+00:00",
-            "repr": "5/10/2020  1200"
+            "dt": "2020-05-18T00:00:00+00:00",
+            "repr": "5/18/2020  0000"
         }
     },
+    "icao": "KMCO",
     "station": {
         "city": "Orlando",
         "country": "US",

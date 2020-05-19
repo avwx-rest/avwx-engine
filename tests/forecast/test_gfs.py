@@ -2,18 +2,18 @@
 GFS service forecast parsing tests
 """
 
+# pylint: disable=protected-access,missing-class-docstring,redefined-builtin
+
 # stdlib
-import json
 from dataclasses import asdict
 from datetime import datetime, timedelta, timezone
-from pathlib import Path
 
 # module
 from avwx import structs
 from avwx.forecast import gfs
 
 # tests
-from tests.util import BaseTest, get_data, datetime_parser
+from tests.util import BaseTest, get_data
 
 MAV_REPORT = """
 KMCO   GFS MOS GUIDANCE    2/11/2020  0000 UTC                      
@@ -202,13 +202,13 @@ class GfsForecastBase(BaseTest):
         """
         Performs an end-to-end test of all report JSON files
         """
-        for path in get_data(__file__, report.__class__.__name__.lower()):
-            path = Path(path)
-            ref = json.load(path.open(), object_hook=datetime_parser)
-            station = report(path.stem)
+        for ref, icao, issued in get_data(__file__, report.__class__.__name__.lower()):
+            station = report(icao)
             self.assertIsNone(station.last_updated)
+            self.assertIsNone(station.issued)
             self.assertTrue(station.update(ref["data"]["raw"]))
             self.assertIsInstance(station.last_updated, datetime)
+            self.assertEqual(station.issued, issued)
             # Clear timestamp due to parse_date limitations
             self.assertEqual(asdict(station.data), ref["data"])
 

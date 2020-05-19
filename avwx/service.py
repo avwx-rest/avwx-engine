@@ -5,7 +5,6 @@ Classes for retrieving raw report strings
 # pylint: disable=arguments-differ,invalid-name
 
 # stdlib
-from abc import ABCMeta, abstractmethod
 from socket import gaierror
 
 # library
@@ -18,7 +17,7 @@ from avwx.exceptions import InvalidRequest, SourceError
 from avwx.station import valid_station
 
 
-class Service(metaclass=ABCMeta):
+class Service:
     """
     Base Service class for fetching reports
     """
@@ -43,14 +42,12 @@ class Service(metaclass=ABCMeta):
         msg = f"Could not find {key} in {self.__class__.__name__} response\n"
         return InvalidRequest(msg + body)
 
-    @abstractmethod
     def _make_url(self, station: str, lat: float, lon: float) -> (str, dict):
         """
         Returns a formatted URL and parameters
         """
         raise NotImplementedError()
 
-    @abstractmethod
     def _extract(self, raw: str, station: str = None) -> str:
         """
         Extracts the report string from the service response

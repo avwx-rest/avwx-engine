@@ -5,16 +5,17 @@ python util/build_tests.py
 """
 
 # stdlib
-import datetime
 import json
 from dataclasses import asdict
+from datetime import date, datetime, timezone
+from pathlib import Path
 
 # module
 import avwx
 
 
 def _default(o):
-    if isinstance(o, (datetime.date, datetime.datetime)):
+    if isinstance(o, (date, datetime)):
         return o.isoformat()
 
 
@@ -24,8 +25,6 @@ def make_metar_test(station: str) -> dict:
     """
     m = avwx.Metar(station)
     m.update()
-    # Clear timestamp due to parse_date limitations
-    m.data.time = None
     return {
         "data": asdict(m.data),
         "translations": asdict(m.translations),
@@ -40,15 +39,8 @@ def make_taf_test(station: str, report: str = None) -> dict:
     """
     t = avwx.Taf(station)
     t.update(report)
-    data = asdict(t.data)
-    # Clear timestamp due to parse_date limitations
-    for key in ("time", "start_time", "end_time"):
-        data[key] = None
-    for i in range(len(data["forecast"])):
-        for key in ("start_time", "end_time", "transition_start"):
-            data["forecast"][i][key] = None
     return {
-        "data": data,
+        "data": asdict(t.data),
         "translations": asdict(t.translations),
         "summary": t.summary,
         "speech": t.speech,
@@ -66,8 +58,6 @@ def make_pirep_test(station: str) -> [dict]:
     if not p.data:
         return
     for report in p.data:
-        # Clear timestamp due to parse_date limitations
-        report.time = None
         ret.append({"data": asdict(report)})
     return {"reports": ret, "station": asdict(p.station)}
 
@@ -97,17 +87,24 @@ def make_mex_test(station: str) -> dict:
     return make_gfs_test(avwx.Mex, station)
 
 
-if __name__ == "__main__":
-    from pathlib import Path
-
+def main():
+    """
+    Creates source files for end-to-end tests
+    """
     targets = {"current": ("metar", "taf", "pirep"), "forecast": ("mav", "mex")}
 
     for target, reports in targets.items():
         for report_type in reports:
             for icao in ("KJFK", "KMCO", "PHNL", "EGLL"):
-                data = locals()[f"make_{report_type}_test"](icao)
+                data = globals()[f"make_{report_type}_test"](icao)
                 if data:
+                    data["icao"] = icao
+                    data["created"] = datetime.now(tz=timezone.utc).date()
                     path = Path("tests", target, "data", report_type, icao + ".json")
                     json.dump(
                         data, path.open("w"), indent=4, sort_keys=True, default=_default
                     )
+
+
+if __name__ == "__main__":
+    main()

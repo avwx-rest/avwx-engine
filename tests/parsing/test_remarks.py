@@ -1,7 +1,8 @@
 """
-Michael duPont - michael@mdupont.com
-tests/test_remarks.py
+Tests remarks elements parsing
 """
+
+# pylint: disable=protected-access
 
 # library
 import unittest
@@ -12,6 +13,10 @@ from avwx.parsing import core, remarks
 
 
 class TestRemarks(unittest.TestCase):
+    """
+    Tests remarks elements parsing
+    """
+
     def test_tdec(self):
         """
         Tests that a 4-digit number gets decoded into a readable temperature

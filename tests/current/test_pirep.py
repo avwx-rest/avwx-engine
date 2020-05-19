@@ -2,12 +2,12 @@
 PIREP Report Tests
 """
 
+# pylint: disable=protected-access,invalid-name
+
 # stdlib
-import json
 import unittest
 from dataclasses import asdict
 from datetime import datetime
-from pathlib import Path
 
 # module
 from avwx import structs
@@ -212,15 +212,13 @@ class TestPirep(unittest.TestCase):
         """
         Performs an end-to-end test of all PIREP JSON files
         """
-        for path in get_data(__file__, "pirep"):
-            path = Path(path)
-            ref = json.load(path.open())
-            station = pirep.Pireps(path.stem)
+        for ref, icao, issued in get_data(__file__, "pirep"):
+            station = pirep.Pireps(icao)
             self.assertIsNone(station.last_updated)
+            self.assertIsNone(station.issued)
             reports = [report["data"]["raw"] for report in ref["reports"]]
-            self.assertTrue(station.update(reports))
+            self.assertTrue(station.update(reports, issued=issued))
             self.assertIsInstance(station.last_updated, datetime)
-            for i, report in enumerate(ref["reports"]):
-                # Clear timestamp due to parse_date limitations
-                station.data[i].time = None
-                self.assertEqual(asdict(station.data[i]), report["data"])
+            self.assertEqual(station.issued, issued)
+            for parsed, report in zip(station.data, ref["reports"]):
+                self.assertEqual(asdict(parsed), report["data"])
