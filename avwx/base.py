@@ -129,3 +129,11 @@ class AVWXBase(metaclass=ABCMeta):
             self._post_update()
         self._set_meta()
         return True
+
+    @staticmethod
+    def sanitize(report: str) -> str:
+        """
+        Sanitizes the report string.
+        This has not been overridden and returns the raw report
+        """
+        return report

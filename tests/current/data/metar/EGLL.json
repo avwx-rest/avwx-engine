@@ -21,7 +21,7 @@
             "temperature_decimal": null
         },
         "runway_visibility": [],
-        "sanitized": "EGLL 180550Z 26009KT 9999 11/08 Q1024 ",
+        "sanitized": "EGLL 180550Z 26009KT 9999 11/08 Q1024",
         "station": "EGLL",
         "temperature": {
             "repr": "11",

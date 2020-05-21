@@ -6,7 +6,7 @@ from datetime import date
 
 # module
 from avwx.current.base import Reports
-from avwx.parsing import core
+from avwx.parsing import sanitization
 from avwx.structs import AirepData
 
 
@@ -15,8 +15,8 @@ def parse(report: str, issued: date = None) -> AirepData:
     """
     if not report:
         return None
-    clean = core.sanitize_report_string(report)
-    wxdata = core.sanitize_report_list(clean.split())
+    clean = sanitization.sanitize_report_string(report)
+    wxdata = sanitization.sanitize_report_list(clean.split())
     wxresp = {"raw": report, "sanitized": " ".join(wxdata)}
     print(wxdata)
     print(wxresp)

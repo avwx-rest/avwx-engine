@@ -7,7 +7,7 @@ from datetime import date
 
 # module
 from avwx.current.base import Report, get_wx_codes
-from avwx.parsing import core, remarks, speech, summary
+from avwx.parsing import core, remarks, sanitization, speech, summary
 from avwx.parsing.translate.metar import translate_metar
 from avwx.static.core import FLIGHT_RULES, IN_UNITS, NA_UNITS
 from avwx.static.metar import METAR_RMK
@@ -39,21 +39,21 @@ def get_remarks(txt: str) -> ([str], str):
     return txt.strip().split(), ""
 
 
-def get_runway_visibility(wxdata: [str]) -> ([str], [str]):
+def get_runway_visibility(data: [str]) -> ([str], [str]):
     """
     Returns the report list and the remove runway visibility list
     """
     runway_vis = []
-    for i, item in reversed(list(enumerate(wxdata))):
+    for i, item in reversed(list(enumerate(data))):
         if (
             len(item) > 4
             and item[0] == "R"
             and (item[3] == "/" or item[4] == "/")
             and item[1:3].isdigit()
         ):
-            runway_vis.append(wxdata.pop(i))
+            runway_vis.append(data.pop(i))
     runway_vis.sort()
-    return wxdata, runway_vis
+    return data, runway_vis
 
 
 def parse_altimeter(value: str) -> Number:
@@ -81,7 +81,7 @@ def parse_altimeter(value: str) -> Number:
     return core.make_number(number, value, number)
 
 
-def get_altimeter(wxdata: [str], units: Units, version: str = "NA") -> ([str], Number):
+def get_altimeter(data: [str], units: Units, version: str = "NA") -> ([str], Number):
     """
     Returns the report list and the removed altimeter item
 
@@ -89,26 +89,26 @@ def get_altimeter(wxdata: [str], units: Units, version: str = "NA") -> ([str], N
     """
     values = []
     for _ in range(2):
-        if not wxdata:
+        if not data:
             break
-        value = parse_altimeter(wxdata[-1])
+        value = parse_altimeter(data[-1])
         if value is None:
             break
         values.append(value)
-        wxdata.pop(-1)
+        data.pop(-1)
     if not values:
-        return wxdata, None
+        return data, None
     values.sort(key=lambda x: x.value)
     altimeter = values[0 if version == "NA" else -1]
     units.altimeter = "inHg" if altimeter.value < 100 else "hPa"
-    return wxdata, altimeter
+    return data, altimeter
 
 
-def get_temp_and_dew(wxdata: str) -> ([str], Number, Number):
+def get_temp_and_dew(data: str) -> ([str], Number, Number):
     """
     Returns the report list and removed temperature and dewpoint strings
     """
-    for i, item in reversed(list(enumerate(wxdata))):
+    for i, item in reversed(list(enumerate(data))):
         if "/" in item:
             # ///07
             if item[0] == "/":
@@ -127,9 +127,23 @@ def get_temp_and_dew(wxdata: str) -> ([str], Number, Number):
                     valid = False
                     break
             if valid:
-                wxdata.pop(i)
-                return (wxdata, *[core.make_number(t) for t in tempdew])
-    return wxdata, None, None
+                data.pop(i)
+                return (data, *[core.make_number(t) for t in tempdew])
+    return data, None, None
+
+
+def sanitize(report: str) -> (str, str, [str]):
+    """
+    Returns a sanitized report, remarks, and elements ready for parsing
+    """
+    clean = sanitization.sanitize_report_string(report)
+    data, remark_str = get_remarks(clean)
+    data = core.dedupe(data)
+    data = sanitization.sanitize_report_list(data)
+    clean = " ".join(data)
+    if remark_str:
+        clean += " " + remark_str
+    return clean, remark_str, data
 
 
 def parse(station: str, report: str, issued: date = None) -> (MetarData, Units):
@@ -148,33 +162,29 @@ def parse_na(report: str, issued: date = None) -> (MetarData, Units):
     Parser for the North American METAR variant
     """
     units = Units(**NA_UNITS)
-    wxresp = {"raw": report}
-    clean = core.sanitize_report_string(report)
-    wxdata, wxresp["remarks"] = get_remarks(clean)
-    wxdata = core.dedupe(wxdata)
-    wxdata = core.sanitize_report_list(wxdata)
-    wxresp["sanitized"] = " ".join(wxdata + [wxresp["remarks"]])
-    wxdata, wxresp["station"], wxresp["time"] = core.get_station_and_time(wxdata)
-    wxdata, wxresp["runway_visibility"] = get_runway_visibility(wxdata)
-    wxdata, wxresp["clouds"] = core.get_clouds(wxdata)
+    resp = {"raw": report}
+    resp["sanitized"], resp["remarks"], data = sanitize(report)
+    data, resp["station"], resp["time"] = core.get_station_and_time(data)
+    data, resp["runway_visibility"] = get_runway_visibility(data)
+    data, resp["clouds"] = core.get_clouds(data)
     (
-        wxdata,
-        wxresp["wind_direction"],
-        wxresp["wind_speed"],
-        wxresp["wind_gust"],
-        wxresp["wind_variable_direction"],
-    ) = core.get_wind(wxdata, units)
-    wxdata, wxresp["altimeter"] = get_altimeter(wxdata, units, "NA")
-    wxdata, wxresp["visibility"] = core.get_visibility(wxdata, units)
-    wxdata, wxresp["temperature"], wxresp["dewpoint"] = get_temp_and_dew(wxdata)
+        data,
+        resp["wind_direction"],
+        resp["wind_speed"],
+        resp["wind_gust"],
+        resp["wind_variable_direction"],
+    ) = core.get_wind(data, units)
+    data, resp["altimeter"] = get_altimeter(data, units, "NA")
+    data, resp["visibility"] = core.get_visibility(data, units)
+    data, resp["temperature"], resp["dewpoint"] = get_temp_and_dew(data)
     condition = core.get_flight_rules(
-        wxresp["visibility"], core.get_ceiling(wxresp["clouds"])
+        resp["visibility"], core.get_ceiling(resp["clouds"])
     )
-    wxresp["other"], wxresp["wx_codes"] = get_wx_codes(wxdata)
-    wxresp["flight_rules"] = FLIGHT_RULES[condition]
-    wxresp["remarks_info"] = remarks.parse(wxresp["remarks"])
-    wxresp["time"] = core.make_timestamp(wxresp["time"], target_date=issued)
-    return MetarData(**wxresp), units
+    resp["other"], resp["wx_codes"] = get_wx_codes(data)
+    resp["flight_rules"] = FLIGHT_RULES[condition]
+    resp["remarks_info"] = remarks.parse(resp["remarks"])
+    resp["time"] = core.make_timestamp(resp["time"], target_date=issued)
+    return MetarData(**resp), units
 
 
 def parse_in(report: str, issued: date = None) -> (MetarData, Units):
@@ -182,39 +192,35 @@ def parse_in(report: str, issued: date = None) -> (MetarData, Units):
     Parser for the International METAR variant
     """
     units = Units(**IN_UNITS)
-    wxresp = {"raw": report}
-    clean = core.sanitize_report_string(report)
-    wxdata, wxresp["remarks"] = get_remarks(clean)
-    wxdata = core.dedupe(wxdata)
-    wxdata = core.sanitize_report_list(wxdata)
-    wxresp["sanitized"] = " ".join(wxdata + [wxresp["remarks"]])
-    wxdata, wxresp["station"], wxresp["time"] = core.get_station_and_time(wxdata)
-    wxdata, wxresp["runway_visibility"] = get_runway_visibility(wxdata)
-    if "CAVOK" not in wxdata:
-        wxdata, wxresp["clouds"] = core.get_clouds(wxdata)
+    resp = {"raw": report}
+    resp["sanitized"], resp["remarks"], data = sanitize(report)
+    data, resp["station"], resp["time"] = core.get_station_and_time(data)
+    data, resp["runway_visibility"] = get_runway_visibility(data)
+    if "CAVOK" not in data:
+        data, resp["clouds"] = core.get_clouds(data)
     (
-        wxdata,
-        wxresp["wind_direction"],
-        wxresp["wind_speed"],
-        wxresp["wind_gust"],
-        wxresp["wind_variable_direction"],
-    ) = core.get_wind(wxdata, units)
-    wxdata, wxresp["altimeter"] = get_altimeter(wxdata, units, "IN")
-    if "CAVOK" in wxdata:
-        wxresp["visibility"] = core.make_number("CAVOK")
-        wxresp["clouds"] = []
-        wxdata.remove("CAVOK")
+        data,
+        resp["wind_direction"],
+        resp["wind_speed"],
+        resp["wind_gust"],
+        resp["wind_variable_direction"],
+    ) = core.get_wind(data, units)
+    data, resp["altimeter"] = get_altimeter(data, units, "IN")
+    if "CAVOK" in data:
+        resp["visibility"] = core.make_number("CAVOK")
+        resp["clouds"] = []
+        data.remove("CAVOK")
     else:
-        wxdata, wxresp["visibility"] = core.get_visibility(wxdata, units)
-    wxdata, wxresp["temperature"], wxresp["dewpoint"] = get_temp_and_dew(wxdata)
+        data, resp["visibility"] = core.get_visibility(data, units)
+    data, resp["temperature"], resp["dewpoint"] = get_temp_and_dew(data)
     condition = core.get_flight_rules(
-        wxresp["visibility"], core.get_ceiling(wxresp["clouds"])
+        resp["visibility"], core.get_ceiling(resp["clouds"])
     )
-    wxresp["other"], wxresp["wx_codes"] = get_wx_codes(wxdata)
-    wxresp["flight_rules"] = FLIGHT_RULES[condition]
-    wxresp["remarks_info"] = remarks.parse(wxresp["remarks"])
-    wxresp["time"] = core.make_timestamp(wxresp["time"], target_date=issued)
-    return MetarData(**wxresp), units
+    resp["other"], resp["wx_codes"] = get_wx_codes(data)
+    resp["flight_rules"] = FLIGHT_RULES[condition]
+    resp["remarks_info"] = remarks.parse(resp["remarks"])
+    resp["time"] = core.make_timestamp(resp["time"], target_date=issued)
+    return MetarData(**resp), units
 
 
 class Metar(Report):
@@ -225,6 +231,13 @@ class Metar(Report):
     def _post_update(self):
         self.data, self.units = parse(self.icao, self.raw, self.issued)
         self.translations = translate_metar(self.data, self.units)
+
+    @staticmethod
+    def sanitize(report: str) -> str:
+        """
+        Sanitizes a METAR string
+        """
+        return sanitize(report)[0]
 
     @property
     def summary(self) -> str:

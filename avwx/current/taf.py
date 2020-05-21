@@ -7,7 +7,7 @@ from datetime import date
 
 # module
 from avwx.current.base import Report, get_wx_codes
-from avwx.parsing import core, speech, summary
+from avwx.parsing import core, sanitization, speech, summary
 from avwx.parsing.translate.taf import translate_taf
 from avwx.static.core import FLIGHT_RULES, IN_UNITS, NA_UNITS
 from avwx.static.taf import TAF_RMK, TAF_NEWLINE, TAF_NEWLINE_STARTSWITH
@@ -60,24 +60,24 @@ def get_taf_remarks(txt: str) -> (str, str):
     return txt, remarks
 
 
-def get_alt_ice_turb(wxdata: [str]) -> ([str], str, [str], [str]):
+def get_alt_ice_turb(data: [str]) -> ([str], str, [str], [str]):
     """
     Returns the report list and removed: Altimeter string, Icing list, Turbulence list
     """
     altimeter = ""
     icing, turbulence = [], []
-    for i, item in reversed(list(enumerate(wxdata))):
+    for i, item in reversed(list(enumerate(data))):
         if len(item) > 6 and item.startswith("QNH") and item[3:7].isdigit():
-            altimeter = wxdata.pop(i)[3:7]
+            altimeter = data.pop(i)[3:7]
             if altimeter[0] in ("2", "3"):
                 altimeter = altimeter[:2] + "." + altimeter[2:]
             altimeter = core.make_number(altimeter)
         elif item.isdigit():
             if item[0] == "6":
-                icing.append(wxdata.pop(i))
+                icing.append(data.pop(i))
             elif item[0] == "5":
-                turbulence.append(wxdata.pop(i))
-    return wxdata, altimeter, icing, turbulence
+                turbulence.append(data.pop(i))
+    return data, altimeter, icing, turbulence
 
 
 def starts_new_line(item: str) -> bool:
@@ -108,50 +108,50 @@ def split_taf(txt: str) -> [str]:
 
 
 # TAF line report type and start/end times
-def get_type_and_times(wxdata: [str]) -> ([str], str, str, str):
+def get_type_and_times(data: [str]) -> ([str], str, str, str):
     """
     Returns the report list and removed:
     Report type string, start time string, end time string
     """
     report_type, start_time, end_time, transition = "FROM", None, None, None
-    if wxdata:
+    if data:
         # TEMPO, BECMG, INTER
-        if wxdata[0] in TAF_NEWLINE:
-            report_type = wxdata.pop(0)
+        if data[0] in TAF_NEWLINE:
+            report_type = data.pop(0)
         # PROB[30,40]
-        elif len(wxdata[0]) == 6 and wxdata[0].startswith("PROB"):
-            report_type = wxdata.pop(0)
-    if wxdata:
+        elif len(data[0]) == 6 and data[0].startswith("PROB"):
+            report_type = data.pop(0)
+    if data:
         # 1200/1306
         if (
-            len(wxdata[0]) == 9
-            and wxdata[0][4] == "/"
-            and wxdata[0][:4].isdigit()
-            and wxdata[0][5:].isdigit()
+            len(data[0]) == 9
+            and data[0][4] == "/"
+            and data[0][:4].isdigit()
+            and data[0][5:].isdigit()
         ):
-            start_time, end_time = wxdata.pop(0).split("/")
+            start_time, end_time = data.pop(0).split("/")
         # FM120000
-        elif len(wxdata[0]) > 7 and wxdata[0].startswith("FM"):
+        elif len(data[0]) > 7 and data[0].startswith("FM"):
             report_type = "FROM"
             if (
-                "/" in wxdata[0]
-                and wxdata[0][2:].split("/")[0].isdigit()
-                and wxdata[0][2:].split("/")[1].isdigit()
+                "/" in data[0]
+                and data[0][2:].split("/")[0].isdigit()
+                and data[0][2:].split("/")[1].isdigit()
             ):
-                start_time, end_time = wxdata.pop(0)[2:].split("/")
-            elif wxdata[0][2:8].isdigit():
-                start_time = wxdata.pop(0)[2:6]
+                start_time, end_time = data.pop(0)[2:].split("/")
+            elif data[0][2:8].isdigit():
+                start_time = data.pop(0)[2:6]
             # TL120600
             if (
-                wxdata
-                and len(wxdata[0]) > 7
-                and wxdata[0].startswith("TL")
-                and wxdata[0][2:8].isdigit()
+                data
+                and len(data[0]) > 7
+                and data[0].startswith("TL")
+                and data[0][2:8].isdigit()
             ):
-                end_time = wxdata.pop(0)[2:6]
+                end_time = data.pop(0)[2:6]
     if report_type == "BECMG":
         transition, start_time, end_time = start_time, end_time, None
-    return wxdata, report_type, start_time, end_time, transition
+    return data, report_type, start_time, end_time, transition
 
 
 def _is_tempo_or_prob(line: dict) -> bool:
@@ -205,30 +205,30 @@ def find_missing_taf_times(lines: [dict], start: Timestamp, end: Timestamp) -> [
     return lines
 
 
-def get_wind_shear(wxdata: [str]) -> ([str], str):
+def get_wind_shear(data: [str]) -> ([str], str):
     """
     Returns the report list and the remove wind shear
     """
     shear = None
-    for i, item in reversed(list(enumerate(wxdata))):
+    for i, item in reversed(list(enumerate(data))):
         if len(item) > 6 and item.startswith("WS") and item[5] == "/":
-            shear = wxdata.pop(i).replace("KT", "")
-    return wxdata, shear
+            shear = data.pop(i).replace("KT", "")
+    return data, shear
 
 
-def get_temp_min_and_max(wxlist: [str]) -> ([str], str, str):
+def get_temp_min_and_max(data: [str]) -> ([str], str, str):
     """
     Pull out Max temp at time and Min temp at time items from wx list
     """
     temp_max, temp_min = "", ""
-    for i, item in reversed(list(enumerate(wxlist))):
+    for i, item in reversed(list(enumerate(data))):
         if len(item) > 6 and item[0] == "T" and "/" in item:
             # TX12/1316Z
             if item[1] == "X":
-                temp_max = wxlist.pop(i)
+                temp_max = data.pop(i)
             # TNM03/1404Z
             elif item[1] == "N":
-                temp_min = wxlist.pop(i)
+                temp_min = data.pop(i)
             # TM03/1404Z T12/1316Z -> Will fix TN/TX
             elif item[1] == "M" or item[1].isdigit():
                 if temp_min:
@@ -241,20 +241,20 @@ def get_temp_min_and_max(wxlist: [str]) -> ([str], str, str):
                         temp_max = "TX" + item[1:]
                 else:
                     temp_min = "TN" + item[1:]
-                wxlist.pop(i)
-    return wxlist, temp_max, temp_min
+                data.pop(i)
+    return data, temp_max, temp_min
 
 
-def get_oceania_temp_and_alt(wxlist: [str]) -> ([str], [str], [str]):
+def get_oceania_temp_and_alt(data: [str]) -> ([str], [str], [str]):
     """
     Get Temperature and Altimeter lists for Oceania TAFs
     """
     tlist, qlist = [], []
-    if "T" in wxlist:
-        wxlist, tlist = core.get_digit_list(wxlist, wxlist.index("T"))
-    if "Q" in wxlist:
-        wxlist, qlist = core.get_digit_list(wxlist, wxlist.index("Q"))
-    return wxlist, tlist, qlist
+    if "T" in data:
+        data, tlist = core.get_digit_list(data, data.index("T"))
+    if "Q" in data:
+        data, qlist = core.get_digit_list(data, data.index("Q"))
+    return data, tlist, qlist
 
 
 def get_taf_flight_rules(lines: [dict]) -> [dict]:
@@ -290,11 +290,11 @@ def parse(station: str, report: str, issued: date = None) -> (TafData, Units):
     valid_station(station)
     while len(report) > 3 and report[:4] in ("TAF ", "AMD ", "COR "):
         report = report[4:]
-    retwx = {"end_time": None, "raw": report, "remarks": None, "start_time": None}
-    report = core.sanitize_report_string(report)
+    ret = {"end_time": None, "raw": report, "remarks": None, "start_time": None}
+    report = sanitization.sanitize_report_string(report)
     _, station, time = core.get_station_and_time(report[:20].split())
-    retwx["station"] = station
-    retwx["time"] = core.make_timestamp(time, target_date=issued)
+    ret["station"] = station
+    ret["time"] = core.make_timestamp(time, target_date=issued)
     report = report.replace(station, "")
     if time:
         report = report.replace(time, "").strip()
@@ -305,7 +305,7 @@ def parse(station: str, report: str, issued: date = None) -> (TafData, Units):
         use_na = False
         units = Units(**IN_UNITS)
     # Find and remove remarks
-    report, retwx["remarks"] = get_taf_remarks(report)
+    report, ret["remarks"] = get_taf_remarks(report)
     # Split and parse each line
     lines = split_taf(report)
     parsed_lines = parse_lines(lines, units, use_na, issued)
@@ -313,27 +313,27 @@ def parse(station: str, report: str, issued: date = None) -> (TafData, Units):
     if parsed_lines:
         (
             parsed_lines[-1]["other"],
-            retwx["max_temp"],
-            retwx["min_temp"],
+            ret["max_temp"],
+            ret["min_temp"],
         ) = get_temp_min_and_max(parsed_lines[-1]["other"])
-        if not (retwx["max_temp"] or retwx["min_temp"]):
+        if not (ret["max_temp"] or ret["min_temp"]):
             (
                 parsed_lines[0]["other"],
-                retwx["max_temp"],
-                retwx["min_temp"],
+                ret["max_temp"],
+                ret["min_temp"],
             ) = get_temp_min_and_max(parsed_lines[0]["other"])
         # Set start and end times based on the first line
         start, end = parsed_lines[0]["start_time"], parsed_lines[0]["end_time"]
         parsed_lines[0]["end_time"] = None
-        retwx["start_time"], retwx["end_time"] = start, end
+        ret["start_time"], ret["end_time"] = start, end
         parsed_lines = find_missing_taf_times(parsed_lines, start, end)
         parsed_lines = get_taf_flight_rules(parsed_lines)
     # Extract Oceania-specific data
-    if retwx["station"][0] == "A":
+    if ret["station"][0] == "A":
         (
             parsed_lines[-1]["other"],
-            retwx["alts"],
-            retwx["temps"],
+            ret["alts"],
+            ret["temps"],
         ) = get_oceania_temp_and_alt(parsed_lines[-1]["other"])
     # Convert wx codes
     for i, line in enumerate(parsed_lines):
@@ -341,8 +341,8 @@ def parse(station: str, report: str, issued: date = None) -> (TafData, Units):
             line["other"]
         )
     # Convert to dataclass
-    retwx["forecast"] = [TafLineData(**line) for line in parsed_lines]
-    return TafData(**retwx), units
+    ret["forecast"] = [TafLineData(**line) for line in parsed_lines]
+    return TafData(**ret), units
 
 
 def parse_lines(
@@ -386,71 +386,71 @@ def parse_na_line(line: str, units: Units) -> {str: str}:
     """
     Parser for the North American TAF forcast variant
     """
-    wxdata = core.dedupe(line.split())
-    wxdata = core.sanitize_report_list(wxdata)
-    retwx = {"sanitized": " ".join(wxdata)}
+    data = core.dedupe(line.split())
+    data = sanitization.sanitize_report_list(data)
+    ret = {"sanitized": " ".join(data)}
     (
-        wxdata,
-        retwx["type"],
-        retwx["start_time"],
-        retwx["end_time"],
-        retwx["transition_start"],
-    ) = get_type_and_times(wxdata)
-    wxdata, retwx["wind_shear"] = get_wind_shear(wxdata)
+        data,
+        ret["type"],
+        ret["start_time"],
+        ret["end_time"],
+        ret["transition_start"],
+    ) = get_type_and_times(data)
+    data, ret["wind_shear"] = get_wind_shear(data)
     (
-        wxdata,
-        retwx["wind_direction"],
-        retwx["wind_speed"],
-        retwx["wind_gust"],
+        data,
+        ret["wind_direction"],
+        ret["wind_speed"],
+        ret["wind_gust"],
         _,
-    ) = core.get_wind(wxdata, units)
-    wxdata, retwx["visibility"] = core.get_visibility(wxdata, units)
-    wxdata, retwx["clouds"] = core.get_clouds(wxdata)
+    ) = core.get_wind(data, units)
+    data, ret["visibility"] = core.get_visibility(data, units)
+    data, ret["clouds"] = core.get_clouds(data)
     (
-        retwx["other"],
-        retwx["altimeter"],
-        retwx["icing"],
-        retwx["turbulence"],
-    ) = get_alt_ice_turb(wxdata)
-    return retwx
+        ret["other"],
+        ret["altimeter"],
+        ret["icing"],
+        ret["turbulence"],
+    ) = get_alt_ice_turb(data)
+    return ret
 
 
 def parse_in_line(line: str, units: Units) -> {str: str}:
     """
     Parser for the International TAF forcast variant
     """
-    wxdata = core.dedupe(line.split())
-    wxdata = core.sanitize_report_list(wxdata)
-    retwx = {"sanitized": " ".join(wxdata)}
+    data = core.dedupe(line.split())
+    data = sanitization.sanitize_report_list(data)
+    ret = {"sanitized": " ".join(data)}
     (
-        wxdata,
-        retwx["type"],
-        retwx["start_time"],
-        retwx["end_time"],
-        retwx["transition_start"],
-    ) = get_type_and_times(wxdata)
-    wxdata, retwx["wind_shear"] = get_wind_shear(wxdata)
+        data,
+        ret["type"],
+        ret["start_time"],
+        ret["end_time"],
+        ret["transition_start"],
+    ) = get_type_and_times(data)
+    data, ret["wind_shear"] = get_wind_shear(data)
     (
-        wxdata,
-        retwx["wind_direction"],
-        retwx["wind_speed"],
-        retwx["wind_gust"],
+        data,
+        ret["wind_direction"],
+        ret["wind_speed"],
+        ret["wind_gust"],
         _,
-    ) = core.get_wind(wxdata, units)
-    if "CAVOK" in wxdata:
-        retwx["visibility"] = core.make_number("CAVOK")
-        retwx["clouds"] = []
-        wxdata.pop(wxdata.index("CAVOK"))
+    ) = core.get_wind(data, units)
+    if "CAVOK" in data:
+        ret["visibility"] = core.make_number("CAVOK")
+        ret["clouds"] = []
+        data.pop(data.index("CAVOK"))
     else:
-        wxdata, retwx["visibility"] = core.get_visibility(wxdata, units)
-        wxdata, retwx["clouds"] = core.get_clouds(wxdata)
+        data, ret["visibility"] = core.get_visibility(data, units)
+        data, ret["clouds"] = core.get_clouds(data)
     (
-        retwx["other"],
-        retwx["altimeter"],
-        retwx["icing"],
-        retwx["turbulence"],
-    ) = get_alt_ice_turb(wxdata)
-    return retwx
+        ret["other"],
+        ret["altimeter"],
+        ret["icing"],
+        ret["turbulence"],
+    ) = get_alt_ice_turb(data)
+    return ret
 
 
 class Taf(Report):

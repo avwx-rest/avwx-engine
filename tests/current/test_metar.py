@@ -51,8 +51,8 @@ class TestMetar(BaseTest):
             (["/////", "1", "2"], (None,), (None,)),
             (["XX/01", "1", "2"], (None,), ("01", 1)),
         ):
-            retwx, ret_temp, ret_dew = metar.get_temp_and_dew(wx)
-            self.assertEqual(retwx, ["1", "2"])
+            ret_wx, ret_temp, ret_dew = metar.get_temp_and_dew(wx)
+            self.assertEqual(ret_wx, ["1", "2"])
             self.assert_number(ret_temp, *temp)
             self.assert_number(ret_dew, *dew)
         self.assertEqual(metar.get_temp_and_dew(["MX/01"]), (["MX/01"], None, None))
@@ -135,12 +135,25 @@ class TestMetar(BaseTest):
         """
         Tests extracting runway visibility
         """
-        for wx, rvis in (
+        for wx, runway_vis in (
             (["1", "2"], []),
             (["1", "2", "R10/10"], ["R10/10"]),
             (["1", "2", "R02/05", "R34/04"], ["R02/05", "R34/04"]),
         ):
-            self.assertEqual(metar.get_runway_visibility(wx), (["1", "2"], rvis))
+            self.assertEqual(metar.get_runway_visibility(wx), (["1", "2"], runway_vis))
+
+    def test_sanitize(self):
+        """
+        Tests report sanitization
+        """
+        report = "METAR AUTO KJFK 032151ZVRB08KT FEW034BKN250 ? C A V O K RMK TEST"
+        clean = "KJFK 032151Z VRB08KT FEW034 BKN250 CAVOK RMK TEST"
+        remarks = "RMK TEST"
+        data = ["KJFK", "032151Z", "VRB08KT", "FEW034", "BKN250", "CAVOK"]
+        ret_clean, ret_remarks, ret_data = metar.sanitize(report)
+        self.assertEqual(clean, ret_clean)
+        self.assertEqual(remarks, ret_remarks)
+        self.assertEqual(data, ret_data)
 
     def test_parse(self):
         """
@@ -160,9 +173,11 @@ class TestMetar(BaseTest):
         """
         for ref, icao, issued in get_data(__file__, "metar"):
             station = metar.Metar(icao)
+            raw = ref["data"]["raw"]
+            self.assertEqual(station.sanitize(raw), ref["data"]["sanitized"])
             self.assertIsNone(station.last_updated)
             self.assertIsNone(station.issued)
-            self.assertTrue(station.update(ref["data"]["raw"], issued=issued))
+            self.assertTrue(station.update(raw, issued=issued))
             self.assertIsInstance(station.last_updated, datetime)
             self.assertEqual(station.issued, issued)
             self.assertEqual(asdict(station.data), ref["data"])

@@ -170,7 +170,7 @@ def nullify(data: dict) -> dict:
     Nullify empty strings in a dict
     """
     for key, val in data.items():
-        if val == "":
+        if isinstance(val, str) and not val.strip():
             data[key] = None
     return data
 

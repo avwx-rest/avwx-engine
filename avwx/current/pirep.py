@@ -7,7 +7,7 @@ from datetime import date
 
 # module
 from avwx.current.base import Reports
-from avwx.parsing import core
+from avwx.parsing import core, sanitization
 from avwx.static.core import NA_UNITS
 from avwx.structs import (
     Aircraft,
@@ -205,7 +205,7 @@ def parse(report: str, issued: date = None) -> PirepData:
     """
     if not report:
         return None
-    sanitized = core.sanitize_report_string(report)
+    sanitized = sanitization.sanitize_report_string(report)
     # NOTE: will need to implement PIREP-specific list clean
     resp = {"raw": report, "sanitized": sanitized, "station": None, "remarks": None}
     data = sanitized.split("/")
@@ -243,3 +243,10 @@ class Pireps(Reports):
         self.data = []
         for report in self.raw:
             self.data.append(parse(report, issued=self.issued))
+
+    @staticmethod
+    def sanitize(report: str) -> str:
+        """
+        Sanitizes a PIREP string
+        """
+        return sanitization.sanitize_report_string(report)
