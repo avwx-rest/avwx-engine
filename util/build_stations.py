@@ -15,6 +15,7 @@ from pathlib import Path
 
 # module
 from find_bad_stations import BAD_PATH, GOOD_PATH, load_stations
+from mappers import FILE_REPLACE, SURFACE_TYPES
 
 _DATA = Path("data")
 AIRPORT_PATH = _DATA / "airports.csv"
@@ -31,138 +32,6 @@ ACCEPTED_STATION_TYPES = [
     "seaplane_base",
     "small_airport",
 ]
-
-
-FILE_REPLACE = {
-    "Æ\x8f": "Ə",
-    "Ã\x81": "Á",
-    "Ã„": "Ä",
-    "Ã…": "Å",
-    "Ã‚": "Â",
-    "Ãƒ": "Ã",
-    "Ã¡": "á",
-    "áº£": "ả",
-    "áº¥": "ấ",
-    "Ã£": "ã",
-    "Ã¢": "â",
-    "Äƒ": "ă",
-    "Ã¤": "ä",
-    "Ã¥": "å",
-    "áº©": "ẩ",
-    "Ä…": "ą",
-    "Ä\x81": "ā",
-    "áºµ": "ẵ",
-    "Ã¦": "æ",
-    "ÃŸ": "ß",
-    "ÄŒ": "Č",
-    "Ã‡": "Ç",
-    "Ä†": "Č",
-    "Ã§": "ç",
-    "Ä‡": "ć",
-    "Ä\x8d": "č",
-    "ÄŽ": "Ď",
-    "Ä\x90": "Đ",
-    "Ä\x8f": "ď",
-    "Ä‘": "đ",
-    "Ã‰": "É",
-    "Ã©": "é",
-    "È©": "ę",
-    "Ä™": "ę",
-    "Ã¨": "è",
-    "Ã«": "ë",
-    "Ä“": "ē",
-    "Ä—": "ė",
-    "Ãª": "ê",
-    "Ä›": "ě",
-    "É™": "ə",
-    "áº¿": "ế",
-    "ÄŸ": "ğ",
-    "Ä¡": "ġ",
-    "Ä£": "ģ",
-    "Ä°": "İ",
-    "ÃŽ": "Î",
-    "Ã\x8d": "Í",
-    "Ã¯": "ï",
-    "Ã¬": "ì",
-    "Ã­č": "í",
-    "Ä±": "ı",
-    "Ã®": "î",
-    "Ä«": "ī",
-    "Ä¯": "į",
-    "Ã\xad": "í",
-    "Ä·": "ķ",
-    "Å\x81": "Ł",
-    "Å‚": "ł",
-    "Ä¾": "ľ",
-    "Ã‘": "Ñ",
-    "Ã±": "ñ",
-    "Å„": "ń",
-    "Åˆ": "ň",
-    "Ä¼": "ņ",
-    "Å†": "ņ",
-    "Ã–": "Ö",
-    "ÅŒ": "Ō",
-    "Ã”": "Ô",
-    "Ã“": "Ó",
-    "Ã˜": "Ø",
-    "Å\x90": "Ő",
-    "Ãµ": "õ",
-    "Ã°": "ð",
-    "Ã²": "ò",
-    "Ã¶": "ö",
-    "Ã³": "ó",
-    "á»“": "ồ",
-    "á»‘": "ố",
-    "á»™": "ộ",
-    "Ã´": "ố",
-    "Æ¡": "ơ",
-    "Å‘": "ő",
-    "Ã¸": "ø",
-    "Å\x8d": "ō",
-    "Å\x8f": "ŏ",
-    "Ãž": "Þ",
-    "Å˜": "Ř",
-    "Å™": "ř",
-    "Å ": "Š",
-    "Åš": "Ś",
-    "Åž": "Ş",
-    "Å›": "ś",
-    "Å¡": "š",
-    "È™": "ș",
-    "ÅŸ": "ș",
-    "Å\x9d": "ŝ",
-    "È›": "ț",
-    "Å¥": "ť",
-    "Å£": "ț",
-    "Ãœ": "Ü",
-    "Ãš": "Ú",
-    "Ã¼": "ü",
-    "Ãº": "ú",
-    "Å«": "ū",
-    "Å¯": "ů",
-    "Ã»": "û",
-    "Å³": "ų",
-    "á»±": "ự",
-    "Ã½": "ý",
-    "Å½": "Ž",
-    "Å»": "Ż",
-    "Åº": "ź",
-    "Å¼": "ż",
-    "Å¾": "ž",
-    "Â¡": "¡",
-    "â€“": "–",
-    "â€™": "'",
-    "â€ž": "„",
-    "â€œ": "“",
-    "â€\x9d": "”",
-    # Key for another replacement
-    "Ã†": "Æ",
-    # In-place character
-    "Â°": "°",
-    "Âº": "º",
-    # Last because too broad
-    "Ã ": "à",
-}
 
 
 def nullify(data: dict) -> dict:
@@ -275,6 +144,15 @@ def add_missing_stations(stations: dict) -> dict:
     return stations
 
 
+def get_surface_type(surface: str) -> str:
+    """
+    Returns the normalize surface type value
+    """
+    for key, items in SURFACE_TYPES.items():
+        if surface in items:
+            return key
+
+
 def add_runways(stations: dict) -> dict:
     """
     Add runway information to station if availabale
@@ -288,6 +166,8 @@ def add_runways(stations: dict) -> dict:
         data = {
             "length_ft": int(runway[3]) if runway[3] else 0,
             "width_ft": int(runway[4]) if runway[4] else 0,
+            "surface": get_surface_type(runway[5].lower()),
+            "lights": runway[6] == "1",
             "ident1": runway[8],
             "ident2": runway[14],
         }
