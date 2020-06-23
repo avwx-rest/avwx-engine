@@ -43,7 +43,12 @@ class _LazyLoad:
         for key in self.data:
             yield key
 
-    def values(self) -> list:
+    def items(self) -> "dict_items":
+        if not self.data:
+            self._load()
+        return self.data.items()
+
+    def values(self) -> "dict_values":
         if not self.data:
             self._load()
         return self.data.values()

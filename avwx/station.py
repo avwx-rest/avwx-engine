@@ -7,6 +7,7 @@ Station handling and search
 # stdlib
 from copy import copy
 from dataclasses import dataclass
+from functools import lru_cache
 
 # library
 from geopy.distance import great_circle, Distance
@@ -89,6 +90,18 @@ def valid_station(station: str):
     if len(station) != 4:
         raise BadStation("ICAO station ident must be four characters long")
     uses_na_format(station)
+
+
+@lru_cache
+def station_list(reporting: bool = True) -> [str]:
+    """
+    Returns a list of station idents matching the search criteria
+    """
+    stations = []
+    for icao, station in _STATIONS.items():
+        if not reporting or station["reporting"]:
+            stations.append(icao)
+    return stations
 
 
 @dataclass
