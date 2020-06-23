@@ -488,6 +488,7 @@ def parse_date(
     else:
         target = dt.datetime.now(tz=dt.timezone.utc)
     day = target.day if time_only else int(date[0:2])
+    hour = int(date[ihour : ihour + 2])
     # Handle situation where next month has less days than current month
     # Shifted value makes sure that a month shift doesn't happen twice
     shifted = False
@@ -497,13 +498,16 @@ def parse_date(
     try:
         guess = target.replace(
             day=day,
-            hour=int(date[ihour : ihour + 2]) % 24,
+            hour=hour % 24,
             minute=int(date[ihour + 2 : ihour + 4]) % 60,
             second=0,
             microsecond=0,
         )
     except ValueError:
         return None
+    # Handle overflow hour
+    if hour > 23:
+        guess += dt.timedelta(days=1)
     # Handle changing months if not already shifted
     if not shifted:
         hourdiff = (guess - target) / dt.timedelta(minutes=1) / 60

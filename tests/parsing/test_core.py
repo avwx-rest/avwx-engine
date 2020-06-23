@@ -7,6 +7,9 @@ Core Tests
 # stdlib
 from datetime import datetime, timezone
 
+# library
+import time_machine
+
 # module
 from avwx import static, structs
 from avwx.parsing import core
@@ -354,6 +357,17 @@ class TestCore(BaseTest):
         self.assertEqual(parsed.day, today.day)
         self.assertEqual(parsed.hour, today.hour)
         self.assertEqual(parsed.minute, today.minute)
+
+    @time_machine.travel("2020-06-22 12:00")
+    def test_midnight_rollover(self):
+        """
+        Tests that hour > 23 gets rolled into the next day
+        """
+        parsed = core.parse_date("2224")
+        self.assertIsInstance(parsed, datetime)
+        self.assertEqual(parsed.day, 23)
+        self.assertEqual(parsed.hour, 0)
+        self.assertEqual(parsed.minute, 0)
 
     def test_make_timestamp(self):
         """
