@@ -263,10 +263,11 @@ def get_taf_flight_rules(lines: [dict]) -> [dict]:
     """
     for i, line in enumerate(lines):
         temp_vis, temp_cloud = line["visibility"], line["clouds"]
-        for report in reversed(lines[:i]):
+        for report in reversed(lines[: i + 1]):
             if not _is_tempo_or_prob(report):
                 if not temp_vis:
                     temp_vis = report["visibility"]
+                # SKC or CLR should force no clouds instead of looking back
                 if "SKC" in report["other"] or "CLR" in report["other"]:
                     temp_cloud = "temp-clear"
                 elif temp_cloud == []:
@@ -387,7 +388,7 @@ def parse_na_line(line: str, units: Units) -> {str: str}:
     Parser for the North American TAF forcast variant
     """
     data = core.dedupe(line.split())
-    data = sanitization.sanitize_report_list(data)
+    data = sanitization.sanitize_report_list(data, remove_clr_and_skc=False)
     ret = {"sanitized": " ".join(data)}
     (
         data,
@@ -420,7 +421,7 @@ def parse_in_line(line: str, units: Units) -> {str: str}:
     Parser for the International TAF forcast variant
     """
     data = core.dedupe(line.split())
-    data = sanitization.sanitize_report_list(data)
+    data = sanitization.sanitize_report_list(data, remove_clr_and_skc=False)
     ret = {"sanitized": " ".join(data)}
     (
         data,

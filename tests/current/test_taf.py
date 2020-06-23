@@ -194,10 +194,22 @@ class TestTaf(unittest.TestCase):
         ):
             self.assertEqual(taf.get_wind_shear(wx), (["1", "2"], shear))
 
-    # def test_get_taf_flight_rules(self):
-    #     """
-    #     """
-    #     pass
+    def test_skc_flight_rules(self):
+        """
+        SKC should prevent temp_cloud lookback instead of missing clouds
+        """
+        report = (
+            "KLGB 201120Z 2012/2112 VRB03KT P6SM OVC016 "
+            "FM201600 15006KT P6SM BKN021 "
+            "FM201930 20008KT P6SM SKC "
+            "FM210000 29008KT P6SM SKC "
+            "FM210500 VRB03KT P6SM OVC015"
+        )
+        expected_flight_rules = ["MVFR", "MVFR", "VFR", "VFR", "MVFR"]
+        data, _ = taf.parse(report[:4], report)
+        self.assertIsInstance(data, structs.TafData)
+        for period, flight_rules in zip(data.forecast, expected_flight_rules):
+            self.assertEqual(period.flight_rules, flight_rules)
 
     def test_parse(self):
         """

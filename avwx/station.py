@@ -92,7 +92,8 @@ def valid_station(station: str):
     uses_na_format(station)
 
 
-@lru_cache
+# maxsize = 2 ** number of boolean options
+@lru_cache(maxsize=2)
 def station_list(reporting: bool = True) -> [str]:
     """
     Returns a list of station idents matching the search criteria
@@ -216,6 +217,7 @@ def _station_filter(station: Station, is_airport: bool, reporting: bool) -> bool
     return True
 
 
+@lru_cache(maxsize=128)
 def _query_filter(
     lat: float, lon: float, n: int, d: float, is_airport: bool, reporting: bool
 ) -> [Station]:
