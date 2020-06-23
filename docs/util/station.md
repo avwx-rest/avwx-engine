@@ -118,6 +118,10 @@ Runway number 01-18 with modifiers. Ex: `"17L"`
 
 Runway number 19-36 with modifiers. Ex: `"35R"`
 
+## avwx.station.**station_list**(*reporting: bool = True*) -> *[str]*:
+
+Returns a list of station idents matching the search criteria
+
 ## avwx.station.**nearest**(*lat: float, lon: float, n: int = 1, is_airport: bool = False, sends_reports: bool = True, max_distance: float = 10*) -> *[dict]*
 
 Finds the nearest n Stations to a lat,lon coordinate pair

@@ -1,5 +1,6 @@
 # AVWX
 
+[![CircleCI](https://circleci.com/gh/avwx-rest/avwx-engine.svg?style=svg)](https://circleci.com/gh/avwx-rest/avwx-engine)
 [![PyPI version](https://badge.fury.io/py/avwx-engine.svg)](https://badge.fury.io/py/avwx-engine)
 [![Requirements Status](https://requires.io/github/avwx-rest/avwx-engine/requirements.svg?branch=master)](https://requires.io/github/avwx-rest/avwx-engine/requirements/?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/avwx-engine/badge/?version=latest)](http://avwx-engine.readthedocs.io/en/latest/?badge=latest)
@@ -18,7 +19,7 @@ True
 'VFR'
 ```
 
-These docs could use some love, and I am not a writer. You can help by making a pull request on [GitHub](https://github.com/avwx-rest/AVWX-Engine)
+These docs could use some love, and I am not a writer. You can help by making a pull request on [GitHub](https://github.com/avwx-rest/avwx-engine)
 
 ## Contents
 

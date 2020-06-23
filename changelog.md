@@ -6,10 +6,12 @@ Parsing and sanitization improvements are always ongoing and non-breaking
 
 - Added GFS MOS `Mav` and `Mex` implemented
 - Added `AVWXBase` and `Code` classes
+- Added station ICAO list as `avwx.station.station_list`
 - Added `transition_start` to `TafLineData`
 - Added `surface` and `lights` to `Runway`
 - Added `issued` and `sanitize` to `AVWXBase` classes
 - Sub module structure for reports, parsing, and static
+- Dropped Python 3.6 support
 
 ## 1.3
 
