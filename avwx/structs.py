@@ -6,15 +6,17 @@ Contains dataclasses to hold report data
 
 # stdlib
 import json
+from collections.abc import KeysView, ValuesView
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+from typing import Iterable, List, Optional
 
 
 class _LazyLoad:
 
     source: Path
-    data: dict = None
+    data: Optional[dict] = None
 
     def __init__(self, filename: str):
         self.source = Path(__file__).parent.joinpath("data", f"{filename}.json")
@@ -37,18 +39,18 @@ class _LazyLoad:
             self._load()
         return len(self.data)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterable[str]:
         if not self.data:
             self._load()
         for key in self.data:
             yield key
 
-    def items(self) -> "dict_items":
+    def items(self) -> KeysView:
         if not self.data:
             self._load()
         return self.data.items()
 
-    def values(self) -> "dict_values":
+    def values(self) -> ValuesView:
         if not self.data:
             self._load()
         return self.data.values()
@@ -112,11 +114,11 @@ class Code:
 @dataclass
 class Cloud:
     repr: str
-    type: str = None
-    base: int = None
-    top: int = None
-    modifier: str = None
-    direction: str = None
+    type: Optional[str] = None
+    base: Optional[int] = None
+    top: Optional[int] = None
+    modifier: Optional[str] = None
+    direction: Optional[str] = None
 
 
 @dataclass
@@ -129,8 +131,8 @@ class Location:
 
 @dataclass
 class RemarksData:
-    dewpoint_decimal: float = None
-    temperature_decimal: float = None
+    dewpoint_decimal: Optional[float] = None
+    temperature_decimal: Optional[float] = None
 
 
 @dataclass
@@ -144,48 +146,48 @@ class ReportData:
 @dataclass
 class SharedData:
     altimeter: Number
-    clouds: [Cloud]
+    clouds: List[Cloud]
     flight_rules: str
-    other: [str]
+    other: List[str]
     sanitized: str
     visibility: Number
     wind_direction: Number
     wind_gust: Number
     wind_speed: Number
-    wx_codes: [Code]
+    wx_codes: List[Code]
 
 
 @dataclass
 class MetarData(ReportData, SharedData):
     dewpoint: Number
     remarks_info: RemarksData
-    runway_visibility: [str]
+    runway_visibility: List[str]
     temperature: Number
-    wind_variable_direction: [Number]
+    wind_variable_direction: List[Number]
 
 
 @dataclass
 class TafLineData(SharedData):
     end_time: Timestamp
-    icing: [str]
+    icing: List[str]
     probability: Number
     raw: str
     start_time: Timestamp
     transition_start: Timestamp
-    turbulence: [str]
+    turbulence: List[str]
     type: str
     wind_shear: str
 
 
 @dataclass
 class TafData(ReportData):
-    forecast: [TafLineData]
+    forecast: List[TafLineData]
     start_time: Timestamp
     end_time: Timestamp
-    max_temp: float = None
-    min_temp: float = None
-    alts: [str] = None
-    temps: [str] = None
+    max_temp: Optional[float] = None
+    min_temp: Optional[float] = None
+    alts: Optional[List[str]] = None
+    temps: Optional[List[str]] = None
 
 
 @dataclass
@@ -214,7 +216,7 @@ class TafLineTrans(ReportTrans):
 
 @dataclass
 class TafTrans:
-    forecast: [TafLineTrans]
+    forecast: List[TafLineTrans]
     max_temp: str
     min_temp: str
     remarks: dict
@@ -223,29 +225,29 @@ class TafTrans:
 @dataclass
 class Turbulence:
     severity: str
-    floor: Number = None
-    ceiling: Number = None
+    floor: Optional[Number] = None
+    ceiling: Optional[Number] = None
 
 
 @dataclass
 class Icing(Turbulence):
-    type: str = None
+    type: Optional[str] = None
 
 
 @dataclass
 class PirepData(ReportData):
     # pylint: disable=invalid-name
-    aircraft: Aircraft = None
-    altitude: Number = None
-    clouds: [Cloud] = None
-    flight_visibility: Number = None
-    icing: Icing = None
-    location: Location = None
-    sanitized: str = None
-    temperature: Number = None
-    turbulence: Turbulence = None
-    type: str = None
-    wx: [str] = None
+    aircraft: Optional[Aircraft] = None
+    altitude: Optional[Number] = None
+    clouds: Optional[List[Cloud]] = None
+    flight_visibility: Optional[Number] = None
+    icing: Optional[Icing] = None
+    location: Optional[Location] = None
+    sanitized: Optional[str] = None
+    temperature: Optional[Number] = None
+    turbulence: Optional[Turbulence] = None
+    type: Optional[str] = None
+    wx: Optional[List[str]] = None
 
 
 @dataclass
@@ -259,46 +261,46 @@ class GfsPeriod:
     temperature: Number
     dewpoint: Number
     cloud: Code
-    precip_chance_12: Number = None
-    precip_amount_12: Code = None
-    thunder_storm_12: Number = None
-    severe_storm_12: Number = None
-    freezing_precip: Number = None
-    precip_type: Code = None
-    snow: Number = None
+    precip_chance_12: Optional[Number] = None
+    precip_amount_12: Optional[Code] = None
+    thunder_storm_12: Optional[Number] = None
+    severe_storm_12: Optional[Number] = None
+    freezing_precip: Optional[Number] = None
+    precip_type: Optional[Code] = None
+    snow: Optional[Number] = None
 
 
 @dataclass
 class MavPeriod(GfsPeriod):
-    wind_direction: Number = None
-    wind_speed: Number = None
-    precip_chance_6: Number = None
-    precip_amount_6: Code = None
-    thunder_storm_6: Number = None
-    severe_storm_6: Number = None
-    ceiling: Code = None
-    visibility: Code = None
-    vis_obstruction: Code = None
+    wind_direction: Optional[Number] = None
+    wind_speed: Optional[Number] = None
+    precip_chance_6: Optional[Number] = None
+    precip_amount_6: Optional[Code] = None
+    thunder_storm_6: Optional[Number] = None
+    severe_storm_6: Optional[Number] = None
+    ceiling: Optional[Code] = None
+    visibility: Optional[Code] = None
+    vis_obstruction: Optional[Code] = None
 
 
 @dataclass
 class MexPeriod(GfsPeriod):
-    precip_chance_24: Number = None
-    precip_amount_24: Code = None
-    thunder_storm_24: Number = None
-    severe_storm_24: Number = None
-    rain_snow_mix: Number = None
-    snow_amount_24: Code = None
+    precip_chance_24: Optional[Number] = None
+    precip_amount_24: Optional[Code] = None
+    thunder_storm_24: Optional[Number] = None
+    severe_storm_24: Optional[Number] = None
+    rain_snow_mix: Optional[Number] = None
+    snow_amount_24: Optional[Code] = None
 
 
 @dataclass
 class MavData(ReportData):
-    forecast: [MavPeriod]
+    forecast: List[MavPeriod]
 
 
 @dataclass
 class MexData(ReportData):
-    forecast: [MexPeriod]
+    forecast: List[MexPeriod]
 
 
 # @dataclass

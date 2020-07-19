@@ -4,16 +4,27 @@ Parsing for NOAA GFS forecasts
 
 # stdlib
 from datetime import datetime, timedelta, timezone
-from typing import Callable
+from typing import Callable, List, Tuple
 
 # module
 import avwx.static.gfs as static
 from avwx.forecast.base import Forecast
 from avwx.parsing import core
-from avwx.structs import Code, MavData, MavPeriod, MexData, MexPeriod, Timestamp, Units
+from avwx.structs import (
+    Code,
+    MavData,
+    MavPeriod,
+    MexData,
+    MexPeriod,
+    Number,
+    Timestamp,
+    Units,
+)
 
 
-def _split_line(line: str, size: int = 3, prefix: int = 4, strip: str = " |") -> [str]:
+def _split_line(
+    line: str, size: int = 3, prefix: int = 4, strip: str = " |"
+) -> List[str]:
     """
     Evenly split a string while stripping elements
     """
@@ -37,7 +48,7 @@ def _timestamp(line: str) -> Timestamp:
     return Timestamp(text, timestamp.replace(tzinfo=timezone.utc))
 
 
-def _find_time_periods(line: [str], timestamp: datetime) -> [dict]:
+def _find_time_periods(line: List[str], timestamp: datetime) -> List[dict]:
     """
     Find and create the empty time periods
     """
@@ -55,7 +66,7 @@ def _find_time_periods(line: [str], timestamp: datetime) -> [dict]:
     return [{"time": time} for time in periods]
 
 
-def _init_parse(report: str) -> (dict, [str]):
+def _init_parse(report: str) -> Tuple[dict, List[str]]:
     """
     Returns the meta data and lines from a report string
     """
@@ -70,7 +81,7 @@ def _init_parse(report: str) -> (dict, [str]):
     return data, lines
 
 
-def _numbers(line: str, size: int = 3, postfix: str = "") -> ["Number"]:
+def _numbers(line: str, size: int = 3, postfix: str = "") -> List[Number]:
     """
     Parse line into Number objects
     """
@@ -80,7 +91,7 @@ def _numbers(line: str, size: int = 3, postfix: str = "") -> ["Number"]:
     ]
 
 
-def _wind_direction(line: str, size: int = 3) -> ["Number"]:
+def _wind_direction(line: str, size: int = 3) -> List[Number]:
     """
     Parse wind direction line into Number objects
     """
@@ -164,7 +175,9 @@ _MEX_HANDLERS = {
 }
 
 
-def _parse_lines(periods: [dict], lines: [str], size: int = 3, handlers: dict = None):
+def _parse_lines(
+    periods: List[dict], lines: List[str], size: int = 3, handlers: dict = None
+):
     """
     Add data to time periods by parsing each line (element type)
 

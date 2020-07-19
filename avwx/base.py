@@ -5,6 +5,7 @@ Report parent classes
 # stdlib
 from abc import ABCMeta, abstractmethod
 from datetime import date, datetime, timezone
+from typing import Optional
 
 # module
 from avwx.exceptions import BadStation
@@ -32,25 +33,25 @@ class AVWXBase(metaclass=ABCMeta):
     """
 
     #: UTC datetime object when the report was last updated
-    last_updated: datetime = None
+    last_updated: Optional[datetime] = None
 
     #: UTC date object when the report was issued
-    issued: date = None
+    issued: Optional[date] = None
 
     #: 4-character ICAO station ident code the report was initialized with
-    icao: str = None
+    icao: Optional[str] = None
 
     #: Provide basic station info if given at init
-    station: Station = None
+    station: Optional[Station] = None
 
     #: The original report string. Fetched on update()
-    raw: str = None
+    raw: Optional[str] = None
 
     #: ReportData dataclass of parsed data values and units. Parsed on update()
-    data: ReportData = None
+    data: Optional[ReportData] = None
 
     #: Units inferred from the station location and report contents
-    units: Units = None
+    units: Optional[Units] = None
 
     #: Service object used to fetch the report string
     service: Service

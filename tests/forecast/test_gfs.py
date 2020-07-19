@@ -198,7 +198,7 @@ class GfsForecastBase(BaseTest):
 
     maxDiff = None
 
-    def _test_gfs_ete(self, report: "Forecast"):
+    def _test_gfs_ete(self, report: gfs.Forecast):
         """
         Performs an end-to-end test of all report JSON files
         """

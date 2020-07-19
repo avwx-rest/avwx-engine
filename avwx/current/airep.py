@@ -3,6 +3,7 @@
 
 # stdlib
 from datetime import date
+from typing import List
 
 # module
 from avwx.current.base import Reports
@@ -28,10 +29,10 @@ class Aireps(Reports):
     Class to handle aircraft report data
     """
 
-    data: [AirepData] = None
+    data: List[AirepData] = None
 
     @staticmethod
-    def _report_filter(reports: [str]) -> [str]:
+    def _report_filter(reports: List[str]) -> List[str]:
         """
         Removes PIREPs before updating raw_reports
         """

@@ -1,0 +1,186 @@
+"""
+Classes for retrieving raw report strings via managed files
+"""
+
+# pylint: disable=invalid-name
+
+# stdlib
+import asyncio as aio
+import atexit
+import datetime as dt
+import tempfile
+from pathlib import Path
+from socket import gaierror
+from typing import Optional
+
+# library
+import httpx
+
+# module
+from avwx.service.base import Service
+
+
+_TEMP_DIR = tempfile.TemporaryDirectory()
+_TEMP = Path(_TEMP_DIR.name)
+
+
+@atexit.register
+def _cleanup():
+    """
+    Deletes temporary files and directory at Python exit
+    """
+    _TEMP_DIR.cleanup()
+
+
+class FileService(Service):
+    """
+    Service class for fetching reports via managed source files
+    """
+
+    update_interval: dt.timedelta = dt.timedelta(hours=1)
+    _updating: bool = False
+
+    @property
+    def _file_stem(self) -> str:
+        return f"{self.__class__.__name__}.{self.report_type}"
+
+    @property
+    def _file(self) -> Optional[Path]:
+        """
+        Path object of the managed data file
+        """
+        for path in _TEMP.glob(self._file_stem + "*"):
+            return path
+        return None
+
+    @property
+    def last_updated(self) -> Optional[dt.datetime]:
+        """
+        When the file was last updated
+        """
+        try:
+            timestamp = int(self._file.name.split(".")[-2])
+            return dt.datetime.fromtimestamp(timestamp, tz=dt.timezone.utc)
+        except (AttributeError, ValueError):
+            return None
+
+    @property
+    def is_outdated(self) -> bool:
+        """
+        If the file should be updated based on the update interval
+        """
+        last = self.last_updated
+        if last is None:
+            return True
+        now = dt.datetime.now(tz=dt.timezone.utc)
+        return now > last + self.update_interval
+
+    def _new_path(self) -> Path:
+        timestamp = str(dt.datetime.now(tz=dt.timezone.utc).timestamp()).split(".")[0]
+        return _TEMP / f"{self._file_stem}.{timestamp}.txt"
+
+    async def _wait_until_updated(self):
+        while not self._updating:
+            await aio.sleep(0.01)
+
+    async def _update_file(self):
+        raise NotImplementedError()
+
+    def _extract(self, station: str) -> Optional[str]:
+        raise NotImplementedError()
+
+    async def update(self, wait: bool = False) -> bool:
+        """
+        Update the stored file and returns success
+
+        If wait, this will block if the file is already being updated
+        """
+        # Guard for other async calls
+        if self._updating:
+            if wait:
+                await self._wait_until_updated()
+                return True
+            return False
+        self._updating = True
+        # Replace file
+        old_path = self._file
+        if not await self._update_file():
+            self._updating = False
+            return False
+        if old_path:
+            old_path.unlink()
+        self._updating = False
+        return True
+
+    def fetch(self, station: str, wait: bool = True) -> Optional[str]:
+        """
+        Fetch a report string from the source file
+
+        If wait, this will block if the file is already being updated
+        """
+        return aio.run(self.async_fetch(station, wait))
+
+    async def async_fetch(self, station: str, wait: bool = True) -> Optional[str]:
+        """
+        Asynchronously fetch a report string from the source file
+
+        If wait, this will block if the file is already being updated
+        """
+        if wait and self._updating:
+            self._wait_until_updated()
+        if self.is_outdated:
+            if not await self.update():
+                return None
+        return self._extract(station)
+
+
+class NOAA_NBM(FileService):
+    """
+    Requests forecast data from NOAA NBM FTP servers
+    """
+
+    url = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/blend/prod/blend.{}/{}/text/blend_{}tx.t{}z"
+    _valid_types = ("nbs",)
+
+    async def _update_file(self) -> bool:
+        """
+        Finds and saves the most recent file from NBM file server
+        """
+        # Find the most recent file
+        date = dt.datetime.now(tz=dt.timezone.utc)
+        cutoff = date - dt.timedelta(days=1)
+        async with httpx.AsyncClient() as client:
+            while date > cutoff:
+                try:
+                    timestamp = date.strftime(r"%Y%m%d")
+                    hour = str(date.hour).zfill(2)
+                    url = self.url.format(timestamp, hour, self.report_type, hour)
+                    resp = await client.get(url)
+                    if resp.status_code == 200:
+                        break
+                    date -= dt.timedelta(hours=1)
+                except gaierror:
+                    return False
+            else:
+                return False
+        # Save successful file download
+        new_path = self._new_path()
+        with new_path.open("wb") as new_file:
+            new_file.write(resp.content)
+        return True
+
+    def _extract(self, station: str) -> Optional[str]:
+        """
+        Returns report pulled from the saved file
+        """
+        with self._file.open() as fin:
+            txt = fin.read()
+            txt = txt[txt.find(f"{station}    NBM") :]
+            txt = txt[: txt.find(f"{self.report_type.upper()} GUIDANCE", 30)]
+            lines = []
+            for line in txt.split("\n"):
+                line = line.strip()
+                if not line:
+                    break
+                lines.append(line)
+            return "\n".join(lines) or None

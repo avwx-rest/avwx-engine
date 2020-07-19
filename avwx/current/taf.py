@@ -4,6 +4,7 @@ Contains TAF-specific functions for report parsing
 
 # stdlib
 from datetime import date
+from typing import Dict, List, Tuple
 
 # module
 from avwx.current.base import Report, get_wx_codes
@@ -48,7 +49,7 @@ def sanitize_line(txt: str) -> str:
     return txt
 
 
-def get_taf_remarks(txt: str) -> (str, str):
+def get_taf_remarks(txt: str) -> Tuple[str, str]:
     """
     Returns report and remarks separated if found
     """
@@ -60,7 +61,7 @@ def get_taf_remarks(txt: str) -> (str, str):
     return txt, remarks
 
 
-def get_alt_ice_turb(data: [str]) -> ([str], str, [str], [str]):
+def get_alt_ice_turb(data: List[str]) -> Tuple[List[str], str, List[str], List[str]]:
     """
     Returns the report list and removed: Altimeter string, Icing list, Turbulence list
     """
@@ -92,7 +93,7 @@ def starts_new_line(item: str) -> bool:
     return False
 
 
-def split_taf(txt: str) -> [str]:
+def split_taf(txt: str) -> List[str]:
     """
     Splits a TAF report into each distinct time period
     """
@@ -108,7 +109,7 @@ def split_taf(txt: str) -> [str]:
 
 
 # TAF line report type and start/end times
-def get_type_and_times(data: [str]) -> ([str], str, str, str):
+def get_type_and_times(data: List[str]) -> Tuple[List[str], str, str, str]:
     """
     Returns the report list and removed:
     Report type string, start time string, end time string
@@ -161,7 +162,7 @@ def _is_tempo_or_prob(line: dict) -> bool:
     return line.get("type") == "TEMPO" or line.get("probability") is not None
 
 
-def _get_next_time(lines: [dict], target: str) -> str:
+def _get_next_time(lines: List[dict], target: str) -> str:
     """
     Returns the next normal time target value or empty
     """
@@ -177,7 +178,9 @@ def _get_next_time(lines: [dict], target: str) -> str:
     return ""
 
 
-def find_missing_taf_times(lines: [dict], start: Timestamp, end: Timestamp) -> [dict]:
+def find_missing_taf_times(
+    lines: List[dict], start: Timestamp, end: Timestamp
+) -> List[dict]:
     """
     Fix any missing time issues (except for error/empty lines)
     """
@@ -205,7 +208,7 @@ def find_missing_taf_times(lines: [dict], start: Timestamp, end: Timestamp) -> [
     return lines
 
 
-def get_wind_shear(data: [str]) -> ([str], str):
+def get_wind_shear(data: List[str]) -> Tuple[List[str], str]:
     """
     Returns the report list and the remove wind shear
     """
@@ -216,7 +219,7 @@ def get_wind_shear(data: [str]) -> ([str], str):
     return data, shear
 
 
-def get_temp_min_and_max(data: [str]) -> ([str], str, str):
+def get_temp_min_and_max(data: List[str]) -> Tuple[List[str], str, str]:
     """
     Pull out Max temp at time and Min temp at time items from wx list
     """
@@ -245,7 +248,7 @@ def get_temp_min_and_max(data: [str]) -> ([str], str, str):
     return data, temp_max, temp_min
 
 
-def get_oceania_temp_and_alt(data: [str]) -> ([str], [str], [str]):
+def get_oceania_temp_and_alt(data: List[str]) -> Tuple[List[str], List[str], List[str]]:
     """
     Get Temperature and Altimeter lists for Oceania TAFs
     """
@@ -257,7 +260,7 @@ def get_oceania_temp_and_alt(data: [str]) -> ([str], [str], [str]):
     return data, tlist, qlist
 
 
-def get_taf_flight_rules(lines: [dict]) -> [dict]:
+def get_taf_flight_rules(lines: List[dict]) -> List[dict]:
     """
     Get flight rules by looking for missing data in prior reports
     """
@@ -282,7 +285,7 @@ def get_taf_flight_rules(lines: [dict]) -> [dict]:
     return lines
 
 
-def parse(station: str, report: str, issued: date = None) -> (TafData, Units):
+def parse(station: str, report: str, issued: date = None) -> Tuple[TafData, Units]:
     """
     Returns TafData and Units dataclasses with parsed data and their associated units
     """
@@ -347,8 +350,8 @@ def parse(station: str, report: str, issued: date = None) -> (TafData, Units):
 
 
 def parse_lines(
-    lines: [str], units: Units, use_na: bool = True, issued: date = None
-) -> [dict]:
+    lines: List[str], units: Units, use_na: bool = True, issued: date = None
+) -> List[dict]:
     """
     Returns a list of parsed line dictionaries
     """
@@ -383,7 +386,7 @@ def parse_lines(
     return parsed_lines
 
 
-def parse_na_line(line: str, units: Units) -> {str: str}:
+def parse_na_line(line: str, units: Units) -> Dict[str, str]:
     """
     Parser for the North American TAF forcast variant
     """
@@ -416,7 +419,7 @@ def parse_na_line(line: str, units: Units) -> {str: str}:
     return ret
 
 
-def parse_in_line(line: str, units: Units) -> {str: str}:
+def parse_in_line(line: str, units: Units) -> Dict[str, str]:
     """
     Parser for the International TAF forcast variant
     """
@@ -464,7 +467,7 @@ class Taf(Report):
         self.translations = translate_taf(self.data, self.units)
 
     @property
-    def summary(self) -> [str]:
+    def summary(self) -> List[str]:
         """
         Condensed summary for each forecast created from translations
         """

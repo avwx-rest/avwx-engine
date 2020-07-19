@@ -8,6 +8,7 @@ Station handling and search
 from copy import copy
 from dataclasses import dataclass
 from functools import lru_cache
+from typing import Callable, List, Tuple, Type, TypeVar, Union
 
 # library
 from geopy.distance import great_circle, Distance
@@ -34,10 +35,10 @@ _STATIONS = _LazyLoad("stations")
 class _LazyCalc:
     # pylint: disable=too-few-public-methods,missing-function-docstring
 
-    func: "Callable"
+    func: Callable
     _value: object = None
 
-    def __init__(self, func: "Callable"):
+    def __init__(self, func: Callable):
         self.func = func
 
     @property
@@ -94,7 +95,7 @@ def valid_station(station: str):
 
 # maxsize = 2 ** number of boolean options
 @lru_cache(maxsize=2)
-def station_list(reporting: bool = True) -> [str]:
+def station_list(reporting: bool = True) -> List[str]:
     """
     Returns a list of station idents matching the search criteria
     """
@@ -119,6 +120,9 @@ class Runway:
     ident2: str
 
 
+T = TypeVar("T", bound="Station")
+
+
 @dataclass
 class Station:
     """
@@ -138,7 +142,7 @@ class Station:
     name: str
     note: str
     reporting: bool
-    runways: [Runway]
+    runways: List[Runway]
     state: str
     type: str
     website: str
@@ -159,13 +163,13 @@ class Station:
 
     @classmethod
     def nearest(
-        cls,
+        cls: Type[T],
         lat: float,
         lon: float,
         is_airport: bool = False,
         sends_reports: bool = True,
         max_coord_distance: float = 10,
-    ) -> ("Station", dict):
+    ) -> Tuple[T, dict]:
         """
         Load the Station nearest to a lat,lon coordinate pair
 
@@ -193,7 +197,7 @@ class Station:
         return great_circle((lat, lon), (self.latitude, self.longitude))
 
 
-def _query_coords(lat: float, lon: float, n: int, d: float) -> [(str, float)]:
+def _query_coords(lat: float, lon: float, n: int, d: float) -> List[Tuple[str, float]]:
     """
     Returns <= n number of ident, dist tuples <= d coord distance from lat,lon
     """
@@ -220,7 +224,7 @@ def _station_filter(station: Station, is_airport: bool, reporting: bool) -> bool
 @lru_cache(maxsize=128)
 def _query_filter(
     lat: float, lon: float, n: int, d: float, is_airport: bool, reporting: bool
-) -> [Station]:
+) -> List[Station]:
     """
     Returns <= n number of stations <= d distance from lat,lon matching the query params
     """
@@ -250,7 +254,7 @@ def nearest(
     is_airport: bool = False,
     sends_reports: bool = True,
     max_coord_distance: float = 10,
-) -> "dict/[dict]":
+) -> Union[dict, List[dict]]:
     """
     Finds the nearest n Stations to a lat,lon coordinate pair
 

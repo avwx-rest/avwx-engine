@@ -6,6 +6,7 @@ Current report shared resources
 
 # stdlib
 from datetime import date
+from typing import List, Optional, Tuple, Union
 
 # module
 from avwx.base import AVWXBase
@@ -14,7 +15,7 @@ from avwx.static.core import NA_UNITS, WX_TRANSLATIONS
 from avwx.structs import Code, ReportData, ReportTrans, Units
 
 
-def wx_code(code: str) -> "Code/str":
+def wx_code(code: str) -> Union[Code, str]:
     """
     Translates weather codes into readable strings
 
@@ -41,7 +42,7 @@ def wx_code(code: str) -> "Code/str":
     return Code(code_copy, ret.strip())
 
 
-def get_wx_codes(codes: [str]) -> ([Code], [str]):
+def get_wx_codes(codes: List[str]) -> Tuple[List[Code], List[str]]:
     """
     Separates parsed WX codes
     """
@@ -58,7 +59,7 @@ class Report(AVWXBase):
     """
 
     #: ReportTrans dataclass of translation strings from data. Parsed on update()
-    translations: ReportTrans = None
+    translations: Optional[ReportTrans] = None
 
     def __init__(self, icao: str):
         super().__init__(icao)
@@ -72,8 +73,8 @@ class Reports(AVWXBase):
     Base class containing multiple reports
     """
 
-    raw: [str] = None
-    data: [ReportData] = None
+    raw: Optional[List[str]] = None
+    data: Optional[List[ReportData]] = None
     units: Units = Units(**NA_UNITS)
 
     def __init__(self, icao: str = None, lat: float = None, lon: float = None):
@@ -91,7 +92,7 @@ class Reports(AVWXBase):
         return f"<avwx.{self.__class__.__name__} lat={self.lat} lon={self.lon}>"
 
     @staticmethod
-    def _report_filter(reports: [str]) -> [str]:
+    def _report_filter(reports: List[str]) -> List[str]:
         """
         Applies any report filtering before updating raw_reports
         """
@@ -99,8 +100,8 @@ class Reports(AVWXBase):
 
     def update(
         self,
-        reports: [str] = None,
-        issued: date = None,
+        reports: Optional[List[str]] = None,
+        issued: Optional[date] = None,
         timeout: int = 10,
         disable_post: bool = False,
     ) -> bool:

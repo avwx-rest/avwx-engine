@@ -4,6 +4,7 @@ Functions for parsing PIREPs
 
 # stdlib
 from datetime import date
+from typing import List, Optional, Tuple, Union
 
 # module
 from avwx.current.base import Reports
@@ -76,7 +77,7 @@ def _time(item: str, target: date = None) -> Timestamp:
     return core.make_timestamp(item, time_only=True, target_date=target)
 
 
-def _altitude(item: str) -> "Number|str":
+def _altitude(item: str) -> Union[Number, str]:
     """
     Convert reporting altitude to a Number or string
     """
@@ -95,7 +96,7 @@ def _aircraft(item: str) -> str:
         return item
 
 
-def _clouds(item: str) -> [Cloud]:
+def _clouds(item: str) -> List[Cloud]:
     """
     Convert cloud element to a list of Clouds
     """
@@ -118,7 +119,7 @@ def _number(item: str) -> Number:
 _DIR_SIG = {"BLO": "ceiling"}
 
 
-def _find_floor_ceiling(items: [str]) -> ([str], dict):
+def _find_floor_ceiling(items: List[str]) -> Tuple[List[str], dict]:
     """
     Extracts the floor and ceiling from item list
     """
@@ -230,10 +231,10 @@ class Pireps(Reports):
     Class to handle pilot report data
     """
 
-    data: [PirepData] = None
+    data: Optional[List[PirepData]] = None
 
     @staticmethod
-    def _report_filter(reports: [str]) -> [str]:
+    def _report_filter(reports: List[str]) -> List[str]:
         """
         Removes AIREPs before updating raw_reports
         """

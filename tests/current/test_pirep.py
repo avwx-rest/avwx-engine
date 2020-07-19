@@ -8,10 +8,12 @@ PIREP Report Tests
 import unittest
 from dataclasses import asdict
 from datetime import datetime
+from typing import Optional
 
 # module
 from avwx import structs
 from avwx.current import pirep
+from avwx.structs import Number
 
 from tests.util import BaseTest, get_data
 
@@ -21,7 +23,7 @@ class TestPirepHandlers(BaseTest):
     Tests PIREP element handlers
     """
 
-    def _test_num(self, src: "Number/None", exp: "int/None"):
+    def _test_num(self, src: Optional[Number], exp: Optional[int]):
         """
         Tests a nNumber value or is None
         """

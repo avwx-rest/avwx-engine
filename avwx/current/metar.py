@@ -4,6 +4,7 @@ Contains METAR-specific functions for report parsing
 
 # stdlib
 from datetime import date
+from typing import List, Tuple
 
 # module
 from avwx.current.base import Report, get_wx_codes
@@ -15,7 +16,7 @@ from avwx.station import uses_na_format, valid_station
 from avwx.structs import MetarData, Number, Units
 
 
-def get_remarks(txt: str) -> ([str], str):
+def get_remarks(txt: str) -> Tuple[List[str], str]:
     """
     Returns the report split into components and the remarks string
 
@@ -39,7 +40,7 @@ def get_remarks(txt: str) -> ([str], str):
     return txt.strip().split(), ""
 
 
-def get_runway_visibility(data: [str]) -> ([str], [str]):
+def get_runway_visibility(data: List[str]) -> Tuple[List[str], List[str]]:
     """
     Returns the report list and the remove runway visibility list
     """
@@ -81,7 +82,9 @@ def parse_altimeter(value: str) -> Number:
     return core.make_number(number, value, number)
 
 
-def get_altimeter(data: [str], units: Units, version: str = "NA") -> ([str], Number):
+def get_altimeter(
+    data: List[str], units: Units, version: str = "NA"
+) -> Tuple[List[str], Number]:
     """
     Returns the report list and the removed altimeter item
 
@@ -104,7 +107,7 @@ def get_altimeter(data: [str], units: Units, version: str = "NA") -> ([str], Num
     return data, altimeter
 
 
-def get_temp_and_dew(data: str) -> ([str], Number, Number):
+def get_temp_and_dew(data: str) -> Tuple[List[str], Number, Number]:
     """
     Returns the report list and removed temperature and dewpoint strings
     """
@@ -132,7 +135,7 @@ def get_temp_and_dew(data: str) -> ([str], Number, Number):
     return data, None, None
 
 
-def sanitize(report: str) -> (str, str, [str]):
+def sanitize(report: str) -> Tuple[str, str, List[str]]:
     """
     Returns a sanitized report, remarks, and elements ready for parsing
     """
@@ -146,7 +149,7 @@ def sanitize(report: str) -> (str, str, [str]):
     return clean, remark_str, data
 
 
-def parse(station: str, report: str, issued: date = None) -> (MetarData, Units):
+def parse(station: str, report: str, issued: date = None) -> Tuple[MetarData, Units]:
     """
     Returns MetarData and Units dataclasses with parsed data and their associated units
     """
@@ -157,7 +160,7 @@ def parse(station: str, report: str, issued: date = None) -> (MetarData, Units):
     return parser(report, issued)
 
 
-def parse_na(report: str, issued: date = None) -> (MetarData, Units):
+def parse_na(report: str, issued: date = None) -> Tuple[MetarData, Units]:
     """
     Parser for the North American METAR variant
     """
@@ -187,7 +190,7 @@ def parse_na(report: str, issued: date = None) -> (MetarData, Units):
     return MetarData(**resp), units
 
 
-def parse_in(report: str, issued: date = None) -> (MetarData, Units):
+def parse_in(report: str, issued: date = None) -> Tuple[MetarData, Units]:
     """
     Parser for the International METAR variant
     """

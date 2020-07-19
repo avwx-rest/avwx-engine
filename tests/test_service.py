@@ -6,6 +6,7 @@ Service API Tests
 
 # stdlib
 import unittest
+from typing import List
 
 # library
 import pytest
@@ -14,15 +15,15 @@ import pytest
 from avwx import exceptions, service
 
 
-class TestService(unittest.TestCase):
+class TestScrapeService(unittest.TestCase):
 
-    serv: service.Service
-    name: str = "Service"
-    stations: [str] = None
+    serv: service.scrape.Service
+    name: str = "ScrapeService"
+    stations: List[str] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.serv = getattr(service, self.name)("metar")
+        self.serv = getattr(service.scrape, self.name)("metar")
         if not self.stations:
             self.stations = []
 
@@ -30,16 +31,23 @@ class TestService(unittest.TestCase):
         """
         Tests that the Service class is initialized properly
         """
-        for attr in ("url", "rtype", "_make_err", "_extract", "fetch"):
+        for attr in (
+            "url",
+            "report_type",
+            "_make_err",
+            "_extract",
+            "fetch",
+            "async_fetch",
+        ):
             self.assertTrue(hasattr(self.serv, attr))
-        self.assertEqual(self.serv.rtype, "metar")
+        self.assertEqual(self.serv.report_type, "metar")
 
     def test_service(self):
         """
         Tests that the base Service class has no URL and throws NotImplemented errors
         """
         # pylint: disable=unidiomatic-typecheck
-        if type(self.serv) == service.Service:
+        if type(self.serv) == service.base.Service:
             self.assertIsNone(self.serv.url)
             with self.assertRaises(NotImplementedError):
                 self.serv._extract(None)
@@ -106,25 +114,25 @@ class TestService(unittest.TestCase):
             self.assertTrue(station in report)
 
 
-class TestNOAA(TestService):
+class TestNOAA(TestScrapeService):
 
     name = "NOAA"
     stations = ["KJFK", "EGLL", "PHNL"]
 
 
-class TestAMO(TestService):
+class TestAMO(TestScrapeService):
 
     name = "AMO"
     stations = ["RKSI", "RKSS", "RKNY"]
 
 
-class TestMAC(TestService):
+class TestMAC(TestScrapeService):
 
     name = "MAC"
     stations = ["SKBO"]
 
 
-class TestAUBOM(TestService):
+class TestAUBOM(TestScrapeService):
 
     name = "AUBOM"
     stations = ["YBBN", "YSSY", "YCNK"]
@@ -144,5 +152,5 @@ class TestModule(unittest.TestCase):
         ):
             for station in stations:
                 self.assertIsInstance(
-                    service.get_service(station, country)("metar"), serv
+                    service.scrape.get_service(station, country)("metar"), serv
                 )
