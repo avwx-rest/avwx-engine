@@ -2,10 +2,13 @@
 Contains the core parsing and indent functions of avwx
 """
 
+# pylint: disable=redefined-builtin
+
 # stdlib
 import datetime as dt
 from calendar import monthrange
 from copy import copy
+from typing import List, Tuple
 
 # library
 from dateutil.relativedelta import relativedelta
@@ -50,7 +53,7 @@ def is_unknown(val: str) -> bool:
     return False
 
 
-def get_digit_list(alist: [str], from_index: int) -> ([str], [str]):
+def get_digit_list(alist: List[str], from_index: int) -> Tuple[List[str], List[str]]:
     """
     Returns a list of items removed from a given list of strings
     that are all digits from 'from_index' until hitting a non-digit item
@@ -89,33 +92,55 @@ def remove_leading_zeros(num: str) -> str:
     return "0" if ret in ("", "M", "-") else ret
 
 
-def spoken_number(num: str) -> str:
+SPOKEN_POSTFIX = (
+    (" zero zero zero", " thousand"),
+    (" zero zero", " hundred"),
+)
+
+
+def spoken_number(num: str, literal: bool = False) -> str:
     """
     Returns the spoken version of a number
 
+    If literal, no conversion to hundreds/thousands
+
     Ex: 1.2 -> one point two
         1 1/2 -> one and one half
+        25000 -> two five thousand
     """
     ret = []
     for part in num.split():
         if part in FRACTIONS:
             ret.append(FRACTIONS[part])
         else:
-            ret.append(
-                " ".join(NUMBER_REPL[char] for char in part if char in NUMBER_REPL)
-            )
+            val = " ".join(NUMBER_REPL[char] for char in part if char in NUMBER_REPL)
+            if not literal:
+                for target, replacement in SPOKEN_POSTFIX:
+                    if val.endswith(target):
+                        val = val[: -len(target)] + replacement
+            ret.append(val)
     return " and ".join(ret)
 
 
-def make_number(num: str, repr: str = None, speak: str = None) -> Number:
+def make_number(
+    num: str,
+    repr: str = None,
+    speak: str = None,
+    literal: bool = False,
+    special: dict = None,
+) -> Number:
     """
     Returns a Number or Fraction dataclass for a number string
+
+    If literal, spoken string will not convert to hundreds/thousands
 
     NOTE: Numerators are assumed to have a single digit. Additional are whole numbers
     """
     if not num or is_unknown(num):
         return None
     # Check special
+    if special is not None and num in special:
+        return Number(repr or num, *special[num])
     if num in SPECIAL_NUMBERS:
         return Number(repr or num, *SPECIAL_NUMBERS[num])
     # Check cardinal direction
@@ -138,7 +163,7 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
         else:
             nmr = int(nmr)
         unpacked = unpack_fraction(num)
-        spoken = spoken_number(unpacked)
+        spoken = spoken_number(unpacked, literal)
         return Fraction(repr or num, nmr / dnm, spoken, nmr, dnm, unpacked)
     # Handle Minus values with errors like 0M04
     if "M" in num:
@@ -151,10 +176,10 @@ def make_number(num: str, repr: str = None, speak: str = None) -> Number:
     if not val:
         return None
     val = float(val) if "." in num else int(val)
-    return Number(repr or num, val, spoken_number(speak or str(val)))
+    return Number(repr or num, val, spoken_number(speak or str(val), literal))
 
 
-def find_first_in_list(txt: str, str_list: [str]) -> int:
+def find_first_in_list(txt: str, str_list: List[str]) -> int:
     """
     Returns the index of the earliest occurrence of an item from a list in a string
 
@@ -193,7 +218,7 @@ def is_possible_temp(temp: str) -> bool:
     return True
 
 
-def get_station_and_time(data: [str]) -> ([str], str, str):
+def get_station_and_time(data: List[str]) -> Tuple[List[str], str, str]:
     """
     Returns the report list and removed station ident and time strings
     """
@@ -202,17 +227,17 @@ def get_station_and_time(data: [str]) -> ([str], str, str):
     station = data.pop(0)
     if not data:
         return data, station, None
-    qtime = data[0]
+    qtime, rtime = data[0], None
     if data and qtime.endswith("Z") and qtime[:-1].isdigit():
         rtime = data.pop(0)
     elif data and len(qtime) == 6 and qtime.isdigit():
         rtime = data.pop(0) + "Z"
-    else:
-        rtime = None
     return data, station, rtime
 
 
-def get_wind(data: [str], units: Units) -> ([str], Number, Number, Number, [Number]):
+def get_wind(
+    data: List[str], units: Units
+) -> Tuple[List[str], Number, Number, Number, List[Number]]:
     """
     Returns the report list and removed:
     Direction string, speed string, gust string, variable direction list
@@ -274,15 +299,17 @@ def get_wind(data: [str], units: Units) -> ([str], Number, Number, Number, [Numb
         and data[0][3] == "V"
         and data[0][4:].isdigit()
     ):
-        variable = [make_number(i, speak=i) for i in data.pop(0).split("V")]
+        variable = [
+            make_number(i, speak=i, literal=True) for i in data.pop(0).split("V")
+        ]
     # Convert to Number
-    direction = make_number(direction, speak=direction)
+    direction = make_number(direction, speak=direction, literal=True)
     speed = make_number(speed.strip("BV"))
     gust = make_number(gust)
     return data, direction, speed, gust, variable
 
 
-def get_visibility(data: [str], units: Units) -> ([str], Number):
+def get_visibility(data: List[str], units: Units) -> Tuple[List[str], Number]:
     """
     Returns the report list and removed visibility string
     """
@@ -388,7 +415,7 @@ def make_cloud(cloud: str) -> Cloud:
     return Cloud(cloud, **els)
 
 
-def get_clouds(data: [str]) -> ([str], list):
+def get_clouds(data: List[str]) -> Tuple[List[str], list]:
     """
     Returns the report list and removed list of split cloud layers
     """
@@ -437,7 +464,7 @@ def get_flight_rules(vis: Number, ceiling: Cloud) -> int:
     return 0  # VFR
 
 
-def get_ceiling(clouds: [Cloud]) -> Cloud:
+def get_ceiling(clouds: List[Cloud]) -> Cloud:
     """
     Returns ceiling layer from Cloud-List or None if none found
 

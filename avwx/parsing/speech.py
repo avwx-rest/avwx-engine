@@ -3,6 +3,11 @@ Contains functions for converting translations into a speech string
 Currently only supports METAR
 """
 
+# pylint: disable=redefined-builtin
+
+# stdlib
+from typing import List
+
 # module
 from avwx.parsing import core, translate
 from avwx.static.core import SPOKEN_UNITS
@@ -22,7 +27,7 @@ def wind(
     direction: Number,
     speed: Number,
     gust: Number,
-    vardir: [Number] = None,
+    vardir: List[Number] = None,
     unit: str = "kt",
 ) -> str:
     """
@@ -80,13 +85,13 @@ def altimeter(alt: Number, unit: str = "inHg") -> str:
     if not alt:
         ret += "unknown"
     elif unit == "inHg":
-        ret += core.spoken_number(str(alt.value).ljust(5, "0"))
+        ret += core.spoken_number(str(alt.value).ljust(5, "0"), True)
     elif unit == "hPa":
-        ret += core.spoken_number(str(alt.value).zfill(4))
+        ret += core.spoken_number(str(alt.value).zfill(4), True)
     return ret
 
 
-def wx_codes(codes: [Code]) -> str:
+def wx_codes(codes: List[Code]) -> str:
     """
     Format wx codes into a spoken word string
     """

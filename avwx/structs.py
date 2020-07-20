@@ -303,6 +303,53 @@ class MexData(ReportData):
     forecast: List[MexPeriod]
 
 
+@dataclass
+class NbsUnits(Units):
+    accumulation: str
+    duration: str
+    solar_radiation: str
+    wave_height: str
+
+
+@dataclass
+class NbsPeriod:
+    time: Timestamp
+    temperature: Number
+    dewpoint: Number
+    sky_cover: Number
+    wind_direction: Number
+    wind_speed: Number
+    wind_gust: Number
+    thunder_storm_3: Number
+    freezing_precip: Number
+    snow: Number
+    sleet: Number
+    rain: Number
+    snow_level: Number
+    ceiling: Number
+    visibility: Number
+    cloud_base: Number
+    mixing_height: Number
+    transport_wind_direction: Number
+    transport_wind_speed: Number
+    precip_chance_6: Optional[Number] = None
+    precip_chance_12: Optional[Number] = None
+    precip_amount_6: Optional[Number] = None
+    precip_amount_12: Optional[Number] = None
+    precip_duration: Optional[Number] = None
+    thunder_storm_12: Optional[Number] = None
+    snow_amount_6: Optional[Number] = None
+    icing_amount_6: Optional[Number] = None
+    wave_height: Optional[Number] = None
+    haines: List[Number] = None
+    solar_radiation: Optional[Number] = None
+
+
+@dataclass
+class NbsData(ReportData):
+    forecast: List[NbsPeriod]
+
+
 # @dataclass
 # class GfsPeriodTrans:
 #     temperature: str

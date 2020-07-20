@@ -5,6 +5,7 @@ Contains report sanitization functions
 # stdlib
 import re
 from itertools import permutations
+from typing import List
 
 # module
 from avwx.parsing.core import dedupe, is_timerange, is_timestamp, is_unknown
@@ -215,7 +216,9 @@ VIS_PERMUTATIONS = ["".join(p) for p in permutations("P6SM")]
 VIS_PERMUTATIONS.remove("6MPS")
 
 
-def sanitize_report_list(wxdata: [str], remove_clr_and_skc: bool = True) -> [str]:
+def sanitize_report_list(
+    wxdata: List[str], remove_clr_and_skc: bool = True
+) -> List[str]:
     """
     Sanitize wxData
 

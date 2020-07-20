@@ -72,7 +72,7 @@ def get_alt_ice_turb(data: List[str]) -> Tuple[List[str], str, List[str], List[s
             altimeter = data.pop(i)[3:7]
             if altimeter[0] in ("2", "3"):
                 altimeter = altimeter[:2] + "." + altimeter[2:]
-            altimeter = core.make_number(altimeter)
+            altimeter = core.make_number(altimeter, literal=True)
         elif item.isdigit():
             if item[0] == "6":
                 icing.append(data.pop(i))

@@ -65,7 +65,7 @@ def parse_altimeter(value: str) -> Number:
         return None
     # QNH3003INS
     if len(value) >= 7 and value.endswith("INS"):
-        return core.make_number(value[-7:-5] + "." + value[-5:-3], value)
+        return core.make_number(value[-7:-5] + "." + value[-5:-3], value, literal=True)
     number = value.replace(".", "")
     # Q1000/10
     if "/" in number:
@@ -79,7 +79,7 @@ def parse_altimeter(value: str) -> Number:
         number = number[:2] + "." + number[2:]
     elif number[0] not in ("0", "1"):
         return None
-    return core.make_number(number, value, number)
+    return core.make_number(number, value, number, literal=True)
 
 
 def get_altimeter(

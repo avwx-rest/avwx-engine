@@ -2,6 +2,10 @@
 TAF data translation handlers
 """
 
+# stdlib
+from typing import List
+
+# module
 import avwx.parsing.translate.base as _trans
 from avwx.parsing import core, remarks
 from avwx.static.taf import ICING_CONDITIONS, TURBULENCE_CONDITIONS
@@ -19,11 +23,11 @@ def wind_shear(
     if not shear or "WS" not in shear or "/" not in shear:
         return ""
     shear = shear[2:].rstrip(unit_wind.upper()).split("/")
-    wdir = core.spoken_number(shear[1][:3]) if spoken else shear[1][:3]
+    wdir = core.spoken_number(shear[1][:3], True) if spoken else shear[1][:3]
     return f"Wind shear {int(shear[0])*100}{unit_alt} from {wdir} at {shear[1][3:]}{unit_wind}"
 
 
-def turb_ice(values: [str], unit: str = "ft") -> str:
+def turb_ice(values: List[str], unit: str = "ft") -> str:
     """
     Translate the list of turbulence or icing into a readable sentence
 

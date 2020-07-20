@@ -11,7 +11,7 @@ UNITS = {
     "wind_speed": "kt",
 }
 
-#:
+#: GFS coded ceiling values
 CEILING_HEIGHT = {
     "1": "< 200 feet",
     "2": "200 - 400 feet",
@@ -23,7 +23,7 @@ CEILING_HEIGHT = {
     "8": "> 12,000 feet or unlimited ceiling",
 }
 
-#:
+#: GFS coded visibility values
 VISIBILITY = {
     "1": "< 1/2 miles",
     "2": "1/2 - < 1 miles",

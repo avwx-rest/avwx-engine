@@ -3,99 +3,29 @@ Parsing for NOAA GFS forecasts
 """
 
 # stdlib
-from datetime import datetime, timedelta, timezone
-from typing import Callable, List, Tuple
+from typing import Optional
 
 # module
 import avwx.static.gfs as static
-from avwx.forecast.base import Forecast
 from avwx.parsing import core
+from avwx.service import GFS_MOS
 from avwx.structs import (
-    Code,
     MavData,
     MavPeriod,
     MexData,
     MexPeriod,
-    Number,
-    Timestamp,
     Units,
 )
-
-
-def _split_line(
-    line: str, size: int = 3, prefix: int = 4, strip: str = " |"
-) -> List[str]:
-    """
-    Evenly split a string while stripping elements
-    """
-    line = line[prefix:]
-    ret = []
-    while len(line) >= size:
-        ret.append(line[:size].strip(strip))
-        line = line[size:]
-    line = line.strip(strip)
-    if line:
-        ret.append(line)
-    return ret
-
-
-def _timestamp(line: str) -> Timestamp:
-    """
-    Returns the report timestamp from the first line
-    """
-    text = line[26:43].strip()
-    timestamp = datetime.strptime(text, r"%m/%d/%Y  %H%M")
-    return Timestamp(text, timestamp.replace(tzinfo=timezone.utc))
-
-
-def _find_time_periods(line: List[str], timestamp: datetime) -> List[dict]:
-    """
-    Find and create the empty time periods
-    """
-    previous = timestamp.hour
-    periods = []
-    for hourstr in line:
-        if not hourstr:
-            continue
-        hour = int(hourstr)
-        previous, difference = hour, hour - previous
-        if difference < 0:
-            difference += 24
-        timestamp += timedelta(hours=difference)
-        periods.append(Timestamp(hourstr, timestamp))
-    return [{"time": time} for time in periods]
-
-
-def _init_parse(report: str) -> Tuple[dict, List[str]]:
-    """
-    Returns the meta data and lines from a report string
-    """
-    report = report.strip()
-    lines = report.split("\n")
-    data = {
-        "raw": report,
-        "station": report[:4],
-        "time": _timestamp(lines[0]),
-        "remarks": None,
-    }
-    return data, lines
-
-
-def _numbers(line: str, size: int = 3, postfix: str = "") -> List[Number]:
-    """
-    Parse line into Number objects
-    """
-    return [
-        core.make_number(item + postfix if item else item, repr=item)
-        for item in _split_line(line, size=size)
-    ]
-
-
-def _wind_direction(line: str, size: int = 3) -> List[Number]:
-    """
-    Parse wind direction line into Number objects
-    """
-    return _numbers(line, size, postfix="0")
+from .base import (
+    Forecast,
+    _code,
+    _direction,
+    _find_time_periods,
+    _init_parse,
+    _numbers,
+    _parse_lines,
+    _split_line,
+)
 
 
 def _thunder(line: str, size: int = 3) -> list:
@@ -116,33 +46,14 @@ def _thunder(line: str, size: int = 3) -> list:
     return ret
 
 
-def _code(mapping: dict) -> Callable:
-    """
-    Generates a conditional code mapping function
-    """
-
-    def func(line: str, size: int = 3) -> list:
-        ret = []
-        for key in _split_line(line, size=size):
-            try:
-                value = Code(key, mapping[key])
-            except KeyError:
-                value = key or None
-            ret.append(value)
-        return ret
-
-    return func
-
-
 # pylint: disable=invalid-name
 _precip_amount = _code(static.PRECIPITATION_AMOUNT)
-
 
 _HANDLERS = {
     "TMP": ("temperature", _numbers),
     "DPT": ("dewpoint", _numbers),
     "CLD": ("cloud", _code(static.CLOUD)),
-    "WDR": ("wind_direction", _wind_direction),
+    "WDR": ("wind_direction", _direction),
     "WSP": ("wind_speed", _numbers),
     "P06": ("precip_chance_6", _numbers),
     "P12": ("precip_chance_12", _numbers),
@@ -156,6 +67,7 @@ _HANDLERS = {
 
 # Secondary dicts for conflicting handlers
 _MAV_HANDLERS = {
+    **_HANDLERS,
     "T06": ("thunder_storm_6", "severe_storm_6", _thunder),
     "T12": ("thunder_storm_12", "severe_storm_12", _thunder),
     "POZ": ("freezing_precip", _numbers),
@@ -166,6 +78,7 @@ _MAV_HANDLERS = {
 }
 
 _MEX_HANDLERS = {
+    **_HANDLERS,
     "T12": ("thunder_storm_12", _numbers),
     "T24": ("thunder_storm_24", _numbers),
     "PZP": ("freezing_precip", _numbers),
@@ -175,39 +88,7 @@ _MEX_HANDLERS = {
 }
 
 
-def _parse_lines(
-    periods: List[dict], lines: List[str], size: int = 3, handlers: dict = None
-):
-    """
-    Add data to time periods by parsing each line (element type)
-
-    Adds data in place
-    """
-    if handlers is not None:
-        handlers = {**_HANDLERS, **handlers}
-    else:
-        handlers = _HANDLERS
-    for line in lines:
-        try:
-            *keys, handler = handlers[line[:3]]
-        except (IndexError, KeyError):
-            continue
-        values = handler(line, size=size)
-        values += [None] * (len(periods) - len(values))
-        # pylint: disable=consider-using-enumerate
-        for i in range(len(periods)):
-            value = values[i]
-            if not value:
-                continue
-            if isinstance(value, tuple):
-                for j, key in enumerate(keys):
-                    if value[j]:
-                        periods[i][key] = value[j]
-            else:
-                periods[i][keys[0]] = value
-
-
-def parse_mav(report: str) -> MavData:
+def parse_mav(report: str) -> Optional[MavData]:
     """
     Parser for GFS MAV reports
     """
@@ -216,12 +97,12 @@ def parse_mav(report: str) -> MavData:
     data, lines = _init_parse(report)
     periods = _split_line(lines[2])
     periods = _find_time_periods(periods, data["time"].dt)
-    _parse_lines(periods, lines[3:], handlers=_MAV_HANDLERS)
+    _parse_lines(periods, lines[3:], _MAV_HANDLERS)
     data["forecast"] = [MavPeriod(**p) for p in periods]
     return MavData(**data)
 
 
-def parse_mex(report: str) -> MexData:
+def parse_mex(report: str) -> Optional[MexData]:
     """
     Parser for GFS MEX reports
     """
@@ -235,7 +116,7 @@ def parse_mex(report: str) -> MexData:
             lines = [l[:climo_index] for l in lines]
     periods = _split_line(lines[1], size=4, prefix=4)
     periods = _find_time_periods(periods, data["time"].dt)
-    _parse_lines(periods, lines[3:], size=4, handlers=_MEX_HANDLERS)
+    _parse_lines(periods, lines[3:], _MEX_HANDLERS, size=4)
     data["forecast"] = [MexPeriod(**p) for p in periods]
     return MexData(**data)
 
@@ -246,6 +127,7 @@ class Mav(Forecast):
     """
 
     report_type = "mav"
+    _service_class = GFS_MOS
 
     def _post_update(self):
         self.data = parse_mav(self.raw)
@@ -258,6 +140,7 @@ class Mex(Forecast):
     """
 
     report_type = "mex"
+    _service_class = GFS_MOS
 
     def _post_update(self):
         self.data = parse_mex(self.raw)

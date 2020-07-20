@@ -64,7 +64,7 @@ def _location(item: str) -> Location:
         station, direction, distance = items[0], items[1][:3], items[1][3:]
     # Convert non-null elements
     if direction:
-        direction = core.make_number(direction)
+        direction = core.make_number(direction, literal=True)
     if distance:
         distance = core.make_number(distance)
     return Location(item, station, direction, distance)

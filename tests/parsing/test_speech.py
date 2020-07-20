@@ -42,9 +42,9 @@ class TestSpeech(unittest.TestCase):
                 "two seven zero (variable two four zero to three zero zero) at 10kt",
             ),
         ):
-            wind = [core.make_number(i) for i in wind]
+            wind = [core.make_number(v, literal=(not i)) for i, v in enumerate(wind)]
             if vardir:
-                vardir = [core.make_number(i, speak=i) for i in vardir]
+                vardir = [core.make_number(i, speak=i, literal=True) for i in vardir]
             self.assertEqual(speech.wind(*wind, vardir), "Winds " + spoken)
 
     def test_temperature(self):

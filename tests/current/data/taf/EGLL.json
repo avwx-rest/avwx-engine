@@ -81,7 +81,7 @@
                 "type": "TEMPO",
                 "visibility": {
                     "repr": "8000",
-                    "spoken": "eight zero zero zero",
+                    "spoken": "eight thousand",
                     "value": 8000
                 },
                 "wind_direction": null,

@@ -2,6 +2,10 @@
 Contains functions for translating report data
 """
 
+# stdlib
+from typing import Dict, List
+
+# module
 from avwx.static.core import CLOUD_TRANSLATIONS
 from avwx.structs import Cloud, Code, Number, SharedData, Units
 
@@ -69,7 +73,7 @@ def wind(
     direction: Number,
     speed: Number,
     gust: Number,
-    vardir: [Number] = None,
+    vardir: List[Number] = None,
     unit: str = "kt",
     cardinals: bool = True,
     spoken: bool = False,
@@ -132,6 +136,8 @@ def visibility(vis: Number, unit: str = "m") -> str:
         converted = vis.value / 0.621371
         converted = str(round(converted, 1)).replace(".0", "") + "km"
         value = str(vis.value).replace(".0", "")
+    else:
+        return ""
     return f"{value}{unit} ({converted})"
 
 
@@ -152,6 +158,8 @@ def temperature(temp: Number, unit: str = "C") -> str:
     elif unit == "F":
         converted = (temp.value - 32) / 1.8
         converted = str(int(round(converted))) + "°C"
+    else:
+        return ""
     return f"{temp.value}°{unit} ({converted})"
 
 
@@ -171,10 +179,12 @@ def altimeter(alt: Number, unit: str = "hPa") -> str:
         value = str(alt.value).ljust(5, "0")
         converted = alt.value * 33.8638866667
         converted = str(int(round(converted))) + " hPa"
+    else:
+        return ""
     return f"{value} {unit} ({converted})"
 
 
-def clouds(values: [Cloud], unit: str = "ft") -> str:
+def clouds(values: List[Cloud], unit: str = "ft") -> str:
     """
     Format cloud list into a readable sentence
 
@@ -197,7 +207,7 @@ def clouds(values: [Cloud], unit: str = "ft") -> str:
     return "Sky clear"
 
 
-def wx_codes(codes: [Code]) -> str:
+def wx_codes(codes: List[Code]) -> str:
     """
     Join WX code values
 
@@ -206,7 +216,7 @@ def wx_codes(codes: [Code]) -> str:
     return ", ".join(code.value for code in codes)
 
 
-def current_shared(wxdata: SharedData, units: Units) -> {str: str}:
+def current_shared(wxdata: SharedData, units: Units) -> Dict[str, str]:
     """
     Translate Visibility, Altimeter, Clouds, and Other
     """

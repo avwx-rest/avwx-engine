@@ -2,6 +2,9 @@
 Contains functions for handling and translating remarks
 """
 
+# stdlib
+from typing import Dict
+
 # module
 from avwx.parsing import core
 from avwx.static.core import REMARKS_ELEMENTS, REMARKS_GROUPS, WX_TRANSLATIONS
@@ -90,7 +93,7 @@ def parse(rmk: str) -> RemarksData:
     return RemarksData(**rmkdata)
 
 
-def translate(remarks: str) -> {str: str}:
+def translate(remarks: str) -> Dict[str, str]:
     """
     Translates elements in the remarks string
     """

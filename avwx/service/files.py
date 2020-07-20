@@ -83,13 +83,13 @@ class FileService(Service):
         while not self._updating:
             await aio.sleep(0.01)
 
-    async def _update_file(self):
+    async def _update_file(self, timeout: int):
         raise NotImplementedError()
 
     def _extract(self, station: str) -> Optional[str]:
         raise NotImplementedError()
 
-    async def update(self, wait: bool = False) -> bool:
+    async def update(self, wait: bool = False, timeout: int = 10) -> bool:
         """
         Update the stored file and returns success
 
@@ -104,7 +104,7 @@ class FileService(Service):
         self._updating = True
         # Replace file
         old_path = self._file
-        if not await self._update_file():
+        if not await self._update_file(timeout):
             self._updating = False
             return False
         if old_path:
@@ -112,15 +112,19 @@ class FileService(Service):
         self._updating = False
         return True
 
-    def fetch(self, station: str, wait: bool = True) -> Optional[str]:
+    def fetch(
+        self, station: str, wait: bool = True, timeout: int = 10
+    ) -> Optional[str]:
         """
         Fetch a report string from the source file
 
         If wait, this will block if the file is already being updated
         """
-        return aio.run(self.async_fetch(station, wait))
+        return aio.run(self.async_fetch(station, wait, timeout))
 
-    async def async_fetch(self, station: str, wait: bool = True) -> Optional[str]:
+    async def async_fetch(
+        self, station: str, wait: bool = True, timeout: int = 10
+    ) -> Optional[str]:
         """
         Asynchronously fetch a report string from the source file
 
@@ -129,7 +133,7 @@ class FileService(Service):
         if wait and self._updating:
             self._wait_until_updated()
         if self.is_outdated:
-            if not await self.update():
+            if not await self.update(wait, timeout):
                 return None
         return self._extract(station)
 
@@ -142,14 +146,14 @@ class NOAA_NBM(FileService):
     url = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/blend/prod/blend.{}/{}/text/blend_{}tx.t{}z"
     _valid_types = ("nbs",)
 
-    async def _update_file(self) -> bool:
+    async def _update_file(self, timeout: int) -> bool:
         """
         Finds and saves the most recent file from NBM file server
         """
         # Find the most recent file
         date = dt.datetime.now(tz=dt.timezone.utc)
         cutoff = date - dt.timedelta(days=1)
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=timeout) as client:
             while date > cutoff:
                 try:
                     timestamp = date.strftime(r"%Y%m%d")
@@ -159,6 +163,8 @@ class NOAA_NBM(FileService):
                     if resp.status_code == 200:
                         break
                     date -= dt.timedelta(hours=1)
+                except (httpx.ConnectTimeout, httpx.ReadTimeout):
+                    return False
                 except gaierror:
                     return False
             else:
