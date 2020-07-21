@@ -29,7 +29,7 @@ class TestMav(ForecastBase):
         """
         Performs an end-to-end test of all MAV JSON files
         """
-        self._test_gfs_ete(gfs.Mav)
+        self._test_forecast_ete(gfs.Mav)
 
 
 class TestMex(ForecastBase):
@@ -37,4 +37,4 @@ class TestMex(ForecastBase):
         """
         Performs an end-to-end test of all MEX JSON files
         """
-        self._test_gfs_ete(gfs.Mex)
+        self._test_forecast_ete(gfs.Mex)

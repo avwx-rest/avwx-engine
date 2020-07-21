@@ -128,19 +128,22 @@ class TestForecastBase(BaseTest):
         """
         Tests that number lines are converted to Number or None
         """
-        for numbers, text, postfix in (
-            ([1, 2, None, 34], "NUM   1  2    34", ""),
-            ([10, 20, None, 340], "NUM   1  2    34", "0"),
+        for numbers, line, prefix, postfix, decimal in (
+            ([1, 2, None, 34], "NUM   1  2    34", "", "", None),
+            ([10, 20, None, 340], "NUM   1  2    34", "", "0", None),
+            ([110, 120, None, 1340], "NUM   1  2    34", "1", "0", None),
+            ([1.1, 1.2, None, 13.4], "NUM   1  2    34", "1", "", -1),
         ):
-            for i, number in enumerate(base._numbers(text, postfix=postfix)):
-                num = numbers[i]
+            raw = line[4:]
+            raw = [raw[i : (i + 3)].strip() for i in range(0, len(raw), 3)]
+            for i, number in enumerate(
+                base._numbers(line, 3, prefix, postfix, decimal)
+            ):
+                num, text = numbers[i], raw[i]
                 if num is None:
                     self.assertIsNone(number)
                 else:
-                    raw = str(num)
-                    if postfix:
-                        raw = raw[: -len(postfix)]
-                    self.assert_number(number, raw, num)
+                    self.assert_number(number, text, num)
 
     def test_code(self):
         """
@@ -157,7 +160,7 @@ class ForecastBase(BaseTest):
 
     maxDiff = None
 
-    def _test_gfs_ete(self, report: base.Forecast):
+    def _test_forecast_ete(self, report: base.Forecast):
         """
         Performs an end-to-end test of all report JSON files
         """

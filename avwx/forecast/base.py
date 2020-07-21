@@ -120,7 +120,7 @@ def _number_10(line: str, size: int = 3) -> List[Number]:
     """
     Parse line into Number objects in tens
     """
-    return _numbers(line, size, postfix="00")
+    return _numbers(line, size, postfix="0")
 
 
 def _number_100(line: str, size: int = 3) -> List[Number]:

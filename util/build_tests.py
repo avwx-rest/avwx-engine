@@ -9,6 +9,7 @@ import json
 from dataclasses import asdict
 from datetime import date, datetime, timezone
 from pathlib import Path
+from typing import List
 
 # module
 import avwx
@@ -48,7 +49,7 @@ def make_taf_test(station: str, report: str = None) -> dict:
     }
 
 
-def make_pirep_test(station: str) -> [dict]:
+def make_pirep_test(station: str) -> List[dict]:
     """
     Builds PIREP test file for station
     """
@@ -62,7 +63,7 @@ def make_pirep_test(station: str) -> [dict]:
     return {"reports": ret, "station": asdict(p.station)}
 
 
-def make_gfs_test(report: "Forecast", station: str) -> dict:
+def make_forecast_test(report: avwx.forecast.base.Forecast, station: str) -> dict:
     """
     Builds GFS service test file for station
     """
@@ -77,21 +78,28 @@ def make_mav_test(station: str) -> dict:
     """
     Builds MAV test file for station
     """
-    return make_gfs_test(avwx.Mav, station)
+    return make_forecast_test(avwx.Mav, station)
 
 
 def make_mex_test(station: str) -> dict:
     """
     Builds MEX test file for station
     """
-    return make_gfs_test(avwx.Mex, station)
+    return make_forecast_test(avwx.Mex, station)
+
+
+def make_nbs_test(station: str) -> dict:
+    """
+    Builds NBS test file for station
+    """
+    return make_forecast_test(avwx.Nbs, station)
 
 
 def main():
     """
     Creates source files for end-to-end tests
     """
-    targets = {"current": ("metar", "taf", "pirep"), "forecast": ("mav", "mex")}
+    targets = {"current": ("metar", "taf", "pirep"), "forecast": ("mav", "mex", "nbs")}
 
     for target, reports in targets.items():
         for report_type in reports:

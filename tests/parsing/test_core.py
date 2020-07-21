@@ -13,7 +13,9 @@ import time_machine
 # module
 from avwx import static, structs
 from avwx.parsing import core
+from avwx.structs import Fraction, Number
 
+# tests
 from tests.util import BaseTest
 
 
@@ -116,14 +118,23 @@ class TestCore(BaseTest):
             ("1", 1, "one"),
             ("1.5", 1.5, "one point five"),
             ("060", 60, "six zero"),
+            ("300", 300, "three hundred"),
+            ("25000", 25000, "two five thousand"),
             ("M10", -10, "minus one zero"),
             ("P6SM", None, "greater than six"),
             ("M1/4", None, "less than one quarter"),
         ):
             number = core.make_number(num)
+            self.assertIsInstance(number, Number)
             self.assertEqual(number.repr, num)
             self.assertEqual(number.value, value)
             self.assertEqual(number.spoken, spoken)
+        self.assertEqual(core.make_number("1234", "A1234").repr, "A1234")
+
+    def test_make_number_fractions(self):
+        """
+        Tests Fraction dataclass generation from a number string
+        """
         for num, value, spoken, nmr, dnm, norm in (
             ("1/4", 0.25, "one quarter", 1, 4, "1/4"),
             ("5/2", 2.5, "two and one half", 5, 2, "2 1/2"),
@@ -132,15 +143,23 @@ class TestCore(BaseTest):
             ("11/4", 1.25, "one and one quarter", 5, 4, "1 1/4"),
         ):
             number = core.make_number(num)
+            self.assertIsInstance(number, Fraction)
             self.assertEqual(number.value, value)
             self.assertEqual(number.spoken, spoken)
             self.assertEqual(number.numerator, nmr)
             self.assertEqual(number.denominator, dnm)
             self.assertEqual(number.normalized, norm)
-        self.assertEqual(core.make_number("1234", "A1234").repr, "A1234")
+
+    def test_make_number_speech(self):
+        """
+        Tests Number generation speech overrides
+        """
         number = core.make_number("040", speak="040")
         self.assertEqual(number.value, 40)
         self.assertEqual(number.spoken, "zero four zero")
+        number = core.make_number("100", literal=True)
+        self.assertEqual(number.value, 100)
+        self.assertEqual(number.spoken, "one zero zero")
 
     def test_find_first_in_list(self):
         """

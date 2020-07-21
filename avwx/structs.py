@@ -320,11 +320,6 @@ class NbsPeriod:
     wind_direction: Number
     wind_speed: Number
     wind_gust: Number
-    thunder_storm_3: Number
-    freezing_precip: Number
-    snow: Number
-    sleet: Number
-    rain: Number
     snow_level: Number
     ceiling: Number
     visibility: Number
@@ -337,7 +332,12 @@ class NbsPeriod:
     precip_amount_6: Optional[Number] = None
     precip_amount_12: Optional[Number] = None
     precip_duration: Optional[Number] = None
+    thunder_storm_3: Optional[Number] = None
     thunder_storm_12: Optional[Number] = None
+    freezing_precip: Optional[Number] = None
+    snow: Optional[Number] = None
+    sleet: Optional[Number] = None
+    rain: Optional[Number] = None
     snow_amount_6: Optional[Number] = None
     icing_amount_6: Optional[Number] = None
     wave_height: Optional[Number] = None
