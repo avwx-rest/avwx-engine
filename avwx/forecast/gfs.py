@@ -8,7 +8,7 @@ from typing import Optional
 # module
 import avwx.static.gfs as static
 from avwx.parsing import core
-from avwx.service import GFS_MOS
+from avwx.service import NOAA_GFS
 from avwx.structs import (
     MavData,
     MavPeriod,
@@ -127,7 +127,7 @@ class Mav(Forecast):
     """
 
     report_type = "mav"
-    _service_class = GFS_MOS
+    _service_class = NOAA_GFS
 
     def _post_update(self):
         self.data = parse_mav(self.raw)
@@ -140,7 +140,7 @@ class Mex(Forecast):
     """
 
     report_type = "mex"
-    _service_class = GFS_MOS
+    _service_class = NOAA_GFS
 
     def _post_update(self):
         self.data = parse_mex(self.raw)

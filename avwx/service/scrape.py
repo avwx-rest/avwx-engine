@@ -349,36 +349,3 @@ def get_service(station: str, country_code: str) -> Service:
         if station.startswith(prefix):
             return PREFERRED[prefix]
     return BY_COUNTRY.get(country_code, NOAA)
-
-
-# Specialty Services
-
-
-class GFS_MOS(ScrapeService):
-    """
-    Requests medium and long-term forecasts from NOAA GFS MOS
-    """
-
-    # url = "https://www.nws.noaa.gov/cgi-bin/mos/get{}.pl"
-    url = "https://www.weather.gov/mdl/mos_getbull"
-
-    _valid_types = ("mav", "mex")
-    _strip_whitespace = False
-
-    def _make_url(self, station: str, *_, **__) -> Tuple[str, dict]:
-        """
-        Returns a formatted URL and parameters
-        """
-        return (self.url, {"ele": self.report_type, "sta": station})
-
-    def _extract(self, raw: str, station: str = None) -> str:
-        """
-        Extracts the report using string finding
-        """
-        print(raw[raw.find('<div id="demo"') : raw.find('<div id="demo"') + 100])
-        print(raw.find("<pre>"))
-        raw = raw[raw.find("<pre>") + 5 :]
-        raw = raw[: raw.find("</pre>")].strip().replace("\n ", "\n")
-        if "<" in raw:
-            return ""
-        return raw
