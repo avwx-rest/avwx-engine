@@ -175,7 +175,13 @@ def make_number(
     # Create Number
     if not val:
         return None
-    val = float(val) if "." in num else int(val)
+    if "." in num:
+        val = float(val)
+        # Overwrite float 0 due to "0.0" literal
+        if not val:
+            val = 0
+    else:
+        val = int(val)
     return Number(repr or num, val, spoken_number(speak or str(val), literal))
 
 

@@ -88,6 +88,13 @@ def make_mex_test(station: str) -> dict:
     return make_forecast_test(avwx.Mex, station)
 
 
+def make_nbh_test(station: str) -> dict:
+    """
+    Builds NBH test file for station
+    """
+    return make_forecast_test(avwx.Nbh, station)
+
+
 def make_nbs_test(station: str) -> dict:
     """
     Builds NBS test file for station
@@ -95,11 +102,21 @@ def make_nbs_test(station: str) -> dict:
     return make_forecast_test(avwx.Nbs, station)
 
 
+def make_nbe_test(station: str) -> dict:
+    """
+    Builds NBE test file for station
+    """
+    return make_forecast_test(avwx.Nbe, station)
+
+
 def main():
     """
     Creates source files for end-to-end tests
     """
-    targets = {"current": ("metar", "taf", "pirep"), "forecast": ("mav", "mex", "nbs")}
+    targets = {
+        "current": ("metar", "taf", "pirep"),
+        "forecast": ("mav", "mex", "nbh", "nbs", "nbe"),
+    }
 
     for target, reports in targets.items():
         for report_type in reports:

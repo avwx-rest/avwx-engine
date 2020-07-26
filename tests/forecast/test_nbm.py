@@ -11,7 +11,7 @@ from avwx.forecast import nbm
 from .test_base import ForecastBase
 
 
-class TestNbs(ForecastBase):
+class TestNbm(ForecastBase):
     def test_ceiling(self):
         """
         Tests that a line is converted into ceiling-specific Numbers
@@ -29,8 +29,20 @@ class TestNbs(ForecastBase):
             else:
                 self.assert_number(number, *expected)
 
+    def test_nbh_ete(self):
+        """
+        Performs an end-to-end test of all NBH JSON files
+        """
+        self._test_forecast_ete(nbm.Nbh)
+
     def test_nbs_ete(self):
         """
-        Performs an end-to-end test of all MEX JSON files
+        Performs an end-to-end test of all NBS JSON files
         """
         self._test_forecast_ete(nbm.Nbs)
+
+    def test_nbe_ete(self):
+        """
+        Performs an end-to-end test of all NBE JSON files
+        """
+        self._test_forecast_ete(nbm.Nbe)

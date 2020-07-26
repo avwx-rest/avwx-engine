@@ -7,13 +7,13 @@ from setuptools import find_namespace_packages, setup
 VERSION = "1.4.6"
 
 dependencies = [
-    "geopy~=1.22",
+    "geopy~=2.0",
     "httpx~=0.13",
     "python-dateutil~=2.8",
     "xmltodict~=0.12",
 ]
 
-test_dependencies = ["pytest-asyncio~=0.12", "time-machine~=1.1"]
+test_dependencies = ["pytest-asyncio~=0.14", "time-machine~=1.2"]
 
 extras = {
     "scipy": ["scipy~=1.5"],

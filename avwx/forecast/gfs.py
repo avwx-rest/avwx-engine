@@ -109,11 +109,6 @@ def parse_mex(report: str) -> Optional[MexData]:
     if not report:
         return None
     data, lines = _init_parse(report)
-    # Remove CLIMO data for now
-    if len(lines) >= 3:
-        climo_index = lines[2].find(" CLIMO")
-        if climo_index >= 0:
-            lines = [l[:climo_index] for l in lines]
     periods = _split_line(lines[1], size=4, prefix=4)
     periods = _find_time_periods(periods, data["time"].dt)
     _parse_lines(periods, lines[3:], _MEX_HANDLERS, size=4)

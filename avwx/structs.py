@@ -10,7 +10,7 @@ from collections.abc import KeysView, ValuesView
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Iterable, List, Optional
+from typing import Iterable, List, Optional, Union
 
 
 class _LazyLoad:
@@ -87,7 +87,7 @@ class Units:
 @dataclass
 class Number:
     repr: str
-    value: float
+    value: Union[int, float]
     spoken: str
 
 
@@ -304,7 +304,7 @@ class MexData(ReportData):
 
 
 @dataclass
-class NbsUnits(Units):
+class NbmUnits(Units):
     accumulation: str
     duration: str
     solar_radiation: str
@@ -312,7 +312,7 @@ class NbsUnits(Units):
 
 
 @dataclass
-class NbsPeriod:
+class NbmPeriod:
     time: Timestamp
     temperature: Number
     dewpoint: Number
@@ -321,33 +321,73 @@ class NbsPeriod:
     wind_speed: Number
     wind_gust: Number
     snow_level: Number
-    ceiling: Number
-    visibility: Number
-    cloud_base: Number
-    mixing_height: Number
-    transport_wind_direction: Number
-    transport_wind_speed: Number
-    precip_chance_6: Optional[Number] = None
-    precip_chance_12: Optional[Number] = None
-    precip_amount_6: Optional[Number] = None
-    precip_amount_12: Optional[Number] = None
-    precip_duration: Optional[Number] = None
-    thunder_storm_3: Optional[Number] = None
-    thunder_storm_12: Optional[Number] = None
-    freezing_precip: Optional[Number] = None
-    snow: Optional[Number] = None
-    sleet: Optional[Number] = None
-    rain: Optional[Number] = None
-    snow_amount_6: Optional[Number] = None
-    icing_amount_6: Optional[Number] = None
-    wave_height: Optional[Number] = None
+    precip_duration: Number = None
+    freezing_precip: Number = None
+    snow: Number = None
+    sleet: Number = None
+    rain: Number = None
+    solar_radiation: Number = None
+    wave_height: Number = None
+
+
+@dataclass
+class NbhsShared(NbmPeriod):
+    ceiling: Number = None
+    visibility: Number = None
+    cloud_base: Number = None
+    mixing_height: Number = None
+    transport_wind_direction: Number = None
+    transport_wind_speed: Number = None
     haines: List[Number] = None
-    solar_radiation: Optional[Number] = None
+
+
+@dataclass
+class NbhPeriod(NbhsShared):
+    precip_chance_1: Number = None
+    precip_chance_6: Number = None
+    precip_amount_1: Number = None
+    thunder_storm_1: Number = None
+    snow_amount_1: Number = None
+    icing_amount_1: Number = None
+
+
+@dataclass
+class NbsPeriod(NbhsShared):
+    precip_chance_6: Number = None
+    precip_chance_12: Number = None
+    precip_amount_6: Number = None
+    precip_amount_12: Number = None
+    precip_duration: Number = None
+    thunder_storm_3: Number = None
+    thunder_storm_12: Number = None
+    snow_amount_6: Number = None
+    icing_amount_6: Number = None
+
+
+@dataclass
+class NbePeriod(NbmPeriod):
+    precip_chance_12: Number = None
+    precip_amount_12: Number = None
+    precip_amount_24: Number = None
+    thunder_storm_12: Number = None
+    snow_amount_12: Number = None
+    snow_amount_24: Number = None
+    icing_amount_12: Number = None
+
+
+@dataclass
+class NbhData(ReportData):
+    forecast: List[NbhPeriod]
 
 
 @dataclass
 class NbsData(ReportData):
     forecast: List[NbsPeriod]
+
+
+@dataclass
+class NbeData(ReportData):
+    forecast: List[NbePeriod]
 
 
 # @dataclass

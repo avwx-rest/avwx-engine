@@ -5,12 +5,12 @@ Parsing for NOAA NBM forecasts
 # Reference: https://www.weather.gov/mdl/nbm_textcard_v32
 
 # stdlib
-from typing import List
+from typing import Callable, Dict, List, Tuple
 
 # module
+from avwx import structs
 from avwx.service.files import NOAA_NBM
 from avwx.static.gfs import UNITS
-from avwx.structs import NbsData, NbsPeriod, Number, NbsUnits
 from .base import (
     Forecast,
     _decimal_10,
@@ -39,7 +39,7 @@ _CEILING_SPECIAL = {
 }
 
 
-def _ceiling(line: str, size: int = 3) -> List[Number]:
+def _ceiling(line: str, size: int = 3) -> List[structs.Number]:
     """
     Parse line into Number objects handling ceiling special units
     """
@@ -53,20 +53,25 @@ _HANDLERS = {
     "WDR": ("wind_direction", _direction),
     "WSP": ("wind_speed", _numbers),
     "GST": ("wind_gust", _numbers),
-    "P06": ("precip_chance_6", _numbers),
-    "P12": ("precip_chance_12", _numbers),
-    "Q06": ("precip_amount_6", _decimal_100),
-    "Q12": ("precip_amount_12", _decimal_100),
     "DUR": ("precip_duration", _numbers),
-    "T03": ("thunder_storm_3", _numbers),
-    "T12": ("thunder_storm_12", _numbers),
     "PZR": ("freezing_precip", _numbers),
     "PSN": ("snow", _numbers),
     "PPL": ("sleet", _numbers),
     "PRA": ("rain", _numbers),
-    "S06": ("snow_amount_6", _decimal_10),
     "SLV": ("snow_level", _number_100),
-    "I06": ("icing_amount_6", _decimal_100),
+    "SOL": ("solar_radiation", _numbers),
+    "SWH": ("wave_height", _numbers),
+}
+
+_HOUR_HANDLERS = {
+    "P": ("precip_chance", _numbers),
+    "Q": ("precip_amount", _decimal_100),
+    "T": ("thunder_storm", _numbers),
+    "S": ("snow_amount", _decimal_10),
+    "I": ("icing_amount", _decimal_100),
+}
+
+_NBHS_HANDLERS = {
     "CIG": ("ceiling", _ceiling),
     "VIS": ("visibility", _decimal_10),
     "LCB": ("cloud_base", _number_100),
@@ -74,33 +79,94 @@ _HANDLERS = {
     "TWD": ("transport_wind_direction", _direction),
     "TWS": ("transport_wind_speed", _numbers),
     "HID": ("haines", _numbers),
-    "SOL": ("solar_radiation", _numbers),
-    "SWH": ("wave_height", _numbers),
 }
 
 
-def parse_nbs(report: str):
+def _parse_factory(
+    data_class,
+    period_class,
+    handlers: Dict[str, Tuple],
+    hours: int = 2,
+    size: int = 3,
+    prefix: int = 4,
+) -> Callable:
     """
-    Parser for NBM NBS reports
+    Creates handler function for static and computed keys
     """
-    if not report:
-        return None
-    data, lines = _init_parse(report)
-    periods = _split_line(lines[2])
-    periods = _find_time_periods(periods, data["time"].dt)
-    _parse_lines(periods, lines[3:], _HANDLERS)
-    data["forecast"] = [NbsPeriod(**p) for p in periods]
-    return NbsData(**data)
+
+    handlers = {**_HANDLERS, **handlers}
+
+    def handle(key: str) -> Tuple:
+        """
+        Returns response key(s) and value handler for a line key
+        """
+        try:
+            return handlers[key]
+        except KeyError:
+            pass
+        if not key[1:].isdigit():
+            raise KeyError
+        root, handler = _HOUR_HANDLERS[key[0]]
+        return f"{root}_{key[1:].lstrip('0')}", handler
+
+    def parse(report: str):
+        """
+        Parser for NBM reports
+        """
+        if not report:
+            return None
+        data, lines = _init_parse(report)
+        periods = _split_line(lines[hours], size, prefix)
+        periods = _find_time_periods(periods, data["time"].dt)
+        data_lines = lines[hours + 1 :]
+        # Normalize line prefix length
+        if prefix != 4:
+            indexes = (4, prefix)
+            start, end = min(indexes), max(indexes)
+            data_lines = [l[:start] + l[end:] for l in data_lines]
+        _parse_lines(periods, data_lines, handle, size)
+        data["forecast"] = [period_class(**p) for p in periods]
+        return data_class(**data)
+
+    return parse
 
 
-class Nbs(Forecast):
+parse_nbh = _parse_factory(structs.NbhData, structs.NbhPeriod, _NBHS_HANDLERS, hours=1)
+parse_nbs = _parse_factory(structs.NbsData, structs.NbsPeriod, _NBHS_HANDLERS)
+parse_nbe = _parse_factory(structs.NbeData, structs.NbePeriod, {}, size=4, prefix=5)
+
+
+class _Nbm(Forecast):
+    units = structs.NbmUnits(**UNITS)
+    _service_class = NOAA_NBM
+    _parser: Callable
+
+    def _post_update(self):
+        self.data = self._parser(self.raw)
+
+
+class Nbh(_Nbm):
+    """
+    Class to handle NBM NBH report data
+    """
+
+    report_type = "nbh"
+    _parser = staticmethod(parse_nbh)
+
+
+class Nbs(_Nbm):
     """
     Class to handle NBM NBS report data
     """
 
     report_type = "nbs"
-    _service_class = NOAA_NBM
+    _parser = staticmethod(parse_nbs)
 
-    def _post_update(self):
-        self.data = parse_nbs(self.raw)
-        self.units = NbsUnits(**UNITS)
+
+class Nbe(_Nbm):
+    """
+    Class to handle NBM NBE report data
+    """
+
+    report_type = "nbe"
+    _parser = staticmethod(parse_nbe)

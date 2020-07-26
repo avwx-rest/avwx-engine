@@ -196,7 +196,7 @@ class NOAA_NBM(NOAA_Forecast):
     """
 
     url = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/blend/prod/blend.{}/{}/text/blend_{}tx.t{}z"
-    _valid_types = ("nbs",)
+    _valid_types = ("nbh", "nbs", "nbe")
 
     @property
     def _urls(self) -> Iterator[str]:
@@ -212,7 +212,7 @@ class NOAA_NBM(NOAA_Forecast):
             date -= dt.timedelta(hours=1)
 
     def _index_target(self, station: str) -> Tuple[str]:
-        return station + "    NBM", self.report_type.upper() + " GUIDANCE"
+        return station + "   ", self.report_type.upper() + " GUIDANCE"
 
 
 class NOAA_GFS(NOAA_Forecast):

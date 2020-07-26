@@ -4,7 +4,7 @@ Forecast report shared resources
 
 # stdlib
 from datetime import datetime, timedelta, timezone
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Union
 
 # module
 from avwx.base import AVWXBase
@@ -155,7 +155,12 @@ def _code(mapping: dict) -> Callable:
     return func
 
 
-def _parse_lines(periods: List[dict], lines: List[str], handlers: dict, size: int = 3):
+def _parse_lines(
+    periods: List[dict],
+    lines: List[str],
+    handlers: Union[dict, Callable],
+    size: int = 3,
+):
     """
     Add data to time periods by parsing each line (element type)
 
@@ -163,7 +168,9 @@ def _parse_lines(periods: List[dict], lines: List[str], handlers: dict, size: in
     """
     for line in lines:
         try:
-            *keys, handler = handlers[line[:3]]
+            key = line[:3]
+            resp = handlers[key] if isinstance(handlers, dict) else handlers(key)
+            *keys, handler = resp
         except (IndexError, KeyError):
             continue
         values = handler(line, size=size)
