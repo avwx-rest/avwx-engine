@@ -34,12 +34,12 @@ def make_metar_test(station: str) -> dict:
     }
 
 
-def make_taf_test(station: str, report: str = None) -> dict:
+def make_taf_test(station: str) -> dict:
     """
     Builds TAF test file for station
     """
     t = avwx.Taf(station)
-    t.update(report)
+    t.update()
     return {
         "data": asdict(t.data),
         "translations": asdict(t.translations),

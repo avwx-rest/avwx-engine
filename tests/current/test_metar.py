@@ -177,7 +177,7 @@ class TestMetar(BaseTest):
             self.assertEqual(station.sanitize(raw), ref["data"]["sanitized"])
             self.assertIsNone(station.last_updated)
             self.assertIsNone(station.issued)
-            self.assertTrue(station.update(raw, issued=issued))
+            self.assertTrue(station.parse(raw, issued=issued))
             self.assertIsInstance(station.last_updated, datetime)
             self.assertEqual(station.issued, issued)
             self.assertEqual(asdict(station.data), ref["data"])

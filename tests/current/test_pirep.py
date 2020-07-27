@@ -219,7 +219,7 @@ class TestPirep(unittest.TestCase):
             self.assertIsNone(station.last_updated)
             self.assertIsNone(station.issued)
             reports = [report["data"]["raw"] for report in ref["reports"]]
-            self.assertTrue(station.update(reports, issued=issued))
+            self.assertTrue(station.parse(reports, issued=issued))
             self.assertIsInstance(station.last_updated, datetime)
             self.assertEqual(station.issued, issued)
             for parsed, report in zip(station.data, ref["reports"]):

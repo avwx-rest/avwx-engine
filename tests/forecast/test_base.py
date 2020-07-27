@@ -168,7 +168,7 @@ class ForecastBase(BaseTest):
             station = report(icao)
             self.assertIsNone(station.last_updated)
             self.assertIsNone(station.issued)
-            self.assertTrue(station.update(ref["data"]["raw"]))
+            self.assertTrue(station.parse(ref["data"]["raw"]))
             self.assertIsInstance(station.last_updated, datetime)
             self.assertEqual(station.issued, issued)
             # Clear timestamp due to parse_date limitations

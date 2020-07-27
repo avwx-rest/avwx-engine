@@ -98,48 +98,38 @@ class Reports(AVWXBase):
         """
         return reports
 
-    def update(
-        self,
-        reports: Optional[List[str]] = None,
-        issued: Optional[date] = None,
-        timeout: int = 10,
-        disable_post: bool = False,
+    def _update(
+        self, reports: List[str], issued: Optional[date], disable_post: bool
     ) -> bool:
-        """
-        Updates raw and data by fetch recent aircraft reports
+        if not reports:
+            return False
+        reports = self._report_filter(reports)
+        return super()._update(reports, issued, disable_post)
 
-        Can accept a list report strings to parse instead
+    def parse(self, reports: Union[str, List[str]], issued: Optional[date] = None):
+        """
+        Updates report data by parsing a given report
+
+        Can accept a report issue date if not a recent report string
+        """
+        if isinstance(reports, str):
+            reports = [reports]
+        return self._update(reports, issued, False)
+
+    def update(self, timeout: int = 10, disable_post: bool = False,) -> bool:
+        """
+        Updates report data by fetching and parsing the report
 
         Returns True if new reports are available, else False
         """
-        if not reports:
-            reports = self.service.fetch(lat=self.lat, lon=self.lon, timeout=timeout)
-            if not reports:
-                return False
-            issued = None
-        if isinstance(reports, str):
-            reports = [reports]
-        if reports == self.raw:
-            return False
-        self.raw = self._report_filter(reports)
-        self.issued = issued
-        if not disable_post:
-            self._post_update()
-        self._set_meta()
-        return True
+        reports = self.service.fetch(lat=self.lat, lon=self.lon, timeout=timeout)
+        return self._update(reports, None, disable_post)
 
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
         """
-        Async version of update
+        Async updates report data by fetching and parsing the report
         """
         reports = await self.service.async_fetch(
             lat=self.lat, lon=self.lon, timeout=timeout
         )
-        if not reports or reports == self.raw:
-            return False
-        self.raw = reports
-        self.issued = None
-        if not disable_post:
-            self._post_update()
-        self._set_meta()
-        return True
+        return self._update(reports, None, disable_post)

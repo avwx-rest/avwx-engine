@@ -27,25 +27,26 @@ datetime.datetime(2018, 3, 4, 23, 43, 26, 209644)
 'Starting on March 4th - From 21 to 16 zulu, Winds three three zero at 16kt gusting to 27kt. Visibility greater than six miles. Broken layer at 4500ft. From 16 to 21 zulu, Winds three six zero at 16kt gusting to 22kt. Visibility greater than six miles. Broken layer at 4000ft. From 21 to midnight zulu, Winds three five zero at 13kt. Visibility greater than six miles. Scattered clouds at 3500ft'
 ```
 
-The update function can also accept a given report string if you want to override to normal fetching process.
+The `parse` and `from_report` methods can parse a report string if you want to override the normal fetching process.
 
 ```python
 >>> from avwx import Taf
->>> zyhb = Taf('ZYHB')
+>>> report = "TAF ZYHB 082300Z 0823/0911 VRB03KT 9999 SCT018 BKN120 TX14/0907Z TN04/0921Z FM090100 09015KT 9999 -SHRA WS020/13045KT SCT018 BKN120 BECMG 0904/0906 34008KT PROB30 TEMPO 0906/0911 7000 -RA SCT020 650104 530804 RMK FCST BASED ON AUTO OBS. NXT FCST BY 090600Z"
+>>> zyhb = Taf.from_report(report)
+True
 >>> zyhb.station.city
 'Hulan'
->>> report = "TAF ZYHB 082300Z 0823/0911 VRB03KT 9999 SCT018 BKN120 TX14/0907Z TN04/0921Z FM090100 09015KT 9999 -SHRA WS020/13045KT SCT018 BKN120 BECMG 0904/0906 34008KT PROB30 TEMPO 0906/0911 7000 -RA SCT020 650104 530804 RMK FCST BASED ON AUTO OBS. NXT FCST BY 090600Z"
->>> zyhb.update(report)
-True
 >>> zyhb.data.remarks
 'RMK FCST BASED ON AUTO OBS. NXT FCST BY 090600Z'
 >>> zyhb.summary[-1]
 'Vis 7km, Light Rain, Scattered clouds at 2000ft, Frequent moderate turbulence in clear air from 8000ft to 12000ft, Moderate icing in clouds from 1000ft to 5000ft'
 ```
 
-#### **async_update**() -> *bool*
+#### **async_update**(*timeout: int = 10*) -> *bool*
 
-Async version of `update`
+Async updates report data by fetching and parsing the report
+
+Returns `True` if a new report is available, else `False`
 
 #### **data**: *avwx.structs.TafData* = *None*
 
@@ -59,9 +60,19 @@ Returns an updated report object based on an existing report
 
 4-character ICAO station ident code the report was initialized with
 
+#### **issued**: *date* = *None*
+
+UTC date object when the report was issued
+
 #### **last_updated**: *datetime.datetime* = *None*
 
 UTC Datetime object when the report was last updated
+
+#### **parse**(*report: str*, *issued: Optional[date] = None*) -> *bool*
+
+Updates report data by parsing a given report
+
+Can accept a report issue date if not a recent report string
 
 #### **raw**: *str* = *None*
 
@@ -91,11 +102,9 @@ TafTrans dataclass of translation strings from data. Parsed on update()
 
 Units inferred from the station location and report contents
 
-#### **update**(*report: str = None*) -> *bool*
+#### **update**(*timeout: int = 10*) -> *bool*
 
-Updates `raw`, `data`, and `translations` by fetching and parsing the report
-
-Can accept a report string to parse instead
+Updates report data by fetching and parsing the report
 
 Returns `True` if a new report is available, else `False`
 
@@ -105,7 +114,7 @@ Returns `True` if a new report is available, else `False`
 
 **end_time**: *avwx.structs.Timestamp*
 
-**forecast**: *[avwx.structs.TafLineData]*
+**forecast**: *List[avwx.structs.TafLineData]*
 
 **max_temp**: *float* = *None*
 
@@ -119,13 +128,13 @@ Returns `True` if a new report is available, else `False`
 
 **icao**: *str*
 
-**temps**: *[str]* = *None*
+**temps**: *List[str]* = *None*
 
 **time**: *avwx.structs.Timestamp*
 
 ## class avwx.structs.**TafTrans**
 
-**forecast**: *[avwx.structs.TafLineTrans]*
+**forecast**: *List[avwx.structs.TafLineTrans]*
 
 **max_temp**: *str*
 
@@ -137,15 +146,15 @@ Returns `True` if a new report is available, else `False`
 
 **altimeter**: *avwx.structs.Number*
 
-**clouds**: *[avwx.structs.Cloud]*
+**clouds**: *List[avwx.structs.Cloud]*
 
 **end_time**: *avwx.structs.Timestamp*
 
 **flight_rules**: *str*
 
-**icing**: *[str]*
+**icing**: *List[str]*
 
-**other**: *[str]*
+**other**: *List[str]*
 
 **probability**: *avwx.structs.Number*
 
@@ -157,7 +166,7 @@ Returns `True` if a new report is available, else `False`
 
 **transition_start**: *avwx.structs.Timestamp*
 
-**turbulence**: *[str]*
+**turbulence**: *List[str]*
 
 **type**: *str*
 

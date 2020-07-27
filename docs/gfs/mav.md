@@ -48,11 +48,13 @@ OBV   N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N  N
 Code(repr='7', value='6600 - 12,000 feet')
 ```
 
-The update function can also accept a given report string if you want to override to normal fetching process.
+The `parse` and `from_report` methods can parse a report string if you want to override the normal fetching process.
 
-#### **async_update**() -> *bool*
+#### **async_update**(*timeout: int = 10*) -> *bool*
 
-Async version of `update`
+Async updates report data by fetching and parsing the report
+
+Returns `True` if a new report is available, else `False`
 
 #### **data**: *avwx.structs.MavData* = *None*
 
@@ -66,9 +68,17 @@ Returns an updated report object based on an existing report
 
 4-character ICAO station ident code the report was initialized with
 
+#### **issued**: *date* = *None*
+
+UTC date object when the report was issued
+
 #### **last_updated**: *datetime.datetime* = *None*
 
 UTC Datetime object when the report was last updated
+
+#### **parse**(*report: str*) -> *bool*
+
+Updates report data by parsing a given report
 
 #### **raw**: *str* = *None*
 
@@ -86,17 +96,15 @@ Provides basic station info
 
 Units inferred from the station location and report contents
 
-#### **update**(*report: str = None*) -> *bool*
+#### **update**(*timeout: int = 10*) -> *bool*
 
-Updates `raw`, `data`, and `translations` by fetching and parsing the report
-
-Can accept a report string to parse instead
+Updates report data by fetching and parsing the report
 
 Returns `True` if a new report is available, else `False`
 
 ## class avwx.structs.**MavData**
 
-**forecast**: *[avwx.structs.MavPeriod]*
+**forecast**: *List[avwx.structs.MavPeriod]*
 
 **raw**: *str*
 

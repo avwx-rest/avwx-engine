@@ -23,16 +23,14 @@ datetime.datetime(2019, 5, 24, 13, 31, 46, 561732)
 Location(repr='KFLL275015', station='KFLL', direction=Number(repr='275', value=275, spoken='two seven five'), distance=Number(repr='015', value=15, spoken='one five'))
 ```
 
-The update function can also accept a given report string if you want to override to normal fetching process. Here's an example of a really bad day.
+The `parse` and `from_report` methods can parse a report string if you want to override the normal fetching process. Here's an example of a really bad day.
 
 ```python
 >>> from avwx import Metar
->>> ksfo = Metar('KSFO')
+>>> ksfo = Metar.from_report(report)
+True
 >>> ksfo.station.city
 'San Francisco'
->>> report = 'KSFO 031254Z 36024G55KT 320V040 1/8SM R06/0200D +TS VCFC OVC050 BKN040TCU 14/10 A2978 RMK AIRPORT CLOSED'
->>> ksfo.update(report)
-True
 >>> ksfo.last_updated
 datetime.datetime(2018, 3, 4, 23, 54, 4, 353757)
 >>> ksfo.data.flight_rules
@@ -43,13 +41,19 @@ datetime.datetime(2018, 3, 4, 23, 54, 4, 353757)
 'Winds N-360 (variable 320 to 040) at 24kt gusting to 55kt, Vis 0.125sm, Temp 14C, Dew 10C, Alt 29.78inHg, Heavy Thunderstorm, Vicinity Funnel Cloud, Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft'
 ```
 
-#### **async_update**() -> *bool*
+#### **async_update**(*timeout: int = 10*) -> *bool*
 
-Async version of `update`
+Async updates report data by fetching and parsing the report
 
-#### **data**: *[avwx.structs.PirepData]* = *None*
+Returns `True` if a new report is available, else `False`
+
+#### **data**: *List[avwx.structs.PirepData]* = *None*
 
 List of PirepData dataclasses of parsed data values and units. Parsed on update()
+
+#### **issued**: *date* = *None*
+
+UTC date object when the report was issued
 
 #### **last_updated**: *datetime.datetime* = *None*
 
@@ -63,7 +67,13 @@ Latitude of the radial center. This is supplied by the user or loaded from the s
 
 Longitude of the radial center. This is supplied by the user or loaded from the station
 
-#### **raw**: *[str]* = *None*
+#### **parse**(*reports: Union[str, List[str]]*, *issued: Optional[date] = None*) -> *bool*
+
+Updates report data by parsing a given report
+
+Can accept a report issue date if not a recent report string
+
+#### **raw**: *List[str]* = *None*
 
 The unparsed report strings. Fetched on update()
 
@@ -79,13 +89,11 @@ Provides basic station info
 
 Units inferred from the station location and report contents
 
-#### **update**(*reports: [str] = None*) -> *bool*
+#### **update**(*timeout: int = 10*) -> *bool*
 
-Updates `raw` and `data` by fetch recent aircraft reports
+Updates report data by fetching and parsing recent aircraft reports
 
-Can accept a list report strings to parse instead
-
-Returns `True` if new reports are available, else `False`
+Returns `True` if a new report is available, else `False`
 
 ## class avwx.structs.**PirepData**
 
@@ -93,7 +101,7 @@ Returns `True` if new reports are available, else `False`
 
 **altitude**: *avwx.structs.Number* = *None*
 
-**clouds**: *[avwx.structs.Cloud]*
+**clouds**: *List[avwx.structs.Cloud]*
 
 **flight_visibility**: *avwx.structs.Number* = *None*
 
@@ -117,4 +125,4 @@ Returns `True` if new reports are available, else `False`
 
 **type**: *str*
 
-**wx**: *[str]*
+**wx**: *List[str]*

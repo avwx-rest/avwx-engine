@@ -25,16 +25,15 @@ datetime.datetime(2018, 3, 4, 23, 36, 6, 62376)
 {'AO2': 'Automated with precipitation sensor', 'SLP184': 'Sea level pressure: 1018.4 hPa', 'T00441078': 'Temperature 4.4°C and dewpoint -7.8°C'}
 ```
 
-The update function can also accept a given report string if you want to override to normal fetching process. Here's an example of a really bad day.
+The `parse` and `from_report` methods can parse a report string if you want to override the normal fetching process. Here's an example of a really bad day.
 
 ```python
 >>> from avwx import Metar
->>> ksfo = Metar('KSFO')
+>>> report = 'KSFO 031254Z 36024G55KT 320V040 1/8SM R06/0200D +TS VCFC OVC050 BKN040TCU 14/10 A2978 RMK AIRPORT CLOSED'
+>>> ksfo = Metar.from_report(report)
+True
 >>> ksfo.station.city
 'San Francisco'
->>> report = 'KSFO 031254Z 36024G55KT 320V040 1/8SM R06/0200D +TS VCFC OVC050 BKN040TCU 14/10 A2978 RMK AIRPORT CLOSED'
->>> ksfo.update(report)
-True
 >>> ksfo.last_updated
 datetime.datetime(2018, 3, 4, 23, 54, 4, 353757)
 >>> ksfo.data.flight_rules
@@ -45,9 +44,11 @@ datetime.datetime(2018, 3, 4, 23, 54, 4, 353757)
 'Winds N-360 (variable 320 to 040) at 24kt gusting to 55kt, Vis 0.125sm, Temp 14C, Dew 10C, Alt 29.78inHg, Heavy Thunderstorm, Vicinity Funnel Cloud, Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft'
 ```
 
-#### **async_update**() -> *bool*
+#### **async_update**(*timeout: int = 10*) -> *bool*
 
-Async version of `update`
+Async updates report data by fetching and parsing the report
+
+Returns `True` if a new report is available, else `False`
 
 #### **data**: *avwx.structs.MetarData* = *None*
 
@@ -61,9 +62,19 @@ Returns an updated report object based on an existing report
 
 4-character ICAO station ident code the report was initialized with
 
+#### **issued**: *date* = *None*
+
+UTC date object when the report was issued
+
 #### **last_updated**: *datetime.datetime* = *None*
 
 UTC Datetime object when the report was last updated
+
+#### **parse**(*report: str*, *issued: Optional[date] = None*) -> *bool*
+
+Updates report data by parsing a given report
+
+Can accept a report issue date if not a recent report string
 
 #### **raw**: *str* = *None*
 
@@ -93,11 +104,9 @@ MetarTrans dataclass of translation strings from data. Parsed on update()
 
 Units inferred from the station location and report contents
 
-#### **update**(*report: str = None*) -> *bool*
+#### **update**(*timeout: int = 10*) -> *bool*
 
-Updates `raw`, `data`, and `translations` by fetching and parsing the report
-
-Can accept a report string to parse instead
+Updates report data by fetching and parsing the report
 
 Returns `True` if a new report is available, else `False`
 
@@ -105,13 +114,13 @@ Returns `True` if a new report is available, else `False`
 
 **altimeter**: *avwx.structs.Number*
 
-**clouds**: *[avwx.structs.Cloud]*
+**clouds**: *List[avwx.structs.Cloud]*
 
 **dewpoint**: *avwx.structs.Number*
 
 **flight_rules**: *str*
 
-**other**: *[str]*
+**other**: *List[str]*
 
 **raw**: *str*
 
@@ -119,7 +128,7 @@ Returns `True` if a new report is available, else `False`
 
 **remarks_info**: *avwx.structs.RemarksData*
 
-**runway_visibility**: *[str]*
+**runway_visibility**: *List[str]*
 
 **sanitized**: *str*
 

@@ -238,7 +238,7 @@ class TestTaf(unittest.TestCase):
             "FM280000 23008KT P6SM BKN040 RMK FCST BASED ON AUTO OBS. NXT FCST BY 272000Z"
         )
         tafobj = taf.Taf("CYBC")
-        tafobj.update(report)
+        tafobj.parse(report)
         lines = tafobj.data.forecast
         self.assertEqual(len(lines), 6)
         self.assertEqual(lines[3].probability, None)
@@ -259,7 +259,7 @@ class TestTaf(unittest.TestCase):
             "PROB40 2522/2602 P6SM TSRA BKN020CB"
         )
         tafobj = taf.Taf("CYBC")
-        tafobj.update(report)
+        tafobj.parse(report)
         lines = tafobj.data.forecast
         self.assertEqual(lines[0].start_time.repr, "2500")
         self.assertEqual(lines[0].end_time.repr, "2506")
@@ -284,7 +284,7 @@ class TestTaf(unittest.TestCase):
             "TEMPO 2913/2918 P6SM -SHRA OVC020 RMK NXT FCST BY 290000Z"
         )
         tafobj = taf.Taf("CYBC")
-        tafobj.update(report)
+        tafobj.parse(report)
         lines = tafobj.data.forecast
         self.assertEqual(len(lines), 7)
         self.assertEqual(lines[0].wind_shear, "WS015/20055")
@@ -300,7 +300,7 @@ class TestTaf(unittest.TestCase):
             "PROB30 TEMPO 2105/2106 8000 BKN006"
         )
         tafobj = taf.Taf("EGLL")
-        tafobj.update(report)
+        tafobj.parse(report)
         lines = tafobj.data.forecast
         for line in lines:
             self.assertIsInstance(line.start_time, structs.Timestamp)
@@ -317,7 +317,7 @@ class TestTaf(unittest.TestCase):
             station = taf.Taf(icao)
             self.assertIsNone(station.last_updated)
             self.assertIsNone(station.issued)
-            self.assertTrue(station.update(ref["data"]["raw"], issued=issued))
+            self.assertTrue(station.parse(ref["data"]["raw"], issued=issued))
             self.assertIsInstance(station.last_updated, datetime)
             self.assertEqual(station.issued, issued)
             self.assertEqual(asdict(station.data), ref["data"])
@@ -336,7 +336,6 @@ class TestTaf(unittest.TestCase):
             "FM021800 14008KT P6SM BKN025 OVC090"
         )
         expected_rules = ("VFR", "VFR", "VFR", "MVFR")
-        tafobj = taf.Taf(report[:4])
-        tafobj.update(report)
+        tafobj = taf.Taf.from_report(report)
         for i, line in enumerate(tafobj.data.forecast):
             self.assertEqual(line.flight_rules, expected_rules[i])

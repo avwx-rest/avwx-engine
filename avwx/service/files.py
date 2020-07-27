@@ -138,17 +138,17 @@ class FileService(Service):
         return True
 
     def fetch(
-        self, station: str, wait: bool = True, timeout: int = 10
+        self, station: str, wait: bool = True, timeout: int = 10, force: bool = False
     ) -> Optional[str]:
         """
         Fetch a report string from the source file
 
         If wait, this will block if the file is already being updated
         """
-        return aio.run(self.async_fetch(station, wait, timeout))
+        return aio.run(self.async_fetch(station, wait, timeout, force))
 
     async def async_fetch(
-        self, station: str, wait: bool = True, timeout: int = 10
+        self, station: str, wait: bool = True, timeout: int = 10, force: bool = False
     ) -> Optional[str]:
         """
         Asynchronously fetch a report string from the source file
@@ -158,7 +158,7 @@ class FileService(Service):
         valid_station(station)
         if wait and self._updating:
             self._wait_until_updated()
-        if self.is_outdated:
+        if force or self.is_outdated:
             if not await self.update(wait, timeout):
                 return None
         return self._extract(station)

@@ -5,7 +5,7 @@ Report parent classes
 # stdlib
 from abc import ABCMeta, abstractmethod
 from datetime import date, datetime, timezone
-from typing import Optional
+from typing import List, Optional, Union
 
 # module
 from avwx.exceptions import BadStation
@@ -78,7 +78,7 @@ class AVWXBase(metaclass=ABCMeta):
         if not station:
             return None
         obj = cls(station.icao)
-        obj.update(report, issued=issued)
+        obj.parse(report, issued=issued)
         return obj
 
     def _set_meta(self):
@@ -91,23 +91,9 @@ class AVWXBase(metaclass=ABCMeta):
         except AttributeError:
             pass
 
-    def update(
-        self,
-        report: str = None,
-        issued: date = None,
-        timeout: int = 10,
-        disable_post: bool = False,
+    def _update(
+        self, report: Union[str, List[str]], issued: Optional[date], disable_post: bool
     ) -> bool:
-        """
-        Updates raw, data, and translations by fetching and parsing the report
-
-        Can accept a report string to parse instead
-
-        Returns True if a new report is available, else False
-        """
-        if not report:
-            report = self.service.fetch(self.icao, timeout=timeout)
-            issued = None
         if not report or report == self.raw:
             return False
         self.raw = report
@@ -117,19 +103,31 @@ class AVWXBase(metaclass=ABCMeta):
         self._set_meta()
         return True
 
+    def parse(self, report: str, issued: Optional[date] = None) -> bool:
+        """
+        Updates report data by parsing a given report
+
+        Can accept a report issue date if not a recent report string
+        """
+        return self._update(report, issued, False)
+
+    def update(self, timeout: int = 10, disable_post: bool = False) -> bool:
+        """
+        Updates report data by fetching and parsing the report
+
+        Returns True if a new report is available, else False
+        """
+        report = self.service.fetch(self.icao, timeout=timeout)
+        return self._update(report, None, disable_post)
+
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
         """
-        Async version of update
+        Async updates report data by fetching and parsing the report
+
+        Returns True if a new report is available, else False
         """
         report = await self.service.async_fetch(self.icao, timeout=timeout)
-        if not report or report == self.raw:
-            return False
-        self.raw = report
-        self.issued = None
-        if not disable_post:
-            self._post_update()
-        self._set_meta()
-        return True
+        return self._update(report, None, disable_post)
 
     @staticmethod
     def sanitize(report: str) -> str:
