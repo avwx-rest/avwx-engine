@@ -2,7 +2,7 @@
 
 A METAR (Meteorological Aerodrome Report) is the surface weather observed at most controlled (and some uncontrolled) airports. They are updated once per hour or when conditions change enough to warrant an update, and the observations are valid for one hour after the report was issued or until the next report is issued.
 
-## class avwx.**Metar**(*station_ident: str*)
+## class avwx.**Metar**(*icao: str*)
 
 The Metar class offers an object-oriented approach to managing METAR data for a single station.
 

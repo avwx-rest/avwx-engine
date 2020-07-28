@@ -183,7 +183,8 @@ class NOAA_Forecast(FileService):
             txt = txt[: txt.find(end, 30)]
             lines = []
             for line in txt.split("\n"):
-                line = line.strip()
+                if "CLIMO" not in line:
+                    line = line.strip()
                 if not line:
                     break
                 lines.append(line)

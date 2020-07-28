@@ -66,7 +66,7 @@ _HANDLERS = {
 _HOUR_HANDLERS = {
     "P": ("precip_chance", _numbers),
     "Q": ("precip_amount", _decimal_100),
-    "T": ("thunder_storm", _numbers),
+    "T": ("thunderstorm", _numbers),
     "S": ("snow_amount", _decimal_10),
     "I": ("icing_amount", _decimal_100),
 }

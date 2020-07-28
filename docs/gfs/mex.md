@@ -2,7 +2,7 @@
 
 The [MEX report](https://www.nws.noaa.gov/mdl/synop/mexcard.php) is an extended-range forecast (24-192 hours) based on the [Global Forecast System](https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs) model output and is only valid for ICAO stations in the United States, Puerto Rico, and US Virgin Islands. Reports are published at 0000 and 1200 UTC.
 
-## class avwx.**Mex**(*station_ident: str*)
+## class avwx.**Mex**(*icao: str*)
 
 The Mex class offers an object-oriented approach to managing MOS MEX data for a single station.
 
@@ -139,8 +139,8 @@ Returns `True` if a new report is available, else `False`
 
 **temperature**: *avwx.structs.Number*
 
-**thunder_storm_12**: *avwx.structs.Number*
+**thunderstorm_12**: *avwx.structs.Number*
 
-**thunder_storm_24**: *avwx.structs.Number*
+**thunderstorm_24**: *avwx.structs.Number*
 
 **time**: *avwx.structs.Timestamp*

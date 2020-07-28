@@ -2,7 +2,7 @@
 
 The [MAV report](https://www.nws.noaa.gov/mdl/synop/mavcard.php) is a short-range forecast (6-72 hours) based on the [Global Forecast System](https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs) model output and is only valid for ICAO stations in the United States, Puerto Rico, and US Virgin Islands. Reports are published every six hours starting at 0000 UTC.
 
-## class avwx.**Mav**(*station_ident: str*)
+## class avwx.**Mav**(*icao: str*)
 
 The Mav class offers an object-oriented approach to managing MOS MAV data for a single station.
 
@@ -140,9 +140,9 @@ Returns `True` if a new report is available, else `False`
 
 **temperature**: *avwx.structs.Number*
 
-**thunder_storm_6**: *avwx.structs.Number*
+**thunderstorm_6**: *avwx.structs.Number*
 
-**thunder_storm_12**: *avwx.structs.Number*
+**thunderstorm_12**: *avwx.structs.Number*
 
 **time**: *avwx.structs.Timestamp*
 

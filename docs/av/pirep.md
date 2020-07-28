@@ -2,7 +2,7 @@
 
 A PIREP (Pilot Report) is an observation made by pilots inflight meant to aid controllers and pilots routing around adverse conditions and other conditions of note. They typically contain icing, turbulence, cloud types/bases/tops, and other info at a known distance and radial from a ground station. They are released as they come in.
 
-## class avwx.**Pireps**(*station_ident: str = None, lat: float = None, lon: float = None*)
+## class avwx.**Pireps**(*icao: str = None, lat: float = None, lon: float = None*)
 
 The Pireps class offers an object-oriented approach to managing multiple PIREP reports for a single station.
 

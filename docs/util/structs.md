@@ -97,3 +97,24 @@ Load an Aircraft from an ICAO aircraft code
 **visibility**: *str*
 
 **wind_speed**: *str*
+
+
+## class avwx.structs.**NbmUnits**:
+
+**accumulation**: *str*
+
+**altimeter**: *str*
+
+**altitude**: *str*
+
+**duration**: *str*
+
+**solar_radiation**: *str*
+
+**temperature**: *str*
+
+**visibility**: *str*
+
+**wave_height**: *str*
+
+**wind_speed**: *str*

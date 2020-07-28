@@ -2,7 +2,7 @@
 
 A TAF (Terminal Aerodrome Forecast) is a 24-hour weather forecast for the area 5 statute miles from the reporting station. They are update once every three or six hours or when significant changes warrant an update, and the observations are valid for six hours or until the next report is issued
 
-## class avwx.**Taf**(*station_ident: str*)
+## class avwx.**Taf**(*icao: str*)
 
 The Taf class offers an object-oriented approach to managing TAF data for a single station.
 

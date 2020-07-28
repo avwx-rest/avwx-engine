@@ -41,8 +41,8 @@
                     "spoken": "five three",
                     "value": 53
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
+                "thunderstorm_12": null,
+                "thunderstorm_6": null,
                 "time": {
                     "dt": "2020-05-18T06:00:00+00:00",
                     "repr": "06"
@@ -105,8 +105,8 @@
                     "spoken": "five two",
                     "value": 52
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
+                "thunderstorm_12": null,
+                "thunderstorm_6": null,
                 "time": {
                     "dt": "2020-05-18T09:00:00+00:00",
                     "repr": "09"
@@ -180,8 +180,8 @@
                     "spoken": "five three",
                     "value": 53
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": {
+                "thunderstorm_12": null,
+                "thunderstorm_6": {
                     "repr": "2",
                     "spoken": "two",
                     "value": 2
@@ -248,8 +248,8 @@
                     "spoken": "six zero",
                     "value": 60
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
+                "thunderstorm_12": null,
+                "thunderstorm_6": null,
                 "time": {
                     "dt": "2020-05-18T15:00:00+00:00",
                     "repr": "15"
@@ -327,12 +327,12 @@
                     "spoken": "six three",
                     "value": 63
                 },
-                "thunder_storm_12": {
+                "thunderstorm_12": {
                     "repr": "2",
                     "spoken": "two",
                     "value": 2
                 },
-                "thunder_storm_6": {
+                "thunderstorm_6": {
                     "repr": "1",
                     "spoken": "one",
                     "value": 1
@@ -399,8 +399,8 @@
                     "spoken": "six two",
                     "value": 62
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
+                "thunderstorm_12": null,
+                "thunderstorm_6": null,
                 "time": {
                     "dt": "2020-05-18T21:00:00+00:00",
                     "repr": "21"
@@ -481,8 +481,8 @@
                     "spoken": "five nine",
                     "value": 59
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": {
+                "thunderstorm_12": null,
+                "thunderstorm_6": {
                     "repr": "2",
                     "spoken": "two",
                     "value": 2
@@ -549,8 +549,8 @@
                     "spoken": "five six",
                     "value": 56
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
+                "thunderstorm_12": null,
+                "thunderstorm_6": null,
                 "time": {
                     "dt": "2020-05-19T03:00:00+00:00",
                     "repr": "03"
@@ -628,12 +628,12 @@
                     "spoken": "five four",
                     "value": 54
                 },
-                "thunder_storm_12": {
+                "thunderstorm_12": {
                     "repr": "2",
                     "spoken": "two",
                     "value": 2
                 },
-                "thunder_storm_6": {
+                "thunderstorm_6": {
                     "repr": "1",
                     "spoken": "one",
                     "value": 1
@@ -700,8 +700,8 @@
                     "spoken": "five two",
                     "value": 52
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
+                "thunderstorm_12": null,
+                "thunderstorm_6": null,
                 "time": {
                     "dt": "2020-05-19T09:00:00+00:00",
                     "repr": "09"
@@ -782,8 +782,8 @@
                     "spoken": "five four",
                     "value": 54
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": {
+                "thunderstorm_12": null,
+                "thunderstorm_6": {
                     "repr": "2",
                     "spoken": "two",
                     "value": 2
@@ -850,8 +850,8 @@
                     "spoken": "six one",
                     "value": 61
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
+                "thunderstorm_12": null,
+                "thunderstorm_6": null,
                 "time": {
                     "dt": "2020-05-19T15:00:00+00:00",
                     "repr": "15"
@@ -929,12 +929,12 @@
                     "spoken": "six four",
                     "value": 64
                 },
-                "thunder_storm_12": {
+                "thunderstorm_12": {
                     "repr": "2",
                     "spoken": "two",
                     "value": 2
                 },
-                "thunder_storm_6": {
+                "thunderstorm_6": {
                     "repr": "1",
                     "spoken": "one",
                     "value": 1
@@ -1001,8 +1001,8 @@
                     "spoken": "six two",
                     "value": 62
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
+                "thunderstorm_12": null,
+                "thunderstorm_6": null,
                 "time": {
                     "dt": "2020-05-19T21:00:00+00:00",
                     "repr": "21"
@@ -1083,8 +1083,8 @@
                     "spoken": "five eight",
                     "value": 58
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": {
+                "thunderstorm_12": null,
+                "thunderstorm_6": {
                     "repr": "0",
                     "spoken": "zero",
                     "value": 0
@@ -1151,8 +1151,8 @@
                     "spoken": "five four",
                     "value": 54
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
+                "thunderstorm_12": null,
+                "thunderstorm_6": null,
                 "time": {
                     "dt": "2020-05-20T03:00:00+00:00",
                     "repr": "03"
@@ -1230,12 +1230,12 @@
                     "spoken": "five two",
                     "value": 52
                 },
-                "thunder_storm_12": {
+                "thunderstorm_12": {
                     "repr": "0",
                     "spoken": "zero",
                     "value": 0
                 },
-                "thunder_storm_6": {
+                "thunderstorm_6": {
                     "repr": "0",
                     "spoken": "zero",
                     "value": 0
@@ -1302,8 +1302,8 @@
                     "spoken": "five zero",
                     "value": 50
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": null,
+                "thunderstorm_12": null,
+                "thunderstorm_6": null,
                 "time": {
                     "dt": "2020-05-20T09:00:00+00:00",
                     "repr": "09"
@@ -1384,8 +1384,8 @@
                     "spoken": "five one",
                     "value": 51
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": {
+                "thunderstorm_12": null,
+                "thunderstorm_6": {
                     "repr": "0",
                     "spoken": "zero",
                     "value": 0
@@ -1463,12 +1463,12 @@
                     "spoken": "five eight",
                     "value": 58
                 },
-                "thunder_storm_12": {
+                "thunderstorm_12": {
                     "repr": "0",
                     "spoken": "zero",
                     "value": 0
                 },
-                "thunder_storm_6": null,
+                "thunderstorm_6": null,
                 "time": {
                     "dt": "2020-05-20T18:00:00+00:00",
                     "repr": "18"
@@ -1549,8 +1549,8 @@
                     "spoken": "five one",
                     "value": 51
                 },
-                "thunder_storm_12": null,
-                "thunder_storm_6": {
+                "thunderstorm_12": null,
+                "thunderstorm_6": {
                     "repr": "0",
                     "spoken": "zero",
                     "value": 0

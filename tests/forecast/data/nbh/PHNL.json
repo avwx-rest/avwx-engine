@@ -62,7 +62,7 @@
                     "spoken": "eight one",
                     "value": 81
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T06:00:00+00:00",
                     "repr": "06"
@@ -159,7 +159,7 @@
                     "spoken": "eight one",
                     "value": 81
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T07:00:00+00:00",
                     "repr": "07"
@@ -256,7 +256,7 @@
                     "spoken": "eight one",
                     "value": 81
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T08:00:00+00:00",
                     "repr": "08"
@@ -353,7 +353,7 @@
                     "spoken": "eight one",
                     "value": 81
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T09:00:00+00:00",
                     "repr": "09"
@@ -450,7 +450,7 @@
                     "spoken": "eight one",
                     "value": 81
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T10:00:00+00:00",
                     "repr": "10"
@@ -547,7 +547,7 @@
                     "spoken": "eight zero",
                     "value": 80
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T11:00:00+00:00",
                     "repr": "11"
@@ -652,7 +652,7 @@
                     "spoken": "eight zero",
                     "value": 80
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T12:00:00+00:00",
                     "repr": "12"
@@ -749,7 +749,7 @@
                     "spoken": "eight one",
                     "value": 81
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T13:00:00+00:00",
                     "repr": "13"
@@ -846,7 +846,7 @@
                     "spoken": "eight zero",
                     "value": 80
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T14:00:00+00:00",
                     "repr": "14"
@@ -943,7 +943,7 @@
                     "spoken": "eight zero",
                     "value": 80
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T15:00:00+00:00",
                     "repr": "15"
@@ -1040,7 +1040,7 @@
                     "spoken": "eight zero",
                     "value": 80
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T16:00:00+00:00",
                     "repr": "16"
@@ -1137,7 +1137,7 @@
                     "spoken": "seven nine",
                     "value": 79
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T17:00:00+00:00",
                     "repr": "17"
@@ -1242,7 +1242,7 @@
                     "spoken": "eight zero",
                     "value": 80
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T18:00:00+00:00",
                     "repr": "18"
@@ -1339,7 +1339,7 @@
                     "spoken": "eight one",
                     "value": 81
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T19:00:00+00:00",
                     "repr": "19"
@@ -1436,7 +1436,7 @@
                     "spoken": "eight two",
                     "value": 82
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T20:00:00+00:00",
                     "repr": "20"
@@ -1533,7 +1533,7 @@
                     "spoken": "eight two",
                     "value": 82
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T21:00:00+00:00",
                     "repr": "21"
@@ -1630,7 +1630,7 @@
                     "spoken": "eight two",
                     "value": 82
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T22:00:00+00:00",
                     "repr": "22"
@@ -1727,7 +1727,7 @@
                     "spoken": "eight two",
                     "value": 82
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-26T23:00:00+00:00",
                     "repr": "23"
@@ -1836,7 +1836,7 @@
                     "spoken": "eight two",
                     "value": 82
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-27T00:00:00+00:00",
                     "repr": "00"
@@ -1933,7 +1933,7 @@
                     "spoken": "eight two",
                     "value": 82
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-27T01:00:00+00:00",
                     "repr": "01"
@@ -2030,7 +2030,7 @@
                     "spoken": "eight two",
                     "value": 82
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-27T02:00:00+00:00",
                     "repr": "02"
@@ -2127,7 +2127,7 @@
                     "spoken": "eight two",
                     "value": 82
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-27T03:00:00+00:00",
                     "repr": "03"
@@ -2224,7 +2224,7 @@
                     "spoken": "eight two",
                     "value": 82
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-27T04:00:00+00:00",
                     "repr": "04"
@@ -2321,7 +2321,7 @@
                     "spoken": "eight two",
                     "value": 82
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-27T05:00:00+00:00",
                     "repr": "05"
@@ -2426,7 +2426,7 @@
                     "spoken": "eight two",
                     "value": 82
                 },
-                "thunder_storm_1": null,
+                "thunderstorm_1": null,
                 "time": {
                     "dt": "2020-07-27T06:00:00+00:00",
                     "repr": "06"

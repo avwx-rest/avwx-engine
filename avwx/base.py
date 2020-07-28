@@ -57,7 +57,7 @@ class AVWXBase(metaclass=ABCMeta):
     service: Service
 
     def __init__(self, icao: str):
-        # Raises a BadStation error if needed
+        icao = icao.upper()
         self.icao = icao
         self.station = Station.from_icao(icao)
 

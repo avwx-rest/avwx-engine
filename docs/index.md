@@ -33,6 +33,9 @@ These docs could use some love, and I am not a writer. You can help by making a 
 
 ### Model Forecasts
 
+* [NBM NBH](nbm/nbh.md)
+* [NBM NBS](nbm/nbs.md)
+* [NBM NBE](nbm/nbe.md)
 * [GFS MOS MAV](gfs/mav.md)
 * [GFS MOS MEX](gfs/mex.md)
 

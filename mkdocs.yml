@@ -9,6 +9,9 @@ nav:
     - TAF: av/taf.md
     - PIREP: av/pirep.md
   - Models:
+    - NBM NBH: nbm/nbh.md
+    - NBM NBS: nbm/nbs.md
+    - NBM NBE: nbm/nbe.md
     - GFS MOS MAV: gfs/mav.md
     - GFS MOS MEX: gfs/mex.md
   - Utilities:

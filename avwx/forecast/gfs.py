@@ -68,8 +68,8 @@ _HANDLERS = {
 # Secondary dicts for conflicting handlers
 _MAV_HANDLERS = {
     **_HANDLERS,
-    "T06": ("thunder_storm_6", "severe_storm_6", _thunder),
-    "T12": ("thunder_storm_12", "severe_storm_12", _thunder),
+    "T06": ("thunderstorm_6", "severe_storm_6", _thunder),
+    "T12": ("thunderstorm_12", "severe_storm_12", _thunder),
     "POZ": ("freezing_precip", _numbers),
     "POS": ("snow", _numbers),
     "CIG": ("ceiling", _code(static.CEILING_HEIGHT)),
@@ -79,8 +79,8 @@ _MAV_HANDLERS = {
 
 _MEX_HANDLERS = {
     **_HANDLERS,
-    "T12": ("thunder_storm_12", _numbers),
-    "T24": ("thunder_storm_24", _numbers),
+    "T12": ("thunderstorm_12", _numbers),
+    "T24": ("thunderstorm_24", _numbers),
     "PZP": ("freezing_precip", _numbers),
     "PRS": ("rain_snow_mix", _numbers),
     "PSN": ("snow", _numbers),

@@ -8,11 +8,11 @@ AVWX is available on PyPI. Note: the package name is ``avwx-engine``, but the im
 pip install avwx-engine
 ```
 
-AVWX only supports Python 3.6 and above.
+AVWX only supports Python 3.7 and above.
 
 ## Tutorial
 
-Let's run through a quick example of fetching and parsing a METAR and TAF.
+Let's run through a quick example of fetching and parsing a METAR and TAF. There are other report types, but they follow the same basic API.
 
 ```python
 >>> import avwx

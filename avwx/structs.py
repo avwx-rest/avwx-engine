@@ -263,7 +263,7 @@ class GfsPeriod:
     cloud: Code
     precip_chance_12: Optional[Number] = None
     precip_amount_12: Optional[Code] = None
-    thunder_storm_12: Optional[Number] = None
+    thunderstorm_12: Optional[Number] = None
     severe_storm_12: Optional[Number] = None
     freezing_precip: Optional[Number] = None
     precip_type: Optional[Code] = None
@@ -276,7 +276,7 @@ class MavPeriod(GfsPeriod):
     wind_speed: Optional[Number] = None
     precip_chance_6: Optional[Number] = None
     precip_amount_6: Optional[Code] = None
-    thunder_storm_6: Optional[Number] = None
+    thunderstorm_6: Optional[Number] = None
     severe_storm_6: Optional[Number] = None
     ceiling: Optional[Code] = None
     visibility: Optional[Code] = None
@@ -287,7 +287,7 @@ class MavPeriod(GfsPeriod):
 class MexPeriod(GfsPeriod):
     precip_chance_24: Optional[Number] = None
     precip_amount_24: Optional[Code] = None
-    thunder_storm_24: Optional[Number] = None
+    thunderstorm_24: Optional[Number] = None
     severe_storm_24: Optional[Number] = None
     rain_snow_mix: Optional[Number] = None
     snow_amount_24: Optional[Code] = None
@@ -346,7 +346,7 @@ class NbhPeriod(NbhsShared):
     precip_chance_1: Number = None
     precip_chance_6: Number = None
     precip_amount_1: Number = None
-    thunder_storm_1: Number = None
+    thunderstorm_1: Number = None
     snow_amount_1: Number = None
     icing_amount_1: Number = None
 
@@ -358,8 +358,8 @@ class NbsPeriod(NbhsShared):
     precip_amount_6: Number = None
     precip_amount_12: Number = None
     precip_duration: Number = None
-    thunder_storm_3: Number = None
-    thunder_storm_12: Number = None
+    thunderstorm_3: Number = None
+    thunderstorm_12: Number = None
     snow_amount_6: Number = None
     icing_amount_6: Number = None
 
@@ -369,7 +369,7 @@ class NbePeriod(NbmPeriod):
     precip_chance_12: Number = None
     precip_amount_12: Number = None
     precip_amount_24: Number = None
-    thunder_storm_12: Number = None
+    thunderstorm_12: Number = None
     snow_amount_12: Number = None
     snow_amount_24: Number = None
     icing_amount_12: Number = None
@@ -397,7 +397,7 @@ class NbeData(ReportData):
 #     cloud: str
 #     precip_chance_12: str
 #     precip_amount_12: str
-#     thunder_storm_12: str
+#     thunderstorm_12: str
 #     severe_storm_12: str
 #     freezing_precip: str
 #     precip_type: str
@@ -410,7 +410,7 @@ class NbeData(ReportData):
 #     wind_speed: str
 #     precip_chance_6: str
 #     precip_amount_6: str
-#     thunder_storm_6: str
+#     thunderstorm_6: str
 #     severe_storm_6: str
 #     ceiling: str
 #     visibility: str
@@ -421,7 +421,7 @@ class NbeData(ReportData):
 # class MexPeriodTrans(GfsPeriodTrans):
 #     precip_chance_24: str
 #     precip_amount_24: str
-#     thunder_storm_24: str
+#     thunderstorm_24: str
 #     severe_storm_24: str
 #     rain_snow_mix: str
 #     snow_amount_24: str
