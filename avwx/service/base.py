@@ -6,6 +6,9 @@ Service base class
 from typing import Tuple
 
 
+_VALUE_ERROR = "'{}' is not a valid report type for {}. Expected {}"
+
+
 class Service:
     """
     Base Service class for fetching reports
@@ -19,17 +22,19 @@ class Service:
         if self._valid_types:
             if report_type not in self._valid_types:
                 raise ValueError(
-                    f"{report_type} is not a valid report type for {self.__class__.__name__}"
+                    _VALUE_ERROR.format(
+                        report_type, self.__class__.__name__, self._valid_types
+                    )
                 )
         self.report_type = report_type
 
-    def fetch(self, station: str = None, timeout: int = 10) -> str:
+    def fetch(self, station: str, timeout: int = 10) -> str:
         """
         Fetches a report string from the service
         """
         raise NotImplementedError()
 
-    async def async_fetch(self, station: str = None, timeout: int = 10) -> str:
+    async def async_fetch(self, station: str, timeout: int = 10) -> str:
         """
         Asynchronously fetch a report string from the service
         """

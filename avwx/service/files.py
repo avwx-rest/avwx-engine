@@ -11,7 +11,7 @@ import datetime as dt
 import tempfile
 from pathlib import Path
 from socket import gaierror
-from typing import Dict, Iterator, Optional, Tuple
+from typing import Dict, Iterator, Optional, TextIO, Tuple
 
 # library
 import httpx
@@ -38,7 +38,7 @@ class FileService(Service):
     Service class for fetching reports via managed source files
     """
 
-    update_interval: dt.timedelta = dt.timedelta(minutes=30)
+    update_interval: dt.timedelta = dt.timedelta(minutes=10)
     _updating: bool = False
 
     @property
@@ -88,7 +88,7 @@ class FileService(Service):
     def _urls(self) -> Iterator[str]:
         raise NotImplementedError()
 
-    def _extract(self, station: str) -> Optional[str]:
+    def _extract(self, station: str, source: TextIO) -> Optional[str]:
         raise NotImplementedError()
 
     async def _update_file(self, timeout: int) -> bool:
@@ -144,6 +144,8 @@ class FileService(Service):
         Fetch a report string from the source file
 
         If wait, this will block if the file is already being updated
+
+        Can force the service to fetch a new file
         """
         return aio.run(self.async_fetch(station, wait, timeout, force))
 
@@ -154,6 +156,8 @@ class FileService(Service):
         Asynchronously fetch a report string from the source file
 
         If wait, this will block if the file is already being updated
+
+        Can force the service to fetch a new file
         """
         valid_station(station)
         if wait and self._updating:
@@ -161,7 +165,9 @@ class FileService(Service):
         if force or self.is_outdated:
             if not await self.update(wait, timeout):
                 return None
-        return self._extract(station)
+        with self._file.open() as fin:
+            report = self._extract(station, fin)
+        return report
 
 
 class NOAA_Forecast(FileService):
@@ -172,23 +178,22 @@ class NOAA_Forecast(FileService):
     def _index_target(self, station: str) -> Tuple[str]:
         raise NotImplementedError()
 
-    def _extract(self, station: str) -> Optional[str]:
+    def _extract(self, station: str, source: TextIO) -> Optional[str]:
         """
         Returns report pulled from the saved file
         """
         start, end = self._index_target(station)
-        with self._file.open() as fin:
-            txt = fin.read()
-            txt = txt[txt.find(start) :]
-            txt = txt[: txt.find(end, 30)]
-            lines = []
-            for line in txt.split("\n"):
-                if "CLIMO" not in line:
-                    line = line.strip()
-                if not line:
-                    break
-                lines.append(line)
-            return "\n".join(lines) or None
+        txt = source.read()
+        txt = txt[txt.find(start) :]
+        txt = txt[: txt.find(end, 30)]
+        lines = []
+        for line in txt.split("\n"):
+            if "CLIMO" not in line:
+                line = line.strip()
+            if not line:
+                break
+            lines.append(line)
+        return "\n".join(lines) or None
 
 
 class NOAA_NBM(NOAA_Forecast):
@@ -218,7 +223,7 @@ class NOAA_NBM(NOAA_Forecast):
 
 class NOAA_GFS(NOAA_Forecast):
     """
-    Requests forecast data from NOAA NBM FTP servers
+    Requests forecast data from NOAA GFS FTP servers
     """
 
     url = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfsmos.{}/mdl_gfs{}.t{}z"

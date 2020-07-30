@@ -33,7 +33,7 @@ class TestScrapeService(BaseTestService):
             return
         # pylint: disable=no-member.pointless-statement
         with self.assertRaises(NotImplementedError):
-            self.serv._extract(None)
+            self.serv._extract(None, None)
         with self.assertRaises(NotImplementedError):
             self.serv._urls
 

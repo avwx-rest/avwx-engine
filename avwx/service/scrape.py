@@ -37,7 +37,7 @@ class ScrapeService(Service):
         msg = f"Could not find {key} in {self.__class__.__name__} response\n"
         return InvalidRequest(msg + body)
 
-    def _make_url(self, station: str, lat: float, lon: float) -> Tuple[str, dict]:
+    def _make_url(self, station: str) -> Tuple[str, dict]:
         """
         Returns a formatted URL and parameters
         """
@@ -67,33 +67,7 @@ class ScrapeService(Service):
             return dedupe(" ".join(r.split()) for r in report)
         return " ".join(report.split())
 
-    def fetch(
-        self,
-        station: str = None,
-        lat: float = None,
-        lon: float = None,
-        timeout: int = 10,
-    ) -> str:
-        """
-        Fetches a report string from the service
-        """
-        return aio.run(self.async_fetch(station, lat, lon, timeout))
-
-    async def async_fetch(
-        self,
-        station: str = None,
-        lat: float = None,
-        lon: float = None,
-        timeout: int = 10,
-    ) -> str:
-        """
-        Asynchronously fetch a report string from the service
-        """
-        if station:
-            valid_station(station)
-        elif lat is None or lon is None:
-            raise ValueError("No valid fetch parameters")
-        url, params = self._make_url(station, lat, lon)
+    async def __fetch(self, station: str, url: str, params: dict, timeout: int) -> str:
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:
                 if self.method.lower() == "post":
@@ -114,6 +88,20 @@ class ScrapeService(Service):
             )
         report = self._extract(resp.text, station)
         return self._clean_report(report)
+
+    def fetch(self, station: str, timeout: int = 10,) -> str:
+        """
+        Fetches a report string from the service
+        """
+        return aio.run(self.async_fetch(station, timeout))
+
+    async def async_fetch(self, station: str, timeout: int = 10) -> str:
+        """
+        Asynchronously fetch a report string from the service
+        """
+        valid_station(station)
+        url, params = self._make_url(station)
+        return await self.__fetch(station, url, params, timeout)
 
 
 # Multiple sources for NOAA data
@@ -179,6 +167,35 @@ class NOAA_ADDS(ScrapeService):
             raise self._make_err(raw, '"raw_text"')
         return ret
 
+    def fetch(
+        self,
+        station: str = None,
+        lat: float = None,
+        lon: float = None,
+        timeout: int = 10,
+    ) -> str:
+        """
+        Fetches a report string from the service
+        """
+        return aio.run(self.async_fetch(station, lat, lon, timeout))
+
+    async def async_fetch(
+        self,
+        station: str = None,
+        lat: float = None,
+        lon: float = None,
+        timeout: int = 10,
+    ) -> str:
+        """
+        Asynchronously fetch a report string from the service
+        """
+        if station:
+            valid_station(station)
+        elif lat is None or lon is None:
+            raise ValueError("No valid fetch parameters")
+        url, params = self._make_url(station, lat, lon)
+        return await self.__fetch(station, url, params, timeout)
+
 
 class NOAA_FTP(ScrapeService):
     """
@@ -187,7 +204,7 @@ class NOAA_FTP(ScrapeService):
 
     url = "https://tgftp.nws.noaa.gov/data/{}/{}/stations/{}.TXT"
 
-    def _make_url(self, station: str, *_, **__) -> Tuple[str, dict]:
+    def _make_url(self, station: str) -> Tuple[str, dict]:
         """
         Returns a formatted URL and parameters
         """
@@ -209,7 +226,7 @@ class NOAA_Scrape(ScrapeService):
 
     url = "https://aviationweather.gov/{}/data"
 
-    def _make_url(self, station: str, *_, **__) -> Tuple[str, dict]:
+    def _make_url(self, station: str) -> Tuple[str, dict]:
         """
         Returns a formatted URL and parameters
         """
@@ -231,10 +248,7 @@ class NOAA_Scrape(ScrapeService):
         return raw
 
 
-class NOAA(NOAA_Scrape):
-    """
-    Request data from NOAA as the default provider
-    """
+NOAA = NOAA_Scrape
 
 
 # Regional data sources
@@ -247,7 +261,7 @@ class AMO(ScrapeService):
 
     url = "http://amoapi.kma.go.kr/amoApi/{}"
 
-    def _make_url(self, station: str, *_, **__) -> Tuple[str, dict]:
+    def _make_url(self, station: str) -> Tuple[str, dict]:
         """
         Returns a formatted URL and parameters
         """
@@ -285,7 +299,7 @@ class MAC(ScrapeService):
     url = "http://meteorologia.aerocivil.gov.co/expert_text_query/parse"
     method = "POST"
 
-    def _make_url(self, station: str, *_, **__) -> Tuple[str, dict]:
+    def _make_url(self, station: str) -> Tuple[str, dict]:
         """
         Returns a formatted URL and parameters
         """
@@ -308,7 +322,7 @@ class AUBOM(ScrapeService):
     url = "http://www.bom.gov.au/aviation/php/process.php"
     method = "POST"
 
-    def _make_url(self, *_, **__) -> Tuple[str, dict]:
+    def _make_url(self, _) -> Tuple[str, dict]:
         """
         Returns a formatted URL and empty parameters
         """
