@@ -42,7 +42,7 @@ True
 'Vis 7km, Light Rain, Scattered clouds at 2000ft, Frequent moderate turbulence in clear air from 8000ft to 12000ft, Moderate icing in clouds from 1000ft to 5000ft'
 ```
 
-#### **async_update**(*timeout: int = 10*) -> *bool*
+#### async **async_update**(*timeout: int = 10*) -> *bool*
 
 Async updates report data by fetching and parsing the report
 

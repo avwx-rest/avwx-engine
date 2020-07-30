@@ -41,7 +41,7 @@ datetime.datetime(2018, 3, 4, 23, 54, 4, 353757)
 'Winds N-360 (variable 320 to 040) at 24kt gusting to 55kt, Vis 0.125sm, Temp 14C, Dew 10C, Alt 29.78inHg, Heavy Thunderstorm, Vicinity Funnel Cloud, Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft'
 ```
 
-#### **async_update**(*timeout: int = 10*) -> *bool*
+#### async **async_update**(*timeout: int = 10*) -> *bool*
 
 Async updates report data by fetching and parsing the report
 

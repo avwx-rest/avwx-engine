@@ -55,7 +55,7 @@ Number(repr='25', value=250, spoken='two five zero')
 
 The `parse` and `from_report` methods can parse a report string if you want to override the normal fetching process.
 
-#### **async_update**(*timeout: int = 10*) -> *bool*
+#### async **async_update**(*timeout: int = 10*) -> *bool*
 
 Async updates report data by fetching and parsing the report
 
