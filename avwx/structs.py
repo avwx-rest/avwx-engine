@@ -314,13 +314,13 @@ class NbmUnits(Units):
 @dataclass
 class NbmPeriod:
     time: Timestamp
-    temperature: Number
-    dewpoint: Number
-    sky_cover: Number
-    wind_direction: Number
-    wind_speed: Number
-    wind_gust: Number
-    snow_level: Number
+    temperature: Number = None
+    dewpoint: Number = None
+    sky_cover: Number = None
+    wind_direction: Number = None
+    wind_speed: Number = None
+    wind_gust: Number = None
+    snow_level: Number = None
     precip_duration: Number = None
     freezing_precip: Number = None
     snow: Number = None

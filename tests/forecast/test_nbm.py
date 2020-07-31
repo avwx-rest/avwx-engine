@@ -29,6 +29,23 @@ class TestNbm(ForecastBase):
             else:
                 self.assert_number(number, *expected)
 
+    def test_wind(self):
+        """
+        Tests that a line is converted into wind-specific Numbers
+        """
+        line = "GST  12 NG    45"
+        values = [
+            ("12", 12, "one two"),
+            ("NG", 0, "zero"),
+            None,
+            ("45", 45, "four five"),
+        ]
+        for number, expected in zip(nbm._wind(line), values):
+            if expected is None:
+                self.assertIsNone(number)
+            else:
+                self.assert_number(number, *expected)
+
     def test_nbh_ete(self):
         """
         Performs an end-to-end test of all NBH JSON files

@@ -33,17 +33,25 @@ UNITS = {
 }
 
 
-_CEILING_SPECIAL = {
+_CEILING = {
     # 888 is code but processed as 88800 due to postfix
     "88800": (None, "unlimited")
 }
+_WIND = {"NG": (0, "zero")}
 
 
 def _ceiling(line: str, size: int = 3) -> List[structs.Number]:
     """
     Parse line into Number objects handling ceiling special units
     """
-    return _numbers(line, size, postfix="00", special=_CEILING_SPECIAL)
+    return _numbers(line, size, postfix="00", special=_CEILING)
+
+
+def _wind(line: str, size: int = 3) -> List[structs.Number]:
+    """
+    Parse line into Number objects handling wind special units
+    """
+    return _numbers(line, size, special=_WIND)
 
 
 _HANDLERS = {
@@ -51,8 +59,8 @@ _HANDLERS = {
     "DPT": ("dewpoint", _numbers),
     "SKY": ("sky_cover", _numbers),
     "WDR": ("wind_direction", _direction),
-    "WSP": ("wind_speed", _numbers),
-    "GST": ("wind_gust", _numbers),
+    "WSP": ("wind_speed", _wind),
+    "GST": ("wind_gust", _wind),
     "DUR": ("precip_duration", _numbers),
     "PZR": ("freezing_precip", _numbers),
     "PSN": ("snow", _numbers),
