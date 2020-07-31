@@ -314,65 +314,65 @@ class NbmUnits(Units):
 @dataclass
 class NbmPeriod:
     time: Timestamp
-    temperature: Number = None
-    dewpoint: Number = None
-    sky_cover: Number = None
-    wind_direction: Number = None
-    wind_speed: Number = None
-    wind_gust: Number = None
-    snow_level: Number = None
-    precip_duration: Number = None
-    freezing_precip: Number = None
-    snow: Number = None
-    sleet: Number = None
-    rain: Number = None
-    solar_radiation: Number = None
-    wave_height: Number = None
+    temperature: Optional[Number] = None
+    dewpoint: Optional[Number] = None
+    sky_cover: Optional[Number] = None
+    wind_direction: Optional[Number] = None
+    wind_speed: Optional[Number] = None
+    wind_gust: Optional[Number] = None
+    snow_level: Optional[Number] = None
+    precip_duration: Optional[Number] = None
+    freezing_precip: Optional[Number] = None
+    snow: Optional[Number] = None
+    sleet: Optional[Number] = None
+    rain: Optional[Number] = None
+    solar_radiation: Optional[Number] = None
+    wave_height: Optional[Number] = None
 
 
 @dataclass
 class NbhsShared(NbmPeriod):
-    ceiling: Number = None
-    visibility: Number = None
-    cloud_base: Number = None
-    mixing_height: Number = None
-    transport_wind_direction: Number = None
-    transport_wind_speed: Number = None
+    ceiling: Optional[Number] = None
+    visibility: Optional[Number] = None
+    cloud_base: Optional[Number] = None
+    mixing_height: Optional[Number] = None
+    transport_wind_direction: Optional[Number] = None
+    transport_wind_speed: Optional[Number] = None
     haines: List[Number] = None
 
 
 @dataclass
 class NbhPeriod(NbhsShared):
-    precip_chance_1: Number = None
-    precip_chance_6: Number = None
-    precip_amount_1: Number = None
-    thunderstorm_1: Number = None
-    snow_amount_1: Number = None
-    icing_amount_1: Number = None
+    precip_chance_1: Optional[Number] = None
+    precip_chance_6: Optional[Number] = None
+    precip_amount_1: Optional[Number] = None
+    thunderstorm_1: Optional[Number] = None
+    snow_amount_1: Optional[Number] = None
+    icing_amount_1: Optional[Number] = None
 
 
 @dataclass
 class NbsPeriod(NbhsShared):
-    precip_chance_6: Number = None
-    precip_chance_12: Number = None
-    precip_amount_6: Number = None
-    precip_amount_12: Number = None
-    precip_duration: Number = None
-    thunderstorm_3: Number = None
-    thunderstorm_12: Number = None
-    snow_amount_6: Number = None
-    icing_amount_6: Number = None
+    precip_chance_6: Optional[Number] = None
+    precip_chance_12: Optional[Number] = None
+    precip_amount_6: Optional[Number] = None
+    precip_amount_12: Optional[Number] = None
+    precip_duration: Optional[Number] = None
+    thunderstorm_3: Optional[Number] = None
+    thunderstorm_12: Optional[Number] = None
+    snow_amount_6: Optional[Number] = None
+    icing_amount_6: Optional[Number] = None
 
 
 @dataclass
 class NbePeriod(NbmPeriod):
-    precip_chance_12: Number = None
-    precip_amount_12: Number = None
-    precip_amount_24: Number = None
-    thunderstorm_12: Number = None
-    snow_amount_12: Number = None
-    snow_amount_24: Number = None
-    icing_amount_12: Number = None
+    precip_chance_12: Optional[Number] = None
+    precip_amount_12: Optional[Number] = None
+    precip_amount_24: Optional[Number] = None
+    thunderstorm_12: Optional[Number] = None
+    snow_amount_12: Optional[Number] = None
+    snow_amount_24: Optional[Number] = None
+    icing_amount_12: Optional[Number] = None
 
 
 @dataclass

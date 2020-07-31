@@ -4,7 +4,7 @@ avwx Package Setup
 
 from setuptools import find_namespace_packages, setup
 
-VERSION = "1.4.6"
+VERSION = "1.5.0"
 
 dependencies = [
     "geopy~=2.0",
@@ -27,7 +27,7 @@ setup(
     description="Aviation weather report parsing library",
     url="https://github.com/avwx-rest/avwx-engine",
     author="Michael duPont",
-    author_email="michael@mdupont.com",
+    author_email="michael@dupont.dev",
     license="MIT",
     classifiers=[
         "Programming Language :: Python :: 3",

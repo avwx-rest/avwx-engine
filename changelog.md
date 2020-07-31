@@ -2,9 +2,16 @@
 
 Parsing and sanitization improvements are always ongoing and non-breaking
 
+## 1.5
+
+- Added NBM `Nbh`, `Nbs`, and `Nbe` report classes
+- Added `ScrapeService`, `FileService`, and `NOAA_NBM` service classes
+- Sub module structure for service
+- Simplified service API when lat, lon are not used
+
 ## 1.4
 
-- Added GFS MOS `Mav` and `Mex` implemented
+- Added GFS MOS `Mav` and `Mex` report classes
 - Added `AVWXBase` and `Code` classes
 - Added station ICAO list as `avwx.station.station_list`
 - Added `transition_start` to `TafLineData`
