@@ -12,6 +12,7 @@ https://www.aviationweather.gov/docs/metar/stations.txt
 import csv
 import json
 from pathlib import Path
+from typing import List
 
 # module
 from find_bad_stations import BAD_PATH, GOOD_PATH, load_stations
@@ -64,7 +65,7 @@ def clean_source_file():
         fout.write(text)
 
 
-def format_station(station: [str]) -> dict:
+def format_station(station: List[str]) -> dict:
     """
     Converts source station list into info dict
     """

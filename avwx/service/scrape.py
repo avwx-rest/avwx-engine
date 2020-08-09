@@ -67,7 +67,7 @@ class ScrapeService(Service):
             return dedupe(" ".join(r.split()) for r in report)
         return " ".join(report.split())
 
-    async def __fetch(self, station: str, url: str, params: dict, timeout: int) -> str:
+    async def _fetch(self, station: str, url: str, params: dict, timeout: int) -> str:
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:
                 if self.method.lower() == "post":
@@ -101,7 +101,7 @@ class ScrapeService(Service):
         """
         valid_station(station)
         url, params = self._make_url(station)
-        return await self.__fetch(station, url, params, timeout)
+        return await self._fetch(station, url, params, timeout)
 
 
 # Multiple sources for NOAA data
@@ -194,7 +194,7 @@ class NOAA_ADDS(ScrapeService):
         elif lat is None or lon is None:
             raise ValueError("No valid fetch parameters")
         url, params = self._make_url(station, lat, lon)
-        return await self.__fetch(station, url, params, timeout)
+        return await self._fetch(station, url, params, timeout)
 
 
 class NOAA_FTP(ScrapeService):
