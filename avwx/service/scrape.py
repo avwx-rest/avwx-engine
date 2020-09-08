@@ -10,6 +10,7 @@ from socket import gaierror
 from typing import List, Tuple, Union
 
 # library
+import httpcore
 import httpx
 from xmltodict import parse as parsexml
 
@@ -80,11 +81,15 @@ class ScrapeService(Service):
                     raise SourceError(
                         f"{self.__class__.__name__} server returned {resp.status_code}"
                     )
-        except (httpx.ConnectTimeout, httpx.ReadTimeout):
+        except (httpx.ConnectTimeout, httpx.ReadTimeout, httpcore.ReadTimeout):
             raise TimeoutError(f"Timeout from {self.__class__.__name__} server")
-        except gaierror:
+        except (gaierror, httpcore.ConnectError):
             raise ConnectionError(
                 f"Unable to connect to {self.__class__.__name__} server"
+            )
+        except httpcore.NetworkError:
+            raise ConnectionError(
+                f"Unable to read data from {self.__class__.__name__} server"
             )
         report = self._extract(resp.text, station)
         return self._clean_report(report)

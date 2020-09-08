@@ -45,6 +45,8 @@ STR_REPL = {
     # "Z/ ": "Z ", NOTE: Too broad re pirep
     "KKT ": "KT ",
     "KLT ": "KT ",
+    "TKT ": "KT ",
+    " TMM": " TNM",
     "CALMKT ": "CALM ",
     "N0SIG": "NOSIG",
     " <1/": " M1/",  # <1/4SM <1/8SM
