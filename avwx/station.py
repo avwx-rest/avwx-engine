@@ -5,6 +5,7 @@ Station handling and search
 # pylint: disable=invalid-name,too-many-arguments
 
 # stdlib
+from contextlib import suppress
 from copy import copy
 from dataclasses import dataclass
 from functools import lru_cache
@@ -19,10 +20,8 @@ from avwx.static.core import IN_REGIONS, M_IN_REGIONS, M_NA_REGIONS, NA_REGIONS
 from avwx.structs import _LazyLoad
 
 # We catch this import error only if user attempts coord lookup
-try:
+with suppress(ModuleNotFoundError):
     from scipy.spatial import KDTree
-except ModuleNotFoundError:
-    pass
 
 
 __LAST_UPDATED__ = "2020-09-07"

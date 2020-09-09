@@ -9,6 +9,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
 from time import sleep
+from typing import List
 
 # module
 import avwx
@@ -17,11 +18,11 @@ GOOD_PATH = Path("data", "good_stations.txt")
 BAD_PATH = Path("data", "bad_stations.txt")
 
 
-def load_stations(path: Path) -> [str]:
+def load_stations(path: Path) -> List[str]:
     return path.read_text().strip().split(",")
 
 
-def save_stations(data: [str], path: Path):
+def save_stations(data: List[str], path: Path):
     path.write_text(",".join(sorted(set(data))))
 
 
@@ -72,7 +73,6 @@ async def worker(queue: aio.Queue):
             print()
             print(exc)
             print(icao)
-            print(m.raw)
             print()
         finally:
             queue.task_done()

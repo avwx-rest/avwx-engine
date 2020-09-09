@@ -5,6 +5,7 @@ Parsing for NOAA NBM forecasts
 # Reference: https://www.weather.gov/mdl/nbm_textcard_v32
 
 # stdlib
+from contextlib import suppress
 from typing import Callable, Dict, List, Tuple
 
 # module
@@ -108,10 +109,8 @@ def _parse_factory(
         """
         Returns response key(s) and value handler for a line key
         """
-        try:
+        with suppress(KeyError):
             return handlers[key]
-        except KeyError:
-            pass
         if not key[1:].isdigit():
             raise KeyError
         root, handler = _HOUR_HANDLERS[key[0]]

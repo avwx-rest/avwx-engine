@@ -4,6 +4,7 @@ Report parent classes
 
 # stdlib
 from abc import ABCMeta, abstractmethod
+from contextlib import suppress
 from datetime import date, datetime, timezone
 from typing import List, Optional, Union
 
@@ -20,10 +21,8 @@ def find_station(report: str) -> Station:
     """
     for item in report.split():
         if len(item) == 4:
-            try:
+            with suppress(BadStation):
                 return Station.from_icao(item.upper())
-            except BadStation:
-                pass
     return None
 
 
@@ -86,10 +85,8 @@ class AVWXBase(metaclass=ABCMeta):
         Update timestamps after parsing
         """
         self.last_updated = datetime.now(tz=timezone.utc)
-        try:
+        with suppress(AttributeError):
             self.issued = self.data.time.dt.date()
-        except AttributeError:
-            pass
 
     def _update(
         self, report: Union[str, List[str]], issued: Optional[date], disable_post: bool

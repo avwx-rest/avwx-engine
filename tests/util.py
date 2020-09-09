@@ -7,6 +7,7 @@ Testing utilities
 # stdlib
 import json
 import unittest
+from contextlib import suppress
 from datetime import datetime
 from pathlib import Path
 from typing import Iterator
@@ -79,12 +80,8 @@ def datetime_parser(data: dict) -> dict:
     for key, val in data.items():
         if isinstance(val, str):
             if "+00:00" in val:
-                try:
+                with suppress(ValueError):
                     data[key] = datetime.fromisoformat(val)
-                except ValueError:
-                    pass
-            try:
+            with suppress(ValueError):
                 data[key] = datetime.strptime(val, r"%Y-%m-%d")
-            except ValueError:
-                pass
     return data
