@@ -43,6 +43,7 @@ STR_REPL = {
     " 0I0": " 090",
     " PROBB": " PROB",
     # "Z/ ": "Z ", NOTE: Too broad re pirep
+    "KTKT ": "KT ",
     "KKT ": "KT ",
     "KLT ": "KT ",
     "TKT ": "KT ",
