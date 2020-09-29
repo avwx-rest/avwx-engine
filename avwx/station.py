@@ -24,7 +24,7 @@ with suppress(ModuleNotFoundError):
     from scipy.spatial import KDTree
 
 
-__LAST_UPDATED__ = "2020-09-19"
+__LAST_UPDATED__ = "2020-09-29"
 
 # Lazy data loading to speed up import times for unused features
 _STATIONS = _LazyLoad("stations")

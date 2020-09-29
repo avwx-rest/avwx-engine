@@ -154,6 +154,9 @@ def get_surface_type(surface: str) -> str:
             return key
 
 
+ICAO_REPLACE = {"RMU": "LEMI"}
+
+
 def add_runways(stations: dict) -> dict:
     """
     Add runway information to station if availabale
@@ -173,6 +176,7 @@ def add_runways(stations: dict) -> dict:
             "ident2": runway[14],
         }
         icao = runway[2]
+        icao = ICAO_REPLACE.get(icao, icao)
         if icao in stations:
             if "runways" in stations[icao]:
                 stations[icao]["runways"].append(data)

@@ -1,5 +1,5 @@
 geopy~=2.0
-httpx~=0.14
+httpx~=0.15
 mkdocs~=1.1
 nox==2020.8.22
 pre-commit~=2.7
