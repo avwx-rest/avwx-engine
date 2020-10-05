@@ -24,7 +24,7 @@ with suppress(ModuleNotFoundError):
     from scipy.spatial import KDTree
 
 
-__LAST_UPDATED__ = "2020-09-29"
+__LAST_UPDATED__ = "2020-10-04"
 
 # Lazy data loading to speed up import times for unused features
 _STATIONS = _LazyLoad("stations")
@@ -117,6 +117,8 @@ class Runway:
     lights: bool
     ident1: str
     ident2: str
+    bearing1: float
+    bearing2: float
 
 
 T = TypeVar("T", bound="Station")

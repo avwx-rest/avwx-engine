@@ -47,6 +47,7 @@ STR_REPL = {
     "KKT ": "KT ",
     "KLT ": "KT ",
     "TKT ": "KT ",
+    "GKT ": "KT ",
     " TMM": " TNM",
     "CALMKT ": "CALM ",
     "N0SIG": "NOSIG",

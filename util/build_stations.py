@@ -174,6 +174,8 @@ def add_runways(stations: dict) -> dict:
             "lights": runway[6] == "1",
             "ident1": runway[8],
             "ident2": runway[14],
+            "bearing1": float(runway[12]) if runway[12] else None,
+            "bearing2": float(runway[18]) if runway[18] else None,
         }
         icao = runway[2]
         icao = ICAO_REPLACE.get(icao, icao)
