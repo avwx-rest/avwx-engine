@@ -376,7 +376,8 @@ def parse_lines(
                 parsed_line[key] = core.make_timestamp(
                     parsed_line[key], target_date=issued
                 )
-            parsed_line["probability"] = core.make_number(prob[4:])
+            prob_percent = None if " " in prob else core.make_number(prob[4:])
+            parsed_line["probability"] = prob_percent
             parsed_line["raw"] = raw_line
             if prob:
                 parsed_line["sanitized"] = prob + " " + parsed_line["sanitized"]

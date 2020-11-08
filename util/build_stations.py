@@ -12,7 +12,7 @@ https://www.aviationweather.gov/docs/metar/stations.txt
 import csv
 import json
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 # module
 from find_bad_stations import BAD_PATH, GOOD_PATH, load_stations
@@ -36,9 +36,7 @@ ACCEPTED_STATION_TYPES = [
 
 
 def nullify(data: dict) -> dict:
-    """
-    Nullify empty strings in a dict
-    """
+    """Nullify empty strings in a dict"""
     for key, val in data.items():
         if isinstance(val, str) and not val.strip():
             data[key] = None
@@ -46,29 +44,37 @@ def nullify(data: dict) -> dict:
 
 
 def format_coord(coord: str) -> float:
-    """
-    Convert coord string to float
-    """
+    """Convert coord string to float"""
     neg = -1 if coord[-1] in ("S", "W") else 1
     return neg * float(coord[:-1].strip().replace(" ", "."))
+
+
+def validate_icao(code: str) -> Optional[str]:
+    """Validates a given station ident"""
+    if len(code) != 4:
+        return None
+    return code.upper()
+
+
+def get_icao(station: List[str]) -> Optional[str]:
+    """Finds the ICAO by checking ident and GPS code"""
+    return validate_icao(station[1]) or validate_icao(station[12])
 
 
 def clean_source_file():
     """
     Cleans the source data files before parsing
     """
-    with AIRPORT_PATH.open("r") as fin:
+    with AIRPORT_PATH.open("r", encoding="utf8") as fin:
         text = fin.read()
     for find, replace in FILE_REPLACE.items():
         text = text.replace(find, replace)
-    with AIRPORT_PATH.open("w") as fout:
+    with AIRPORT_PATH.open("w", encoding="utf8") as fout:
         fout.write(text)
 
 
-def format_station(station: List[str]) -> dict:
-    """
-    Converts source station list into info dict
-    """
+def format_station(icao: str, station: List[str]) -> dict:
+    """Converts source station list into info dict"""
     try:
         elev_ft = float(station[6])
         elev_m = round(elev_ft * 0.3048)
@@ -87,7 +93,7 @@ def format_station(station: List[str]) -> dict:
         "country": station[9][:iloc],
         "state": station[9][iloc + 1 :],
         "city": station[10],
-        "icao": station[12].upper(),
+        "icao": icao,
         "iata": station[13].upper(),
         "website": station[15],
         "wiki": station[16],
@@ -97,26 +103,20 @@ def format_station(station: List[str]) -> dict:
 
 
 def build_stations() -> dict:
-    """
-    Builds the station dict from source file
-    """
+    """Builds the station dict from source file"""
     stations = {}
-    data = csv.reader(AIRPORT_PATH.open())
+    data = csv.reader(AIRPORT_PATH.open(encoding="utf8"))
     next(data)  # Skip header
     for station in data:
-        icao = station[12].upper()
-        if len(icao) != 4:
-            continue
-        if station[2] in ACCEPTED_STATION_TYPES:
-            stations[icao] = format_station(station)
+        icao = get_icao(station)
+        if icao and station[2] in ACCEPTED_STATION_TYPES:
+            stations[icao] = format_station(icao, station)
     return stations
 
 
 def add_missing_stations(stations: dict) -> dict:
-    """
-    Add non-airport stations from NOAA
-    """
-    for line in STATION_PATH.open().readlines():
+    """Add non-airport stations from NOAA"""
+    for line in STATION_PATH.open(encoding="utf8").readlines():
         # Must be data line with METAR reporting
         if len(line) != 84 or line[0] == "!" or line[62] != "X":
             continue
@@ -146,9 +146,7 @@ def add_missing_stations(stations: dict) -> dict:
 
 
 def get_surface_type(surface: str) -> str:
-    """
-    Returns the normalize surface type value
-    """
+    """Returns the normalize surface type value"""
     for key, items in SURFACE_TYPES.items():
         if surface in items:
             return key
@@ -158,10 +156,8 @@ ICAO_REPLACE = {"RMU": "LEMI"}
 
 
 def add_runways(stations: dict) -> dict:
-    """
-    Add runway information to station if availabale
-    """
-    data = csv.reader(RUNWAY_PATH.open())
+    """Add runway information to station if availabale"""
+    data = csv.reader(RUNWAY_PATH.open(encoding="utf8"))
     next(data)  # Skip header
     for runway in data:
         # if runway is closed
@@ -194,9 +190,7 @@ def add_runways(stations: dict) -> dict:
 
 
 def add_reporting(stations: dict) -> dict:
-    """
-    Add reporting boolean to station if available
-    """
+    """Add reporting boolean to station if available"""
     good = load_stations(GOOD_PATH)
     bad = load_stations(BAD_PATH)
     for icao in stations:
@@ -209,16 +203,18 @@ def add_reporting(stations: dict) -> dict:
 
 
 def main() -> int:
-    """
-    Build/update the stations.json master file
-    """
+    """Build/update the stations.json master file"""
     clean_source_file()
     stations = build_stations()
     stations = add_missing_stations(stations)
     stations = add_reporting(stations)
     stations = add_runways(stations)
     json.dump(
-        stations, OUTPUT_PATH.open("w"), sort_keys=True, indent=2, ensure_ascii=False
+        stations,
+        OUTPUT_PATH.open("w", encoding="utf8"),
+        sort_keys=True,
+        indent=2,
+        ensure_ascii=False,
     )
     return 0
 

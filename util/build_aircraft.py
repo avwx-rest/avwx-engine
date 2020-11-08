@@ -10,19 +10,17 @@ import json
 from pathlib import Path
 
 AIRCRAFT_PATH = Path("data", "aircraft.tsv")
-OUTPUT_PATH = Path("..", "avwx", "aircraft.json")
+OUTPUT_PATH = Path("..", "avwx", "data", "aircraft.json")
 
 
 def main() -> int:
-    """
-    Builds/updates aircraft.json codes
-    """
+    """Builds/updates aircraft.json codes"""
     craft = {}
-    for line in AIRCRAFT_PATH.open().readlines():
+    for line in AIRCRAFT_PATH.open(encoding="utf8").readlines():
         code, _, name = line.strip().split("\t")
         if code not in craft:
             craft[code] = name
-    json.dump(craft, OUTPUT_PATH.open("w"))
+    json.dump(craft, OUTPUT_PATH.open("w", encoding="utf8"))
     return 0
 
 

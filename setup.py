@@ -4,11 +4,11 @@ avwx Package Setup
 
 from setuptools import find_namespace_packages, setup
 
-VERSION = "1.5.5"
+VERSION = "1.5.6"
 
 dependencies = [
     "geopy~=2.0",
-    "httpx~=0.15",
+    "httpx~=0.16",
     "python-dateutil~=2.8",
     "xmltodict~=0.12",
 ]
@@ -33,6 +33,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "License :: OSI Approved :: MIT License",
     ],
     python_requires=">= 3.7",

@@ -36,6 +36,7 @@ STR_REPL = {
     " VGB": " VRB",
     " VRC": " VRB",
     " WBB": " VRB",
+    " NRB": " VRB",
     " VR0": " VRB0",
     " VB0": " VRB0",
     " RB0": " VRB0",

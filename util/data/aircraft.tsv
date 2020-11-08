@@ -4,13 +4,13 @@ A148	A81	Antonov An-148
 A158	A58	Antonov An-158
 A19N	31N	Airbus A319neo
 A20N	32N	Airbus A320neo
+A210	N/A	Aquila A 210
 A21N	32Q	Airbus A321neo
-A225	A25	Antonov An-225 Mriya
-A30B	AB3	Airbus A300B1
-A30B	AB4	Airbus A300B2, A300B4, and A300C4
+A225	A5F	Antonov An-225 Mriya
 A306	AB6	Airbus A300-600
-A3ST	ABB	Airbus A300-600ST "Super Transporter" / "Beluga"
-A310	310	Airbus A310
+A30B	AB4	Airbus A300B2, A300B4, and A300C4
+A310	312	Airbus A310-200
+A310	313	Airbus A310-300
 A318	318	Airbus A318
 A318	32C	Airbus A318 (sharklets)
 A319	319	Airbus A319
@@ -31,11 +31,15 @@ A346	346	Airbus A340-600
 A359	359	Airbus A350-900
 A35K	351	Airbus A350-1000
 A388	388	Airbus A380-800
+A3ST	ABB	Airbus A300-600ST "Super Transporter" / "Beluga"
+A400		Airbus A400M Atlas
 A5	N/A	ICON A5
 A748	HS7	Hawker Siddeley HS 748
 AC68	ACP	Gulfstream/Rockwell (Aero) Commander
 AC90	ACT	Gulfstream/Rockwell (Aero) Turbo Commander
+AJ27	C27	COMAC ARJ21
 AN12	ANF	Antonov AN-12
+AN2	N/A	Antonov An-2
 AN24	AN4	Antonov AN-24
 AN26	A26	Antonov AN-26
 AN28	A28	Antonov AN-28
@@ -57,12 +61,12 @@ ATP	ATP	British Aerospace ATP
 B105	MBH	Eurocopter (MBB) Bo.105
 B190	BEH	Beechcraft 1900
 B212	BH2	Bell 212
-B412	BH2	Bell 412
-B429	BH2	Bell 429
 B37M	7M7	Boeing 737 MAX 7
 B38M	7M8	Boeing 737 MAX 8
 B39M	7M9	Boeing 737 MAX 9
-[to be determined]	7MJ	Boeing 737 MAX 10
+B3XM	7MJ	Boeing 737 MAX 10
+B412	BH2	Bell 412
+B429	BH2	Bell 429
 B461	141	BAe 146-100
 B462	142	BAe 146-200
 B463	143	BAe 146-300
@@ -102,20 +106,22 @@ B762	762	Boeing 767-200
 B763	763	Boeing 767-300
 B764	764	Boeing 767-400ER
 B772	772	Boeing 777-200 / Boeing 777-200ER
-B77L	77F	Boeing 777F
-B77L	77L	Boeing 777-200LR
 B773	773	Boeing 777-300
-B77W	77W	Boeing 777-300ER
 B778	778	Boeing 777-8
 B779	779	Boeing 777-9
+B77L	77X	Boeing 777-200 Freighter
+B77L	77L	Boeing 777-200LR
+B77W	77W	Boeing 777-300ER
 B788	788	Boeing 787-8
 B789	789	Boeing 787-9
 B78X	781	Boeing 787-10
 BA11	B11	British Aerospace (BAC) One Eleven
-BCS1	CS1	Airbus A220-100
-BCS3	CS3	Airbus A220-300
+BCS1	221	Airbus A220-100
+BCS3	223	Airbus A220-300
+BE40	N/A	Hawker 400
 BE55	N/A	Beechcraft Baron / 55 Baron
 BE58	N/A	Beechcraft Baron / 58 Baron
+BE99		Beechcraft Model 99
 BELF	SHB	Shorts SC-5 Belfast
 BER2	N/A	Beriev Be-200 Altair
 BL8	N/A	8KCAB Decathlon, 8GCBC Scout
@@ -125,8 +131,6 @@ C130	LOH	Lockheed L-182 / 282 / 382 (L-100) Hercules
 C152	N/A	Cessna 152
 C162	CN1	Cessna 162
 C172	CN1	Cessna 172
-C72R	CN1	Cessna 172 Cutlass RG
-C77R	CN1	Cessna 177 Cardinal RG
 C182	CN1	Cessna 182 Skylane
 C206	CN1	Cessna 206 Stationair
 C208	CN1	Cessna 208 Caravan
@@ -135,6 +139,8 @@ C212	CS2	CASA / IPTN 212 Aviocar
 C25A	CNJ	Cessna Citation CJ2
 C25B	CNJ	Cessna Citation CJ3
 C25C	CNJ	Cessna Citation CJ4
+C30J	LOH	Lockheed Martin C-130J Hercules
+C310	N/A	Cessna 310
 C46	CWC	Curtiss C-46 Commando
 C500	CNJ	Cessna Citation I
 C510	CNJ	Cessna Citation Mustang
@@ -144,7 +150,9 @@ C560	CNJ	Cessna Citation V
 C56X	CNJ	Cessna Citation Excel
 C650	CNJ	Cessna Citation III, VI, VII
 C680	CNJ	Cessna Citation Sovereign
+C72R	CN1	Cessna 172 Cutlass RG
 C750	CNJ	Cessna Citation X
+C77R	CN1	Cessna 177 Cardinal RG
 C919	N/A	COMAC C919
 CH7A	N/A	7AC Champ, 7ECA Citabria
 CH7B	N/A	7GCAA, 7GCBC, 7KCAB Citabria
@@ -163,7 +171,13 @@ CVLP	CV4	Convair CV-240 & -440
 CVLT	CV5	Convair CV-580, Convair CV-600, Convair CV-640
 D228	D28	Fairchild Dornier Do.228
 D328	D38	Fairchild Dornier Do.328
-DC10	D10	Douglas DC-10
+DA42	N/A	Diamond DA42
+DA62	N/A	Diamond DA62
+DC10	D11	Douglas DC-10-10 / -15 Passenger
+DC10	D1C	Douglas DC-10-30 / -40 Passenger
+DC10	D1M	Douglas DC-10-30 Combi
+DC10	D1X	Douglas DC-10-10 Freighter
+DC10	D1Y	Douglas DC-10-30 / -40 Freighter
 DC3	D3F	Douglas DC-3
 DC6	D6F	Douglas DC-6
 DC85	D8T	Douglas DC-8-50
@@ -194,18 +208,17 @@ E135	ER3	Embraer RJ135
 E135	ERD	Embraer RJ140
 E145	ER4	Embraer RJ145
 E170	E70	Embraer 170
-E75S/L	E75	Embraer 175
-E190	E90	Embraer 190
-E290	290	Embraer E190-E2
+E190	E90	Embraer 190 / Lineage 1000
 E195	E95	Embraer 195
+E290	290	Embraer E190-E2
 E295	295	Embraer E195-E2
 E35L	ER3	Embraer Legacy 600 / Legacy 650
-E545	N/A	Embraer Legacy 450
-E190	E90	Embraer Lineage 1000
 E50P	EP1	Embraer Phenom 100
+E545	N/A	Embraer Legacy 450 / Praetor 500
+E550	N/A	Embraer Legacy 500 / Praetor 600
 E55P	EP3	Embraer Phenom 300
 E75L	E7W	Embraer 175 (long wing)
-E75S	E7W	Embraer 175 (short wing)
+E75S	E75	Embraer 175 (short wing)
 EA30		Airbus A300 (deprecated 1997: code replaced)
 EA31		Airbus A310 (deprecated 1997: code replaced)
 EA32		Airbus A320 (deprecated 1997: code replaced)
@@ -215,7 +228,6 @@ EC20	N/A	Eurocopter EC120 Colibri / Harbin HC120
 EC25	N/A	Eurocopter EC225 Super Puma
 EC35	N/A	Eurocopter EC135 / EC635
 EC45	N/A	Eurocopter EC145
-P212	N/A	Tecnam P2012 Traveller
 ECHO	N/A	Tecnam P92 Echo / P92 Eaglet / P92 SeaSky
 EV97	N/A	EV-97 EuroStar / EV-97 Harmony
 EVSS	N/A	Evektor SportStar
@@ -240,10 +252,11 @@ GLEX	CCX	Bombardier Global Express / Raytheon Sentinel
 GLF4	GJ4	Gulfstream IV
 GLF5	GJ5	Gulfstream V
 GLF6	GJ6	Gulfstream G650
-HERN	DHH	De Havilland DH.114 Heron
+GOLF	N/A	Tecnam P96
 H25B	H25	British Aerospace 125 series / Hawker/Raytheon 700/800/800XP/850/900
 H25C	H25	British Aerospace 125-1000 series / Hawker/Raytheon 1000
 HDJT	N/A	Honda HA-420
+HERN	DHH	De Havilland DH.114 Heron
 I114	I14	Ilyushin IL114
 IL18	IL8	Ilyushin IL18
 IL62	IL6	Ilyushin IL62
@@ -269,26 +282,28 @@ MD83	M83	McDonnell Douglas MD-83
 MD87	M87	McDonnell Douglas MD-87
 MD88	M88	McDonnell Douglas MD-88
 MD90	M90	McDonnell Douglas MD-90
-MI8	MIH	MIL Mi-8 / Mi-17 / Mi-171 / Mil-172
 MI24	N/A	Mil Mi-24 / Mi-25 / Mi-35
+MI8	MIH	MIL Mi-8 / Mi-17 / Mi-171 / Mil-172
 MU2	MU2	Mitsubishi Mu-2
 N262	ND2	Aerospatiale (Nord) 262
 NOMA	CD2	Government Aircraft Factories N22B / N24A Nomad
 P06T	N/A	Tecnam P2006T
+P180	N/A	Piaggio P.180 Avanti
+P208	N/A	Tecnam P2008
+P212	T12	Tecnam P2012 Traveller
 P28A	N/A	Piper PA-28 (up to 180 hp)
 P28B	N/A	Piper PA-28 (above 200 hp)
 P68	PN6	Partenavia P.68
-P180	N/A	Piaggio P.180 Avanti
 PA31	PA2	Piper PA-31 Navajo
 PA44	N/A	Piper PA-44 Seminole
 PA46	PAG	Piper PA-46
 PC12	PL2	Pilatus PC-12
 PC6T	PL6	Pilatus PC-6 Turbo Porter
-PISI	N/A	Pipistrel Sinus[3]
-PITA	N/A	Pipistrel Taurus[3]
-PIVI	N/A	Pipistrel Virus[3]
-RJ1H	AR1	Avro RJ100
+PISI	N/A	Pipistrel Sinus[4]
+PITA	N/A	Pipistrel Taurus[4]
+PIVI	N/A	Pipistrel Virus[4]
 R200	N/A	Robin HR200/R2000 series, Alpha160A
+RJ1H	AR1	Avro RJ100
 RJ70	AR7	Avro RJ70
 RJ85	AR8	Avro RJ85
 S210	CRV	Aerospatiale (Sud Aviation) Se.210 Caravelle
@@ -301,17 +316,20 @@ S92	S92	Sikorsky S-92
 SB20	S20	Saab 2000
 SC7	SHS	Shorts SC-7 Skyvan
 SF34	SF3	Saab SF340A/B
+SF50	N/A	Cirrus SF50 Vision Jet
 SH33	SH3	Shorts SD.330
 SH36	SH6	Shorts SD.360
+SIRA	N/A	Tecnam P2002 Sierra
 SU95	SU9	Sukhoi Superjet 100-95
-TRF1	N/A	Team Rocket F1
 T134	TU3	Tupolev Tu-134
 T144	N/A	Tupolev Tu-144
 T154	TU5	Tupolev Tu-154
 T204	T20	Tupolev Tu-204 / Tu-214
 TB20	N/A	Socata TB-20 Trinidad
 TL20	N/A	TL Ultralight TL-96 Star / TL-2000 Sting
+TRF1	N/A	Team Rocket F1
 TRIS	BNT	Pilatus Britten-Norman BN-2A Mk III Trislander
+TWEN	N/A	Tecnam P2010
 WW24	WWP	Israel Aircraft Industries 1124 Westwind
 Y12	YN2	Harbin Yunshuji Y12
 YK40	YK4	Yakovlev Yak-40

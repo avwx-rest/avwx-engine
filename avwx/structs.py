@@ -22,7 +22,7 @@ class _LazyLoad:
         self.source = Path(__file__).parent.joinpath("data", f"{filename}.json")
 
     def _load(self):
-        self.data = json.load(self.source.open())
+        self.data = json.load(self.source.open(encoding="utf8"))
 
     def __getitem__(self, key: str) -> object:
         if not self.data:
@@ -359,6 +359,7 @@ class NbsPeriod(NbhsShared):
     precip_amount_12: Optional[Number] = None
     precip_duration: Optional[Number] = None
     thunderstorm_3: Optional[Number] = None
+    thunderstorm_6: Optional[Number] = None
     thunderstorm_12: Optional[Number] = None
     snow_amount_6: Optional[Number] = None
     icing_amount_6: Optional[Number] = None
