@@ -273,6 +273,8 @@ def get_taf_flight_rules(lines: List[dict]) -> List[dict]:
                 # SKC or CLR should force no clouds instead of looking back
                 if "SKC" in report["other"] or "CLR" in report["other"]:
                     temp_cloud = "temp-clear"
+                elif temp_vis and temp_vis.repr == "CAVOK":
+                    temp_cloud = "temp-clear"
                 elif temp_cloud == []:
                     temp_cloud = report["clouds"]
                 if temp_vis and temp_cloud != []:

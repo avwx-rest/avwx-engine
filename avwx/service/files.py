@@ -9,6 +9,7 @@ import asyncio as aio
 import atexit
 import datetime as dt
 import tempfile
+from contextlib import suppress
 from pathlib import Path
 from socket import gaierror
 from typing import Dict, Iterator, Optional, TextIO, Tuple
@@ -133,7 +134,8 @@ class FileService(Service):
             self._updating = False
             return False
         if old_path:
-            old_path.unlink()
+            with suppress(FileNotFoundError):
+                old_path.unlink()
         self._updating = False
         return True
 
