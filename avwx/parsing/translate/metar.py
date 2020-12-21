@@ -8,9 +8,7 @@ from avwx.structs import MetarData, MetarTrans, Units
 
 
 def translate_metar(wxdata: MetarData, units: Units) -> MetarTrans:
-    """
-    Returns translations for a MetarData object
-    """
+    """Returns translations for a MetarData object"""
     data = _trans.current_shared(wxdata, units)
     data["wind"] = _trans.wind(
         wxdata.wind_direction,

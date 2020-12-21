@@ -32,9 +32,7 @@ FHR  05 08 11 14 17 20 23 26 29 32 35 38 41 44 47 50 53 56 59 62 65 68 71
 
 class TestForecastBase(BaseTest):
     def test_split_line(self):
-        """
-        Tests splitting and stripping elements on a non-delineated line
-        """
+        """Tests splitting and stripping elements on a non-delineated line"""
         text = " 1  2  3  4  5  6  7  8  9  0 "
         for size, prefix, expect in (
             (3, 0, ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]),
@@ -57,9 +55,7 @@ class TestForecastBase(BaseTest):
         self.assertEqual(line[-1], "192")
 
     def test_timestamp(self):
-        """
-        Tests Timestamp inference on the first line of the report
-        """
+        """Tests Timestamp inference on the first line of the report"""
         for year, month, day, hour, minute, line in (
             (2020, 2, 11, 0, 0, "KMCO   GFS MOS GUIDANCE    2/11/2020  0000 UTC"),
             (2020, 12, 3, 12, 0, "KMCO   GFSX MOS GUIDANCE   12/03/2020  1200 UTC"),
@@ -75,9 +71,7 @@ class TestForecastBase(BaseTest):
             self.assertEqual(time.dt.second, 0)
 
     def test_find_time_periods(self):
-        """
-        Tests creating datetime objects from a line of hours-since values
-        """
+        """Tests creating datetime objects from a line of hours-since values"""
         start_time = datetime(2020, 2, 11, 0, 0, tzinfo=timezone.utc)
         for counters, line in (
             (
@@ -107,9 +101,7 @@ class TestForecastBase(BaseTest):
                     i += 1
 
     def test_init_parse(self):
-        """
-        Tests first pass data creation and line splits
-        """
+        """Tests first pass data creation and line splits"""
         for report, time, line_length in (
             (MAV_HEAD, datetime(2020, 2, 11, 0, 0, tzinfo=timezone.utc), 3),
             (NBS_HEAD, datetime(2020, 7, 19, 16, 0, tzinfo=timezone.utc), 4),
@@ -125,9 +117,7 @@ class TestForecastBase(BaseTest):
             self.assertEqual(len(lines), line_length)
 
     def test_numbers(self):
-        """
-        Tests that number lines are converted to Number or None
-        """
+        """Tests that number lines are converted to Number or None"""
         for numbers, line, prefix, postfix, decimal in (
             ([1, 2, None, 34], "NUM   1  2    34", "", "", None),
             ([10, 20, None, 340], "NUM   1  2    34", "", "0", None),
@@ -146,9 +136,7 @@ class TestForecastBase(BaseTest):
                     self.assert_number(number, text, num)
 
     def test_code(self):
-        """
-        Tests that codes are properly mapped into Code dataclasses
-        """
+        """Tests that codes are properly mapped into Code dataclasses"""
         codes = {"A": 1, "B": 2}
         text = "COD A B   C"
         values = (("A", 1), ("B", 2), (None, None), ("C", "C"))
@@ -161,9 +149,7 @@ class ForecastBase(BaseTest):
     maxDiff = None
 
     def _test_forecast_ete(self, report: base.Forecast):
-        """
-        Performs an end-to-end test of all report JSON files
-        """
+        """Performs an end-to-end test of all report JSON files"""
         for ref, icao, issued in get_data(__file__, report.__class__.__name__.lower()):
             station = report(icao)
             self.assertIsNone(station.last_updated)

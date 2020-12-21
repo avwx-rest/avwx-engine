@@ -10,9 +10,7 @@ _VALUE_ERROR = "'{}' is not a valid report type for {}. Expected {}"
 
 
 class Service:
-    """
-    Base Service class for fetching reports
-    """
+    """Base Service class for fetching reports"""
 
     url: str = None
     report_type: str
@@ -29,13 +27,9 @@ class Service:
         self.report_type = report_type
 
     def fetch(self, station: str, timeout: int = 10) -> str:
-        """
-        Fetches a report string from the service
-        """
+        """Fetches a report string from the service"""
         raise NotImplementedError()
 
     async def async_fetch(self, station: str, timeout: int = 10) -> str:
-        """
-        Asynchronously fetch a report string from the service
-        """
+        """Asynchronously fetch a report string from the service"""
         raise NotImplementedError()

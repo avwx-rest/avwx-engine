@@ -16,9 +16,7 @@ from avwx.structs import ReportData, Units
 
 
 def find_station(report: str) -> Station:
-    """
-    Returns the first ICAO ident found in a report string
-    """
+    """Returns the first ICAO ident found in a report string"""
     for item in report.split():
         if len(item) == 4:
             with suppress(BadStation):
@@ -27,9 +25,7 @@ def find_station(report: str) -> Station:
 
 
 class AVWXBase(metaclass=ABCMeta):
-    """
-    Abstract base class for AVWX report types
-    """
+    """Abstract base class for AVWX report types"""
 
     #: UTC datetime object when the report was last updated
     last_updated: Optional[datetime] = None
@@ -69,9 +65,7 @@ class AVWXBase(metaclass=ABCMeta):
 
     @classmethod
     def from_report(cls, report: str, issued: date = None) -> "AVWXBase":
-        """
-        Returns an updated report object based on an existing report
-        """
+        """Returns an updated report object based on an existing report"""
         report = report.strip()
         station = find_station(report)
         if not station:
@@ -81,9 +75,7 @@ class AVWXBase(metaclass=ABCMeta):
         return obj
 
     def _set_meta(self):
-        """
-        Update timestamps after parsing
-        """
+        """Update timestamps after parsing"""
         self.last_updated = datetime.now(tz=timezone.utc)
         with suppress(AttributeError):
             self.issued = self.data.time.dt.date()
@@ -101,16 +93,14 @@ class AVWXBase(metaclass=ABCMeta):
         return True
 
     def parse(self, report: str, issued: Optional[date] = None) -> bool:
-        """
-        Updates report data by parsing a given report
+        """Updates report data by parsing a given report
 
         Can accept a report issue date if not a recent report string
         """
         return self._update(report, issued, False)
 
     def update(self, timeout: int = 10, disable_post: bool = False) -> bool:
-        """
-        Updates report data by fetching and parsing the report
+        """Updates report data by fetching and parsing the report
 
         Returns True if a new report is available, else False
         """
@@ -118,8 +108,7 @@ class AVWXBase(metaclass=ABCMeta):
         return self._update(report, None, disable_post)
 
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
-        """
-        Async updates report data by fetching and parsing the report
+        """Async updates report data by fetching and parsing the report
 
         Returns True if a new report is available, else False
         """
@@ -128,8 +117,8 @@ class AVWXBase(metaclass=ABCMeta):
 
     @staticmethod
     def sanitize(report: str) -> str:
-        """
-        Sanitizes the report string.
+        """Sanitizes the report string
+
         This has not been overridden and returns the raw report
         """
         return report

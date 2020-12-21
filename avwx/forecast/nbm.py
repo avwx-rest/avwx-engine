@@ -42,16 +42,12 @@ _WIND = {"NG": (0, "zero")}
 
 
 def _ceiling(line: str, size: int = 3) -> List[structs.Number]:
-    """
-    Parse line into Number objects handling ceiling special units
-    """
+    """Parse line into Number objects handling ceiling special units"""
     return _numbers(line, size, postfix="00", special=_CEILING)
 
 
 def _wind(line: str, size: int = 3) -> List[structs.Number]:
-    """
-    Parse line into Number objects handling wind special units
-    """
+    """Parse line into Number objects handling wind special units"""
     return _numbers(line, size, special=_WIND)
 
 
@@ -99,16 +95,12 @@ def _parse_factory(
     size: int = 3,
     prefix: int = 4,
 ) -> Callable:
-    """
-    Creates handler function for static and computed keys
-    """
+    """Creates handler function for static and computed keys"""
 
     handlers = {**_HANDLERS, **handlers}
 
     def handle(key: str) -> Tuple:
-        """
-        Returns response key(s) and value handler for a line key
-        """
+        """Returns response key(s) and value handler for a line key"""
         with suppress(KeyError):
             return handlers[key]
         if not key[1:].isdigit():
@@ -117,9 +109,7 @@ def _parse_factory(
         return f"{root}_{key[1:].lstrip('0')}", handler
 
     def parse(report: str):
-        """
-        Parser for NBM reports
-        """
+        """Parser for NBM reports"""
         if not report:
             return None
         data, lines = _init_parse(report)
@@ -153,27 +143,21 @@ class _Nbm(Forecast):
 
 
 class Nbh(_Nbm):
-    """
-    Class to handle NBM NBH report data
-    """
+    """Class to handle NBM NBH report data"""
 
     report_type = "nbh"
     _parser = staticmethod(parse_nbh)
 
 
 class Nbs(_Nbm):
-    """
-    Class to handle NBM NBS report data
-    """
+    """Class to handle NBM NBS report data"""
 
     report_type = "nbs"
     _parser = staticmethod(parse_nbs)
 
 
 class Nbe(_Nbm):
-    """
-    Class to handle NBM NBE report data
-    """
+    """Class to handle NBM NBE report data"""
 
     report_type = "nbe"
     _parser = staticmethod(parse_nbe)

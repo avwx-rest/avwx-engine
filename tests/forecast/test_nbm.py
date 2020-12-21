@@ -13,9 +13,7 @@ from .test_base import ForecastBase
 
 class TestNbm(ForecastBase):
     def test_ceiling(self):
-        """
-        Tests that a line is converted into ceiling-specific Numbers
-        """
+        """Tests that a line is converted into ceiling-specific Numbers"""
         line = "CIG  12888    45"
         values = [
             ("12", 1200, "one two hundred"),
@@ -30,9 +28,7 @@ class TestNbm(ForecastBase):
                 self.assert_number(number, *expected)
 
     def test_wind(self):
-        """
-        Tests that a line is converted into wind-specific Numbers
-        """
+        """Tests that a line is converted into wind-specific Numbers"""
         line = "GST  12 NG    45"
         values = [
             ("12", 12, "one two"),
@@ -47,19 +43,13 @@ class TestNbm(ForecastBase):
                 self.assert_number(number, *expected)
 
     def test_nbh_ete(self):
-        """
-        Performs an end-to-end test of all NBH JSON files
-        """
+        """Performs an end-to-end test of all NBH JSON files"""
         self._test_forecast_ete(nbm.Nbh)
 
     def test_nbs_ete(self):
-        """
-        Performs an end-to-end test of all NBS JSON files
-        """
+        """Performs an end-to-end test of all NBS JSON files"""
         self._test_forecast_ete(nbm.Nbs)
 
     def test_nbe_ete(self):
-        """
-        Performs an end-to-end test of all NBE JSON files
-        """
+        """Performs an end-to-end test of all NBE JSON files"""
         self._test_forecast_ete(nbm.Nbe)

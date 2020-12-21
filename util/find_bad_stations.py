@@ -31,9 +31,7 @@ BAD = load_stations(BAD_PATH)
 
 
 def should_test(icao: str) -> bool:
-    """
-    Returns False if an ident is known good or never good
-    """
+    """Returns False if an ident is known good or never good"""
     if icao in GOOD:
         return False
     for char in icao:
@@ -43,9 +41,7 @@ def should_test(icao: str) -> bool:
 
 
 async def worker(queue: aio.Queue):
-    """
-    Worker to check queued idents and update lists
-    """
+    """Worker to check queued idents and update lists"""
     i = 0
     maxi = 100
     while True:
@@ -80,9 +76,7 @@ async def worker(queue: aio.Queue):
 
 @asynccontextmanager
 async def task_manager(queue: aio.Queue, n: int = 10):
-    """
-    Handles async task managers
-    """
+    """Handles async task managers"""
     tasks = []
     # Create three worker tasks to process the queue concurrently
     for _ in range(n):
@@ -97,9 +91,7 @@ async def task_manager(queue: aio.Queue, n: int = 10):
 
 
 async def loop():
-    """
-    Populate and run ICAO check queue
-    """
+    """Populate and run ICAO check queue"""
     queue = aio.Queue()
     for station in avwx.station._STATIONS.values():
         icao = station["icao"]
@@ -117,9 +109,7 @@ async def loop():
 
 
 def main() -> int:
-    """
-    Update ICAO lists with 1 hour sleep cycle
-    """
+    """Update ICAO lists with 1 hour sleep cycle"""
     while True:
         aio.run(loop())
         print()

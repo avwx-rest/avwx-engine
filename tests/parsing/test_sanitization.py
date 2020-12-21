@@ -9,14 +9,10 @@ from tests.util import BaseTest
 
 
 class TestSanitization(BaseTest):
-    """
-    Test report sanitization functions
-    """
+    """Test report sanitization functions"""
 
     def test_extra_space_exists(self):
-        """
-        Tests whether a space should exist between two elements
-        """
+        """Tests whether a space should exist between two elements"""
         for strings in (
             ("10", "SM"),
             ("1", "0SM"),
@@ -46,9 +42,7 @@ class TestSanitization(BaseTest):
             self.assertFalse(sanitization.extra_space_exists(*strings))
 
     def test_extra_space_needed(self):
-        """
-        Tests if two elements should be split and where
-        """
+        """Tests if two elements should be split and where"""
         for item, sep in (
             ("21016G28KTPROB40", 10),
             ("VCSHINTER", 4),
@@ -62,17 +56,13 @@ class TestSanitization(BaseTest):
             self.assertEqual(sanitization.extra_space_needed(item), sep)
 
     def test_sanitize_report_string(self):
-        """
-        Tests a function which fixes common mistakes while the report is a string
-        """
+        """Tests a function which fixes common mistakes while the report is a string"""
         line = "KJFK 36010 ? TSFEW004SCT012FEW///CBBKN080 C A V O K A2992"
         fixed = "KJFK 36010   TS FEW004 SCT012 FEW///CB BKN080 CAVOK A2992"
         self.assertEqual(sanitization.sanitize_report_string(line), fixed)
 
     def test_sanitize_report_list(self):
-        """
-        Tests a function which fixes common mistakes while the report is a list
-        """
+        """Tests a function which fixes common mistakes while the report is a list"""
         for line, fixed in (
             ("KJFK AUTO 123456Z ////// KT 10SM 20/10", "KJFK 123456Z 10SM 20/10"),
             ("METAR EGLL CALM RETS 6SPM CLR Q 1000", "EGLL 00000KT TS P6SM Q1000"),

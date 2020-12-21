@@ -58,13 +58,11 @@ def validate_icao(code: str) -> Optional[str]:
 
 def get_icao(station: List[str]) -> Optional[str]:
     """Finds the ICAO by checking ident and GPS code"""
-    return validate_icao(station[1]) or validate_icao(station[12])
+    return validate_icao(station[12]) or validate_icao(station[1])
 
 
 def clean_source_file():
-    """
-    Cleans the source data files before parsing
-    """
+    """Cleans the source data files before parsing"""
     with AIRPORT_PATH.open("r", encoding="utf8") as fin:
         text = fin.read()
     for find, replace in FILE_REPLACE.items():
@@ -145,11 +143,12 @@ def add_missing_stations(stations: dict) -> dict:
     return stations
 
 
-def get_surface_type(surface: str) -> str:
+def get_surface_type(surface: str) -> Optional[str]:
     """Returns the normalize surface type value"""
     for key, items in SURFACE_TYPES.items():
         if surface in items:
             return key
+    return None
 
 
 ICAO_REPLACE = {"RMU": "LEMI"}

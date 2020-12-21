@@ -17,16 +17,12 @@ from tests.util import BaseTest, get_data
 
 
 class TestMetar(BaseTest):
-    """
-    Tests Metar class and parsing
-    """
+    """Tests Metar class and parsing"""
 
     maxDiff = None
 
     def test_get_remarks(self):
-        """
-        Remarks get removed first with the remaining components split into a list
-        """
+        """Remarks get removed first with the remaining components split into a list"""
         for raw, wx, rmk in (
             ("1 2 3 A2992 RMK Hi", ["1", "2", "3", "A2992"], "RMK Hi"),
             ("1 2 3 A2992 Hi", ["1", "2", "3", "A2992"], "Hi"),
@@ -38,9 +34,7 @@ class TestMetar(BaseTest):
             self.assertEqual(rmk, test_rmk)
 
     def test_get_temp_and_dew(self):
-        """
-        Tests temperature and dewpoint extraction
-        """
+        """Tests temperature and dewpoint extraction"""
         for wx, temp, dew in (
             (["1", "2"], (None,), (None,)),
             (["1", "2", "07/05"], ("07", 7), ("05", 5)),
@@ -58,9 +52,7 @@ class TestMetar(BaseTest):
         self.assertEqual(metar.get_temp_and_dew(["MX/01"]), (["MX/01"], None, None))
 
     def test_parse_altimeter(self):
-        """
-        Tests that an atlimiter is correctly parsed into a Number
-        """
+        """Tests that an atlimiter is correctly parsed into a Number"""
         for text, alt in (
             ("A2992", (29.92, "two nine point nine two")),
             ("2992", (29.92, "two nine point nine two")),
@@ -76,9 +68,7 @@ class TestMetar(BaseTest):
             self.assertIsNone(metar.parse_altimeter(text))
 
     def test_get_altimeter(self):
-        """
-        Tests that the correct alimeter item gets removed from the end of the wx list
-        """
+        """Tests that the correct alimeter item gets removed from the end of the wx list"""
         for version, wx, alt, unit in (
             ("NA", ["1"], (None,), "inHg"),
             ("NA", ["1", "A2992"], ("A2992", 29.92, "two nine point nine two"), "inHg"),
@@ -132,9 +122,7 @@ class TestMetar(BaseTest):
             self.assertEqual(units.altimeter, unit)
 
     def test_get_runway_visibility(self):
-        """
-        Tests extracting runway visibility
-        """
+        """Tests extracting runway visibility"""
         for wx, runway_vis in (
             (["1", "2"], []),
             (["1", "2", "R10/10"], ["R10/10"]),
@@ -143,9 +131,7 @@ class TestMetar(BaseTest):
             self.assertEqual(metar.get_runway_visibility(wx), (["1", "2"], runway_vis))
 
     def test_sanitize(self):
-        """
-        Tests report sanitization
-        """
+        """Tests report sanitization"""
         report = "METAR AUTO KJFK 032151ZVRB08KT FEW034BKN250 ? C A V O K RMK TEST"
         clean = "KJFK 032151Z VRB08KT FEW034 BKN250 CAVOK RMK TEST"
         remarks = "RMK TEST"
@@ -156,9 +142,7 @@ class TestMetar(BaseTest):
         self.assertEqual(data, ret_data)
 
     def test_parse(self):
-        """
-        Tests returned structs from the parse function
-        """
+        """Tests returned structs from the parse function"""
         report = (
             "KJFK 032151Z 16008KT 10SM FEW034 FEW130 BKN250 27/23 A3013 RMK AO2 SLP201"
         )
@@ -168,9 +152,7 @@ class TestMetar(BaseTest):
         self.assertEqual(data.raw, report)
 
     def test_metar_ete(self):
-        """
-        Performs an end-to-end test of all METAR JSON files
-        """
+        """Performs an end-to-end test of all METAR JSON files"""
         for ref, icao, issued in get_data(__file__, "metar"):
             station = metar.Metar(icao)
             raw = ref["data"]["raw"]

@@ -50,6 +50,8 @@ STR_REPL = {
     "TKT ": "KT ",
     "GKT ": "KT ",
     " TMM": " TNM",
+    " TNTN": " TN",
+    " TXTX": " TX",
     "CALMKT ": "CALM ",
     "N0SIG": "NOSIG",
     " <1/": " M1/",  # <1/4SM <1/8SM
@@ -58,8 +60,7 @@ STR_REPL = {
 
 
 def sanitize_report_string(txt: str) -> str:
-    """
-    Provides sanitization for operations that work better when the report is a string
+    """Provides sanitization for operations that work better when the report is a string
 
     Returns the first pass sanitized report string
     """
@@ -95,9 +96,7 @@ def sanitize_report_string(txt: str) -> str:
 
 
 def extra_space_exists(str1: str, str2: str) -> bool:
-    """
-    Return True if a space shouldn't exist between two items
-    """
+    """Return True if a space shouldn't exist between two items"""
     ls1, ls2 = len(str1), len(str2)
     if str1.isdigit():
         # 10 SM
@@ -170,9 +169,7 @@ CLOUD_SPACE_PATTERNS = [
 
 
 def extra_space_needed(item: str) -> int:
-    """
-    Returns the index where the string should be separated or None
-    """
+    """Returns the index where the string should be separated or None"""
     # For items starting with cloud list
     if item[:3] in CLOUD_LIST:
         for pattern in CLOUD_SPACE_PATTERNS:
@@ -225,8 +222,7 @@ VIS_PERMUTATIONS.remove("6MPS")
 def sanitize_report_list(
     wxdata: List[str], remove_clr_and_skc: bool = True
 ) -> List[str]:
-    """
-    Sanitize wxData
+    """Sanitize wxData
 
     We can remove and identify "one-off" elements and fix other issues before parsing a line
     """

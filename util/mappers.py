@@ -94,8 +94,15 @@ SURFACE_TYPES = {
         "mac",  # 12
         "gravel / cinders / crushed rock / coral/shells / slag",  # 10
     ),
-    None: ("unk", "", "per",),  # 689  # 319  # 30
-    "water": ("water", "water-e",),  # 686  # 60
+    None: (
+        "unk",
+        "",
+        "per",
+    ),  # 689  # 319  # 30
+    "water": (
+        "water",
+        "water-e",
+    ),  # 686  # 60
     "dirt": (
         "dirt",  # 532
         "x",  # 436
@@ -123,9 +130,15 @@ SURFACE_TYPES = {
         "pierced steel planking / landing mats / membranes",  # 22
         "psp",  # 14
     ),
-    "sand": ("sand", "san",),  # 20  # 20
+    "sand": (
+        "sand",
+        "san",
+    ),  # 20  # 20
     "ice": ("ice",),  # 13
-    "snow": ("turf/snow", "snow",),  # 12
+    "snow": (
+        "turf/snow",
+        "snow",
+    ),  # 12
 }
 
 

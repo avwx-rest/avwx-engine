@@ -11,8 +11,7 @@ from avwx.structs import Cloud, Code, Number, SharedData, Units
 
 
 def get_cardinal_direction(direction: int) -> str:
-    """
-    Returns the cardinal direction (NSEW) for a degree direction
+    """Returns the cardinal direction (NSEW) for a degree direction
 
     Wind Direction - Cheat Sheet:
 
@@ -78,8 +77,7 @@ def wind(
     cardinals: bool = True,
     spoken: bool = False,
 ) -> str:
-    """
-    Format wind elements into a readable sentence
+    """Format wind elements into a readable sentence
 
     Returns the translation string
 
@@ -118,8 +116,7 @@ VIS_REPR = {
 
 
 def visibility(vis: Number, unit: str = "m") -> str:
-    """
-    Formats a visibility element into a string with both km and sm values
+    """Formats a visibility element into a string with both km and sm values
 
     Ex: 8km ( 5sm )
     """
@@ -142,8 +139,7 @@ def visibility(vis: Number, unit: str = "m") -> str:
 
 
 def temperature(temp: Number, unit: str = "C") -> str:
-    """
-    Formats a temperature element into a string with both C and F values
+    """Formats a temperature element into a string with both C and F values
 
     Used for both Temp and Dew
 
@@ -164,8 +160,7 @@ def temperature(temp: Number, unit: str = "C") -> str:
 
 
 def altimeter(alt: Number, unit: str = "hPa") -> str:
-    """
-    Formats the altimeter element into a string with hPa and inHg values
+    """Formats the altimeter element into a string with hPa and inHg values
 
     Ex: 30.11 inHg (10.20 hPa)
     """
@@ -185,8 +180,7 @@ def altimeter(alt: Number, unit: str = "hPa") -> str:
 
 
 def clouds(values: List[Cloud], unit: str = "ft") -> str:
-    """
-    Format cloud list into a readable sentence
+    """Format cloud list into a readable sentence
 
     Returns the translation string
 
@@ -208,8 +202,7 @@ def clouds(values: List[Cloud], unit: str = "ft") -> str:
 
 
 def wx_codes(codes: List[Code]) -> str:
-    """
-    Join WX code values
+    """Join WX code values
 
     Returns the translation string
     """
@@ -217,9 +210,7 @@ def wx_codes(codes: List[Code]) -> str:
 
 
 def current_shared(wxdata: SharedData, units: Units) -> Dict[str, str]:
-    """
-    Translate Visibility, Altimeter, Clouds, and Other
-    """
+    """Translate Visibility, Altimeter, Clouds, and Other"""
     data = {}
     data["visibility"] = visibility(wxdata.visibility, units.visibility)
     data["altimeter"] = altimeter(wxdata.altimeter, units.altimeter)

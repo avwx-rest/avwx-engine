@@ -13,21 +13,15 @@ from avwx.parsing import core, remarks
 
 
 class TestRemarks(unittest.TestCase):
-    """
-    Tests remarks elements parsing
-    """
+    """Tests remarks elements parsing"""
 
     def test_tdec(self):
-        """
-        Tests that a 4-digit number gets decoded into a readable temperature
-        """
+        """Tests that a 4-digit number gets decoded into a readable temperature"""
         for code, temp in (("1045", "-4.5°C"), ("0237", "23.7°C"), ("0987", "98.7°C")):
             self.assertEqual(remarks._tdec(code), temp)
 
     def test_temp_minmax(self):
-        """
-        Tests the minimum and maximum temperature translation string
-        """
+        """Tests the minimum and maximum temperature translation string"""
         for code, ttype, temp in (
             ("21045", "minimum", "-4.5°C"),
             ("10237", "maximum", "23.7°C"),
@@ -37,9 +31,7 @@ class TestRemarks(unittest.TestCase):
             self.assertEqual(remarks.temp_minmax(code), equals)
 
     def test_pressure_tendency(self):
-        """
-        Tests translating the pressure tendency code
-        """
+        """Tests translating the pressure tendency code"""
         for code, pressure in (("50123", "12.3"), ("54987", "98.7"), ("51846", "84.6")):
             equals = (
                 "3-hour pressure difference: +/- "
@@ -48,9 +40,7 @@ class TestRemarks(unittest.TestCase):
             self.assertEqual(remarks.pressure_tendency(code), equals)
 
     def test_precip_36(self):
-        """
-        Tests translating the three and six hour precipitation code
-        """
+        """Tests translating the three and six hour precipitation code"""
         for code, three, six in (("60720", 7, 20), ("60000", 0, 0), ("60104", 1, 4)):
             equals = (
                 f"Precipitation in the last 3 hours: {three} in. - 6 hours: {six} in."
@@ -58,25 +48,19 @@ class TestRemarks(unittest.TestCase):
             self.assertEqual(remarks.precip_36(code), equals)
 
     def test_precip_24(self):
-        """
-        Tests translating the 24-hour precipitation code
-        """
+        """Tests translating the 24-hour precipitation code"""
         for code, precip in (("70016", 16), ("79999", 9999), ("70000", 0)):
             equals = f"Precipitation in the last 24 hours: {precip} in."
             self.assertEqual(remarks.precip_24(code), equals)
 
     def test_sunshine_duration(self):
-        """
-        Tests translating the sunshine duration code
-        """
+        """Tests translating the sunshine duration code"""
         for code, minutes in (("90000", 0), ("99999", 9999), ("91234", 1234)):
             equals = f"Duration of sunlight: {minutes} minutes"
             self.assertEqual(remarks.sunshine_duration(code), equals)
 
     def test_parse(self):
-        """
-        Tests generating RemarksData from a remarks string
-        """
+        """Tests generating RemarksData from a remarks string"""
         for rmk, data in (
             ("", (None, None)),
             ("T09870123", ("12.3", "98.7")),
@@ -86,9 +70,7 @@ class TestRemarks(unittest.TestCase):
             self.assertEqual(remarks.parse(rmk), structs.RemarksData(*data))
 
     def test_translate(self):
-        """
-        Tests extracting translations from the remarks string
-        """
+        """Tests extracting translations from the remarks string"""
         for rmk, out in (
             (
                 "RMK AO1 ACFT MSHP SLP137 T02720183 BINOVC",

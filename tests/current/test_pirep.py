@@ -19,14 +19,10 @@ from tests.util import BaseTest, get_data
 
 
 class TestPirepHandlers(BaseTest):
-    """
-    Tests PIREP element handlers
-    """
+    """Tests PIREP element handlers"""
 
     def _test_num(self, src: Optional[Number], exp: Optional[int]):
-        """
-        Tests a nNumber value or is None
-        """
+        """Tests a nNumber value or is None"""
         if exp is None:
             self.assertIsNone(src)
         else:
@@ -48,9 +44,7 @@ class TestPirepHandlers(BaseTest):
             self.assertEqual(ret_root["type"], report_type)
 
     def test_location(self):
-        """
-        Tests location unpacking
-        """
+        """Tests location unpacking"""
         for loc, station, direction, distance in (
             ("MLB", "MLB", None, None),
             ("MKK360002", "MKK", 360, 2),
@@ -66,9 +60,7 @@ class TestPirepHandlers(BaseTest):
             self._test_num(ret_loc.distance, distance)
 
     def test_time(self):
-        """
-        Tests time parsing
-        """
+        """Tests time parsing"""
         for time in ("1930", "0000", "2359", "0515"):
             ret_time = pirep._time(time)
             self.assertIsInstance(ret_time, structs.Timestamp)
@@ -79,9 +71,7 @@ class TestPirepHandlers(BaseTest):
         self.assertIsNone(pirep._time(None))
 
     def test_altitude(self):
-        """
-        Tests converting altitude to Number
-        """
+        """Tests converting altitude to Number"""
         for alt, num in (("2000", 2000), ("9999", 9999), ("0500", 500)):
             ret_alt = pirep._altitude(alt)
             self.assertIsInstance(ret_alt, structs.Number)
@@ -90,9 +80,7 @@ class TestPirepHandlers(BaseTest):
         self.assertIsInstance(pirep._altitude("test"), str)
 
     def test_aircraft(self):
-        """
-        Tests converting aircraft code into Aircraft
-        """
+        """Tests converting aircraft code into Aircraft"""
         for code, name in (
             ("B752", "Boeing 757-200"),
             ("PC12", "Pilatus PC-12"),
@@ -105,9 +93,7 @@ class TestPirepHandlers(BaseTest):
         self.assertIsInstance(pirep._aircraft("not a code"), str)
 
     def test_cloud_tops(self):
-        """
-        Tests converting clouds with tops
-        """
+        """Tests converting clouds with tops"""
         for cloud, out in (
             ("OVC100-TOP110", ["OVC", 100, 110]),
             ("OVC065-TOPUNKN", ["OVC", 65, None]),
@@ -124,17 +110,13 @@ class TestPirepHandlers(BaseTest):
                 self.assertEqual(getattr(parsed, key), out[i])
 
     def test_number(self):
-        """
-        Tests converting value into a Number
-        """
+        """Tests converting value into a Number"""
         for num, value in (("01", 1), ("M01", -1), ("E", 90), ("1/4", 0.25)):
             self.assert_number(pirep._number(num), num, value)
         self.assertIsNone(pirep._number(""))
 
     def test_turbulence(self):
-        """
-        Tests converting turbulence string to Turbulence
-        """
+        """Tests converting turbulence string to Turbulence"""
         for turb, severity, floor, ceiling in (
             ("MOD CHOP", "MOD CHOP", None, None),
             ("LGT-MOD CAT 160-260", "LGT-MOD CAT", 160, 260),
@@ -149,9 +131,7 @@ class TestPirepHandlers(BaseTest):
             self._test_num(ret_turb.ceiling, ceiling)
 
     def test_icing(self):
-        """
-        Tests converting icing string to Icing
-        """
+        """Tests converting icing string to Icing"""
         for ice, severity, itype, floor, ceiling in (
             ("MOD RIME", "MOD", "RIME", None, None),
             ("LGT RIME 025", "LGT", "RIME", 25, 25),
@@ -168,18 +148,14 @@ class TestPirepHandlers(BaseTest):
             self._test_num(ret_ice.ceiling, ceiling)
 
     def test_remarks(self):
-        """
-        Tests remarks pass through
-        """
+        """Tests remarks pass through"""
         for rmk in ("Test", "12345", "IT WAS MOSTLY SMOOTH"):
             ret_rmk = pirep._remarks(rmk)
             self.assertIsInstance(ret_rmk, str)
             self.assertEqual(ret_rmk, rmk)
 
     def test_wx(self):
-        """
-        Tests wx split and visibility ident
-        """
+        """Tests wx split and visibility ident"""
         for txt, wx in (("VCFC", ["VCFC"]), ("+RATS -GR", ["+RATS", "-GR"])):
             ret_wx = pirep._wx(txt)
             self.assertIsInstance(ret_wx, dict)
@@ -192,16 +168,12 @@ class TestPirepHandlers(BaseTest):
 
 
 class TestPirep(unittest.TestCase):
-    """
-    Test Pirep class and parsing
-    """
+    """Test Pirep class and parsing"""
 
     maxDiff = None
 
     def test_parse(self):
-        """
-        Tests returned structs from the parse function
-        """
+        """Tests returned structs from the parse function"""
         for report in (
             "EWR UA /OV SBJ090/010/TM 2108/FL060/TP B738/TB MOD",
             "SMQ UA /OV BWZ/TM 0050/FL280/TP A320/TB MOD",
@@ -211,9 +183,7 @@ class TestPirep(unittest.TestCase):
             self.assertEqual(data.raw, report)
 
     def test_pirep_ete(self):
-        """
-        Performs an end-to-end test of all PIREP JSON files
-        """
+        """Performs an end-to-end test of all PIREP JSON files"""
         for ref, icao, issued in get_data(__file__, "pirep"):
             station = pirep.Pireps(icao)
             self.assertIsNone(station.last_updated)

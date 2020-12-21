@@ -11,14 +11,10 @@ from avwx.parsing import summary
 
 
 class TestSummary(unittest.TestCase):
-    """
-    Test summary functions
-    """
+    """Test summary functions"""
 
     def test_metar(self):
-        """
-        Tests that METAR translations are summarized in the proper order
-        """
+        """Tests that METAR translations are summarized in the proper order"""
         self.assertEqual(
             summary.metar(
                 structs.MetarTrans(
@@ -40,9 +36,7 @@ class TestSummary(unittest.TestCase):
         )
 
     def test_taf(self):
-        """
-        Tests that TAF line translations are summarized in the proper order
-        """
+        """Tests that TAF line translations are summarized in the proper order"""
         self.assertEqual(
             summary.taf(
                 structs.TafLineTrans(

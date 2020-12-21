@@ -93,9 +93,7 @@ class Reports(AVWXBase):
 
     @staticmethod
     def _report_filter(reports: List[str]) -> List[str]:
-        """
-        Applies any report filtering before updating raw_reports
-        """
+        """Applies any report filtering before updating raw_reports"""
         return reports
 
     def _update(
@@ -107,8 +105,7 @@ class Reports(AVWXBase):
         return super()._update(reports, issued, disable_post)
 
     def parse(self, reports: Union[str, List[str]], issued: Optional[date] = None):
-        """
-        Updates report data by parsing a given report
+        """Updates report data by parsing a given report
 
         Can accept a report issue date if not a recent report string
         """
@@ -116,9 +113,12 @@ class Reports(AVWXBase):
             reports = [reports]
         return self._update(reports, issued, False)
 
-    def update(self, timeout: int = 10, disable_post: bool = False,) -> bool:
-        """
-        Updates report data by fetching and parsing the report
+    def update(
+        self,
+        timeout: int = 10,
+        disable_post: bool = False,
+    ) -> bool:
+        """Updates report data by fetching and parsing the report
 
         Returns True if new reports are available, else False
         """
@@ -126,9 +126,7 @@ class Reports(AVWXBase):
         return self._update(reports, None, disable_post)
 
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
-        """
-        Async updates report data by fetching and parsing the report
-        """
+        """Async updates report data by fetching and parsing the report"""
         reports = await self.service.async_fetch(
             lat=self.lat, lon=self.lon, timeout=timeout
         )

@@ -20,14 +20,10 @@ from tests.util import BaseTest
 
 
 class TestCore(BaseTest):
-    """
-    Test core parsing functions
-    """
+    """Test core parsing functions"""
 
     def test_dedupe(self):
-        """
-        Tests list deduplication
-        """
+        """Tests list deduplication"""
         for before, after in (
             ([1, 2, 3, 2, 1], [1, 2, 3]),
             ([4, 4, 4, 4], [4]),
@@ -42,9 +38,7 @@ class TestCore(BaseTest):
             self.assertEqual(core.dedupe(before, only_neighbors=True), after)
 
     def test_is_unknown(self):
-        """
-        Tests unknown value when a string value contains only backspace characters or empty
-        """
+        """Tests unknown value when a string value contains only backspace characters or empty"""
         # Unknown values
         for i in range(10):
             self.assertTrue(core.is_unknown("/" * i))
@@ -56,18 +50,14 @@ class TestCore(BaseTest):
             core.is_unknown(None)
 
     def test_is_timestamp(self):
-        """
-        Tests determining if a string is a timestamp element
-        """
+        """Tests determining if a string is a timestamp element"""
         for ts in ("123456Z", "987654Z"):
             self.assertTrue(core.is_timestamp(ts))
         for nts in ("", "123456Z123", "1234", "1234Z"):
             self.assertFalse(core.is_timestamp(nts))
 
     def test_unpack_fraction(self):
-        """
-        Tests unpacking a fraction where the numerator can be greater than the denominator
-        """
+        """Tests unpacking a fraction where the numerator can be greater than the denominator"""
         for fraction, unpacked in (
             ("", ""),
             ("1", "1"),
@@ -78,9 +68,7 @@ class TestCore(BaseTest):
             self.assertEqual(core.unpack_fraction(fraction), unpacked)
 
     def test_remove_leading_zeros(self):
-        """
-        Tests removing leading zeros from a number
-        """
+        """Tests removing leading zeros from a number"""
         for num, stripped in (
             ("", ""),
             ("5", "5"),
@@ -94,9 +82,7 @@ class TestCore(BaseTest):
             self.assertEqual(core.remove_leading_zeros(num), stripped)
 
     def test_spoken_number(self):
-        """
-        Tests converting digits into spoken values
-        """
+        """Tests converting digits into spoken values"""
         for num, spoken in (
             ("1", "one"),
             ("5", "five"),
@@ -110,9 +96,7 @@ class TestCore(BaseTest):
             self.assertEqual(core.spoken_number(num), spoken)
 
     def test_make_number(self):
-        """
-        Tests Number dataclass generation from a number string
-        """
+        """Tests Number dataclass generation from a number string"""
         self.assertIsNone(core.make_number(""))
         for num, value, spoken in (
             ("1", 1, "one"),
@@ -132,9 +116,7 @@ class TestCore(BaseTest):
         self.assertEqual(core.make_number("1234", "A1234").repr, "A1234")
 
     def test_make_number_fractions(self):
-        """
-        Tests Fraction dataclass generation from a number string
-        """
+        """Tests Fraction dataclass generation from a number string"""
         for num, value, spoken, nmr, dnm, norm in (
             ("1/4", 0.25, "one quarter", 1, 4, "1/4"),
             ("5/2", 2.5, "two and one half", 5, 2, "2 1/2"),
@@ -151,9 +133,7 @@ class TestCore(BaseTest):
             self.assertEqual(number.normalized, norm)
 
     def test_make_number_speech(self):
-        """
-        Tests Number generation speech overrides
-        """
+        """Tests Number generation speech overrides"""
         number = core.make_number("040", speak="040")
         self.assertEqual(number.value, 40)
         self.assertEqual(number.spoken, "zero four zero")
@@ -162,8 +142,7 @@ class TestCore(BaseTest):
         self.assertEqual(number.spoken, "one zero zero")
 
     def test_find_first_in_list(self):
-        """
-        Tests a function which finds the first occurrence in a string from a list
+        """Tests a function which finds the first occurrence in a string from a list
 
         This is used to find remarks and TAF time periods
         """
@@ -175,18 +154,14 @@ class TestCore(BaseTest):
             self.assertEqual(core.find_first_in_list(string, targets), index)
 
     def test_is_possible_temp(self):
-        """
-        Tests if an element could be a formatted temperature
-        """
+        """Tests if an element could be a formatted temperature"""
         for is_temp in ("10", "22", "333", "M05", "5"):
             self.assertTrue(core.is_possible_temp(is_temp))
         for not_temp in ("A", "12.3", "MNA", "-13"):
             self.assertFalse(core.is_possible_temp(not_temp))
 
     def test_get_station_and_time(self):
-        """
-        Tests removal of station (first item) and potential timestamp
-        """
+        """Tests removal of station (first item) and potential timestamp"""
         for wx, ret, station, time in (
             (["KJFK", "123456Z", "1"], ["1"], "KJFK", "123456Z"),
             (["KJFK", "123456", "1"], ["1"], "KJFK", "123456Z"),
@@ -198,9 +173,7 @@ class TestCore(BaseTest):
             self.assertEqual(core.get_station_and_time(wx), (ret, station, time))
 
     def test_get_wind(self):
-        """
-        Tests that the wind item gets removed and split into its components
-        """
+        """Tests that the wind item gets removed and split into its components"""
         # Both us knots as the default unit, so just test North American default
         for wx, unit, *wind, varv in (
             (["1"], "kt", (None,), (None,), (None,), []),
@@ -229,9 +202,7 @@ class TestCore(BaseTest):
             self.assertEqual(units.wind_speed, unit)
 
     def test_get_visibility(self):
-        """
-        Tests that the visibility item(s) gets removed and cleaned
-        """
+        """Tests that the visibility item(s) gets removed and cleaned"""
         for wx, unit, visibility in (
             (["1"], "sm", (None,)),
             (["05SM", "1"], "sm", ("5", 5)),
@@ -254,9 +225,7 @@ class TestCore(BaseTest):
             self.assertEqual(units.visibility, unit)
 
     def test_get_digit_list(self):
-        """
-        Tests that digits are removed after an index but before a non-digit item
-        """
+        """Tests that digits are removed after an index but before a non-digit item"""
         items = ["1", "T", "2", "3", "ODD", "Q", "4", "C"]
         items, ret = core.get_digit_list(items, 1)
         self.assertEqual(items, ["1", "ODD", "Q", "4", "C"])
@@ -266,9 +235,7 @@ class TestCore(BaseTest):
         self.assertEqual(ret, ["4"])
 
     def test_sanitize_cloud(self):
-        """
-        Tests the common cloud issues are fixed before parsing
-        """
+        """Tests the common cloud issues are fixed before parsing"""
         for bad, good in (
             ("OVC", "OVC"),
             ("010", "010"),
@@ -280,9 +247,7 @@ class TestCore(BaseTest):
             self.assertEqual(core.sanitize_cloud(bad), good)
 
     def test_make_cloud(self):
-        """
-        Tests helper function which returns a Cloud dataclass
-        """
+        """Tests helper function which returns a Cloud dataclass"""
         for cloud, out in (
             ("SCT060", ["SCT", 60, None, None]),
             ("FEWO03", ["FEW", 3, None, None]),
@@ -304,9 +269,7 @@ class TestCore(BaseTest):
                 self.assertEqual(getattr(ret_cloud, key), out[i])
 
     def test_get_clouds(self):
-        """
-        Tests that clouds are removed, fixed, and split correctly
-        """
+        """Tests that clouds are removed, fixed, and split correctly"""
         for wx, clouds in (
             (["1"], []),
             (["SCT060", "1"], [["SCT", 60, None]]),
@@ -324,8 +287,7 @@ class TestCore(BaseTest):
                     self.assertEqual(getattr(cloud, key), clouds[i][j])
 
     def test_get_flight_rules(self):
-        """
-        Tests that the proper flight rule is calculated for a set visibility and ceiling
+        """Tests that the proper flight rule is calculated for a set visibility and ceiling
 
         Note: Only 'Broken', 'Overcast', and 'Vertical Visibility' are considered ceilings
         """
@@ -348,9 +310,7 @@ class TestCore(BaseTest):
             )
 
     def test_get_ceiling(self):
-        """
-        Tests that the ceiling is properly identified from a list of clouds
-        """
+        """Tests that the ceiling is properly identified from a list of clouds"""
         for clouds, ceiling in (
             ([], None),
             ([["FEW", 10], ["SCT", 10]], None),
@@ -366,9 +326,7 @@ class TestCore(BaseTest):
             self.assertEqual(core.get_ceiling(clouds), ceiling)
 
     def test_parse_date(self):
-        """
-        Tests that report timestamp is parsed into a datetime object
-        """
+        """Tests that report timestamp is parsed into a datetime object"""
         today = datetime.now(tz=timezone.utc)
         rts = today.strftime(r"%d%H%MZ")
         parsed = core.parse_date(rts)
@@ -379,9 +337,7 @@ class TestCore(BaseTest):
 
     @time_machine.travel("2020-06-22 12:00")
     def test_midnight_rollover(self):
-        """
-        Tests that hour > 23 gets rolled into the next day
-        """
+        """Tests that hour > 23 gets rolled into the next day"""
         parsed = core.parse_date("2224")
         self.assertIsInstance(parsed, datetime)
         self.assertEqual(parsed.day, 23)
@@ -389,9 +345,7 @@ class TestCore(BaseTest):
         self.assertEqual(parsed.minute, 0)
 
     def test_make_timestamp(self):
-        """
-        Tests that a report timestamp is converted into a Timestamp dataclass
-        """
+        """Tests that a report timestamp is converted into a Timestamp dataclass"""
         for dt, fmt, target in (
             (datetime.now(tz=timezone.utc), r"%d%HZ", False),
             (datetime.now(tz=timezone.utc), r"%d%H%MZ", False),

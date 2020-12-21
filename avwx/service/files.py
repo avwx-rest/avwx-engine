@@ -28,16 +28,12 @@ _TEMP = Path(_TEMP_DIR.name)
 
 @atexit.register
 def _cleanup():
-    """
-    Deletes temporary files and directory at Python exit
-    """
+    """Deletes temporary files and directory at Python exit"""
     _TEMP_DIR.cleanup()
 
 
 class FileService(Service):
-    """
-    Service class for fetching reports via managed source files
-    """
+    """Service class for fetching reports via managed source files"""
 
     update_interval: dt.timedelta = dt.timedelta(minutes=10)
     _updating: bool = False
@@ -48,18 +44,14 @@ class FileService(Service):
 
     @property
     def _file(self) -> Optional[Path]:
-        """
-        Path object of the managed data file
-        """
+        """Path object of the managed data file"""
         for path in _TEMP.glob(self._file_stem + "*"):
             return path
         return None
 
     @property
     def last_updated(self) -> Optional[dt.datetime]:
-        """
-        When the file was last updated
-        """
+        """When the file was last updated"""
         try:
             timestamp = int(self._file.name.split(".")[-2])
             return dt.datetime.fromtimestamp(timestamp, tz=dt.timezone.utc)
@@ -68,9 +60,7 @@ class FileService(Service):
 
     @property
     def is_outdated(self) -> bool:
-        """
-        If the file should be updated based on the update interval
-        """
+        """If the file should be updated based on the update interval"""
         last = self.last_updated
         if last is None:
             return True
@@ -93,9 +83,7 @@ class FileService(Service):
         raise NotImplementedError()
 
     async def _update_file(self, timeout: int) -> bool:
-        """
-        Finds and saves the most recent file
-        """
+        """Finds and saves the most recent file"""
         # Find the most recent file
         async with httpx.AsyncClient(timeout=timeout) as client:
             for url in self._urls:
@@ -116,8 +104,7 @@ class FileService(Service):
         return True
 
     async def update(self, wait: bool = False, timeout: int = 10) -> bool:
-        """
-        Update the stored file and returns success
+        """Update the stored file and returns success
 
         If wait, this will block if the file is already being updated
         """
@@ -142,8 +129,7 @@ class FileService(Service):
     def fetch(
         self, station: str, wait: bool = True, timeout: int = 10, force: bool = False
     ) -> Optional[str]:
-        """
-        Fetch a report string from the source file
+        """Fetch a report string from the source file
 
         If wait, this will block if the file is already being updated
 
@@ -154,8 +140,7 @@ class FileService(Service):
     async def async_fetch(
         self, station: str, wait: bool = True, timeout: int = 10, force: bool = False
     ) -> Optional[str]:
-        """
-        Asynchronously fetch a report string from the source file
+        """Asynchronously fetch a report string from the source file
 
         If wait, this will block if the file is already being updated
 
@@ -173,17 +158,13 @@ class FileService(Service):
 
 
 class NOAA_Forecast(FileService):
-    """
-    Subclass for extracting reports from NOAA FTP files
-    """
+    """Subclass for extracting reports from NOAA FTP files"""
 
     def _index_target(self, station: str) -> Tuple[str]:
         raise NotImplementedError()
 
     def _extract(self, station: str, source: TextIO) -> Optional[str]:
-        """
-        Returns report pulled from the saved file
-        """
+        """Returns report pulled from the saved file"""
         start, end = self._index_target(station)
         txt = source.read()
         txt = txt[txt.find(start) :]
@@ -199,18 +180,14 @@ class NOAA_Forecast(FileService):
 
 
 class NOAA_NBM(NOAA_Forecast):
-    """
-    Requests forecast data from NOAA NBM FTP servers
-    """
+    """Requests forecast data from NOAA NBM FTP servers"""
 
     url = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/blend/prod/blend.{}/{}/text/blend_{}tx.t{}z"
     _valid_types = ("nbh", "nbs", "nbe")
 
     @property
     def _urls(self) -> Iterator[str]:
-        """
-        Iterates through hourly updates no older than two days
-        """
+        """Iterates through hourly updates no older than two days"""
         date = dt.datetime.now(tz=dt.timezone.utc)
         cutoff = date - dt.timedelta(days=1)
         while date > cutoff:
@@ -224,9 +201,7 @@ class NOAA_NBM(NOAA_Forecast):
 
 
 class NOAA_GFS(NOAA_Forecast):
-    """
-    Requests forecast data from NOAA GFS FTP servers
-    """
+    """Requests forecast data from NOAA GFS FTP servers"""
 
     url = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfsmos.{}/mdl_gfs{}.t{}z"
     _valid_types = ("mav", "mex")
@@ -235,9 +210,7 @@ class NOAA_GFS(NOAA_Forecast):
 
     @property
     def _urls(self) -> Iterator[str]:
-        """
-        Iterates through update cycles no older than two days
-        """
+        """Iterates through update cycles no older than two days"""
         now = dt.datetime.now(tz=dt.timezone.utc)
         date = dt.datetime.now(tz=dt.timezone.utc)
         cutoff = date - dt.timedelta(days=1)

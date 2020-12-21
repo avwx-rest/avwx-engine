@@ -15,14 +15,10 @@ from avwx.parsing import core, speech
 
 
 class TestSpeech(unittest.TestCase):
-    """
-    Tests speech parsing
-    """
+    """Tests speech parsing"""
 
     def test_wind(self):
-        """
-        Tests converting wind data into a spoken string
-        """
+        """Tests converting wind data into a spoken string"""
         for *wind, vardir, spoken in (
             ("", "", "", None, "unknown"),
             (
@@ -48,9 +44,7 @@ class TestSpeech(unittest.TestCase):
             self.assertEqual(speech.wind(*wind, vardir), "Winds " + spoken)
 
     def test_temperature(self):
-        """
-        Tests converting a temperature into a spoken string
-        """
+        """Tests converting a temperature into a spoken string"""
         for temp, unit, spoken in (
             ("", "F", "unknown"),
             ("20", "F", "two zero degrees Fahrenheit"),
@@ -64,9 +58,7 @@ class TestSpeech(unittest.TestCase):
             )
 
     def test_visibility(self):
-        """
-        Tests converting visibility distance into a spoken string
-        """
+        """Tests converting visibility distance into a spoken string"""
         for vis, unit, spoken in (
             ("", "m", "unknown"),
             ("0000", "m", "zero kilometers"),
@@ -83,9 +75,7 @@ class TestSpeech(unittest.TestCase):
             )
 
     def test_altimeter(self):
-        """
-        Tests converting altimeter reading into a spoken string
-        """
+        """Tests converting altimeter reading into a spoken string"""
         for alt, unit, spoken in (
             ("", "hPa", "unknown"),
             ("1020", "hPa", "one zero two zero"),
@@ -100,9 +90,7 @@ class TestSpeech(unittest.TestCase):
             )
 
     def test_wx_codes(self):
-        """
-        Tests converting WX codes into a spoken string
-        """
+        """Tests converting WX codes into a spoken string"""
         for codes, spoken in (
             ([], ""),
             (
@@ -118,9 +106,7 @@ class TestSpeech(unittest.TestCase):
             self.assertEqual(speech.wx_codes(codes), spoken)
 
     def test_metar(self):
-        """
-        Tests converting METAR data into into a single spoken string
-        """
+        """Tests converting METAR data into into a single spoken string"""
         units = structs.Units(**static.core.NA_UNITS)
         data = {
             "altimeter": parse_altimeter("2992"),
@@ -166,9 +152,7 @@ class TestSpeech(unittest.TestCase):
         self.assertEqual(ret, spoken)
 
     def test_type_and_times(self):
-        """
-        Tests line start from type, time, and probability values
-        """
+        """Tests line start from type, time, and probability values"""
         for type, *times, prob, spoken in (
             (None, None, None, None, ""),
             ("FROM", "2808", "2815", None, "From 8 to 15 zulu,"),
@@ -199,9 +183,7 @@ class TestSpeech(unittest.TestCase):
             self.assertEqual(ret, spoken)
 
     def test_wind_shear(self):
-        """
-        Tests converting wind shear code into a spoken string
-        """
+        """Tests converting wind shear code into a spoken string"""
         for shear, spoken in (
             ("", "Wind shear unknown"),
             ("WS020/07040KT", "Wind shear 2000ft from zero seven zero at 40kt"),
@@ -210,9 +192,7 @@ class TestSpeech(unittest.TestCase):
             self.assertEqual(speech.wind_shear(shear), spoken)
 
     def test_taf_line(self):
-        """
-        Tests converting TAF line data into into a single spoken string
-        """
+        """Tests converting TAF line data into into a single spoken string"""
         units = structs.Units(**static.core.NA_UNITS)
         line = {
             "altimeter": parse_altimeter("2992"),
@@ -248,9 +228,7 @@ class TestSpeech(unittest.TestCase):
         self.assertEqual(ret, spoken)
 
     def test_taf(self):
-        """
-        Tests converting a TafData report into a single spoken string
-        """
+        """Tests converting a TafData report into a single spoken string"""
         units = structs.Units(**static.core.NA_UNITS)
         # pylint: disable=no-member
         empty_line = {k: None for k in structs.TafLineData.__dataclass_fields__.keys()}

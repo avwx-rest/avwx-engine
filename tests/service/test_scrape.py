@@ -24,9 +24,7 @@ class TestScrapeService(BaseTestService):
     required_attrs = ("method", "_strip_whitespace", "_extract")
 
     def test_service(self):
-        """
-        Tests for expected values and method implementation
-        """
+        """Tests for expected values and method implementation"""
         # pylint: disable=no-member
         if type(self.serv) == service.scrape.ScrapeService:
             self.assertIsNone(self.serv.url)
@@ -38,9 +36,7 @@ class TestScrapeService(BaseTestService):
         self.assertIn(self.serv.method, ("GET", "POST"))
 
     def test_make_err(self):
-        """
-        Tests that InvalidRequest exceptions are generated with the right message
-        """
+        """Tests that InvalidRequest exceptions are generated with the right message"""
         # pylint: disable=no-member
         key, msg = "test_key", "testing"
         err = self.serv._make_err(msg, key)
@@ -52,9 +48,7 @@ class TestScrapeService(BaseTestService):
         self.assertEqual(str(err), err_str)
 
     def test_fetch_exceptions(self):
-        """
-        Tests fetch exception handling
-        """
+        """Tests fetch exception handling"""
         for station in ("12K", "MAYT"):
             with self.assertRaises(exceptions.BadStation):
                 self.serv.fetch(station)
@@ -65,9 +59,7 @@ class TestScrapeService(BaseTestService):
 
     @pytest.mark.asyncio
     async def test_async_fetch_exceptions(self):
-        """
-        Tests async fetch exception handling
-        """
+        """Tests async fetch exception handling"""
         for station in ("12K", "MAYT"):
             with self.assertRaises(exceptions.BadStation):
                 await self.serv.async_fetch(station)
@@ -103,9 +95,7 @@ class TestAUBOM(TestScrapeService):
 
 class TestModule(unittest.TestCase):
     def test_get_service(self):
-        """
-        Tests that the correct service class is returned
-        """
+        """Tests that the correct service class is returned"""
         for stations, country, serv in (
             (("KJFK", "PHNL"), "US", service.NOAA),
             (("EGLL",), "GB", service.NOAA),

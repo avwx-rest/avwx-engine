@@ -13,8 +13,7 @@ from avwx.structs import RemarksData
 
 
 def _tdec(code: str, unit: str = "C") -> str:
-    """
-    Translates a 4-digit decimal temperature representation
+    """Translates a 4-digit decimal temperature representation
 
     Ex: 1045 -> -4.5°C    0237 -> 23.7°C
     """
@@ -27,16 +26,13 @@ def _tdec(code: str, unit: str = "C") -> str:
 
 
 def temp_minmax(code: str) -> str:
-    """
-    Translates a 5-digit min/max temperature code
-    """
+    """Translates a 5-digit min/max temperature code"""
     label = "maximum" if code[0] == "1" else "minimum"
     return f"6-hour {label} temperature {_tdec(code[1:])}"
 
 
 def pressure_tendency(code: str, unit: str = "mb") -> str:
-    """
-    Translates a 5-digit pressure outlook code
+    """Translates a 5-digit pressure outlook code
 
     Ex: 50123 -> 12.3 mb: Increasing, then decreasing
     """
@@ -48,9 +44,7 @@ def pressure_tendency(code: str, unit: str = "mb") -> str:
 
 
 def precip_36(code: str, unit: str = "in") -> str:
-    """
-    Translates a 5-digit 3 and 6-hour precipitation code
-    """
+    """Translates a 5-digit 3 and 6-hour precipitation code"""
     return (
         "Precipitation in the last 3 hours: "
         f"{int(code[1:3])} {unit}. - 6 hours: {int(code[3:])} {unit}."
@@ -58,16 +52,12 @@ def precip_36(code: str, unit: str = "in") -> str:
 
 
 def precip_24(code: str, unit: str = "in") -> str:
-    """
-    Translates a 5-digit 24-hour precipitation code
-    """
+    """Translates a 5-digit 24-hour precipitation code"""
     return f"Precipitation in the last 24 hours: {int(code[1:])} {unit}."
 
 
 def sunshine_duration(code: str, unit: str = "minutes") -> str:
-    """
-    Translates a 5-digit sunlight duration code
-    """
+    """Translates a 5-digit sunlight duration code"""
     return f"Duration of sunlight: {int(code[1:])} {unit}"
 
 
@@ -82,9 +72,7 @@ LEN5_DECODE = {
 
 
 def parse(rmk: str) -> RemarksData:
-    """
-    Finds temperature and dewpoint decimal values from the remarks
-    """
+    """Finds temperature and dewpoint decimal values from the remarks"""
     rmkdata = {}
     for item in rmk.split():
         if len(item) in [5, 9] and item[0] == "T" and item[1:].isdigit():
@@ -94,9 +82,7 @@ def parse(rmk: str) -> RemarksData:
 
 
 def translate(remarks: str) -> Dict[str, str]:
-    """
-    Translates elements in the remarks string
-    """
+    """Translates elements in the remarks string"""
     ret = {}
     # Add and replace static multi-word elements
     for key in REMARKS_GROUPS:

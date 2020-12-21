@@ -4,18 +4,12 @@ Contains avwx custom exceptions
 
 
 class BadStation(Exception):
-    """
-    Station does not exist
-    """
+    """Station does not exist"""
 
 
 class InvalidRequest(Exception):
-    """
-    Unable to fetch data
-    """
+    """Unable to fetch data"""
 
 
 class SourceError(Exception):
-    """
-    Source servers returned an error code
-    """
+    """Source servers returned an error code"""

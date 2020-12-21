@@ -19,16 +19,12 @@ from tests.util import get_data
 
 
 class TestTaf(unittest.TestCase):
-    """
-    Tests Taf class and parsing
-    """
+    """Tests Taf class and parsing"""
 
     maxDiff = None
 
     def test_get_taf_remarks(self):
-        """
-        Tests that remarks are removed from a TAF report
-        """
+        """Tests that remarks are removed from a TAF report"""
         for txt, rmk in (
             ("KJFK test", ""),
             ("KJFK test RMK test", "RMK test"),
@@ -40,9 +36,7 @@ class TestTaf(unittest.TestCase):
             self.assertEqual(remarks, rmk)
 
     def test_sanitize_line(self):
-        """
-        Tests a function which fixes common new-line signifiers in TAF reports
-        """
+        """Tests a function which fixes common new-line signifiers in TAF reports"""
         for line in ("1 BEC 1", "1 BE CMG1", "1 BEMG 1"):
             self.assertEqual(taf.sanitize_line(line), "1 BECMG 1")
         for line in ("1 TEMP0 1", "1 TEMP 1", "1 TEMO1", "1 T EMPO1"):
@@ -50,9 +44,7 @@ class TestTaf(unittest.TestCase):
         self.assertEqual(taf.sanitize_line("1 2 3 4 5"), "1 2 3 4 5")
 
     def test_is_tempo_or_prob(self):
-        """
-        Tests a function which checks that an item signifies a new time period
-        """
+        """Tests a function which checks that an item signifies a new time period"""
         for line in (
             {"type": "TEMPO"},
             {"probability": 30},
@@ -64,9 +56,7 @@ class TestTaf(unittest.TestCase):
             self.assertFalse(taf._is_tempo_or_prob(line))
 
     def test_get_alt_ice_turb(self):
-        """
-        Tests that report global altimeter, icing, and turbulence get removed
-        """
+        """Tests that report global altimeter, icing, and turbulence get removed"""
         for wx, *data in (
             (["1"], "", [], []),
             (["1", "512345", "612345"], "", ["612345"], ["512345"]),
@@ -75,9 +65,7 @@ class TestTaf(unittest.TestCase):
             self.assertEqual(taf.get_alt_ice_turb(wx), (["1"], *data))
 
     def test_starts_new_line(self):
-        """
-        Tests that certain items are identified as new line markers in TAFs
-        """
+        """Tests that certain items are identified as new line markers in TAFs"""
         for item in [
             *static.taf.TAF_NEWLINE,
             "PROB30",
@@ -90,9 +78,7 @@ class TestTaf(unittest.TestCase):
             self.assertFalse(taf.starts_new_line(item))
 
     def test_split_taf(self):
-        """
-        Tests that TAF reports are split into the correct time periods
-        """
+        """Tests that TAF reports are split into the correct time periods"""
         for report, num in (
             ("KJFK test", 1),
             ("KJFK test FM12345678 test", 2),
@@ -106,9 +92,7 @@ class TestTaf(unittest.TestCase):
             self.assertEqual(split[0], "KJFK test")
 
     def test_get_type_and_times(self):
-        """
-        Tests TAF line type, start time, and end time extraction
-        """
+        """Tests TAF line type, start time, and end time extraction"""
         for wx, *data in (
             (["1"], "FROM", None, None, None),
             (["INTER", "1"], "INTER", None, None, None),
@@ -122,9 +106,7 @@ class TestTaf(unittest.TestCase):
             self.assertEqual(taf.get_type_and_times(wx), (["1"], *data))
 
     def test_find_missing_taf_times(self):
-        """
-        Tests that missing forecast times can be interpretted by 
-        """
+        """Tests that missing forecast times can be interpretted by preceding periods"""
         good_lines = [
             {
                 "type": "FROM",
@@ -164,9 +146,7 @@ class TestTaf(unittest.TestCase):
         self.assertEqual(taf.find_missing_taf_times(bad_lines, start, end), good_lines)
 
     def test_get_temp_min_and_max(self):
-        """
-        Tests that temp max and min times are extracted and assigned properly
-        """
+        """Tests that temp max and min times are extracted and assigned properly"""
         for wx, *temps in (
             (["1"], "", ""),
             (["1", "TX12/1316Z", "TNM03/1404Z"], "TX12/1316Z", "TNM03/1404Z"),
@@ -175,9 +155,7 @@ class TestTaf(unittest.TestCase):
             self.assertEqual(taf.get_temp_min_and_max(wx), (["1"], *temps))
 
     def test_get_oceania_temp_and_alt(self):
-        """
-        Tests that Oceania-specific elements are identified and removed
-        """
+        """Tests that Oceania-specific elements are identified and removed"""
         items = ["1", "T", "2", "3", "ODD", "Q", "4", "C"]
         items, tlist, qlist = taf.get_oceania_temp_and_alt(items)
         self.assertEqual(items, ["1", "ODD", "C"])
@@ -185,9 +163,7 @@ class TestTaf(unittest.TestCase):
         self.assertEqual(qlist, ["4"])
 
     def test_get_wind_shear(self):
-        """
-        Tests extracting wind shear
-        """
+        """Tests extracting wind shear"""
         for wx, shear in (
             (["1", "2"], None),
             (["1", "2", "WS020/07040"], "WS020/07040"),
@@ -195,9 +171,7 @@ class TestTaf(unittest.TestCase):
             self.assertEqual(taf.get_wind_shear(wx), (["1", "2"], shear))
 
     def test_skc_flight_rules(self):
-        """
-        SKC should prevent temp_cloud lookback instead of missing clouds
-        """
+        """SKC should prevent temp_cloud lookback instead of missing clouds"""
         report = (
             "KLGB 201120Z 2012/2112 VRB03KT P6SM OVC016 "
             "FM201600 15006KT P6SM BKN021 "
@@ -212,9 +186,7 @@ class TestTaf(unittest.TestCase):
             self.assertEqual(period.flight_rules, flight_rules)
 
     def test_parse(self):
-        """
-        Tests returned structs from the parse function
-        """
+        """Tests returned structs from the parse function"""
         report = (
             "PHNL 042339Z 0500/0606 06018G25KT P6SM FEW030 SCT060 FM050600 06010KT "
             "P6SM FEW025 SCT060 FM052000 06012G20KT P6SM FEW030 SCT060"
@@ -225,8 +197,7 @@ class TestTaf(unittest.TestCase):
         self.assertEqual(data.raw, report)
 
     def test_prob_line(self):
-        """
-        Even though PROB__ is not in TAF_NEWLINE, it should still separate,
+        """Even though PROB__ is not in TAF_NEWLINE, it should still separate,
         add a new line, and include the prob value in line.probability
         """
         report = (
@@ -246,9 +217,7 @@ class TestTaf(unittest.TestCase):
         self.assertTrue(lines[4].raw.startswith("PROB30"))
 
     def test_prob_end(self):
-        """
-        PROB and TEMPO lines are discrete times and should not affect FROM times
-        """
+        """PROB and TEMPO lines are discrete times and should not affect FROM times"""
         report = (
             "MMMX 242331Z 2500/2606 24005KT P6SM VC RA SCT020CB SCT080 BKN200 TX25/2521Z TN14/2513Z "
             "TEMPO 2500/2504 6SM TSRA BKN020CB "
@@ -271,9 +240,7 @@ class TestTaf(unittest.TestCase):
         self.assertEqual(lines[-1].end_time.repr, "2602")
 
     def test_wind_shear(self):
-        """
-        Wind shear should be recognized as its own element in addition to wind
-        """
+        """Wind shear should be recognized as its own element in addition to wind"""
         report = (
             "TAF AMD CYOW 282059Z 2821/2918 09008KT WS015/20055KT P6SM BKN220 "
             "BECMG 2821/2823 19015G25KT "
@@ -291,9 +258,7 @@ class TestTaf(unittest.TestCase):
         self.assertEqual(tafobj.translations.forecast[1].clouds, None)
 
     def test_prob_tempo(self):
-        """
-        Non-PROB types should take precident but still fill the probability value
-        """
+        """Non-PROB types should take precident but still fill the probability value"""
         report = (
             "EGLL 192253Z 2000/2106 28006KT 9999 BKN035 "
             "PROB30 TEMPO 2004/2009 BKN012 "
@@ -310,9 +275,7 @@ class TestTaf(unittest.TestCase):
             self.assertEqual(lines[i].probability.value, 30)
 
     def test_taf_ete(self):
-        """
-        Performs an end-to-end test of all TAF JSON files
-        """
+        """Performs an end-to-end test of all TAF JSON files"""
         for ref, icao, issued in get_data(__file__, "taf"):
             station = taf.Taf(icao)
             self.assertIsNone(station.last_updated)
@@ -326,9 +289,7 @@ class TestTaf(unittest.TestCase):
             self.assertEqual(station.speech, ref["speech"])
 
     def test_rule_inherit(self):
-        """
-        Tests if TAF forecast periods selectively inherit features to calculate flight rules
-        """
+        """Tests if TAF forecast periods selectively inherit features to calculate flight rules"""
         report = (
             "CYKF 020738Z 0208/0220 34005KT P6SM FEW015 BKN070 "
             "FM020900 VRB03KT P6SM FEW070 SCT120 "

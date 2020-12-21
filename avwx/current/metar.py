@@ -17,8 +17,7 @@ from avwx.structs import MetarData, Number, Units
 
 
 def get_remarks(txt: str) -> Tuple[List[str], str]:
-    """
-    Returns the report split into components and the remarks string
+    """Returns the report split into components and the remarks string
 
     Remarks can include items like RMK and on, NOSIG and on, and BECMG and on
     """
@@ -41,9 +40,7 @@ def get_remarks(txt: str) -> Tuple[List[str], str]:
 
 
 def get_runway_visibility(data: List[str]) -> Tuple[List[str], List[str]]:
-    """
-    Returns the report list and the remove runway visibility list
-    """
+    """Returns the report list and the remove runway visibility list"""
     runway_vis = []
     for i, item in reversed(list(enumerate(data))):
         if (
@@ -58,9 +55,7 @@ def get_runway_visibility(data: List[str]) -> Tuple[List[str], List[str]]:
 
 
 def parse_altimeter(value: str) -> Number:
-    """
-    Parse an altimeter string into a Number
-    """
+    """Parse an altimeter string into a Number"""
     if not value or len(value) < 4:
         return None
     # QNH3003INS
@@ -85,8 +80,7 @@ def parse_altimeter(value: str) -> Number:
 def get_altimeter(
     data: List[str], units: Units, version: str = "NA"
 ) -> Tuple[List[str], Number]:
-    """
-    Returns the report list and the removed altimeter item
+    """Returns the report list and the removed altimeter item
 
     Version is 'NA' (North American / default) or 'IN' (International)
     """
@@ -108,9 +102,7 @@ def get_altimeter(
 
 
 def get_temp_and_dew(data: str) -> Tuple[List[str], Number, Number]:
-    """
-    Returns the report list and removed temperature and dewpoint strings
-    """
+    """Returns the report list and removed temperature and dewpoint strings"""
     for i, item in reversed(list(enumerate(data))):
         if "/" in item:
             # ///07
@@ -136,9 +128,7 @@ def get_temp_and_dew(data: str) -> Tuple[List[str], Number, Number]:
 
 
 def sanitize(report: str) -> Tuple[str, str, List[str]]:
-    """
-    Returns a sanitized report, remarks, and elements ready for parsing
-    """
+    """Returns a sanitized report, remarks, and elements ready for parsing"""
     clean = sanitization.sanitize_report_string(report)
     data, remark_str = get_remarks(clean)
     data = core.dedupe(data)
@@ -150,9 +140,7 @@ def sanitize(report: str) -> Tuple[str, str, List[str]]:
 
 
 def parse(station: str, report: str, issued: date = None) -> Tuple[MetarData, Units]:
-    """
-    Returns MetarData and Units dataclasses with parsed data and their associated units
-    """
+    """Returns MetarData and Units dataclasses with parsed data and their associated units"""
     valid_station(station)
     if not report:
         return None, None
@@ -161,9 +149,7 @@ def parse(station: str, report: str, issued: date = None) -> Tuple[MetarData, Un
 
 
 def parse_na(report: str, issued: date = None) -> Tuple[MetarData, Units]:
-    """
-    Parser for the North American METAR variant
-    """
+    """Parser for the North American METAR variant"""
     units = Units(**NA_UNITS)
     resp = {"raw": report}
     resp["sanitized"], resp["remarks"], data = sanitize(report)
@@ -191,9 +177,7 @@ def parse_na(report: str, issued: date = None) -> Tuple[MetarData, Units]:
 
 
 def parse_in(report: str, issued: date = None) -> Tuple[MetarData, Units]:
-    """
-    Parser for the International METAR variant
-    """
+    """Parser for the International METAR variant"""
     units = Units(**IN_UNITS)
     resp = {"raw": report}
     resp["sanitized"], resp["remarks"], data = sanitize(report)
@@ -227,9 +211,7 @@ def parse_in(report: str, issued: date = None) -> Tuple[MetarData, Units]:
 
 
 class Metar(Report):
-    """
-    Class to handle METAR report data
-    """
+    """Class to handle METAR report data"""
 
     def _post_update(self):
         self.data, self.units = parse(self.icao, self.raw, self.issued)
@@ -237,25 +219,19 @@ class Metar(Report):
 
     @staticmethod
     def sanitize(report: str) -> str:
-        """
-        Sanitizes a METAR string
-        """
+        """Sanitizes a METAR string"""
         return sanitize(report)[0]
 
     @property
     def summary(self) -> str:
-        """
-        Condensed report summary created from translations
-        """
+        """Condensed report summary created from translations"""
         if not self.translations:
             self.update()
         return summary.metar(self.translations)
 
     @property
     def speech(self) -> str:
-        """
-        Report summary designed to be read by a text-to-speech program
-        """
+        """Report summary designed to be read by a text-to-speech program"""
         if not self.data:
             self.update()
         return speech.metar(self.data, self.units)

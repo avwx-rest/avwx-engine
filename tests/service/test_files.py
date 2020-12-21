@@ -26,9 +26,7 @@ class TestScrapeService(BaseTestService):
     )
 
     def test_not_implemented(self):
-        """
-        Tests that the base FileService class throws NotImplemented errors
-        """
+        """Tests that the base FileService class throws NotImplemented errors"""
         if type(self.serv) != service.files.FileService:
             return
         # pylint: disable=no-member.pointless-statement
@@ -39,9 +37,7 @@ class TestScrapeService(BaseTestService):
 
     @pytest.mark.asyncio
     async def test_async_fetch_exceptions(self):
-        """
-        Tests async fetch exception handling
-        """
+        """Tests async fetch exception handling"""
         for station in ("12K", "MAYT"):
             with self.assertRaises(exceptions.BadStation):
                 await self.serv.async_fetch(station)

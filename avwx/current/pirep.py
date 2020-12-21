@@ -26,9 +26,7 @@ _UNITS = Units(**NA_UNITS)
 
 
 def _root(item: str) -> dict:
-    """
-    Parses report root data including station and report type
-    """
+    """Parses report root data including station and report type"""
     # pylint: disable=redefined-argument-from-local
     report_type = None
     station = None
@@ -41,9 +39,7 @@ def _root(item: str) -> dict:
 
 
 def _location(item: str) -> Location:
-    """
-    Convert a location element to a Location object
-    """
+    """Convert a location element to a Location object"""
     items = item.split()
     if not items:
         return None
@@ -71,25 +67,19 @@ def _location(item: str) -> Location:
 
 
 def _time(item: str, target: date = None) -> Timestamp:
-    """
-    Convert a time element to a Timestamp
-    """
+    """Convert a time element to a Timestamp"""
     return core.make_timestamp(item, time_only=True, target_date=target)
 
 
 def _altitude(item: str) -> Union[Number, str]:
-    """
-    Convert reporting altitude to a Number or string
-    """
+    """Convert reporting altitude to a Number or string"""
     if item.isdigit():
         return core.make_number(item)
     return item
 
 
 def _aircraft(item: str) -> str:
-    """
-    Returns the Aircraft from the ICAO code
-    """
+    """Returns the Aircraft from the ICAO code"""
     try:
         return Aircraft.from_icao(item)
     except ValueError:
@@ -97,9 +87,7 @@ def _aircraft(item: str) -> str:
 
 
 def _clouds(item: str) -> List[Cloud]:
-    """
-    Convert cloud element to a list of Clouds
-    """
+    """Convert cloud element to a list of Clouds"""
     clouds = item.split()
     # BASES 004 TOPS 016
     if "BASES" in clouds and "TOPS" in clouds:
@@ -110,9 +98,7 @@ def _clouds(item: str) -> List[Cloud]:
 
 
 def _number(item: str) -> Number:
-    """
-    Convert an element to a Number
-    """
+    """Convert an element to a Number"""
     return core.make_number(item)
 
 
@@ -120,9 +106,7 @@ _DIR_SIG = {"BLO": "ceiling"}
 
 
 def _find_floor_ceiling(items: List[str]) -> Tuple[List[str], dict]:
-    """
-    Extracts the floor and ceiling from item list
-    """
+    """Extracts the floor and ceiling from item list"""
     ret = {"floor": None, "ceiling": None}
     for i, item in enumerate(items):
         hloc = item.find("-")
@@ -145,18 +129,14 @@ def _find_floor_ceiling(items: List[str]) -> Tuple[List[str], dict]:
 
 
 def _turbulence(item: str) -> Turbulence:
-    """
-    Convert reported turbulence to a Turbulence object
-    """
+    """Convert reported turbulence to a Turbulence object"""
     items, ret = _find_floor_ceiling(item.split())
     ret["severity"] = " ".join(items)
     return Turbulence(**ret)
 
 
 def _icing(item: str) -> Icing:
-    """
-    Convert reported icing to an Icing object
-    """
+    """Convert reported icing to an Icing object"""
     items, ret = _find_floor_ceiling(item.split())
     ret["severity"] = items.pop(0)
     ret["type"] = items[0] if items else None
@@ -164,16 +144,12 @@ def _icing(item: str) -> Icing:
 
 
 def _remarks(item: str) -> str:
-    """
-    Returns the remarks. Reserved for later parsing
-    """
+    """Returns the remarks. Reserved for later parsing"""
     return item
 
 
 def _wx(item: str) -> dict:
-    """
-    Parses remaining weather elements
-    """
+    """Parses remaining weather elements"""
     # pylint: disable=redefined-argument-from-local
     ret = {"wx": []}
     items = item.split()
@@ -201,9 +177,7 @@ _DICT_HANDLERS = {"WX": _wx}
 
 
 def parse(report: str, issued: date = None) -> PirepData:
-    """
-    Returns a PirepData object based on the given report
-    """
+    """Returns a PirepData object based on the given report"""
     if not report:
         return None
     sanitized = sanitization.sanitize_report_string(report)
@@ -227,17 +201,13 @@ def parse(report: str, issued: date = None) -> PirepData:
 
 
 class Pireps(Reports):
-    """
-    Class to handle pilot report data
-    """
+    """Class to handle pilot report data"""
 
     data: Optional[List[PirepData]] = None
 
     @staticmethod
     def _report_filter(reports: List[str]) -> List[str]:
-        """
-        Removes AIREPs before updating raw_reports
-        """
+        """Removes AIREPs before updating raw_reports"""
         return [r for r in reports if not r.startswith("ARP")]
 
     def _post_update(self):
@@ -247,7 +217,5 @@ class Pireps(Reports):
 
     @staticmethod
     def sanitize(report: str) -> str:
-        """
-        Sanitizes a PIREP string
-        """
+        """Sanitizes a PIREP string"""
         return sanitization.sanitize_report_string(report)

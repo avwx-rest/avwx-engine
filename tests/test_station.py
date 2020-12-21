@@ -10,14 +10,11 @@ from avwx import exceptions, station
 
 
 class TestStationFuncs(TestCase):
-    """
-    Tests station module functions
-    """
+    """Tests station module functions"""
 
     def test_uses_na_format(self):
-        """
-        METAR and TAF reports come in two flavors: North American and International
-        
+        """METAR and TAF reports come in two flavors: North American and International
+
         uses_na_format should determine the format based on the station ident using prefixes
         """
         # NA idents
@@ -32,8 +29,7 @@ class TestStationFuncs(TestCase):
                 station.uses_na_format(ident)
 
     def test_valid_station(self):
-        """
-        While not designed to catch all non-existant station idents,
+        """While not designed to catch all non-existant station idents,
         valid_station should catch non-ICAO strings and filter based on known prefixes
         """
         # Good idents
@@ -45,9 +41,7 @@ class TestStationFuncs(TestCase):
                 station.valid_station(ident)
 
     def test_nearest(self):
-        """
-        Tests returning nearest Stations to lat, lon
-        """
+        """Tests returning nearest Stations to lat, lon"""
         dist = station.nearest(28.43, -81.31)
         stn = dist.pop("station")
         self.assertIsInstance(stn, station.Station)
@@ -70,13 +64,11 @@ class TestStationFuncs(TestCase):
                     self.assertIsInstance(val, float)
 
     def test_nearest_filter(self):
-        """
-        Tests filtering nearest stations
-        """
+        """Tests filtering nearest stations"""
         for airport, reports, count in (
-            (True, True, 5),
-            (True, False, 15),
-            (False, True, 7),
+            (True, True, 6),
+            (True, False, 16),
+            (False, True, 6),
             (False, False, 29),
         ):
             stations = station.nearest(30, -80, 30, airport, reports, 1.5)
@@ -84,14 +76,10 @@ class TestStationFuncs(TestCase):
 
 
 class TestStation(TestCase):
-    """
-    Tests the Station class
-    """
+    """Tests the Station class"""
 
     def test_from_icao(self):
-        """
-        Tests loading a Station by ICAO ident
-        """
+        """Tests loading a Station by ICAO ident"""
         for icao, name, city in (
             ("KJFK", "John F Kennedy International Airport", "New York"),
             ("kjfk", "John F Kennedy International Airport", "New York"),
@@ -109,9 +97,7 @@ class TestStation(TestCase):
                 station.Station.from_icao(bad)
 
     def test_nearest(self):
-        """
-        Tests loading a Station nearest to a lat,lon coordinate pair
-        """
+        """Tests loading a Station nearest to a lat,lon coordinate pair"""
         for lat, lon, icao in ((28.43, -81.31, "KMCO"), (28.43, -81, "KTIX")):
             stn, dist = station.Station.nearest(lat, lon, is_airport=True)
             self.assertIsInstance(stn, station.Station)
@@ -126,9 +112,7 @@ class TestStation(TestCase):
             self.assertIsInstance(val, float)
 
     def test_sends_reports(self):
-        """
-        Tests bool indicating likely reporting station
-        """
+        """Tests bool indicating likely reporting station"""
         for icao in ("KJFK", "EGLL"):
             stn = station.Station.from_icao(icao)
             self.assertTrue(stn.sends_reports)

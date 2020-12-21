@@ -15,8 +15,7 @@ from avwx.structs import TafData, TafLineTrans, TafTrans, Units
 def wind_shear(
     shear: str, unit_alt: str = "ft", unit_wind: str = "kt", spoken: bool = False
 ) -> str:
-    """
-    Translate wind shear into a readable string
+    """Translate wind shear into a readable string
 
     Ex: Wind shear 2000ft from 140 at 30kt
     """
@@ -28,8 +27,7 @@ def wind_shear(
 
 
 def turb_ice(values: List[str], unit: str = "ft") -> str:
-    """
-    Translate the list of turbulence or icing into a readable sentence
+    """Translate the list of turbulence or icing into a readable sentence
 
     Ex: Occasional moderate turbulence in clouds from 3000ft to 14000ft
     """
@@ -69,8 +67,7 @@ def turb_ice(values: List[str], unit: str = "ft") -> str:
 
 
 def min_max_temp(temp: str, unit: str = "C") -> str:
-    """
-    Format the Min and Max temp elements into a readable string
+    """Format the Min and Max temp elements into a readable string
 
     Ex: Maximum temperature of 23°C (73°F) at 18-15:00Z
     """
@@ -90,9 +87,7 @@ def min_max_temp(temp: str, unit: str = "C") -> str:
 
 
 def translate_taf(wxdata: TafData, units: Units) -> TafTrans:
-    """
-    Returns translations for a TafData object
-    """
+    """Returns translations for a TafData object"""
     data = {"forecast": []}
     for line in wxdata.forecast:
         _data = _trans.current_shared(line, units)

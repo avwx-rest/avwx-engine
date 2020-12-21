@@ -14,14 +14,10 @@ from avwx.parsing import core, translate
 
 
 class TestShared(unittest.TestCase):
-    """
-    Test shared translation functions
-    """
+    """Test shared translation functions"""
 
     def test_visibility(self):
-        """
-        Tests visibility translation and conversion
-        """
+        """Tests visibility translation and conversion"""
         for vis, unit, translation in (
             ("", "m", ""),
             ("0000", "m", "0km (0sm)"),
@@ -38,9 +34,7 @@ class TestShared(unittest.TestCase):
             )
 
     def test_altimeter(self):
-        """
-        Tests altimeter translation and conversion
-        """
+        """Tests altimeter translation and conversion"""
         for alt, repr, unit, translation in (
             ("", "", "hPa", ""),
             ("1020", "1020", "hPa", "1020 hPa (30.12 inHg)"),
@@ -55,9 +49,7 @@ class TestShared(unittest.TestCase):
             )
 
     def test_clouds(self):
-        """
-        Tests translating each cloud into a single string
-        """
+        """Tests translating each cloud into a single string"""
         self.assertEqual(translate.base.clouds(None), "")
         self.assertEqual(translate.base.clouds([]), "Sky clear")
         for clouds, translation in (
@@ -74,9 +66,7 @@ class TestShared(unittest.TestCase):
             )
 
     def test_wx_codes(self):
-        """
-        Tests translating a list of weather codes into a single string
-        """
+        """Tests translating a list of weather codes into a single string"""
         for codes, translation in (
             ([], ""),
             (["VCFC", "+RA"], "Vicinity Funnel Cloud, Heavy Rain"),
@@ -86,9 +76,7 @@ class TestShared(unittest.TestCase):
             self.assertEqual(translate.base.wx_codes(codes), translation)
 
     def test_shared(self):
-        """
-        Tests availability of shared values between the METAR and TAF translations
-        """
+        """Tests availability of shared values between the METAR and TAF translations"""
         units = structs.Units(**static.core.NA_UNITS)
         data = structs.SharedData(
             altimeter=core.make_number("2992"),
@@ -110,14 +98,10 @@ class TestShared(unittest.TestCase):
 
 
 class TestMetar(unittest.TestCase):
-    """
-    Test METAR translations
-    """
+    """Test METAR translations"""
 
     def test_cardinal_direction(self):
-        """
-        Tests that a direction int returns the correct cardinal direction string
-        """
+        """Tests that a direction int returns the correct cardinal direction string"""
         # 12 - 360+
         keys = (12, 34, 57, 79)
         for i, cardinal in enumerate(
@@ -155,9 +139,7 @@ class TestMetar(unittest.TestCase):
             self.assertEqual(translate.base.get_cardinal_direction(direction), "N")
 
     def test_wind(self):
-        """
-        Tests that wind values are translating into a single string
-        """
+        """Tests that wind values are translating into a single string"""
         for *wind, vardir, translation in (
             ("", "", "", None, ""),
             (
@@ -177,9 +159,7 @@ class TestMetar(unittest.TestCase):
             self.assertEqual(translate.base.wind(*wind, vardir), translation)
 
     def test_temperature(self):
-        """
-        Tests temperature translation and conversion
-        """
+        """Tests temperature translation and conversion"""
         for temp, unit, translation in (
             ("20", "F", "20°F (-7°C)"),
             ("M20", "F", "-20°F (-29°C)"),
@@ -192,9 +172,7 @@ class TestMetar(unittest.TestCase):
             )
 
     def test_metar(self):
-        """
-        Tests end-to-end METAR translation
-        """
+        """Tests end-to-end METAR translation"""
         units = structs.Units(**static.core.NA_UNITS)
         data = {
             "altimeter": core.make_number("29.92", "2992"),
@@ -244,14 +222,10 @@ class TestMetar(unittest.TestCase):
 
 
 class TestTaf(unittest.TestCase):
-    """
-    Test TAF translations
-    """
+    """Test TAF translations"""
 
     def test_wind_shear(self):
-        """
-        Tests wind shear unpacking and translation
-        """
+        """Tests wind shear unpacking and translation"""
         for shear, translation in (
             ("", ""),
             ("WS020/07040KT", "Wind shear 2000ft from 070 at 40kt"),
@@ -260,9 +234,7 @@ class TestTaf(unittest.TestCase):
             self.assertEqual(translate.taf.wind_shear(shear), translation)
 
     def test_turb_ice(self):
-        """
-        Tests turbulence and icing translations
-        """
+        """Tests turbulence and icing translations"""
         for turb_ice, translation in (
             ([], ""),
             (
@@ -278,9 +250,7 @@ class TestTaf(unittest.TestCase):
             self.assertEqual(translate.taf.turb_ice(turb_ice), translation)
 
     def test_min_max_temp(self):
-        """
-        Tests temperature time translation and conversion
-        """
+        """Tests temperature time translation and conversion"""
         for temp, translation in (
             ("", ""),
             ("TX20/1518Z", "Maximum temperature of 20°C (68°F) at 15-18:00Z"),
@@ -290,9 +260,7 @@ class TestTaf(unittest.TestCase):
             self.assertEqual(translate.taf.min_max_temp(temp), translation)
 
     def test_taf(self):
-        """
-        Tests end-to-end TAF translation
-        """
+        """Tests end-to-end TAF translation"""
         units = structs.Units(**static.core.NA_UNITS)
         line_data = {
             "altimeter": core.make_number("29.92", "2992"),

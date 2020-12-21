@@ -22,9 +22,7 @@ from avwx.service.base import Service
 
 
 class ScrapeService(Service):
-    """
-    Service class for fetching reports via direct web requests
-    """
+    """Service class for fetching reports via direct web requests"""
 
     method: str = "GET"
 
@@ -32,36 +30,26 @@ class ScrapeService(Service):
     _strip_whitespace: bool = True
 
     def _make_err(self, body: str, key: str = "report path") -> InvalidRequest:
-        """
-        Returns an InvalidRequest exception with formatted error message
-        """
+        """Returns an InvalidRequest exception with formatted error message"""
         msg = f"Could not find {key} in {self.__class__.__name__} response\n"
         return InvalidRequest(msg + body)
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
-        """
-        Returns a formatted URL and parameters
-        """
+        """Returns a formatted URL and parameters"""
         raise NotImplementedError()
 
     def _extract(self, raw: str, station: str = None) -> str:
-        """
-        Extracts the report string from the service response
-        """
+        """Extracts the report string from the service response"""
         raise NotImplementedError()
 
     # pylint: disable=unused-argument
     @staticmethod
     def _post_data(station: str) -> dict:
-        """
-        Returns the POST form/data payload
-        """
+        """Returns the POST form/data payload"""
         return {}
 
     def _clean_report(self, report: str) -> str:
-        """
-        Replaces all *whitespace elements with a single space if enabled
-        """
+        """Replaces all *whitespace elements with a single space if enabled"""
         if not self._strip_whitespace:
             return report
         if isinstance(report, list):
@@ -94,16 +82,16 @@ class ScrapeService(Service):
         report = self._extract(resp.text, station)
         return self._clean_report(report)
 
-    def fetch(self, station: str, timeout: int = 10,) -> str:
-        """
-        Fetches a report string from the service
-        """
+    def fetch(
+        self,
+        station: str,
+        timeout: int = 10,
+    ) -> str:
+        """Fetches a report string from the service"""
         return aio.run(self.async_fetch(station, timeout))
 
     async def async_fetch(self, station: str, timeout: int = 10) -> str:
-        """
-        Asynchronously fetch a report string from the service
-        """
+        """Asynchronously fetch a report string from the service"""
         valid_station(station)
         url, params = self._make_url(station)
         return await self._fetch(station, url, params, timeout)
@@ -113,9 +101,7 @@ class ScrapeService(Service):
 
 
 class NOAA_ADDS(ScrapeService):
-    """
-    Requests data from NOAA ADDS
-    """
+    """Requests data from NOAA ADDS"""
 
     url = "https://aviationweather.gov/adds/dataserver_current/httpparam"
 
@@ -128,9 +114,7 @@ class NOAA_ADDS(ScrapeService):
         super().__init__(self._rtype_map.get(request_type, request_type))
 
     def _make_url(self, station: str, lat: float, lon: float) -> Tuple[str, dict]:
-        """
-        Returns a formatted URL and parameters
-        """
+        """Returns a formatted URL and parameters"""
         # Base request params
         params = {
             "requestType": "retrieve",
@@ -145,9 +129,7 @@ class NOAA_ADDS(ScrapeService):
         return self.url, params
 
     def _extract(self, raw: str, station: str = None) -> Union[str, List[str]]:
-        """
-        Extracts the raw_report element from XML response
-        """
+        """Extracts the raw_report element from XML response"""
         resp = parsexml(raw)
         try:
             data = resp["response"]["data"]
@@ -179,9 +161,7 @@ class NOAA_ADDS(ScrapeService):
         lon: float = None,
         timeout: int = 10,
     ) -> str:
-        """
-        Fetches a report string from the service
-        """
+        """Fetches a report string from the service"""
         return aio.run(self.async_fetch(station, lat, lon, timeout))
 
     async def async_fetch(
@@ -191,9 +171,7 @@ class NOAA_ADDS(ScrapeService):
         lon: float = None,
         timeout: int = 10,
     ) -> str:
-        """
-        Asynchronously fetch a report string from the service
-        """
+        """Asynchronously fetch a report string from the service"""
         if station:
             valid_station(station)
         elif lat is None or lon is None:
@@ -203,38 +181,28 @@ class NOAA_ADDS(ScrapeService):
 
 
 class NOAA_FTP(ScrapeService):
-    """
-    Requests data from NOAA via FTP
-    """
+    """Requests data from NOAA via FTP"""
 
     url = "https://tgftp.nws.noaa.gov/data/{}/{}/stations/{}.TXT"
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
-        """
-        Returns a formatted URL and parameters
-        """
+        """Returns a formatted URL and parameters"""
         root = "forecasts" if self.report_type == "taf" else "observations"
         return self.url.format(root, self.report_type, station), None
 
     def _extract(self, raw: str, station: str = None) -> str:
-        """
-        Extracts the report using string finding
-        """
+        """Extracts the report using string finding"""
         raw = raw[raw.find(station) :]
         return raw[: raw.find('"')]
 
 
 class NOAA_Scrape(ScrapeService):
-    """
-    Requests data from NOAA via site scraping
-    """
+    """Requests data from NOAA via site scraping"""
 
     url = "https://aviationweather.gov/{}/data"
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
-        """
-        Returns a formatted URL and parameters
-        """
+        """Returns a formatted URL and parameters"""
         hours = 7 if self.report_type == "taf" else 2
         return (
             self.url.format(self.report_type),
@@ -242,9 +210,7 @@ class NOAA_Scrape(ScrapeService):
         )
 
     def _extract(self, raw: str, station: str = None) -> str:
-        """
-        Extracts the report using string finding
-        """
+        """Extracts the report using string finding"""
         raw = raw[raw.find("<code>") :]
         raw = raw[raw.find(station) :]
         raw = raw[: raw.find("</code>")]
@@ -260,22 +226,16 @@ NOAA = NOAA_Scrape
 
 
 class AMO(ScrapeService):
-    """
-    Requests data from AMO KMA for Korean stations
-    """
+    """Requests data from AMO KMA for Korean stations"""
 
     url = "http://amoapi.kma.go.kr/amoApi/{}"
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
-        """
-        Returns a formatted URL and parameters
-        """
+        """Returns a formatted URL and parameters"""
         return self.url.format(self.report_type), {"icao": station}
 
     def _extract(self, raw: str, station: str = None) -> str:
-        """
-        Extracts the report message from XML response
-        """
+        """Extracts the report message from XML response"""
         resp = parsexml(raw)
         try:
             report = resp["response"]["body"]["items"]["item"][
@@ -297,53 +257,39 @@ class AMO(ScrapeService):
 
 
 class MAC(ScrapeService):
-    """
-    Requests data from Meteorologia Aeronautica Civil for Columbian stations
-    """
+    """Requests data from Meteorologia Aeronautica Civil for Columbian stations"""
 
     url = "http://meteorologia.aerocivil.gov.co/expert_text_query/parse"
     method = "POST"
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
-        """
-        Returns a formatted URL and parameters
-        """
+        """Returns a formatted URL and parameters"""
         return self.url, {"query": f"{self.report_type} {station}"}
 
     def _extract(self, raw: str, station: str = None) -> str:
-        """
-        Extracts the report message using string finding
-        """
+        """Extracts the report message using string finding"""
         report = raw[raw.find(station.upper() + " ") :]
         report = report[: report.find(" =")]
         return report
 
 
 class AUBOM(ScrapeService):
-    """
-    Requests data from the Australian Bureau of Meteorology
-    """
+    """Requests data from the Australian Bureau of Meteorology"""
 
     url = "http://www.bom.gov.au/aviation/php/process.php"
     method = "POST"
 
     def _make_url(self, _) -> Tuple[str, dict]:
-        """
-        Returns a formatted URL and empty parameters
-        """
+        """Returns a formatted URL and empty parameters"""
         return self.url, None
 
     @staticmethod
     def _post_data(station: str) -> dict:
-        """
-        Returns the POST form
-        """
+        """Returns the POST form"""
         return {"keyword": station, "type": "search", "page": "TAF"}
 
     def _extract(self, raw: str, station: str = None) -> str:
-        """
-        Extracts the reports from HTML response
-        """
+        """Extracts the reports from HTML response"""
         index = 1 if self.report_type == "taf" else 2
         try:
             report = raw.split("<p")[index]
@@ -361,9 +307,7 @@ BY_COUNTRY = {"AU": AUBOM}
 
 
 def get_service(station: str, country_code: str) -> Service:
-    """
-    Returns the preferred service for a given station
-    """
+    """Returns the preferred service for a given station"""
     for prefix in PREFERRED:
         if station.startswith(prefix):
             return PREFERRED[prefix]

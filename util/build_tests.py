@@ -9,7 +9,7 @@ import json
 from dataclasses import asdict
 from datetime import date, datetime, timezone
 from pathlib import Path
-from typing import List
+from typing import Optional
 
 # module
 import avwx
@@ -21,9 +21,7 @@ def _default(o):
 
 
 def make_metar_test(station: str) -> dict:
-    """
-    Builds METAR test file for station
-    """
+    """Builds METAR test file for station"""
     m = avwx.Metar(station)
     m.update()
     return {
@@ -35,9 +33,7 @@ def make_metar_test(station: str) -> dict:
 
 
 def make_taf_test(station: str) -> dict:
-    """
-    Builds TAF test file for station
-    """
+    """Builds TAF test file for station"""
     t = avwx.Taf(station)
     t.update()
     return {
@@ -49,70 +45,56 @@ def make_taf_test(station: str) -> dict:
     }
 
 
-def make_pirep_test(station: str) -> List[dict]:
-    """
-    Builds PIREP test file for station
-    """
+def make_pirep_test(station: str) -> Optional[dict]:
+    """Builds PIREP test file for station"""
     p = avwx.Pireps(station)
     p.update()
     ret = []
     if not p.data:
-        return
+        return None
     for report in p.data:
         ret.append({"data": asdict(report)})
     return {"reports": ret, "station": asdict(p.station)}
 
 
-def make_forecast_test(report: avwx.forecast.base.Forecast, station: str) -> dict:
-    """
-    Builds GFS service test file for station
-    """
+def make_forecast_test(
+    report: avwx.forecast.base.Forecast, station: str
+) -> Optional[dict]:
+    """Builds GFS service test file for station"""
     g = report(station)
     g.update()
     if not g.data:
-        return
+        return None
     return {"data": asdict(g.data), "station": asdict(g.station)}
 
 
-def make_mav_test(station: str) -> dict:
-    """
-    Builds MAV test file for station
-    """
+def make_mav_test(station: str) -> Optional[dict]:
+    """Builds MAV test file for station"""
     return make_forecast_test(avwx.Mav, station)
 
 
-def make_mex_test(station: str) -> dict:
-    """
-    Builds MEX test file for station
-    """
+def make_mex_test(station: str) -> Optional[dict]:
+    """Builds MEX test file for station"""
     return make_forecast_test(avwx.Mex, station)
 
 
-def make_nbh_test(station: str) -> dict:
-    """
-    Builds NBH test file for station
-    """
+def make_nbh_test(station: str) -> Optional[dict]:
+    """Builds NBH test file for station"""
     return make_forecast_test(avwx.Nbh, station)
 
 
-def make_nbs_test(station: str) -> dict:
-    """
-    Builds NBS test file for station
-    """
+def make_nbs_test(station: str) -> Optional[dict]:
+    """Builds NBS test file for station"""
     return make_forecast_test(avwx.Nbs, station)
 
 
-def make_nbe_test(station: str) -> dict:
-    """
-    Builds NBE test file for station
-    """
+def make_nbe_test(station: str) -> Optional[dict]:
+    """Builds NBE test file for station"""
     return make_forecast_test(avwx.Nbe, station)
 
 
 def main():
-    """
-    Creates source files for end-to-end tests
-    """
+    """Creates source files for end-to-end tests"""
     targets = {
         "current": ("metar", "taf", "pirep"),
         "forecast": ("mav", "mex", "nbh", "nbs", "nbe"),

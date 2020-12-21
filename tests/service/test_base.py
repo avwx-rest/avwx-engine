@@ -31,17 +31,13 @@ class BaseTestService(unittest.TestCase):
         self.required_attrs = BASE_ATTRS + self.required_attrs
 
     def test_init(self):
-        """
-        Tests that the Service class is initialized properly
-        """
+        """Tests that the Service class is initialized properly"""
         for attr in self.required_attrs:
             self.assertTrue(hasattr(self.serv, attr))
         self.assertEqual(self.serv.report_type, self.report_type)
 
     def test_fetch(self):
-        """
-        Tests that reports are fetched from service
-        """
+        """Tests that reports are fetched from service"""
         for station in self.stations:
             report = self.serv.fetch(station)
             self.assertIsInstance(report, str)
@@ -49,9 +45,7 @@ class BaseTestService(unittest.TestCase):
 
     @pytest.mark.asyncio
     async def test_async_fetch(self):
-        """
-        Tests that reports are fetched from async service
-        """
+        """Tests that reports are fetched from async service"""
         for station in self.stations:
             report = await self.serv.async_fetch(station)
             self.assertIsInstance(report, str)

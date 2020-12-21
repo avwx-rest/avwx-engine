@@ -29,9 +29,7 @@ from .base import (
 
 
 def _thunder(line: str, size: int = 3) -> list:
-    """
-    Parse thunder line into Number tuples
-    """
+    """Parse thunder line into Number tuples"""
     ret = []
     previous = None
     for item in _split_line(line, size=size, prefix=5, strip=" /"):
@@ -89,9 +87,7 @@ _MEX_HANDLERS = {
 
 
 def parse_mav(report: str) -> Optional[MavData]:
-    """
-    Parser for GFS MAV reports
-    """
+    """Parser for GFS MAV reports"""
     if not report:
         return None
     data, lines = _init_parse(report)
@@ -103,9 +99,7 @@ def parse_mav(report: str) -> Optional[MavData]:
 
 
 def parse_mex(report: str) -> Optional[MexData]:
-    """
-    Parser for GFS MEX reports
-    """
+    """Parser for GFS MEX reports"""
     if not report:
         return None
     data, lines = _init_parse(report)
@@ -117,9 +111,7 @@ def parse_mex(report: str) -> Optional[MexData]:
 
 
 class Mav(Forecast):
-    """
-    Class to handle GFS MAV report data
-    """
+    """Class to handle GFS MAV report data"""
 
     report_type = "mav"
     _service_class = NOAA_GFS
@@ -130,9 +122,7 @@ class Mav(Forecast):
 
 
 class Mex(Forecast):
-    """
-    Class to handle GFS MAV report data
-    """
+    """Class to handle GFS MAV report data"""
 
     report_type = "mex"
     _service_class = NOAA_GFS

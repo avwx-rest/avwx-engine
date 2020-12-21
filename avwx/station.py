@@ -65,8 +65,8 @@ _COORD_TREE = _LazyCalc(_make_coord_tree)
 
 
 def uses_na_format(station: str) -> bool:
-    """
-    Returns True if the station uses the North American format,
+    """Returns True if the station uses the North American format,
+
     False if the International format
     """
     if station[0] in NA_REGIONS:
@@ -81,8 +81,7 @@ def uses_na_format(station: str) -> bool:
 
 
 def valid_station(station: str):
-    """
-    Checks the validity of a station ident
+    """Checks the validity of a station ident
 
     This function doesn't return anything. It merely raises a BadStation error if needed
     """
@@ -95,9 +94,7 @@ def valid_station(station: str):
 # maxsize = 2 ** number of boolean options
 @lru_cache(maxsize=2)
 def station_list(reporting: bool = True) -> List[str]:
-    """
-    Returns a list of station idents matching the search criteria
-    """
+    """Returns a list of station idents matching the search criteria"""
     stations = []
     for icao, station in _STATIONS.items():
         if not reporting or station["reporting"]:
@@ -107,9 +104,7 @@ def station_list(reporting: bool = True) -> List[str]:
 
 @dataclass
 class Runway:
-    """
-    Represents a runway at an airport
-    """
+    """Represents a runway at an airport"""
 
     length_ft: int
     width_ft: int
@@ -126,9 +121,7 @@ T = TypeVar("T", bound="Station")
 
 @dataclass
 class Station:
-    """
-    Stores basic station information
-    """
+    """Stores basic station information"""
 
     # pylint: disable=too-many-instance-attributes
 
@@ -151,9 +144,7 @@ class Station:
 
     @classmethod
     def from_icao(cls, ident: str) -> "Station":
-        """
-        Load a Station from an ICAO station ident
-        """
+        """Load a Station from an ICAO station ident"""
         try:
             info = copy(_STATIONS[ident.upper()])
             if info["runways"]:
@@ -171,8 +162,7 @@ class Station:
         sends_reports: bool = True,
         max_coord_distance: float = 10,
     ) -> Tuple[T, dict]:
-        """
-        Load the Station nearest to a lat,lon coordinate pair
+        """Load the Station nearest to a lat,lon coordinate pair
 
         Returns the Station and distances from source
 
@@ -186,22 +176,16 @@ class Station:
 
     @property
     def sends_reports(self) -> bool:
-        """
-        Returns whether or not a Station likely sends weather reports
-        """
+        """Returns whether or not a Station likely sends weather reports"""
         return self.reporting is True
 
     def distance(self, lat: float, lon: float) -> Distance:
-        """
-        Returns a geopy Distance using the great circle method
-        """
+        """Returns a geopy Distance using the great circle method"""
         return great_circle((lat, lon), (self.latitude, self.longitude))
 
 
 def _query_coords(lat: float, lon: float, n: int, d: float) -> List[Tuple[str, float]]:
-    """
-    Returns <= n number of ident, dist tuples <= d coord distance from lat,lon
-    """
+    """Returns <= n number of ident, dist tuples <= d coord distance from lat,lon"""
     dist, index = _COORD_TREE.value.query([lat, lon], n, distance_upper_bound=d)
     if n == 1:
         dist, index = [dist], [index]
@@ -212,9 +196,7 @@ def _query_coords(lat: float, lon: float, n: int, d: float) -> List[Tuple[str, f
 
 
 def _station_filter(station: Station, is_airport: bool, reporting: bool) -> bool:
-    """
-    Return True if station matches given criteria
-    """
+    """Return True if station matches given criteria"""
     if is_airport and "airport" not in station.type:
         return False
     if reporting and not station.sends_reports:
@@ -226,9 +208,7 @@ def _station_filter(station: Station, is_airport: bool, reporting: bool) -> bool
 def _query_filter(
     lat: float, lon: float, n: int, d: float, is_airport: bool, reporting: bool
 ) -> List[Station]:
-    """
-    Returns <= n number of stations <= d distance from lat,lon matching the query params
-    """
+    """Returns <= n number of stations <= d distance from lat,lon matching the query params"""
     k = n * 20
     last = 0
     stations = []
@@ -256,8 +236,7 @@ def nearest(
     sends_reports: bool = True,
     max_coord_distance: float = 10,
 ) -> Union[dict, List[dict]]:
-    """
-    Finds the nearest n Stations to a lat,lon coordinate pair
+    """Finds the nearest n Stations to a lat,lon coordinate pair
 
     Returns the Station and coordinate distance from source
 

@@ -66,9 +66,7 @@ class Aircraft:
 
     @classmethod
     def from_icao(cls, code: str) -> "Aircraft":
-        """
-        Load an Aircraft from an ICAO aircraft code
-        """
+        """Load an Aircraft from an ICAO aircraft code"""
         try:
             return cls(code=code, type=AIRCRAFT[code])
         except KeyError:

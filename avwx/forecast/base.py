@@ -16,9 +16,7 @@ from avwx.structs import Code, Number, Timestamp
 def _split_line(
     line: str, size: int = 3, prefix: int = 4, strip: str = " |"
 ) -> List[str]:
-    """
-    Evenly split a string while stripping elements
-    """
+    """Evenly split a string while stripping elements"""
     line = line[prefix:]
     ret = []
     while len(line) >= size:
@@ -31,9 +29,7 @@ def _split_line(
 
 
 def _timestamp(line: str) -> Timestamp:
-    """
-    Returns the report timestamp from the first line
-    """
+    """Returns the report timestamp from the first line"""
     start = line.find("GUIDANCE") + 11
     text = line[start : start + 16].strip()
     timestamp = datetime.strptime(text, r"%m/%d/%Y  %H%M")
@@ -41,9 +37,7 @@ def _timestamp(line: str) -> Timestamp:
 
 
 def _find_time_periods(line: List[str], timestamp: datetime) -> List[dict]:
-    """
-    Find and create the empty time periods
-    """
+    """Find and create the empty time periods"""
     previous = timestamp.hour
     periods = []
     for hourstr in line:
@@ -59,9 +53,7 @@ def _find_time_periods(line: List[str], timestamp: datetime) -> List[dict]:
 
 
 def _init_parse(report: str) -> Tuple[dict, List[str]]:
-    """
-    Returns the meta data and lines from a report string
-    """
+    """Returns the meta data and lines from a report string"""
     report = report.strip()
     lines = report.split("\n")
     data = {
@@ -82,8 +74,7 @@ def _numbers(
     literal: bool = False,
     special: dict = None,
 ) -> List[Number]:
-    """
-    Parse line into Number objects
+    """Parse line into Number objects
 
     Prefix, postfix, and decimal location are applied to value, not repr
 
@@ -103,44 +94,32 @@ def _numbers(
 
 
 def _decimal_10(line: str, size: int = 3) -> List[Number]:
-    """
-    Parse line into Number objects with 10ths decimal location
-    """
+    """Parse line into Number objects with 10ths decimal location"""
     return _numbers(line, size, decimal=-1)
 
 
 def _decimal_100(line: str, size: int = 3) -> List[Number]:
-    """
-    Parse line into Number objects with 100ths decimal location
-    """
+    """Parse line into Number objects with 100ths decimal location"""
     return _numbers(line, size, decimal=-2)
 
 
 def _number_10(line: str, size: int = 3) -> List[Number]:
-    """
-    Parse line into Number objects in tens
-    """
+    """Parse line into Number objects in tens"""
     return _numbers(line, size, postfix="0")
 
 
 def _number_100(line: str, size: int = 3) -> List[Number]:
-    """
-    Parse line into Number objects in hundreds
-    """
+    """Parse line into Number objects in hundreds"""
     return _numbers(line, size, postfix="00")
 
 
 def _direction(line: str, size: int = 3) -> List[Number]:
-    """
-    Parse line into Number objects in hundreds
-    """
+    """Parse line into Number objects in hundreds"""
     return _numbers(line, size, postfix="0", literal=True)
 
 
 def _code(mapping: dict) -> Callable:
-    """
-    Generates a conditional code mapping function
-    """
+    """Generates a conditional code mapping function"""
 
     def func(line: str, size: int = 3) -> list:
         ret = []
@@ -161,8 +140,7 @@ def _parse_lines(
     handlers: Union[dict, Callable],
     size: int = 3,
 ):
-    """
-    Add data to time periods by parsing each line (element type)
+    """Add data to time periods by parsing each line (element type)
 
     Adds data in place
     """
@@ -189,9 +167,7 @@ def _parse_lines(
 
 
 class Forecast(AVWXBase):
-    """
-    Forecast base class
-    """
+    """Forecast base class"""
 
     # pylint: disable=abstract-method
 

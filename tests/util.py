@@ -17,16 +17,12 @@ from avwx import structs
 
 
 class BaseTest(unittest.TestCase):
-    """
-    TestCase with added assert methods
-    """
+    """TestCase with added assert methods"""
 
     def assert_number(
         self, num: structs.Number, repr: str, value: object = None, spoken: str = None
     ):
-        """
-        Tests string conversion into a Number dataclass
-        """
+        """Tests string conversion into a Number dataclass"""
         if not repr:
             self.assertIsNone(num)
         else:
@@ -37,9 +33,7 @@ class BaseTest(unittest.TestCase):
                 self.assertEqual(num.spoken, spoken)
 
     def assert_timestamp(self, ts: structs.Timestamp, repr: str, value: datetime):
-        """
-        Tests string conversion into a Timestamp dataclass
-        """
+        """Tests string conversion into a Timestamp dataclass"""
         if not repr:
             self.assertIsNone(ts)
         else:
@@ -48,9 +42,7 @@ class BaseTest(unittest.TestCase):
             self.assertEqual(ts.dt, value)
 
     def assert_code(self, code: structs.Code, repr: object, value: object):
-        """
-        Tests string conversion into a conditional Code dataclass
-        """
+        """Tests string conversion into a conditional Code dataclass"""
         if not repr:
             self.assertIsNone(code)
         elif isinstance(code, str):
@@ -62,9 +54,7 @@ class BaseTest(unittest.TestCase):
 
 
 def get_data(filepath: str, report_type: str) -> Iterator:
-    """
-    Returns a glob iterable of JSON files
-    """
+    """Returns a glob iterable of JSON files"""
     path = Path(filepath).parent.joinpath("data", report_type)
     for result in path.glob("*.json"):
         data = json.load(result.open(), object_hook=datetime_parser)
@@ -74,9 +64,7 @@ def get_data(filepath: str, report_type: str) -> Iterator:
 
 
 def datetime_parser(data: dict) -> dict:
-    """
-    Convert ISO strings into datetime objects
-    """
+    """Convert ISO strings into datetime objects"""
     for key, val in data.items():
         if isinstance(val, str):
             if "+00:00" in val:
