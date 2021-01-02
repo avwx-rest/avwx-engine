@@ -69,16 +69,22 @@ class ScrapeService(Service):
                     raise SourceError(
                         f"{self.__class__.__name__} server returned {resp.status_code}"
                     )
-        except (httpx.ConnectTimeout, httpx.ReadTimeout, httpcore.ReadTimeout):
-            raise TimeoutError(f"Timeout from {self.__class__.__name__} server")
-        except (gaierror, httpcore.ConnectError):
+        except (
+            httpx.ConnectTimeout,
+            httpx.ReadTimeout,
+            httpcore.ReadTimeout,
+        ) as timeout_error:
+            raise TimeoutError(
+                f"Timeout from {self.__class__.__name__} server"
+            ) from timeout_error
+        except (gaierror, httpcore.ConnectError, httpx.ConnectError) as connect_error:
             raise ConnectionError(
                 f"Unable to connect to {self.__class__.__name__} server"
-            )
-        except httpcore.NetworkError:
+            ) from connect_error
+        except httpcore.NetworkError as network_error:
             raise ConnectionError(
                 f"Unable to read data from {self.__class__.__name__} server"
-            )
+            ) from network_error
         report = self._extract(resp.text, station)
         return self._clean_report(report)
 
@@ -136,8 +142,8 @@ class NOAA_ADDS(ScrapeService):
             if data["@num_results"] == "0":
                 return ""
             reports = data[self._targets[self.report_type]]
-        except KeyError:
-            raise self._make_err(raw)
+        except KeyError as key_error:
+            raise self._make_err(raw) from key_error
         # Only one report exists
         if isinstance(reports, dict):
             ret = reports["raw_text"]
@@ -241,8 +247,8 @@ class AMO(ScrapeService):
             report = resp["response"]["body"]["items"]["item"][
                 self.report_type.lower() + "Msg"
             ]
-        except KeyError:
-            raise self._make_err(raw)
+        except KeyError as key_error:
+            raise self._make_err(raw) from key_error
         if not report:
             raise self._make_err("The station might not exist")
         # Replace line breaks
@@ -294,8 +300,8 @@ class AUBOM(ScrapeService):
         try:
             report = raw.split("<p")[index]
             report = report[report.find(">") + 1 :]
-        except IndexError:
-            raise self._make_err("The station might not exist")
+        except IndexError as index_error:
+            raise self._make_err("The station might not exist") from index_error
         if report.startswith("<"):
             return ""
         report = report[: report.find("</p>")]

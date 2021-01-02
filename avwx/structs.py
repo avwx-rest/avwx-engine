@@ -69,8 +69,8 @@ class Aircraft:
         """Load an Aircraft from an ICAO aircraft code"""
         try:
             return cls(code=code, type=AIRCRAFT[code])
-        except KeyError:
-            raise ValueError(code + " is not a known aircraft code")
+        except KeyError as key_error:
+            raise ValueError(code + " is not a known aircraft code") from key_error
 
 
 @dataclass

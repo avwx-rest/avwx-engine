@@ -24,7 +24,7 @@ with suppress(ModuleNotFoundError):
     from scipy.spatial import KDTree
 
 
-__LAST_UPDATED__ = "2020-11-27"
+__LAST_UPDATED__ = "2021-01-01"
 
 # Lazy data loading to speed up import times for unused features
 _STATIONS = _LazyLoad("stations")
@@ -57,8 +57,10 @@ _COORDS = _LazyCalc(_make_coords)
 def _make_coord_tree():
     try:
         return KDTree([c[1:] for c in _COORDS.value])
-    except NameError:
-        raise ModuleNotFoundError("scipy must be installed to use coordinate lookup")
+    except NameError as name_error:
+        raise ModuleNotFoundError(
+            "scipy must be installed to use coordinate lookup"
+        ) from name_error
 
 
 _COORD_TREE = _LazyCalc(_make_coord_tree)
@@ -150,8 +152,10 @@ class Station:
             if info["runways"]:
                 info["runways"] = [Runway(**r) for r in info["runways"]]
             return cls(**info)
-        except (KeyError, AttributeError):
-            raise BadStation(f"Could not find station with ident {ident}")
+        except (KeyError, AttributeError) as not_found:
+            raise BadStation(
+                f"Could not find station with ident {ident}"
+            ) from not_found
 
     @classmethod
     def nearest(
