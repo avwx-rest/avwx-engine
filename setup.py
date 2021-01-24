@@ -4,7 +4,7 @@ avwx Package Setup
 
 from setuptools import find_namespace_packages, setup
 
-VERSION = "1.5.9"
+VERSION = "1.5.10"
 
 dependencies = [
     "geopy~=2.1",
@@ -13,7 +13,7 @@ dependencies = [
     "xmltodict~=0.12",
 ]
 
-test_dependencies = ["pytest-asyncio~=0.14", "time-machine~=1.3"]
+test_dependencies = ["pytest-asyncio~=0.14", "time-machine~=2.0"]
 
 extras = {
     "scipy": ["scipy~=1.6"],

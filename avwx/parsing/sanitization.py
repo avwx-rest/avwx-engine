@@ -38,6 +38,7 @@ STR_REPL = {
     " VRE": " VRB",
     " WBB": " VRB",
     " NRB": " VRB",
+    " VRBN": " VRB",
     " VR0": " VRB0",
     " VB0": " VRB0",
     " RB0": " VRB0",
@@ -45,6 +46,7 @@ STR_REPL = {
     " 0I0": " 090",
     " PROBB": " PROB",
     # "Z/ ": "Z ", NOTE: Too broad re pirep
+    "NOSIGKT ": "KT NOSIG ",
     "KTKT ": "KT ",
     "KKT ": "KT ",
     "KLT ": "KT ",
@@ -56,6 +58,8 @@ STR_REPL = {
     "CALMKT ": "CALM ",
     "N0SIG": "NOSIG",
     " <1/": " M1/",  # <1/4SM <1/8SM
+    "/04SM": "/4SM",
+    "/08SM": "/8SM",
     " /34SM": "3/4SM",
 }
 
