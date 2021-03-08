@@ -4,7 +4,7 @@ avwx Package Setup
 
 from setuptools import find_namespace_packages, setup
 
-VERSION = "1.6.0"
+VERSION = "1.6.1"
 
 dependencies = [
     "fuzzywuzzy[speedup]~=0.18",

@@ -3,6 +3,7 @@ Station text-based search
 """
 
 # stdlib
+from functools import lru_cache
 from typing import List, Tuple
 
 # library
@@ -11,7 +12,7 @@ from fuzzywuzzy import fuzz, process
 # module
 from avwx.load_utils import LazyCalc
 from avwx.station.meta import STATIONS
-from avwx.station.station import Station
+from avwx.station.station import Station, station_filter
 
 
 TYPE_ORDER = [
@@ -25,7 +26,7 @@ TYPE_ORDER = [
 ]
 
 
-def _format_search(airport: dict, keys: list[str]) -> str:
+def _format_search(airport: dict, keys: List[str]) -> str:
     values = [airport.get(k) for k in keys]
     return " - ".join(k for k in values if k)
 
@@ -47,11 +48,21 @@ def _sort_key(result: Tuple[dict, int]) -> Tuple[int]:
     return (score, 10 - type_order)
 
 
-def search(text: str, limit: int = 10) -> List[Station]:
-    """Text search for stations against codes, name, city, and state"""
+@lru_cache(maxsize=128)
+def search(
+    text: str,
+    limit: int = 10,
+    is_airport: bool = False,
+    sends_reports: bool = True,
+) -> List[Station]:
+    """Text search for stations against codes, name, city, and state
+
+    Results may be shorter than limit value
+    """
     results = process.extract(
-        text, _CORPUS.value, limit=limit * 10, scorer=fuzz.token_set_ratio
+        text, _CORPUS.value, limit=limit * 20, scorer=fuzz.token_set_ratio
     )
     results = [(Station.from_icao(k[:4]), s) for k, s in results]
     results.sort(key=_sort_key, reverse=True)
-    return [s[0] for s in results][:limit]
+    results = [s for s, _ in results if station_filter(s, is_airport, sends_reports)]
+    return results[:limit] if len(results) > limit else results

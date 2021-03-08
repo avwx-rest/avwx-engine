@@ -142,6 +142,13 @@ class TestStationSearch(TestCase):
             ("orlando", "KMCO"),
             ("london city", "EGLC"),
         ):
-            results = station.search(icao)
+            results = station.search(text)
             self.assertEqual(len(results), 10)
             self.assertEqual(results[0].icao, icao)
+
+    def test_search_filter(self):
+        """Tests search result filtering"""
+        for airport in station.search("orlando", is_airport=True):
+            self.assertTrue("airport" in airport.type)
+        for airport in station.search("orlando", sends_reports=True):
+            self.assertTrue(airport.reporting)

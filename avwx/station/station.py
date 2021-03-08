@@ -16,51 +16,12 @@ from geopy.distance import great_circle, Distance
 
 # module
 from avwx.exceptions import BadStation
-from avwx.static.core import IN_REGIONS, M_IN_REGIONS, M_NA_REGIONS, NA_REGIONS
 from avwx.load_utils import LazyCalc
 from avwx.station.meta import STATIONS
 
 # We catch this import error only if user attempts coord lookup
 with suppress(ModuleNotFoundError):
     from scipy.spatial import KDTree
-
-
-def uses_na_format(station: str) -> bool:
-    """Returns True if the station uses the North American format,
-
-    False if the International format
-    """
-    if station[0] in NA_REGIONS:
-        return True
-    if station[0] in IN_REGIONS:
-        return False
-    if station[:2] in M_NA_REGIONS:
-        return True
-    if station[:2] in M_IN_REGIONS:
-        return False
-    raise BadStation("Station doesn't start with a recognized character set")
-
-
-def valid_station(station: str):
-    """Checks the validity of a station ident
-
-    This function doesn't return anything. It merely raises a BadStation error if needed
-    """
-    station = station.strip()
-    if len(station) != 4:
-        raise BadStation("ICAO station ident must be four characters long")
-    uses_na_format(station)
-
-
-# maxsize = 2 ** number of boolean options
-@lru_cache(maxsize=2)
-def station_list(reporting: bool = True) -> List[str]:
-    """Returns a list of station idents matching the search criteria"""
-    stations = []
-    for icao, station in STATIONS.items():
-        if not reporting or station["reporting"]:
-            stations.append(icao)
-    return stations
 
 
 @dataclass
@@ -180,7 +141,7 @@ def _query_coords(lat: float, lon: float, n: int, d: float) -> List[Tuple[str, f
     ]
 
 
-def _station_filter(station: Station, is_airport: bool, reporting: bool) -> bool:
+def station_filter(station: Station, is_airport: bool, reporting: bool) -> bool:
     """Return True if station matches given criteria"""
     if is_airport and "airport" not in station.type:
         return False
@@ -204,7 +165,7 @@ def _query_filter(
             return stations
         for icao, dist in nodes:
             stn = Station.from_icao(icao)
-            if _station_filter(stn, is_airport, reporting):
+            if station_filter(stn, is_airport, reporting):
                 stations.append((stn, dist))
             # Reached the desired number of stations
             if len(stations) >= n:
