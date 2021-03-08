@@ -4,16 +4,17 @@ avwx Package Setup
 
 from setuptools import find_namespace_packages, setup
 
-VERSION = "1.5.10"
+VERSION = "1.6.0"
 
 dependencies = [
+    "fuzzywuzzy[speedup]~=0.18",
     "geopy~=2.1",
-    "httpx~=0.16",
+    "httpx~=0.17",
     "python-dateutil~=2.8",
     "xmltodict~=0.12",
 ]
 
-test_dependencies = ["pytest-asyncio~=0.14", "time-machine~=2.0"]
+test_dependencies = ["pytest-asyncio~=0.14", "time-machine~=2.1"]
 
 extras = {
     "scipy": ["scipy~=1.6"],

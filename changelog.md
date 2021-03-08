@@ -2,11 +2,16 @@
 
 Parsing and sanitization improvements are always ongoing and non-breaking
 
+## 1.6
+
+- Added station text-based search at `station.search(text)`
+- Submodule structure for station
+
 ## 1.5
 
 - Added NBM `Nbh`, `Nbs`, and `Nbe` report classes
 - Added `ScrapeService`, `FileService`, and `NOAA_NBM` service classes
-- Sub module structure for service
+- Submodule structure for service
 - Simplified service API when lat, lon are not used
 
 ## 1.4

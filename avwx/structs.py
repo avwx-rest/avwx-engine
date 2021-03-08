@@ -5,58 +5,15 @@ Contains dataclasses to hold report data
 # pylint: disable=missing-class-docstring,missing-function-docstring,too-many-instance-attributes
 
 # stdlib
-import json
-from collections.abc import KeysView, ValuesView
 from dataclasses import dataclass
 from datetime import datetime
-from pathlib import Path
-from typing import Iterable, List, Optional, Union
+from typing import List, Optional, Union
+
+# module
+from avwx.load_utils import LazyLoad
 
 
-class _LazyLoad:
-
-    source: Path
-    data: Optional[dict] = None
-
-    def __init__(self, filename: str):
-        self.source = Path(__file__).parent.joinpath("data", f"{filename}.json")
-
-    def _load(self):
-        self.data = json.load(self.source.open(encoding="utf8"))
-
-    def __getitem__(self, key: str) -> object:
-        if not self.data:
-            self._load()
-        return self.data[key]
-
-    def __contains__(self, key: str) -> bool:
-        if not self.data:
-            self._load()
-        return key in self.data
-
-    def __len__(self) -> int:
-        if not self.data:
-            self._load()
-        return len(self.data)
-
-    def __iter__(self) -> Iterable[str]:
-        if not self.data:
-            self._load()
-        for key in self.data:
-            yield key
-
-    def items(self) -> KeysView:
-        if not self.data:
-            self._load()
-        return self.data.items()
-
-    def values(self) -> ValuesView:
-        if not self.data:
-            self._load()
-        return self.data.values()
-
-
-AIRCRAFT = _LazyLoad("aircraft")
+AIRCRAFT = LazyLoad("aircraft")
 
 
 @dataclass

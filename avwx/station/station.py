@@ -1,5 +1,5 @@
 """
-Station handling and search
+Station handling and coordinate search
 """
 
 # pylint: disable=invalid-name,too-many-arguments
@@ -9,7 +9,7 @@ from contextlib import suppress
 from copy import copy
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import Callable, List, Tuple, Type, TypeVar, Union
+from typing import List, Tuple, Type, TypeVar, Union
 
 # library
 from geopy.distance import great_circle, Distance
@@ -17,53 +17,12 @@ from geopy.distance import great_circle, Distance
 # module
 from avwx.exceptions import BadStation
 from avwx.static.core import IN_REGIONS, M_IN_REGIONS, M_NA_REGIONS, NA_REGIONS
-from avwx.structs import _LazyLoad
+from avwx.load_utils import LazyCalc
+from avwx.station.meta import STATIONS
 
 # We catch this import error only if user attempts coord lookup
 with suppress(ModuleNotFoundError):
     from scipy.spatial import KDTree
-
-
-__LAST_UPDATED__ = "2021-01-24"
-
-# Lazy data loading to speed up import times for unused features
-_STATIONS = _LazyLoad("stations")
-
-
-# LazyCalc lets us avoid the global keyword
-class _LazyCalc:
-    # pylint: disable=too-few-public-methods,missing-function-docstring
-
-    func: Callable
-    _value: object = None
-
-    def __init__(self, func: Callable):
-        self.func = func
-
-    @property
-    def value(self) -> object:
-        if self._value is None:
-            self._value = self.func()
-        return self._value
-
-
-def _make_coords():
-    return [(s["icao"], s["latitude"], s["longitude"]) for s in _STATIONS.values()]
-
-
-_COORDS = _LazyCalc(_make_coords)
-
-
-def _make_coord_tree():
-    try:
-        return KDTree([c[1:] for c in _COORDS.value])
-    except NameError as name_error:
-        raise ModuleNotFoundError(
-            "scipy must be installed to use coordinate lookup"
-        ) from name_error
-
-
-_COORD_TREE = _LazyCalc(_make_coord_tree)
 
 
 def uses_na_format(station: str) -> bool:
@@ -98,7 +57,7 @@ def valid_station(station: str):
 def station_list(reporting: bool = True) -> List[str]:
     """Returns a list of station idents matching the search criteria"""
     stations = []
-    for icao, station in _STATIONS.items():
+    for icao, station in STATIONS.items():
         if not reporting or station["reporting"]:
             stations.append(icao)
     return stations
@@ -148,7 +107,7 @@ class Station:
     def from_icao(cls, ident: str) -> "Station":
         """Load a Station from an ICAO station ident"""
         try:
-            info = copy(_STATIONS[ident.upper()])
+            info = copy(STATIONS[ident.upper()])
             if info["runways"]:
                 info["runways"] = [Runway(**r) for r in info["runways"]]
             return cls(**info)
@@ -186,6 +145,28 @@ class Station:
     def distance(self, lat: float, lon: float) -> Distance:
         """Returns a geopy Distance using the great circle method"""
         return great_circle((lat, lon), (self.latitude, self.longitude))
+
+
+# Coordinate search and resources
+
+
+def _make_coords():
+    return [(s["icao"], s["latitude"], s["longitude"]) for s in STATIONS.values()]
+
+
+_COORDS = LazyCalc(_make_coords)
+
+
+def _make_coord_tree():
+    try:
+        return KDTree([c[1:] for c in _COORDS.value])
+    except NameError as name_error:
+        raise ModuleNotFoundError(
+            "scipy must be installed to use coordinate lookup"
+        ) from name_error
+
+
+_COORD_TREE = LazyCalc(_make_coord_tree)
 
 
 def _query_coords(lat: float, lon: float, n: int, d: float) -> List[Tuple[str, float]]:

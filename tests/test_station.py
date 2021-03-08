@@ -9,7 +9,7 @@ from unittest import TestCase
 from avwx import exceptions, station
 
 
-class TestStationFuncs(TestCase):
+class TestStationFunctions(TestCase):
     """Tests station module functions"""
 
     def test_uses_na_format(self):
@@ -121,3 +121,27 @@ class TestStation(TestCase):
             stn = station.Station.from_icao(icao)
             self.assertFalse(stn.sends_reports)
             self.assertIsNone(stn.iata)
+
+
+class TestStationSearch(TestCase):
+    """Tests the Station class"""
+
+    def test_exact_icao(self):
+        """Tests searching for a Station by exact ICAO ident"""
+        for icao in ("KMCO", "KJFK", "PHNL", "EGLC"):
+            results = station.search(icao)
+            self.assertEqual(len(results), 10)
+            self.assertEqual(results[0].icao, icao)
+
+    def test_combined_terms(self):
+        """Tests search using multiple search terms"""
+        for text, icao in (
+            ("kona hi", "PHKO"),
+            ("danville powell field", "KDVK"),
+            ("lexington ky", "KLEX"),
+            ("orlando", "KMCO"),
+            ("london city", "EGLC"),
+        ):
+            results = station.search(icao)
+            self.assertEqual(len(results), 10)
+            self.assertEqual(results[0].icao, icao)
