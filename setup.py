@@ -4,13 +4,13 @@ avwx Package Setup
 
 from setuptools import find_namespace_packages, setup
 
-VERSION = "1.6.1"
+VERSION = "1.6.2"
 
 dependencies = [
-    "fuzzywuzzy[speedup]~=0.18",
     "geopy~=2.1",
     "httpx~=0.17",
     "python-dateutil~=2.8",
+    "rapidfuzz~=1.2",
     "xmltodict~=0.12",
 ]
 

@@ -7,7 +7,7 @@ from functools import lru_cache
 from typing import List, Tuple
 
 # library
-from fuzzywuzzy import fuzz, process
+from rapidfuzz import fuzz, process
 
 # module
 from avwx.load_utils import LazyCalc
@@ -62,7 +62,7 @@ def search(
     results = process.extract(
         text, _CORPUS.value, limit=limit * 20, scorer=fuzz.token_set_ratio
     )
-    results = [(Station.from_icao(k[:4]), s) for k, s in results]
+    results = [(Station.from_icao(k[:4]), s) for k, s, _ in results]
     results.sort(key=_sort_key, reverse=True)
     results = [s for s, _ in results if station_filter(s, is_airport, sends_reports)]
     return results[:limit] if len(results) > limit else results

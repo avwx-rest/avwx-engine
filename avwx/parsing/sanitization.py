@@ -45,6 +45,7 @@ STR_REPL = {
     " V0": " VRB0",
     " 0I0": " 090",
     " PROBB": " PROB",
+    " PROBN": " PROB",
     # "Z/ ": "Z ", NOTE: Too broad re pirep
     "NOSIGKT ": "KT NOSIG ",
     "KTKT ": "KT ",
@@ -265,11 +266,11 @@ def sanitize_report_list(
         # Fix misplaced KT 22022KTG40
         elif ilen == 10 and "KTG" in item and item[:5].isdigit():
             wxdata[i] = item.replace("KTG", "G") + "KT"
-        # Fix backwards KT Ex: 06012G22TK
+        # Fix malformed KT Ex: 06012G22TK
         if (
             ilen >= 7
             and (item[:3].isdigit() or item[:3] == "VRB")
-            and item.endswith("TK")
+            and item[-2:] in ("TK", "GT")
         ):
             wxdata[i] = item[:-2] + "KT"
         # Fix gust double G Ex: 360G17G32KT
