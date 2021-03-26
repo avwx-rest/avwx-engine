@@ -6,25 +6,20 @@ Classes for retrieving raw report strings via web scraping
 
 # stdlib
 import asyncio as aio
-from socket import gaierror
 from typing import List, Tuple, Union
 
 # library
-import httpcore
-import httpx
 from xmltodict import parse as parsexml
 
 # module
 from avwx.parsing.core import dedupe
-from avwx.exceptions import InvalidRequest, SourceError
+from avwx.exceptions import InvalidRequest
 from avwx.station import valid_station
-from avwx.service.base import Service
+from avwx.service.base import CallsHTTP, Service
 
 
-class ScrapeService(Service):
+class ScrapeService(Service, CallsHTTP):
     """Service class for fetching reports via direct web requests"""
-
-    method: str = "GET"
 
     _valid_types = ("metar", "taf")
     _strip_whitespace: bool = True
@@ -57,35 +52,9 @@ class ScrapeService(Service):
         return " ".join(report.split())
 
     async def _fetch(self, station: str, url: str, params: dict, timeout: int) -> str:
-        try:
-            async with httpx.AsyncClient(timeout=timeout) as client:
-                if self.method.lower() == "post":
-                    resp = await client.post(
-                        url, params=params, data=self._post_data(station)
-                    )
-                else:
-                    resp = await client.get(url, params=params)
-                if resp.status_code != 200:
-                    raise SourceError(
-                        f"{self.__class__.__name__} server returned {resp.status_code}"
-                    )
-        except (
-            httpx.ConnectTimeout,
-            httpx.ReadTimeout,
-            httpcore.ReadTimeout,
-        ) as timeout_error:
-            raise TimeoutError(
-                f"Timeout from {self.__class__.__name__} server"
-            ) from timeout_error
-        except (gaierror, httpcore.ConnectError, httpx.ConnectError) as connect_error:
-            raise ConnectionError(
-                f"Unable to connect to {self.__class__.__name__} server"
-            ) from connect_error
-        except httpcore.NetworkError as network_error:
-            raise ConnectionError(
-                f"Unable to read data from {self.__class__.__name__} server"
-            ) from network_error
-        report = self._extract(resp.text, station)
+        data = self._post_data(station) if self.method.lower() == "post" else None
+        text = await self._call(url, params=params, data=data, timeout=timeout)
+        report = self._extract(text, station)
         return self._clean_report(report)
 
     def fetch(
