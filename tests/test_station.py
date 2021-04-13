@@ -67,9 +67,9 @@ class TestStationFunctions(TestCase):
         """Tests filtering nearest stations"""
         for airport, reports, count in (
             (True, True, 6),
-            (True, False, 16),
+            (True, False, 15),
             (False, True, 6),
-            (False, False, 30),
+            (False, False, 29),
         ):
             stations = station.nearest(30, -80, 30, airport, reports, 1.5)
             self.assertEqual(len(stations), count)
