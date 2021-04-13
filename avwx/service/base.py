@@ -50,15 +50,22 @@ class CallsHTTP:
     method: str = "GET"
 
     async def _call(
-        self, url: str, params: dict = None, data: Any = None, timeout: int = 10
+        self,
+        url: str,
+        params: dict = None,
+        headers: dict = None,
+        data: Any = None,
+        timeout: int = 10,
     ) -> str:
         name = self.__class__.__name__
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:
                 if self.method.lower() == "post":
-                    resp = await client.post(url, params=params, data=data)
+                    resp = await client.post(
+                        url, params=params, headers=headers, data=data
+                    )
                 else:
-                    resp = await client.get(url, params=params)
+                    resp = await client.get(url, params=params, headers=headers)
                 if resp.status_code != 200:
                     raise SourceError(f"{name} server returned {resp.status_code}")
         except (

@@ -6,6 +6,7 @@ Classes for retrieving raw report strings via web scraping
 
 # stdlib
 import asyncio as aio
+import random
 from typing import List, Tuple, Union
 
 # library
@@ -16,6 +17,16 @@ from avwx.parsing.core import dedupe
 from avwx.exceptions import InvalidRequest
 from avwx.station import valid_station
 from avwx.service.base import CallsHTTP, Service
+
+
+USER_AGENTS = [
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15"
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:77.0) Gecko/20100101 Firefox/77.0",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36",
+]
 
 
 class ScrapeService(Service, CallsHTTP):
@@ -32,6 +43,11 @@ class ScrapeService(Service, CallsHTTP):
     def _make_url(self, station: str) -> Tuple[str, dict]:
         """Returns a formatted URL and parameters"""
         raise NotImplementedError()
+
+    @staticmethod
+    def _make_headers() -> dict:
+        """Returns request headers"""
+        return {}
 
     def _extract(self, raw: str, station: str = None) -> str:
         """Extracts the report string from the service response"""
@@ -52,8 +68,11 @@ class ScrapeService(Service, CallsHTTP):
         return " ".join(report.split())
 
     async def _fetch(self, station: str, url: str, params: dict, timeout: int) -> str:
+        headers = self._make_headers()
         data = self._post_data(station) if self.method.lower() == "post" else None
-        text = await self._call(url, params=params, data=data, timeout=timeout)
+        text = await self._call(
+            url, params=params, headers=headers, data=data, timeout=timeout
+        )
         report = self._extract(text, station)
         return self._clean_report(report)
 
@@ -257,6 +276,23 @@ class AUBOM(ScrapeService):
     def _make_url(self, _) -> Tuple[str, dict]:
         """Returns a formatted URL and empty parameters"""
         return self.url, None
+
+    @staticmethod
+    def _make_headers() -> dict:
+        """Returns request headers"""
+        return {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Accept": "*/*",
+            "Accept-Language": "en-us",
+            "Accept-Encoding": "gzip, deflate",
+            "Host": "www.bom.gov.au",
+            "Origin": "http://www.bom.gov.au",
+            "User-Agent": random.choice(USER_AGENTS),
+            "Connection": "keep-alive",
+            # 'Referer': 'http://www.bom.gov.au/aviation/observations/metar-speci/',
+            # 'Cookie': 'check=ok; bm_sv=C423C389DECFF9A821E265C1696BFD2B~HNlY4KT2eVGRmQ7vlgQu8I6Uj0MQIueL8syy1Gce2Do+dyNtfywMIueEu+bDc5gEsw2QMkRJY16RvBDBYgrCZJRlY08iB6teeIZuYaWHzqIJOWEXJANCWC6HgGu4uUEOvVRmMWFiraXWm3YTUv38sNxB83MXOZiS5YS9qf6MqXo=; __utma=172860464.760688564.1618331786.1618331786.1618331786.1; __utmb=172860464.4.10.1618331786; __utmc=172860464; __utmz=172860464.1618331786.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); PHPSESSID=sbu75i840376vc6v33k8f7tp13; ak_bmsc=2DE29B1D2EEC759732EFC20AF6CE52AA1749B466715E000089C8756048C6D311~plkVCUVDvoBcyCISZlrLApGC8CbD9JMTgKXEBQqxfXzP039W0VONAXG4azzOIcDVp1+ovscHFBt1zxXTqr8sEJhqGS3i9Q2aBCg+hmKXYuJ5pmj0jiz8YTy+uoNui4FKcDiw2sGtzXMkv022BuUddJIj2SNSXNtt6ogjVtUeu1uD7qEp+hBkusmT9C2byp34EkVilnlIomV/n2svH3u7P8rk2sRXlcqjKp/hPP1nDly4EEjCv5VVFhw1JbVbxbw2v7; bm_mi=F129320EBC30F70FC3BCC129E5FB67B1~2ErkxZx/0YwGSQpO9GUziKtgD05/7Zl225D53UFU2Su+OzO9YwYEG/CGHTiTTQL9bNMHZjqYzRuszGROuGts+JHoICZx8rhM9O5BksHCw+xaBIIzhu0hCDMYYvGUgbSwc1PwdIzdgi6U4MSkWBxyOwN1Ol9WR9yfb84rxfdXXAfFpVIzir8rmw9XryJSgPG3FqFLXZCFt5ygWB+JLoUo/qksC/FHIgAnXhJHM5JvTj+oTdB91O2PbYUNHCbGR2pfSHO1pCOTaN5K8EQqEHKsOGgXMtqUjpes0Xx4B1817T4=',
+            # 'X-Requested-With': 'XMLHttpRequest',
+        }
 
     @staticmethod
     def _post_data(station: str) -> dict:
