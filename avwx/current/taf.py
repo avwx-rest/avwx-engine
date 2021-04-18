@@ -4,7 +4,7 @@ Contains TAF-specific functions for report parsing
 
 # stdlib
 from datetime import date
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 
 # module
 from avwx.current.base import Report, get_wx_codes
@@ -430,6 +430,8 @@ def parse_in_line(line: str, units: Units) -> Dict[str, str]:
 
 class Taf(Report):
     """Class to handle TAF report data"""
+
+    data: Optional[TafData] = None
 
     def _post_update(self):
         self.data, self.units = parse(self.icao, self.raw, self.issued)
