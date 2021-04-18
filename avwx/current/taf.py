@@ -13,7 +13,7 @@ from avwx.parsing.translate.taf import translate_taf
 from avwx.static.core import FLIGHT_RULES, IN_UNITS, NA_UNITS
 from avwx.static.taf import TAF_RMK, TAF_NEWLINE, TAF_NEWLINE_STARTSWITH
 from avwx.station import uses_na_format, valid_station
-from avwx.structs import TafData, TafLineData, Timestamp, Units
+from avwx.structs import TafData, TafLineData, TafTrans, Timestamp, Units
 
 
 LINE_FIXES = {
@@ -432,7 +432,7 @@ class Taf(Report):
     """Class to handle TAF report data"""
 
     data: Optional[TafData] = None
-
+    translatopns: Optional[TafTrans] = None
     def _post_update(self):
         self.data, self.units = parse(self.icao, self.raw, self.issued)
         self.translations = translate_taf(self.data, self.units)
