@@ -4,7 +4,7 @@ Contains METAR-specific functions for report parsing
 
 # stdlib
 from datetime import date
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 # module
 from avwx.current.base import Report, get_wx_codes
@@ -212,6 +212,8 @@ def parse_in(report: str, issued: date = None) -> Tuple[MetarData, Units]:
 
 class Metar(Report):
     """Class to handle METAR report data"""
+
+    data: Optional[MetarData] = None
 
     def _post_update(self):
         self.data, self.units = parse(self.icao, self.raw, self.issued)
