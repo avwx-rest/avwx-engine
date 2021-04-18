@@ -13,7 +13,7 @@ from avwx.parsing.translate.metar import translate_metar
 from avwx.static.core import FLIGHT_RULES, IN_UNITS, NA_UNITS
 from avwx.static.metar import METAR_RMK
 from avwx.station import uses_na_format, valid_station
-from avwx.structs import MetarData, Number, Units
+from avwx.structs import MetarData, MetarTrans, Number, Units
 
 
 def get_remarks(txt: str) -> Tuple[List[str], str]:
