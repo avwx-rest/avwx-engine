@@ -214,6 +214,7 @@ class Metar(Report):
     """Class to handle METAR report data"""
 
     data: Optional[MetarData] = None
+    translations: Optional[MetarTrans] = None
 
     def _post_update(self):
         self.data, self.units = parse(self.icao, self.raw, self.issued)
