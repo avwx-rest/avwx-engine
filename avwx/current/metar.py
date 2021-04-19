@@ -4,7 +4,7 @@ Contains METAR-specific functions for report parsing
 
 # stdlib
 from datetime import date
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 # module
 from avwx.current.base import Report, get_wx_codes
@@ -13,7 +13,7 @@ from avwx.parsing.translate.metar import translate_metar
 from avwx.static.core import FLIGHT_RULES, IN_UNITS, NA_UNITS
 from avwx.static.metar import METAR_RMK
 from avwx.station import uses_na_format, valid_station
-from avwx.structs import MetarData, Number, Units
+from avwx.structs import MetarData, MetarTrans, Number, Units
 
 
 def get_remarks(txt: str) -> Tuple[List[str], str]:
@@ -212,6 +212,9 @@ def parse_in(report: str, issued: date = None) -> Tuple[MetarData, Units]:
 
 class Metar(Report):
     """Class to handle METAR report data"""
+
+    data: Optional[MetarData] = None
+    translations: Optional[MetarTrans] = None
 
     def _post_update(self):
         self.data, self.units = parse(self.icao, self.raw, self.issued)
