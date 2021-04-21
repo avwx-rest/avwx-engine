@@ -6,7 +6,7 @@ Service base class
 
 # stdlib
 from socket import gaierror
-from typing import Any, Tuple
+from typing import Any, Optional, Tuple
 
 # library
 import httpx
@@ -21,9 +21,9 @@ _VALUE_ERROR = "'{}' is not a valid report type for {}. Expected {}"
 class Service:
     """Base Service class for fetching reports"""
 
-    url: str = None
+    url: Optional[str] = None
     report_type: str
-    _valid_types: Tuple[str] = tuple()
+    _valid_types: Tuple[str, ...] = tuple()
 
     def __init__(self, report_type: str):
         if self._valid_types:
@@ -34,14 +34,6 @@ class Service:
                     )
                 )
         self.report_type = report_type
-
-    def fetch(self, station: str, timeout: int = 10) -> str:
-        """Fetches a report string from the service"""
-        raise NotImplementedError()
-
-    async def async_fetch(self, station: str, timeout: int = 10) -> str:
-        """Asynchronously fetch a report string from the service"""
-        raise NotImplementedError()
 
 
 class CallsHTTP:

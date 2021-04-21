@@ -52,8 +52,11 @@ class FileService(Service):
     @property
     def last_updated(self) -> Optional[dt.datetime]:
         """When the file was last updated"""
+        file = self._file
+        if file is None:
+            return None
         try:
-            timestamp = int(self._file.name.split(".")[-2])
+            timestamp = int(file.name.split(".")[-2])
             return dt.datetime.fromtimestamp(timestamp, tz=dt.timezone.utc)
         except (AttributeError, ValueError):
             return None
@@ -152,7 +155,10 @@ class FileService(Service):
         if force or self.is_outdated:
             if not await self.update(wait, timeout):
                 return None
-        with self._file.open() as fin:
+        file = self._file
+        if file is None:
+            return None
+        with file.open() as fin:
             report = self._extract(station, fin)
         return report
 
@@ -160,7 +166,7 @@ class FileService(Service):
 class NOAA_Forecast(FileService):
     """Subclass for extracting reports from NOAA FTP files"""
 
-    def _index_target(self, station: str) -> Tuple[str]:
+    def _index_target(self, station: str) -> Tuple[str, str]:
         raise NotImplementedError()
 
     def _extract(self, station: str, source: TextIO) -> Optional[str]:
@@ -196,7 +202,7 @@ class NOAA_NBM(NOAA_Forecast):
             yield self.url.format(timestamp, hour, self.report_type, hour)
             date -= dt.timedelta(hours=1)
 
-    def _index_target(self, station: str) -> Tuple[str]:
+    def _index_target(self, station: str) -> Tuple[str, str]:
         return station + "   ", self.report_type.upper() + " GUIDANCE"
 
 
@@ -206,7 +212,7 @@ class NOAA_GFS(NOAA_Forecast):
     url = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfsmos.{}/mdl_gfs{}.t{}z"
     _valid_types = ("mav", "mex")
 
-    _cycles: Dict[str, Tuple[int]] = {"mav": (0, 6, 12, 18), "mex": (0, 12)}
+    _cycles: Dict[str, Tuple[int, ...]] = {"mav": (0, 6, 12, 18), "mex": (0, 12)}
 
     @property
     def _urls(self) -> Iterator[str]:
@@ -224,5 +230,5 @@ class NOAA_GFS(NOAA_Forecast):
                 yield self.url.format(timestamp, self.report_type, hour)
             date -= dt.timedelta(hours=1)
 
-    def _index_target(self, station: str) -> Tuple[str]:
+    def _index_target(self, station: str) -> Tuple[str, str]:
         return station + "   GFS", self.report_type.upper() + " GUIDANCE"

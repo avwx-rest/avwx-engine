@@ -8,7 +8,7 @@
         },
         "forecast": [
             {
-                "altimeter": "",
+                "altimeter": null,
                 "clouds": [],
                 "end_time": {
                     "dt": "2020-05-19T12:00:00+00:00",
@@ -47,7 +47,7 @@
                 "wx_codes": []
             },
             {
-                "altimeter": "",
+                "altimeter": null,
                 "clouds": [
                     {
                         "base": 8,
@@ -91,10 +91,11 @@
                 "wx_codes": []
             }
         ],
-        "max_temp": "",
-        "min_temp": "",
+        "max_temp": null,
+        "min_temp": null,
         "raw": "EGLL 180503Z 1806/1912 27010KT CAVOK PROB30 TEMPO 1903/1908 8000 BKN008",
         "remarks": "",
+        "sanitized": "EGLL 180503Z 1806/1912 27010KT CAVOK PROB30 TEMPO 1903/1908 8000 BKN008",
         "start_time": {
             "dt": "2020-05-18T06:00:00+00:00",
             "repr": "1806"

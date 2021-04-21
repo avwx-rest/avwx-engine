@@ -3,7 +3,7 @@ Parsing for NOAA GFS forecasts
 """
 
 # stdlib
-from typing import Optional
+from typing import List, Optional, Tuple
 
 # module
 import avwx.static.gfs as static
@@ -14,6 +14,7 @@ from avwx.structs import (
     MavPeriod,
     MexData,
     MexPeriod,
+    Number,
     Units,
 )
 from .base import (
@@ -28,9 +29,12 @@ from .base import (
 )
 
 
-def _thunder(line: str, size: int = 3) -> list:
+ThunderList = List[Optional[Tuple[Optional[Number], Optional[Number]]]]
+
+
+def _thunder(line: str, size: int = 3) -> ThunderList:
     """Parse thunder line into Number tuples"""
-    ret = []
+    ret: ThunderList = []
     previous = None
     for item in _split_line(line, size=size, prefix=5, strip=" /"):
         if not item:
@@ -91,11 +95,18 @@ def parse_mav(report: str) -> Optional[MavData]:
     if not report:
         return None
     data, lines = _init_parse(report)
-    periods = _split_line(lines[2])
-    periods = _find_time_periods(periods, data["time"].dt)
+    period_strings = _split_line(lines[2])
+    timestamp = data.time.dt if data.time else None
+    periods = _find_time_periods(period_strings, timestamp)
     _parse_lines(periods, lines[3:], _MAV_HANDLERS)
-    data["forecast"] = [MavPeriod(**p) for p in periods]
-    return MavData(**data)
+    return MavData(
+        raw=data.raw,
+        sanitized=data.sanitized,
+        station=data.station,
+        time=data.time,
+        remarks=data.remarks,
+        forecast=[MavPeriod(**p) for p in periods],
+    )
 
 
 def parse_mex(report: str) -> Optional[MexData]:
@@ -103,18 +114,25 @@ def parse_mex(report: str) -> Optional[MexData]:
     if not report:
         return None
     data, lines = _init_parse(report)
-    periods = _split_line(lines[1], size=4, prefix=4)
-    periods = _find_time_periods(periods, data["time"].dt)
+    period_strings = _split_line(lines[1], size=4, prefix=4)
+    timestamp = data.time.dt if data.time else None
+    periods = _find_time_periods(period_strings, timestamp)
     _parse_lines(periods, lines[3:], _MEX_HANDLERS, size=4)
-    data["forecast"] = [MexPeriod(**p) for p in periods]
-    return MexData(**data)
+    return MexData(
+        raw=data.raw,
+        sanitized=data.sanitized,
+        station=data.station,
+        time=data.time,
+        remarks=data.remarks,
+        forecast=[MexPeriod(**p) for p in periods],
+    )
 
 
 class Mav(Forecast):
     """Class to handle GFS MAV report data"""
 
     report_type = "mav"
-    _service_class = NOAA_GFS
+    _service_class = NOAA_GFS  # type: ignore
 
     def _post_update(self):
         self.data = parse_mav(self.raw)
@@ -125,7 +143,7 @@ class Mex(Forecast):
     """Class to handle GFS MAV report data"""
 
     report_type = "mex"
-    _service_class = NOAA_GFS
+    _service_class = NOAA_GFS  # type: ignore
 
     def _post_update(self):
         self.data = parse_mex(self.raw)

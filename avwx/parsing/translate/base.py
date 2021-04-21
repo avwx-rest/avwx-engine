@@ -3,14 +3,15 @@ Contains functions for translating report data
 """
 
 # stdlib
-from typing import Dict, List
+from contextlib import suppress
+from typing import List, Optional, Union
 
 # module
 from avwx.static.core import CLOUD_TRANSLATIONS
-from avwx.structs import Cloud, Code, Number, SharedData, Units
+from avwx.structs import Cloud, Code, Number, ReportTrans, SharedData, Units
 
 
-def get_cardinal_direction(direction: int) -> str:
+def get_cardinal_direction(direction: Union[int, float]) -> str:
     """Returns the cardinal direction (NSEW) for a degree direction
 
     Wind Direction - Cheat Sheet:
@@ -69,9 +70,9 @@ WIND_DIR_REPR = {"000": "Calm", "VRB": "Variable"}
 
 
 def wind(
-    direction: Number,
-    speed: Number,
-    gust: Number,
+    direction: Optional[Number],
+    speed: Optional[Number],
+    gust: Optional[Number],
     vardir: List[Number] = None,
     unit: str = "kt",
     cardinals: bool = True,
@@ -115,30 +116,34 @@ VIS_REPR = {
 }
 
 
-def visibility(vis: Number, unit: str = "m") -> str:
+def visibility(vis: Optional[Number], unit: str = "m") -> str:
     """Formats a visibility element into a string with both km and sm values
 
     Ex: 8km ( 5sm )
     """
     if not (vis and unit in ("m", "sm")):
         return ""
-    if vis.repr in VIS_REPR:
+    with suppress(KeyError):
         return VIS_REPR[vis.repr]
+    if vis.value is None:
+        return ""
     if unit == "m":
-        converted = vis.value * 0.000621371
-        converted = str(round(converted, 1)).replace(".0", "") + "sm"
-        value = str(round(vis.value / 1000, 1)).replace(".0", "")
+        meters = vis.value
+        miles = meters * 0.000621371
+        converted = str(round(miles, 1)).replace(".0", "") + "sm"
+        value = str(round(meters / 1000, 1)).replace(".0", "")
         unit = "km"
     elif unit == "sm":
-        converted = vis.value / 0.621371
-        converted = str(round(converted, 1)).replace(".0", "") + "km"
-        value = str(vis.value).replace(".0", "")
+        miles = vis.value or 0
+        kilometers = miles / 0.621371
+        converted = str(round(kilometers, 1)).replace(".0", "") + "km"
+        value = str(miles).replace(".0", "")
     else:
         return ""
     return f"{value}{unit} ({converted})"
 
 
-def temperature(temp: Number, unit: str = "C") -> str:
+def temperature(temp: Optional[Number], unit: str = "C") -> str:
     """Formats a temperature element into a string with both C and F values
 
     Used for both Temp and Dew
@@ -146,40 +151,40 @@ def temperature(temp: Number, unit: str = "C") -> str:
     Ex: 34°C (93°F)
     """
     unit = unit.upper()
-    if not (temp and unit in ("C", "F")):
+    if not (temp and temp.value is not None and unit in ("C", "F")):
         return ""
     if unit == "C":
-        converted = temp.value * 1.8 + 32
-        converted = str(int(round(converted))) + "°F"
+        fahrenheit = temp.value * 1.8 + 32
+        converted = str(int(round(fahrenheit))) + "°F"
     elif unit == "F":
-        converted = (temp.value - 32) / 1.8
-        converted = str(int(round(converted))) + "°C"
+        celsius = (temp.value - 32) / 1.8
+        converted = str(int(round(celsius))) + "°C"
     else:
         return ""
     return f"{temp.value}°{unit} ({converted})"
 
 
-def altimeter(alt: Number, unit: str = "hPa") -> str:
+def altimeter(alt: Optional[Number], unit: str = "hPa") -> str:
     """Formats the altimeter element into a string with hPa and inHg values
 
     Ex: 30.11 inHg (10.20 hPa)
     """
-    if not (alt and unit in ("hPa", "inHg")):
+    if not (alt and alt.value is not None and unit in ("hPa", "inHg")):
         return ""
     if unit == "hPa":
-        value = alt.value
-        converted = round(alt.value / 33.8638866667, 2)
-        converted = str(converted).ljust(5, "0") + " inHg"
+        value = str(alt.value)
+        inches = round(alt.value / 33.8638866667, 2)
+        converted = str(inches).ljust(5, "0") + " inHg"
     elif unit == "inHg":
         value = str(alt.value).ljust(5, "0")
-        converted = alt.value * 33.8638866667
-        converted = str(int(round(converted))) + " hPa"
+        pascals = alt.value * 33.8638866667
+        converted = str(int(round(pascals))) + " hPa"
     else:
         return ""
     return f"{value} {unit} ({converted})"
 
 
-def clouds(values: List[Cloud], unit: str = "ft") -> str:
+def clouds(values: Optional[List[Cloud]], unit: str = "ft") -> str:
     """Format cloud list into a readable sentence
 
     Returns the translation string
@@ -209,11 +214,11 @@ def wx_codes(codes: List[Code]) -> str:
     return ", ".join(code.value for code in codes)
 
 
-def current_shared(wxdata: SharedData, units: Units) -> Dict[str, str]:
+def current_shared(wxdata: SharedData, units: Units) -> ReportTrans:
     """Translate Visibility, Altimeter, Clouds, and Other"""
-    data = {}
-    data["visibility"] = visibility(wxdata.visibility, units.visibility)
-    data["altimeter"] = altimeter(wxdata.altimeter, units.altimeter)
-    data["clouds"] = clouds(wxdata.clouds, units.altitude)
-    data["wx_codes"] = wx_codes(wxdata.wx_codes)
-    return data
+    return ReportTrans(
+        visibility=visibility(wxdata.visibility, units.visibility),
+        altimeter=altimeter(wxdata.altimeter, units.altimeter),
+        clouds=clouds(wxdata.clouds, units.altitude),
+        wx_codes=wx_codes(wxdata.wx_codes),
+    )

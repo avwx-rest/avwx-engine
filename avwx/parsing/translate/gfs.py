@@ -2,6 +2,8 @@
 GFS data translation handlers
 """
 
+# mypy: ignore-errors
+
 raise NotImplementedError()
 
 from typing import List

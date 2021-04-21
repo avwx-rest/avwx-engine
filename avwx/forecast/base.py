@@ -4,13 +4,13 @@ Forecast report shared resources
 
 # stdlib
 from datetime import datetime, timedelta, timezone
-from typing import Callable, List, Tuple, Union
+from typing import Callable, List, Optional, Tuple, Union
 
 # module
 from avwx.base import AVWXBase
 from avwx.parsing import core
 from avwx.service import Service
-from avwx.structs import Code, Number, Timestamp
+from avwx.structs import Code, Number, ReportData, Timestamp
 
 
 def _split_line(
@@ -36,33 +36,37 @@ def _timestamp(line: str) -> Timestamp:
     return Timestamp(text, timestamp.replace(tzinfo=timezone.utc))
 
 
-def _find_time_periods(line: List[str], timestamp: datetime) -> List[dict]:
+def _find_time_periods(line: List[str], timestamp: Optional[datetime]) -> List[dict]:
     """Find and create the empty time periods"""
-    previous = timestamp.hour
-    periods = []
-    for hourstr in line:
-        if not hourstr:
-            continue
-        hour = int(hourstr)
-        previous, difference = hour, hour - previous
-        if difference < 0:
-            difference += 24
-        timestamp += timedelta(hours=difference)
-        periods.append(Timestamp(hourstr, timestamp))
+    periods: List[Optional[Timestamp]] = []
+    if timestamp is None:
+        periods = [None] * len(line)
+    else:
+        previous = timestamp.hour
+        for hourstr in line:
+            if not hourstr:
+                continue
+            hour = int(hourstr)
+            previous, difference = hour, hour - previous
+            if difference < 0:
+                difference += 24
+            timestamp += timedelta(hours=difference)
+            periods.append(Timestamp(hourstr, timestamp))
     return [{"time": time} for time in periods]
 
 
-def _init_parse(report: str) -> Tuple[dict, List[str]]:
+def _init_parse(report: str) -> Tuple[ReportData, List[str]]:
     """Returns the meta data and lines from a report string"""
     report = report.strip()
     lines = report.split("\n")
-    data = {
-        "raw": report,
-        "station": report[:4],
-        "time": _timestamp(lines[0]),
-        "remarks": None,
-    }
-    return data, lines
+    struct = ReportData(
+        raw=report,
+        sanitized=report,
+        station=report[:4],
+        time=_timestamp(lines[0]),
+        remarks=None,
+    )
+    return struct, lines
 
 
 def _numbers(
@@ -73,7 +77,7 @@ def _numbers(
     decimal: int = None,
     literal: bool = False,
     special: dict = None,
-) -> List[Number]:
+) -> List[Optional[Number]]:
     """Parse line into Number objects
 
     Prefix, postfix, and decimal location are applied to value, not repr
@@ -93,27 +97,27 @@ def _numbers(
     return ret
 
 
-def _decimal_10(line: str, size: int = 3) -> List[Number]:
+def _decimal_10(line: str, size: int = 3) -> List[Optional[Number]]:
     """Parse line into Number objects with 10ths decimal location"""
     return _numbers(line, size, decimal=-1)
 
 
-def _decimal_100(line: str, size: int = 3) -> List[Number]:
+def _decimal_100(line: str, size: int = 3) -> List[Optional[Number]]:
     """Parse line into Number objects with 100ths decimal location"""
     return _numbers(line, size, decimal=-2)
 
 
-def _number_10(line: str, size: int = 3) -> List[Number]:
+def _number_10(line: str, size: int = 3) -> List[Optional[Number]]:
     """Parse line into Number objects in tens"""
     return _numbers(line, size, postfix="0")
 
 
-def _number_100(line: str, size: int = 3) -> List[Number]:
+def _number_100(line: str, size: int = 3) -> List[Optional[Number]]:
     """Parse line into Number objects in hundreds"""
     return _numbers(line, size, postfix="00")
 
 
-def _direction(line: str, size: int = 3) -> List[Number]:
+def _direction(line: str, size: int = 3) -> List[Optional[Number]]:
     """Parse line into Number objects in hundreds"""
     return _numbers(line, size, postfix="0", literal=True)
 
@@ -121,14 +125,13 @@ def _direction(line: str, size: int = 3) -> List[Number]:
 def _code(mapping: dict) -> Callable:
     """Generates a conditional code mapping function"""
 
-    def func(line: str, size: int = 3) -> list:
-        ret = []
+    def func(line: str, size: int = 3) -> List[Union[Code, str, None]]:
+        ret: List[Union[Code, str, None]] = []
         for key in _split_line(line, size=size):
             try:
-                value = Code(key, mapping[key])
+                ret.append(Code(key, mapping[key]))
             except KeyError:
-                value = key or None
-            ret.append(value)
+                ret.append(key or None)
         return ret
 
     return func
@@ -176,4 +179,4 @@ class Forecast(AVWXBase):
 
     def __init__(self, icao: str):
         super().__init__(icao)
-        self.service = self._service_class(self.report_type)
+        self.service = self._service_class(self.report_type)  # type: ignore

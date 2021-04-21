@@ -42,7 +42,7 @@ class Units:
 @dataclass
 class Number:
     repr: str
-    value: Union[int, float]
+    value: Union[int, float, None]
     spoken: str
 
 
@@ -57,7 +57,7 @@ class Fraction(Number):
 class Timestamp:
     # pylint: disable=invalid-name
     repr: str
-    dt: datetime
+    dt: Optional[datetime]
 
 
 @dataclass
@@ -79,68 +79,69 @@ class Cloud:
 @dataclass
 class Location:
     repr: str
-    station: str
-    direction: Number
-    distance: Number
+    station: Optional[str]
+    direction: Optional[Number]
+    distance: Optional[Number]
 
 
 @dataclass
 class RemarksData:
-    dewpoint_decimal: Optional[float] = None
-    temperature_decimal: Optional[float] = None
+    dewpoint_decimal: Optional[Number] = None
+    temperature_decimal: Optional[Number] = None
 
 
 @dataclass
 class ReportData:
     raw: str
-    station: str
-    time: Timestamp
-    remarks: str
+    sanitized: str
+    station: Optional[str]
+    time: Optional[Timestamp]
+    remarks: Optional[str]
 
 
 @dataclass
 class SharedData:
-    altimeter: Number
+    altimeter: Optional[Number]
     clouds: List[Cloud]
     flight_rules: str
     other: List[str]
-    sanitized: str
-    visibility: Number
-    wind_direction: Number
-    wind_gust: Number
-    wind_speed: Number
+    visibility: Optional[Number]
+    wind_direction: Optional[Number]
+    wind_gust: Optional[Number]
+    wind_speed: Optional[Number]
     wx_codes: List[Code]
 
 
 @dataclass
 class MetarData(ReportData, SharedData):
-    dewpoint: Number
+    dewpoint: Optional[Number]
     remarks_info: RemarksData
     runway_visibility: List[str]
-    temperature: Number
+    temperature: Optional[Number]
     wind_variable_direction: List[Number]
 
 
 @dataclass
 class TafLineData(SharedData):
-    end_time: Timestamp
+    end_time: Optional[Timestamp]
     icing: List[str]
-    probability: Number
+    probability: Optional[Number]
     raw: str
-    start_time: Timestamp
-    transition_start: Timestamp
+    sanitized: str
+    start_time: Optional[Timestamp]
+    transition_start: Optional[Timestamp]
     turbulence: List[str]
     type: str
-    wind_shear: str
+    wind_shear: Optional[str]
 
 
 @dataclass
 class TafData(ReportData):
     forecast: List[TafLineData]
-    start_time: Timestamp
-    end_time: Timestamp
-    max_temp: Optional[float] = None
-    min_temp: Optional[float] = None
+    start_time: Optional[Timestamp]
+    end_time: Optional[Timestamp]
+    max_temp: Optional[str] = None
+    min_temp: Optional[str] = None
     alts: Optional[List[str]] = None
     temps: Optional[List[str]] = None
 
@@ -192,13 +193,12 @@ class Icing(Turbulence):
 @dataclass
 class PirepData(ReportData):
     # pylint: disable=invalid-name
-    aircraft: Optional[Aircraft] = None
-    altitude: Optional[Number] = None
+    aircraft: Union[Aircraft, str, None] = None
+    altitude: Union[Number, str, None] = None
     clouds: Optional[List[Cloud]] = None
     flight_visibility: Optional[Number] = None
     icing: Optional[Icing] = None
     location: Optional[Location] = None
-    sanitized: Optional[str] = None
     temperature: Optional[Number] = None
     turbulence: Optional[Turbulence] = None
     type: Optional[str] = None
@@ -293,7 +293,7 @@ class NbhsShared(NbmPeriod):
     mixing_height: Optional[Number] = None
     transport_wind_direction: Optional[Number] = None
     transport_wind_speed: Optional[Number] = None
-    haines: List[Number] = None
+    haines: Optional[List[Number]] = None
 
 
 @dataclass

@@ -5,7 +5,7 @@ Contains report sanitization functions
 # stdlib
 import re
 from itertools import permutations
-from typing import List
+from typing import List, Optional
 
 # module
 from avwx.parsing.core import dedupe, is_timerange, is_timestamp, is_unknown
@@ -174,34 +174,34 @@ CLOUD_SPACE_PATTERNS = [
 ]
 
 
-def extra_space_needed(item: str) -> int:
+def extra_space_needed(item: str) -> Optional[int]:
     """Returns the index where the string should be separated or None"""
     # For items starting with cloud list
     if item[:3] in CLOUD_LIST:
         for pattern in CLOUD_SPACE_PATTERNS:
-            sep = pattern.search(item)
-            if sep is None:
+            match = pattern.search(item)
+            if match is None:
                 continue
-            if sep.start():
-                return sep.start()
+            if match.start():
+                return match.start()
     # Connected timestamp
     for loc, check in ((7, is_timestamp), (9, is_timerange)):
         if len(item) > loc and check(item[:loc]):
             return loc
     # Connected to wind
     if len(item) > 5 and "KT" in item and not item.endswith("KT"):
-        sep = item.find("KT")
-        if sep > 4:
-            return sep + 2
+        index = item.find("KT")
+        if index > 4:
+            return index + 2
     # TAF newline connected to previous element
     for key in TAF_NEWLINE:
         if key in item and not item.startswith(key):
             return item.find(key)
     for key in TAF_NEWLINE_STARTSWITH:
         if key in item and not item.startswith(key):
-            sep = item.find(key)
-            if item[sep + len(key) :].isdigit():
-                return sep
+            index = item.find(key)
+            if item[index + len(key) :].isdigit():
+                return index
     return None
 
 
@@ -330,9 +330,9 @@ def sanitize_report_list(
                 wxdata.insert(i + 1, item[:tx_index])
                 wxdata[i] = item[tx_index:]
         # Fix situations where a space is missing
-        sep = extra_space_needed(item)
-        if sep:
-            wxdata.insert(i + 1, item[sep:])
-            wxdata[i] = item[:sep]
+        index = extra_space_needed(item)
+        if index:
+            wxdata.insert(i + 1, item[index:])
+            wxdata[i] = item[:index]
     wxdata = dedupe(wxdata, only_neighbors=True)
     return wxdata

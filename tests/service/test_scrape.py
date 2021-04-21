@@ -17,19 +17,17 @@ from avwx import exceptions, service
 from .test_base import BaseTestService
 
 
-class TestScrapeService(BaseTestService):
+class TestStationScrape(BaseTestService):
 
-    service_class = service.scrape.ScrapeService
+    service_class = service.scrape.StationScrape
     report_type = "metar"
     required_attrs = ("method", "_strip_whitespace", "_extract")
 
     def test_service(self):
         """Tests for expected values and method implementation"""
         # pylint: disable=no-member
-        if type(self.serv) == service.scrape.ScrapeService:
+        if type(self.serv) == service.scrape.StationScrape:
             self.assertIsNone(self.serv.url)
-            with self.assertRaises(NotImplementedError):
-                self.serv._extract(None)
         else:
             self.assertIsInstance(self.serv.url, str)
         self.assertIsInstance(self.serv.method, str)
@@ -51,43 +49,43 @@ class TestScrapeService(BaseTestService):
         """Tests fetch exception handling"""
         for station in ("12K", "MAYT"):
             with self.assertRaises(exceptions.BadStation):
-                self.serv.fetch(station)
+                self.serv.fetch(station)  # pylint: disable=no-member
         # Should raise exception due to empty url
         if type(self.serv) == service.scrape.ScrapeService:
             with self.assertRaises(NotImplementedError):
-                self.serv.fetch("KJFK")
+                self.serv.fetch("KJFK")  # pylint: disable=no-member
 
     @pytest.mark.asyncio
     async def test_async_fetch_exceptions(self):
         """Tests async fetch exception handling"""
         for station in ("12K", "MAYT"):
             with self.assertRaises(exceptions.BadStation):
-                await self.serv.async_fetch(station)
+                await self.serv.async_fetch(station)  # pylint: disable=no-member
         # Should raise exception due to empty url
         if type(self.serv) == service.scrape.ScrapeService:
             with self.assertRaises(NotImplementedError):
-                await self.serv.async_fetch("KJFK")
+                await self.serv.async_fetch("KJFK")  # pylint: disable=no-member
 
 
-class TestNOAA(TestScrapeService):
+class TestNOAA(TestStationScrape):
 
     service_class = service.NOAA
     stations = ["KJFK", "EGLL", "PHNL"]
 
 
-class TestAMO(TestScrapeService):
+class TestAMO(TestStationScrape):
 
     service_class = service.AMO
     stations = ["RKSI", "RKSS", "RKNY"]
 
 
-class TestMAC(TestScrapeService):
+class TestMAC(TestStationScrape):
 
     service_class = service.MAC
     stations = ["SKBO"]
 
 
-class TestAUBOM(TestScrapeService):
+class TestAUBOM(TestStationScrape):
 
     service_class = service.AUBOM
     stations = ["YBBN", "YSSY", "YCNK"]

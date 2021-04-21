@@ -14,7 +14,7 @@ import pytest
 # module
 from avwx import service
 
-BASE_ATTRS = ("url", "report_type", "_valid_types", "fetch", "async_fetch")
+BASE_ATTRS = ("url", "report_type", "_valid_types")
 
 
 class BaseTestService(unittest.TestCase):

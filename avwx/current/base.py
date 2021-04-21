@@ -42,14 +42,18 @@ def wx_code(code: str) -> Union[Code, str]:
     return Code(code_copy, ret.strip())
 
 
-def get_wx_codes(codes: List[str]) -> Tuple[List[Code], List[str]]:
+def get_wx_codes(codes: List[str]) -> Tuple[List[str], List[Code]]:
     """
     Separates parsed WX codes
     """
-    ret, other = [], []
-    for code in codes:
-        code = wx_code(code)
-        (ret if isinstance(code, Code) else other).append(code)
+    other: List[str] = []
+    ret: List[Code] = []
+    for item in codes:
+        code = wx_code(item)
+        if isinstance(code, Code):
+            ret.append(code)
+        else:
+            other.append(code)
     return other, ret
 
 
@@ -63,9 +67,9 @@ class Report(AVWXBase):
 
     def __init__(self, icao: str):
         super().__init__(icao)
-        self.service = get_service(icao, self.station.country)(
-            self.__class__.__name__.lower()
-        )
+        if self.station is not None:
+            service = get_service(icao, self.station.country)
+            self.service = service(self.__class__.__name__.lower())  # type: ignore
 
 
 class Reports(AVWXBase):
@@ -73,15 +77,16 @@ class Reports(AVWXBase):
     Base class containing multiple reports
     """
 
-    raw: Optional[List[str]] = None
-    data: Optional[List[ReportData]] = None
+    raw: Optional[List[str]] = None  # type: ignore
+    data: Optional[List[ReportData]] = None  # type: ignore
     units: Units = Units(**NA_UNITS)
 
     def __init__(self, icao: str = None, lat: float = None, lon: float = None):
         if icao:
             super().__init__(icao)
-            lat = self.station.latitude
-            lon = self.station.longitude
+            if self.station is not None:
+                lat = self.station.latitude
+                lon = self.station.longitude
         elif lat is None or lon is None:
             raise ValueError("No station or valid coordinates given")
         self.lat = lat
@@ -96,7 +101,7 @@ class Reports(AVWXBase):
         """Applies any report filtering before updating raw_reports"""
         return reports
 
-    def _update(
+    def _update(  # type: ignore
         self, reports: List[str], issued: Optional[date], disable_post: bool
     ) -> bool:
         if not reports:
@@ -122,12 +127,12 @@ class Reports(AVWXBase):
 
         Returns True if new reports are available, else False
         """
-        reports = self.service.fetch(lat=self.lat, lon=self.lon, timeout=timeout)
+        reports = self.service.fetch(lat=self.lat, lon=self.lon, timeout=timeout)  # type: ignore
         return self._update(reports, None, disable_post)
 
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
         """Async updates report data by fetching and parsing the report"""
-        reports = await self.service.async_fetch(
+        reports = await self.service.async_fetch(  # type: ignore
             lat=self.lat, lon=self.lon, timeout=timeout
         )
         return self._update(reports, None, disable_post)

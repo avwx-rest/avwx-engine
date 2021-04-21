@@ -25,7 +25,7 @@ from avwx.structs import (
 _UNITS = Units(**NA_UNITS)
 
 
-def _root(item: str) -> dict:
+def _root(item: str) -> Tuple[Optional[str], Optional[str]]:
     """Parses report root data including station and report type"""
     # pylint: disable=redefined-argument-from-local
     report_type = None
@@ -35,15 +35,16 @@ def _root(item: str) -> dict:
             report_type = item
         elif not station:
             station = item
-    return {"station": station, "type": report_type}
+    return station, report_type
 
 
-def _location(item: str) -> Location:
+def _location(item: str) -> Optional[Location]:
     """Convert a location element to a Location object"""
     items = item.split()
     if not items:
         return None
     station, direction, distance = None, None, None
+    direction_number, distance_number = None, None
     if len(items) == 1:
         ilen = len(item)
         # MLB
@@ -60,25 +61,25 @@ def _location(item: str) -> Location:
         station, direction, distance = items[0], items[1][:3], items[1][3:]
     # Convert non-null elements
     if direction:
-        direction = core.make_number(direction, literal=True)
+        direction_number = core.make_number(direction, literal=True)
     if distance:
-        distance = core.make_number(distance)
-    return Location(item, station, direction, distance)
+        distance_number = core.make_number(distance)
+    return Location(item, station, direction_number, distance_number)
 
 
-def _time(item: str, target: date = None) -> Timestamp:
+def _time(item: str, target: date = None) -> Optional[Timestamp]:
     """Convert a time element to a Timestamp"""
     return core.make_timestamp(item, time_only=True, target_date=target)
 
 
-def _altitude(item: str) -> Union[Number, str]:
+def _altitude(item: str) -> Union[Optional[Number], str]:
     """Convert reporting altitude to a Number or string"""
     if item.isdigit():
         return core.make_number(item)
     return item
 
 
-def _aircraft(item: str) -> str:
+def _aircraft(item: str) -> Union[Aircraft, str]:
     """Returns the Aircraft from the ICAO code"""
     try:
         return Aircraft.from_icao(item)
@@ -93,54 +94,63 @@ def _clouds(item: str) -> List[Cloud]:
     if "BASES" in clouds and "TOPS" in clouds:
         base = clouds[clouds.index("BASES") + 1]
         top = clouds[clouds.index("TOPS") + 1]
-        return [Cloud(item, base=base, top=top)]
+        return [Cloud(item, base=int(base), top=int(top))]
     return [core.make_cloud(cloud) for cloud in clouds]
 
 
-def _number(item: str) -> Number:
+def _number(item: str) -> Optional[Number]:
     """Convert an element to a Number"""
     return core.make_number(item)
 
 
-_DIR_SIG = {"BLO": "ceiling"}
-
-
-def _find_floor_ceiling(items: List[str]) -> Tuple[List[str], dict]:
+def _find_floor_ceiling(
+    items: List[str],
+) -> Tuple[List[str], Optional[Number], Optional[Number]]:
     """Extracts the floor and ceiling from item list"""
-    ret = {"floor": None, "ceiling": None}
+    floor: Optional[Number] = None
+    ceiling: Optional[Number] = None
+
     for i, item in enumerate(items):
         hloc = item.find("-")
         # TRACE RIME 070-090
         if hloc > -1 and item[:hloc].isdigit() and item[hloc + 1 :].isdigit():
-            for key, val in zip(("floor", "ceiling"), items.pop(i).split("-")):
-                ret[key] = core.make_number(val)
+            floor_str, ceiling_str = items.pop(i).split("-")
+            floor = core.make_number(floor_str)
+            ceiling = core.make_number(ceiling_str)
             break
         # CONT LGT CHOP BLO 250
-        if item in _DIR_SIG:
-            ret[_DIR_SIG[item]] = core.make_number(items[i + 1])
+        if item == "BLO":
+            ceiling = core.make_number(items[i + 1])
             items = items[:i]
             break
         # LGT RIME 025
         if item.isdigit():
             num = core.make_number(item)
-            ret["floor"], ret["ceiling"] = num, num
+            floor, ceiling = num, num
             break
-    return items, ret
+    return items, floor, ceiling
 
 
 def _turbulence(item: str) -> Turbulence:
     """Convert reported turbulence to a Turbulence object"""
-    items, ret = _find_floor_ceiling(item.split())
-    ret["severity"] = " ".join(items)
-    return Turbulence(**ret)
+    items, floor, ceiling = _find_floor_ceiling(item.split())
+    return Turbulence(
+        severity=" ".join(items),
+        floor=floor,
+        ceiling=ceiling,
+    )
 
 
 def _icing(item: str) -> Icing:
     """Convert reported icing to an Icing object"""
-    items, ret = _find_floor_ceiling(item.split())
-    ret["severity"] = items.pop(0)
-    ret["type"] = items[0] if items else None
-    return Icing(**ret)
+    items, floor, ceiling = _find_floor_ceiling(item.split())
+    severity = items.pop(0)
+    return Icing(
+        severity=severity,
+        floor=floor,
+        ceiling=ceiling,
+        type=items[0] if items else None,
+    )
 
 
 def _remarks(item: str) -> str:
@@ -148,62 +158,79 @@ def _remarks(item: str) -> str:
     return item
 
 
-def _wx(item: str) -> dict:
+def _wx(item: str) -> Tuple[List[str], Optional[Number]]:
     """Parses remaining weather elements"""
     # pylint: disable=redefined-argument-from-local
-    ret = {"wx": []}
+    wx_codes: List[str] = []
+    flight_visibility = None
     items = item.split()
     for item in items:
         if len(item) > 2 and item.startswith("FV"):
-            _, ret["flight_visibility"] = core.get_visibility([item[2:]], _UNITS)
+            _, flight_visibility = core.get_visibility([item[2:]], _UNITS)
         else:
-            ret["wx"].append(item)
-    return ret
+            wx_codes.append(item)
+    return wx_codes, flight_visibility
 
 
-_HANDLERS = {
-    "OV": ("location", _location),
-    "FL": ("altitude", _altitude),
-    "TP": ("aircraft", _aircraft),
-    "SK": ("clouds", _clouds),
-    "TA": ("temperature", _number),
-    "TB": ("turbulence", _turbulence),
-    "IC": ("icing", _icing),
-    "RM": ("remarks", _remarks),
-}
-
-
-_DICT_HANDLERS = {"WX": _wx}
-
-
-def parse(report: str, issued: date = None) -> PirepData:
+def parse(report: str, issued: date = None) -> Optional[PirepData]:
     """Returns a PirepData object based on the given report"""
     if not report:
         return None
     sanitized = sanitization.sanitize_report_string(report)
     # NOTE: will need to implement PIREP-specific list clean
-    resp = {"raw": report, "sanitized": sanitized, "station": None, "remarks": None}
     data = sanitized.split("/")
-    resp.update(_root(data.pop(0).strip()))
+    station, report_type = _root(data.pop(0).strip())
+    time, location, altitude, aircraft = None, None, None, None
+    clouds, temperature, turbulence, other = None, None, None, None
+    icing, remarks, flight_visibility = None, None, None
     for item in data:
         if not item or len(item) < 2:
             continue
         tag = item[:2]
         item = item[2:].strip()
         if tag == "TM":
-            resp["time"] = _time(item, issued)
-        elif tag in _HANDLERS:
-            key, handler = _HANDLERS[tag]
-            resp[key] = handler(item)
-        elif tag in _DICT_HANDLERS:
-            resp.update(_DICT_HANDLERS[tag](item))
-    return PirepData(**resp)
+            time = _time(item, issued)
+        elif tag == "OV":
+            location = _location(item)
+        elif tag == "FL":
+            altitude = _altitude(item)
+        elif tag == "TP":
+            aircraft = _aircraft(item)
+        elif tag == "SK":
+            clouds = _clouds(item)
+        elif tag == "TA":
+            temperature = _number(item)
+        elif tag == "TB":
+            turbulence = _turbulence(item)
+        elif tag == "IC":
+            icing = _icing(item)
+        elif tag == "RM":
+            remarks = _remarks(item)
+        elif tag == "WX":
+            other, flight_visibility = _wx(item)
+    return PirepData(
+        raw=report,
+        sanitized=sanitized,
+        station=station,
+        time=time,
+        remarks=remarks,
+        aircraft=aircraft,
+        altitude=altitude,
+        clouds=clouds,
+        flight_visibility=flight_visibility,
+        icing=icing,
+        location=location,
+        temperature=temperature,
+        turbulence=turbulence,
+        type=report_type,
+        wx=other,
+    )
 
 
 class Pireps(Reports):
     """Class to handle pilot report data"""
 
-    data: Optional[List[PirepData]] = None
+    data: Optional[List[PirepData]] = None  # type: ignore
 
     @staticmethod
     def _report_filter(reports: List[str]) -> List[str]:

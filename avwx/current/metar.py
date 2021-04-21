@@ -54,7 +54,7 @@ def get_runway_visibility(data: List[str]) -> Tuple[List[str], List[str]]:
     return data, runway_vis
 
 
-def parse_altimeter(value: str) -> Number:
+def parse_altimeter(value: str) -> Optional[Number]:
     """Parse an altimeter string into a Number"""
     if not value or len(value) < 4:
         return None
@@ -79,12 +79,12 @@ def parse_altimeter(value: str) -> Number:
 
 def get_altimeter(
     data: List[str], units: Units, version: str = "NA"
-) -> Tuple[List[str], Number]:
+) -> Tuple[List[str], Optional[Number]]:
     """Returns the report list and the removed altimeter item
 
     Version is 'NA' (North American / default) or 'IN' (International)
     """
-    values = []
+    values: List[Number] = []
     for _ in range(2):
         if not data:
             break
@@ -95,13 +95,16 @@ def get_altimeter(
         data.pop(-1)
     if not values:
         return data, None
-    values.sort(key=lambda x: x.value)
+    values.sort(key=lambda x: x.value or 0)
     altimeter = values[0 if version == "NA" else -1]
-    units.altimeter = "inHg" if altimeter.value < 100 else "hPa"
+    if altimeter.value is not None:
+        units.altimeter = "inHg" if altimeter.value < 100 else "hPa"
     return data, altimeter
 
 
-def get_temp_and_dew(data: str) -> Tuple[List[str], Number, Number]:
+def get_temp_and_dew(
+    data: List[str],
+) -> Tuple[List[str], Optional[Number], Optional[Number]]:
     """Returns the report list and removed temperature and dewpoint strings"""
     for i, item in reversed(list(enumerate(data))):
         if "/" in item:
@@ -123,7 +126,8 @@ def get_temp_and_dew(data: str) -> Tuple[List[str], Number, Number]:
                     break
             if valid:
                 data.pop(i)
-                return (data, *[core.make_number(t) for t in tempdew])
+                temp, dew = tempdew
+                return data, core.make_number(temp), core.make_number(dew)
     return data, None, None
 
 
@@ -139,7 +143,9 @@ def sanitize(report: str) -> Tuple[str, str, List[str]]:
     return clean, remark_str, data
 
 
-def parse(station: str, report: str, issued: date = None) -> Tuple[MetarData, Units]:
+def parse(
+    station: str, report: str, issued: date = None
+) -> Tuple[Optional[MetarData], Optional[Units]]:
     """Returns MetarData and Units dataclasses with parsed data and their associated units"""
     valid_station(station)
     if not report:
@@ -151,63 +157,93 @@ def parse(station: str, report: str, issued: date = None) -> Tuple[MetarData, Un
 def parse_na(report: str, issued: date = None) -> Tuple[MetarData, Units]:
     """Parser for the North American METAR variant"""
     units = Units(**NA_UNITS)
-    resp = {"raw": report}
-    resp["sanitized"], resp["remarks"], data = sanitize(report)
-    data, resp["station"], resp["time"] = core.get_station_and_time(data)
-    data, resp["runway_visibility"] = get_runway_visibility(data)
-    data, resp["clouds"] = core.get_clouds(data)
+    sanitized, remarks_str, data = sanitize(report)
+    data, station, time = core.get_station_and_time(data)
+    data, runway_visibility = get_runway_visibility(data)
+    data, clouds = core.get_clouds(data)
     (
         data,
-        resp["wind_direction"],
-        resp["wind_speed"],
-        resp["wind_gust"],
-        resp["wind_variable_direction"],
+        wind_direction,
+        wind_speed,
+        wind_gust,
+        wind_variable_direction,
     ) = core.get_wind(data, units)
-    data, resp["altimeter"] = get_altimeter(data, units, "NA")
-    data, resp["visibility"] = core.get_visibility(data, units)
-    data, resp["temperature"], resp["dewpoint"] = get_temp_and_dew(data)
-    condition = core.get_flight_rules(
-        resp["visibility"], core.get_ceiling(resp["clouds"])
+    data, altimeter = get_altimeter(data, units, "NA")
+    data, visibility = core.get_visibility(data, units)
+    data, temperature, dewpoint = get_temp_and_dew(data)
+    condition = core.get_flight_rules(visibility, core.get_ceiling(clouds))
+    other, wx_codes = get_wx_codes(data)
+    struct = MetarData(
+        altimeter=altimeter,
+        clouds=clouds,
+        dewpoint=dewpoint,
+        flight_rules=FLIGHT_RULES[condition],
+        other=other,
+        raw=report,
+        remarks_info=remarks.parse(remarks_str),
+        remarks=remarks_str,
+        runway_visibility=runway_visibility,
+        sanitized=sanitized,
+        station=station,
+        temperature=temperature,
+        time=core.make_timestamp(time, target_date=issued),
+        visibility=visibility,
+        wind_direction=wind_direction,
+        wind_gust=wind_gust,
+        wind_speed=wind_speed,
+        wind_variable_direction=wind_variable_direction,
+        wx_codes=wx_codes,
     )
-    resp["other"], resp["wx_codes"] = get_wx_codes(data)
-    resp["flight_rules"] = FLIGHT_RULES[condition]
-    resp["remarks_info"] = remarks.parse(resp["remarks"])
-    resp["time"] = core.make_timestamp(resp["time"], target_date=issued)
-    return MetarData(**resp), units
+    return struct, units
 
 
 def parse_in(report: str, issued: date = None) -> Tuple[MetarData, Units]:
     """Parser for the International METAR variant"""
     units = Units(**IN_UNITS)
-    resp = {"raw": report}
-    resp["sanitized"], resp["remarks"], data = sanitize(report)
-    data, resp["station"], resp["time"] = core.get_station_and_time(data)
-    data, resp["runway_visibility"] = get_runway_visibility(data)
+    sanitized, remarks_str, data = sanitize(report)
+    data, station, time = core.get_station_and_time(data)
+    data, runway_visibility = get_runway_visibility(data)
     if "CAVOK" not in data:
-        data, resp["clouds"] = core.get_clouds(data)
+        data, clouds = core.get_clouds(data)
     (
         data,
-        resp["wind_direction"],
-        resp["wind_speed"],
-        resp["wind_gust"],
-        resp["wind_variable_direction"],
+        wind_direction,
+        wind_speed,
+        wind_gust,
+        wind_variable_direction,
     ) = core.get_wind(data, units)
-    data, resp["altimeter"] = get_altimeter(data, units, "IN")
+    data, altimeter = get_altimeter(data, units, "IN")
     if "CAVOK" in data:
-        resp["visibility"] = core.make_number("CAVOK")
-        resp["clouds"] = []
+        visibility = core.make_number("CAVOK")
+        clouds = []
         data.remove("CAVOK")
     else:
-        data, resp["visibility"] = core.get_visibility(data, units)
-    data, resp["temperature"], resp["dewpoint"] = get_temp_and_dew(data)
-    condition = core.get_flight_rules(
-        resp["visibility"], core.get_ceiling(resp["clouds"])
+        data, visibility = core.get_visibility(data, units)
+    data, temperature, dewpoint = get_temp_and_dew(data)
+    condition = core.get_flight_rules(visibility, core.get_ceiling(clouds))
+    other, wx_codes = get_wx_codes(data)
+    struct = MetarData(
+        altimeter=altimeter,
+        clouds=clouds,
+        dewpoint=dewpoint,
+        flight_rules=FLIGHT_RULES[condition],
+        other=other,
+        raw=report,
+        remarks_info=remarks.parse(remarks_str),
+        remarks=remarks_str,
+        runway_visibility=runway_visibility,
+        sanitized=sanitized,
+        station=station,
+        temperature=temperature,
+        time=core.make_timestamp(time, target_date=issued),
+        visibility=visibility,
+        wind_direction=wind_direction,
+        wind_gust=wind_gust,
+        wind_speed=wind_speed,
+        wind_variable_direction=wind_variable_direction,
+        wx_codes=wx_codes,
     )
-    resp["other"], resp["wx_codes"] = get_wx_codes(data)
-    resp["flight_rules"] = FLIGHT_RULES[condition]
-    resp["remarks_info"] = remarks.parse(resp["remarks"])
-    resp["time"] = core.make_timestamp(resp["time"], target_date=issued)
-    return MetarData(**resp), units
+    return struct, units
 
 
 class Metar(Report):
@@ -226,15 +262,19 @@ class Metar(Report):
         return sanitize(report)[0]
 
     @property
-    def summary(self) -> str:
+    def summary(self) -> Optional[str]:
         """Condensed report summary created from translations"""
         if not self.translations:
             self.update()
+        if self.translations is None:
+            return None
         return summary.metar(self.translations)
 
     @property
-    def speech(self) -> str:
+    def speech(self) -> Optional[str]:
         """Report summary designed to be read by a text-to-speech program"""
         if not self.data:
             self.update()
+        if self.data is None or self.units is None:
+            return None
         return speech.metar(self.data, self.units)

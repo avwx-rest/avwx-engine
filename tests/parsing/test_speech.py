@@ -255,6 +255,7 @@ class TestSpeech(unittest.TestCase):
         ]
         taf = structs.TafData(
             raw=None,
+            sanitized=None,
             remarks=None,
             station=None,
             time=None,

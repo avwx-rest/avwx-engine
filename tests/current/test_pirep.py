@@ -38,10 +38,9 @@ class TestPirepHandlers(BaseTest):
             ("UA", None, "UA"),
             ("MCO", "MCO", None),
         ):
-            ret_root = pirep._root(root)
-            self.assertIsInstance(ret_root, dict)
-            self.assertEqual(ret_root["station"], station)
-            self.assertEqual(ret_root["type"], report_type)
+            ret_station, ret_report_type = pirep._root(root)
+            self.assertEqual(ret_station, station)
+            self.assertEqual(ret_report_type, report_type)
 
     def test_location(self):
         """Tests location unpacking"""
@@ -156,15 +155,19 @@ class TestPirepHandlers(BaseTest):
 
     def test_wx(self):
         """Tests wx split and visibility ident"""
-        for txt, wx in (("VCFC", ["VCFC"]), ("+RATS -GR", ["+RATS", "-GR"])):
-            ret_wx = pirep._wx(txt)
-            self.assertIsInstance(ret_wx, dict)
-            self.assertEqual(ret_wx["wx"], wx)
-        ret_wx = pirep._wx("FV1000 VCFC")
-        self.assertIsInstance(ret_wx, dict)
-        self.assertEqual(ret_wx["wx"], ["VCFC"])
-        self.assertIsInstance(ret_wx["flight_visibility"], structs.Number)
-        self.assertEqual(ret_wx["flight_visibility"].value, 1000)
+        for txt, wx in (
+            ("VCFC", ["VCFC"]),
+            ("+RATS -GR", ["+RATS", "-GR"]),
+        ):
+            wx_codes, flight_visibility = pirep._wx(txt)
+            self.assertIsInstance(wx_codes, list)
+            self.assertEqual(wx_codes, wx)
+            self.assertIsNone(flight_visibility)
+        wx_codes, flight_visibility = pirep._wx("FV1000 VCFC")
+        self.assertIsInstance(wx_codes, list)
+        self.assertEqual(wx_codes, ["VCFC"])
+        self.assertIsInstance(flight_visibility, structs.Number)
+        self.assertEqual(flight_visibility.value, 1000)
 
 
 class TestPirep(unittest.TestCase):

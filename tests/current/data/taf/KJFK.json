@@ -8,7 +8,7 @@
         },
         "forecast": [
             {
-                "altimeter": "",
+                "altimeter": null,
                 "clouds": [
                     {
                         "base": 12,
@@ -64,7 +64,7 @@
                 "wx_codes": []
             },
             {
-                "altimeter": "",
+                "altimeter": null,
                 "clouds": [
                     {
                         "base": 15,
@@ -120,7 +120,7 @@
                 "wx_codes": []
             },
             {
-                "altimeter": "",
+                "altimeter": null,
                 "clouds": [
                     {
                         "base": 25,
@@ -180,7 +180,7 @@
                 "wx_codes": []
             },
             {
-                "altimeter": "",
+                "altimeter": null,
                 "clouds": [
                     {
                         "base": 50,
@@ -248,7 +248,7 @@
                 "wx_codes": []
             },
             {
-                "altimeter": "",
+                "altimeter": null,
                 "clouds": [
                     {
                         "base": 50,
@@ -316,7 +316,7 @@
                 "wx_codes": []
             },
             {
-                "altimeter": "",
+                "altimeter": null,
                 "clouds": [
                     {
                         "base": 50,
@@ -384,10 +384,11 @@
                 "wx_codes": []
             }
         ],
-        "max_temp": "",
-        "min_temp": "",
+        "max_temp": null,
+        "min_temp": null,
         "raw": "KJFK 180535Z 1806/1912 09006KT P6SM FEW012 OVC080 FM181300 06009KT P6SM FEW015 BKN070 FM181600 09011G18KT P6SM FEW025 BKN050 FM181800 10015G22KT P6SM BKN050 BKN090 BKN250 FM190200 07012G20KT P6SM SCT050 BKN070 BKN200 FM191000 05016G23KT P6SM SCT050 SCT080 BKN200",
         "remarks": "",
+        "sanitized": "KJFK 180535Z 1806/1912 09006KT P6SM FEW012 OVC080 FM181300 06009KT P6SM FEW015 BKN070 FM181600 09011G18KT P6SM FEW025 BKN050 FM181800 10015G22KT P6SM BKN050 BKN090 BKN250 FM190200 07012G20KT P6SM SCT050 BKN070 BKN200 FM191000 05016G23KT P6SM SCT050 SCT080 BKN200",
         "start_time": {
             "dt": "2020-05-18T06:00:00+00:00",
             "repr": "1806"

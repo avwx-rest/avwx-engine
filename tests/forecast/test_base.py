@@ -107,13 +107,13 @@ class TestForecastBase(BaseTest):
             (NBS_HEAD, datetime(2020, 7, 19, 16, 0, tzinfo=timezone.utc), 4),
         ):
             data, lines = base._init_parse(report)
-            self.assertIsInstance(data, dict)
+            self.assertIsInstance(data, structs.ReportData)
             self.assertIsInstance(lines, list)
-            self.assertEqual(data["raw"], report.strip())
-            self.assertEqual(data["station"], "KMCO")
-            self.assertIsInstance(data["time"], structs.Timestamp)
-            self.assertEqual(data["time"].dt, time)
-            self.assertIsNone(data["remarks"])
+            self.assertEqual(data.raw, report.strip())
+            self.assertEqual(data.station, "KMCO")
+            self.assertIsInstance(data.time, structs.Timestamp)
+            self.assertEqual(data.time.dt, time)
+            self.assertIsNone(data.remarks)
             self.assertEqual(len(lines), line_length)
 
     def test_numbers(self):

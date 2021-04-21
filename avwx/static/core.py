@@ -125,6 +125,7 @@ CLOUD_TRANSLATIONS = {
     "SC": "Stratocumulus",
     "ST": "Stratus",
     "TCU": "Towering Cumulus",
+    None: "Unknown",
 }
 
 #: Units required to be translated in order to be spoken properly

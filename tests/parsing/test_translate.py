@@ -79,11 +79,10 @@ class TestShared(unittest.TestCase):
         """Tests availability of shared values between the METAR and TAF translations"""
         units = structs.Units(**static.core.NA_UNITS)
         data = structs.SharedData(
-            altimeter=core.make_number("2992"),
+            altimeter=core.make_number("29.92"),
             clouds=[core.make_cloud("OVC060")],
             flight_rules="",
             other=[],
-            sanitized="",
             visibility=core.make_number("10"),
             wind_direction=core.make_number("0"),
             wind_gust=core.make_number("0"),
@@ -91,10 +90,9 @@ class TestShared(unittest.TestCase):
             wx_codes=get_wx_codes(["RA"])[1],
         )
         trans = translate.base.current_shared(data, units)
-        self.assertIsInstance(trans, dict)
+        self.assertIsInstance(trans, structs.ReportTrans)
         for key in ("altimeter", "clouds", "visibility", "wx_codes"):
-            self.assertIn(key, trans)
-            self.assertTrue(bool(trans[key]))
+            self.assertTrue(bool(getattr(trans, key)))
 
 
 class TestMetar(unittest.TestCase):
@@ -292,7 +290,17 @@ class TestTaf(unittest.TestCase):
         )
         data = {"max_temp": "TX20/1518Z", "min_temp": "TN00/00", "remarks": ""}
         data.update(
-            {k: "" for k in ("raw", "station", "time", "start_time", "end_time")}
+            {
+                k: ""
+                for k in (
+                    "raw",
+                    "sanitized",
+                    "station",
+                    "time",
+                    "start_time",
+                    "end_time",
+                )
+            }
         )
         data = structs.TafData(forecast=[structs.TafLineData(**line_data)], **data)
         line_trans = structs.TafLineTrans(

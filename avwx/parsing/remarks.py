@@ -3,16 +3,16 @@ Contains functions for handling and translating remarks
 """
 
 # stdlib
-from typing import Dict
+from typing import Callable, Dict, Optional
 
 # module
 from avwx.parsing import core
 from avwx.static.core import REMARKS_ELEMENTS, REMARKS_GROUPS, WX_TRANSLATIONS
 from avwx.static.taf import PRESSURE_TENDENCIES
-from avwx.structs import RemarksData
+from avwx.structs import Number, RemarksData
 
 
-def _tdec(code: str, unit: str = "C") -> str:
+def _tdec(code: Optional[str], unit: Optional[str] = "C") -> Optional[str]:
     """Translates a 4-digit decimal temperature representation
 
     Ex: 1045 -> -4.5°C    0237 -> 23.7°C
@@ -61,7 +61,7 @@ def sunshine_duration(code: str, unit: str = "minutes") -> str:
     return f"Duration of sunlight: {int(code[1:])} {unit}"
 
 
-LEN5_DECODE = {
+LEN5_DECODE: Dict[str, Callable] = {
     "1": temp_minmax,
     "2": temp_minmax,
     "5": pressure_tendency,
@@ -73,16 +73,24 @@ LEN5_DECODE = {
 
 def parse(rmk: str) -> RemarksData:
     """Finds temperature and dewpoint decimal values from the remarks"""
-    rmkdata = {}
+    temperature_decimal: Optional[Number] = None
+    dewpoint_decimal: Optional[Number] = None
     for item in rmk.split():
         if len(item) in [5, 9] and item[0] == "T" and item[1:].isdigit():
-            rmkdata["temperature_decimal"] = core.make_number(_tdec(item[1:5], None))
-            rmkdata["dewpoint_decimal"] = core.make_number(_tdec(item[5:], None))
-    return RemarksData(**rmkdata)
+            temp = _tdec(item[1:5], None)
+            if temp is not None:
+                temperature_decimal = core.make_number(temp)
+            dew = _tdec(item[5:], None)
+            if dew is not None:
+                dewpoint_decimal = core.make_number(dew)
+            break
+    return RemarksData(dewpoint_decimal, temperature_decimal)
 
 
-def translate(remarks: str) -> Dict[str, str]:
+def translate(remarks: Optional[str]) -> Dict[str, str]:
     """Translates elements in the remarks string"""
+    if not remarks:
+        return {}
     ret = {}
     # Add and replace static multi-word elements
     for key in REMARKS_GROUPS:

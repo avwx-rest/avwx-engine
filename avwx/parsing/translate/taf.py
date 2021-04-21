@@ -3,7 +3,7 @@ TAF data translation handlers
 """
 
 # stdlib
-from typing import List
+from typing import List, Optional
 
 # module
 import avwx.parsing.translate.base as _trans
@@ -13,7 +13,10 @@ from avwx.structs import TafData, TafLineTrans, TafTrans, Units
 
 
 def wind_shear(
-    shear: str, unit_alt: str = "ft", unit_wind: str = "kt", spoken: bool = False
+    shear: Optional[str],
+    unit_alt: str = "ft",
+    unit_wind: str = "kt",
+    spoken: bool = False,
 ) -> str:
     """Translate wind shear into a readable string
 
@@ -21,9 +24,11 @@ def wind_shear(
     """
     if not shear or "WS" not in shear or "/" not in shear:
         return ""
-    shear = shear[2:].rstrip(unit_wind.upper()).split("/")
-    wdir = core.spoken_number(shear[1][:3], True) if spoken else shear[1][:3]
-    return f"Wind shear {int(shear[0])*100}{unit_alt} from {wdir} at {shear[1][3:]}{unit_wind}"
+    altitude, wind = shear[2:].rstrip(unit_wind.upper()).split("/")
+    wdir = core.spoken_number(wind[:3], True) if spoken else wind[:3]
+    return (
+        f"Wind shear {int(altitude)*100}{unit_alt} from {wdir} at {wind[3:]}{unit_wind}"
+    )
 
 
 def turb_ice(values: List[str], unit: str = "ft") -> str:
@@ -66,7 +71,7 @@ def turb_ice(values: List[str], unit: str = "ft") -> str:
     )
 
 
-def min_max_temp(temp: str, unit: str = "C") -> str:
+def min_max_temp(temp: Optional[str], unit: str = "C") -> str:
     """Format the Min and Max temp elements into a readable string
 
     Ex: Maximum temperature of 23°C (73°F) at 18-15:00Z
@@ -79,31 +84,41 @@ def min_max_temp(temp: str, unit: str = "C") -> str:
         temp_type = "Minimum"
     else:
         return ""
-    temp = temp[2:].replace("M", "-").replace("Z", "").split("/")
-    if len(temp[1]) > 2:
-        temp[1] = temp[1][:2] + "-" + temp[1][2:]
-    temp_value = _trans.temperature(core.make_number(temp[0]), unit)
-    return f"{temp_type} temperature of {temp_value} at {temp[1]}:00Z"
+    value, time = temp[2:].replace("M", "-").replace("Z", "").split("/")
+    if len(time) > 2:
+        time = time[:2] + "-" + time[2:]
+    translation = _trans.temperature(core.make_number(value), unit)
+    return f"{temp_type} temperature of {translation} at {time}:00Z"
 
 
 def translate_taf(wxdata: TafData, units: Units) -> TafTrans:
     """Returns translations for a TafData object"""
-    data = {"forecast": []}
+    forecast: List[TafLineTrans] = []
     for line in wxdata.forecast:
-        _data = _trans.current_shared(line, units)
-        _data["wind"] = _trans.wind(
-            line.wind_direction, line.wind_speed, line.wind_gust, unit=units.wind_speed
-        )
-        _data["wind_shear"] = wind_shear(
-            line.wind_shear, units.altitude, units.wind_speed
-        )
-        _data["turbulence"] = turb_ice(line.turbulence, units.altitude)
-        _data["icing"] = turb_ice(line.icing, units.altitude)
+        shared = _trans.current_shared(line, units)
         # Remove false 'Sky Clear' if line type is 'BECMG'
-        if line.type == "BECMG" and _data["clouds"] == "Sky clear":
-            _data["clouds"] = None
-        data["forecast"].append(TafLineTrans(**_data))
-    data["min_temp"] = min_max_temp(wxdata.min_temp, units.temperature)
-    data["max_temp"] = min_max_temp(wxdata.max_temp, units.temperature)
-    data["remarks"] = remarks.translate(wxdata.remarks)
-    return TafTrans(**data)
+        clouds = shared.clouds
+        if line.type == "BECMG" and clouds == "Sky clear":
+            clouds = ""
+        struct = TafLineTrans(
+            altimeter=shared.altimeter,
+            clouds=clouds,
+            wx_codes=shared.wx_codes,
+            visibility=shared.visibility,
+            wind=_trans.wind(
+                line.wind_direction,
+                line.wind_speed,
+                line.wind_gust,
+                unit=units.wind_speed,
+            ),
+            wind_shear=wind_shear(line.wind_shear, units.altitude, units.wind_speed),
+            turbulence=turb_ice(line.turbulence, units.altitude),
+            icing=turb_ice(line.icing, units.altitude),
+        )
+        forecast.append(struct)
+    return TafTrans(
+        forecast=forecast,
+        max_temp=min_max_temp(wxdata.max_temp, units.temperature),
+        min_temp=min_max_temp(wxdata.min_temp, units.temperature),
+        remarks=remarks.translate(wxdata.remarks),
+    )

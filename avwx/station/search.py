@@ -4,10 +4,10 @@ Station text-based search
 
 # stdlib
 from functools import lru_cache
-from typing import List, Tuple
+from typing import Iterable, List, Tuple
 
 # library
-from rapidfuzz import fuzz, process
+from rapidfuzz import fuzz, process  # type: ignore
 
 # module
 from avwx.load_utils import LazyCalc
@@ -26,7 +26,7 @@ TYPE_ORDER = [
 ]
 
 
-def _format_search(airport: dict, keys: List[str]) -> str:
+def _format_search(airport: dict, keys: Iterable[str]) -> str:
     values = [airport.get(k) for k in keys]
     return " - ".join(k for k in values if k)
 
@@ -39,7 +39,7 @@ def _build_corpus() -> List[str]:
 _CORPUS = LazyCalc(_build_corpus)
 
 
-def _sort_key(result: Tuple[dict, int]) -> Tuple[int]:
+def _sort_key(result: Tuple[Station, int]) -> Tuple[int, ...]:
     station, score = result
     try:
         type_order = TYPE_ORDER.index(station.type)

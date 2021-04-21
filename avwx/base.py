@@ -6,7 +6,7 @@ Report parent classes
 from abc import ABCMeta, abstractmethod
 from contextlib import suppress
 from datetime import date, datetime, timezone
-from typing import List, Optional, Union
+from typing import List, Optional, Type, TypeVar, Union
 
 # module
 from avwx.exceptions import BadStation
@@ -15,13 +15,16 @@ from avwx.station import Station
 from avwx.structs import ReportData, Units
 
 
-def find_station(report: str) -> Station:
+def find_station(report: str) -> Optional[Station]:
     """Returns the first ICAO ident found in a report string"""
     for item in report.split():
         if len(item) == 4:
             with suppress(BadStation):
                 return Station.from_icao(item.upper())
     return None
+
+
+T = TypeVar("T", bound="AVWXBase")
 
 
 class AVWXBase(metaclass=ABCMeta):
@@ -60,11 +63,11 @@ class AVWXBase(metaclass=ABCMeta):
         return f"<avwx.{self.__class__.__name__} icao={self.icao}>"
 
     @abstractmethod
-    def _post_update(self):
+    def _post_update(self) -> None:
         pass
 
     @classmethod
-    def from_report(cls, report: str, issued: date = None) -> "AVWXBase":
+    def from_report(cls: Type[T], report: str, issued: date = None) -> Optional[T]:
         """Returns an updated report object based on an existing report"""
         report = report.strip()
         station = find_station(report)
@@ -74,18 +77,18 @@ class AVWXBase(metaclass=ABCMeta):
         obj.parse(report, issued=issued)
         return obj
 
-    def _set_meta(self):
+    def _set_meta(self) -> None:
         """Update timestamps after parsing"""
         self.last_updated = datetime.now(tz=timezone.utc)
         with suppress(AttributeError):
-            self.issued = self.data.time.dt.date()
+            self.issued = self.data.time.dt.date()  # type: ignore
 
     def _update(
         self, report: Union[str, List[str]], issued: Optional[date], disable_post: bool
     ) -> bool:
         if not report or report == self.raw:
             return False
-        self.raw = report
+        self.raw = report  # type: ignore
         self.issued = issued
         if not disable_post:
             self._post_update()
@@ -104,7 +107,7 @@ class AVWXBase(metaclass=ABCMeta):
 
         Returns True if a new report is available, else False
         """
-        report = self.service.fetch(self.icao, timeout=timeout)
+        report = self.service.fetch(self.icao, timeout=timeout)  # type: ignore
         return self._update(report, None, disable_post)
 
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
@@ -112,7 +115,7 @@ class AVWXBase(metaclass=ABCMeta):
 
         Returns True if a new report is available, else False
         """
-        report = await self.service.async_fetch(self.icao, timeout=timeout)
+        report = await self.service.async_fetch(self.icao, timeout=timeout)  # type: ignore
         return self._update(report, None, disable_post)
 
     @staticmethod

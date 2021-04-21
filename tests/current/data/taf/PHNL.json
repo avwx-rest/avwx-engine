@@ -8,7 +8,7 @@
         },
         "forecast": [
             {
-                "altimeter": "",
+                "altimeter": null,
                 "clouds": [
                     {
                         "base": 25,
@@ -64,7 +64,7 @@
                 "wx_codes": []
             },
             {
-                "altimeter": "",
+                "altimeter": null,
                 "clouds": [
                     {
                         "base": 25,
@@ -125,7 +125,7 @@
                 ]
             },
             {
-                "altimeter": "",
+                "altimeter": null,
                 "clouds": [
                     {
                         "base": 25,
@@ -190,7 +190,7 @@
                 ]
             },
             {
-                "altimeter": "",
+                "altimeter": null,
                 "clouds": [
                     {
                         "base": 25,
@@ -246,10 +246,11 @@
                 "wx_codes": []
             }
         ],
-        "max_temp": "",
-        "min_temp": "",
+        "max_temp": null,
+        "min_temp": null,
         "raw": "PHNL 180543Z 1806/1912 05009KT P6SM FEW025 SCT040 FM181500 05006KT P6SM VCSH SCT025 BKN040 FM182100 05012G20KT P6SM VCSH SCT025 BKN040 FM190600 05009KT P6SM FEW025 BKN040",
         "remarks": "",
+        "sanitized": "PHNL 180543Z 1806/1912 05009KT P6SM FEW025 SCT040 FM181500 05006KT P6SM VCSH SCT025 BKN040 FM182100 05012G20KT P6SM VCSH SCT025 BKN040 FM190600 05009KT P6SM FEW025 BKN040",
         "start_time": {
             "dt": "2020-05-18T06:00:00+00:00",
             "repr": "1806"

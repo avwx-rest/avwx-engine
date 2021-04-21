@@ -6,7 +6,7 @@ Parsing for NOAA NBM forecasts
 
 # stdlib
 from contextlib import suppress
-from typing import Callable, Dict, List, Tuple
+from typing import Callable, Dict, List, Optional, Tuple
 
 # module
 from avwx import structs
@@ -41,17 +41,17 @@ _CEILING = {
 _WIND = {"NG": (0, "zero")}
 
 
-def _ceiling(line: str, size: int = 3) -> List[structs.Number]:
+def _ceiling(line: str, size: int = 3) -> List[Optional[structs.Number]]:
     """Parse line into Number objects handling ceiling special units"""
     return _numbers(line, size, postfix="00", special=_CEILING)
 
 
-def _wind(line: str, size: int = 3) -> List[structs.Number]:
+def _wind(line: str, size: int = 3) -> List[Optional[structs.Number]]:
     """Parse line into Number objects handling wind special units"""
     return _numbers(line, size, special=_WIND)
 
 
-_HANDLERS = {
+_HANDLERS: Dict[str, Tuple[str, Callable]] = {
     "TMP": ("temperature", _numbers),
     "DPT": ("dewpoint", _numbers),
     "SKY": ("sky_cover", _numbers),
@@ -68,7 +68,7 @@ _HANDLERS = {
     "SWH": ("wave_height", _numbers),
 }
 
-_HOUR_HANDLERS = {
+_HOUR_HANDLERS: Dict[str, Tuple[str, Callable]] = {
     "P": ("precip_chance", _numbers),
     "Q": ("precip_amount", _decimal_100),
     "T": ("thunderstorm", _numbers),
@@ -76,7 +76,7 @@ _HOUR_HANDLERS = {
     "I": ("icing_amount", _decimal_100),
 }
 
-_NBHS_HANDLERS = {
+_NBHS_HANDLERS: Dict[str, Tuple[str, Callable]] = {
     "CIG": ("ceiling", _ceiling),
     "VIS": ("visibility", _decimal_10),
     "LCB": ("cloud_base", _number_100),
@@ -90,7 +90,7 @@ _NBHS_HANDLERS = {
 def _parse_factory(
     data_class,
     period_class,
-    handlers: Dict[str, Tuple],
+    handlers: Dict[str, Tuple[str, Callable]],
     hours: int = 2,
     size: int = 3,
     prefix: int = 4,
@@ -113,8 +113,9 @@ def _parse_factory(
         if not report:
             return None
         data, lines = _init_parse(report)
-        periods = _split_line(lines[hours], size, prefix)
-        periods = _find_time_periods(periods, data["time"].dt)
+        period_strings = _split_line(lines[hours], size, prefix)
+        timestamp = data.time.dt if data.time else None
+        periods = _find_time_periods(period_strings, timestamp)
         data_lines = lines[hours + 1 :]
         # Normalize line prefix length
         if prefix != 4:
@@ -122,21 +123,33 @@ def _parse_factory(
             start, end = min(indexes), max(indexes)
             data_lines = [l[:start] + l[end:] for l in data_lines]
         _parse_lines(periods, data_lines, handle, size)
-        data["forecast"] = [period_class(**p) for p in periods]
-        return data_class(**data)
+        return data_class(
+            raw=data.raw,
+            sanitized=data.sanitized,
+            station=data.station,
+            time=data.time,
+            remarks=data.remarks,
+            forecast=[period_class(**p) for p in periods],
+        )
 
     return parse
 
 
-parse_nbh = _parse_factory(structs.NbhData, structs.NbhPeriod, _NBHS_HANDLERS, hours=1)
-parse_nbs = _parse_factory(structs.NbsData, structs.NbsPeriod, _NBHS_HANDLERS)
-parse_nbe = _parse_factory(structs.NbeData, structs.NbePeriod, {}, size=4, prefix=5)
+parse_nbh: Callable[[str], structs.NbhData] = _parse_factory(
+    structs.NbhData, structs.NbhPeriod, _NBHS_HANDLERS, hours=1
+)
+parse_nbs: Callable[[str], structs.NbsData] = _parse_factory(
+    structs.NbsData, structs.NbsPeriod, _NBHS_HANDLERS
+)
+parse_nbe: Callable[[str], structs.NbeData] = _parse_factory(
+    structs.NbeData, structs.NbePeriod, {}, size=4, prefix=5
+)
 
 
 class _Nbm(Forecast):
     units = structs.NbmUnits(**UNITS)
-    _service_class = NOAA_NBM
-    _parser: Callable
+    _service_class = NOAA_NBM  # type: ignore
+    _parser: staticmethod
 
     def _post_update(self):
         self.data = self._parser(self.raw)

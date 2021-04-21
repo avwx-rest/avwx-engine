@@ -18,6 +18,36 @@ from avwx.parsing import core
 from tests.util import get_data
 
 
+TAF_FIELDS = (
+    "altimeter",
+    "clouds",
+    "flight_rules",
+    "other",
+    "visibility",
+    "wind_direction",
+    "wind_gust",
+    "wind_speed",
+    "wx_codes",
+    "icing",
+    "probability",
+    "raw",
+    "sanitized",
+    "turbulence",
+    "wind_shear",
+    "type",
+    "transition_start",
+    "start_time",
+    "end_time",
+)
+
+
+def line_struct(fields: dict) -> structs.TafLineData:
+    """Create TafLineData with null missing fields"""
+    existing = {k: None for k in TAF_FIELDS}
+    existing.update(fields)
+    return structs.TafLineData(**existing)
+
+
 class TestTaf(unittest.TestCase):
     """Tests Taf class and parsing"""
 
@@ -51,15 +81,15 @@ class TestTaf(unittest.TestCase):
             {"probability": "PROBNA"},
             {"type": "FROM", "probability": 30},
         ):
-            self.assertTrue(taf._is_tempo_or_prob(line))
+            self.assertTrue(taf._is_tempo_or_prob(line_struct(line)))
         for line in ({"type": "FROM"}, {"type": "FROM", "probability": None}):
-            self.assertFalse(taf._is_tempo_or_prob(line))
+            self.assertFalse(taf._is_tempo_or_prob(line_struct(line)))
 
     def test_get_alt_ice_turb(self):
         """Tests that report global altimeter, icing, and turbulence get removed"""
         for wx, *data in (
-            (["1"], "", [], []),
-            (["1", "512345", "612345"], "", ["612345"], ["512345"]),
+            (["1"], None, [], []),
+            (["1", "512345", "612345"], None, ["612345"], ["512345"]),
             (["QNH1234", "1", "612345"], core.make_number("1234"), ["612345"], []),
         ):
             self.assertEqual(taf.get_alt_ice_turb(wx), (["1"], *data))
@@ -136,19 +166,20 @@ class TestTaf(unittest.TestCase):
         for line in good_lines:
             for key in ("start_time", "end_time", "transition_start"):
                 line[key] = core.make_timestamp(line[key])
+        good_lines = [line_struct(line) for line in good_lines]
         bad_lines = deepcopy(good_lines)
-        bad_lines[0]["start_time"] = None
-        bad_lines[1]["start_time"] = None
-        bad_lines[1]["end_time"] = None
-        bad_lines[2]["end_time"] = None  # This None implies normal parsing
-        bad_lines[3]["end_time"] = None
-        start, end = good_lines[0]["start_time"], good_lines[-1]["end_time"]
+        bad_lines[0].start_time = None
+        bad_lines[1].start_time = None
+        bad_lines[1].end_time = None
+        bad_lines[2].end_time = None  # This None implies normal parsing
+        bad_lines[3].end_time = None
+        start, end = good_lines[0].start_time, good_lines[-1].end_time
         self.assertEqual(taf.find_missing_taf_times(bad_lines, start, end), good_lines)
 
     def test_get_temp_min_and_max(self):
         """Tests that temp max and min times are extracted and assigned properly"""
         for wx, *temps in (
-            (["1"], "", ""),
+            (["1"], None, None),
             (["1", "TX12/1316Z", "TNM03/1404Z"], "TX12/1316Z", "TNM03/1404Z"),
             (["1", "TM03/1404Z", "T12/1316Z"], "TX12/1316Z", "TNM03/1404Z"),
         ):
@@ -250,12 +281,12 @@ class TestTaf(unittest.TestCase):
             "FM291300 32017G27KT P6SM OVC030 "
             "TEMPO 2913/2918 P6SM -SHRA OVC020 RMK NXT FCST BY 290000Z"
         )
-        tafobj = taf.Taf("CYBC")
+        tafobj = taf.Taf("CYOW")
         tafobj.parse(report)
         lines = tafobj.data.forecast
         self.assertEqual(len(lines), 7)
         self.assertEqual(lines[0].wind_shear, "WS015/20055")
-        self.assertEqual(tafobj.translations.forecast[1].clouds, None)
+        self.assertEqual(tafobj.translations.forecast[1].clouds, "")
 
     def test_prob_tempo(self):
         """Non-PROB types should take precident but still fill the probability value"""

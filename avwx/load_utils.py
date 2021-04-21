@@ -5,52 +5,54 @@ Data load utilities
 # pylint: disable=missing-function-docstring
 
 import json
-from collections.abc import KeysView, ValuesView
+from collections.abc import ItemsView, ValuesView
 from pathlib import Path
-from typing import Callable, Iterable, Optional
+from typing import Any, Callable, Dict, Iterable, Optional
 
 
 class LazyLoad:
     """Lazy load a dictionary from the JSON data cache"""
 
     source: Path
-    data: Optional[dict] = None
+    _data: Optional[Dict[str, Any]] = None
 
     def __init__(self, filename: str):
         self.source = Path(__file__).parent.joinpath("data", f"{filename}.json")
 
     def _load(self):
-        self.data = json.load(self.source.open(encoding="utf8"))
+        self._data = json.load(self.source.open(encoding="utf8"))
 
-    def __getitem__(self, key: str) -> object:
-        if not self.data:
+    def _check(self):
+        if self._data is None:
             self._load()
+
+    @property
+    def data(self) -> Dict[str, Any]:
+        return self._data or {}
+
+    def __getitem__(self, key: str) -> Any:
+        self._check()
         return self.data[key]
 
     def __contains__(self, key: str) -> bool:
-        if not self.data:
-            self._load()
+        self._check()
         return key in self.data
 
     def __len__(self) -> int:
-        if not self.data:
-            self._load()
+        self._check()
         return len(self.data)
 
     def __iter__(self) -> Iterable[str]:
-        if not self.data:
-            self._load()
+        self._check()
         for key in self.data:
             yield key
 
-    def items(self) -> KeysView:
-        if not self.data:
-            self._load()
+    def items(self) -> ItemsView:
+        self._check()
         return self.data.items()
 
     def values(self) -> ValuesView:
-        if not self.data:
-            self._load()
+        self._check()
         return self.data.values()
 
 
@@ -60,14 +62,14 @@ class LazyCalc:
 
     # pylint: disable=too-few-public-methods,missing-function-docstring
 
-    func: Callable
-    _value: object = None
+    _func: Callable
+    _value: Optional[Any] = None
 
     def __init__(self, func: Callable):
-        self.func = func
+        self._func = func  # type: ignore
 
     @property
-    def value(self) -> object:
+    def value(self) -> Any:
         if self._value is None:
-            self._value = self.func()
+            self._value = self._func()
         return self._value

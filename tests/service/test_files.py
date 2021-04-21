@@ -40,11 +40,11 @@ class TestScrapeService(BaseTestService):
         """Tests async fetch exception handling"""
         for station in ("12K", "MAYT"):
             with self.assertRaises(exceptions.BadStation):
-                await self.serv.async_fetch(station)
+                await self.serv.async_fetch(station)  # pylint: disable=no-member
         # Should raise exception due to empty url
         if type(self.serv) == service.scrape.ScrapeService:
             with self.assertRaises(NotImplementedError):
-                await self.serv.async_fetch("KJFK")
+                await self.serv.async_fetch("KJFK")  # pylint: disable=no-member
 
 
 class TestNBM(TestScrapeService):

@@ -9,10 +9,10 @@ from contextlib import suppress
 from copy import copy
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import List, Tuple, Type, TypeVar, Union
+from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
 # library
-from geopy.distance import great_circle, Distance
+from geopy.distance import great_circle, Distance  # type: ignore
 
 # module
 from avwx.exceptions import BadStation
@@ -21,7 +21,7 @@ from avwx.station.meta import STATIONS
 
 # We catch this import error only if user attempts coord lookup
 with suppress(ModuleNotFoundError):
-    from scipy.spatial import KDTree
+    from scipy.spatial import KDTree  # type: ignore
 
 
 @dataclass
@@ -65,10 +65,10 @@ class Station:
     wiki: str
 
     @classmethod
-    def from_icao(cls, ident: str) -> "Station":
+    def from_icao(cls: Type[T], ident: str) -> T:
         """Load a Station from an ICAO station ident"""
         try:
-            info = copy(STATIONS[ident.upper()])
+            info: Dict[str, Any] = copy(STATIONS[ident.upper()])
             if info["runways"]:
                 info["runways"] = [Runway(**r) for r in info["runways"]]
             return cls(**info)
@@ -85,7 +85,7 @@ class Station:
         is_airport: bool = False,
         sends_reports: bool = True,
         max_coord_distance: float = 10,
-    ) -> Tuple[T, dict]:
+    ) -> Optional[Tuple[T, dict]]:
         """Load the Station nearest to a lat,lon coordinate pair
 
         Returns the Station and distances from source
@@ -153,11 +153,11 @@ def station_filter(station: Station, is_airport: bool, reporting: bool) -> bool:
 @lru_cache(maxsize=128)
 def _query_filter(
     lat: float, lon: float, n: int, d: float, is_airport: bool, reporting: bool
-) -> List[Station]:
+) -> List[Tuple[Station, float]]:
     """Returns <= n number of stations <= d distance from lat,lon matching the query params"""
     k = n * 20
     last = 0
-    stations = []
+    stations: List[Tuple[Station, float]] = []
     while True:
         nodes = _query_coords(lat, lon, k, d)[last:]
         # Ran out of new stations
@@ -190,8 +190,8 @@ def nearest(
     """
     # Default state includes all, no filtering necessary
     if not (is_airport or sends_reports):
-        stations = _query_coords(lat, lon, n, max_coord_distance)
-        stations = [(Station.from_icao(icao), d) for icao, d in stations]
+        data = _query_coords(lat, lon, n, max_coord_distance)
+        stations = [(Station.from_icao(icao), d) for icao, d in data]
     else:
         stations = _query_filter(
             lat, lon, n, max_coord_distance, is_airport, sends_reports

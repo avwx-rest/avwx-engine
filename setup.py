@@ -14,7 +14,7 @@ dependencies = [
     "xmltodict~=0.12",
 ]
 
-test_dependencies = ["pytest-asyncio~=0.14", "time-machine~=2.1"]
+test_dependencies = ["pytest-asyncio~=0.15", "time-machine~=2.1"]
 
 extras = {
     "scipy": ["scipy~=1.6"],

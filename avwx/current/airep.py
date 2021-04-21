@@ -1,6 +1,8 @@
 """
 """
 
+# mypy: ignore-errors
+
 # stdlib
 from datetime import date
 from typing import List
