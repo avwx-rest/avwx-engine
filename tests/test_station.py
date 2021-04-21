@@ -96,6 +96,23 @@ class TestStation(TestCase):
             with self.assertRaises(exceptions.BadStation):
                 station.Station.from_icao(bad)
 
+    def test_from_iata(self):
+        """Tests loading a Station by IATA code"""
+        for iata, icao in (
+            ("JFK", "KJFK"),
+            ("jfk", "KJFK"),
+            ("LAX", "KLAX"),
+            ("HNL", "PHNL"),
+            ("LHR", "EGLL"),
+        ):
+            stn = station.Station.from_iata(iata)
+            self.assertIsInstance(stn, station.Station)
+            self.assertEqual(iata.upper(), stn.iata)
+            self.assertEqual(icao, stn.icao)
+        for bad in ("1234", 1234, None, True, ""):
+            with self.assertRaises(exceptions.BadStation):
+                station.Station.from_icao(bad)
+
     def test_nearest(self):
         """Tests loading a Station nearest to a lat,lon coordinate pair"""
         for lat, lon, icao in ((28.43, -81.31, "KMCO"), (28.43, -81, "KTIX")):

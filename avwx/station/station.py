@@ -39,6 +39,7 @@ class Runway:
 
 
 T = TypeVar("T", bound="Station")
+_IATAS = LazyCalc(lambda: {v["iata"]: k for k, v in STATIONS.items() if v["iata"]})
 
 
 @dataclass
@@ -74,7 +75,17 @@ class Station:
             return cls(**info)
         except (KeyError, AttributeError) as not_found:
             raise BadStation(
-                f"Could not find station with ident {ident}"
+                f"Could not find station with ICAO ident {ident}"
+            ) from not_found
+
+    @classmethod
+    def from_iata(cls: Type[T], ident: str) -> T:
+        """Load a Station from an IATA code"""
+        try:
+            return cls.from_icao(_IATAS.value[ident.upper()])
+        except (KeyError, AttributeError) as not_found:
+            raise BadStation(
+                f"Could not find station with ICAO ident {ident}"
             ) from not_found
 
     @classmethod
