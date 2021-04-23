@@ -2,19 +2,21 @@
 
 Parsing and sanitization improvements are always ongoing and non-breaking
 
-## 1.6
+## 1.6.x
 
 - Added station text-based search at `station.search(text)`
+- Added `from_iata` class method to `Station`
 - Submodule structure for station
+- Mypy type compliance
 
-## 1.5
+## 1.5.x
 
 - Added NBM `Nbh`, `Nbs`, and `Nbe` report classes
 - Added `ScrapeService`, `FileService`, and `NOAA_NBM` service classes
 - Submodule structure for service
 - Simplified service API when lat, lon are not used
 
-## 1.4
+## 1.4.x
 
 - Added GFS MOS `Mav` and `Mex` report classes
 - Added `AVWXBase` and `Code` classes
@@ -25,20 +27,20 @@ Parsing and sanitization improvements are always ongoing and non-breaking
 - Sub module structure for reports, parsing, and static
 - Dropped Python 3.6 support
 
-## 1.3
+## 1.3.x
 
 - Added Australian service as `avwx.service.AUBOM`
 - Added country code param to `avwx.service.get_service`
 - Nearest searches default to airports only
 
-## 1.2
+## 1.2.x
 
 - Added `nearest(lat, lon)` and `sends_reports` to `Station`
 - Added `nearest(lat, lon, n)` to `station`
 - Added lazy loading handling
 - Moved `Station`, `uses_na_format`, `valid_station` to `avwx.station`
 
-## 1.1
+## 1.1.x
 
 - Added `Pireps` class, module
 - Added new fields to `Station`
@@ -46,7 +48,7 @@ Parsing and sanitization improvements are always ongoing and non-breaking
 - Added `Aircraft`, `Turbulence`, `Icing`, `Location`, `PirepData` dataclasses in `avwx.structs`
 - Removed `priority` from `Station`
 
-## 1.0
+## 1.0.x
 
 - `Metar` and `Taf` classes fully implemented
 - Added `Station` class

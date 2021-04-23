@@ -8,7 +8,7 @@ For the purposes of AVWX, a station is any location that has an ICAO identificat
 
 The Station dataclass stores basic info about the desired station and available Runways.
 
-The easiest way to get a station is to supply the ICAO code.
+The easiest way to get a station is to supply the ICAO code. IATA codes will also work with `from_iata`.
 
 ```python
 >>> from avwx import Station

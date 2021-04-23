@@ -8,5 +8,5 @@
 ## 2.0
 
 - Separate `Report` class from fetch/update management
+- `Station` class requesting report types
 - Add translate, summary, speech to Pirep, Airep
-- Move report sanitization to separate module
