@@ -91,6 +91,12 @@ class TestAUBOM(TestStationScrape):
     stations = ["YBBN", "YSSY", "YCNK"]
 
 
+class TestOLBS(TestStationScrape):
+
+    service_class = service.OLBS
+    stations = ["VAPO", "VEGT"]
+
+
 class TestModule(unittest.TestCase):
     def test_get_service(self):
         """Tests that the correct service class is returned"""

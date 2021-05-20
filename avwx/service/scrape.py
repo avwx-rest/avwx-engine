@@ -46,8 +46,7 @@ class ScrapeService(Service, CallsHTTP):
         return {}
 
     # pylint: disable=unused-argument
-    @staticmethod
-    def _post_data(station: str) -> dict:
+    def _post_data(self, station: str) -> dict:
         """Returns the POST form/data payload"""
         return {}
 
@@ -299,13 +298,9 @@ class AUBOM(StationScrape):
             "Origin": "http://www.bom.gov.au",
             "User-Agent": random.choice(USER_AGENTS),
             "Connection": "keep-alive",
-            # 'Referer': 'http://www.bom.gov.au/aviation/observations/metar-speci/',
-            # 'Cookie': 'check=ok; bm_sv=C423C389DECFF9A821E265C1696BFD2B~HNlY4KT2eVGRmQ7vlgQu8I6Uj0MQIueL8syy1Gce2Do+dyNtfywMIueEu+bDc5gEsw2QMkRJY16RvBDBYgrCZJRlY08iB6teeIZuYaWHzqIJOWEXJANCWC6HgGu4uUEOvVRmMWFiraXWm3YTUv38sNxB83MXOZiS5YS9qf6MqXo=; __utma=172860464.760688564.1618331786.1618331786.1618331786.1; __utmb=172860464.4.10.1618331786; __utmc=172860464; __utmz=172860464.1618331786.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); PHPSESSID=sbu75i840376vc6v33k8f7tp13; ak_bmsc=2DE29B1D2EEC759732EFC20AF6CE52AA1749B466715E000089C8756048C6D311~plkVCUVDvoBcyCISZlrLApGC8CbD9JMTgKXEBQqxfXzP039W0VONAXG4azzOIcDVp1+ovscHFBt1zxXTqr8sEJhqGS3i9Q2aBCg+hmKXYuJ5pmj0jiz8YTy+uoNui4FKcDiw2sGtzXMkv022BuUddJIj2SNSXNtt6ogjVtUeu1uD7qEp+hBkusmT9C2byp34EkVilnlIomV/n2svH3u7P8rk2sRXlcqjKp/hPP1nDly4EEjCv5VVFhw1JbVbxbw2v7; bm_mi=F129320EBC30F70FC3BCC129E5FB67B1~2ErkxZx/0YwGSQpO9GUziKtgD05/7Zl225D53UFU2Su+OzO9YwYEG/CGHTiTTQL9bNMHZjqYzRuszGROuGts+JHoICZx8rhM9O5BksHCw+xaBIIzhu0hCDMYYvGUgbSwc1PwdIzdgi6U4MSkWBxyOwN1Ol9WR9yfb84rxfdXXAfFpVIzir8rmw9XryJSgPG3FqFLXZCFt5ygWB+JLoUo/qksC/FHIgAnXhJHM5JvTj+oTdB91O2PbYUNHCbGR2pfSHO1pCOTaN5K8EQqEHKsOGgXMtqUjpes0Xx4B1817T4=',
-            # 'X-Requested-With': 'XMLHttpRequest',
         }
 
-    @staticmethod
-    def _post_data(station: str) -> dict:
+    def _post_data(self, station: str) -> dict:
         """Returns the POST form"""
         return {"keyword": station, "type": "search", "page": "TAF"}
 
@@ -323,8 +318,48 @@ class AUBOM(StationScrape):
         return report.replace("<br />", " ")
 
 
+class OLBS(StationScrape):
+    """Requests data from India OLBS flight briefing"""
+
+    url = "https://olbs.amsschennai.gov.in/nsweb/FlightBriefing/showopmetquery.php"
+    method = "POST"
+
+    def _make_url(self, _) -> Tuple[str, dict]:
+        """Returns a formatted URL and empty parameters"""
+        return self.url, {}
+
+    def _post_data(self, station: str) -> dict:
+        """Returns the POST form"""
+        # Can set icaos to "V*" to return all results
+        return {"icaos": station, "type": self.report_type}
+
+    @staticmethod
+    def _make_headers() -> dict:
+        """Returns request headers"""
+        return {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Accept": "text/html, */*; q=0.01",
+            "Accept-Language": "en-us",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Host": "olbs.amsschennai.gov.in",
+            "User-Agent": random.choice(USER_AGENTS),
+            "Connection": "keep-alive",
+            "Referer": "https://olbs.amsschennai.gov.in/nsweb/FlightBriefing/",
+            "X-Requested-With": "XMLHttpRequest",
+        }
+
+    def _extract(self, raw: str, station: str) -> str:
+        """Extracts the reports from HTML response"""
+        start = raw.find(f"{self.report_type.upper()} {station} ")
+        if start < 0:
+            return ""
+        report = raw[start:]
+        report = report[: report.find("=")].strip()
+        return " ".join(dedupe(report.split()))
+
+
 PREFERRED = {"RK": AMO, "SK": MAC}
-BY_COUNTRY = {"AU": AUBOM}
+BY_COUNTRY = {"AU": AUBOM, "IN": OLBS}
 
 
 def get_service(station: str, country_code: str) -> ScrapeService:
