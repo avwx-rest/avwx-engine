@@ -71,10 +71,12 @@ class TestSanitization(BaseTest):
             ("OAKB 211230Z 360G17G32KT Q1011", "OAKB 211230Z 36017G32KT Q1011"),
             ("MHLC 090024Z 06012G22TK 5000", "MHLC 090024Z 06012G22KT 5000"),
             ("SKCL 211600Z 211600ZVRB04KT A3010", "SKCL 211600Z VRB04KT A3010"),
+            ("METAR VABO 211600Z VAB04KT A3010", "VABO 211600Z VRB04KT A3010"),
             (
                 "SVMG 072200Z //////KT 9999 FEW010 XX/XX Q1012",
                 "SVMG 072200Z 9999 FEW010 Q1012",
             ),
+            ("AYPY 210600Z 15015GT20KT Q1006", "AYPY 210600Z 15015G20KT Q1006"),
             ("KJFK 1 1 1 1 1 1 2 1", "KJFK 1 2 1"),
         ):
             line, fixed = line.split(), fixed.split()

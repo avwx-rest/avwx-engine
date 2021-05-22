@@ -8,9 +8,68 @@ from itertools import permutations
 from typing import List, Optional
 
 # module
-from avwx.parsing.core import dedupe, is_timerange, is_timestamp, is_unknown
+from avwx.parsing.core import dedupe, is_timerange, is_timestamp, is_unknown, is_wind
 from avwx.static.core import CLOUD_LIST, CLOUD_TRANSLATIONS
 from avwx.static.taf import TAF_NEWLINE, TAF_NEWLINE_STARTSWITH
+
+WIND_REMV = ("/", "-", "(N)", "(E)", "(S)", "(W)")
+
+WIND_REPL = {
+    "O": "0",
+    "GG": "G",
+    "GT": "G",
+    "LKT": "KT",
+    "ZKT": "KT",
+    "KTKT": "KT",
+    "KKT": "KT",
+    "KLT": "KT",
+    "TKT": "KT",
+    "GKT": "KT",
+}
+
+WIND_VRB = (
+    "BRB",
+    "BRV",
+    "ERB",
+    "NRB",
+    "RB0",
+    "V0",
+    "VAB",
+    "VAR",
+    "VB0",
+    "VBB",
+    "VBR",
+    "VEB",
+    "VFB",
+    "VGB",
+    "VKB",
+    "VR0",
+    "VRBL",
+    "VRBN",
+    "VRC",
+    "VRE",
+    "VRG",
+    "VRN",
+    "VRR",
+    "VRV",
+    "VTB",
+    "WBB",
+)
+
+
+def sanitize_wind(text: str) -> str:
+    """Fix rare wind issues that may be too broad otherwise"""
+    for rep in WIND_REMV:
+        text = text.replace(rep, "")
+    for key, rep in WIND_REPL.items():
+        text = text.replace(key, rep)
+    for key in WIND_VRB:
+        if text.startswith(key):
+            zero = "0" if key[-1] == "0" else ""
+            text = text.replace(key, "VRB" + zero)
+            break
+    return text
+
 
 STR_REPL = {
     " C A V O K ": " CAVOK ",
@@ -19,44 +78,17 @@ STR_REPL = {
     "'": "",
     "`": "",
     ".": "",
-    " VTB": " VRB",
-    " VBR": " VRB",
-    " VBB": " VRB",
-    " ERB": " VRB",
-    " VRV": " VRB",
-    " BRV": " VRB",
-    " VRN": " VRB",
-    " BRB": " VRB",
-    " VEB": " VRB",
-    " VFB": " VRB",
-    " VAB": " VRB",
-    " VAR": " VRB",
-    " VRG": " VRB",
-    " VRR": " VRB",
-    " VGB": " VRB",
-    " VRC": " VRB",
-    " VRE": " VRB",
-    " WBB": " VRB",
-    " NRB": " VRB",
-    " VRBN": " VRB",
-    " VR0": " VRB0",
-    " VB0": " VRB0",
-    " RB0": " VRB0",
-    " V0": " VRB0",
     " 0I0": " 090",
     " PROBB": " PROB",
     " PROBN": " PROB",
     # "Z/ ": "Z ", NOTE: Too broad re pirep
     "NOSIGKT ": "KT NOSIG ",
-    "KTKT ": "KT ",
-    "KKT ": "KT ",
-    "KLT ": "KT ",
-    "TKT ": "KT ",
-    "GKT ": "KT ",
     " TMM": " TNM",
     " TNTN": " TN",
     " TXTX": " TX",
+    "/VRB": " VRB",
     "CALMKT ": "CALM ",
+    "CLMKT ": "CALM ",
     "N0SIG": "NOSIG",
     " <1/": " M1/",  # <1/4SM <1/8SM
     "/04SM": "/4SM",
@@ -65,40 +97,46 @@ STR_REPL = {
 }
 
 
-def sanitize_report_string(txt: str) -> str:
+def separate_cloud_layers(text: str) -> str:
+    """Check for missing spaces in front of cloud layers
+    Ex: TSFEW004SCT012FEW///CBBKN080
+    """
+    for cloud in CLOUD_LIST:
+        if cloud in text and " " + cloud not in text:
+            start, counter = 0, 0
+            while text.count(cloud) != text.count(" " + cloud):
+                cloud_index = start + text[start:].find(cloud)
+                if len(text[cloud_index:]) >= 3:
+                    target = text[
+                        cloud_index + len(cloud) : cloud_index + len(cloud) + 3
+                    ]
+                    if target.isdigit() or not target.strip("/"):
+                        text = text[:cloud_index] + " " + text[cloud_index:]
+                start = cloud_index + len(cloud) + 1
+                # Prevent infinite loops
+                if counter > text.count(cloud):
+                    break
+                counter += 1
+    return text
+
+
+def sanitize_report_string(text: str) -> str:
     """Provides sanitization for operations that work better when the report is a string
 
     Returns the first pass sanitized report string
     """
-    txt = txt.upper()
-    if len(txt) < 4:
-        return txt
+    text = text.upper()
+    if len(text) < 4:
+        return text
     # Standardize whitespace
-    txt = " ".join(txt.split())
+    text = " ".join(text.split())
     # Prevent changes to station ID
-    stid, txt = txt[:4], txt[4:]
+    stid, text = text[:4], text[4:]
     # Replace invalid key-value pairs
     for key, rep in STR_REPL.items():
-        txt = txt.replace(key, rep)
-    # Check for missing spaces in front of cloud layers
-    # Ex: TSFEW004SCT012FEW///CBBKN080
-    for cloud in CLOUD_LIST:
-        if cloud in txt and " " + cloud not in txt:
-            start, counter = 0, 0
-            while txt.count(cloud) != txt.count(" " + cloud):
-                cloud_index = start + txt[start:].find(cloud)
-                if len(txt[cloud_index:]) >= 3:
-                    target = txt[
-                        cloud_index + len(cloud) : cloud_index + len(cloud) + 3
-                    ]
-                    if target.isdigit() or not target.strip("/"):
-                        txt = txt[:cloud_index] + " " + txt[cloud_index:]
-                start = cloud_index + len(cloud) + 1
-                # Prevent infinite loops
-                if counter > txt.count(cloud):
-                    break
-                counter += 1
-    return stid + txt
+        text = text.replace(key, rep)
+    text = separate_cloud_layers(text)
+    return stid + text
 
 
 def extra_space_exists(str1: str, str2: str) -> bool:
@@ -334,5 +372,11 @@ def sanitize_report_list(
         if index:
             wxdata.insert(i + 1, item[index:])
             wxdata[i] = item[:index]
+    # Check for wind sanitization
+    for i, item in enumerate(wxdata):
+        possible_wind = sanitize_wind(item)
+        if is_wind(possible_wind):
+            print(possible_wind)
+            wxdata[i] = possible_wind
     wxdata = dedupe(wxdata, only_neighbors=True)
     return wxdata

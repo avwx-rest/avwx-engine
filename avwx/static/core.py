@@ -163,6 +163,7 @@ SPECIAL_NUMBERS = {
     "P6SM": (None, "greater than six"),
     "P99": (None, "greater than nine nine"),
     "VRB": (None, "variable"),
+    "CLM": (0, "calm"),
 }
 
 #: Static remarks translation elements

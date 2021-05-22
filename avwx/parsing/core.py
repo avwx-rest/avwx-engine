@@ -52,25 +52,26 @@ def is_unknown(val: str) -> bool:
     return False
 
 
-def get_digit_list(alist: List[str], from_index: int) -> Tuple[List[str], List[str]]:
+def get_digit_list(data: List[str], from_index: int) -> Tuple[List[str], List[str]]:
     """Returns a list of items removed from a given list of strings
     that are all digits from 'from_index' until hitting a non-digit item
     """
     ret = []
-    alist.pop(from_index)
-    while len(alist) > from_index and alist[from_index].isdigit():
-        ret.append(alist.pop(from_index))
-    return alist, ret
+    data.pop(from_index)
+    while len(data) > from_index and data[from_index].isdigit():
+        ret.append(data.pop(from_index))
+    return data, ret
 
 
 def unpack_fraction(num: str) -> str:
     """Returns unpacked fraction string 5/2 -> 2 1/2"""
-    nums = [int(n) for n in num.split("/") if n]
-    if len(nums) == 2 and nums[0] > nums[1]:
-        over = nums[0] // nums[1]
-        rem = nums[0] % nums[1]
-        return f"{over} {rem}/{nums[1]}"
-    return num
+    numbers = [int(n) for n in num.split("/") if n]
+    if not (len(numbers) == 2 and numbers[0] > numbers[1]):
+        return num
+    numerator, denominator = numbers
+    over = numerator // denominator
+    rem = numerator % denominator
+    return f"{over} {rem}/{denominator}"
 
 
 def remove_leading_zeros(num: str) -> str:
@@ -231,17 +232,11 @@ def get_station_and_time(
     return data, station, rtime
 
 
-def sanitize_wind(text: str) -> str:
-    """Fix rare wind issues that aren't caught in the first pass"""
-    for rep in ["(E)"]:
-        text = text.replace(rep, "")
-    for replacements in (("O", "0"), ("/", ""), ("LKT", "KT"), ("GG", "G")):
-        text = text.replace(*replacements)
-    return text
-
-
 def is_wind(text: str) -> bool:
-    """Returns True if the text is likely a wind element"""
+    """Returns True if the text is likely a normal wind element"""
+    # Ignore wind shear
+    if text.startswith("WS"):
+        return False
     # 09010KT, 09010G15KT
     for ending in ("KT", "KTS", "MPS", "KMH"):
         if text.endswith(ending):
@@ -274,8 +269,12 @@ def separate_wind(text: str) -> Tuple[str, str, str]:
         gust = text[start:end]
         text = text[:g_index] + text[end:]
     if text:
-        speed = text[3:]
-        direction = text[:3]
+        # 10G18KT
+        if len(text) == 2:
+            speed = text
+        else:
+            direction = text[:3]
+            speed = text[3:]
     return direction, speed, gust
 
 
@@ -295,7 +294,7 @@ def get_wind(
     direction, speed, gust = "", "", ""
     variable: List[Number] = []
     if data:
-        item = sanitize_wind(copy(data[0]))
+        item = copy(data[0])
         if is_wind(item):
             # Select and remove unit in order of frequency
             if item.endswith("KT"):
@@ -515,13 +514,13 @@ def parse_date(
     if time_only:
         if len(date) != 4:
             return None
-        ihour = 0
+        index_hour = 0
     else:
         if len(date) == 4:
             date += "00"
         if len(date) != 6:
             return None
-        ihour = 2
+        index_hour = 2
     # Create initial guess
     if target:
         target = dt.datetime(
@@ -530,7 +529,7 @@ def parse_date(
     else:
         target = dt.datetime.now(tz=dt.timezone.utc)
     day = target.day if time_only else int(date[0:2])
-    hour = int(date[ihour : ihour + 2])
+    hour = int(date[index_hour : index_hour + 2])
     # Handle situation where next month has less days than current month
     # Shifted value makes sure that a month shift doesn't happen twice
     shifted = False
@@ -541,7 +540,7 @@ def parse_date(
         guess = target.replace(
             day=day,
             hour=hour % 24,
-            minute=int(date[ihour + 2 : ihour + 4]) % 60,
+            minute=int(date[index_hour + 2 : index_hour + 4]) % 60,
             second=0,
             microsecond=0,
         )
