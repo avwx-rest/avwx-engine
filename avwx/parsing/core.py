@@ -5,6 +5,7 @@ Contains the core parsing and indent functions of avwx
 # pylint: disable=redefined-builtin
 
 # stdlib
+import re
 import datetime as dt
 from calendar import monthrange
 from contextlib import suppress
@@ -230,6 +231,54 @@ def get_station_and_time(
     return data, station, rtime
 
 
+def sanitize_wind(text: str) -> str:
+    """Fix rare wind issues that aren't caught in the first pass"""
+    for rep in ["(E)"]:
+        text = text.replace(rep, "")
+    for replacements in (("O", "0"), ("/", ""), ("LKT", "KT"), ("GG", "G")):
+        text = text.replace(*replacements)
+    return text
+
+
+def is_wind(text: str) -> bool:
+    """Returns True if the text is likely a wind element"""
+    # 09010KT, 09010G15KT
+    for ending in ("KT", "KTS", "MPS", "KMH"):
+        if text.endswith(ending):
+            return True
+    # 09010  09010G15 VRB10
+    if not (
+        len(text) == 5
+        or (len(text) >= 8 and text.find("G") != -1)
+        and text.find("/") == -1
+    ):
+        return False
+    return text[:5].isdigit() or (text.startswith("VRB") and text[3:5].isdigit())
+
+
+VARIABLE_DIRECTION_PATTERN = re.compile(r"\d{3}V\d{3}")
+
+
+def is_variable_wind_direction(text: str) -> bool:
+    """Returns True if element looks like 350V040"""
+    return VARIABLE_DIRECTION_PATTERN.match(text) is not None
+
+
+def separate_wind(text: str) -> Tuple[str, str, str]:
+    """Extracts the direction, speed, and gust from a wind element"""
+    direction, speed, gust = "", "", ""
+    # Remove gust
+    if "G" in text:
+        g_index = text.find("G")
+        start, end = g_index + 1, g_index + 3
+        gust = text[start:end]
+        text = text[:g_index] + text[end:]
+    if text:
+        speed = text[3:]
+        direction = text[:3]
+    return direction, speed, gust
+
+
 def get_wind(
     data: List[str], units: Units
 ) -> Tuple[
@@ -246,30 +295,9 @@ def get_wind(
     direction, speed, gust = "", "", ""
     variable: List[Number] = []
     if data:
-        item = copy(data[0])
-        for rep in ["(E)"]:
-            item = item.replace(rep, "")
-        for replacements in (("O", "0"), ("/", ""), ("LKT", "KT"), ("GG", "G")):
-            item = item.replace(*replacements)
-        # 09010KT, 09010G15KT
-        if (
-            item.endswith("KT")
-            or item.endswith("KTS")
-            or item.endswith("MPS")
-            or item.endswith("KMH")
-            or (
-                (
-                    len(item) == 5
-                    or (len(item) >= 8 and item.find("G") != -1)
-                    and item.find("/") == -1
-                )
-                and (
-                    item[:5].isdigit()
-                    or (item.startswith("VRB") and item[3:5].isdigit())
-                )
-            )
-        ):
-            # In order of frequency
+        item = sanitize_wind(copy(data[0]))
+        if is_wind(item):
+            # Select and remove unit in order of frequency
             if item.endswith("KT"):
                 item = item.replace("KT", "")
             elif item.endswith("KTS"):
@@ -280,26 +308,13 @@ def get_wind(
             elif item.endswith("KMH"):
                 units.wind_speed = "km/h"
                 item = item.replace("KMH", "")
-            direction = item[:3]
-            if "G" in item:
-                g_index = item.find("G")
-                gust = item[g_index + 1 :]
-                speed = item[3:g_index]
-            else:
-                speed = item[3:]
-            direction = item[:3]
+            direction, speed, gust = separate_wind(item)
             data.pop(0)
     # Separated Gust
     if data and 1 < len(data[0]) < 4 and data[0][0] == "G" and data[0][1:].isdigit():
         gust = data.pop(0)[1:]
     # Variable Wind Direction
-    if (
-        data
-        and len(data[0]) == 7
-        and data[0][:3].isdigit()
-        and data[0][3] == "V"
-        and data[0][4:].isdigit()
-    ):
+    if data and is_variable_wind_direction(data[0]):
         for item in data.pop(0).split("V"):
             value = make_number(item, speak=item, literal=True)
             if value is not None:
