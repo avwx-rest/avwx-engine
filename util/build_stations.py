@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import List, Optional
 
 # module
-from find_bad_stations import BAD_PATH, GOOD_PATH, load_stations
+from find_bad_stations import GOOD_PATH, load_stations
 from mappers import FILE_REPLACE, SURFACE_TYPES
 
 _DATA = Path("data")
@@ -79,7 +79,7 @@ def format_station(icao: str, station: List[str]) -> dict:
         elev_ft = round(elev_ft)
     except ValueError:
         elev_ft, elev_m = None, None
-    iloc = station[9].find("-")
+    index = station[9].find("-")
     ret = {
         "type": station[2],
         "name": station[3],
@@ -88,8 +88,8 @@ def format_station(icao: str, station: List[str]) -> dict:
         "longitude": float(station[5]),
         "elevation_ft": elev_ft,
         "elevation_m": elev_m,
-        "country": station[9][:iloc],
-        "state": station[9][iloc + 1 :],
+        "country": station[9][:index],
+        "state": station[9][index + 1 :],
         "city": station[10],
         "icao": icao,
         "iata": station[13].upper(),
@@ -191,13 +191,8 @@ def add_runways(stations: dict) -> dict:
 def add_reporting(stations: dict) -> dict:
     """Add reporting boolean to station if available"""
     good = load_stations(GOOD_PATH)
-    bad = load_stations(BAD_PATH)
     for icao in stations:
-        if icao in good:
-            stations[icao]["reporting"] = True
-        elif icao in bad:
-            stations[icao]["reporting"] = False
-        # else unknown
+        stations[icao]["reporting"] = icao in good
     return stations
 
 

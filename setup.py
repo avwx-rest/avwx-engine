@@ -4,11 +4,11 @@ avwx Package Setup
 
 from setuptools import find_namespace_packages, setup
 
-VERSION = "1.6.5"
+VERSION = "1.6.6"
 
 dependencies = [
     "geopy~=2.1",
-    "httpx~=0.17",
+    "httpx~=0.18",
     "python-dateutil~=2.8",
     "rapidfuzz~=1.4",
     "xmltodict~=0.12",

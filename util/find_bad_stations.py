@@ -2,123 +2,111 @@
 Manages good/bad station lists by calling METARs
 """
 
+# pylint: disable=broad-except
+
 # stdlib
-import sys
+import random
 import asyncio as aio
-from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
-from time import sleep
-from typing import List
+
+# library
+from kewkew import Kew
 
 # module
 import avwx
 
+
 GOOD_PATH = Path("data", "good_stations.txt")
-BAD_PATH = Path("data", "bad_stations.txt")
 
 
-def load_stations(path: Path) -> List[str]:
-    return path.read_text().strip().split(",")
+def load_stations(path: Path) -> set[str]:
+    """Load a station set from a path"""
+    return set(path.read_text().strip().split(","))
 
 
-def save_stations(data: List[str], path: Path):
-    path.write_text(",".join(sorted(set(data))))
+def save_stations(data: set[str], path: Path):
+    """Save a sation set to a path"""
+    path.write_text(",".join(sorted(data)))
 
 
-GOOD = load_stations(GOOD_PATH)
-BAD = load_stations(BAD_PATH)
+class StationTester(Kew):
+    """Station reporting queue manager"""
 
+    good_stations: set[str]
+    sleep_chance: float
 
-def should_test(icao: str) -> bool:
-    """Returns False if an ident is known good or never good"""
-    if icao in GOOD:
-        return False
-    for char in icao:
-        if char.isdigit():
+    def __init__(self, stations: set[str], workers: int = 3) -> None:
+        super().__init__(workers=workers)
+        self.good_stations = stations
+        self.sleep_chance = 0.0
+
+    def should_test(self, icao: str) -> bool:
+        """Returns False if an ident is known good or never good"""
+        if icao in self.good_stations:
             return False
-    return True
+        for char in icao:
+            if char.isdigit():
+                return False
+        return True
 
-
-async def worker(queue: aio.Queue):
-    """Worker to check queued idents and update lists"""
-    i = 0
-    maxi = 100
-    while True:
-        icao = await queue.get()
+    async def worker(self, data: object) -> bool:
+        """Worker to check queued idents and update lists"""
+        icao = data
         try:
-            m = avwx.Metar(icao)
-            if await m.async_update():
-                GOOD.append(icao)
-                BAD.remove(icao)
-            elif icao not in BAD:
-                BAD.append(icao)
-            i += 1
-            # Sleep to prevent 403 from services
-            if i >= maxi:
-                i = 0
-                await aio.sleep(10)
+            metar = avwx.Metar(icao)
+            if await metar.async_update():
+                self.good_stations.add(icao)
         except avwx.exceptions.SourceError as exc:
             print(exc)
-            sys.exit(3)
         except (avwx.exceptions.BadStation, avwx.exceptions.InvalidRequest):
             pass
-        except KeyboardInterrupt:
-            sys.exit(1)
         except Exception as exc:
             print()
             print(exc)
             print(icao)
             print()
-        finally:
-            queue.task_done()
+        return True
+
+    async def wait(self):
+        """Waits until the queue is empty"""
+        while not self._queue.empty():
+            await aio.sleep(0.01)
+
+    async def add_stations(self):
+        """Populate and run ICAO check queue"""
+        stations = []
+        for station in avwx.station.meta.STATIONS.values():
+            icao = station["icao"]
+            if not station["reporting"] and self.should_test(icao):
+                stations.append(icao)
+        random.shuffle(stations)
+        for icao in stations:
+            await self.add(icao)
 
 
-@asynccontextmanager
-async def task_manager(queue: aio.Queue, n: int = 10):
-    """Handles async task managers"""
-    tasks = []
-    # Create three worker tasks to process the queue concurrently
-    for _ in range(n):
-        task = aio.create_task(worker(queue))
-        tasks.append(task)
-    yield
-    # Cancel our worker tasks
-    for task in tasks:
-        task.cancel()
-    # Wait until all worker tasks are cancelled
-    await aio.gather(*tasks, return_exceptions=True)
-
-
-async def loop():
-    """Populate and run ICAO check queue"""
-    queue = aio.Queue()
-    for station in avwx.station._STATIONS.values():
-        icao = station["icao"]
-        if not station["reporting"] and should_test(icao):
-            queue.put_nowait(icao)
+async def main() -> int:
+    """Update ICAO lists with 1 hour sleep cycle"""
+    tester = StationTester(load_stations(GOOD_PATH))
     try:
-        async with task_manager(queue, 2):
-            await queue.join()
+        while True:
+            print()
+            print("Starting", datetime.now())
+            await tester.add_stations()
+            await tester.wait()
+            save_stations(tester.good_stations, GOOD_PATH)
+            print(f"Good stations: {len(tester.good_stations)}")
+            print("Sleeping", datetime.now())
+            await aio.sleep(60 * 60)
     except KeyboardInterrupt:
-        sys.exit(1)
+        pass
     except Exception as exc:
         print()
         print(exc)
-        sys.exit(2)
-
-
-def main() -> int:
-    """Update ICAO lists with 1 hour sleep cycle"""
-    while True:
-        aio.run(loop())
-        print()
-        save_stations(BAD, BAD_PATH)
-        save_stations(GOOD, GOOD_PATH)
-        print("Looped", datetime.now())
-        sleep(60 * 60)
+    finally:
+        await tester.finish(wait=False)
     return 0
 
 
 if __name__ == "__main__":
-    main()
+    aio.run(main())
