@@ -2,6 +2,8 @@
 Contains METAR-specific functions for report parsing
 """
 
+# pylint: disable=invalid-overridden-method
+
 # stdlib
 from datetime import date, datetime, timedelta, timezone
 from typing import List, Tuple, Optional
@@ -253,12 +255,12 @@ class Metar(Report):
     data: Optional[MetarData] = None
     translations: Optional[MetarTrans] = None
 
-    def _pull_from_default(self) -> None:
+    async def _pull_from_default(self) -> None:
         """Checks for a more recent report from NOAA. Only sync"""
         service = NOAA(self.__class__.__name__.lower())
         if self.icao is None:
             return
-        report = service.fetch(self.icao)
+        report = await service.async_fetch(self.icao)
         if report is not None:
             data, units = parse(self.icao, report, self.issued)
             if not data or data.time is None or data.time.dt is None:
@@ -283,12 +285,20 @@ class Metar(Report):
         time_since = datetime.now(tz=timezone.utc) - self.data.time.dt
         return time_since > timedelta(minutes=90)
 
-    def _post_update(self) -> None:
+    async def _post_update(self):
         if self.icao is None or self.raw is None:
             return
         self.data, self.units = parse(self.icao, self.raw, self.issued)
         if self._should_check_default:
-            self._pull_from_default()
+            await self._pull_from_default()
+        if self.data is None or self.units is None:
+            return
+        self.translations = translate_metar(self.data, self.units)
+
+    def _post_parse(self):
+        if self.icao is None or self.raw is None:
+            return
+        self.data, self.units = parse(self.icao, self.raw, self.issued)
         if self.data is None or self.units is None:
             return
         self.translations = translate_metar(self.data, self.units)

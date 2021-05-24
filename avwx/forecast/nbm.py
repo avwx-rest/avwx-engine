@@ -151,7 +151,10 @@ class _Nbm(Forecast):
     _service_class = NOAA_NBM  # type: ignore
     _parser: staticmethod
 
-    def _post_update(self):
+    async def _post_update(self):
+        self.data = self._parser(self.raw)
+
+    def _post_parse(self):
         self.data = self._parser(self.raw)
 
 

@@ -3,7 +3,6 @@ Report parent classes
 """
 
 # stdlib
-import inspect
 import asyncio as aio
 from abc import ABCMeta, abstractmethod
 from contextlib import suppress
@@ -68,7 +67,11 @@ class AVWXBase(metaclass=ABCMeta):
         return f"<avwx.{self.__class__.__name__} icao={self.icao}>"
 
     @abstractmethod
-    def _post_update(self) -> None:
+    async def _post_update(self) -> None:
+        pass
+
+    @abstractmethod
+    def _post_parse(self) -> None:
         pass
 
     @classmethod
@@ -96,10 +99,7 @@ class AVWXBase(metaclass=ABCMeta):
         self.raw = report  # type: ignore
         self.issued = issued
         if not disable_post:
-            if inspect.iscoroutinefunction(self._post_update):
-                await self._post_update()  # type: ignore
-            else:
-                self._post_update()
+            await self._post_update()
         self._set_meta()
         return True
 
@@ -109,7 +109,13 @@ class AVWXBase(metaclass=ABCMeta):
         Can accept a report issue date if not a recent report string
         """
         self.source = None
-        return aio.run(self._update(report, issued, False))
+        if not report or report == self.raw:
+            return False
+        self.raw = report  # type: ignore
+        self.issued = issued
+        self._post_parse()
+        self._set_meta()
+        return True
 
     def update(self, timeout: int = 10, disable_post: bool = False) -> bool:
         """Updates report data by fetching and parsing the report

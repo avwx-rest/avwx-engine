@@ -120,6 +120,18 @@ class Reports(AVWXBase):
             reports = [reports]
         return aio.run(self._update(reports, issued, False))
 
+    async def async_parse(
+        self, reports: Union[str, List[str]], issued: Optional[date] = None
+    ):
+        """Async updates report data by parsing a given report
+
+        Can accept a report issue date if not a recent report string
+        """
+        self.source = None
+        if isinstance(reports, str):
+            reports = [reports]
+        return await self._update(reports, issued, False)
+
     def update(
         self,
         timeout: int = 10,

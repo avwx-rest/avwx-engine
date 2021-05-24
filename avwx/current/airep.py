@@ -35,7 +35,12 @@ class Aireps(Reports):
         """Removes PIREPs before updating raw_reports"""
         return [r for r in reports if r.startswith("ARP")]
 
-    def _post_update(self):
+    async def _post_update(self):
+        self.data = []
+        for report in self.raw:
+            parse(report, self.issued)
+
+    def _post_parse(self):
         self.data = []
         for report in self.raw:
             parse(report, self.issued)
