@@ -3,6 +3,8 @@ Report parent classes
 """
 
 # stdlib
+import inspect
+import asyncio as aio
 from abc import ABCMeta, abstractmethod
 from contextlib import suppress
 from datetime import date, datetime, timezone
@@ -35,6 +37,9 @@ class AVWXBase(metaclass=ABCMeta):
 
     #: UTC date object when the report was issued
     issued: Optional[date] = None
+
+    #: Root URL used to retrieve the current report
+    source: Optional[str] = None
 
     #: 4-character ICAO station ident code the report was initialized with
     icao: Optional[str] = None
@@ -83,7 +88,7 @@ class AVWXBase(metaclass=ABCMeta):
         with suppress(AttributeError):
             self.issued = self.data.time.dt.date()  # type: ignore
 
-    def _update(
+    async def _update(
         self, report: Union[str, List[str]], issued: Optional[date], disable_post: bool
     ) -> bool:
         if not report or report == self.raw:
@@ -91,7 +96,10 @@ class AVWXBase(metaclass=ABCMeta):
         self.raw = report  # type: ignore
         self.issued = issued
         if not disable_post:
-            self._post_update()
+            if inspect.iscoroutinefunction(self._post_update):
+                await self._post_update()  # type: ignore
+            else:
+                self._post_update()
         self._set_meta()
         return True
 
@@ -100,7 +108,13 @@ class AVWXBase(metaclass=ABCMeta):
 
         Can accept a report issue date if not a recent report string
         """
-        return self._update(report, issued, False)
+        # Save the source in case of failure
+        source = self.source
+        self.source = None
+        success = aio.run(self._update(report, issued, False))
+        if not success:
+            self.source = source
+        return success
 
     def update(self, timeout: int = 10, disable_post: bool = False) -> bool:
         """Updates report data by fetching and parsing the report
@@ -108,7 +122,8 @@ class AVWXBase(metaclass=ABCMeta):
         Returns True if a new report is available, else False
         """
         report = self.service.fetch(self.icao, timeout=timeout)  # type: ignore
-        return self._update(report, None, disable_post)
+        self.source = self.service.root
+        return aio.run(self._update(report, None, disable_post))
 
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
         """Async updates report data by fetching and parsing the report
@@ -116,7 +131,8 @@ class AVWXBase(metaclass=ABCMeta):
         Returns True if a new report is available, else False
         """
         report = await self.service.async_fetch(self.icao, timeout=timeout)  # type: ignore
-        return self._update(report, None, disable_post)
+        self.source = self.service.root
+        return await self._update(report, None, disable_post)
 
     @staticmethod
     def sanitize(report: str) -> str:

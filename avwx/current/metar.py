@@ -3,13 +3,14 @@ Contains METAR-specific functions for report parsing
 """
 
 # stdlib
-from datetime import date
+from datetime import date, datetime, timedelta, timezone
 from typing import List, Tuple, Optional
 
 # module
 from avwx.current.base import Report, get_wx_codes
 from avwx.parsing import core, remarks, sanitization, speech, summary
 from avwx.parsing.translate.metar import translate_metar
+from avwx.service import NOAA
 from avwx.static.core import FLIGHT_RULES, IN_UNITS, NA_UNITS
 from avwx.static.metar import METAR_RMK
 from avwx.station import uses_na_format, valid_station
@@ -252,8 +253,44 @@ class Metar(Report):
     data: Optional[MetarData] = None
     translations: Optional[MetarTrans] = None
 
-    def _post_update(self):
+    def _pull_from_default(self) -> None:
+        """Checks for a more recent report from NOAA. Only sync"""
+        service = NOAA(self.__class__.__name__.lower())
+        if self.icao is None:
+            return
+        report = service.fetch(self.icao)
+        if report is not None:
+            data, units = parse(self.icao, report, self.issued)
+            if not data or data.time is None or data.time.dt is None:
+                return
+            if (
+                not self.data
+                or self.data.time is None
+                or self.data.time.dt is None
+                or data.time.dt > self.data.time.dt
+            ):
+                self.data, self.units = data, units
+                self.source = service.root
+
+    @property
+    def _should_check_default(self) -> bool:
+        """Returns True if pulled from regional source and potentially out of date"""
+        if isinstance(self.service, NOAA) or self.source is None:
+            return False
+
+        if self.data is None or self.data.time is None or self.data.time.dt is None:
+            return True
+        time_since = datetime.now(tz=timezone.utc) - self.data.time.dt
+        return time_since > timedelta(minutes=90)
+
+    def _post_update(self) -> None:
+        if self.icao is None or self.raw is None:
+            return
         self.data, self.units = parse(self.icao, self.raw, self.issued)
+        if self._should_check_default:
+            self._pull_from_default()
+        if self.data is None or self.units is None:
+            return
         self.translations = translate_metar(self.data, self.units)
 
     @staticmethod

@@ -376,7 +376,6 @@ def sanitize_report_list(
     for i, item in enumerate(wxdata):
         possible_wind = sanitize_wind(item)
         if is_wind(possible_wind):
-            print(possible_wind)
             wxdata[i] = possible_wind
     wxdata = dedupe(wxdata, only_neighbors=True)
     return wxdata

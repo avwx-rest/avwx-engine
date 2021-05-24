@@ -5,6 +5,7 @@ Current report shared resources
 # pylint: disable=abstract-method,arguments-differ
 
 # stdlib
+import asyncio as aio
 from datetime import date
 from typing import List, Optional, Tuple, Union
 
@@ -101,13 +102,13 @@ class Reports(AVWXBase):
         """Applies any report filtering before updating raw_reports"""
         return reports
 
-    def _update(  # type: ignore
+    async def _update(  # type: ignore
         self, reports: List[str], issued: Optional[date], disable_post: bool
     ) -> bool:
         if not reports:
             return False
         reports = self._report_filter(reports)
-        return super()._update(reports, issued, disable_post)
+        return await super()._update(reports, issued, disable_post)
 
     def parse(self, reports: Union[str, List[str]], issued: Optional[date] = None):
         """Updates report data by parsing a given report
@@ -116,7 +117,7 @@ class Reports(AVWXBase):
         """
         if isinstance(reports, str):
             reports = [reports]
-        return self._update(reports, issued, False)
+        return aio.run(self._update(reports, issued, False))
 
     def update(
         self,
@@ -128,11 +129,11 @@ class Reports(AVWXBase):
         Returns True if new reports are available, else False
         """
         reports = self.service.fetch(lat=self.lat, lon=self.lon, timeout=timeout)  # type: ignore
-        return self._update(reports, None, disable_post)
+        return aio.run(self._update(reports, None, disable_post))
 
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
         """Async updates report data by fetching and parsing the report"""
         reports = await self.service.async_fetch(  # type: ignore
             lat=self.lat, lon=self.lon, timeout=timeout
         )
-        return self._update(reports, None, disable_post)
+        return await self._update(reports, None, disable_post)

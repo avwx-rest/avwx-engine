@@ -2,7 +2,7 @@
 Service base class
 """
 
-# pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods,unsubscriptable-object
 
 # stdlib
 from socket import gaierror
@@ -34,6 +34,14 @@ class Service:
                     )
                 )
         self.report_type = report_type
+
+    @property
+    def root(self) -> Optional[str]:
+        """Returns the service's root URL"""
+        if self.url is None:
+            return None
+        url = self.url[self.url.find("//") + 2 :]
+        return url[: url.find("/")]
 
 
 class CallsHTTP:
