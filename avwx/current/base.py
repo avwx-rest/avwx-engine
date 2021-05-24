@@ -115,6 +115,7 @@ class Reports(AVWXBase):
 
         Can accept a report issue date if not a recent report string
         """
+        self.source = None
         if isinstance(reports, str):
             reports = [reports]
         return aio.run(self._update(reports, issued, False))
@@ -129,6 +130,7 @@ class Reports(AVWXBase):
         Returns True if new reports are available, else False
         """
         reports = self.service.fetch(lat=self.lat, lon=self.lon, timeout=timeout)  # type: ignore
+        self.source = self.service.root
         return aio.run(self._update(reports, None, disable_post))
 
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
@@ -136,4 +138,5 @@ class Reports(AVWXBase):
         reports = await self.service.async_fetch(  # type: ignore
             lat=self.lat, lon=self.lon, timeout=timeout
         )
+        self.source = self.service.root
         return await self._update(reports, None, disable_post)

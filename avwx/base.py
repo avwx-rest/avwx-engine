@@ -108,13 +108,8 @@ class AVWXBase(metaclass=ABCMeta):
 
         Can accept a report issue date if not a recent report string
         """
-        # Save the source in case of failure
-        source = self.source
         self.source = None
-        success = aio.run(self._update(report, issued, False))
-        if not success:
-            self.source = source
-        return success
+        return aio.run(self._update(report, issued, False))
 
     def update(self, timeout: int = 10, disable_post: bool = False) -> bool:
         """Updates report data by fetching and parsing the report
