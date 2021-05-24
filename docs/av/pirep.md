@@ -81,6 +81,10 @@ The unparsed report strings. Fetched on update()
 
 Service object used to fetch the report strings
 
+#### **source**: *str* = *None*
+
+Source URL root used to pull the current report data
+
 #### **station**: *avwx.Station* = *None*
 
 Provides basic station info

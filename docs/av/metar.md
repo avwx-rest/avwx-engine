@@ -84,6 +84,10 @@ The unparsed report string. Fetched on update()
 
 Service object used to fetch the report string
 
+#### **source**: *str* = *None*
+
+Source URL root used to pull the current report data
+
 #### **speech**: *str*
 
 Report summary designed to be read by a text-to-speech program

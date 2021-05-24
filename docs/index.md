@@ -1,14 +1,22 @@
 # AVWX
 
+![AVWX logo](assets/images/avwx-logo-color-200.png)
+
 [![CircleCI](https://circleci.com/gh/avwx-rest/avwx-engine.svg?style=svg)](https://circleci.com/gh/avwx-rest/avwx-engine)
 [![PyPI version](https://badge.fury.io/py/avwx-engine.svg)](https://badge.fury.io/py/avwx-engine)
 [![Requirements Status](https://requires.io/github/avwx-rest/avwx-engine/requirements.svg?branch=master)](https://requires.io/github/avwx-rest/avwx-engine/requirements/?branch=master)
-[![Documentation Status](https://readthedocs.org/projects/avwx-engine/badge/?version=latest)](http://avwx-engine.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/pypi/l/avwx-engine.svg)](https://pypi.org/project/avwx-engine/)
 
-![AVWX logo](https://avwx.rest/static/favicons/apple-icon-76x76.png)
+AVWX is a global aviation weather fetching and parsing engine. It sources reports from a variety of government sources, parses individual elements, and calculates additional information like flight rules and time range interpolation.
 
-Aviation Weather for Humans
+AVWX currently supports:
+
+- Station data and search
+- METAR
+- TAF
+- PIREP
+- NBM (NBH, NBS, NBE)
+- GFS (MAV, MEX)
 
 ```python
 >>> import avwx

@@ -52,6 +52,10 @@ Elevation in meters
 
 Load a Station from an ICAO station ident
 
+#### **from_iata**(*ident: str*) -> *Station*
+
+Load a Station from an IATA code
+
 #### **iata**: *str*
 
 Station's 3-char IATA ident

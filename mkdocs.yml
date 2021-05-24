@@ -1,6 +1,23 @@
-site_name: AVWX
+site_name: AVWX Engine
+site_url: https://engine.avwx.rest
+site_description: AVWX Engine Package Documentation
 site_author: Michael duPont
 repo_url: https://github.com/avwx-rest/avwx-engine
+
+theme:
+  name: material
+  logo: assets/images/avwx-icon-32-white.png
+  favicon: assets/images/favicon.ico
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+extra:
+  homepage: https://avwx.rest
+
+extra_css:
+  - assets/stylesheets/extra.css
 
 nav:
   - Getting Started: getting-started.md
@@ -21,13 +38,11 @@ nav:
     - Static Values: util/static.md
     - Exceptions: util/exceptions.md
 
-# theme:
-#   name: 'material'
-#   language: 'en'
-#   logo:
-#     icon: 'flight'
+copyright: Copyright &copy; 2021 duPont Technologies LLC
 
 plugins:
   - search
   - minify:
       minify_html: true
+      htmlmin_opts:
+        remove_comments: true
