@@ -16,7 +16,7 @@ from avwx.service import NOAA
 from avwx.static.core import FLIGHT_RULES, IN_UNITS, NA_UNITS
 from avwx.static.metar import METAR_RMK
 from avwx.station import uses_na_format, valid_station
-from avwx.structs import MetarData, MetarTrans, Number, Units
+from avwx.structs import MetarData, MetarTrans, Number, RemarksData, Units
 
 
 def get_remarks(txt: str) -> Tuple[List[str], str]:
@@ -134,6 +134,26 @@ def get_temp_and_dew(
     return data, None, None
 
 
+def get_relative_humidity(
+    temperature: Optional[Number],
+    dewpoint: Optional[Number],
+    remarks_info: Optional[RemarksData],
+    units: Units,
+) -> Optional[float]:
+    """Calculates relative humidity from preferred temperature and dewpoint"""
+    if remarks_info is not None:
+        temp = remarks_info.temperature_decimal or temperature
+        dew = remarks_info.dewpoint_decimal or dewpoint
+    else:
+        temp = temperature
+        dew = dewpoint
+    if temp is None or temp.value is None:
+        return None
+    if dew is None or dew.value is None:
+        return None
+    return core.relative_humidity(temp.value, dew.value, units.temperature)
+
+
 def sanitize(report: str) -> Tuple[str, str, List[str]]:
     """Returns a sanitized report, remarks, and elements ready for parsing"""
     clean = sanitization.sanitize_report_string(report)
@@ -176,6 +196,8 @@ def parse_na(report: str, issued: date = None) -> Tuple[MetarData, Units]:
     data, temperature, dewpoint = get_temp_and_dew(data)
     condition = core.get_flight_rules(visibility, core.get_ceiling(clouds))
     other, wx_codes = get_wx_codes(data)
+    remarks_info = remarks.parse(remarks_str)
+    humidity = get_relative_humidity(temperature, dewpoint, remarks_info, units)
     struct = MetarData(
         altimeter=altimeter,
         clouds=clouds,
@@ -183,7 +205,8 @@ def parse_na(report: str, issued: date = None) -> Tuple[MetarData, Units]:
         flight_rules=FLIGHT_RULES[condition],
         other=other,
         raw=report,
-        remarks_info=remarks.parse(remarks_str),
+        relative_humidity=humidity,
+        remarks_info=remarks_info,
         remarks=remarks_str,
         runway_visibility=runway_visibility,
         sanitized=sanitized,
@@ -225,6 +248,8 @@ def parse_in(report: str, issued: date = None) -> Tuple[MetarData, Units]:
     data, temperature, dewpoint = get_temp_and_dew(data)
     condition = core.get_flight_rules(visibility, core.get_ceiling(clouds))
     other, wx_codes = get_wx_codes(data)
+    remarks_info = remarks.parse(remarks_str)
+    humidity = get_relative_humidity(temperature, dewpoint, remarks_info, units)
     struct = MetarData(
         altimeter=altimeter,
         clouds=clouds,
@@ -232,7 +257,8 @@ def parse_in(report: str, issued: date = None) -> Tuple[MetarData, Units]:
         flight_rules=FLIGHT_RULES[condition],
         other=other,
         raw=report,
-        remarks_info=remarks.parse(remarks_str),
+        relative_humidity=humidity,
+        remarks_info=remarks_info,
         remarks=remarks_str,
         runway_visibility=runway_visibility,
         sanitized=sanitized,

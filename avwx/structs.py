@@ -139,6 +139,7 @@ class SharedData:
 @dataclass
 class MetarData(ReportData, SharedData):
     dewpoint: Optional[Number]
+    relative_humidity: Optional[float]
     remarks_info: Optional[RemarksData]
     runway_visibility: List[str]
     temperature: Optional[Number]

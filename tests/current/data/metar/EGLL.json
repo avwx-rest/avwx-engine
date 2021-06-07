@@ -15,6 +15,7 @@
         "flight_rules": "VFR",
         "other": [],
         "raw": "EGLL 070520Z AUTO 18005KT 9999 NCD 14/13 Q1024",
+        "relative_humidity": 0.9369330286066342,
         "remarks": "",
         "remarks_info": null,
         "runway_visibility": [],

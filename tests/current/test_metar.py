@@ -51,6 +51,28 @@ class TestMetar(BaseTest):
             self.assert_number(ret_dew, *dew)
         self.assertEqual(metar.get_temp_and_dew(["MX/01"]), (["MX/01"], None, None))
 
+    def test_get_relative_humidity(self):
+        """Tests calculating relative humidity from available temperatures"""
+        units = metar.Units(**metar.NA_UNITS)
+        for temp, dew, rmk, humidity in (
+            (None, None, "", None),
+            (12, 5, "", 0.62228),
+            (12, 5, "RMK T01230054", 0.62732),
+            (None, None, "RMK T00121123", 0.35818),
+            (None, 12, "", None),
+            (12, None, "", None),
+            (12, None, "RMK T12341345", 0.35408),
+        ):
+            if temp is not None:
+                temp = metar.Number("", temp, "")
+            if dew is not None:
+                dew = metar.Number("", dew, "")
+            remarks_info = metar.remarks.parse(rmk)
+            value = metar.get_relative_humidity(temp, dew, remarks_info, units)
+            if value is not None:
+                value = round(value, 5)
+            self.assertEqual(humidity, value)
+
     def test_parse_altimeter(self):
         """Tests that an atlimiter is correctly parsed into a Number"""
         for text, alt in (

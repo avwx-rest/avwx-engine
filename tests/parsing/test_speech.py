@@ -113,6 +113,7 @@ class TestSpeech(unittest.TestCase):
             "clouds": [core.make_cloud("BKN015CB")],
             "dewpoint": core.make_number("M01"),
             "other": [],
+            "relative_humidity": None,
             "temperature": core.make_number("03"),
             "visibility": core.make_number("3"),
             "wind_direction": core.make_number("360"),

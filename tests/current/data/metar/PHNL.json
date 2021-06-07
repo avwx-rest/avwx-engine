@@ -40,6 +40,7 @@
         "flight_rules": "VFR",
         "other": [],
         "raw": "PHNL 070453Z 06010G18KT 10SM FEW024 FEW040 FEW065 26/17 A3003 RMK AO2 RAE48 SLP167 SHRA DSNT N P0000 T02610172",
+        "relative_humidity": 0.5799377532715835,
         "remarks": "RMK AO2 RAE48 SLP167 SHRA DSNT N P0000 T02610172",
         "remarks_info": {
             "codes": [

@@ -7,6 +7,7 @@ Contains the core parsing and indent functions of avwx
 # stdlib
 import re
 import datetime as dt
+import math
 from calendar import monthrange
 from contextlib import suppress
 from copy import copy
@@ -213,6 +214,24 @@ def is_possible_temp(temp: str) -> bool:
         if not (char.isdigit() or char == "M"):
             return False
     return True
+
+
+_numeric = Union[int, float]
+
+
+def relative_humidity(
+    temperature: _numeric, dewpoint: _numeric, unit: str = "C"
+) -> float:
+    """Calculates the relative humidity as a 0 to 1 percentage"""
+
+    def saturation(value: Union[int, float]) -> float:
+        """Returns the saturation vapor pressure without the C constant for humidity calc"""
+        return math.exp((17.67 * value) / (243.5 + value))
+
+    if unit == "F":
+        dewpoint = (dewpoint - 32) * 5 / 9
+        temperature = (temperature - 32) * 5 / 9
+    return saturation(dewpoint) / saturation(temperature)
 
 
 def get_station_and_time(
