@@ -9,6 +9,7 @@ from typing import List, Tuple, Optional
 # module
 from avwx.current.base import Report, get_wx_codes
 from avwx.parsing import core, sanitization, speech, summary
+from avwx.parsing.remarks import parse as parse_remarks
 from avwx.parsing.translate.taf import translate_taf
 from avwx.static.core import FLIGHT_RULES, IN_UNITS, NA_UNITS
 from avwx.static.taf import TAF_RMK, TAF_NEWLINE, TAF_NEWLINE_STARTSWITH
@@ -338,6 +339,7 @@ def parse(
         station=station,
         time=core.make_timestamp(time, target_date=issued),
         remarks=remarks,
+        remarks_info=parse_remarks(remarks),
         forecast=parsed_lines,
         start_time=start_time,
         end_time=end_time,

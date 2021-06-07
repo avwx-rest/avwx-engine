@@ -2,7 +2,7 @@
 Station handling and coordinate search
 """
 
-# pylint: disable=invalid-name,too-many-arguments
+# pylint: disable=invalid-name,too-many-arguments,too-many-instance-attributes
 
 # stdlib
 from contextlib import suppress

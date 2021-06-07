@@ -1,61 +1,82 @@
 {
-    "created": "2020-05-18",
+    "created": "2021-06-07",
     "data": {
         "altimeter": {
-            "repr": "A3019",
-            "spoken": "three zero point one nine",
-            "value": 30.19
+            "repr": "A3009",
+            "spoken": "three zero point zero nine",
+            "value": 30.09
         },
         "clouds": [
             {
-                "base": 15,
+                "base": 250,
                 "direction": null,
                 "modifier": null,
-                "repr": "FEW015",
+                "repr": "FEW250",
                 "top": null,
                 "type": "FEW"
-            },
-            {
-                "base": 70,
-                "direction": null,
-                "modifier": null,
-                "repr": "OVC070",
-                "top": null,
-                "type": "OVC"
             }
         ],
         "dewpoint": {
-            "repr": "09",
-            "spoken": "nine",
-            "value": 9
+            "repr": "17",
+            "spoken": "one seven",
+            "value": 17
         },
         "flight_rules": "VFR",
         "other": [],
-        "raw": "KJFK 180551Z 10007KT 10SM FEW015 OVC070 12/09 A3019 RMK AO2 SLP223 T01220094 10122 20117 56016",
-        "remarks": "RMK AO2 SLP223 T01220094 10122 20117 56016",
+        "raw": "KJFK 070451Z 18005KT 10SM FEW250 21/17 A3009 RMK AO2 SLP188 T02060172 403060206",
+        "remarks": "RMK AO2 SLP188 T02060172 403060206",
         "remarks_info": {
+            "codes": [
+                {
+                    "repr": "AO2",
+                    "value": "Automated with precipitation sensor"
+                }
+            ],
             "dewpoint_decimal": {
-                "repr": "9.4",
-                "spoken": "nine point four",
-                "value": 9.4
+                "repr": "0172",
+                "spoken": "one seven point two",
+                "value": 17.2
             },
+            "maximum_temperature_24": {
+                "repr": "0306",
+                "spoken": "three zero point six",
+                "value": 30.6
+            },
+            "maximum_temperature_6": null,
+            "minimum_temperature_24": {
+                "repr": "0206",
+                "spoken": "two zero point six",
+                "value": 20.6
+            },
+            "minimum_temperature_6": null,
+            "precip_24_hours": null,
+            "precip_36_hours": null,
+            "precip_hourly": null,
+            "pressure_tendency": null,
+            "sea_level_pressure": {
+                "repr": "SLP188",
+                "spoken": "one zero one eight point eight",
+                "value": 1018.8
+            },
+            "snow_depth": null,
+            "sunshine_minutes": null,
             "temperature_decimal": {
-                "repr": "12.2",
-                "spoken": "one two point two",
-                "value": 12.2
+                "repr": "0206",
+                "spoken": "two zero point six",
+                "value": 20.6
             }
         },
         "runway_visibility": [],
-        "sanitized": "KJFK 180551Z 10007KT 10SM FEW015 OVC070 12/09 A3019 RMK AO2 SLP223 T01220094 10122 20117 56016",
+        "sanitized": "KJFK 070451Z 18005KT 10SM FEW250 21/17 A3009 RMK AO2 SLP188 T02060172 403060206",
         "station": "KJFK",
         "temperature": {
-            "repr": "12",
-            "spoken": "one two",
-            "value": 12
+            "repr": "21",
+            "spoken": "two one",
+            "value": 21
         },
         "time": {
-            "dt": "2020-05-18T05:51:00+00:00",
-            "repr": "180551Z"
+            "dt": "2021-06-07T04:51:00+00:00",
+            "repr": "070451Z"
         },
         "visibility": {
             "repr": "10",
@@ -63,37 +84,35 @@
             "value": 10
         },
         "wind_direction": {
-            "repr": "100",
-            "spoken": "one zero zero",
-            "value": 100
+            "repr": "180",
+            "spoken": "one eight zero",
+            "value": 180
         },
         "wind_gust": null,
         "wind_speed": {
-            "repr": "07",
-            "spoken": "seven",
-            "value": 7
+            "repr": "05",
+            "spoken": "five",
+            "value": 5
         },
         "wind_variable_direction": [],
         "wx_codes": []
     },
     "icao": "KJFK",
-    "speech": "Winds one zero zero at 7kt. Visibility one zero miles. Temperature one two degrees Celsius. Dew point nine degrees Celsius. Altimeter three zero point one nine. Few clouds at 1500ft. Overcast layer at 7000ft",
-    "summary": "Winds E-100 at 7kt, Vis 10sm, Temp 12\u00b0C, Dew 9\u00b0C, Alt 30.19 inHg, Few clouds at 1500ft, Overcast layer at 7000ft",
+    "speech": "Winds one eight zero at 5kt. Visibility one zero miles. Temperature two one degrees Celsius. Dew point one seven degrees Celsius. Altimeter three zero point zero nine. Few clouds at 25000ft",
+    "summary": "Winds S-180 at 5kt, Vis 10sm, Temp 21\u00b0C, Dew 17\u00b0C, Alt 30.09 inHg, Few clouds at 25000ft",
     "translations": {
-        "altimeter": "30.19 inHg (1022 hPa)",
-        "clouds": "Few clouds at 1500ft, Overcast layer at 7000ft - Reported AGL",
-        "dewpoint": "9\u00b0C (48\u00b0F)",
+        "altimeter": "30.09 inHg (1019 hPa)",
+        "clouds": "Few clouds at 25000ft - Reported AGL",
+        "dewpoint": "17\u00b0C (63\u00b0F)",
         "remarks": {
-            "10122": "6-hour maximum temperature 12.2\u00b0C",
-            "20117": "6-hour minimum temperature 11.7\u00b0C",
-            "56016": "3-hour pressure difference: +/- 1.6 mb - Decreasing, then steady",
+            "402060306": "24-hour temperature: max 30.6 min 20.6",
             "AO2": "Automated with precipitation sensor",
-            "SLP223": "Sea level pressure: 1022.3 hPa",
-            "T01220094": "Temperature 12.2\u00b0C and dewpoint 9.4\u00b0C"
+            "SLP188": "Sea level pressure: 1018.8 hPa",
+            "T02060172": "Temperature 20.6\u00b0C and dewpoint 17.2\u00b0C"
         },
-        "temperature": "12\u00b0C (54\u00b0F)",
+        "temperature": "21\u00b0C (70\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "E-100 at 7kt",
+        "wind": "S-180 at 5kt",
         "wx_codes": ""
     }
 }

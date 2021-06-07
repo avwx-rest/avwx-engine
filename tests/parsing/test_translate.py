@@ -10,7 +10,7 @@ import unittest
 # module
 from avwx import static, structs
 from avwx.current.base import get_wx_codes
-from avwx.parsing import core, translate
+from avwx.parsing import core, remarks, translate
 
 
 class TestShared(unittest.TestCase):
@@ -260,6 +260,25 @@ class TestTaf(unittest.TestCase):
     def test_taf(self):
         """Tests end-to-end TAF translation"""
         units = structs.Units(**static.core.NA_UNITS)
+        empty_line_fields = (
+            "raw",
+            "end_time",
+            "start_time",
+            "transition_start",
+            "probability",
+            "type",
+            "flight_rules",
+            "sanitized",
+        )
+        empty_fields = (
+            "raw",
+            "remarks",
+            "sanitized",
+            "station",
+            "time",
+            "start_time",
+            "end_time",
+        )
         line_data = {
             "altimeter": core.make_number("29.92", "2992"),
             "clouds": [core.make_cloud("BKN015CB")],
@@ -273,35 +292,11 @@ class TestTaf(unittest.TestCase):
             "wind_speed": core.make_number("12"),
             "wx_codes": get_wx_codes(["+RA"])[1],
         }
-        line_data.update(
-            {
-                k: ""
-                for k in (
-                    "raw",
-                    "end_time",
-                    "start_time",
-                    "transition_start",
-                    "probability",
-                    "type",
-                    "flight_rules",
-                    "sanitized",
-                )
-            }
-        )
-        data = {"max_temp": "TX20/1518Z", "min_temp": "TN00/00", "remarks": ""}
-        data.update(
-            {
-                k: ""
-                for k in (
-                    "raw",
-                    "sanitized",
-                    "station",
-                    "time",
-                    "start_time",
-                    "end_time",
-                )
-            }
-        )
+        data = {"max_temp": "TX20/1518Z", "min_temp": "TN00/00"}
+        for key in empty_line_fields:
+            line_data[key] = ""
+        for key in empty_fields:
+            data[key] = ""
         data = structs.TafData(forecast=[structs.TafLineData(**line_data)], **data)
         line_trans = structs.TafLineTrans(
             altimeter="29.92 inHg (1013 hPa)",
@@ -324,3 +319,44 @@ class TestTaf(unittest.TestCase):
         for line in translated.forecast:
             self.assertIsInstance(line, structs.TafLineTrans)
         self.assertEqual(translated, trans)
+
+
+class TestRemarks(unittest.TestCase):
+    """Test remarks translations"""
+
+    def test_translate(self):
+        """Tests extracting translations from the remarks string"""
+        for rmk, out in (
+            (
+                "RMK AO1 ACFT MSHP SLP137 T02720183 BINOVC",
+                {
+                    "ACFT MSHP": "Aircraft mishap",
+                    "AO1": "Automated with no precipitation sensor",
+                    "BINOVC": "Breaks in Overcast",
+                    "SLP137": "Sea level pressure: 1013.7 hPa",
+                    "T02720183": "Temperature 27.2°C and dewpoint 18.3°C",
+                },
+            ),
+            (
+                "RMK AO2 51014 21045 60720 70016",
+                {
+                    "21045": "6-hour minimum temperature -4.5°C",
+                    "51014": "3-hour pressure difference: +/- 1.4 mb - Increasing, then steady",
+                    "60720": "Precipitation in the last 3/6 hours: 7.2 in",
+                    "70016": "Precipitation in the last 24 hours: 0.16 in",
+                    "AO2": "Automated with precipitation sensor",
+                },
+            ),
+            (
+                "RMK 98123 TSB20 P0123 NOSPECI $",
+                {
+                    "$": "ASOS requires maintenance",
+                    "98123": "Duration of sunlight: 123 minutes",
+                    "NOSPECI": "No SPECI reports taken",
+                    "P0123": "Precipitation in the last hour: 1.23 in",
+                    "TSB20": "Thunderstorm began at :20",
+                },
+            ),
+        ):
+            data = remarks.parse(rmk)
+            self.assertEqual(translate.remarks.translate(rmk, data), out)

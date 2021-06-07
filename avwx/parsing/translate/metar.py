@@ -3,7 +3,7 @@ METAR data translation handlers
 """
 
 import avwx.parsing.translate.base as _trans
-from avwx.parsing import remarks
+from avwx.parsing.translate import remarks
 from avwx.structs import MetarData, MetarTrans, Units
 
 
@@ -24,5 +24,5 @@ def translate_metar(wxdata: MetarData, units: Units) -> MetarTrans:
         ),
         temperature=_trans.temperature(wxdata.temperature, units.temperature),
         dewpoint=_trans.temperature(wxdata.dewpoint, units.temperature),
-        remarks=remarks.translate(wxdata.remarks),
+        remarks=remarks.translate(wxdata.remarks, wxdata.remarks_info),
     )

@@ -7,7 +7,9 @@ from typing import List, Optional
 
 # module
 import avwx.parsing.translate.base as _trans
-from avwx.parsing import core, remarks
+from avwx.parsing import core
+
+from avwx.parsing.translate import remarks
 from avwx.static.taf import ICING_CONDITIONS, TURBULENCE_CONDITIONS
 from avwx.structs import TafData, TafLineTrans, TafTrans, Units
 
@@ -120,5 +122,5 @@ def translate_taf(wxdata: TafData, units: Units) -> TafTrans:
         forecast=forecast,
         max_temp=min_max_temp(wxdata.max_temp, units.temperature),
         min_temp=min_max_temp(wxdata.min_temp, units.temperature),
-        remarks=remarks.translate(wxdata.remarks),
+        remarks=remarks.translate(wxdata.remarks, wxdata.remarks_info),
     )

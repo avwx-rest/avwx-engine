@@ -5,7 +5,7 @@ Contains dataclasses to hold report data
 # pylint: disable=missing-class-docstring,missing-function-docstring,too-many-instance-attributes
 
 # stdlib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from typing import List, Optional, Union
 
@@ -32,6 +32,7 @@ class Aircraft:
 
 @dataclass
 class Units:
+    accumulation: str
     altimeter: str
     altitude: str
     temperature: str
@@ -85,8 +86,31 @@ class Location:
 
 
 @dataclass
-class RemarksData:
+class PressureTendency:
+    repr: str
+    tendency: str
+    change: float
+
+
+@dataclass
+class FiveDigitCodes:
+    maximum_temperature_6: Optional[Number] = None  # 1
+    minimum_temperature_6: Optional[Number] = None  # 2
+    pressure_tendency: Optional[PressureTendency] = None  # 5
+    precip_36_hours: Optional[Number] = None  # 6
+    precip_24_hours: Optional[Number] = None  # 7
+    sunshine_minutes: Optional[Number] = None  # 9
+
+
+@dataclass
+class RemarksData(FiveDigitCodes):
+    codes: List[Code] = field(default_factory=[])  # type: ignore
     dewpoint_decimal: Optional[Number] = None
+    maximum_temperature_24: Optional[Number] = None
+    minimum_temperature_24: Optional[Number] = None
+    precip_hourly: Optional[Number] = None
+    sea_level_pressure: Optional[Number] = None
+    snow_depth: Optional[Number] = None
     temperature_decimal: Optional[Number] = None
 
 
@@ -115,7 +139,7 @@ class SharedData:
 @dataclass
 class MetarData(ReportData, SharedData):
     dewpoint: Optional[Number]
-    remarks_info: RemarksData
+    remarks_info: Optional[RemarksData]
     runway_visibility: List[str]
     temperature: Optional[Number]
     wind_variable_direction: List[Number]
@@ -144,6 +168,7 @@ class TafData(ReportData):
     min_temp: Optional[str] = None
     alts: Optional[List[str]] = None
     temps: Optional[List[str]] = None
+    remarks_info: Optional[RemarksData] = None
 
 
 @dataclass
@@ -260,7 +285,6 @@ class MexData(ReportData):
 
 @dataclass
 class NbmUnits(Units):
-    accumulation: str
     duration: str
     solar_radiation: str
     wave_height: str

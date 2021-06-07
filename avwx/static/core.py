@@ -35,6 +35,7 @@ M_IN_REGIONS = ["MD", "MG", "MH", "MK", "MN", "MP", "MR", "MS", "MU", "MW", "MZ"
 NA_UNITS = {
     "altimeter": "inHg",
     "altitude": "ft",
+    "accumulation": "in",
     "temperature": "C",
     "visibility": "sm",
     "wind_speed": "kt",
@@ -43,6 +44,7 @@ NA_UNITS = {
 IN_UNITS = {
     "altimeter": "hPa",
     "altitude": "ft",
+    "accumulation": "in",
     "temperature": "C",
     "visibility": "m",
     "wind_speed": "kt",
@@ -180,9 +182,10 @@ REMARKS_ELEMENTS = {
     "PRESRR": "Pressure Rising Rapidly",
     "PWINO": "Precipitation identifier information not available",
     "RVRNO": "Runway Visual Range missing",
+    "SLPNO": "Sea level pressure not available",
     "SOG": "Snow on the ground",
     "TSNO": "Thunderstorm information not available",
 }
 
 #: Static remarks translation groups
-REMARKS_GROUPS = {" ACFT MSHP ": "Aircraft mishap"}
+REMARKS_GROUPS = {"ACFT MSHP": "Aircraft mishap"}

@@ -1,48 +1,57 @@
 {
-    "created": "2020-05-18",
+    "created": "2021-06-07",
     "data": {
         "alts": null,
         "end_time": {
-            "dt": "2020-05-19T12:00:00+00:00",
-            "repr": "1912"
+            "dt": "2021-06-08T12:00:00+00:00",
+            "repr": "0812"
         },
         "forecast": [
             {
                 "altimeter": null,
-                "clouds": [],
+                "clouds": [
+                    {
+                        "base": 45,
+                        "direction": null,
+                        "modifier": null,
+                        "repr": "FEW045",
+                        "top": null,
+                        "type": "FEW"
+                    }
+                ],
                 "end_time": {
-                    "dt": "2020-05-19T12:00:00+00:00",
-                    "repr": "1912"
+                    "dt": "2021-06-08T12:00:00+00:00",
+                    "repr": "0812"
                 },
                 "flight_rules": "VFR",
                 "icing": [],
                 "other": [],
                 "probability": null,
-                "raw": "1806/1912 27010KT CAVOK",
-                "sanitized": "1806/1912 27010KT CAVOK",
+                "raw": "0706/0812 19005KT 9999 FEW045",
+                "sanitized": "0706/0812 19005KT 9999 FEW045",
                 "start_time": {
-                    "dt": "2020-05-18T06:00:00+00:00",
-                    "repr": "1806"
+                    "dt": "2021-06-07T06:00:00+00:00",
+                    "repr": "0706"
                 },
                 "transition_start": null,
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
-                    "repr": "CAVOK",
-                    "spoken": "ceiling and visibility ok",
+                    "repr": "9999",
+                    "spoken": "nine nine nine nine",
                     "value": 9999
                 },
                 "wind_direction": {
-                    "repr": "270",
-                    "spoken": "two seven zero",
-                    "value": 270
+                    "repr": "190",
+                    "spoken": "one nine zero",
+                    "value": 190
                 },
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
-                    "repr": "10",
-                    "spoken": "one zero",
-                    "value": 10
+                    "repr": "05",
+                    "spoken": "five",
+                    "value": 5
                 },
                 "wx_codes": []
             },
@@ -50,39 +59,39 @@
                 "altimeter": null,
                 "clouds": [
                     {
-                        "base": 8,
+                        "base": 5,
                         "direction": null,
                         "modifier": null,
-                        "repr": "BKN008",
+                        "repr": "BKN005",
                         "top": null,
                         "type": "BKN"
                     }
                 ],
                 "end_time": {
-                    "dt": "2020-05-19T08:00:00+00:00",
-                    "repr": "1908"
+                    "dt": "2021-06-07T07:00:00+00:00",
+                    "repr": "0707"
                 },
                 "flight_rules": "IFR",
                 "icing": [],
                 "other": [],
                 "probability": {
-                    "repr": "30",
-                    "spoken": "three zero",
-                    "value": 30
+                    "repr": "40",
+                    "spoken": "four zero",
+                    "value": 40
                 },
-                "raw": "PROB30 TEMPO 1903/1908 8000 BKN008",
-                "sanitized": "PROB30 TEMPO 1903/1908 8000 BKN008",
+                "raw": "PROB40 0706/0707 7000 BKN005",
+                "sanitized": "PROB40 0706/0707 7000 BKN005",
                 "start_time": {
-                    "dt": "2020-05-19T03:00:00+00:00",
-                    "repr": "1903"
+                    "dt": "2021-06-07T06:00:00+00:00",
+                    "repr": "0706"
                 },
                 "transition_start": null,
                 "turbulence": [],
-                "type": "TEMPO",
+                "type": "FROM",
                 "visibility": {
-                    "repr": "8000",
-                    "spoken": "eight thousand",
-                    "value": 8000
+                    "repr": "7000",
+                    "spoken": "seven thousand",
+                    "value": 7000
                 },
                 "wind_direction": null,
                 "wind_gust": null,
@@ -93,22 +102,23 @@
         ],
         "max_temp": null,
         "min_temp": null,
-        "raw": "EGLL 180503Z 1806/1912 27010KT CAVOK PROB30 TEMPO 1903/1908 8000 BKN008",
+        "raw": "EGLL 070457Z 0706/0812 19005KT 9999 FEW045 PROB40 0706/0707 7000 BKN005",
         "remarks": "",
-        "sanitized": "EGLL 180503Z 1806/1912 27010KT CAVOK PROB30 TEMPO 1903/1908 8000 BKN008",
+        "remarks_info": null,
+        "sanitized": "EGLL 070457Z 0706/0812 19005KT 9999 FEW045 PROB40 0706/0707 7000 BKN005",
         "start_time": {
-            "dt": "2020-05-18T06:00:00+00:00",
-            "repr": "1806"
+            "dt": "2021-06-07T06:00:00+00:00",
+            "repr": "0706"
         },
         "station": "EGLL",
         "temps": null,
         "time": {
-            "dt": "2020-05-18T05:03:00+00:00",
-            "repr": "180503Z"
+            "dt": "2021-06-07T04:57:00+00:00",
+            "repr": "070457Z"
         }
     },
     "icao": "EGLL",
-    "speech": "Starting on May 18th - From 6 to 12 zulu, Winds two seven zero at 10kt. Visibility one zero kilometers. Sky clear. From 3 to 8 zulu, there's a 30% chance for temporary Visibility eight kilometers. Broken layer at 800ft",
+    "speech": "Starting on June 7th - From 6 to 12 zulu, Winds one nine zero at 5kt. Visibility one zero kilometers. Few clouds at 4500ft. From 6 to 7 zulu, there's a 40% chance for Visibility seven kilometers. Broken layer at 500ft",
     "station": {
         "city": "London",
         "country": "GB",
@@ -123,15 +133,23 @@
         "reporting": true,
         "runways": [
             {
+                "bearing1": 89.6,
+                "bearing2": 269.6,
                 "ident1": "09L",
                 "ident2": "27R",
                 "length_ft": 12799,
+                "lights": true,
+                "surface": "asphalt",
                 "width_ft": 164
             },
             {
+                "bearing1": 90.0,
+                "bearing2": 270.0,
                 "ident1": "09R",
                 "ident2": "27L",
                 "length_ft": 12001,
+                "lights": true,
+                "surface": "asphalt",
                 "width_ft": 148
             }
         ],
@@ -141,27 +159,27 @@
         "wiki": "https://en.wikipedia.org/wiki/Heathrow_Airport"
     },
     "summary": [
-        "Winds W-270 at 10kt, Vis 10km, Sky clear",
-        "Vis 8km, Broken layer at 800ft"
+        "Winds S-190 at 5kt, Vis 10km, Few clouds at 4500ft",
+        "Vis 7km, Broken layer at 500ft"
     ],
     "translations": {
         "forecast": [
             {
                 "altimeter": "",
-                "clouds": "Sky clear",
+                "clouds": "Few clouds at 4500ft - Reported AGL",
                 "icing": "",
                 "turbulence": "",
                 "visibility": "10km (6.2sm)",
-                "wind": "W-270 at 10kt",
+                "wind": "S-190 at 5kt",
                 "wind_shear": "",
                 "wx_codes": ""
             },
             {
                 "altimeter": "",
-                "clouds": "Broken layer at 800ft - Reported AGL",
+                "clouds": "Broken layer at 500ft - Reported AGL",
                 "icing": "",
                 "turbulence": "",
-                "visibility": "8km (5sm)",
+                "visibility": "7km (4.3sm)",
                 "wind": "",
                 "wind_shear": "",
                 "wx_codes": ""
