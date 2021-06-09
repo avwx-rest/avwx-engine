@@ -13,7 +13,8 @@ import time_machine
 # module
 from avwx import static, structs
 from avwx.parsing import core
-from avwx.structs import Fraction, Number
+from avwx.static.core import NA_UNITS
+from avwx.structs import Fraction, Number, Units
 
 # tests
 from tests.util import BaseTest
@@ -361,3 +362,40 @@ class TestCore(BaseTest):
                 dt = dt.replace(minute=0)
             ts = core.make_timestamp(dt_repr, target_date=target)
             self.assert_timestamp(ts, dt_repr, dt)
+
+    def test_relative_humidity(self):
+        """Tests calculating relative humidity from temperatrue and dewpoint"""
+        for temperature, dewpoint, humidity in (
+            (10, 5, 0.7107),
+            (27, 24, 0.83662),
+            (15, 0, 0.35868),
+            (10, 10, 1.0),
+        ):
+            value = core.relative_humidity(temperature, dewpoint)
+            self.assertEqual(round(value, 5), humidity)
+
+    def test_pressure_altitude(self):
+        """Tests calculating pressure altitude in feet"""
+        for pressure, altitude, pressure_altitude in (
+            (29.92, 0, 0),
+            (30.12, 6400, 6200),
+            (30.28, 12000, 11640),
+            (29.78, 1200, 1340),
+            (30.09, 0, -170),
+        ):
+            value = core.pressure_altitude(pressure, altitude)
+            self.assertEqual(value, pressure_altitude)
+
+    def test_density_altitude(self):
+        """Tests calculating density altitude in feet"""
+        units = Units(**NA_UNITS)
+        for pressure, temperature, altitude, density in (
+            (29.92, 15, 0, 0),
+            (30.12, 10, 6400, 7136),
+            (30.28, -10, 12000, 11520),
+            (29.78, 18, 1200, 1988),
+            (30.09, 31, 0, 1750),
+            (30.02, 0, 0, -1900),
+        ):
+            value = core.density_altitude(pressure, temperature, altitude, units)
+            self.assertEqual(value, density)

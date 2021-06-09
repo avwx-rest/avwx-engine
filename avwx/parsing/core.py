@@ -234,6 +234,29 @@ def relative_humidity(
     return saturation(dewpoint) / saturation(temperature)
 
 
+# https://aviation.stackexchange.com/questions/47971/how-do-i-calculate-density-altitude-by-hand
+
+
+def pressure_altitude(pressure: float, altitude: _numeric, unit: str = "inHg") -> int:
+    """Calculates the pressure altitude in feet. Converts pressure units"""
+    if unit == "hPa":
+        pressure *= 0.02953
+    return round((29.92 - pressure) * 1000 + altitude)
+
+
+def density_altitude(
+    pressure: float, temperature: _numeric, altitude: _numeric, units: Units
+) -> int:
+    """Calculates the density altitude in feet. Converts pressure and temperature units"""
+    if units.temperature == "F":
+        temperature = (temperature - 32) * 5 / 9
+    if units.altimeter == "hPa":
+        pressure *= 0.02953
+    pressure_alt = pressure_altitude(pressure, altitude)
+    standard = 15 - (2 * altitude / 1000)
+    return round(((temperature - standard) * 120) + pressure_alt)
+
+
 def get_station_and_time(
     data: List[str],
 ) -> Tuple[List[str], Optional[str], Optional[str]]:
@@ -243,12 +266,12 @@ def get_station_and_time(
     station = data.pop(0)
     if not data:
         return data, station, None
-    qtime, rtime = data[0], None
-    if data and qtime.endswith("Z") and qtime[:-1].isdigit():
-        rtime = data.pop(0)
-    elif data and len(qtime) == 6 and qtime.isdigit():
-        rtime = data.pop(0) + "Z"
-    return data, station, rtime
+    q_time, r_time = data[0], None
+    if data and q_time.endswith("Z") and q_time[:-1].isdigit():
+        r_time = data.pop(0)
+    elif data and len(q_time) == 6 and q_time.isdigit():
+        r_time = data.pop(0) + "Z"
+    return data, station, r_time
 
 
 def is_wind(text: str) -> bool:

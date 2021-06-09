@@ -144,6 +144,8 @@ class MetarData(ReportData, SharedData):
     runway_visibility: List[str]
     temperature: Optional[Number]
     wind_variable_direction: List[Number]
+    density_altitude: Optional[int] = None
+    pressure_altitude: Optional[int] = None
 
 
 @dataclass

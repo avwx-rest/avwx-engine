@@ -7,6 +7,7 @@
             "value": 1024
         },
         "clouds": [],
+        "density_altitude": -336,
         "dewpoint": {
             "repr": "13",
             "spoken": "one three",
@@ -14,6 +15,7 @@
         },
         "flight_rules": "VFR",
         "other": [],
+        "pressure_altitude": -236,
         "raw": "EGLL 070520Z AUTO 18005KT 9999 NCD 14/13 Q1024",
         "relative_humidity": 0.9369330286066342,
         "remarks": "",

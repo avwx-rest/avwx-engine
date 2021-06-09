@@ -311,6 +311,26 @@ class Metar(Report):
         time_since = datetime.now(tz=timezone.utc) - self.data.time.dt
         return time_since > timedelta(minutes=90)
 
+    def _calculate_altitudes(self):
+        """Adds the pressure and density altitudes to data if all fields are available"""
+        if self.data is None:
+            return
+        # Select decimal temperature if available
+        temp = self.data.temperature
+        if self.data.remarks_info is not None:
+            temp = self.data.remarks_info.temperature_decimal or temp
+        alt = self.data.altimeter
+        if temp is None or temp.value is None or alt is None or alt.value is None:
+            return
+        alt, temp = alt.value, temp.value
+        elev = self.station.elevation_ft
+        if elev is None:
+            return
+        self.data.pressure_altitude = core.pressure_altitude(
+            alt, elev, self.units.altimeter
+        )
+        self.data.density_altitude = core.density_altitude(alt, temp, elev, self.units)
+
     async def _post_update(self):
         if self.icao is None or self.raw is None:
             return
@@ -319,6 +339,7 @@ class Metar(Report):
             await self._pull_from_default()
         if self.data is None or self.units is None:
             return
+        self._calculate_altitudes()
         self.translations = translate_metar(self.data, self.units)
 
     def _post_parse(self):
@@ -327,6 +348,7 @@ class Metar(Report):
         self.data, self.units = parse(self.icao, self.raw, self.issued)
         if self.data is None or self.units is None:
             return
+        self._calculate_altitudes()
         self.translations = translate_metar(self.data, self.units)
 
     @staticmethod

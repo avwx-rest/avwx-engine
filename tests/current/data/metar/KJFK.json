@@ -16,6 +16,7 @@
                 "type": "FEW"
             }
         ],
+        "density_altitude": 518,
         "dewpoint": {
             "repr": "17",
             "spoken": "one seven",
@@ -23,6 +24,7 @@
         },
         "flight_rules": "VFR",
         "other": [],
+        "pressure_altitude": -157,
         "raw": "KJFK 070451Z 18005KT 10SM FEW250 21/17 A3009 RMK AO2 SLP188 T02060172 403060206",
         "relative_humidity": 0.8085816533417106,
         "remarks": "RMK AO2 SLP188 T02060172 403060206",

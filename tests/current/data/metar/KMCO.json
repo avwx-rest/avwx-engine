@@ -32,6 +32,7 @@
                 "type": "OVC"
             }
         ],
+        "density_altitude": 1251,
         "dewpoint": {
             "repr": "23",
             "spoken": "two three",
@@ -39,6 +40,7 @@
         },
         "flight_rules": "VFR",
         "other": [],
+        "pressure_altitude": -104,
         "raw": "KMCO 070453Z 13006KT 10SM FEW035 FEW065 OVC210 26/23 A3012 RMK AO2 SLP197 T02610233 403390233",
         "relative_humidity": 0.8457854173562626,
         "remarks": "RMK AO2 SLP197 T02610233 403390233",
