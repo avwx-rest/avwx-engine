@@ -120,13 +120,19 @@ Returns `True` if a new report is available, else `False`
 
 **clouds**: *List[avwx.structs.Cloud]*
 
+**density_altitude**: *int*
+
 **dewpoint**: *avwx.structs.Number*
 
 **flight_rules**: *str*
 
 **other**: *List[str]*
 
+**pressure_altitude**: *int*
+
 **raw**: *str*
+
+**relative_humidity**: *str*
 
 **remarks**: *str*
 

@@ -66,11 +66,43 @@ Load an Aircraft from an ICAO aircraft code
 
 **value**: *float*
 
+## class avwx.structs.**PressureTendency**
+
+**repr**: *str*
+
+**tendency**: *str*
+
+**change**: *float*
+
 ## class avwx.structs.**RemarksData**
 
-**dewpoint_decimal**: *float* = *None*
+**codes**: *List[avwx.structs.Code]* = *[]*
 
-**temperature_decimal**: *float* = *None*
+**dewpoint_decimal**: *avwx.structs.Number* = *None*
+
+**maximum_temperature_24**: *avwx.structs.Number* = *None*
+
+**maximum_temperature_6**: *avwx.structs.Number* = *None*
+
+**minimum_temperature_24**: *avwx.structs.Number* = *None*
+
+**minimum_temperature_6**: *avwx.structs.Number* = *None*
+
+**precip_24_hours**: *avwx.structs.Number* = *None*
+
+**precip_36_hours**: *avwx.structs.Number* = *None*
+
+**precip_hourly**: *avwx.structs.Number* = *None*
+
+**pressure_tendency**: *avwx.structs.PressureTendency* = *None*
+
+**sea_level_pressure**: *avwx.structs.Number* = *None*
+
+**snow_depth**: *avwx.structs.Number* = *None*
+
+**sunshine_minutes**: *avwx.structs.Number* = *None*
+
+**temperature_decimal**: *avwx.structs.Number* = *None*
 
 ## class avwx.structs.**Timestamp**
 
@@ -87,6 +119,8 @@ Load an Aircraft from an ICAO aircraft code
 **severity**: *str*
 
 ## class avwx.structs.**Units**
+
+**accumulation**: *str*
 
 **altimeter**: *str*
 
