@@ -192,6 +192,7 @@ class TestCore(BaseTest):
             ),
             (["VRB10MPS", "1"], "m/s", ("VRB",), ("10", 10), (None,), []),
             (["VRB20G30KMH", "1"], "km/h", ("VRB",), ("20", 20), ("30", 30), []),
+            (["16006GP99KT", "1"], "kt", ("160", 160), ("06", 6), ("P99", None), []),
         ):
             units = structs.Units(**static.core.NA_UNITS)
             wx, *winds, var = core.get_wind(wx, units)

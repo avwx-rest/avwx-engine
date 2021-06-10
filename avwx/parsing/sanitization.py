@@ -25,6 +25,7 @@ WIND_REPL = {
     "KLT": "KT",
     "TKT": "KT",
     "GKT": "KT",
+    "PKT": "KT",
 }
 
 WIND_VRB = (
@@ -54,6 +55,7 @@ WIND_VRB = (
     "VRV",
     "VTB",
     "WBB",
+    "RRB",
 )
 
 
@@ -78,6 +80,7 @@ STR_REPL = {
     "'": "",
     "`": "",
     ".": "",
+    "MISSINGKT": "",
     " 0I0": " 090",
     " PROBB": " PROB",
     " PROBN": " PROB",
@@ -322,7 +325,7 @@ def sanitize_report_list(
             and item.endswith("KT")
             and not item.startswith("WS")
         ):
-            while not item[0].isdigit() and not item.startswith("VRB"):
+            while item and not item[0].isdigit() and not item.startswith("VRB"):
                 item = item[1:]
             wxdata[i] = item
         # Fix non-G gust Ex: 14010-15KT

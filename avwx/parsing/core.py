@@ -308,6 +308,9 @@ def separate_wind(text: str) -> Tuple[str, str, str]:
     if "G" in text:
         g_index = text.find("G")
         start, end = g_index + 1, g_index + 3
+        # 16006GP99KT ie gust greater than
+        if "GP" in text:
+            end += 1
         gust = text[start:end]
         text = text[:g_index] + text[end:]
     if text:
