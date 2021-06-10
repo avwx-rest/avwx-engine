@@ -1,5 +1,5 @@
 """
-Builds the master station list
+Builds the main station list
 
 Source file for airports.csv and runways.csv can be downloaded from
 http://ourairports.com/data/
@@ -11,8 +11,12 @@ https://www.aviationweather.gov/docs/metar/stations.txt
 # stdlib
 import csv
 import json
+from datetime import date
 from pathlib import Path
 from typing import List, Optional
+
+# library
+import httpx
 
 # module
 from find_bad_stations import GOOD_PATH, load_stations
@@ -61,7 +65,7 @@ def get_icao(station: List[str]) -> Optional[str]:
     return validate_icao(station[12]) or validate_icao(station[1])
 
 
-def clean_source_file():
+def clean_source_files():
     """Cleans the source data files before parsing"""
     with AIRPORT_PATH.open("r", encoding="utf8") as fin:
         text = fin.read()
@@ -196,13 +200,47 @@ def add_reporting(stations: dict) -> dict:
     return stations
 
 
+DATA_ROOT = "https://ourairports.com/data/"
+
+
+def download_source_files() -> bool:
+    """Returns True if source files updated successfully"""
+    for path, source in ((AIRPORT_PATH, "airports"), (RUNWAY_PATH, "runways")):
+        print("Fetching", source)
+        resp = httpx.get(DATA_ROOT + source + ".csv")
+        if resp.status_code != 200:
+            return False
+        with path.open("w") as out:
+            out.write(resp.text)
+    return True
+
+
+def update_station_info_date():
+    """"""
+    meta_path = Path("..", "avwx", "station", "meta.py")
+    meta = meta_path.open().read()
+    target = '__LAST_UPDATED__ = "'
+    start = meta.find(target) + len(target)
+    prefix = meta[:start]
+    end = start + 10
+    output = prefix + date.today().strftime(r"%Y-%m-%d") + meta[end:]
+    with meta_path.open("w") as out:
+        out.write(output)
+
+
 def main() -> int:
-    """Build/update the stations.json master file"""
-    clean_source_file()
+    """Build/update the stations.json main file"""
+    if not download_source_files():
+        print("Unable to update source files")
+        return 1
+    print("Cleaning")
+    clean_source_files()
+    print("Building")
     stations = build_stations()
     stations = add_missing_stations(stations)
     stations = add_reporting(stations)
     stations = add_runways(stations)
+    print("Saving")
     json.dump(
         stations,
         OUTPUT_PATH.open("w", encoding="utf8"),
@@ -210,6 +248,8 @@ def main() -> int:
         indent=2,
         ensure_ascii=False,
     )
+    print("Updating station date")
+    update_station_info_date()
     return 0
 
 

@@ -6,6 +6,8 @@ Parsing and sanitization improvements are always ongoing and non-breaking
 
 - Added station text-based search at `station.search(text)`
 - Added `from_iata` class method to `Station`
+- Added `relative_humidity`, `pressure_altitude`, and `density_altitude` to `Metar`
+- Expanded `RemarksData` parsing scope
 - Submodule structure for station
 - Mypy type compliance
 
