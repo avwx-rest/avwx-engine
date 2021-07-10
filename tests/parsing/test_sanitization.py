@@ -78,6 +78,8 @@ class TestSanitization(BaseTest):
             ),
             ("AYPY 210600Z 15015GT20KT Q1006", "AYPY 210600Z 15015G20KT Q1006"),
             ("KJFK 1 1 1 1 1 1 2 1", "KJFK 1 2 1"),
+            ("MPSM VRB10G19MPSM Q1001", "MPSM VRB10G19MPS Q1001"),
+            ("ENBO 26003KT 200V300KT 8000", "ENBO 26003KT 200V300 8000"),
         ):
             line, fixed = line.split(), fixed.split()
             self.assertEqual(sanitization.sanitize_report_list(line), fixed)

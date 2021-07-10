@@ -86,7 +86,7 @@ def min_max_temp(temp: Optional[str], unit: str = "C") -> str:
         temp_type = "Minimum"
     else:
         return ""
-    value, time = temp[2:].replace("M", "-").replace("Z", "").split("/")
+    value, time = temp[2:].replace("M", "-").replace("Z", "").strip("/").split("/")
     if len(time) > 2:
         time = time[:2] + "-" + time[2:]
     translation = _trans.temperature(core.make_number(value), unit)

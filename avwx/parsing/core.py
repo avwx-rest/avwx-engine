@@ -280,9 +280,10 @@ def is_wind(text: str) -> bool:
     if text.startswith("WS"):
         return False
     # 09010KT, 09010G15KT
-    for ending in ("KT", "KTS", "MPS", "KMH"):
-        if text.endswith(ending):
-            return True
+    if len(text) > 4:
+        for ending in ("KT", "KTS", "MPS", "KMH"):
+            if text.endswith(ending):
+                return True
     # 09010  09010G15 VRB10
     if not (
         len(text) == 5
@@ -298,7 +299,9 @@ VARIABLE_DIRECTION_PATTERN = re.compile(r"\d{3}V\d{3}")
 
 def is_variable_wind_direction(text: str) -> bool:
     """Returns True if element looks like 350V040"""
-    return VARIABLE_DIRECTION_PATTERN.match(text) is not None
+    if len(text) < 7:
+        return False
+    return VARIABLE_DIRECTION_PATTERN.match(text[:7]) is not None
 
 
 def separate_wind(text: str) -> Tuple[str, str, str]:

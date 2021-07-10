@@ -8,7 +8,7 @@ from itertools import permutations
 from typing import List, Optional
 
 # module
-from avwx.parsing.core import dedupe, is_timerange, is_timestamp, is_unknown, is_wind
+from avwx.parsing.core import dedupe, is_timerange, is_timestamp, is_unknown, is_variable_wind_direction, is_wind
 from avwx.static.core import CLOUD_LIST, CLOUD_TRANSLATIONS
 from avwx.static.taf import TAF_NEWLINE, TAF_NEWLINE_STARTSWITH
 
@@ -18,6 +18,7 @@ WIND_REPL = {
     "O": "0",
     "GG": "G",
     "GT": "G",
+    "GS": "G",
     "LKT": "KT",
     "ZKT": "KT",
     "KTKT": "KT",
@@ -26,6 +27,7 @@ WIND_REPL = {
     "TKT": "KT",
     "GKT": "KT",
     "PKT": "KT",
+    "MPSM": "MPS",
 }
 
 WIND_VRB = (
@@ -377,6 +379,9 @@ def sanitize_report_list(
             wxdata[i] = item[:index]
     # Check for wind sanitization
     for i, item in enumerate(wxdata):
+        if is_variable_wind_direction(item):
+            wxdata[i] = item[:7]
+            continue
         possible_wind = sanitize_wind(item)
         if is_wind(possible_wind):
             wxdata[i] = possible_wind
