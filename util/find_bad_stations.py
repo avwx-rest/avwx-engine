@@ -22,12 +22,12 @@ GOOD_PATH = Path("data", "good_stations.txt")
 
 def load_stations(path: Path) -> set[str]:
     """Load a station set from a path"""
-    return set(path.read_text().strip().split(","))
+    return set(path.read_text().strip().split("\n"))
 
 
 def save_stations(data: set[str], path: Path):
     """Save a sation set to a path"""
-    path.write_text(",".join(sorted(data)))
+    path.write_text("\n".join(sorted(data)))
 
 
 class StationTester(Kew):
