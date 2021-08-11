@@ -100,7 +100,6 @@ def _clouds(item: str) -> List[Cloud]:
     clouds = item.replace(",", "").split()
     # BASES 004 TOPS 016
     # BASES SCT030 TOPS SCT058
-    print(item)
     if "BASES" in clouds and "TOPS" in clouds:
         cloud_type = None
         base = clouds[clouds.index("BASES") + 1]
@@ -248,22 +247,22 @@ def parse(report: str, issued: date = None) -> Optional[PirepData]:
         elif tag == "WX":
             wx_codes, flight_visibility, other = _wx(item)
     return PirepData(
-        raw=report,
-        sanitized=sanitized,
-        station=station,
-        time=time,
-        remarks=remarks,
         aircraft=aircraft,
         altitude=altitude,
         clouds=clouds,
         flight_visibility=flight_visibility,
         icing=icing,
         location=location,
+        other=other or [],
+        raw=report,
+        remarks=remarks,
+        sanitized=sanitized,
+        station=station,
         temperature=temperature,
+        time=time,
         turbulence=turbulence,
         type=report_type,
-        wx_codes=wx_codes or None,
-        other=other or None,
+        wx_codes=wx_codes or [],
     )
 
 

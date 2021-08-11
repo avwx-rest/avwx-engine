@@ -32,7 +32,7 @@
                     "repr": "IGN360015",
                     "station": "IGN"
                 },
-                "other": null,
+                "other": [],
                 "raw": "POU UA /OV IGN360015/TM 2327/FL180/TP C68A/TA M08/IC MOD RIME/RM 180-160",
                 "remarks": "180-160",
                 "sanitized": "POU UA /OV IGN360015/TM 2327/FL180/TP C68A/TA M08/IC MOD RIME/RM 180-160",
@@ -48,7 +48,7 @@
                 },
                 "turbulence": null,
                 "type": "UA",
-                "wx_codes": null
+                "wx_codes": []
             }
         }
     ],

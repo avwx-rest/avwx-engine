@@ -109,17 +109,19 @@ Returns `True` if a new report is available, else `False`
 
 **flight_visibility**: *avwx.structs.Number* = *None*
 
+**icao**: *str*
+
 **icing**: *avwx.structs.Icing* = *None*
 
 **location**: *avwx.structs.Location* = *None*
+
+**other**: *List[str]*
 
 **raw**: *str*
 
 **remarks**: *str*
 
 **sanitized**: *str*
-
-**icao**: *str*
 
 **temperature**: *avwx.structs.Number* = *None*
 
@@ -129,4 +131,4 @@ Returns `True` if a new report is available, else `False`
 
 **type**: *str*
 
-**wx**: *List[str]*
+**wx_codes**: *List[avwx.structs.Code]*
