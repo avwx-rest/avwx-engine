@@ -29,7 +29,7 @@ USER_AGENTS = [
 ]
 
 
-class ScrapeService(Service, CallsHTTP):
+class ScrapeService(Service, CallsHTTP):  # pylint: disable=too-few-public-methods
     """Service class for fetching reports via direct web requests"""
 
     _valid_types: Tuple[str, ...] = ("metar", "taf")
@@ -45,8 +45,9 @@ class ScrapeService(Service, CallsHTTP):
         """Returns request headers"""
         return {}
 
-    # pylint: disable=unused-argument
-    def _post_data(self, station: str) -> dict:
+    def _post_data(
+        self, station: str
+    ) -> dict:  # pylint: disable=unused-argument,no-self-use
         """Returns the POST form/data payload"""
         return {}
 
@@ -364,7 +365,7 @@ BY_COUNTRY = {"AU": AUBOM, "IN": OLBS}
 
 def get_service(station: str, country_code: str) -> ScrapeService:
     """Returns the preferred service for a given station"""
-    for prefix in PREFERRED:
+    for prefix, service in PREFERRED.items():
         if station.startswith(prefix):
-            return PREFERRED[prefix]  # type: ignore
+            return service  # type: ignore
     return BY_COUNTRY.get(country_code, NOAA)  # type: ignore

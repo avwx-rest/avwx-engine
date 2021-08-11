@@ -4,6 +4,8 @@ Parsing for NOAA NBM forecasts
 
 # Reference: https://www.weather.gov/mdl/nbm_textcard_v32
 
+# pylint: disable=too-many-arguments
+
 # stdlib
 from contextlib import suppress
 from typing import Callable, Dict, List, Optional, Tuple

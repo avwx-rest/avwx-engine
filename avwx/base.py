@@ -25,7 +25,7 @@ def find_station(report: str) -> Optional[Station]:
     return None
 
 
-T = TypeVar("T", bound="AVWXBase")
+T = TypeVar("T", bound="AVWXBase")  # pylint: disable=invalid-name
 
 
 class AVWXBase(metaclass=ABCMeta):

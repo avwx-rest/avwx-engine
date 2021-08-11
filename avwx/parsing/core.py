@@ -555,6 +555,7 @@ def parse_date(
 
     This function assumes the given timestamp is within the hour threshold from current date
     """
+    # pylint: disable=too-many-branches
     # Format date string
     date = date.strip("Z")
     if not date.isdigit():

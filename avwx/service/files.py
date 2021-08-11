@@ -22,7 +22,7 @@ from avwx.service.base import Service
 from avwx.station import valid_station
 
 
-_TEMP_DIR = tempfile.TemporaryDirectory()
+_TEMP_DIR = tempfile.TemporaryDirectory()  # pylint: disable=consider-using-with
 _TEMP = Path(_TEMP_DIR.name)
 
 
@@ -71,7 +71,8 @@ class FileService(Service):
         return now > last + self.update_interval
 
     def _new_path(self) -> Path:
-        timestamp = str(dt.datetime.now(tz=dt.timezone.utc).timestamp()).split(".")[0]
+        now = dt.datetime.now(tz=dt.timezone.utc).timestamp()
+        timestamp = str(now).split(".", maxsplit=1)[0]
         return _TEMP / f"{self._file_stem}.{timestamp}.txt"
 
     async def _wait_until_updated(self):

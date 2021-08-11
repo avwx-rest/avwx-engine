@@ -227,10 +227,11 @@ class PirepData(ReportData):
     flight_visibility: Optional[Number] = None
     icing: Optional[Icing] = None
     location: Optional[Location] = None
+    other: Optional[List[str]] = None
     temperature: Optional[Number] = None
     turbulence: Optional[Turbulence] = None
     type: Optional[str] = None
-    wx: Optional[List[str]] = None
+    wx_codes: Optional[List[Code]] = None
 
 
 @dataclass

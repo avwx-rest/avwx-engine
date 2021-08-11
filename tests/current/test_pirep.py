@@ -13,7 +13,7 @@ from typing import Optional
 # module
 from avwx import structs
 from avwx.current import pirep
-from avwx.structs import Number
+from avwx.structs import Code, Number
 
 from tests.util import BaseTest, get_data
 
@@ -50,6 +50,8 @@ class TestPirepHandlers(BaseTest):
             ("KLGA220015", "KLGA", 220, 15),
             ("10 WGON", "GON", 270, 10),
             ("GON 270010", "GON", 270, 10),
+            ("10 EAST", None, 90, 10),
+            ("15 SW LRP", "LRP", 225, 15),
         ):
             ret_loc = pirep._location(loc)
             self.assertIsInstance(ret_loc, structs.Location)
@@ -101,6 +103,8 @@ class TestPirepHandlers(BaseTest):
             ("BKN-OVCUNKN-TOP060", ["BKN-OVC", None, 60]),
             ("BKN120-TOP150", ["BKN", 120, 150]),
             ("OVC-TOP085", ["OVC", None, 85]),
+            ("BASES SCT030 TOPS SCT058", ["SCT", 30, 58]),
+            ("BKN030-TOP045", ["BKN", 30, 45]),
         ):
             parsed = pirep._clouds(cloud)[0]
             self.assertIsInstance(parsed, structs.Cloud)
@@ -155,17 +159,24 @@ class TestPirepHandlers(BaseTest):
 
     def test_wx(self):
         """Tests wx split and visibility ident"""
-        for txt, wx in (
-            ("VCFC", ["VCFC"]),
-            ("+RATS -GR", ["+RATS", "-GR"]),
+        for txt, wx, remain in (
+            ("VCFC", [("VCFC", "Vicinity Funnel Cloud")], []),
+            (
+                "+RATS -GR 4",
+                [("+RATS", "Heavy Rain Thunderstorm"), ("-GR", "Light Hail")],
+                ["4"],
+            ),
         ):
-            wx_codes, flight_visibility = pirep._wx(txt)
+            wx_codes, flight_visibility, other = pirep._wx(txt)
             self.assertIsInstance(wx_codes, list)
-            self.assertEqual(wx_codes, wx)
+            self.assertEqual(other, remain)
+            for item, code in zip(wx, wx_codes):
+                self.assertEqual(Code(item[0], item[1]), code)
             self.assertIsNone(flight_visibility)
-        wx_codes, flight_visibility = pirep._wx("FV1000 VCFC")
+        wx_codes, flight_visibility, other = pirep._wx("FV1000 VCFC")
         self.assertIsInstance(wx_codes, list)
-        self.assertEqual(wx_codes, ["VCFC"])
+        self.assertEqual(wx_codes, [Code("VCFC", "Vicinity Funnel Cloud")])
+        self.assertEqual(other, [])
         self.assertIsInstance(flight_visibility, structs.Number)
         self.assertEqual(flight_visibility.value, 1000)
 
@@ -184,6 +195,11 @@ class TestPirep(unittest.TestCase):
             data = pirep.parse(report)
             self.assertIsInstance(data, structs.PirepData)
             self.assertEqual(data.raw, report)
+
+    def test_sanitize(self):
+        """Tests report sanitization"""
+        for line, fixed in (("DAB UA /SK BKN030 TOP045", "DAB UA /SK BKN030-TOP045"),):
+            self.assertEqual(pirep.sanitize(line), fixed)
 
     def test_pirep_ete(self):
         """Performs an end-to-end test of all PIREP JSON files"""

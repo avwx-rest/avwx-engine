@@ -277,6 +277,7 @@ def parse(
     station: str, report: str, issued: date = None
 ) -> Tuple[Optional[TafData], Optional[Units]]:
     """Returns TafData and Units dataclasses with parsed data and their associated units"""
+    # pylint: disable=too-many-locals
     if not report:
         return None, None
     valid_station(station)
@@ -420,6 +421,7 @@ def parse_lines(
 
 def parse_line(line: str, units: Units, issued: date = None) -> TafLineData:
     """Parser for the International TAF forcast variant"""
+    # pylint: disable=too-many-locals
     data = core.dedupe(line.split())
     data = sanitization.sanitize_report_list(data, remove_clr_and_skc=False)
     sanitized = " ".join(data)

@@ -52,6 +52,8 @@ class TestSanitization(BaseTest):
             ("211600ZVRB04KT", 7),
             ("PROB30", None),
             ("A2992", None),
+            ("TX32/2521ZTN24/2512Z", 10),
+            ("TN24/2512ZTX32/2521Z", 10),
         ):
             self.assertEqual(sanitization.extra_space_needed(item), sep)
 

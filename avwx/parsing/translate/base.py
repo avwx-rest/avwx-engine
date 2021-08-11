@@ -24,6 +24,7 @@ def get_cardinal_direction(direction: Union[int, float]) -> str:
 
     (270) -- 281/282 -- 303/304 -- (315) -- 326/327 -- 348/349 -- (360)
     """
+    # pylint: disable=too-many-branches
     ret = ""
     if not isinstance(direction, int):
         direction = int(direction)
@@ -69,7 +70,7 @@ def get_cardinal_direction(direction: Union[int, float]) -> str:
 WIND_DIR_REPR = {"000": "Calm", "VRB": "Variable"}
 
 
-def wind(
+def wind(  # pylint: disable=too-many-arguments
     direction: Optional[Number],
     speed: Optional[Number],
     gust: Optional[Number],

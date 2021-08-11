@@ -1,6 +1,7 @@
 """
 """
 
+# pylint: skip-file
 # mypy: ignore-errors
 
 # stdlib

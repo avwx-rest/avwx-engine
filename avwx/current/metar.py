@@ -179,6 +179,7 @@ def parse(
 
 def parse_na(report: str, issued: date = None) -> Tuple[MetarData, Units]:
     """Parser for the North American METAR variant"""
+    # pylint: disable=too-many-locals
     units = Units(**NA_UNITS)
     sanitized, remarks_str, data = sanitize(report)
     data, station, time = core.get_station_and_time(data)
@@ -225,6 +226,7 @@ def parse_na(report: str, issued: date = None) -> Tuple[MetarData, Units]:
 
 def parse_in(report: str, issued: date = None) -> Tuple[MetarData, Units]:
     """Parser for the International METAR variant"""
+    # pylint: disable=too-many-locals
     units = Units(**IN_UNITS)
     sanitized, remarks_str, data = sanitize(report)
     data, station, time = core.get_station_and_time(data)

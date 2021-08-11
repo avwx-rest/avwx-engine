@@ -2,13 +2,22 @@
 Contains report sanitization functions
 """
 
+# pylint: disable=too-many-boolean-expressions,too-many-return-statements,too-many-branches
+
 # stdlib
 import re
 from itertools import permutations
 from typing import List, Optional
 
 # module
-from avwx.parsing.core import dedupe, is_timerange, is_timestamp, is_unknown, is_variable_wind_direction, is_wind
+from avwx.parsing.core import (
+    dedupe,
+    is_timerange,
+    is_timestamp,
+    is_unknown,
+    is_variable_wind_direction,
+    is_wind,
+)
 from avwx.static.core import CLOUD_LIST, CLOUD_TRANSLATIONS
 from avwx.static.taf import TAF_NEWLINE, TAF_NEWLINE_STARTSWITH
 
@@ -77,6 +86,13 @@ def sanitize_wind(text: str) -> str:
 
 STR_REPL = {
     " C A V O K ": " CAVOK ",
+    "!": "1",
+    "@": "2",
+    "#": "3",
+    "%": "5",
+    "^": "6",
+    "&": "7",
+    "*": "8",
     "?": " ",
     '"': "",
     "'": "",
@@ -245,6 +261,10 @@ def extra_space_needed(item: str) -> Optional[int]:
             index = item.find(key)
             if item[index + len(key) :].isdigit():
                 return index
+    # Connected TAF min/max temp
+    if "TX" in item and "TN" in item and item.endswith("Z") and "/" in item:
+        tx_index, tn_index = item.find("TX"), item.find("TN")
+        return max(tx_index, tn_index)
     return None
 
 
@@ -275,6 +295,7 @@ def sanitize_report_list(
 
     We can remove and identify "one-off" elements and fix other issues before parsing a line
     """
+    # pylint: disable=too-many-statements
     for i, item in reversed(list(enumerate(wxdata))):
         ilen = len(item)
         # Remove elements containing only '/'

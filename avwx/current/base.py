@@ -2,7 +2,7 @@
 Current report shared resources
 """
 
-# pylint: disable=abstract-method,arguments-differ
+# pylint: disable=abstract-method,arguments-renamed
 
 # stdlib
 import asyncio as aio
@@ -32,12 +32,12 @@ def wx_code(code: str) -> Union[Code, str]:
         ret = "Light "
         code = code[1:]
     # Return code if code is not a code, ex R03/03002V03
-    if len(code) not in [2, 4, 6]:
+    if len(code) not in [2, 4, 6] or code.isdigit():
         return code
     while code:
-        if code[:2] in WX_TRANSLATIONS:
+        try:
             ret += WX_TRANSLATIONS[code[:2]] + " "
-        else:
+        except KeyError:
             ret += code[:2]
         code = code[2:]
     return Code(code_copy, ret.strip())

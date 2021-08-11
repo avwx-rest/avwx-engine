@@ -2,6 +2,7 @@
 GFS data translation handlers
 """
 
+# pylint: skip-file
 # mypy: ignore-errors
 
 raise NotImplementedError()

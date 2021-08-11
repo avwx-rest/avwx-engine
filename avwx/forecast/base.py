@@ -2,6 +2,8 @@
 Forecast report shared resources
 """
 
+# pylint: disable=too-many-arguments
+
 # stdlib
 from datetime import datetime, timedelta, timezone
 from typing import Callable, List, Optional, Tuple, Union

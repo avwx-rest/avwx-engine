@@ -31,6 +31,7 @@
                     "repr": "KGNV",
                     "station": "KGNV"
                 },
+                "other": null,
                 "raw": "GNV UA /OV KGNV/TM 2323/FL025/TP C152/SK FEW030/TB NEG BLO 025/RM DURC",
                 "remarks": "DURC",
                 "sanitized": "GNV UA /OV KGNV/TM 2323/FL025/TP C152/SK FEW030/TB NEG BLO 025/RM DURC",
@@ -50,7 +51,7 @@
                     "severity": "NEG"
                 },
                 "type": "UA",
-                "wx": null
+                "wx_codes": null
             }
         },
         {
@@ -82,6 +83,9 @@
                     "repr": "EVB",
                     "station": "EVB"
                 },
+                "other": [
+                    "10"
+                ],
                 "raw": "EVB UA /OV EVB/TM 2258/FL010/TP C172/SK BKN006/WX 10/RM PILOT REPORTS BKN010 2 MILES WEST OF AIRPORT LOWERING TO BKN006 OVER THE AIRPORT",
                 "remarks": "PILOT REPORTS BKN010 2 MILES WEST OF AIRPORT LOWERING TO BKN006 OVER THE AIRPORT",
                 "sanitized": "EVB UA /OV EVB/TM 2258/FL010/TP C172/SK BKN006/WX 10/RM PILOT REPORTS BKN010 2 MILES WEST OF AIRPORT LOWERING TO BKN006 OVER THE AIRPORT",
@@ -93,9 +97,7 @@
                 },
                 "turbulence": null,
                 "type": "UA",
-                "wx": [
-                    "10"
-                ]
+                "wx_codes": null
             }
         },
         {
@@ -126,6 +128,7 @@
                     "repr": "VLD120040",
                     "station": "VLD"
                 },
+                "other": null,
                 "raw": "VLD UA /OV VLD120040/TM 2234/FL430/TP CL30/TB OCNL MOD",
                 "remarks": null,
                 "sanitized": "VLD UA /OV VLD120040/TM 2234/FL430/TP CL30/TB OCNL MOD",
@@ -141,7 +144,7 @@
                     "severity": "OCNL MOD"
                 },
                 "type": "UA",
-                "wx": null
+                "wx_codes": null
             }
         }
     ],

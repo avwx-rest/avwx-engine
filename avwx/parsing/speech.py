@@ -16,7 +16,7 @@ from avwx.static.core import SPOKEN_UNITS
 from avwx.structs import Code, MetarData, Number, TafData, TafLineData, Timestamp, Units
 
 
-def ordinal(n: int) -> Optional[str]:
+def ordinal(n: int) -> Optional[str]:  # pylint: disable=invalid-name
     """Converts an int to it spoken ordinal representation"""
     if n < 0:
         return None

@@ -59,12 +59,16 @@ CLOUD_LIST = ["FEW", "SCT", "BKN", "OVC"]
 #: Dictionary of cardinal direction values
 CARDINALS = {
     "N": 360,
+    "NORTH": 360,
     "NE": 45,
     "E": 90,
+    "EAST": 90,
     "SE": 135,
     "S": 180,
+    "SOUTH": 180,
     "SW": 225,
     "W": 270,
+    "WEST": 270,
     "NW": 315,
 }
 

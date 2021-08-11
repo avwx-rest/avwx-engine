@@ -49,7 +49,7 @@ class CallsHTTP:
 
     method: str = "GET"
 
-    async def _call(
+    async def _call(  # pylint: disable=too-many-arguments
         self,
         url: str,
         params: dict = None,
@@ -78,7 +78,7 @@ class CallsHTTP:
             raise ConnectionError(
                 f"Unable to connect to {name} server"
             ) from connect_error
-        except httpcore.NetworkError as network_error:
+        except (httpcore.NetworkError, httpcore.RemoteProtocolError) as network_error:
             raise ConnectionError(
                 f"Unable to read data from {name} server"
             ) from network_error
