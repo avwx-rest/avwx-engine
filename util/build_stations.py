@@ -22,11 +22,12 @@ import httpx
 from find_bad_stations import GOOD_PATH, load_stations
 from mappers import FILE_REPLACE, SURFACE_TYPES
 
-_DATA = Path("data")
+_FILE_DIR = Path(__file__).parent
+_DATA = _FILE_DIR / "data"
 AIRPORT_PATH = _DATA / "airports.csv"
 STATION_PATH = _DATA / "stations.txt"
 RUNWAY_PATH = _DATA / "runways.csv"
-OUTPUT_PATH = Path("..", "avwx", "data", "stations.json")
+OUTPUT_PATH = _FILE_DIR.parent / "avwx" / "data" / "stations.json"
 
 ACCEPTED_STATION_TYPES = [
     "balloonport",
@@ -217,7 +218,7 @@ def download_source_files() -> bool:
 
 def update_station_info_date():
     """"""
-    meta_path = Path("..", "avwx", "station", "meta.py")
+    meta_path = _FILE_DIR.parent / "avwx" / "station" / "meta.py"
     meta = meta_path.open().read()
     target = '__LAST_UPDATED__ = "'
     start = meta.find(target) + len(target)

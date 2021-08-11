@@ -15,6 +15,9 @@ from typing import Optional
 import avwx
 
 
+TESTS_PATH = Path(__file__).parent.parent / "tests"
+
+
 def _default(o):
     if isinstance(o, (date, datetime)):
         return o.isoformat()
@@ -107,7 +110,9 @@ def main():
                 if data:
                     data["icao"] = icao
                     data["created"] = datetime.now(tz=timezone.utc).date()
-                    path = Path("tests", target, "data", report_type, icao + ".json")
+                    path = TESTS_PATH.joinpath(
+                        target, "data", report_type, icao + ".json"
+                    )
                     json.dump(
                         data, path.open("w"), indent=4, sort_keys=True, default=_default
                     )

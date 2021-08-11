@@ -1,8 +1,8 @@
-geopy~=2.1
+geopy~=2.2
 httpx~=0.18
 mkdocs~=1.2
 nox==2021.6.12
-pre-commit~=2.13
+pre-commit~=2.14
 pytest~=6.2
 pytest-asyncio>=0.15.1
 python-dateutil~=2.8
