@@ -1,12 +1,14 @@
 geopy~=2.2
-httpx~=0.18
+httpx~=0.19
 mkdocs~=1.2
+mkdocs-material~=7.2
+mkdocs-minify-plugin~=0.4
 nox==2021.6.12
 pre-commit~=2.14
 pytest~=6.2
 pytest-asyncio>=0.15.1
 python-dateutil~=2.8
-rapidfuzz~=1.4
+rapidfuzz~=1.5
 scipy~=1.7
 time-machine~=2.3
 xmltodict~=0.12

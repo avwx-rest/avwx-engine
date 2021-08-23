@@ -45,9 +45,9 @@ class ScrapeService(Service, CallsHTTP):  # pylint: disable=too-few-public-metho
         """Returns request headers"""
         return {}
 
-    def _post_data(
-        self, station: str
-    ) -> dict:  # pylint: disable=unused-argument,no-self-use
+    def _post_data(  # pylint: disable=no-self-use
+        self, station: str  # pylint: disable=unused-argument
+    ) -> dict:
         """Returns the POST form/data payload"""
         return {}
 
@@ -322,12 +322,15 @@ class AUBOM(StationScrape):
 class OLBS(StationScrape):
     """Requests data from India OLBS flight briefing"""
 
-    url = "https://olbs.amsschennai.gov.in/nsweb/FlightBriefing/showopmetquery.php"
-    method = "POST"
+    # url = "https://olbs.amsschennai.gov.in/nsweb/FlightBriefing/showopmetquery.php"
+    # method = "POST"
 
-    def _make_url(self, _) -> Tuple[str, dict]:
+    # Temp redirect
+    url = "https://avbrief3.el.r.appspot.com/"
+
+    def _make_url(self, station: str) -> Tuple[str, dict]:
         """Returns a formatted URL and empty parameters"""
-        return self.url, {}
+        return self.url, {"icao": station}
 
     def _post_data(self, station: str) -> dict:
         """Returns the POST form"""
@@ -338,20 +341,29 @@ class OLBS(StationScrape):
     def _make_headers() -> dict:
         """Returns request headers"""
         return {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Accept": "text/html, */*; q=0.01",
-            "Accept-Language": "en-us",
+            # "Content-Type": "application/x-www-form-urlencoded",
+            # "Accept": "text/html, */*; q=0.01",
+            # "Accept-Language": "en-us",
             "Accept-Encoding": "gzip, deflate, br",
-            "Host": "olbs.amsschennai.gov.in",
+            # "Host": "olbs.amsschennai.gov.in",
             "User-Agent": random.choice(USER_AGENTS),
             "Connection": "keep-alive",
-            "Referer": "https://olbs.amsschennai.gov.in/nsweb/FlightBriefing/",
-            "X-Requested-With": "XMLHttpRequest",
+            # "Referer": "https://olbs.amsschennai.gov.in/nsweb/FlightBriefing/",
+            # "X-Requested-With": "XMLHttpRequest",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Referer": "https://avbrief3.el.r.appspot.com/",
+            "Host": "avbrief3.el.r.appspot.com",
         }
 
     def _extract(self, raw: str, station: str) -> str:
         """Extracts the reports from HTML response"""
-        start = raw.find(f"{self.report_type.upper()} {station} ")
+        # start = raw.find(f"{self.report_type.upper()} {station} ")
+        start = raw.find(f">{self.report_type.upper()}</div>")
+        if start < 0:
+            return ""
+        raw = raw[start:]
+        start = raw.find(station)
         if start < 0:
             return ""
         report = raw[start:]

@@ -58,14 +58,11 @@ class StationTester(Kew):
             if await metar.async_update():
                 self.good_stations.add(icao)
         except avwx.exceptions.SourceError as exc:
-            print(exc)
+            print("\n", icao, exc, "\n")
         except (avwx.exceptions.BadStation, avwx.exceptions.InvalidRequest):
             pass
         except Exception as exc:
-            print()
-            print(exc)
-            print(icao)
-            print()
+            print("\n", icao, exc, "\n")
         return True
 
     async def wait(self):
@@ -90,8 +87,7 @@ async def main() -> int:
     tester = StationTester(load_stations(GOOD_PATH))
     try:
         while True:
-            print()
-            print("Starting", datetime.now())
+            print("\nStarting", datetime.now())
             await tester.add_stations()
             await tester.wait()
             save_stations(tester.good_stations, GOOD_PATH)
@@ -101,12 +97,14 @@ async def main() -> int:
     except KeyboardInterrupt:
         pass
     except Exception as exc:
-        print()
-        print(exc)
+        print("\nMAIN ERROR:", exc)
     finally:
         await tester.finish(wait=False)
     return 0
 
 
 if __name__ == "__main__":
-    aio.run(main())
+    try:
+        aio.run(main())
+    except KeyboardInterrupt:
+        pass
