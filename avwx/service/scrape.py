@@ -73,6 +73,20 @@ class StationScrape(ScrapeService):
         """Extracts the report string from the service response"""
         raise NotImplementedError()
 
+    def _simple_extract(self, raw: str, starts: Union[str, List[str]], end: str) -> str:
+        """Simple extract by cutting at sequential start and end points"""
+        if isinstance(starts, str):
+            targets = [starts]
+        else:
+            targets = starts
+        for target in targets:
+            index = raw.find(target)
+            if index == -1:
+                raise self._make_err("The station might not exist")
+            raw = raw[index:]
+        report = raw[: raw.find(end)].strip()
+        return " ".join(dedupe(report.split()))
+
     async def _fetch(self, station: str, url: str, params: dict, timeout: int) -> str:
         headers = self._make_headers()
         data = self._post_data(station) if self.method.lower() == "post" else None
@@ -272,9 +286,7 @@ class MAC(StationScrape):
 
     def _extract(self, raw: str, station: str) -> str:
         """Extracts the report message using string finding"""
-        report = raw[raw.find(station.upper() + " ") :]
-        report = report[: report.find(" =")]
-        return report
+        return self._simple_extract(raw, station.upper() + " ", "=")
 
 
 class AUBOM(StationScrape):
@@ -359,20 +371,41 @@ class OLBS(StationScrape):
     def _extract(self, raw: str, station: str) -> str:
         """Extracts the reports from HTML response"""
         # start = raw.find(f"{self.report_type.upper()} {station} ")
-        start = raw.find(f">{self.report_type.upper()}</div>")
-        if start < 0:
-            return ""
-        raw = raw[start:]
-        start = raw.find(station)
-        if start < 0:
-            return ""
-        report = raw[start:]
-        report = report[: report.find("=")].strip()
-        return " ".join(dedupe(report.split()))
+        return self._simple_extract(
+            raw, [f">{self.report_type.upper()}</div>", station], "="
+        )
+
+
+class NAM(StationScrape):
+    """Requests data from NorthAviMet for North Atlantic and Nordic countries"""
+
+    url = "https://www.northavimet.com/NamConWS/rest/opmet/command/0/"
+
+    def _make_url(self, station: str) -> Tuple[str, dict]:
+        """Returns a formatted URL and empty parameters"""
+        return self.url + station, {}
+
+    def _extract(self, raw: str, station: str) -> str:
+        """Extracts the reports from HTML response"""
+        starts = [f"<b>{self.report_type.upper()} <", f">{station.upper()}<", "<b> "]
+        report = self._simple_extract(raw, starts, "=")
+        return station + report[3:]
 
 
 PREFERRED = {"RK": AMO, "SK": MAC}
-BY_COUNTRY = {"AU": AUBOM, "IN": OLBS}
+BY_COUNTRY = {
+    "AU": AUBOM,
+    "DK": NAM,
+    "EE": NAM,
+    "FI": NAM,
+    "FO": NAM,
+    "GL": NAM,
+    "IN": OLBS,
+    "IS": NAM,
+    "LV": NAM,
+    "NO": NAM,
+    "SE": NAM,
+}
 
 
 def get_service(station: str, country_code: str) -> ScrapeService:

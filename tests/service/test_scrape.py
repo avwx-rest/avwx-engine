@@ -97,6 +97,12 @@ class TestOLBS(TestStationScrape):
     stations = ["VAPO", "VEGT"]
 
 
+class TestNAM(TestStationScrape):
+
+    service_class = service.NAM
+    stations = ["BGQQ", "ENGM", "BIRK"]
+
+
 class TestModule(unittest.TestCase):
     def test_get_service(self):
         """Tests that the correct service class is returned"""
@@ -106,6 +112,7 @@ class TestModule(unittest.TestCase):
             (("RKSI",), "KR", service.AMO),
             (("SKBO", "SKPP"), "CO", service.MAC),
             (("YWOL", "YSSY"), "AU", service.AUBOM),
+            (("VAPO", "VEGT"), "IN", service.OLBS),
         ):
             for station in stations:
                 self.assertIsInstance(
