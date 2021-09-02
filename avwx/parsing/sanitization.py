@@ -146,7 +146,7 @@ def sanitize_report_string(text: str) -> str:
 
     Returns the first pass sanitized report string
     """
-    text = text.upper()
+    text = text.upper().rstrip("=")
     if len(text) < 4:
         return text
     # Standardize whitespace

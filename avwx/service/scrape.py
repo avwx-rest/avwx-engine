@@ -6,6 +6,7 @@ Classes for retrieving raw report strings via web scraping
 
 # stdlib
 import asyncio as aio
+import json
 import random
 from typing import Any, List, Optional, Tuple, Union
 
@@ -392,9 +393,31 @@ class NAM(StationScrape):
         return station + report[3:]
 
 
+class AVT(StationScrape):
+    """Requests data from AVT/XiamenAir for China
+    NOTE: This should be replaced later with a gov+https source
+    """
+
+    url = "http://www.avt7.com/Home/AirportMetarInfo?airport4Code="
+
+    def _make_url(self, station: str) -> Tuple[str, dict]:
+        """Returns a formatted URL and empty parameters"""
+        return self.url + station, {}
+
+    def _extract(self, raw: str, station: str) -> str:
+        """Extracts the reports from HTML response"""
+        try:
+            data = json.loads(raw)
+            key = self.report_type.lower() + "ContentList"
+            return data[key]["rows"][0]["content"]
+        except (TypeError, json.decoder.JSONDecodeError, KeyError, IndexError):
+            return ""
+
+
 PREFERRED = {"RK": AMO, "SK": MAC}
 BY_COUNTRY = {
     "AU": AUBOM,
+    "CN": AVT,
     "DK": NAM,
     "EE": NAM,
     "FI": NAM,
