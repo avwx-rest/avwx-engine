@@ -4,7 +4,7 @@ avwx Package Setup
 
 from setuptools import find_namespace_packages, setup
 
-VERSION = "1.6.13"
+VERSION = "1.6.14"
 
 dependencies = [
     "geopy~=2.2",

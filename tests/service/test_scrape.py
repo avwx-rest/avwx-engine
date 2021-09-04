@@ -79,10 +79,10 @@ class TestAMO(TestStationScrape):
     stations = ["RKSI", "RKSS", "RKNY"]
 
 
-class TestMAC(TestStationScrape):
+# class TestMAC(TestStationScrape):
 
-    service_class = service.MAC
-    stations = ["SKBO"]
+#     service_class = service.MAC
+#     stations = ["SKBO"]
 
 
 class TestAUBOM(TestStationScrape):
@@ -100,7 +100,13 @@ class TestOLBS(TestStationScrape):
 class TestNAM(TestStationScrape):
 
     service_class = service.NAM
-    stations = ["BGQQ", "ENGM", "BIRK"]
+    stations = ["EHAM", "ENGM", "BIRK"]
+
+
+class TestAVT(TestStationScrape):
+
+    service_class = service.AVT
+    stations = ["ZJQH", "ZYCC", "ZSWZ"]
 
 
 class TestModule(unittest.TestCase):
@@ -110,9 +116,10 @@ class TestModule(unittest.TestCase):
             (("KJFK", "PHNL"), "US", service.NOAA),
             (("EGLL",), "GB", service.NOAA),
             (("RKSI",), "KR", service.AMO),
-            (("SKBO", "SKPP"), "CO", service.MAC),
+            # (("SKBO", "SKPP"), "CO", service.MAC),
             (("YWOL", "YSSY"), "AU", service.AUBOM),
             (("VAPO", "VEGT"), "IN", service.OLBS),
+            (("ZJQH", "ZYCC", "ZSWZ"), "CN", service.AVT),
         ):
             for station in stations:
                 self.assertIsInstance(

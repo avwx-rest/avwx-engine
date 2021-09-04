@@ -414,7 +414,10 @@ class AVT(StationScrape):
             return ""
 
 
-PREFERRED = {"RK": AMO, "SK": MAC}
+PREFERRED = {
+    "RK": AMO,
+    # "SK": MAC,
+}
 BY_COUNTRY = {
     "AU": AUBOM,
     "CN": AVT,

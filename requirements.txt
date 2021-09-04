@@ -10,5 +10,5 @@ pytest-asyncio>=0.15.1
 python-dateutil~=2.8
 rapidfuzz~=1.5
 scipy~=1.7
-time-machine~=2.3
+time-machine~=2.4
 xmltodict~=0.12
