@@ -143,14 +143,47 @@ class TestMetar(BaseTest):
             self.assert_number(ret_alt, *alt)
             self.assertEqual(units.altimeter, unit)
 
+    def test_parse_runway_visibility(self):
+        """Tests parsing runway visibility range values"""
+        for value, runway, vis, var, trend in (
+            ("R35L/1000", "35L", ("1000", 1000, "one thousand"), (), None),
+            ("R06/M0500", "06", ("M0500", None, "less than five hundred"), (), None),
+            (
+                "R09C/P6000D",
+                "09C",
+                ("P6000", None, "greater than six thousand"),
+                (),
+                structs.Code("D", "decreasing"),
+            ),
+            (
+                "R36/1600V3000U",
+                "36",
+                None,
+                (("1600", 1600, "one six hundred"), ("3000", 3000, "three thousand")),
+                structs.Code("U", "increasing"),
+            ),
+        ):
+            rvr = metar.parse_runway_visibility(value)
+            self.assertEqual(rvr.runway, runway)
+            if vis is None:
+                self.assertIsNone(rvr.visibility)
+            else:
+                self.assert_number(rvr.visibility, *vis)
+            if var:
+                for original, items in zip(rvr.variable_visibility, var):
+                    self.assert_number(original, *items)
+            self.assertEqual(rvr.trend, trend)
+
     def test_get_runway_visibility(self):
         """Tests extracting runway visibility"""
-        for wx, runway_vis in (
-            (["1", "2"], []),
-            (["1", "2", "R10/10"], ["R10/10"]),
-            (["1", "2", "R02/05", "R34/04"], ["R02/05", "R34/04"]),
+        for wx, count in (
+            (["1", "2"], 0),
+            (["1", "2", "R10/10"], 1),
+            (["1", "2", "R02/05", "R34/04"], 2),
         ):
-            self.assertEqual(metar.get_runway_visibility(wx), (["1", "2"], runway_vis))
+            items, rvr = metar.get_runway_visibility(wx)
+            self.assertEqual(items, ["1", "2"])
+            self.assertEqual(len(rvr), count)
 
     def test_sanitize(self):
         """Tests report sanitization"""

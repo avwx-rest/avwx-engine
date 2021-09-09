@@ -39,13 +39,13 @@ def dedupe(items: Iterable[Any], only_neighbors: bool = False) -> List[Any]:
     return ret
 
 
-def is_unknown(val: str) -> bool:
+def is_unknown(value: str) -> bool:
     """Returns True if val represents and unknown value"""
-    if not isinstance(val, str):
+    if not isinstance(value, str):
         raise TypeError
-    if not val or val.upper() in ("UNKN",):
+    if not value or value.upper() in ("UNKN",):
         return True
-    for char in val:
+    for char in value:
         if char not in ("/", "X", "."):
             break
     else:

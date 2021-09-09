@@ -78,6 +78,15 @@ class Cloud:
 
 
 @dataclass
+class RunwayVisibility:
+    repr: str
+    runway: str
+    visibility: Optional[Number]
+    variable_visibility: List[Number]
+    trend: Optional[Code]
+
+
+@dataclass
 class Location:
     repr: str
     station: Optional[str]
@@ -141,7 +150,7 @@ class MetarData(ReportData, SharedData):
     dewpoint: Optional[Number]
     relative_humidity: Optional[float]
     remarks_info: Optional[RemarksData]
-    runway_visibility: List[str]
+    runway_visibility: List[RunwayVisibility]
     temperature: Optional[Number]
     wind_variable_direction: List[Number]
     density_altitude: Optional[int] = None

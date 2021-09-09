@@ -5,6 +5,7 @@ Contains METAR-specific functions for report parsing
 # pylint: disable=invalid-overridden-method
 
 # stdlib
+from contextlib import suppress
 from datetime import date, datetime, timedelta, timezone
 from typing import List, Tuple, Optional
 
@@ -16,7 +17,15 @@ from avwx.service import NOAA
 from avwx.static.core import FLIGHT_RULES, IN_UNITS, NA_UNITS
 from avwx.static.metar import METAR_RMK
 from avwx.station import uses_na_format, valid_station
-from avwx.structs import MetarData, MetarTrans, Number, RemarksData, Units
+from avwx.structs import (
+    Code,
+    MetarData,
+    MetarTrans,
+    Number,
+    RemarksData,
+    RunwayVisibility,
+    Units,
+)
 
 
 def get_remarks(txt: str) -> Tuple[List[str], str]:
@@ -42,18 +51,68 @@ def get_remarks(txt: str) -> Tuple[List[str], str]:
     return txt.strip().split(), ""
 
 
-def get_runway_visibility(data: List[str]) -> Tuple[List[str], List[str]]:
+def is_runway_visibility(item: str) -> bool:
+    """Returns True if the item is a runway visibility range string"""
+    return (
+        len(item) > 4
+        and item[0] == "R"
+        and (item[3] == "/" or item[4] == "/")
+        and item[1:3].isdigit()
+    )
+
+
+_RVR_CODES = {
+    "M": "less than",
+    "P": "greater than",
+    "U": "increasing",
+    "D": "decreasing",
+    "N": "no change",
+    "V": "variable",
+}
+
+
+def _parse_rvr_number(value: str) -> Optional[Number]:
+    raw, prefix = value, None
+    with suppress(KeyError):
+        prefix = _RVR_CODES[value[0]]
+        value = value[1:]
+    number = core.make_number(value, raw)
+    if number is not None and prefix is not None:
+        number.spoken = prefix + " " + number.spoken
+        number.value = None
+    return number
+
+
+def parse_runway_visibility(value: str) -> RunwayVisibility:
+    """Parse a runway visibility range string"""
+    raw, trend = value, None
+    if value.endswith("FT"):
+        value = value[:-2]
+    with suppress(KeyError):
+        trend = Code(value[-1], _RVR_CODES[value[-1]])
+        value = value[:-1]
+    runway, value = value[1:].split("/")
+    possible_numbers = [_parse_rvr_number(n) for n in value.split("V")]
+    numbers = [n for n in possible_numbers if n is not None]
+    visibility = None
+    if len(numbers) == 1:
+        visibility = numbers.pop()
+    return RunwayVisibility(
+        repr=raw,
+        runway=runway,
+        visibility=visibility,
+        variable_visibility=numbers,
+        trend=trend,
+    )
+
+
+def get_runway_visibility(data: List[str]) -> Tuple[List[str], List[RunwayVisibility]]:
     """Returns the report list and the remove runway visibility list"""
     runway_vis = []
     for i, item in reversed(list(enumerate(data))):
-        if (
-            len(item) > 4
-            and item[0] == "R"
-            and (item[3] == "/" or item[4] == "/")
-            and item[1:3].isdigit()
-        ):
-            runway_vis.append(data.pop(i))
-    runway_vis.sort()
+        if is_runway_visibility(item):
+            runway_vis.append(parse_runway_visibility(data.pop(i)))
+    runway_vis.sort(key=lambda x: x.runway)
     return data, runway_vis
 
 
