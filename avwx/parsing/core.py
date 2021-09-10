@@ -120,6 +120,9 @@ def spoken_number(num: str, literal: bool = False) -> str:
 def make_fraction(num: str, repr: str = None, literal: bool = False) -> Fraction:
     """Returns a fraction dataclass for numbers with / in them"""
     num_str, den_str = num.split("/")
+    # 2-1/2 but not -2 1/2
+    if "-" in num_str and not num_str.startswith("-"):
+        num_str = num_str.replace("-", " ")
     denominator = int(den_str)
     # Multiply multi-digit numerator
     if len(num_str) > 1:
@@ -425,9 +428,11 @@ def sanitize_cloud(cloud: str) -> str:
     if len(cloud) < 4:
         return cloud
     if not cloud[3].isdigit() and cloud[3] not in ("/", "-"):
+        # Bad "O": FEWO03 -> FEW003
         if cloud[3] == "O":
-            cloud = cloud[:3] + "0" + cloud[4:]  # Bad "O": FEWO03 -> FEW003
-        elif cloud[3] != "U":  # Move modifiers to end: BKNC015 -> BKN015C
+            cloud = cloud[:3] + "0" + cloud[4:]
+        # Move modifiers to end: BKNC015 -> BKN015C
+        elif cloud[3] != "U" and not cloud.startswith("BASE"):
             cloud = cloud[:3] + cloud[4:] + cloud[3]
     return cloud
 
@@ -437,6 +442,9 @@ def _null_or_int(val: Optional[str]) -> Optional[int]:
     if not isinstance(val, str) or is_unknown(val):
         return None
     return int(val)
+
+
+_TOP_OFFSETS = ("-TOPS", "-TOP")
 
 
 def make_cloud(cloud: str) -> Cloud:
@@ -451,12 +459,19 @@ def make_cloud(cloud: str) -> Cloud:
     modifier: Optional[str] = None
     cloud = sanitize_cloud(cloud).replace("/", "")
     # Separate top
-    topi = cloud.find("-TOP")
-    if topi > -1:
-        top, cloud = cloud[topi + 4 :], cloud[:topi]
+    for target in _TOP_OFFSETS:
+        topi = cloud.find(target)
+        if topi > -1:
+            top, cloud = cloud[topi + len(target) :], cloud[:topi]
+            break
     # Separate type
+    ## BASE027
+    if cloud.startswith("BASES"):
+        cloud = cloud[5:]
+    elif cloud.startswith("BASE"):
+        cloud = cloud[4:]
     ## VV003
-    if cloud.startswith("VV"):
+    elif cloud.startswith("VV"):
         type, cloud = cloud[:2], cloud[2:]
     ## FEW010
     elif len(cloud) >= 3 and cloud[:3] in CLOUD_LIST:

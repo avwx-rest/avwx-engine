@@ -28,6 +28,7 @@ WIND_REPL = {
     "GG": "G",
     "GT": "G",
     "GS": "G",
+    "K5": "KT",
     "LKT": "KT",
     "ZKT": "KT",
     "KTKT": "KT",
@@ -36,15 +37,18 @@ WIND_REPL = {
     "TKT": "KT",
     "GKT": "KT",
     "PKT": "KT",
+    "XKT": "KT",
     "MPSM": "MPS",
 }
 
 WIND_VRB = (
     "BRB",
     "BRV",
+    "CRB",
     "ERB",
     "NRB",
     "RB0",
+    "RRB",
     "V0",
     "VAB",
     "VAR",
@@ -53,6 +57,7 @@ WIND_VRB = (
     "VBR",
     "VEB",
     "VFB",
+    "VFR",
     "VGB",
     "VKB",
     "VR0",
@@ -66,7 +71,6 @@ WIND_VRB = (
     "VRV",
     "VTB",
     "WBB",
-    "RRB",
 )
 
 

@@ -2,6 +2,8 @@
 Functions for parsing PIREPs
 """
 
+# pylint: disable=too-many-boolean-expressions
+
 # stdlib
 from datetime import date
 from typing import List, Optional, Tuple, Union
@@ -114,7 +116,7 @@ def _clouds(item: str) -> List[Cloud]:
 
 def _number(item: str) -> Optional[Number]:
     """Convert an element to a Number"""
-    return core.make_number(item)
+    return core.make_number(item.strip("CF"), item)
 
 
 def _find_floor_ceiling(
@@ -189,14 +191,14 @@ def _wx(item: str) -> Tuple[List[Code], Optional[Number], List[str]]:
 def _sanitize_report_list(data: List[str]) -> List[str]:
     """Fixes report elements based on neighbor values"""
     for i, item in reversed(list(enumerate(data))):
-        # Fix spaced cloud top Ex: BKN030 TOP045
+        # Fix spaced cloud top Ex: BKN030 TOP045   BASE020 TOPS074
         # But not BASES SCT014 TOPS SCT021
         if (
             item.startswith("TOP")
             and item != "TOPS"
             and i > 0
             and len(data[i - 1]) >= 6
-            and data[i - 1][:3] in CLOUD_LIST
+            and (data[i - 1][:3] in CLOUD_LIST or data[i - 1].startswith("BASE"))
         ):
             data[i - 1] += "-" + data.pop(i)
     wxdata = core.dedupe(data, only_neighbors=True)

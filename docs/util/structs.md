@@ -104,6 +104,18 @@ Load an Aircraft from an ICAO aircraft code
 
 **temperature_decimal**: *avwx.structs.Number* = *None*
 
+## class avwx.structs.**RunwayVisibility**
+
+**repr**: *str*
+
+**runway**: *str*
+
+**trend**: *Optional[avwx.structs.Code]*
+
+**variable_visibility**: *List[avwx.structs.Number]*
+
+**visibility**: *Optional[avwx.structs.Number]*
+
 ## class avwx.structs.**Timestamp**
 
 **dt**: *datetime.datetime*

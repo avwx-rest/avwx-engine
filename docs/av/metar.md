@@ -138,7 +138,7 @@ Returns `True` if a new report is available, else `False`
 
 **remarks_info**: *avwx.structs.RemarksData*
 
-**runway_visibility**: *List[str]*
+**runway_visibility**: *List[avwx.structs.RunwayVisibility]*
 
 **sanitized**: *str*
 

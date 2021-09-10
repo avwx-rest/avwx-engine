@@ -105,6 +105,8 @@ class TestPirepHandlers(BaseTest):
             ("OVC-TOP085", ["OVC", None, 85]),
             ("BASES SCT030 TOPS SCT058", ["SCT", 30, 58]),
             ("BKN030-TOP045", ["BKN", 30, 45]),
+            ("BASE027-TOPUNKN", [None, 27, None]),
+            ("BASES020-TOPS074", [None, 20, 74]),
         ):
             parsed = pirep._clouds(cloud)[0]
             self.assertIsInstance(parsed, structs.Cloud)
@@ -114,7 +116,13 @@ class TestPirepHandlers(BaseTest):
 
     def test_number(self):
         """Tests converting value into a Number"""
-        for num, value in (("01", 1), ("M01", -1), ("E", 90), ("1/4", 0.25)):
+        for num, value in (
+            ("01", 1),
+            ("M01", -1),
+            ("E", 90),
+            ("1/4", 0.25),
+            ("28C", 28),
+        ):
             self.assert_number(pirep._number(num), num, value)
         self.assertIsNone(pirep._number(""))
 
