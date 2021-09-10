@@ -11,6 +11,7 @@ https://www.aviationweather.gov/docs/metar/stations.txt
 # stdlib
 import csv
 import json
+from contextlib import suppress
 from datetime import date
 from pathlib import Path
 from typing import List, Optional
@@ -105,16 +106,17 @@ def format_station(icao: str, station: List[str]) -> dict:
     return nullify(ret)
 
 
-def build_stations() -> dict:
+def build_stations() -> tuple[dict, dict]:
     """Builds the station dict from source file"""
-    stations = {}
+    stations, icao_map = {}, {}
     data = csv.reader(AIRPORT_PATH.open(encoding="utf8"))
     next(data)  # Skip header
     for station in data:
         icao = get_icao(station)
         if icao and station[2] in ACCEPTED_STATION_TYPES:
             stations[icao] = format_station(icao, station)
-    return stations
+            icao_map[station[0]] = icao
+    return stations, icao_map
 
 
 def add_missing_stations(stations: dict) -> dict:
@@ -156,10 +158,7 @@ def get_surface_type(surface: str) -> Optional[str]:
     return None
 
 
-ICAO_REPLACE = {"RMU": "LEMI"}
-
-
-def add_runways(stations: dict) -> dict:
+def add_runways(stations: dict, icao_map: dict) -> dict:
     """Add runway information to station if availabale"""
     data = csv.reader(RUNWAY_PATH.open(encoding="utf8"))
     next(data)  # Skip header
@@ -177,9 +176,8 @@ def add_runways(stations: dict) -> dict:
             "bearing1": float(runway[12]) if runway[12] else None,
             "bearing2": float(runway[18]) if runway[18] else None,
         }
-        icao = runway[2]
-        icao = ICAO_REPLACE.get(icao, icao)
-        if icao in stations:
+        icao = icao_map.get(runway[1], runway[2])
+        with suppress(KeyError):
             if "runways" in stations[icao]:
                 stations[icao]["runways"].append(data)
             else:
@@ -217,7 +215,7 @@ def download_source_files() -> bool:
 
 
 def update_station_info_date():
-    """"""
+    """Update the package's station meta date"""
     meta_path = _FILE_DIR.parent / "avwx" / "station" / "meta.py"
     meta = meta_path.open().read()
     target = '__LAST_UPDATED__ = "'
@@ -237,10 +235,10 @@ def main() -> int:
     print("Cleaning")
     clean_source_files()
     print("Building")
-    stations = build_stations()
+    stations, icao_map = build_stations()
     stations = add_missing_stations(stations)
     stations = add_reporting(stations)
-    stations = add_runways(stations)
+    stations = add_runways(stations, icao_map)
     print("Saving")
     json.dump(
         stations,
