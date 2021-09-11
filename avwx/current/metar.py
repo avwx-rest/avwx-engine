@@ -86,17 +86,19 @@ def _parse_rvr_number(value: str) -> Optional[Number]:
 def parse_runway_visibility(value: str) -> RunwayVisibility:
     """Parse a runway visibility range string"""
     raw, trend = value, None
-    if value.endswith("FT"):
-        value = value[:-2]
+    value = value.replace("FT", "")
     with suppress(KeyError):
         trend = Code(value[-1], _RVR_CODES[value[-1]])
         value = value[:-1]
-    runway, value = value[1:].split("/")
-    possible_numbers = [_parse_rvr_number(n) for n in value.split("V")]
-    numbers = [n for n in possible_numbers if n is not None]
-    visibility = None
-    if len(numbers) == 1:
-        visibility = numbers.pop()
+    runway, value, *_ = value[1:].split("/")
+    if value:
+        possible_numbers = [_parse_rvr_number(n) for n in value.split("V")]
+        numbers = [n for n in possible_numbers if n is not None]
+        visibility = None
+        if len(numbers) == 1:
+            visibility = numbers.pop()
+    else:
+        visibility, numbers = None, []
     return RunwayVisibility(
         repr=raw,
         runway=runway,

@@ -146,13 +146,14 @@ class TestMetar(BaseTest):
     def test_parse_runway_visibility(self):
         """Tests parsing runway visibility range values"""
         for value, runway, vis, var, trend in (
-            ("R35L/1000", "35L", ("1000", 1000, "one thousand"), (), None),
-            ("R06/M0500", "06", ("M0500", None, "less than five hundred"), (), None),
+            ("R35L/1000", "35L", ("1000", 1000, "one thousand"), None, None),
+            ("R06/M0500", "06", ("M0500", None, "less than five hundred"), None, None),
+            ("R33/////", "33", None, None, None),
             (
                 "R09C/P6000D",
                 "09C",
                 ("P6000", None, "greater than six thousand"),
-                (),
+                None,
                 structs.Code("D", "decreasing"),
             ),
             (
@@ -161,6 +162,23 @@ class TestMetar(BaseTest):
                 None,
                 (("1600", 1600, "one six hundred"), ("3000", 3000, "three thousand")),
                 structs.Code("U", "increasing"),
+            ),
+            (
+                "R16/5000VP6000FT/U",
+                "16",
+                None,
+                (
+                    ("5000", 5000, "five thousand"),
+                    ("P6000", None, "greater than six thousand"),
+                ),
+                structs.Code("U", "increasing"),
+            ),
+            (
+                "R16/1400FT/N",
+                "16",
+                ("1400", 1400, "one four hundred"),
+                None,
+                structs.Code("N", "no change"),
             ),
         ):
             rvr = metar.parse_runway_visibility(value)
