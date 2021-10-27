@@ -420,7 +420,7 @@ PREFERRED = {
 }
 BY_COUNTRY = {
     "AU": AUBOM,
-    "CN": AVT,
+    # "CN": AVT,
     "DK": NAM,
     "EE": NAM,
     "FI": NAM,

@@ -103,10 +103,10 @@ class TestNAM(TestStationScrape):
     stations = ["EHAM", "ENGM", "BIRK"]
 
 
-class TestAVT(TestStationScrape):
+# class TestAVT(TestStationScrape):
 
-    service_class = service.AVT
-    stations = ["ZJQH", "ZYCC", "ZSWZ"]
+#     service_class = service.AVT
+#     stations = ["ZJQH", "ZYCC", "ZSWZ"]
 
 
 class TestModule(unittest.TestCase):
@@ -119,7 +119,7 @@ class TestModule(unittest.TestCase):
             # (("SKBO", "SKPP"), "CO", service.MAC),
             (("YWOL", "YSSY"), "AU", service.AUBOM),
             (("VAPO", "VEGT"), "IN", service.OLBS),
-            (("ZJQH", "ZYCC", "ZSWZ"), "CN", service.AVT),
+            # (("ZJQH", "ZYCC", "ZSWZ"), "CN", service.AVT),
         ):
             for station in stations:
                 self.assertIsInstance(

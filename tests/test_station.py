@@ -69,7 +69,7 @@ class TestStationFunctions(TestCase):
             (True, True, 6),
             (True, False, 16),
             (False, True, 6),
-            (False, False, 30),
+            (False, False, 29),
         ):
             stations = station.nearest(30, -80, 30, airport, reports, 1.5)
             self.assertEqual(len(stations), count)
