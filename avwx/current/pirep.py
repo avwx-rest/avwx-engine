@@ -97,6 +97,13 @@ def _aircraft(item: str) -> Union[Aircraft, str]:
         return item
 
 
+def _non_digit_cloud(cloud: str) -> Tuple[Optional[str], str]:
+    """Returns cloud type and altitude for non-digit TOPS BASES cloud elements"""
+    if cloud.endswith("FT"):
+        return None, cloud[:-4]
+    return cloud[:3], cloud[3:]
+
+
 def _clouds(item: str) -> List[Cloud]:
     """Convert cloud element to a list of Clouds"""
     clouds = item.replace(",", "").split()
@@ -107,9 +114,9 @@ def _clouds(item: str) -> List[Cloud]:
         base = clouds[clouds.index("BASES") + 1]
         top = clouds[clouds.index("TOPS") + 1]
         if not base.isdigit():
-            cloud_type, base = base[:3], base[3:]
+            cloud_type, base = _non_digit_cloud(base)
         if not top.isdigit():
-            cloud_type, top = top[:3], top[3:]
+            cloud_type, top = _non_digit_cloud(top)
         return [Cloud(item, cloud_type, base=int(base), top=int(top))]
     return [core.make_cloud(cloud) for cloud in clouds]
 

@@ -104,6 +104,7 @@ class TestPirepHandlers(BaseTest):
             ("BKN120-TOP150", ["BKN", 120, 150]),
             ("OVC-TOP085", ["OVC", None, 85]),
             ("BASES SCT030 TOPS SCT058", ["SCT", 30, 58]),
+            ("TOPS 8000FT BASES 5000FT", [None, 50, 80]),
             ("BKN030-TOP045", ["BKN", 30, 45]),
             ("BASE027-TOPUNKN", [None, 27, None]),
             ("BASES020-TOPS074", [None, 20, 74]),

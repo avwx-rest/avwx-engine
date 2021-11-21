@@ -199,7 +199,7 @@ def add_reporting(stations: dict) -> dict:
     return stations
 
 
-DATA_ROOT = "https://ourairports.com/data/"
+DATA_ROOT = "https://davidmegginson.github.io/ourairports-data/"
 
 
 def download_source_files() -> bool:

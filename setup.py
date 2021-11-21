@@ -4,21 +4,21 @@ avwx Package Setup
 
 from setuptools import find_namespace_packages, setup
 
-VERSION = "1.6.17"
+VERSION = "1.6.18"
 
 dependencies = [
     "geopy~=2.2",
-    "httpx~=0.19",
+    "httpx~=0.21",
     "python-dateutil~=2.8",
-    "rapidfuzz~=1.6",
+    "rapidfuzz~=1.8",
     "xmltodict~=0.12",
 ]
 
-test_dependencies = ["pytest-asyncio>=0.15.1", "time-machine~=2.3"]
+test_dependencies = ["pytest-asyncio~=0.16", "time-machine~=2.4"]
 
 extras = {
     "scipy": ["scipy~=1.7"],
-    "docs": ["mkdocs~=1.2", "mkdocs-material~=7.2", "mkdocs-minify-plugin~=0.4"],
+    "docs": ["mkdocs~=1.2", "mkdocs-material~=7.3", "mkdocs-minify-plugin~=0.5"],
     "tests": test_dependencies,
 }
 
@@ -35,6 +35,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "License :: OSI Approved :: MIT License",
     ],
     python_requires=">= 3.7",
