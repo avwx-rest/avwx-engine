@@ -207,7 +207,10 @@ class TestPirep(unittest.TestCase):
 
     def test_sanitize(self):
         """Tests report sanitization"""
-        for line, fixed in (("DAB UA /SK BKN030 TOP045", "DAB UA /SK BKN030-TOP045"),):
+        for line, fixed in (
+            ("DAB UA /SK BKN030 TOP045", "DAB UA /SK BKN030-TOP045"),
+            ("DAB UA /SK BASES OVC 049 TOPS 055", "DAB UA /SK BASES OVC049 TOPS 055"),
+        ):
             self.assertEqual(pirep.sanitize(line), fixed)
 
     def test_pirep_ete(self):

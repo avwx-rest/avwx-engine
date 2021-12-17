@@ -208,6 +208,9 @@ def _sanitize_report_list(data: List[str]) -> List[str]:
             and (data[i - 1][:3] in CLOUD_LIST or data[i - 1].startswith("BASE"))
         ):
             data[i - 1] += "-" + data.pop(i)
+        # Fix separated clouds Ex: BASES OVC 049 TOPS 055
+        elif item in CLOUD_LIST and data[i + 1].isdigit():
+            data[i] = item + data.pop(i + 1)
     wxdata = core.dedupe(data, only_neighbors=True)
     return wxdata
 

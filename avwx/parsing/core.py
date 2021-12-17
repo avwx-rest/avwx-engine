@@ -43,7 +43,7 @@ def is_unknown(value: str) -> bool:
     """Returns True if val represents and unknown value"""
     if not isinstance(value, str):
         raise TypeError
-    if not value or value.upper() in ("UNKN",):
+    if not value or value.upper() in ("UNKN", "UNK", "UKN"):
         return True
     for char in value:
         if char not in ("/", "X", "."):
