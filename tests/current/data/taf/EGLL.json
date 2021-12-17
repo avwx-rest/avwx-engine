@@ -118,7 +118,7 @@
         }
     },
     "icao": "EGLL",
-    "speech": "Starting on June 7th - From 6 to 12 zulu, Winds one nine zero at 5kt. Visibility one zero kilometers. Few clouds at 4500ft. From 6 to 7 zulu, there's a 40% chance for Visibility seven kilometers. Broken layer at 500ft",
+    "speech": "Starting on June 7th - From 6 to 12 zulu, Winds one nine zero at 5 knots. Visibility one zero kilometers. Few clouds at 4500ft. From 6 to 7 zulu, there's a 40% chance for Visibility seven kilometers. Broken layer at 500ft",
     "station": {
         "city": "London",
         "country": "GB",

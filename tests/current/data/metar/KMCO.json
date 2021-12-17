@@ -117,7 +117,7 @@
         "wx_codes": []
     },
     "icao": "KMCO",
-    "speech": "Winds one three zero at 6kt. Visibility one zero miles. Temperature two six degrees Celsius. Dew point two three degrees Celsius. Altimeter three zero point one two. Few clouds at 3500ft. Few clouds at 6500ft. Overcast layer at 21000ft",
+    "speech": "Winds one three zero at 6 knots. Visibility one zero miles. Temperature two six degrees Celsius. Dew point two three degrees Celsius. Altimeter three zero point one two. Few clouds at 3500ft. Few clouds at 6500ft. Overcast layer at 21000ft",
     "summary": "Winds SE-130 at 6kt, Vis 10sm, Temp 26\u00b0C, Dew 23\u00b0C, Alt 30.12 inHg, Few clouds at 3500ft, Few clouds at 6500ft, Overcast layer at 21000ft",
     "translations": {
         "altimeter": "30.12 inHg (1020 hPa)",

@@ -26,16 +26,16 @@ class TestSpeech(unittest.TestCase):
                 "12",
                 "20",
                 ["340", "020"],
-                "three six zero (variable three four zero to zero two zero) at 12kt gusting to 20kt",
+                "three six zero (variable three four zero to zero two zero) at 12 knots gusting to 20 knots",
             ),
             ("000", "00", "", None, "Calm"),
-            ("VRB", "5", "12", None, "Variable at 5kt gusting to 12kt"),
+            ("VRB", "1", "12", None, "Variable at 1 knot gusting to 12 knots"),
             (
                 "270",
                 "10",
                 "",
                 ["240", "300"],
-                "two seven zero (variable two four zero to three zero zero) at 10kt",
+                "two seven zero (variable two four zero to three zero zero) at 10 knots",
             ),
         ):
             wind = [core.make_number(v, literal=(not i)) for i, v in enumerate(wind)]
@@ -143,7 +143,7 @@ class TestSpeech(unittest.TestCase):
         data = structs.MetarData(**data)
         spoken = (
             "Winds three six zero (variable three four zero to zero two zero) "
-            "at 12kt gusting to 20kt. Visibility three miles. "
+            "at 12 knots gusting to 20 knots. Visibility three miles. "
             "Temperature three degrees Celsius. Dew point minus one degree Celsius. "
             "Altimeter two nine point nine two. Heavy Rain. "
             "Broken layer at 1500ft (Cumulonimbus)"
@@ -187,8 +187,8 @@ class TestSpeech(unittest.TestCase):
         """Tests converting wind shear code into a spoken string"""
         for shear, spoken in (
             ("", "Wind shear unknown"),
-            ("WS020/07040KT", "Wind shear 2000ft from zero seven zero at 40kt"),
-            ("WS100/20020KT", "Wind shear 10000ft from two zero zero at 20kt"),
+            ("WS020/07040KT", "Wind shear 2000ft from zero seven zero at 40 knots"),
+            ("WS100/20020KT", "Wind shear 10000ft from two zero zero at 20 knots"),
         ):
             self.assertEqual(speech.wind_shear(shear), spoken)
 
@@ -217,8 +217,8 @@ class TestSpeech(unittest.TestCase):
         )
         line = structs.TafLineData(**line)
         spoken = (
-            "From 2 to 6 zulu, Winds three six zero at 12kt gusting to 20kt. "
-            "Wind shear 2000ft from zero seven zero at 40kt. Visibility three miles. "
+            "From 2 to 6 zulu, Winds three six zero at 12 knots gusting to 20 knots. "
+            "Wind shear 2000ft from zero seven zero at 40 knots. Visibility three miles. "
             "Altimeter two nine point nine two. Heavy Rain. "
             "Broken layer at 1500ft (Cumulonimbus). "
             "Occasional moderate turbulence in clouds from 5500ft to 8500ft. "
@@ -267,7 +267,7 @@ class TestSpeech(unittest.TestCase):
         ret = speech.taf(taf, units)
         spoken = (
             f"Starting on {taf.start_time.dt.strftime('%B')} 4th - From 10 to 14 zulu, "
-            "Winds three six zero at 12kt gusting to 20kt. Visibility three miles. "
+            "Winds three six zero at 12 knots gusting to 20 knots. Visibility three miles. "
             r"From 12 to 14 zulu, there's a 45% chance for Visibility "
             "less than one quarter of a mile"
         )

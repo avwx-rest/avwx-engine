@@ -266,7 +266,7 @@
         }
     },
     "icao": "KMCO",
-    "speech": "Starting on June 7th - From 6 to 14 zulu, Winds one two zero at 6kt. Visibility greater than six miles. Few clouds at 4000ft. Scattered clouds at 12000ft. Broken layer at 25000ft. From 14 to 22 zulu, Winds one three zero at 10kt gusting to 15kt. Visibility greater than six miles. Scattered clouds at 3500ft. Broken layer at 25000ft. From 22 to 2 zulu, Winds one one zero at 12kt gusting to 18kt. Visibility greater than six miles. Scattered clouds at 6000ft. Broken layer at 20000ft. From 2 to 12 zulu, Winds one two zero at 6kt. Visibility greater than six miles. Scattered clouds at 3000ft. Broken layer at 20000ft",
+    "speech": "Starting on June 7th - From 6 to 14 zulu, Winds one two zero at 6 knots. Visibility greater than six miles. Few clouds at 4000ft. Scattered clouds at 12000ft. Broken layer at 25000ft. From 14 to 22 zulu, Winds one three zero at 10 knots gusting to 15 knots. Visibility greater than six miles. Scattered clouds at 3500ft. Broken layer at 25000ft. From 22 to 2 zulu, Winds one one zero at 12 knots gusting to 18 knots. Visibility greater than six miles. Scattered clouds at 6000ft. Broken layer at 20000ft. From 2 to 12 zulu, Winds one two zero at 6 knots. Visibility greater than six miles. Scattered clouds at 3000ft. Broken layer at 20000ft",
     "station": {
         "city": "Orlando",
         "country": "US",

@@ -6,6 +6,7 @@ Currently only supports METAR
 # pylint: disable=redefined-builtin
 
 # stdlib
+import re
 from typing import List, Optional
 
 # module
@@ -23,6 +24,13 @@ def ordinal(n: int) -> Optional[str]:  # pylint: disable=invalid-name
     return str(n) + "tsnrhtdd"[(n / 10 % 10 != 1) * (n % 10 < 4) * n % 10 :: 4]
 
 
+def _format_plural_unit(value: str, unit: str) -> str:
+    spoken = SPOKEN_UNITS.get(unit, unit)
+    value = re.sub(r"(?<=\b1)" + unit, f" {spoken}", value)  # 1 knot
+    value = re.sub(r"(?<=\d)+" + unit, f" {spoken}s", value)  # 2 knots
+    return value
+
+
 def wind(
     direction: Number,
     speed: Number,
@@ -31,10 +39,11 @@ def wind(
     unit: str = "kt",
 ) -> str:
     """Format wind details into a spoken word string"""
-    unit = SPOKEN_UNITS.get(unit, unit)
     val = translate_base.wind(
         direction, speed, gust, vardir, unit, cardinals=False, spoken=True
     )
+    if val and unit in SPOKEN_UNITS:
+        val = _format_plural_unit(val, unit)
     return "Winds " + (val or "unknown")
 
 
@@ -121,12 +130,13 @@ def type_and_times(
 
 def wind_shear(shear: str, unit_alt: str = "ft", unit_wind: str = "kt") -> str:
     """Format wind shear string into a spoken word string"""
-    unit_alt = SPOKEN_UNITS.get(unit_alt, unit_alt)
-    unit_wind = SPOKEN_UNITS.get(unit_wind, unit_wind)
-    return (
-        translate_taf.wind_shear(shear, unit_alt, unit_wind, spoken=True)
-        or "Wind shear unknown"
-    )
+    value = translate_taf.wind_shear(shear, unit_alt, unit_wind, spoken=True)
+    if not value:
+        return "Wind shear unknown"
+    for unit in (unit_alt, unit_wind):
+        if unit in SPOKEN_UNITS:
+            value = _format_plural_unit(value, unit)
+    return value
 
 
 def metar(data: MetarData, units: Units) -> str:

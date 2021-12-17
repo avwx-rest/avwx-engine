@@ -290,7 +290,7 @@
         }
     },
     "icao": "KJFK",
-    "speech": "Starting on June 7th - From 6 to 13 zulu, Winds one nine zero at 5kt. Visibility greater than six miles. Few clouds at 9000ft. Scattered clouds at 25000ft. From 13 to 18 zulu, Winds one nine zero at 8kt. Visibility greater than six miles. Scattered clouds at 9000ft. Broken layer at 25000ft. From 18 to 1 zulu, Winds one eight zero at 12kt. Visibility greater than six miles. Scattered clouds at 8000ft. Broken layer at 25000ft. From 1 to 6 zulu, Winds one eight zero at 8kt. Visibility greater than six miles. Broken layer at 25000ft. From 6 to 12 zulu, Winds two zero zero at 5kt. Visibility greater than six miles. Broken layer at 25000ft",
+    "speech": "Starting on June 7th - From 6 to 13 zulu, Winds one nine zero at 5 knots. Visibility greater than six miles. Few clouds at 9000ft. Scattered clouds at 25000ft. From 13 to 18 zulu, Winds one nine zero at 8 knots. Visibility greater than six miles. Scattered clouds at 9000ft. Broken layer at 25000ft. From 18 to 1 zulu, Winds one eight zero at 12 knots. Visibility greater than six miles. Scattered clouds at 8000ft. Broken layer at 25000ft. From 1 to 6 zulu, Winds one eight zero at 8 knots. Visibility greater than six miles. Broken layer at 25000ft. From 6 to 12 zulu, Winds two zero zero at 5 knots. Visibility greater than six miles. Broken layer at 25000ft",
     "station": {
         "city": "New York",
         "country": "US",

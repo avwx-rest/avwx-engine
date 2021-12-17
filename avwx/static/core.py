@@ -135,7 +135,13 @@ CLOUD_TRANSLATIONS = {
 }
 
 #: Units required to be translated in order to be spoken properly
-SPOKEN_UNITS = {"sm": "mile", "km": "kilometer", "C": "Celsius", "F": "Fahrenheit"}
+SPOKEN_UNITS = {
+    "sm": "mile",
+    "km": "kilometer",
+    "C": "Celsius",
+    "F": "Fahrenheit",
+    "kt": "knot",
+}
 
 #: Dictionary associating algebraic signs with their spoken version
 NUMBER_REPL = {

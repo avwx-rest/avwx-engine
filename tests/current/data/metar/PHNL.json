@@ -121,7 +121,7 @@
         "wx_codes": []
     },
     "icao": "PHNL",
-    "speech": "Winds zero six zero at 10kt gusting to 18kt. Visibility one zero miles. Temperature two six degrees Celsius. Dew point one seven degrees Celsius. Altimeter three zero point zero three. Few clouds at 2400ft. Few clouds at 4000ft. Few clouds at 6500ft",
+    "speech": "Winds zero six zero at 10 knots gusting to 18 knots. Visibility one zero miles. Temperature two six degrees Celsius. Dew point one seven degrees Celsius. Altimeter three zero point zero three. Few clouds at 2400ft. Few clouds at 4000ft. Few clouds at 6500ft",
     "summary": "Winds ENE-060 at 10kt gusting to 18kt, Vis 10sm, Temp 26\u00b0C, Dew 17\u00b0C, Alt 30.03 inHg, Few clouds at 2400ft, Few clouds at 4000ft, Few clouds at 6500ft",
     "translations": {
         "altimeter": "30.03 inHg (1017 hPa)",
