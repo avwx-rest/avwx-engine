@@ -3,16 +3,19 @@ Station text-based search
 """
 
 # stdlib
+from contextlib import suppress
 from functools import lru_cache
 from typing import Iterable, List, Tuple
-
-# library
-from rapidfuzz import fuzz, process  # type: ignore
 
 # module
 from avwx.load_utils import LazyCalc
 from avwx.station.meta import STATIONS
 from avwx.station.station import Station, station_filter
+
+
+# Catch import error only if user attemps a text search
+with suppress(ModuleNotFoundError):
+    from rapidfuzz import fuzz, process  # type: ignore
 
 
 TYPE_ORDER = [
@@ -59,9 +62,14 @@ def search(
 
     Results may be shorter than limit value
     """
-    results = process.extract(
-        text, _CORPUS.value, limit=limit * 20, scorer=fuzz.token_set_ratio
-    )
+    try:
+        results = process.extract(
+            text, _CORPUS.value, limit=limit * 20, scorer=fuzz.token_set_ratio
+        )
+    except NameError as name_error:
+        raise ModuleNotFoundError(
+            'rapidfuzz must be installed to use text search. Run "pip install avwx-engine[fuzz]" to enable this'
+        ) from name_error
     results = [(Station.from_icao(k[:4]), s) for k, s, _ in results]
     results.sort(key=_sort_key, reverse=True)
     results = [s for s, _ in results if station_filter(s, is_airport, sends_reports)]

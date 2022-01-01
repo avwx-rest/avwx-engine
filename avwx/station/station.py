@@ -134,7 +134,7 @@ def _make_coord_tree():
         return KDTree([c[1:] for c in _COORDS.value])
     except NameError as name_error:
         raise ModuleNotFoundError(
-            "scipy must be installed to use coordinate lookup"
+            'scipy must be installed to use coordinate lookup. Run "pip install avwx-engine[scipy]" to enable this feature'
         ) from name_error
 
 
