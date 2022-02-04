@@ -5,7 +5,6 @@ Station handling and coordinate search
 # pylint: disable=invalid-name,too-many-arguments,too-many-instance-attributes
 
 # stdlib
-from contextlib import suppress
 from copy import copy
 from dataclasses import dataclass
 from functools import lru_cache
@@ -18,10 +17,6 @@ from geopy.distance import great_circle, Distance  # type: ignore
 from avwx.exceptions import BadStation
 from avwx.load_utils import LazyCalc
 from avwx.station.meta import STATIONS
-
-# We catch this import error only if user attempts coord lookup
-with suppress(ModuleNotFoundError):
-    from scipy.spatial import KDTree  # type: ignore
 
 
 @dataclass
@@ -131,8 +126,10 @@ _COORDS = LazyCalc(_make_coords)
 
 def _make_coord_tree():
     try:
+        from scipy.spatial import KDTree
+
         return KDTree([c[1:] for c in _COORDS.value])
-    except NameError as name_error:
+    except (NameError, ModuleNotFoundError) as name_error:
         raise ModuleNotFoundError(
             'scipy must be installed to use coordinate lookup. Run "pip install avwx-engine[scipy]" to enable this feature'
         ) from name_error
