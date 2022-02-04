@@ -4,9 +4,6 @@ FileService API Tests
 
 # pylint: disable=protected-access,missing-class-docstring,unidiomatic-typecheck
 
-# library
-import pytest
-
 # module
 from avwx import exceptions, service
 
@@ -35,7 +32,6 @@ class TestScrapeService(BaseTestService):
         with self.assertRaises(NotImplementedError):
             self.serv._urls
 
-    @pytest.mark.asyncio
     async def test_async_fetch_exceptions(self):
         """Tests async fetch exception handling"""
         for station in ("12K", "MAYT"):

@@ -80,7 +80,7 @@ def sanitize_wind(text: str) -> str:
         text = text.replace(rep, "")
     for key, rep in WIND_REPL.items():
         text = text.replace(key, rep)
-    for key in WIND_VRB:
+    for key in WIND_VRB:  # NOTE: profiled slow, revisit
         if text.startswith(key):
             zero = "0" if key[-1] == "0" else ""
             text = text.replace(key, "VRB" + zero)

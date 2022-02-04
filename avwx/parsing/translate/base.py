@@ -100,7 +100,7 @@ def wind(  # pylint: disable=too-many-arguments
     # Variable direction
     if vardir and isinstance(vardir, list):
         vardir = [getattr(var, target) for var in vardir]
-        ret += " (variable {} to {})".format(*vardir)
+        ret += f" (variable {vardir[0]} to {vardir[1]})"
     # Speed
     if speed and speed.value:
         ret += f" at {speed.value}{unit}"

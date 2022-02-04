@@ -3,13 +3,13 @@ Station Data Tests
 """
 
 # stdlib
-from unittest import TestCase
+import unittest
 
 # module
 from avwx import exceptions, station
 
 
-class TestStationFunctions(TestCase):
+class TestStationFunctions(unittest.TestCase):
     """Tests station module functions"""
 
     def test_uses_na_format(self):
@@ -75,7 +75,7 @@ class TestStationFunctions(TestCase):
             self.assertEqual(len(stations), count)
 
 
-class TestStation(TestCase):
+class TestStation(unittest.TestCase):
     """Tests the Station class"""
 
     def test_from_icao(self):
@@ -140,7 +140,7 @@ class TestStation(TestCase):
             self.assertIsNone(stn.iata)
 
 
-class TestStationSearch(TestCase):
+class TestStationSearch(unittest.TestCase):
     """Tests the Station class"""
 
     def test_exact_icao(self):

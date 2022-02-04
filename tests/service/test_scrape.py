@@ -7,9 +7,6 @@ ScrapeService API Tests
 # stdlib
 import unittest
 
-# library
-import pytest
-
 # module
 from avwx import exceptions, service
 
@@ -55,7 +52,6 @@ class TestStationScrape(BaseTestService):
             with self.assertRaises(NotImplementedError):
                 self.serv.fetch("KJFK")  # pylint: disable=no-member
 
-    @pytest.mark.asyncio
     async def test_async_fetch_exceptions(self):
         """Tests async fetch exception handling"""
         for station in ("12K", "MAYT"):

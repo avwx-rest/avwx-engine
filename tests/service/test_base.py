@@ -8,16 +8,13 @@ Service API Tests
 from typing import Tuple
 import unittest
 
-# library
-import pytest
-
 # module
 from avwx import service
 
 BASE_ATTRS = ("url", "report_type", "_valid_types")
 
 
-class BaseTestService(unittest.TestCase):
+class BaseTestService(unittest.IsolatedAsyncioTestCase):
 
     serv: service.Service
     service_class = service.Service
@@ -38,12 +35,14 @@ class BaseTestService(unittest.TestCase):
 
     def test_fetch(self):
         """Tests that reports are fetched from service"""
-        for station in self.stations:
-            report = self.serv.fetch(station)
-            self.assertIsInstance(report, str)
-            self.assertTrue(station in report)
+        try:
+            station = self.stations[0]
+        except IndexError:
+            return
+        report = self.serv.fetch(station)
+        self.assertIsInstance(report, str)
+        self.assertTrue(station in report)
 
-    @pytest.mark.asyncio
     async def test_async_fetch(self):
         """Tests that reports are fetched from async service"""
         for station in self.stations:

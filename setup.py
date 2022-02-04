@@ -8,12 +8,12 @@ VERSION = "1.6.20"
 
 dependencies = [
     "geopy~=2.2",
-    "httpx~=0.21",
+    "httpx~=0.22",
     "python-dateutil~=2.8",
     "xmltodict~=0.12",
 ]
 
-test_dependencies = ["pytest-asyncio~=0.16", "time-machine~=2.5"]
+test_dependencies = ["pytest-asyncio~=0.17", "time-machine~=2.6"]
 
 extras = {
     "fuzz": ["rapidfuzz~=1.9"],
