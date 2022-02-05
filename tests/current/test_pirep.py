@@ -135,6 +135,7 @@ class TestPirepHandlers(BaseTest):
             ("LGT-MOD 180-280", "LGT-MOD", 180, 280),
             ("LGT", "LGT", None, None),
             ("CONT LGT CHOP BLO 250", "CONT LGT CHOP", None, 250),
+            ("LGT-NEG-MOD BLO 090-075", "LGT-NEG-MOD", 75, 90),
         ):
             ret_turb = pirep._turbulence(turb)
             self.assertIsInstance(ret_turb, structs.Turbulence)

@@ -22,6 +22,9 @@ def find_station(report: str) -> Optional[Station]:
         if len(item) == 4:
             with suppress(BadStation):
                 return Station.from_icao(item.upper())
+        if len(item) == 3:
+            with suppress(BadStation):
+                return Station.from_iata(item.upper())
     return None
 
 

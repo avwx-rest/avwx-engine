@@ -56,6 +56,7 @@ WIND_VRB = (
     "VBB",
     "VBR",
     "VEB",
+    "VER",
     "VFB",
     "VFR",
     "VGB",
@@ -108,6 +109,7 @@ STR_REPL = {
     " PROBN": " PROB",
     # "Z/ ": "Z ", NOTE: Too broad re pirep
     "NOSIGKT ": "KT NOSIG ",
+    "KNOSIGT ": "KT NOSIG ",
     " TMM": " TNM",
     " TNTN": " TN",
     " TXTX": " TX",

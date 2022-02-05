@@ -248,6 +248,7 @@ class TestCore(BaseTest):
             ("FEWO03", "FEW003"),
             ("BKNC015", "BKN015C"),
             ("FEW027///", "FEW027///"),
+            ("UNKN021-TOP023", "UNKN021-TOP023"),
         ):
             self.assertEqual(core.sanitize_cloud(bad), good)
 

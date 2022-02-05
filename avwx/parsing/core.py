@@ -432,7 +432,7 @@ def sanitize_cloud(cloud: str) -> str:
         if cloud[3] == "O":
             cloud = cloud[:3] + "0" + cloud[4:]
         # Move modifiers to end: BKNC015 -> BKN015C
-        elif cloud[3] != "U" and not cloud.startswith("BASE"):
+        elif cloud[3] != "U" and cloud[:4] not in ("BASE", "UNKN"):
             cloud = cloud[:3] + cloud[4:] + cloud[3]
     return cloud
 

@@ -126,6 +126,22 @@ def _number(item: str) -> Optional[Number]:
     return core.make_number(item.strip("CF"), item)
 
 
+def _separate_floor_ceiling(item: str) -> Tuple[Optional[Number], Optional[Number]]:
+    """Extract floor and ceiling numbers from hyphen string"""
+    floor_str, ceiling_str = item.split("-")
+    floor = core.make_number(floor_str)
+    ceiling = core.make_number(ceiling_str)
+    if (
+        floor
+        and ceiling
+        and floor.value
+        and ceiling.value
+        and floor.value > ceiling.value
+    ):
+        return ceiling, floor
+    return floor, ceiling
+
+
 def _find_floor_ceiling(
     items: List[str],
 ) -> Tuple[List[str], Optional[Number], Optional[Number]]:
@@ -137,13 +153,15 @@ def _find_floor_ceiling(
         hloc = item.find("-")
         # TRACE RIME 070-090
         if hloc > -1 and item[:hloc].isdigit() and item[hloc + 1 :].isdigit():
-            floor_str, ceiling_str = items.pop(i).split("-")
-            floor = core.make_number(floor_str)
-            ceiling = core.make_number(ceiling_str)
+            floor, ceiling = _separate_floor_ceiling(items.pop(i))
             break
         # CONT LGT CHOP BLO 250
         if item == "BLO":
-            ceiling = core.make_number(items[i + 1])
+            altitude = items[i + 1]
+            if "-" in altitude:
+                floor, ceiling = _separate_floor_ceiling(altitude)
+            else:
+                ceiling = core.make_number(altitude)
             items = items[:i]
             break
         # LGT RIME 025
@@ -167,7 +185,7 @@ def _turbulence(item: str) -> Turbulence:
 def _icing(item: str) -> Icing:
     """Convert reported icing to an Icing object"""
     items, floor, ceiling = _find_floor_ceiling(item.split())
-    severity = items.pop(0)
+    severity = items.pop(0) if items else ""
     return Icing(
         severity=severity,
         floor=floor,
@@ -209,7 +227,7 @@ def _sanitize_report_list(data: List[str]) -> List[str]:
         ):
             data[i - 1] += "-" + data.pop(i)
         # Fix separated clouds Ex: BASES OVC 049 TOPS 055
-        elif item in CLOUD_LIST and data[i + 1].isdigit():
+        elif item in CLOUD_LIST and i + 1 < len(data) and data[i + 1].isdigit():
             data[i] = item + data.pop(i + 1)
     wxdata = core.dedupe(data, only_neighbors=True)
     return wxdata
