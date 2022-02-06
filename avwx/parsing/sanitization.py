@@ -29,6 +29,7 @@ WIND_REPL = {
     "GT": "G",
     "GS": "G",
     "K5": "KT",
+    "JT": "KT",
     "LKT": "KT",
     "ZKT": "KT",
     "KTKT": "KT",
