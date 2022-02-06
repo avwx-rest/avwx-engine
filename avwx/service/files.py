@@ -12,7 +12,7 @@ import tempfile
 from contextlib import suppress
 from pathlib import Path
 from socket import gaierror
-from typing import Dict, Iterator, Optional, TextIO, Tuple
+from typing import Dict, Iterator, List, Optional, TextIO, Tuple
 
 # library
 import httpx
@@ -78,6 +78,11 @@ class FileService(Service):
     async def _wait_until_updated(self):
         while not self._updating:
             await aio.sleep(0.01)
+
+    @property
+    def all(self) -> List[str]:
+        """All report strings available after updating"""
+        raise NotImplementedError()
 
     @property
     def _urls(self) -> Iterator[str]:
@@ -166,6 +171,25 @@ class FileService(Service):
 
 class NOAA_Forecast(FileService):
     """Subclass for extracting reports from NOAA FTP files"""
+
+    @property
+    def all(self) -> List[str]:
+        """All report strings available after updating"""
+        if self._file is None:
+            return []
+        with self._file.open() as fin:
+            lines = fin.readlines()
+        reports = []
+        report = ""
+        for line in lines:
+            line = line.strip()
+            if line:
+                report += "\n" + line
+            else:
+                if len(report) > 10:
+                    reports.append(report.strip())
+                report = ""
+        return reports
 
     def _index_target(self, station: str) -> Tuple[str, str]:
         raise NotImplementedError()

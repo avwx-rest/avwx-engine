@@ -49,9 +49,23 @@ class TestNBM(TestScrapeService):
     report_type = "nbs"
     stations = ["KJFK", "KMCO", "PHNL"]
 
+    def test_fetch(self):
+        """Tests that reports are fetched from service"""
+        super().test_fetch()
+        reports = self.serv.all
+        self.assertIsInstance(reports, list)
+        self.assertGreater(len(reports), 0)
+
 
 class TestGFS(TestScrapeService):
 
     service_class = service.NOAA_GFS
     report_type = "mav"
     stations = ["KJFK", "KLAX", "PHNL"]
+
+    def test_fetch(self):
+        """Tests that reports are fetched from service"""
+        super().test_fetch()
+        reports = self.serv.all
+        self.assertIsInstance(reports, list)
+        self.assertGreater(len(reports), 0)

@@ -28,7 +28,8 @@ class NOAA_Bulk(Service, CallsHTTP):
         index = self._targets[self.report_type]
         for line in raw.split("\n")[6:]:
             with suppress(IndexError):
-                if report := " ".join(line.split(",")[index].split()):
+                report = " ".join(line.split(",")[index].split())
+                if report:
                     reports.append(report)
         return reports
 
