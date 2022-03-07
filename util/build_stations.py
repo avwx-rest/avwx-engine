@@ -244,7 +244,7 @@ def main() -> int:
         stations,
         OUTPUT_PATH.open("w", encoding="utf8"),
         sort_keys=True,
-        indent=2,
+        indent=1,
         ensure_ascii=False,
     )
     print("Updating station date")
