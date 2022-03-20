@@ -17,7 +17,7 @@ from kewkew import Kew
 import avwx
 
 
-GOOD_PATH = Path(__file__).parent / "data" / "good_stations.txt"
+GOOD_PATH = Path(__file__).parent.parent / "avwx" / "data" / "files" / "good_stations.txt"
 
 
 def load_stations(path: Path) -> set[str]:
