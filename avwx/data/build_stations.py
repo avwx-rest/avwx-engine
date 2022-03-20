@@ -15,7 +15,7 @@ import logging
 from contextlib import suppress
 from datetime import date
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 # library
 import httpx
@@ -39,7 +39,7 @@ OUTPUT_PATH = _DATA / "stations.json"
 
 
 DATA_ROOT = "https://davidmegginson.github.io/ourairports-data/"
-_SOURCE: dict[str, str] = {}
+_SOURCE: Dict[str, str] = {}
 _SOURCES = {
     "airports": DATA_ROOT + "airports.csv",
     "runways": DATA_ROOT + "runways.csv",

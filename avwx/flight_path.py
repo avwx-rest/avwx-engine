@@ -3,7 +3,7 @@ Methods to resolve flight paths in coordinates
 """
 
 # stdlib
-from typing import Optional, Union
+from typing import List, Optional, Union
 
 # library
 from geopy.distance import great_circle
@@ -15,14 +15,14 @@ from avwx.load_utils import LazyLoad
 from avwx.structs import Coord
 
 NAVAIDS = LazyLoad("navaids")
-QCoord = Union[Coord, list[Coord]]
+QCoord = Union[Coord, List[Coord]]
 
 
 def _distance(near: Coord, far: Coord) -> float:
     return great_circle(near.pair, far.pair).nm
 
 
-def _closest(coord: QCoord, coords: list[Coord]) -> Coord:
+def _closest(coord: QCoord, coords: List[Coord]) -> Coord:
     if isinstance(coord, Coord):
         distances = [(_distance(coord, c), c) for c in coords]
     else:
@@ -52,8 +52,8 @@ def _best_coord(
 
 
 def to_coordinates(
-    values: list[Union[Coord, str]], last_value: Optional[list[Coord]] = None
-) -> list[Coord]:
+    values: List[Union[Coord, str]], last_value: Optional[List[Coord]] = None
+) -> List[Coord]:
     """Convert any known idents found in a flight path into coordinates
 
     Prefers Coord > ICAO > Navaid > IATA

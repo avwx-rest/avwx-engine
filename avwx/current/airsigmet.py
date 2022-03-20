@@ -56,7 +56,7 @@ _FLAGS = {
 }
 
 
-def _parse_prep(report: str) -> list[str]:
+def _parse_prep(report: str) -> List[str]:
     """Prepares sanitized string by replacing elements with flags"""
     report = report.rstrip(".")
     for key, val in _FLAGS.items():
@@ -64,7 +64,7 @@ def _parse_prep(report: str) -> list[str]:
     return report.split()
 
 
-def _clean_flags(data: list[str]) -> list[str]:
+def _clean_flags(data: List[str]) -> List[str]:
     return [i for i in data if i[0] != "<"]
 
 
