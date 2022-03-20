@@ -17,7 +17,9 @@ class LazyLoad:
     _data: Optional[Dict[str, Any]] = None
 
     def __init__(self, filename: str):
-        self.source = Path(__file__).parent.joinpath("data", f"{filename}.json")
+        self.source = Path(__file__).parent.joinpath(
+            "data", "files", f"{filename}.json"
+        )
 
     def _load(self):
         self._data = json.load(self.source.open(encoding="utf8"))
