@@ -17,6 +17,7 @@ from geopy.distance import great_circle, Distance  # type: ignore
 from avwx.exceptions import BadStation
 from avwx.load_utils import LazyCalc
 from avwx.station.meta import STATIONS
+from avwx.structs import Coord
 
 
 @dataclass
@@ -109,6 +110,11 @@ class Station:
         """Returns whether or not a Station likely sends weather reports"""
         return self.reporting is True
 
+    @property
+    def coord(self) -> Coord:
+        """Returns the station location as a Coord"""
+        return Coord(lat=self.latitude, lon=self.longitude)
+
     def distance(self, lat: float, lon: float) -> Distance:
         """Returns a geopy Distance using the great circle method"""
         return great_circle((lat, lon), (self.latitude, self.longitude))
@@ -125,6 +131,7 @@ _COORDS = LazyCalc(_make_coords)
 
 
 def _make_coord_tree():
+    # pylint: disable=import-outside-toplevel
     try:
         from scipy.spatial import KDTree
 

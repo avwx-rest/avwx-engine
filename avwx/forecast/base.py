@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Callable, List, Optional, Tuple, Union
 
 # module
-from avwx.base import AVWXBase
+from avwx.base import ManagedReport
 from avwx.parsing import core
 from avwx.service import Service
 from avwx.structs import Code, Number, ReportData, Timestamp
@@ -171,7 +171,7 @@ def _parse_lines(
                 periods[i][keys[0]] = value
 
 
-class Forecast(AVWXBase):
+class Forecast(ManagedReport):
     """Forecast base class"""
 
     # pylint: disable=abstract-method

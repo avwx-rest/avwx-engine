@@ -7,7 +7,7 @@ Contains dataclasses to hold report data
 # stdlib
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import List, Optional, Tuple, Union
 
 # module
 from avwx.load_utils import LazyLoad
@@ -65,6 +65,17 @@ class Timestamp:
 class Code:
     repr: str
     value: str
+
+
+@dataclass
+class Coord:
+    lat: float
+    lon: float
+    repr: Optional[str] = None
+
+    @property
+    def pair(self) -> Tuple[float, float]:
+        return self.lat, self.lon
 
 
 @dataclass
@@ -246,6 +257,51 @@ class PirepData(ReportData):
 @dataclass
 class AirepData(ReportData):
     pass
+
+
+@dataclass
+class Bulletin:
+    repr: str
+    type: Code
+    country: str
+    number: int
+
+
+@dataclass
+class Movement:
+    repr: str
+    direction: Optional[str]
+    speed: Optional[Number]
+
+
+@dataclass
+class AirSigObservation:
+    type: Optional[Code]
+    start_time: Optional[Timestamp]
+    end_time: Optional[Timestamp]
+    position: Optional[Coord]
+    floor: Optional[Number]
+    ceiling: Optional[Number]
+    coords: List[Coord]
+    bounds: List[str]
+    movement: Optional[Movement]
+    intensity: Optional[Code]
+    other: List[str]
+
+
+@dataclass
+class AirSigmetData(ReportData):
+    bulletin: Bulletin
+    issuer: str
+    correction: Optional[str]
+    area: str
+    type: str
+    start_time: Optional[Timestamp]
+    end_time: Timestamp
+    body: str
+    region: str
+    observation: Optional[AirSigObservation]
+    forecast: Optional[AirSigObservation]
 
 
 @dataclass

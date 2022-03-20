@@ -149,6 +149,7 @@ def make_number(
 
     NOTE: Numerators are assumed to have a single digit. Additional are whole numbers
     """
+    # pylint: disable=too-many-branches
     if not num or is_unknown(num):
         return None
     # Check special
@@ -174,6 +175,14 @@ def make_number(
             val_str = val_str[1:]
     else:
         val_str = num
+    # Check value prefixes
+    speak_prefix = ""
+    if val_str.startswith("ABV "):
+        speak_prefix += "above "
+        val_str = val_str[4:]
+    if val_str.startswith("FL"):
+        speak_prefix += "flight level "
+        val_str, literal = val_str[2:], True
     # Create Number
     if not val_str:
         return None
@@ -184,7 +193,8 @@ def make_number(
             value = 0
     else:
         value = int(val_str)
-    return Number(repr or num, value, spoken_number(speak or str(value), literal))
+    spoken = speak_prefix + spoken_number(speak or str(value), literal)
+    return Number(repr or num, value, spoken)
 
 
 def find_first_in_list(txt: str, str_list: List[str]) -> int:

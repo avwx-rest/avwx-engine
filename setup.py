@@ -4,7 +4,7 @@ avwx Package Setup
 
 from setuptools import find_namespace_packages, setup
 
-VERSION = "1.6.22"
+VERSION = "1.7.0-alpha"
 
 dependencies = [
     "geopy~=2.2",
@@ -33,13 +33,12 @@ setup(
     license="MIT",
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "License :: OSI Approved :: MIT License",
     ],
-    python_requires=">= 3.7",
+    python_requires=">= 3.8",
     install_requires=dependencies,
     packages=find_namespace_packages(include=["avwx*"]),
     package_data={"avwx.data": ["aircraft.json", "stations.json"]},

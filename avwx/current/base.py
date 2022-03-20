@@ -10,7 +10,7 @@ from datetime import date
 from typing import List, Optional, Tuple, Union
 
 # module
-from avwx.base import AVWXBase
+from avwx.base import ManagedReport
 from avwx.service import get_service, NOAA_ADDS
 from avwx.static.core import NA_UNITS, WX_TRANSLATIONS
 from avwx.structs import Code, ReportData, ReportTrans, Units
@@ -58,7 +58,7 @@ def get_wx_codes(codes: List[str]) -> Tuple[List[str], List[Code]]:
     return other, ret
 
 
-class Report(AVWXBase):
+class Report(ManagedReport):
     """
     Base report to take care of service assignment and station info
     """
@@ -73,7 +73,7 @@ class Report(AVWXBase):
             self.service = service(self.__class__.__name__.lower())  # type: ignore
 
 
-class Reports(AVWXBase):
+class Reports(ManagedReport):
     """
     Base class containing multiple reports
     """

@@ -108,6 +108,8 @@ class TestCore(BaseTest):
             ("M10", -10, "minus one zero"),
             ("P6SM", None, "greater than six"),
             ("M1/4", None, "less than one quarter"),
+            ("FL310", 310, "flight level three one zero"),
+            ("ABV FL480", 480, "above flight level four eight zero"),
         ):
             number = core.make_number(num)
             self.assertIsInstance(number, Number)

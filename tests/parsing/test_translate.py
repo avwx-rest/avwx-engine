@@ -102,26 +102,7 @@ class TestMetar(unittest.TestCase):
         """Tests that a direction int returns the correct cardinal direction string"""
         # 12 - 360+
         keys = (12, 34, 57, 79)
-        for i, cardinal in enumerate(
-            [
-                "NNE",
-                "NE",
-                "ENE",
-                "E",
-                "ESE",
-                "SE",
-                "SSE",
-                "S",
-                "SSW",
-                "SW",
-                "WSW",
-                "W",
-                "WNW",
-                "NW",
-                "NNW",
-                "N",
-            ]
-        ):
+        for i, cardinal in enumerate(static.core.CARDINAL_DEGREES.keys()):
             lower = keys[i % 4] + 90 * (i // 4)
             upper = (
                 keys[0] + 90 * ((i // 4) + 1) - 1
