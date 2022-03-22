@@ -154,7 +154,12 @@ def make_number(
         return None
     # Check special
     with suppress(KeyError):
-        value, spoken = (special or {}).get(num) or SPECIAL_NUMBERS[num]
+        item = (special or {}).get(num) or SPECIAL_NUMBERS[num]
+        if isinstance(item, tuple):
+            value, spoken = item
+        else:
+            value = item
+            spoken = spoken_number(str(value), literal=literal)
         return Number(repr or num, value, spoken)
     # Check cardinal direction
     if num in CARDINALS:

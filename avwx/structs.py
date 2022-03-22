@@ -270,7 +270,7 @@ class Bulletin:
 @dataclass
 class Movement:
     repr: str
-    direction: Optional[str]
+    direction: Optional[Number]
     speed: Optional[Number]
 
 

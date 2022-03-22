@@ -107,7 +107,7 @@ def _spacetime(
         target = "-" if "-" in data[0] else "/"
         start_time, end_time = data.pop(0).split(target)
     if data[0][-1] == "-":
-        station = data.pop(0)
+        station = data.pop(0)[:-1]
     else:
         station = None
     return data, area, report_type, start_time, end_time, station
@@ -122,7 +122,10 @@ def _first_index(data: List[str], *targets: str) -> int:
 
 def _region(data: List[str]) -> Tuple[List[str], str]:
     # FIR/CTA region name
-    name_end = _first_index(data, "FIR", "CTA", "FROM") + 1
+    name_end = _first_index(data, "FIR", "CTA") + 1
+    # Non-standard name using lookahead Ex: FL CSTL WTRS FROM 100SSW
+    if not name_end:
+        name_end = _first_index(data, "FROM")
     # State list
     if not name_end:
         for item in data:
@@ -138,19 +141,20 @@ def _time(
     data: List[str],
 ) -> Tuple[List[str], Optional[Timestamp], Optional[Timestamp]]:
     """Extracts the start and/or end time based on a couple starting elements"""
-    index = _first_index(data, "AT", "FCST", "UNTIL", "VALID", "OUTLOOK")
+    index = _first_index(data, "AT", "FCST", "UNTIL", "VALID", "OUTLOOK" "OTLK")
     if index == -1:
         return data, None, None
     start_item = data.pop(index)
     start, end, observed = None, None, None
     if "-" in data[index]:
         start_item, end_item = data.pop(index).split("-")
-        start, end = core.make_timestamp(start_item), core.make_timestamp(end_item)
+        start = core.make_timestamp(start_item, time_only=len(start_item) < 6)
+        end = core.make_timestamp(end_item, time_only=len(end_item) < 6)
     elif len(data[index]) >= 4 and data[index][:4].isdigit():
         observed = core.make_timestamp(data.pop(index), time_only=True)
         if index > 0 and data[index - 1] == "OBS":
             data.pop(index - 1)
-    for remv in ("FCST", "OUTLOOK", "VALID"):
+    for remv in ("FCST", "OUTLOOK", "OTLK", "VALID"):
         with suppress(ValueError):
             data.remove(remv)
     if observed:
@@ -194,14 +198,25 @@ def _movement(
     except ValueError:
         return data, units, None
     raw = data.pop(index)
-    direction = data.pop(index)
-    raw += " " + direction
+    direction_str = data.pop(index)
+    raw += " " + direction_str + " "
+    # MOV FROM 23040KT
+    if direction_str == "FROM":
+        value = data[index][:3]
+        raw += value
+        direction = core.make_number(value)
+        data[index] = data[index][3:]
+    # MOV E 45KMH
+    else:
+        direction = core.make_number(
+            direction_str, literal=True, special=CARDINAL_DEGREES
+        )
     speed = None
     kt_unit, kmh_unit = data[index].endswith("KT"), data[index].endswith("KMH")
     if kt_unit or kmh_unit:
         units.wind_speed = "kmh" if kmh_unit else "kt"
         speed_str = data.pop(index)
-        raw += " " + speed_str
+        raw += speed_str
         speed = core.make_number(speed_str[: -3 if kmh_unit else -2])
     return data, units, Movement(repr=raw, direction=direction, speed=speed)
 
