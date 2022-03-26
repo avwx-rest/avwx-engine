@@ -181,7 +181,7 @@ def add_runways(stations: dict, icao_map: dict) -> dict:
         # if runway is closed
         if runway[7] != "0":
             continue
-        data = {
+        out = {
             "length_ft": int(runway[3]) if runway[3] else 0,
             "width_ft": int(runway[4]) if runway[4] else 0,
             "surface": get_surface_type(runway[5].lower()),
@@ -194,9 +194,9 @@ def add_runways(stations: dict, icao_map: dict) -> dict:
         icao = icao_map.get(runway[1], runway[2])
         with suppress(KeyError):
             if "runways" in stations[icao]:
-                stations[icao]["runways"].append(data)
+                stations[icao]["runways"].append(out)
             else:
-                stations[icao]["runways"] = [data]
+                stations[icao]["runways"] = [out]
     # Sort runways by longest length and add missing nulls
     for icao in stations:
         if "runways" in stations[icao]:

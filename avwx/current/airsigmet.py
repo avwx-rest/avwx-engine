@@ -11,7 +11,7 @@ from itertools import chain
 from typing import List, Optional, Tuple
 
 # library
-from geopy.distance import distance as geo_distance
+from geopy.distance import distance as geo_distance  # type: ignore
 
 # module
 from avwx.base import AVWXBase
@@ -70,7 +70,7 @@ def _clean_flags(data: List[str]) -> List[str]:
     return [i for i in data if i[0] != "<"]
 
 
-def _bulletin(value: str) -> Optional[Bulletin]:
+def _bulletin(value: str) -> Bulletin:
     # if len(value) != 6:
     #     return None
     type_key = value[:2]
@@ -504,7 +504,8 @@ class AirSigmet(AVWXBase):
     data: Optional[AirSigmetData] = None
 
     def _post_parse(self) -> None:
-        self.data, self.units = parse(self.raw, self.issued)
+        if self.raw:
+            self.data, self.units = parse(self.raw, self.issued)
 
     @staticmethod
     def sanitize(report: str) -> str:
@@ -515,7 +516,7 @@ class AirSigmet(AVWXBase):
 class AirSigManager:
     """Class to fetch and manage AIRMET and SIGMET reports"""
 
-    _services: List[Service]
+    _services: List[Service]  # type: ignore
     reports: Optional[List[AirSigmet]] = None
 
     def __init__(self):
@@ -523,14 +524,14 @@ class AirSigManager:
 
     async def __update(self, index: int) -> List[AirSigmet]:
         source = self._services[index].root
-        reports = await self._services[index].async_fetch()
+        reports = await self._services[index].async_fetch()  # type: ignore
         data = []
         for report in reports:
             if not report:
                 continue
-            obj = AirSigmet.from_report(report)
-            obj.source = source
-            data.append(obj)
+            if obj := AirSigmet.from_report(report):
+                obj.source = source
+                data.append(obj)
         return data
 
     def update(self) -> bool:

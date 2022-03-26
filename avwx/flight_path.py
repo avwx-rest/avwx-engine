@@ -6,7 +6,7 @@ Methods to resolve flight paths in coordinates
 from typing import List, Optional, Union
 
 # library
-from geopy.distance import great_circle
+from geopy.distance import great_circle  # type: ignore
 
 # module
 from avwx.exceptions import BadStation
@@ -34,7 +34,7 @@ def _closest(coord: QCoord, coords: List[Coord]) -> Coord:
 def _best_coord(
     previous: Optional[QCoord],
     current: QCoord,
-    up_next: Optional[Coord],
+    up_next: Optional[QCoord],
 ) -> Coord:
     """Determine the best coordinate based on surroundings
     At least one of these should be a list
@@ -48,27 +48,27 @@ def _best_coord(
         up_next = previous
     if isinstance(up_next, list):
         return _closest(current, up_next)
-    return _closest(up_next, current)
+    return _closest(up_next, current)  # type: ignore
 
 
 def to_coordinates(
-    values: List[Union[Coord, str]], last_value: Optional[List[Coord]] = None
+    values: List[Union[Coord, str]], last_value: Optional[QCoord] = None
 ) -> List[Coord]:
     """Convert any known idents found in a flight path into coordinates
 
     Prefers Coord > ICAO > Navaid > IATA
     """
     if not values:
-        return values
+        return []
     coord = values[0]
     if isinstance(coord, str):
         try:
             coord = Station.from_icao(coord).coord
         except BadStation:
             try:
-                coords = [Coord(lat=c[0], lon=c[1]) for c in NAVAIDS[coord]]
+                coords = [Coord(lat=c[0], lon=c[1]) for c in NAVAIDS[coord]]  # type: ignore
             except KeyError:
-                coord = Station.from_iata(coord).coord
+                coord = Station.from_iata(coord).coord  # type: ignore
             else:
                 if len(coords) == 1:
                     coord = coords[0]

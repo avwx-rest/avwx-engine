@@ -29,6 +29,7 @@ def find_station(report: str) -> Optional[Station]:
 
 
 T = TypeVar("T", bound="AVWXBase")  # pylint: disable=invalid-name
+MT = TypeVar("MT", bound="ManagedReport")  # pylint: disable=invalid-name
 
 
 class AVWXBase(metaclass=ABCMeta):
@@ -121,7 +122,7 @@ class ManagedReport(AVWXBase, metaclass=ABCMeta):
         pass
 
     @classmethod
-    def from_report(cls: Type[T], report: str, issued: date = None) -> Optional[T]:
+    def from_report(cls: Type[MT], report: str, issued: date = None) -> Optional[MT]:
         """Returns an updated report object based on an existing report"""
         report = report.strip()
         station = find_station(report)

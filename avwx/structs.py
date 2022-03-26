@@ -297,7 +297,7 @@ class AirSigmetData(ReportData):
     area: str
     type: str
     start_time: Optional[Timestamp]
-    end_time: Timestamp
+    end_time: Optional[Timestamp]
     body: str
     region: str
     observation: Optional[AirSigObservation]

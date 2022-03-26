@@ -126,6 +126,9 @@ def get_type_and_times(
             and data[0][5:].isdigit()
         ):
             start_time, end_time = data.pop(0).split("/")
+        # 120000
+        elif len(data[0]) == 6 and data[0].isdigit() and data[0][-2:] == "00":
+            start_time = data.pop(0)[:4]
         # FM120000
         elif len(data[0]) > 7 and data[0].startswith("FM"):
             report_type = "FROM"

@@ -133,7 +133,7 @@ _COORDS = LazyCalc(_make_coords)
 def _make_coord_tree():
     # pylint: disable=import-outside-toplevel
     try:
-        from scipy.spatial import KDTree
+        from scipy.spatial import KDTree  # type: ignore
 
         return KDTree([c[1:] for c in _COORDS.value])
     except (NameError, ModuleNotFoundError) as name_error:

@@ -132,6 +132,7 @@ class TestTaf(unittest.TestCase):
             (["FM120000", "1"], "FROM", "1200", None, None),
             (["FM1200/1206", "1"], "FROM", "1200", "1206", None),
             (["FM120000", "TL120600", "1"], "FROM", "1200", "1206", None),
+            (["TEMPO", "112000", "1"], "TEMPO", "1120", None, None),
         ):
             self.assertEqual(taf.get_type_and_times(wx), (["1"], *data))
 

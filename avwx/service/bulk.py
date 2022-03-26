@@ -54,7 +54,7 @@ class NOAA_Intl(Service, CallsHTTP):
     """Bulk scrape international NOAA data"""
 
     url = "https://www.aviationweather.gov/{}/intl"
-    _valid_types = "airsigmet"
+    _valid_types = ("airsigmet",)
     _url_map = {"airsigmet": "sigmet"}
 
     @staticmethod
