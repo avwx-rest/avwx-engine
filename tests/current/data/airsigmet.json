@@ -1,0 +1,362 @@
+[
+    {
+        "created": "2022-03-25",
+        "data": {
+            "area": "SBAZ",
+            "body": "SBAZ AMAZONICA FIR EMBD TS FCST WI S0513 W05109 - S0730 W04907 - S0904 W05031 - S0650 W05312 - S0513 W05109 TOP FL470 STNR NC",
+            "bulletin": {
+                "country": "BZ",
+                "number": 23,
+                "repr": "WSBZ23",
+                "type": {
+                    "repr": "WS",
+                    "value": "sigmet"
+                }
+            },
+            "correction": null,
+            "end_time": {
+                "dt": "2022-03-25T11:00:00+00:00",
+                "repr": "251100"
+            },
+            "forecast": {
+                "bounds": [],
+                "ceiling": {
+                    "repr": "FL470",
+                    "spoken": "flight level four seven zero",
+                    "value": 470
+                },
+                "coords": [
+                    {
+                        "lat": -5.13,
+                        "lon": -51.09,
+                        "repr": "S0513 W05109"
+                    },
+                    {
+                        "lat": -7.3,
+                        "lon": -49.07,
+                        "repr": "S0730 W04907"
+                    },
+                    {
+                        "lat": -9.04,
+                        "lon": -50.31,
+                        "repr": "S0904 W05031"
+                    },
+                    {
+                        "lat": -6.5,
+                        "lon": -53.12,
+                        "repr": "S0650 W05312"
+                    },
+                    {
+                        "lat": -5.13,
+                        "lon": -51.09,
+                        "repr": "S0513 W05109"
+                    }
+                ],
+                "end_time": null,
+                "floor": null,
+                "intensity": {
+                    "repr": "NC",
+                    "value": "No change"
+                },
+                "movement": {
+                    "direction": null,
+                    "repr": "STNR",
+                    "speed": {
+                        "repr": "STNR",
+                        "spoken": "stationary",
+                        "value": 0
+                    }
+                },
+                "other": [],
+                "position": null,
+                "start_time": null,
+                "type": {
+                    "repr": "EMBD TS",
+                    "value": "Embedded thunderstorms"
+                }
+            },
+            "issuer": "SBGL",
+            "observation": null,
+            "raw": "WSBZ23 SBGL 250655 SBAZ SIGMET 9 VALID 250700/251100 SBAZ - SBAZ AMAZONICA FIR EMBD TS FCST WI S0513 W05109 - S0730 W04907 - S0904 W05031 - S0650 W05312 - S0513 W05109 TOP FL470 STNR NC=",
+            "region": "SBAZ AMAZONICA FIR",
+            "remarks": null,
+            "sanitized": "WSBZ23 SBGL 250655 SBAZ SIGMET 9 VALID 250700/251100 SBAZ - SBAZ AMAZONICA FIR EMBD TS FCST WI S0513 W05109 - S0730 W04907 - S0904 W05031 - S0650 W05312 - S0513 W05109 TOP FL470 STNR NC",
+            "start_time": {
+                "dt": "2022-03-25T07:00:00+00:00",
+                "repr": "250700"
+            },
+            "station": "SBAZ",
+            "time": {
+                "dt": "2022-03-25T06:55:00+00:00",
+                "repr": "250655"
+            },
+            "type": "SIGMET 9"
+        }
+    },
+    {
+        "created": "2022-03-25",
+        "data": {
+            "area": "FAJO",
+            "body": "FAJO JOHANNESBURG OCEANIC FIR SEV TURB FCST WI S6810 W00005 - S6836 E02237 - S7121 E01737 - S7251 W01000 - S6939 W01000 SFC/FL055",
+            "bulletin": {
+                "country": "ZA",
+                "number": 21,
+                "repr": "WSZA21",
+                "type": {
+                    "repr": "WS",
+                    "value": "sigmet"
+                }
+            },
+            "correction": null,
+            "end_time": {
+                "dt": "2022-03-25T10:00:00+00:00",
+                "repr": "251000"
+            },
+            "forecast": {
+                "bounds": [],
+                "ceiling": {
+                    "repr": "FL055",
+                    "spoken": "flight level five five",
+                    "value": 55
+                },
+                "coords": [
+                    {
+                        "lat": -68.1,
+                        "lon": -0.05,
+                        "repr": "S6810 W00005"
+                    },
+                    {
+                        "lat": -68.36,
+                        "lon": 22.37,
+                        "repr": "S6836 E02237"
+                    },
+                    {
+                        "lat": -71.21,
+                        "lon": 17.37,
+                        "repr": "S7121 E01737"
+                    },
+                    {
+                        "lat": -72.51,
+                        "lon": -10.0,
+                        "repr": "S7251 W01000"
+                    },
+                    {
+                        "lat": -69.39,
+                        "lon": -10.0,
+                        "repr": "S6939 W01000"
+                    }
+                ],
+                "end_time": null,
+                "floor": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "intensity": null,
+                "movement": null,
+                "other": [],
+                "position": null,
+                "start_time": null,
+                "type": {
+                    "repr": "SEV TURB",
+                    "value": "Severe turbulence"
+                }
+            },
+            "issuer": "FAOR",
+            "observation": null,
+            "raw": "WSZA21 FAOR 250546 FAJO SIGMET Q01 VALID 250600/251000 FAOR- FAJO JOHANNESBURG OCEANIC FIR SEV TURB FCST WI S6810 W00005 - S6836 E02237 - S7121 E01737 - S7251 W01000 - S6939 W01000 SFC/FL055=",
+            "region": "FAJO JOHANNESBURG OCEANIC FIR",
+            "remarks": null,
+            "sanitized": "WSZA21 FAOR 250546 FAJO SIGMET Q01 VALID 250600/251000 FAOR- FAJO JOHANNESBURG OCEANIC FIR SEV TURB FCST WI S6810 W00005 - S6836 E02237 - S7121 E01737 - S7251 W01000 - S6939 W01000 SFC/FL055",
+            "start_time": {
+                "dt": "2022-03-25T06:00:00+00:00",
+                "repr": "250600"
+            },
+            "station": "FAOR",
+            "time": {
+                "dt": "2022-03-25T05:46:00+00:00",
+                "repr": "250546"
+            },
+            "type": "SIGMET Q01"
+        }
+    },
+    {
+        "created": "2022-03-25",
+        "data": {
+            "area": "UNKL",
+            "body": "UNKL KRASNOYARSK FIR SEV ICE FCST WI N6020 E09550 - N5400 E09600 - N5604 E08905 - N5845 E08756 - N6055 E08300 - N6020 E09550 SFC/FL100 MOV E 20KMH NC",
+            "bulletin": {
+                "country": "RA",
+                "number": 31,
+                "repr": "WSRA31",
+                "type": {
+                    "repr": "WS",
+                    "value": "sigmet"
+                }
+            },
+            "correction": null,
+            "end_time": {
+                "dt": "2022-03-25T10:00:00+00:00",
+                "repr": "251000"
+            },
+            "forecast": {
+                "bounds": [],
+                "ceiling": {
+                    "repr": "FL100",
+                    "spoken": "flight level one zero zero",
+                    "value": 100
+                },
+                "coords": [
+                    {
+                        "lat": 60.2,
+                        "lon": 95.5,
+                        "repr": "N6020 E09550"
+                    },
+                    {
+                        "lat": 54.0,
+                        "lon": 96.0,
+                        "repr": "N5400 E09600"
+                    },
+                    {
+                        "lat": 56.04,
+                        "lon": 89.05,
+                        "repr": "N5604 E08905"
+                    },
+                    {
+                        "lat": 58.45,
+                        "lon": 87.56,
+                        "repr": "N5845 E08756"
+                    },
+                    {
+                        "lat": 60.55,
+                        "lon": 83.0,
+                        "repr": "N6055 E08300"
+                    },
+                    {
+                        "lat": 60.2,
+                        "lon": 95.5,
+                        "repr": "N6020 E09550"
+                    }
+                ],
+                "end_time": null,
+                "floor": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "intensity": {
+                    "repr": "NC",
+                    "value": "No change"
+                },
+                "movement": {
+                    "direction": {
+                        "repr": "E",
+                        "spoken": "nine zero",
+                        "value": 90
+                    },
+                    "repr": "MOV E 20KMH",
+                    "speed": {
+                        "repr": "20",
+                        "spoken": "two zero",
+                        "value": 20
+                    }
+                },
+                "other": [],
+                "position": null,
+                "start_time": null,
+                "type": {
+                    "repr": "SEV ICE",
+                    "value": "Severe icing"
+                }
+            },
+            "issuer": "RUKR",
+            "observation": null,
+            "raw": "WSRA31 RUKR 250412 UNKL SIGMET 1 VALID 250600/251000 UNKL- UNKL KRASNOYARSK FIR SEV ICE FCST WI N6020 E09550 - N5400 E09600 - N5604 E08905 - N5845 E08756 - N6055 E08300 - N6020 E09550 SFC/FL100 MOV E 20KMH NC=",
+            "region": "UNKL KRASNOYARSK FIR",
+            "remarks": null,
+            "sanitized": "WSRA31 RUKR 250412 UNKL SIGMET 1 VALID 250600/251000 UNKL- UNKL KRASNOYARSK FIR SEV ICE FCST WI N6020 E09550 - N5400 E09600 - N5604 E08905 - N5845 E08756 - N6055 E08300 - N6020 E09550 SFC/FL100 MOV E 20KMH NC",
+            "start_time": {
+                "dt": "2022-03-25T06:00:00+00:00",
+                "repr": "250600"
+            },
+            "station": "UNKL",
+            "time": {
+                "dt": "2022-03-25T04:12:00+00:00",
+                "repr": "250412"
+            },
+            "type": "SIGMET 1"
+        }
+    },
+    {
+        "created": "2022-03-25",
+        "data": {
+            "area": "ZHWH",
+            "body": "ZHWH WUHAN FIR EMBD TS FCST N OF N33 TOP FL300 MOV NE 35KMH NC",
+            "bulletin": {
+                "country": "CI",
+                "number": 45,
+                "repr": "WSCI45",
+                "type": {
+                    "repr": "WS",
+                    "value": "sigmet"
+                }
+            },
+            "correction": null,
+            "end_time": {
+                "dt": "2022-03-25T08:35:00+00:00",
+                "repr": "250835"
+            },
+            "forecast": {
+                "bounds": ["N OF N33"],
+                "ceiling": {
+                    "repr": "FL300",
+                    "spoken": "flight level three zero zero",
+                    "value": 300
+                },
+                "coords": [],
+                "end_time": null,
+                "floor": null,
+                "intensity": {
+                    "repr": "NC",
+                    "value": "No change"
+                },
+                "movement": {
+                    "direction": {
+                        "repr": "NE",
+                        "spoken": "four five",
+                        "value": 45
+                    },
+                    "repr": "MOV NE 35KMH",
+                    "speed": {
+                        "repr": "35",
+                        "spoken": "three five",
+                        "value": 35
+                    }
+                },
+                "other": [],
+                "position": null,
+                "start_time": null,
+                "type": {
+                    "repr": "EMBD TS",
+                    "value": "Embedded thunderstorms"
+                }
+            },
+            "issuer": "ZHHH",
+            "observation": null,
+            "raw": "WSCI45 ZHHH 250414 ZHWH SIGMET 3 VALID 250435/250835 ZHHH- ZHWH WUHAN FIR EMBD TS FCST N OF N33 TOP FL300 MOV NE 35KMH NC=",
+            "region": "ZHWH WUHAN FIR",
+            "remarks": null,
+            "sanitized": "WSCI45 ZHHH 250414 ZHWH SIGMET 3 VALID 250435/250835 ZHHH- ZHWH WUHAN FIR EMBD TS FCST N OF N33 TOP FL300 MOV NE 35KMH NC",
+            "start_time": {
+                "dt": "2022-03-25T04:35:00+00:00",
+                "repr": "250435"
+            },
+            "station": "ZHHH",
+            "time": {
+                "dt": "2022-03-25T04:14:00+00:00",
+                "repr": "250414"
+            },
+            "type": "SIGMET 3"
+        }
+    }
+]

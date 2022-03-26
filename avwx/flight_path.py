@@ -9,9 +9,9 @@ from typing import List, Optional, Union
 from geopy.distance import great_circle
 
 # module
-from avwx import Station
 from avwx.exceptions import BadStation
 from avwx.load_utils import LazyLoad
+from avwx.station import Station
 from avwx.structs import Coord
 
 NAVAIDS = LazyLoad("navaids")

@@ -6,6 +6,7 @@ python util/build_tests.py
 
 # stdlib
 import json
+import random
 from dataclasses import asdict
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -21,6 +22,11 @@ TESTS_PATH = Path(__file__).parent.parent / "tests"
 def _default(o):
     if isinstance(o, (date, datetime)):
         return o.isoformat()
+
+
+def save(data: dict, path: Path) -> None:
+    """Save JSON data to path"""
+    json.dump(data, path.open("w"), indent=4, sort_keys=True, default=_default)
 
 
 def make_metar_test(station: str) -> dict:
@@ -96,6 +102,27 @@ def make_nbe_test(station: str) -> Optional[dict]:
     return make_forecast_test(avwx.Nbe, station)
 
 
+def make_airsigmet_tests() -> None:
+    """Builds IRMET/SIGMET test file"""
+    a = avwx.AirSigManager()
+    a.update()
+    if a.reports is None:
+        return
+    reports = {}
+    for _ in range(4):
+        while True:
+            report = random.choice(a.reports)
+            key = report.raw[:20]
+            if key not in reports:
+                reports[key] = {
+                    "created": datetime.now(tz=timezone.utc).date(),
+                    "data": asdict(report.data),
+                }
+                break
+    path = TESTS_PATH / "current" / "data" / "airsigmet.json"
+    save(list(reports.values()), path)
+
+
 def main():
     """Creates source files for end-to-end tests"""
     targets = {
@@ -113,9 +140,8 @@ def main():
                     path = TESTS_PATH.joinpath(
                         target, "data", report_type, icao + ".json"
                     )
-                    json.dump(
-                        data, path.open("w"), indent=4, sort_keys=True, default=_default
-                    )
+                    save(data, path)
+    make_airsigmet_tests()
 
 
 if __name__ == "__main__":

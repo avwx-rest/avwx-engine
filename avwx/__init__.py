@@ -2,6 +2,7 @@
 Aviation weather report parsing library
 """
 
+from .current.airsigmet import AirSigmet, AirSigManager
 from .current.metar import Metar
 from .current.pirep import Pireps
 from .current.taf import Taf
