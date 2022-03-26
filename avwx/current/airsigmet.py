@@ -257,7 +257,10 @@ def _bounds_from_latterals(report: str, start: int) -> Tuple[str, List[str], int
     bounds = []
     for match in _LATTERAL_PATTERN.finditer(_pre_break(report)):
         group, start = _info_from_match(match, start)
-        bounds.append(group.removesuffix(" AND"))
+        # post 3.8 bounds.append(group.removesuffix(" AND"))
+        if group.endswith(" AND"):
+            group = group[:-4]
+        bounds.append(group)
         report = report.replace(group, " ")
     return report, bounds, start
 
@@ -282,7 +285,10 @@ def _coords_from_navaids(report: str, start: int) -> Tuple[str, List[Coord], int
     for match in _NAVAID_PATTERN.finditer(_pre_break(report)):
         group, start = _info_from_match(match, start)
         report = report.replace(group, " ")
-        group = group.strip("-").removeprefix("FROM ").removeprefix("TO ")
+        group = group.strip("-") # post 3.8 .removeprefix("FROM ").removeprefix("TO ")
+        for end in ("FROM", "TO"):
+            if group.startswith(end + " "):
+                group = group[(len(end) + 1):]
         navs.append((group, *group.split()))
     locs = to_coordinates([n[2 if len(n) == 3 else 1] for n in navs])
     for i, nav in enumerate(navs):
@@ -346,7 +352,8 @@ def _make_altitude(
     for end in ("FT", "M"):
         if value.endswith(end):
             units.altitude = end.lower()
-            value = value.removesuffix(end)
+            # post 3.8 value = value.removesuffix(end)
+            value = value[:-len(end)]
     return core.make_number(value, repr=raw), units
 
 
