@@ -73,11 +73,13 @@ Requests data from the Australian Bureau of Meteorology
 
 ## File Services
 
-These services are directed at FTP servers to find the most recent file associated with the search criteria. Files are stored in a temporary directory which is deleted when the program ends. Fetch requests will extract reports from the downloaded file until an update interval has been exceeded, at which point the service will check for a newer file.
+These services are directed at FTP servers to find the most recent file associated with the search criteria. Files are stored in a temporary directory which is deleted when the program ends. Fetch requests will extract reports from the downloaded file until an update interval has been exceeded, at which point the service will check for a newer file. You can also have direct access to all downloaded reports.
 
 ### avwx.service.files.FileService(*report_type*)
 
 Service class for fetching reports via managed source files
+
+#### **all**: *List[str]*
 
 #### **is_outdated**: *bool*
 
@@ -118,6 +120,24 @@ This class accepts `"nbh"`, `"nbs"`, and `"nbe"` as valid report types
 Requests forecast data from NOAA GFS FTP servers
 
 This class accepts `"mav"` and `"mex"` as valid report types
+
+## Bulk Services
+
+These services are specifically for returning multiple reports at a time. For example, we'd want to know all SIGMETs currently in circulation. The sources can be FTP, scraping, or any other method. There is no need for specific stations or updating files behind the scenes.
+
+The `fetch` and `async_fetch` methods are identical except they return `List[str]` instead.
+
+### avwx.service.bulk.NOAA_Bulk(*report_type*)
+
+Requests data from NOAA FTP file servers
+
+This class accepts `"metar"`, `"taf"`, `"aircraftreport"`, and `"airsigmet"` as valid report types.
+
+### avwx.service.bulk.NOAA_Bulk(*report_type*)
+
+Scrapes international reports from NOAA. Designed to accompany `NOAA_Bulk` for AIRMET / SIGMET fetch.
+
+Currently, this class only accepts `"airsigmet"` as a valid report type.
 
 ## Adding a New Service
 

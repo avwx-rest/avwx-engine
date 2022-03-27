@@ -2,6 +2,22 @@
 
 Contains static objects for internal and external use
 
+## Glossary
+
+AVWX includes a compiled glossary of common report abbreviations that are listed separate from any other parsing mechanism. This is provided just for you to assist in translating the original reports or any item left in the `other` element.
+
+#### avwx.static.glossary.**GLOBAL**: *{str: str}
+
+Glossary of abreviations found in reports. These should be treated as default values. OTher elements may overwrite in specific instances.
+
+#### avwx.static.glossary.**METAR**: *{str: str}
+
+Glossary conflicts used only in METARs
+
+#### avwx.static.glossary.**NA_REGIONAL**: *{str: str}
+
+Glossary items and conflicts used for reports referencing locations in North America
+
 ## Station Identification
 
 METAR and TAF reports come in two variants depending on the station's location: North American & International. This affects both element parsing and inferred units of measurement. AVWX determines this by looking at the station's ICAO value.

@@ -16,7 +16,7 @@ Below is typical usage for fetching and pulling PIREP data for KJFK.
 >>> kmco.update()
 True
 >>> kmco.last_updated
-datetime.datetime(2019, 5, 24, 13, 31, 46, 561732)
+datetime.datetime(2019, 5, 24, 13, 31, 46, 561732, tzinfo=datetime.timezone.utc)
 >>> kmco.raw[0]
 'FLL UA /OV KFLL275015/TM 1241/FL020/TP B737/SK TOP020/RM DURD RY10L'
 >>> kmco.data[0].location

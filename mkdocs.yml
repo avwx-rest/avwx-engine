@@ -25,6 +25,7 @@ nav:
     - METAR: av/metar.md
     - TAF: av/taf.md
     - PIREP: av/pirep.md
+    - AIRMET / SIGMET: av/airsigmet.md
   - Models:
     - NBM NBH: nbm/nbh.md
     - NBM NBS: nbm/nbs.md
@@ -34,11 +35,12 @@ nav:
   - Utilities:
     - Station: util/station.md
     - Data Services: util/service.md
+    - Data Updates: util/data.md
     - Data Structures: util/structs.md
     - Static Values: util/static.md
     - Exceptions: util/exceptions.md
 
-copyright: Copyright &copy; 2021 duPont Technologies LLC
+copyright: Copyright &copy; 2022 duPont Technologies LLC
 
 plugins:
   - search

@@ -34,6 +34,8 @@ This is also the same information you'd get from calling Report.station.
 
 #### **city**: *str*
 
+#### **coord**: *avwx.structs.Coord*
+
 #### **country**: *str*
 
 #### **distance**(*lat: float, lon: float*) -> *(float, float)*:

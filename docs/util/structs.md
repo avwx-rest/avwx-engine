@@ -10,6 +10,16 @@ Load an Aircraft from an ICAO aircraft code
 
 **type**: *str*
 
+## class avwx.structs.**Bulletin**
+
+**country**: *str*
+
+**number**: *int*
+
+**repr**: *str*
+
+**type**: *avwx.structs.Code*
+
 ## class avwx.structs.**Cloud**
 
 **base**: *int* = *None*
@@ -57,6 +67,14 @@ Load an Aircraft from an ICAO aircraft code
 **repr**: *str*
 
 **station**: *str*
+
+## class avwx.structs.**Movement**
+
+**direction**: *Optional[avwx.structs.Number]*
+
+**repr**: *str*
+
+**speed**: *Optional[avwx.structs.Number]*
 
 ## class avwx.structs.**Number**
 

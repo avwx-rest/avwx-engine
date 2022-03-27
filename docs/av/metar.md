@@ -35,7 +35,7 @@ True
 >>> ksfo.station.city
 'San Francisco'
 >>> ksfo.last_updated
-datetime.datetime(2018, 3, 4, 23, 54, 4, 353757)
+datetime.datetime(2018, 3, 4, 23, 54, 4, 353757, tzinfo=datetime.timezone.utc)
 >>> ksfo.data.flight_rules
 'LIFR'
 >>> ksfo.translations.clouds

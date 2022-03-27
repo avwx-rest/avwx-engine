@@ -15,6 +15,7 @@ AVWX currently supports:
 - METAR
 - TAF
 - PIREP
+- AIRMET / SIGMET
 - NBM (NBH, NBS, NBE)
 - GFS (MAV, MEX)
 
@@ -38,6 +39,7 @@ These docs could use some love, and I am not a writer. You can help by making a 
 * [METAR](av/metar.md)
 * [TAF](av/taf.md)
 * [PIREP](av/pirep.md)
+* [AIRMET / SIGMET](av/airsigmet.md)
 
 ### Model Forecasts
 
@@ -51,6 +53,7 @@ These docs could use some love, and I am not a writer. You can help by making a 
 
 * [Station](util/station.md)
 * [Service](util/service.md)
+* [Data Updates](util/data.md)
 * [Other Data Structures](util/structs.md)
 * [Static Values](util/static.md)
 * [Exceptions](util/exceptions.md)

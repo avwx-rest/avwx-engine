@@ -8,7 +8,7 @@ AVWX is available on PyPI. Note: the package name is ``avwx-engine``, but the im
 pip install avwx-engine
 ```
 
-AVWX only supports Python 3.7 and above.
+AVWX only supports Python 3.8 and above.
 
 ## Tutorial
 
