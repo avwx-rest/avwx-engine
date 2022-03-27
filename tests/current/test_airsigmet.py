@@ -185,6 +185,7 @@ class TestAirSigmet(BaseTest):
         """Test weather movement extraction"""
         for wx, movement, unit, extra in (
             ("1 2 3", None, "kt", "1 2 3"),
+            ("270226Z CNL MOV CNL", None, "kt", "270226Z CNL"),
             (
                 "SFC/FL030 STNR WKN=",
                 Movement("STNR", None, core.make_number("STNR")),
@@ -367,6 +368,7 @@ class TestAirSigmet(BaseTest):
             ("030", False, 30, "ft", "three zero"),
             ("030", True, 30, "ft", "flight level three zero"),
             ("6000FT", False, 6000, "ft", "six thousand"),
+            ("10000FT", False, 10000, "ft", "one zero thousand"),
             ("2000M", False, 2000, "m", "two thousand"),
             ("ABV FL450", False, 450, "ft", "above flight level four five zero"),
         ):
@@ -382,6 +384,7 @@ class TestAirSigmet(BaseTest):
         for wx, floor, ceiling, unit, extra in (
             ("1 FL060/300 2", 60, 300, "ft", "1 2"),
             ("0110Z SFC/FL160", 0, 160, "ft", "0110Z"),
+            ("0110Z SFC/10000FT", 0, 10000, "ft", "0110Z"),
             ("1 TOPS TO FL310 <break> 2", None, 310, "ft", "1 <break> 2"),
             ("1 SFC/2000M 2", 0, 2000, "m", "1 2"),
             ("1 TOPS ABV FL450 2", None, 450, "ft", "1 2"),

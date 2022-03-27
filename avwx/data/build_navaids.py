@@ -12,7 +12,7 @@ OUTPUT_PATH = Path(__file__).parent / "files" / "navaids.json"
 
 
 def main():
-    """Build navaid coordinate map"""
+    """Builds the navaid coordinate map"""
     text = httpx.get(URL).text
     lines = text.strip().split("\n")
     lines.pop(0)

@@ -6,7 +6,7 @@ AIRMET / SIGMET report parsing
 import asyncio as aio
 import re
 from contextlib import suppress
-from datetime import date
+from datetime import date, datetime, timezone
 from itertools import chain
 from typing import List, Optional, Tuple
 
@@ -212,6 +212,9 @@ def _movement(
         return data, units, None
     raw = data.pop(index)
     direction_str = data.pop(index)
+    # MOV CNL
+    if direction_str == "CNL":
+        return data, units, None
     raw += " " + direction_str + " "
     # MOV FROM 23040KT
     if direction_str == "FROM":
@@ -347,13 +350,14 @@ def _make_altitude(
 ) -> Tuple[Optional[Number], Units]:
     """Convert altitude string into a number"""
     raw = value
-    if force_fl:
-        value = "FL" + value
     for end in ("FT", "M"):
         if value.endswith(end):
+            force_fl = False
             units.altitude = end.lower()
             # post 3.8 value = value.removesuffix(end)
             value = value[: -len(end)]
+    if force_fl:
+        value = "FL" + value
     return core.make_number(value, repr=raw), units
 
 
@@ -470,8 +474,14 @@ def sanitize(report: str) -> str:
     """Sanitized AIRMET / SIGMET report string"""
     data = report.strip(" =").split()
     for i, item in reversed(list(enumerate(data))):
-        # Remove extra element on altitude Ex: FL450Z
-        if len(item) > 4 and _is_altitude(item[:-1]):
+        # Remove extra element on altitude Ex: FL450Z skip 1000FT
+        if (
+            len(item) > 4
+            and not item[-1].isdigit()
+            and item[-2:] != "FT"
+            and item[-1] != "M"
+            and _is_altitude(item[:-1])
+        ):
             data[i] = item[:-1]
     return " ".join(data)
 
@@ -479,7 +489,6 @@ def sanitize(report: str) -> str:
 def parse(report: str, issued: date = None) -> Tuple[AirSigmetData, Units]:
     """Parse AIRMET / SIGMET report string"""
     # pylint: disable=too-many-locals
-    # print(report)
     units = Units(**IN_UNITS)
     sanitized = sanitize(report)
     data, bulletin, issuer, time, correction = _header(_parse_prep(sanitized))
@@ -531,6 +540,7 @@ class AirSigManager:
 
     _services: List[Service]  # type: ignore
     _raw: List[Tuple[str, str]]
+    last_updated: Optional[datetime] = None
     raw: List[str]
     reports: Optional[List[AirSigmet]] = None
 
@@ -561,6 +571,7 @@ class AirSigManager:
         changed = raw != self.raw
         if changed:
             self._raw, self.raw = raw, reports
+            self.last_updated = datetime.now(tz=timezone.utc)
         # Parse reports if not disabled
         if not disable_post:
             parsed = []

@@ -20,8 +20,8 @@ class NOAA_Bulk(Service, CallsHTTP):
     _rtype_map = {"airep": "aircraftreport", "pirep": "aircraftreport"}
     _targets = {"aircraftreport": -2}  # else 0
 
-    def __init__(self, request_type: str):
-        super().__init__(self._rtype_map.get(request_type, request_type))
+    def __init__(self, report_type: str):
+        super().__init__(self._rtype_map.get(report_type, report_type))
 
     @staticmethod
     def _clean_report(report: str) -> str:
