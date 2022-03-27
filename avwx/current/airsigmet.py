@@ -285,10 +285,10 @@ def _coords_from_navaids(report: str, start: int) -> Tuple[str, List[Coord], int
     for match in _NAVAID_PATTERN.finditer(_pre_break(report)):
         group, start = _info_from_match(match, start)
         report = report.replace(group, " ")
-        group = group.strip("-") # post 3.8 .removeprefix("FROM ").removeprefix("TO ")
+        group = group.strip("-")  # post 3.8 .removeprefix("FROM ").removeprefix("TO ")
         for end in ("FROM", "TO"):
             if group.startswith(end + " "):
-                group = group[(len(end) + 1):]
+                group = group[(len(end) + 1) :]
         navs.append((group, *group.split()))
     locs = to_coordinates([n[2 if len(n) == 3 else 1] for n in navs])
     for i, nav in enumerate(navs):
@@ -353,7 +353,7 @@ def _make_altitude(
         if value.endswith(end):
             units.altitude = end.lower()
             # post 3.8 value = value.removesuffix(end)
-            value = value[:-len(end)]
+            value = value[: -len(end)]
     return core.make_number(value, repr=raw), units
 
 
@@ -468,12 +468,18 @@ def _observations(
 
 def sanitize(report: str) -> str:
     """Sanitized AIRMET / SIGMET report string"""
-    return " ".join(report.strip(" =").split())
+    data = report.strip(" =").split()
+    for i, item in reversed(list(enumerate(data))):
+        # Remove extra element on altitude Ex: FL450Z
+        if len(item) > 4 and _is_altitude(item[:-1]):
+            data[i] = item[:-1]
+    return " ".join(data)
 
 
 def parse(report: str, issued: date = None) -> Tuple[AirSigmetData, Units]:
     """Parse AIRMET / SIGMET report string"""
     # pylint: disable=too-many-locals
+    # print(report)
     units = Units(**IN_UNITS)
     sanitized = sanitize(report)
     data, bulletin, issuer, time, correction = _header(_parse_prep(sanitized))
@@ -524,33 +530,43 @@ class AirSigManager:
     """Class to fetch and manage AIRMET and SIGMET reports"""
 
     _services: List[Service]  # type: ignore
+    _raw: List[Tuple[str, str]]
+    raw: List[str]
     reports: Optional[List[AirSigmet]] = None
 
     def __init__(self):
         self._services = [NOAA_Bulk("airsigmet"), NOAA_Intl("airsigmet")]
+        self._raw, self.raw = [], []
 
-    async def __update(self, index: int) -> List[AirSigmet]:
+    async def _update(self, index: int) -> List[Tuple[str, Optional[str]]]:
         source = self._services[index].root
         reports = await self._services[index].async_fetch()  # type: ignore
-        data = []
+        raw: List[Tuple[str, Optional[str]]] = []
         for report in reports:
             if not report:
                 continue
-            if obj := AirSigmet.from_report(report):
-                obj.source = source
-                data.append(obj)
-        return data
+            raw.append((report, source))
+        return raw
 
-    def update(self) -> bool:
+    def update(self, disable_post: bool = False) -> bool:
         """Updates fetched reports and returns whether they've changed"""
-        return aio.run(self.async_update())
+        return aio.run(self.async_update(disable_post))
 
-    async def async_update(self) -> bool:
+    async def async_update(self, disable_post: bool = False) -> bool:
         """Updates fetched reports and returns whether they've changed"""
-        coros = [self.__update(i) for i in range(len(self._services))]
+        coros = [self._update(i) for i in range(len(self._services))]
         data = await aio.gather(*coros)
-        reports = list(chain.from_iterable(data))
-        changed = reports != self.reports
+        raw = list(chain.from_iterable(data))
+        reports = [i[0] for i in raw]
+        changed = raw != self.raw
         if changed:
-            self.reports = reports
+            self._raw, self.raw = raw, reports
+        # Parse reports if not disabled
+        if not disable_post:
+            parsed = []
+            for report, source in raw:
+                if obj := AirSigmet.from_report(report):
+                    obj.source = source
+                    parsed.append(obj)
+            self.reports = parsed
         return changed
