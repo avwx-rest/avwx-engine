@@ -1,13 +1,13 @@
 [
     {
-        "created": "2022-03-25",
+        "created": "2022-03-29",
         "data": {
-            "area": "SBAZ",
-            "body": "SBAZ AMAZONICA FIR EMBD TS FCST WI S0513 W05109 - S0730 W04907 - S0904 W05031 - S0650 W05312 - S0513 W05109 TOP FL470 STNR NC",
+            "area": "SKEC",
+            "body": "SKEC BARRANQUILLA FIR FRQ TS OBS AT 1921Z WI N0911 W07638 - N0832 W07705 - N0751 W07525 - N0855 W07520 - N0913 W07559 - N0911 W07638 TOP FL520 MOV ENE 5KT INTSF",
             "bulletin": {
-                "country": "BZ",
-                "number": 23,
-                "repr": "WSBZ23",
+                "country": "CO",
+                "number": 31,
+                "repr": "WSCO31",
                 "type": {
                     "repr": "WS",
                     "value": "sigmet"
@@ -15,56 +15,378 @@
             },
             "correction": null,
             "end_time": {
-                "dt": "2022-03-25T11:00:00+00:00",
-                "repr": "251100"
+                "dt": "2022-03-29T22:41:00+00:00",
+                "repr": "292241"
             },
-            "forecast": {
+            "forecast": null,
+            "issuer": "SKBO",
+            "observation": {
                 "bounds": [],
                 "ceiling": {
-                    "repr": "FL470",
-                    "spoken": "flight level four seven zero",
-                    "value": 470
+                    "repr": "FL520",
+                    "spoken": "flight level five two zero",
+                    "value": 520
                 },
                 "coords": [
                     {
-                        "lat": -5.13,
-                        "lon": -51.09,
-                        "repr": "S0513 W05109"
+                        "lat": 9.11,
+                        "lon": -76.38,
+                        "repr": "N0911 W07638"
                     },
                     {
-                        "lat": -7.3,
-                        "lon": -49.07,
-                        "repr": "S0730 W04907"
+                        "lat": 8.32,
+                        "lon": -77.05,
+                        "repr": "N0832 W07705"
                     },
                     {
-                        "lat": -9.04,
-                        "lon": -50.31,
-                        "repr": "S0904 W05031"
+                        "lat": 7.51,
+                        "lon": -75.25,
+                        "repr": "N0751 W07525"
                     },
                     {
-                        "lat": -6.5,
-                        "lon": -53.12,
-                        "repr": "S0650 W05312"
+                        "lat": 8.55,
+                        "lon": -75.2,
+                        "repr": "N0855 W07520"
                     },
                     {
-                        "lat": -5.13,
-                        "lon": -51.09,
-                        "repr": "S0513 W05109"
+                        "lat": 9.13,
+                        "lon": -75.59,
+                        "repr": "N0913 W07559"
+                    },
+                    {
+                        "lat": 9.11,
+                        "lon": -76.38,
+                        "repr": "N0911 W07638"
                     }
                 ],
                 "end_time": null,
                 "floor": null,
                 "intensity": {
-                    "repr": "NC",
-                    "value": "No change"
+                    "repr": "INTSF",
+                    "value": "Intensifying"
                 },
                 "movement": {
-                    "direction": null,
-                    "repr": "STNR",
+                    "direction": {
+                        "repr": "ENE",
+                        "spoken": "six seven point five",
+                        "value": 67.5
+                    },
+                    "repr": "MOV ENE 5KT",
                     "speed": {
-                        "repr": "STNR",
-                        "spoken": "stationary",
-                        "value": 0
+                        "repr": "5",
+                        "spoken": "five",
+                        "value": 5
+                    }
+                },
+                "other": [],
+                "position": null,
+                "start_time": {
+                    "dt": "2022-03-29T19:21:00+00:00",
+                    "repr": "1921Z"
+                },
+                "type": {
+                    "repr": "FRQ TS",
+                    "value": "Frequent thunderstorms"
+                }
+            },
+            "raw": "WSCO31 SKBO 291931 SKEC SIGMET 1 VALID 291941/292241 SKBO- SKEC BARRANQUILLA FIR FRQ TS OBS AT 1921Z WI N0911 W07638 - N0832 W07705 - N0751 W07525 - N0855 W07520 - N0913 W07559 - N0911 W07638 TOP FL520 MOV ENE 5KT INTSF=",
+            "region": "SKEC BARRANQUILLA FIR",
+            "remarks": null,
+            "sanitized": "WSCO31 SKBO 291931 SKEC SIGMET 1 VALID 291941/292241 SKBO- SKEC BARRANQUILLA FIR FRQ TS OBS AT 1921Z WI N0911 W07638 - N0832 W07705 - N0751 W07525 - N0855 W07520 - N0913 W07559 - N0911 W07638 TOP FL520 MOV ENE 5KT INTSF",
+            "start_time": {
+                "dt": "2022-03-29T19:41:00+00:00",
+                "repr": "291941"
+            },
+            "station": "SKBO",
+            "time": {
+                "dt": "2022-03-29T19:31:00+00:00",
+                "repr": "291931"
+            },
+            "type": "SIGMET 1"
+        }
+    },
+    {
+        "created": "2022-03-29",
+        "data": {
+            "area": "SIGC",
+            "body": "FROM DBL-LAA-30SSE CME-30E DMN-DBL WST ISSUANCES POSS. REFER TO MOST RECENT ACUS01 KWNS FROM STORM PREDICTION CENTER FOR SYNOPSIS AND METEOROLOGICAL DETAILS. FROM 60SE FSD-40NE MCI-JCT-50SW SJT-50NNE SLN-50ENE ONL-60SE FSD WST ISSUANCES EXPD. REFER TO MOST RECENT ACUS01 KWNS FROM STORM PREDICTION CENTER FOR SYNOPSIS AND METEOROLOGICAL DETAILS.",
+            "bulletin": {
+                "country": "US",
+                "number": 32,
+                "repr": "WSUS32",
+                "type": {
+                    "repr": "WS",
+                    "value": "sigmet"
+                }
+            },
+            "correction": null,
+            "end_time": {
+                "dt": "2022-03-30T01:55:00+00:00",
+                "repr": "300155"
+            },
+            "forecast": null,
+            "issuer": "KKCI",
+            "observation": {
+                "bounds": [],
+                "ceiling": null,
+                "coords": [
+                    {
+                        "lat": 39.439300537109375,
+                        "lon": -106.8949966430664,
+                        "repr": "DBL"
+                    },
+                    {
+                        "lat": 38.19710159301758,
+                        "lon": -102.68800354003906,
+                        "repr": "LAA"
+                    },
+                    {
+                        "lat": 32.874463836395,
+                        "lon": -104.39381192212772,
+                        "repr": "30SSE CME"
+                    },
+                    {
+                        "lat": 32.27422351613592,
+                        "lon": -107.01525922966816,
+                        "repr": "30E DMN"
+                    }
+                ],
+                "end_time": null,
+                "floor": null,
+                "intensity": null,
+                "movement": null,
+                "other": [
+                    "DBL",
+                    "WST",
+                    "ISSUANCES",
+                    "POSS",
+                    "REFER",
+                    "TO",
+                    "MOST",
+                    "RECENT",
+                    "ACUS01",
+                    "KWNS",
+                    "FROM",
+                    "STORM",
+                    "PREDICTION",
+                    "CENTER",
+                    "FOR",
+                    "SYNOPSIS",
+                    "AND",
+                    "METEOROLOGICAL",
+                    "DETAILS",
+                    "FROM",
+                    "60SE",
+                    "FSD-40NE",
+                    "MCI-JCT-50SW",
+                    "SJT-50NNE",
+                    "SLN-50ENE",
+                    "ONL-60SE",
+                    "FSD",
+                    "WST",
+                    "ISSUANCES",
+                    "EXPD",
+                    "REFER",
+                    "TO",
+                    "MOST",
+                    "RECENT",
+                    "ACUS01",
+                    "KWNS",
+                    "FROM",
+                    "STORM",
+                    "PREDICTION",
+                    "CENTER",
+                    "FOR",
+                    "SYNOPSIS",
+                    "AND",
+                    "METEOROLOGICAL",
+                    "DETAILS"
+                ],
+                "position": null,
+                "start_time": null,
+                "type": null
+            },
+            "raw": "WSUS32 KKCI 291955 SIGC OUTLOOK VALID 292155-300155 FROM DBL-LAA-30SSE CME-30E DMN-DBL WST ISSUANCES POSS. REFER TO MOST RECENT ACUS01 KWNS FROM STORM PREDICTION CENTER FOR SYNOPSIS AND METEOROLOGICAL DETAILS. FROM 60SE FSD-40NE MCI-JCT-50SW SJT-50NNE SLN-50ENE ONL-60SE FSD WST ISSUANCES EXPD. REFER TO MOST RECENT ACUS01 KWNS FROM STORM PREDICTION CENTER FOR SYNOPSIS AND METEOROLOGICAL DETAILS.",
+            "region": "",
+            "remarks": null,
+            "sanitized": "WSUS32 KKCI 291955 SIGC OUTLOOK VALID 292155-300155 FROM DBL-LAA-30SSE CME-30E DMN-DBL WST ISSUANCES POSS. REFER TO MOST RECENT ACUS01 KWNS FROM STORM PREDICTION CENTER FOR SYNOPSIS AND METEOROLOGICAL DETAILS. FROM 60SE FSD-40NE MCI-JCT-50SW SJT-50NNE SLN-50ENE ONL-60SE FSD WST ISSUANCES EXPD. REFER TO MOST RECENT ACUS01 KWNS FROM STORM PREDICTION CENTER FOR SYNOPSIS AND METEOROLOGICAL DETAILS.",
+            "start_time": {
+                "dt": "2022-03-29T21:55:00+00:00",
+                "repr": "292155"
+            },
+            "station": null,
+            "time": {
+                "dt": "2022-03-29T19:55:00+00:00",
+                "repr": "291955"
+            },
+            "type": "OUTLOOK"
+        }
+    },
+    {
+        "created": "2022-03-29",
+        "data": {
+            "area": "SFO",
+            "body": "AIRMET MTN OBSCN...WA OR CA FROM 60SSE GEG TO 50SE REO TO 40SE LKV TO 20WNW FMG TO RBL TO 50NNE DSD TO 60SSE GEG MTNS OBSC BY CLDS/PCPN/BR. CONDS ENDG BY 18Z.",
+            "bulletin": {
+                "country": "US",
+                "number": 46,
+                "repr": "WAUS46",
+                "type": {
+                    "repr": "WA",
+                    "value": "airmet"
+                }
+            },
+            "correction": null,
+            "end_time": {
+                "dt": "2022-03-29T21:00:00+00:00",
+                "repr": "292100"
+            },
+            "forecast": null,
+            "issuer": "KKCI",
+            "observation": {
+                "bounds": [],
+                "ceiling": null,
+                "coords": [
+                    {
+                        "lat": 46.640097547592475,
+                        "lon": -117.07162518686401,
+                        "repr": "60SSE GEG"
+                    },
+                    {
+                        "lat": 41.998285779985764,
+                        "lon": -117.07770644610578,
+                        "repr": "50SE REO"
+                    },
+                    {
+                        "lat": 42.019467151645806,
+                        "lon": -119.87456142203764,
+                        "repr": "40SE LKV"
+                    },
+                    {
+                        "lat": 39.65828446312007,
+                        "lon": -120.05475588551538,
+                        "repr": "20WNW FMG"
+                    },
+                    {
+                        "lat": 40.098899841308594,
+                        "lon": -122.23600006103516,
+                        "repr": "RBL"
+                    },
+                    {
+                        "lat": 45.021790007916216,
+                        "lon": -120.85440710853783,
+                        "repr": "50NNE DSD"
+                    },
+                    {
+                        "lat": 46.640097547592475,
+                        "lon": -117.07162518686401,
+                        "repr": "60SSE GEG"
+                    }
+                ],
+                "end_time": null,
+                "floor": null,
+                "intensity": null,
+                "movement": null,
+                "other": [
+                    "BY",
+                    "CLDS/PCPN/BR",
+                    "CONDS",
+                    "ENDG",
+                    "BY",
+                    "18Z"
+                ],
+                "position": null,
+                "start_time": null,
+                "type": {
+                    "repr": "MTNS OBSC",
+                    "value": "Mountain Obscuration"
+                }
+            },
+            "raw": "WAUS46 KKCI 291445 SFOS WA 291445 AIRMET SIERRA UPDT 2 FOR IFR AND MTN OBSCN VALID UNTIL 292100 AIRMET MTN OBSCN...WA OR CA FROM 60SSE GEG TO 50SE REO TO 40SE LKV TO 20WNW FMG TO RBL TO 50NNE DSD TO 60SSE GEG MTNS OBSC BY CLDS/PCPN/BR. CONDS ENDG BY 18Z.",
+            "region": "<elip> WA OR CA",
+            "remarks": null,
+            "sanitized": "WAUS46 KKCI 291445 SFOS WA 291445 AIRMET SIERRA UPDT 2 FOR IFR AND MTN OBSCN VALID UNTIL 292100 AIRMET MTN OBSCN...WA OR CA FROM 60SSE GEG TO 50SE REO TO 40SE LKV TO 20WNW FMG TO RBL TO 50NNE DSD TO 60SSE GEG MTNS OBSC BY CLDS/PCPN/BR. CONDS ENDG BY 18Z.",
+            "start_time": null,
+            "station": null,
+            "time": {
+                "dt": "2022-03-29T14:45:00+00:00",
+                "repr": "291445"
+            },
+            "type": "AIRMET SIERRA UPDT 2 FOR IFR AND MTN OBSCN"
+        }
+    },
+    {
+        "created": "2022-03-29",
+        "data": {
+            "area": "WAAF",
+            "body": "WAAF UJUNG PANDANG FIR EMBD TS OBS WI S0849 E14100 - S0950 E14100 - S 0950 E13940 - S0847 E13757 - S0829 E13948 - S0849 E14100 TOP FL520 MOV WSW 5KT INTSF",
+            "bulletin": {
+                "country": "ID",
+                "number": 21,
+                "repr": "WSID21",
+                "type": {
+                    "repr": "WS",
+                    "value": "sigmet"
+                }
+            },
+            "correction": null,
+            "end_time": {
+                "dt": "2022-03-29T21:10:00+00:00",
+                "repr": "292110"
+            },
+            "forecast": null,
+            "issuer": "WAAA",
+            "observation": {
+                "bounds": [],
+                "ceiling": {
+                    "repr": "FL520",
+                    "spoken": "flight level five two zero",
+                    "value": 520
+                },
+                "coords": [
+                    {
+                        "lat": -8.49,
+                        "lon": 141.0,
+                        "repr": "S0849 E14100"
+                    },
+                    {
+                        "lat": -9.5,
+                        "lon": 141.0,
+                        "repr": "S0950 E14100"
+                    },
+                    {
+                        "lat": -8.47,
+                        "lon": 137.57,
+                        "repr": "S0847 E13757"
+                    },
+                    {
+                        "lat": -8.29,
+                        "lon": 139.48,
+                        "repr": "S0829 E13948"
+                    },
+                    {
+                        "lat": -8.49,
+                        "lon": 141.0,
+                        "repr": "S0849 E14100"
+                    }
+                ],
+                "end_time": null,
+                "floor": null,
+                "intensity": {
+                    "repr": "INTSF",
+                    "value": "Intensifying"
+                },
+                "movement": {
+                    "direction": {
+                        "repr": "WSW",
+                        "spoken": "two four seven point five",
+                        "value": 247.5
+                    },
+                    "repr": "MOV WSW 5KT",
+                    "speed": {
+                        "repr": "5",
+                        "spoken": "five",
+                        "value": 5
                     }
                 },
                 "other": [],
@@ -75,29 +397,387 @@
                     "value": "Embedded thunderstorms"
                 }
             },
-            "issuer": "SBGL",
-            "observation": null,
-            "raw": "WSBZ23 SBGL 250655 SBAZ SIGMET 9 VALID 250700/251100 SBAZ - SBAZ AMAZONICA FIR EMBD TS FCST WI S0513 W05109 - S0730 W04907 - S0904 W05031 - S0650 W05312 - S0513 W05109 TOP FL470 STNR NC=",
-            "region": "SBAZ AMAZONICA FIR",
+            "raw": "WSID21 WAAA 291721 WAAF SIGMET 36 VALID 291723/292110 WAAA- WAAF UJUNG PANDANG FIR EMBD TS OBS WI S0849 E14100 - S0950 E14100 - S 0950 E13940 - S0847 E13757 - S0829 E13948 - S0849 E14100 TOP FL520 MO V WSW 5KT INTSF=",
+            "region": "WAAF UJUNG PANDANG FIR",
             "remarks": null,
-            "sanitized": "WSBZ23 SBGL 250655 SBAZ SIGMET 9 VALID 250700/251100 SBAZ - SBAZ AMAZONICA FIR EMBD TS FCST WI S0513 W05109 - S0730 W04907 - S0904 W05031 - S0650 W05312 - S0513 W05109 TOP FL470 STNR NC",
+            "sanitized": "WSID21 WAAA 291721 WAAF SIGMET 36 VALID 291723/292110 WAAA- WAAF UJUNG PANDANG FIR EMBD TS OBS WI S0849 E14100 - S0950 E14100 - S 0950 E13940 - S0847 E13757 - S0829 E13948 - S0849 E14100 TOP FL520 MOV WSW 5KT INTSF",
             "start_time": {
-                "dt": "2022-03-25T07:00:00+00:00",
-                "repr": "250700"
+                "dt": "2022-03-29T17:23:00+00:00",
+                "repr": "291723"
             },
-            "station": "SBAZ",
+            "station": "WAAA",
             "time": {
-                "dt": "2022-03-25T06:55:00+00:00",
-                "repr": "250655"
+                "dt": "2022-03-29T17:21:00+00:00",
+                "repr": "291721"
             },
-            "type": "SIGMET 9"
+            "type": "SIGMET 36"
         }
     },
     {
-        "created": "2022-03-25",
+        "created": "2022-03-29",
         "data": {
-            "area": "FAJO",
-            "body": "FAJO JOHANNESBURG OCEANIC FIR SEV TURB FCST WI S6810 W00005 - S6836 E02237 - S7121 E01737 - S7251 W01000 - S6939 W01000 SFC/FL055",
+            "area": "SLC",
+            "body": "AIRMET STG SFC WNDS...NM FROM 60ESE TBE TO INK TO ELP TO 40N CME TO 40ESE FTI TO 60ESE TBE SUSTAINED SURFACE WINDS GTR THAN 30KT EXP. CONDS CONTG BYD 21Z ENDG 00-03Z. OTLK VALID 2100-0300Z AREA 1...TURB MT WY CO BOUNDED BY 30SE BIL-90SE MLS-70SW RAP-BFF-GLD-20SE LAA-40SE HBU- 40E CHE-20ESE OCS-30SE BIL MOD TURB BLW 100. CONDS CONTG THRU 03Z. AREA 2...STG SFC WNDS WY CO BOUNDED BY 50NW RAP-70SW RAP-BFF-20E AKO-20E CHE-30SE SHR-50NW RAP SUSTAINED SURFACE WINDS GTR THAN 30KT EXP. CONDS ENDG 00-03Z.",
+            "bulletin": {
+                "country": "US",
+                "number": 45,
+                "repr": "WAUS45",
+                "type": {
+                    "repr": "WA",
+                    "value": "airmet"
+                }
+            },
+            "correction": null,
+            "end_time": {
+                "dt": "2022-03-29T21:00:00+00:00",
+                "repr": "292100"
+            },
+            "forecast": {
+                "bounds": [],
+                "ceiling": {
+                    "repr": "100",
+                    "spoken": "one hundred",
+                    "value": 100
+                },
+                "coords": [
+                    {
+                        "lat": 45.45401606546611,
+                        "lon": -108.12274959850265,
+                        "repr": "30SE BIL"
+                    },
+                    {
+                        "lat": 45.31179883504823,
+                        "lon": -104.45102288065978,
+                        "repr": "90SE MLS"
+                    },
+                    {
+                        "lat": 43.145316842533404,
+                        "lon": -104.13886729326171,
+                        "repr": "70SW RAP"
+                    },
+                    {
+                        "lat": 39.387901306152344,
+                        "lon": -101.69200134277344,
+                        "repr": "GLD"
+                    },
+                    {
+                        "lat": 37.96076137481907,
+                        "lon": -102.38996721037512,
+                        "repr": "20SE LAA"
+                    },
+                    {
+                        "lat": 37.978768475279985,
+                        "lon": -106.44378462234064,
+                        "repr": "40SE HBU"
+                    },
+                    {
+                        "lat": 40.51679322045318,
+                        "lon": -106.43085085886895,
+                        "repr": "40E CHE"
+                    },
+                    {
+                        "lat": 41.46184269294501,
+                        "lon": -108.60539340941362,
+                        "repr": "20ESE OCS"
+                    },
+                    {
+                        "lat": 45.45401606546611,
+                        "lon": -108.12274959850265,
+                        "repr": "30SE BIL"
+                    }
+                ],
+                "end_time": {
+                    "dt": "2022-03-29T03:00:00+00:00",
+                    "repr": "0300Z"
+                },
+                "floor": null,
+                "intensity": null,
+                "movement": null,
+                "other": [
+                    "AREA",
+                    "1",
+                    "TURB",
+                    "MT",
+                    "WY",
+                    "CO",
+                    "CONDS",
+                    "CONTG",
+                    "THRU",
+                    "03Z",
+                    "AREA",
+                    "2",
+                    "STG",
+                    "SFC",
+                    "WNDS",
+                    "WY",
+                    "CO",
+                    "BOUNDED",
+                    "BY",
+                    "50NW",
+                    "RAP-",
+                    "BFF-20E",
+                    "AKO-20E",
+                    "CHE-30SE",
+                    "SHR-50NW",
+                    "RAP",
+                    "SUSTAINED",
+                    "SURFACE",
+                    "WINDS",
+                    "GTR",
+                    "THAN",
+                    "30KT",
+                    "EXP",
+                    "CONDS",
+                    "ENDG",
+                    "00-03Z"
+                ],
+                "position": null,
+                "start_time": {
+                    "dt": "2022-03-29T21:00:00+00:00",
+                    "repr": "2100"
+                },
+                "type": {
+                    "repr": "MOD TURB",
+                    "value": "Moderate Turbulence"
+                }
+            },
+            "issuer": "KKCI",
+            "observation": {
+                "bounds": [],
+                "ceiling": null,
+                "coords": [
+                    {
+                        "lat": 36.86992044237999,
+                        "lon": -102.44858884025075,
+                        "repr": "60ESE TBE"
+                    },
+                    {
+                        "lat": 31.874799728393555,
+                        "lon": -103.24400329589844,
+                        "repr": "INK"
+                    },
+                    {
+                        "lat": 31.815900802612305,
+                        "lon": -106.28199768066406,
+                        "repr": "ELP"
+                    },
+                    {
+                        "lat": 34.00539151165151,
+                        "lon": -104.62100219726562,
+                        "repr": "40N CME"
+                    },
+                    {
+                        "lat": 35.39972854407662,
+                        "lon": -104.38258987660544,
+                        "repr": "40ESE FTI"
+                    },
+                    {
+                        "lat": 36.86992044237999,
+                        "lon": -102.44858884025075,
+                        "repr": "60ESE TBE"
+                    }
+                ],
+                "end_time": null,
+                "floor": null,
+                "intensity": null,
+                "movement": null,
+                "other": [
+                    "SUSTAINED",
+                    "SURFACE",
+                    "WINDS",
+                    "GTR",
+                    "THAN",
+                    "30KT",
+                    "EXP",
+                    "CONDS",
+                    "CONTG",
+                    "BYD",
+                    "21Z",
+                    "ENDG",
+                    "00-03Z"
+                ],
+                "position": null,
+                "start_time": null,
+                "type": null
+            },
+            "raw": "WAUS45 KKCI 291445 SLCT WA 291445 AIRMET TANGO UPDT 2 FOR TURB AND STG SFC WNDS VALID UNTIL 292100 AIRMET STG SFC WNDS...NM FROM 60ESE TBE TO INK TO ELP TO 40N CME TO 40ESE FTI TO 60ESE TBE SUSTAINED SURFACE WINDS GTR THAN 30KT EXP. CONDS CONTG BYD 21Z ENDG 00-03Z. OTLK VALID 2100-0300Z AREA 1...TURB MT WY CO BOUNDED BY 30SE BIL-90SE MLS-70SW RAP-BFF-GLD-20SE LAA-40SE HBU- 40E CHE-20ESE OCS-30SE BIL MOD TURB BLW 100. CONDS CONTG THRU 03Z. AREA 2...STG SFC WNDS WY CO BOUNDED BY 50NW RAP-70SW RAP-BFF-20E AKO-20E CHE-30SE SHR-50NW RAP SUSTAINED SURFACE WINDS GTR THAN 30KT EXP. CONDS ENDG 00-03Z.",
+            "region": "<elip> NM",
+            "remarks": null,
+            "sanitized": "WAUS45 KKCI 291445 SLCT WA 291445 AIRMET TANGO UPDT 2 FOR TURB AND STG SFC WNDS VALID UNTIL 292100 AIRMET STG SFC WNDS...NM FROM 60ESE TBE TO INK TO ELP TO 40N CME TO 40ESE FTI TO 60ESE TBE SUSTAINED SURFACE WINDS GTR THAN 30KT EXP. CONDS CONTG BYD 21Z ENDG 00-03Z. OTLK VALID 2100-0300Z AREA 1...TURB MT WY CO BOUNDED BY 30SE BIL-90SE MLS-70SW RAP-BFF-GLD-20SE LAA-40SE HBU- 40E CHE-20ESE OCS-30SE BIL MOD TURB BLW 100. CONDS CONTG THRU 03Z. AREA 2...STG SFC WNDS WY CO BOUNDED BY 50NW RAP-70SW RAP-BFF-20E AKO-20E CHE-30SE SHR-50NW RAP SUSTAINED SURFACE WINDS GTR THAN 30KT EXP. CONDS ENDG 00-03Z.",
+            "start_time": null,
+            "station": null,
+            "time": {
+                "dt": "2022-03-29T14:45:00+00:00",
+                "repr": "291445"
+            },
+            "type": "AIRMET TANGO UPDT 2 FOR TURB AND STG SFC WNDS"
+        }
+    },
+    {
+        "created": "2022-03-29",
+        "data": {
+            "area": "SIGW",
+            "body": "AZ FROM 30NE PHX-80NNE TUS-30S TUS-80W TUS-30NE PHX AREA TS MOV FROM 26020KT. TOPS TO FL290 OUTLOOK VALID 292155-300155 FROM 40NNE SLC-DBL-30E DMN-60SSE SSO-50S TUS-80ESE BZA-ILC-40NNE SLC WST ISSUANCES POSS. REFER TO MOST RECENT ACUS01 KWNS FROM STORM PREDICTION CENTER FOR SYNOPSIS AND METEOROLOGICAL DETAILS.",
+            "bulletin": {
+                "country": "US",
+                "number": 33,
+                "repr": "WSUS33",
+                "type": {
+                    "repr": "WS",
+                    "value": "sigmet"
+                }
+            },
+            "correction": null,
+            "end_time": {
+                "dt": "2022-03-22T07:00:00+00:00",
+                "repr": "2155Z"
+            },
+            "forecast": {
+                "bounds": [],
+                "ceiling": null,
+                "coords": [
+                    {
+                        "lat": 49.06800168729029,
+                        "lon": 19.50385601808301,
+                        "repr": "40NNE SLC"
+                    },
+                    {
+                        "lat": 32.27422351613592,
+                        "lon": -107.01525922966816,
+                        "repr": "30E DMN"
+                    },
+                    {
+                        "lat": 31.342557135498033,
+                        "lon": -108.81615790284701,
+                        "repr": "60SSE SSO"
+                    },
+                    {
+                        "lat": 31.260071484427392,
+                        "lon": -110.91500091552734,
+                        "repr": "50S TUS"
+                    },
+                    {
+                        "lat": 32.24839531589307,
+                        "lon": -113.15045033587396,
+                        "repr": "80ESE BZA"
+                    },
+                    {
+                        "lat": 49.06800168729029,
+                        "lon": 19.50385601808301,
+                        "repr": "40NNE SLC"
+                    }
+                ],
+                "end_time": {
+                    "dt": "2022-03-30T01:55:00+00:00",
+                    "repr": "300155"
+                },
+                "floor": null,
+                "intensity": null,
+                "movement": null,
+                "other": [
+                    "WST",
+                    "ISSUANCES",
+                    "POSS",
+                    "REFER",
+                    "TO",
+                    "MOST",
+                    "RECENT",
+                    "ACUS01",
+                    "KWNS",
+                    "FROM",
+                    "STORM",
+                    "PREDICTION",
+                    "CENTER",
+                    "FOR",
+                    "SYNOPSIS",
+                    "AND",
+                    "METEOROLOGICAL",
+                    "DETAILS"
+                ],
+                "position": null,
+                "start_time": {
+                    "dt": "2022-03-29T21:55:00+00:00",
+                    "repr": "292155"
+                },
+                "type": null
+            },
+            "issuer": "KKCI",
+            "observation": {
+                "bounds": [],
+                "ceiling": {
+                    "repr": "FL290",
+                    "spoken": "flight level two nine zero",
+                    "value": 290
+                },
+                "coords": [
+                    {
+                        "lat": 33.78878284116313,
+                        "lon": -111.58170112995673,
+                        "repr": "30NE PHX"
+                    },
+                    {
+                        "lat": 33.328029799444025,
+                        "lon": -110.3060775650458,
+                        "repr": "80NNE TUS"
+                    },
+                    {
+                        "lat": 31.594135852510217,
+                        "lon": -110.91500091552734,
+                        "repr": "30S TUS"
+                    },
+                    {
+                        "lat": 32.08547676383338,
+                        "lon": -112.48445849005671,
+                        "repr": "80W TUS"
+                    },
+                    {
+                        "lat": 33.78878284116313,
+                        "lon": -111.58170112995673,
+                        "repr": "30NE PHX"
+                    }
+                ],
+                "end_time": null,
+                "floor": null,
+                "intensity": null,
+                "movement": {
+                    "direction": {
+                        "repr": "260",
+                        "spoken": "two six zero",
+                        "value": 260
+                    },
+                    "repr": "MOV FROM 26020KT",
+                    "speed": {
+                        "repr": "20",
+                        "spoken": "two zero",
+                        "value": 20
+                    }
+                },
+                "other": [],
+                "position": null,
+                "start_time": null,
+                "type": {
+                    "repr": "AREA TS",
+                    "value": "Thunderstorms in the area"
+                }
+            },
+            "raw": "WSUS33 KKCI 291955 SIGW CONVECTIVE SIGMET 41W VALID UNTIL 2155Z AZ FROM 30NE PHX-80NNE TUS-30S TUS-80W TUS-30NE PHX AREA TS MOV FROM 26020KT. TOPS TO FL290. OUTLOOK VALID 292155-300155 FROM 40NNE SLC-DBL-30E DMN-60SSE SSO-50S TUS-80ESE BZA-ILC-40NNE SLC WST ISSUANCES POSS. REFER TO MOST RECENT ACUS01 KWNS FROM STORM PREDICTION CENTER FOR SYNOPSIS AND METEOROLOGICAL DETAILS.",
+            "region": "AZ",
+            "remarks": null,
+            "sanitized": "WSUS33 KKCI 291955 SIGW CONVECTIVE SIGMET 41W VALID UNTIL 2155Z AZ FROM 30NE PHX-80NNE TUS-30S TUS-80W TUS-30NE PHX AREA TS MOV FROM 26020KT. TOPS TO FL290 OUTLOOK VALID 292155-300155 FROM 40NNE SLC-DBL-30E DMN-60SSE SSO-50S TUS-80ESE BZA-ILC-40NNE SLC WST ISSUANCES POSS. REFER TO MOST RECENT ACUS01 KWNS FROM STORM PREDICTION CENTER FOR SYNOPSIS AND METEOROLOGICAL DETAILS.",
+            "start_time": null,
+            "station": null,
+            "time": {
+                "dt": "2022-03-29T19:55:00+00:00",
+                "repr": "291955"
+            },
+            "type": "CONVECTIVE SIGMET 41W"
+        }
+    },
+    {
+        "created": "2022-03-29",
+        "data": {
+            "area": "FACA",
+            "body": "FACA CAPE TOWN FIR SEV TURB FCST WI S3101 E02827 - S3220 E03048 - S3318 E02933 - S3139 E02708 - S3101 E02827 SFC/FL080",
             "bulletin": {
                 "country": "ZA",
                 "number": 21,
@@ -109,41 +789,41 @@
             },
             "correction": null,
             "end_time": {
-                "dt": "2022-03-25T10:00:00+00:00",
-                "repr": "251000"
+                "dt": "2022-03-29T22:00:00+00:00",
+                "repr": "292200"
             },
             "forecast": {
                 "bounds": [],
                 "ceiling": {
-                    "repr": "FL055",
-                    "spoken": "flight level five five",
-                    "value": 55
+                    "repr": "FL080",
+                    "spoken": "flight level eight zero",
+                    "value": 80
                 },
                 "coords": [
                     {
-                        "lat": -68.1,
-                        "lon": -0.05,
-                        "repr": "S6810 W00005"
+                        "lat": -31.01,
+                        "lon": 28.27,
+                        "repr": "S3101 E02827"
                     },
                     {
-                        "lat": -68.36,
-                        "lon": 22.37,
-                        "repr": "S6836 E02237"
+                        "lat": -32.2,
+                        "lon": 30.48,
+                        "repr": "S3220 E03048"
                     },
                     {
-                        "lat": -71.21,
-                        "lon": 17.37,
-                        "repr": "S7121 E01737"
+                        "lat": -33.18,
+                        "lon": 29.33,
+                        "repr": "S3318 E02933"
                     },
                     {
-                        "lat": -72.51,
-                        "lon": -10.0,
-                        "repr": "S7251 W01000"
+                        "lat": -31.39,
+                        "lon": 27.08,
+                        "repr": "S3139 E02708"
                     },
                     {
-                        "lat": -69.39,
-                        "lon": -10.0,
-                        "repr": "S6939 W01000"
+                        "lat": -31.01,
+                        "lon": 28.27,
+                        "repr": "S3101 E02827"
                     }
                 ],
                 "end_time": null,
@@ -164,154 +844,49 @@
             },
             "issuer": "FAOR",
             "observation": null,
-            "raw": "WSZA21 FAOR 250546 FAJO SIGMET Q01 VALID 250600/251000 FAOR- FAJO JOHANNESBURG OCEANIC FIR SEV TURB FCST WI S6810 W00005 - S6836 E02237 - S7121 E01737 - S7251 W01000 - S6939 W01000 SFC/FL055=",
-            "region": "FAJO JOHANNESBURG OCEANIC FIR",
+            "raw": "WSZA21 FAOR 291748 FACA SIGMET E02 VALID 291800/292200 FAOR- FACA CAPE TOWN FIR SEV TURB FCST WI S3101 E02827 - S3220 E03048 - S3318 E02933 - S3139 E02708 - S3101 E02827 SFC/FL080=",
+            "region": "FACA CAPE TOWN FIR",
             "remarks": null,
-            "sanitized": "WSZA21 FAOR 250546 FAJO SIGMET Q01 VALID 250600/251000 FAOR- FAJO JOHANNESBURG OCEANIC FIR SEV TURB FCST WI S6810 W00005 - S6836 E02237 - S7121 E01737 - S7251 W01000 - S6939 W01000 SFC/FL055",
+            "sanitized": "WSZA21 FAOR 291748 FACA SIGMET E02 VALID 291800/292200 FAOR- FACA CAPE TOWN FIR SEV TURB FCST WI S3101 E02827 - S3220 E03048 - S3318 E02933 - S3139 E02708 - S3101 E02827 SFC/FL080",
             "start_time": {
-                "dt": "2022-03-25T06:00:00+00:00",
-                "repr": "250600"
+                "dt": "2022-03-29T18:00:00+00:00",
+                "repr": "291800"
             },
             "station": "FAOR",
             "time": {
-                "dt": "2022-03-25T05:46:00+00:00",
-                "repr": "250546"
+                "dt": "2022-03-29T17:48:00+00:00",
+                "repr": "291748"
             },
-            "type": "SIGMET Q01"
+            "type": "SIGMET E02"
         }
     },
     {
-        "created": "2022-03-25",
+        "created": "2022-03-29",
         "data": {
-            "area": "UNKL",
-            "body": "UNKL KRASNOYARSK FIR SEV ICE FCST WI N6020 E09550 - N5400 E09600 - N5604 E08905 - N5845 E08756 - N6055 E08300 - N6020 E09550 SFC/FL100 MOV E 20KMH NC",
+            "area": "YMMM",
+            "body": "YMMM MELBOURNE FIR TC HALIMA PSN S2048 E08221 CB OBS AT 1800Z WI 130NM OF TC CENTRE TOP FL520 MOV NNW 05KT NC",
             "bulletin": {
-                "country": "RA",
-                "number": 31,
-                "repr": "WSRA31",
+                "country": "AU",
+                "number": 1,
+                "repr": "WCAU01",
                 "type": {
-                    "repr": "WS",
-                    "value": "sigmet"
+                    "repr": "WC",
+                    "value": "tropical cyclone"
                 }
             },
             "correction": null,
             "end_time": {
-                "dt": "2022-03-25T10:00:00+00:00",
-                "repr": "251000"
+                "dt": "2022-03-30T01:26:00+00:00",
+                "repr": "300126"
             },
-            "forecast": {
+            "forecast": null,
+            "issuer": "YMMC",
+            "observation": {
                 "bounds": [],
                 "ceiling": {
-                    "repr": "FL100",
-                    "spoken": "flight level one zero zero",
-                    "value": 100
-                },
-                "coords": [
-                    {
-                        "lat": 60.2,
-                        "lon": 95.5,
-                        "repr": "N6020 E09550"
-                    },
-                    {
-                        "lat": 54.0,
-                        "lon": 96.0,
-                        "repr": "N5400 E09600"
-                    },
-                    {
-                        "lat": 56.04,
-                        "lon": 89.05,
-                        "repr": "N5604 E08905"
-                    },
-                    {
-                        "lat": 58.45,
-                        "lon": 87.56,
-                        "repr": "N5845 E08756"
-                    },
-                    {
-                        "lat": 60.55,
-                        "lon": 83.0,
-                        "repr": "N6055 E08300"
-                    },
-                    {
-                        "lat": 60.2,
-                        "lon": 95.5,
-                        "repr": "N6020 E09550"
-                    }
-                ],
-                "end_time": null,
-                "floor": {
-                    "repr": "SFC",
-                    "spoken": "surface",
-                    "value": 0
-                },
-                "intensity": {
-                    "repr": "NC",
-                    "value": "No change"
-                },
-                "movement": {
-                    "direction": {
-                        "repr": "E",
-                        "spoken": "nine zero",
-                        "value": 90
-                    },
-                    "repr": "MOV E 20KMH",
-                    "speed": {
-                        "repr": "20",
-                        "spoken": "two zero",
-                        "value": 20
-                    }
-                },
-                "other": [],
-                "position": null,
-                "start_time": null,
-                "type": {
-                    "repr": "SEV ICE",
-                    "value": "Severe icing"
-                }
-            },
-            "issuer": "RUKR",
-            "observation": null,
-            "raw": "WSRA31 RUKR 250412 UNKL SIGMET 1 VALID 250600/251000 UNKL- UNKL KRASNOYARSK FIR SEV ICE FCST WI N6020 E09550 - N5400 E09600 - N5604 E08905 - N5845 E08756 - N6055 E08300 - N6020 E09550 SFC/FL100 MOV E 20KMH NC=",
-            "region": "UNKL KRASNOYARSK FIR",
-            "remarks": null,
-            "sanitized": "WSRA31 RUKR 250412 UNKL SIGMET 1 VALID 250600/251000 UNKL- UNKL KRASNOYARSK FIR SEV ICE FCST WI N6020 E09550 - N5400 E09600 - N5604 E08905 - N5845 E08756 - N6055 E08300 - N6020 E09550 SFC/FL100 MOV E 20KMH NC",
-            "start_time": {
-                "dt": "2022-03-25T06:00:00+00:00",
-                "repr": "250600"
-            },
-            "station": "UNKL",
-            "time": {
-                "dt": "2022-03-25T04:12:00+00:00",
-                "repr": "250412"
-            },
-            "type": "SIGMET 1"
-        }
-    },
-    {
-        "created": "2022-03-25",
-        "data": {
-            "area": "ZHWH",
-            "body": "ZHWH WUHAN FIR EMBD TS FCST N OF N33 TOP FL300 MOV NE 35KMH NC",
-            "bulletin": {
-                "country": "CI",
-                "number": 45,
-                "repr": "WSCI45",
-                "type": {
-                    "repr": "WS",
-                    "value": "sigmet"
-                }
-            },
-            "correction": null,
-            "end_time": {
-                "dt": "2022-03-25T08:35:00+00:00",
-                "repr": "250835"
-            },
-            "forecast": {
-                "bounds": ["N OF N33"],
-                "ceiling": {
-                    "repr": "FL300",
-                    "spoken": "flight level three zero zero",
-                    "value": 300
+                    "repr": "FL520",
+                    "spoken": "flight level five two zero",
+                    "value": 520
                 },
                 "coords": [],
                 "end_time": null,
@@ -322,17 +897,150 @@
                 },
                 "movement": {
                     "direction": {
-                        "repr": "NE",
-                        "spoken": "four five",
-                        "value": 45
+                        "repr": "NNW",
+                        "spoken": "three three seven point five",
+                        "value": 337.5
                     },
-                    "repr": "MOV NE 35KMH",
+                    "repr": "MOV NNW 05KT",
                     "speed": {
-                        "repr": "35",
-                        "spoken": "three five",
-                        "value": 35
+                        "repr": "05",
+                        "spoken": "five",
+                        "value": 5
                     }
                 },
+                "other": [
+                    "TC",
+                    "HALIMA",
+                    "WI",
+                    "130NM",
+                    "OF",
+                    "TC",
+                    "CENTRE"
+                ],
+                "position": {
+                    "lat": -20.48,
+                    "lon": 82.21,
+                    "repr": "S2048 E08221"
+                },
+                "start_time": {
+                    "dt": "2022-03-29T18:00:00+00:00",
+                    "repr": "1800Z"
+                },
+                "type": {
+                    "repr": "CB",
+                    "value": "Cumulonimbus"
+                }
+            },
+            "raw": "WCAU01 YMMC 291859 YMMM SIGMET W22 VALID 291926/300126 YMMC- YMMM MELBOURNE FIR TC HALIMA PSN S2048 E08221 CB OBS AT 1800Z WI 130NM OF TC CENTRE TOP FL520 MOV NNW 05KT NC=",
+            "region": "YMMM MELBOURNE FIR",
+            "remarks": null,
+            "sanitized": "WCAU01 YMMC 291859 YMMM SIGMET W22 VALID 291926/300126 YMMC- YMMM MELBOURNE FIR TC HALIMA PSN S2048 E08221 CB OBS AT 1800Z WI 130NM OF TC CENTRE TOP FL520 MOV NNW 05KT NC",
+            "start_time": {
+                "dt": "2022-03-29T19:26:00+00:00",
+                "repr": "291926"
+            },
+            "station": "YMMC",
+            "time": {
+                "dt": "2022-03-29T18:59:00+00:00",
+                "repr": "291859"
+            },
+            "type": "SIGMET W22"
+        }
+    },
+    {
+        "created": "2022-03-29",
+        "data": {
+            "area": "FAJO",
+            "body": "FAJO JOHANNESBURG OCEANIC FIR EMBD TS OBS WI S3545 E01417 - S3702 E01450 - S3722 E02218 - S4450 E03340 - S4514 E05007 - S6036 E04141 - S6258 E03321 - S5931 E02735 - S5414 E03355 - S5115 E03308 - S5416 E02658 - S4314 E01614 TOP FL300",
+            "bulletin": {
+                "country": "ZA",
+                "number": 21,
+                "repr": "WSZA21",
+                "type": {
+                    "repr": "WS",
+                    "value": "sigmet"
+                }
+            },
+            "correction": null,
+            "end_time": {
+                "dt": "2022-03-29T22:00:00+00:00",
+                "repr": "292200"
+            },
+            "forecast": null,
+            "issuer": "FAOR",
+            "observation": {
+                "bounds": [],
+                "ceiling": {
+                    "repr": "FL300",
+                    "spoken": "flight level three zero zero",
+                    "value": 300
+                },
+                "coords": [
+                    {
+                        "lat": -35.45,
+                        "lon": 14.17,
+                        "repr": "S3545 E01417"
+                    },
+                    {
+                        "lat": -37.02,
+                        "lon": 14.5,
+                        "repr": "S3702 E01450"
+                    },
+                    {
+                        "lat": -37.22,
+                        "lon": 22.18,
+                        "repr": "S3722 E02218"
+                    },
+                    {
+                        "lat": -44.5,
+                        "lon": 33.4,
+                        "repr": "S4450 E03340"
+                    },
+                    {
+                        "lat": -45.14,
+                        "lon": 50.07,
+                        "repr": "S4514 E05007"
+                    },
+                    {
+                        "lat": -60.36,
+                        "lon": 41.41,
+                        "repr": "S6036 E04141"
+                    },
+                    {
+                        "lat": -62.58,
+                        "lon": 33.21,
+                        "repr": "S6258 E03321"
+                    },
+                    {
+                        "lat": -59.31,
+                        "lon": 27.35,
+                        "repr": "S5931 E02735"
+                    },
+                    {
+                        "lat": -54.14,
+                        "lon": 33.55,
+                        "repr": "S5414 E03355"
+                    },
+                    {
+                        "lat": -51.15,
+                        "lon": 33.08,
+                        "repr": "S5115 E03308"
+                    },
+                    {
+                        "lat": -54.16,
+                        "lon": 26.58,
+                        "repr": "S5416 E02658"
+                    },
+                    {
+                        "lat": -43.14,
+                        "lon": 16.14,
+                        "repr": "S4314 E01614"
+                    }
+                ],
+                "end_time": null,
+                "floor": null,
+                "intensity": null,
+                "movement": null,
                 "other": [],
                 "position": null,
                 "start_time": null,
@@ -341,22 +1049,142 @@
                     "value": "Embedded thunderstorms"
                 }
             },
-            "issuer": "ZHHH",
-            "observation": null,
-            "raw": "WSCI45 ZHHH 250414 ZHWH SIGMET 3 VALID 250435/250835 ZHHH- ZHWH WUHAN FIR EMBD TS FCST N OF N33 TOP FL300 MOV NE 35KMH NC=",
-            "region": "ZHWH WUHAN FIR",
+            "raw": "WSZA21 FAOR 291740 FAJO SIGMET D02 VALID 291800/292200 FAOR- FAJO JOHANNESBURG OCEANIC FIR EMBD TS OBS WI S3545 E01417 - S3702 E01450 - S3722 E02218 - S4450 E03340 - S4514 E05007 - S6036 E04141 - S6258 E03321 - S5931 E02735 - S5414 E03355 - S5115 E03308 - S5416 E02658 - S4314 E01614 TOP FL300=",
+            "region": "FAJO JOHANNESBURG OCEANIC FIR",
             "remarks": null,
-            "sanitized": "WSCI45 ZHHH 250414 ZHWH SIGMET 3 VALID 250435/250835 ZHHH- ZHWH WUHAN FIR EMBD TS FCST N OF N33 TOP FL300 MOV NE 35KMH NC",
+            "sanitized": "WSZA21 FAOR 291740 FAJO SIGMET D02 VALID 291800/292200 FAOR- FAJO JOHANNESBURG OCEANIC FIR EMBD TS OBS WI S3545 E01417 - S3702 E01450 - S3722 E02218 - S4450 E03340 - S4514 E05007 - S6036 E04141 - S6258 E03321 - S5931 E02735 - S5414 E03355 - S5115 E03308 - S5416 E02658 - S4314 E01614 TOP FL300",
             "start_time": {
-                "dt": "2022-03-25T04:35:00+00:00",
-                "repr": "250435"
+                "dt": "2022-03-29T18:00:00+00:00",
+                "repr": "291800"
             },
-            "station": "ZHHH",
+            "station": "FAOR",
             "time": {
-                "dt": "2022-03-25T04:14:00+00:00",
-                "repr": "250414"
+                "dt": "2022-03-29T17:40:00+00:00",
+                "repr": "291740"
             },
-            "type": "SIGMET 3"
+            "type": "SIGMET D02"
+        }
+    },
+    {
+        "created": "2022-03-29",
+        "data": {
+            "area": "FAJO",
+            "body": "FAJO JOHANNESBURG OCEANIC FIR SEV TURB FCST WI S4118 E00626 - S4648 E01657 - S5055 E02222 - S5314 E02359 - S6546 E02754 - S6330 E06118 - S7208 E04343 - S7444 W01000 - S7355 W01000 - S6232 E00117 - S5046 W00505 - S4224 E00010 FL270/340",
+            "bulletin": {
+                "country": "ZA",
+                "number": 21,
+                "repr": "WSZA21",
+                "type": {
+                    "repr": "WS",
+                    "value": "sigmet"
+                }
+            },
+            "correction": null,
+            "end_time": {
+                "dt": "2022-03-29T22:00:00+00:00",
+                "repr": "292200"
+            },
+            "forecast": {
+                "bounds": [],
+                "ceiling": {
+                    "repr": "340",
+                    "spoken": "flight level three four zero",
+                    "value": 340
+                },
+                "coords": [
+                    {
+                        "lat": -41.18,
+                        "lon": 6.26,
+                        "repr": "S4118 E00626"
+                    },
+                    {
+                        "lat": -46.48,
+                        "lon": 16.57,
+                        "repr": "S4648 E01657"
+                    },
+                    {
+                        "lat": -50.55,
+                        "lon": 22.22,
+                        "repr": "S5055 E02222"
+                    },
+                    {
+                        "lat": -53.14,
+                        "lon": 23.59,
+                        "repr": "S5314 E02359"
+                    },
+                    {
+                        "lat": -65.46,
+                        "lon": 27.54,
+                        "repr": "S6546 E02754"
+                    },
+                    {
+                        "lat": -63.3,
+                        "lon": 61.18,
+                        "repr": "S6330 E06118"
+                    },
+                    {
+                        "lat": -72.08,
+                        "lon": 43.43,
+                        "repr": "S7208 E04343"
+                    },
+                    {
+                        "lat": -74.44,
+                        "lon": -10.0,
+                        "repr": "S7444 W01000"
+                    },
+                    {
+                        "lat": -73.55,
+                        "lon": -10.0,
+                        "repr": "S7355 W01000"
+                    },
+                    {
+                        "lat": -62.32,
+                        "lon": 1.17,
+                        "repr": "S6232 E00117"
+                    },
+                    {
+                        "lat": -50.46,
+                        "lon": -5.05,
+                        "repr": "S5046 W00505"
+                    },
+                    {
+                        "lat": -42.24,
+                        "lon": 0.1,
+                        "repr": "S4224 E00010"
+                    }
+                ],
+                "end_time": null,
+                "floor": {
+                    "repr": "FL270",
+                    "spoken": "flight level two seven zero",
+                    "value": 270
+                },
+                "intensity": null,
+                "movement": null,
+                "other": [],
+                "position": null,
+                "start_time": null,
+                "type": {
+                    "repr": "SEV TURB",
+                    "value": "Severe turbulence"
+                }
+            },
+            "issuer": "FAOR",
+            "observation": null,
+            "raw": "WSZA21 FAOR 291741 FAJO SIGMET C02 VALID 291800/292200 FAOR- FAJO JOHANNESBURG OCEANIC FIR SEV TURB FCST WI S4118 E00626 - S4648 E01657 - S5055 E02222 - S5314 E02359 - S6546 E02754 - S6330 E06118 - S7208 E04343 - S7444 W01000 - S7355 W01000 - S6232 E00117 - S5046 W00505 - S4224 E00010 FL270/340=",
+            "region": "FAJO JOHANNESBURG OCEANIC FIR",
+            "remarks": null,
+            "sanitized": "WSZA21 FAOR 291741 FAJO SIGMET C02 VALID 291800/292200 FAOR- FAJO JOHANNESBURG OCEANIC FIR SEV TURB FCST WI S4118 E00626 - S4648 E01657 - S5055 E02222 - S5314 E02359 - S6546 E02754 - S6330 E06118 - S7208 E04343 - S7444 W01000 - S7355 W01000 - S6232 E00117 - S5046 W00505 - S4224 E00010 FL270/340",
+            "start_time": {
+                "dt": "2022-03-29T18:00:00+00:00",
+                "repr": "291800"
+            },
+            "station": "FAOR",
+            "time": {
+                "dt": "2022-03-29T17:41:00+00:00",
+                "repr": "291741"
+            },
+            "type": "SIGMET C02"
         }
     }
 ]

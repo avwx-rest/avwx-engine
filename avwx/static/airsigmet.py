@@ -43,4 +43,7 @@ WEATHER_TYPES = {
     "RDOACT CLD": "Radioactive cloud",
     "VA ERUPTION": "Volcanic eruption",
     "VA CLD": "Volcanic cloud",
+    "MTNS OBSC": "Mountain Obscuration",
+    "MTNS OBSCN": "Mountain Obscuration",
+    "CB": "Cumulonimbus",
 }

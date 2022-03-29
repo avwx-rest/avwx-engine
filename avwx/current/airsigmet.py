@@ -148,7 +148,7 @@ def _time(
     data: List[str], issued: date = None
 ) -> Tuple[List[str], Optional[Timestamp], Optional[Timestamp]]:
     """Extracts the start and/or end time based on a couple starting elements"""
-    index = _first_index(data, "AT", "FCST", "UNTIL", "VALID", "OUTLOOK" "OTLK")
+    index = _first_index(data, "AT", "FCST", "UNTIL", "VALID", "OUTLOOK", "OTLK")
     if index == -1:
         return data, None, None
     start_item = data.pop(index)
@@ -322,7 +322,7 @@ def _bounds(data: List[str]) -> Tuple[List[str], List[Coord], List[str]]:
     report, coords, start = _coords_from_text(report, start)
     report, navs, start = _coords_from_navaids(report, start)
     coords += navs
-    for target in ("FROM", "WI"):
+    for target in ("FROM", "WI", "BOUNDED", "OBS"):
         index = report.find(target + " ")
         if index != -1 and index < start:
             start = index
@@ -458,7 +458,7 @@ def _observations(
     data: List[str], units: Units, issued: date = None
 ) -> Tuple[Units, Optional[AirSigObservation], Optional[AirSigObservation]]:
     observation, forecast, forecast_index = None, None, -1
-    forecast_index = _first_index(data, "FCST", "OUTLOOK")
+    forecast_index = _first_index(data, "FCST", "OUTLOOK", "OTLK")
     if forecast_index == -1:
         observation, units = _sigmet_observation(data, units, issued)
     # 6 is arbitrary. Will likely change or be more precise later
@@ -470,9 +470,15 @@ def _observations(
     return units, observation, forecast
 
 
+_REPLACE = {" MO V ": " MOV "}
+
+
 def sanitize(report: str) -> str:
     """Sanitized AIRMET / SIGMET report string"""
-    data = report.strip(" =").split()
+    report = report.strip(" =")
+    for key, val in _REPLACE.items():
+        report = report.replace(key, val)
+    data = report.split()
     for i, item in reversed(list(enumerate(data))):
         # Remove extra element on altitude Ex: FL450Z skip 1000FT
         if (
@@ -496,7 +502,7 @@ def parse(report: str, issued: date = None) -> Tuple[AirSigmetData, Units]:
     body = sanitized[sanitized.find(" ".join(data[:2])) :]
     # Trim AIRMET type
     if data[0] == "AIRMET":
-        data = data[: data.index("<elip>")]
+        data = data[data.index("<elip>") :]
     data, region = _region(data)
     units, observation, forecast = _observations(data, units, issued)
     struct = AirSigmetData(
@@ -548,9 +554,11 @@ class AirSigManager:
         self._services = [NOAA_Bulk("airsigmet"), NOAA_Intl("airsigmet")]
         self._raw, self.raw = [], []
 
-    async def _update(self, index: int) -> List[Tuple[str, Optional[str]]]:
+    async def _update(
+        self, index: int, timeout: int
+    ) -> List[Tuple[str, Optional[str]]]:
         source = self._services[index].root
-        reports = await self._services[index].async_fetch()  # type: ignore
+        reports = await self._services[index].async_fetch(timeout=timeout)  # type: ignore
         raw: List[Tuple[str, Optional[str]]] = []
         for report in reports:
             if not report:
@@ -558,13 +566,13 @@ class AirSigManager:
             raw.append((report, source))
         return raw
 
-    def update(self, disable_post: bool = False) -> bool:
+    def update(self, timeout: int = 10, disable_post: bool = False) -> bool:
         """Updates fetched reports and returns whether they've changed"""
-        return aio.run(self.async_update(disable_post))
+        return aio.run(self.async_update(timeout, disable_post))
 
-    async def async_update(self, disable_post: bool = False) -> bool:
+    async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
         """Updates fetched reports and returns whether they've changed"""
-        coros = [self._update(i) for i in range(len(self._services))]
+        coros = [self._update(i, timeout) for i in range(len(self._services))]
         data = await aio.gather(*coros)
         raw = list(chain.from_iterable(data))
         reports = [i[0] for i in raw]

@@ -109,7 +109,7 @@ def make_airsigmet_tests() -> None:
     if a.reports is None:
         return
     reports = {}
-    for _ in range(4):
+    for _ in range(10):
         while True:
             report = random.choice(a.reports)
             key = report.raw[:20]

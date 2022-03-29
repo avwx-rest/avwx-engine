@@ -329,7 +329,7 @@ class TestAirSigmet(BaseTest):
                 "LINE BTN",
             ),
             (
-                "WI N4523 E01356 <break> N6753 W06524",
+                "OBS WI N4523 E01356 <break> N6753 W06524",
                 ((45.23, 13.56),),
                 [],
                 "<break> N6753 W06524",
@@ -437,7 +437,10 @@ class TestAirSigmet(BaseTest):
 
     def test_sanitize(self):
         """Tests report sanitization"""
-        for report, clean in (("WAUS43 KKCI  1 \n 2 3 NC=", "WAUS43 KKCI 1 2 3 NC"),):
+        for report, clean in (
+            ("WAUS43 KKCI  1 \n 2 3 NC=", "WAUS43 KKCI 1 2 3 NC"),
+            ("TOP FL520 MO V NNW 05KT NC", "TOP FL520 MOV NNW 05KT NC"),
+        ):
             self.assertEqual(airsigmet.sanitize(report), clean)
 
     def test_parse(self):
