@@ -4,7 +4,7 @@ avwx Package Setup
 
 from setuptools import find_namespace_packages, setup
 
-VERSION = "1.7.0-alpha"
+VERSION = "1.7.0"
 
 dependencies = [
     "geopy~=2.2",
@@ -13,12 +13,12 @@ dependencies = [
     "xmltodict~=0.12",
 ]
 
-test_dependencies = ["pytest-asyncio~=0.17", "time-machine~=2.6"]
+test_dependencies = ["pytest-asyncio~=0.18", "time-machine~=2.6"]
 
 extras = {
-    "fuzz": ["rapidfuzz~=1.9"],
+    "fuzz": ["rapidfuzz~=2.0"],
     "scipy": ["scipy~=1.8"],
-    "docs": ["mkdocs~=1.2", "mkdocs-material~=8.1", "mkdocs-minify-plugin~=0.5"],
+    "docs": ["mkdocs~=1.3", "mkdocs-material~=8.2", "mkdocs-minify-plugin~=0.5"],
     "tests": test_dependencies,
 }
 extras["all"] = extras["fuzz"] + extras["scipy"]
@@ -41,7 +41,14 @@ setup(
     python_requires=">= 3.8",
     install_requires=dependencies,
     packages=find_namespace_packages(include=["avwx*"]),
-    package_data={"avwx.data": ["aircraft.json", "stations.json"]},
+    package_data={
+        "avwx.data.files": [
+            "aircraft.json",
+            "good_stations.txt",
+            "navaids.json",
+            "stations.json",
+        ]
+    },
     tests_require=test_dependencies,
     extras_require=extras,
 )

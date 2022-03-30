@@ -15,6 +15,7 @@ AVWX currently supports:
 - METAR
 - TAF
 - PIREP
+- AIRMET / SIGMET
 - NBM (NBH, NBS, NBE)
 - GFS (MAV, MEX)
 
@@ -44,7 +45,7 @@ True
 
 You can learn more by reading the [project documentation](https://engine.avwx.rest)
 
-**Note**: This library requires Python 3.7 or above
+**Note**: This library requires Python 3.8 or above
 
 ## Develop
 

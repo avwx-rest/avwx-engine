@@ -175,7 +175,7 @@ def make_number(
         return make_fraction(num, repr, literal)
     # Handle Minus values with errors like 0M04
     if "M" in num:
-        val_str = num.replace("M", "-")
+        val_str = num.replace("MM", "-").replace("M", "-")
         while val_str[0] != "-":
             val_str = val_str[1:]
     else:

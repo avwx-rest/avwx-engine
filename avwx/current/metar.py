@@ -65,6 +65,7 @@ _RVR_CODES = {
     "M": "less than",
     "P": "greater than",
     "U": "increasing",
+    "I": "increasing",
     "D": "decreasing",
     "N": "no change",
     "V": "variable",

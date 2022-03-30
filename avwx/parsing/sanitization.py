@@ -108,6 +108,7 @@ STR_REPL = {
     " 0I0": " 090",
     " PROBB": " PROB",
     " PROBN": " PROB",
+    " PROB3P": "PROB30",
     # "Z/ ": "Z ", NOTE: Too broad re pirep
     "NOSIGKT ": "KT NOSIG ",
     "KNOSIGT ": "KT NOSIG ",
@@ -122,6 +123,9 @@ STR_REPL = {
     "/04SM": "/4SM",
     "/08SM": "/8SM",
     " /34SM": "3/4SM",
+    "SCATTERED": "SCT",
+    "BROKEN": "BKN",
+    "OVERCAST": "OVC",
 }
 
 
