@@ -16,7 +16,7 @@ from avwx.static.core import CARDINAL_DEGREES, IN_UNITS
 from avwx.structs import Code, Coord, Movement, Units
 
 # tests
-from tests.util import BaseTest, datetime_parser
+from tests.util import BaseTest, datetime_parser, round_coordinates
 
 
 class TestAirSigmet(BaseTest):
@@ -457,7 +457,7 @@ class TestAirSigmet(BaseTest):
         self.assertIsInstance(units, structs.Units)
         self.assertEqual(data.raw, report)
 
-    def test_metar_ete(self):
+    def test_airsigmet_ete(self):
         """Performs an end-to-end test of reports in the AIRSIGMET JSON file"""
         path = Path(__file__).parent / "data" / "airsigmet.json"
         for ref in json.load(path.open(), object_hook=datetime_parser):
@@ -468,4 +468,4 @@ class TestAirSigmet(BaseTest):
             self.assertTrue(airsig.parse(ref["data"]["raw"], issued=created))
             self.assertIsInstance(airsig.last_updated, datetime)
             self.assertEqual(airsig.issued, created)
-            self.assertEqual(asdict(airsig.data), ref["data"])
+            self.assertEqual(round_coordinates(asdict(airsig.data)), ref["data"])

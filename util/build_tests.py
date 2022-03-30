@@ -14,6 +14,7 @@ from typing import Optional
 
 # module
 import avwx
+from tests.util import round_coordinates
 
 
 TESTS_PATH = Path(__file__).parent.parent / "tests"
@@ -116,7 +117,7 @@ def make_airsigmet_tests() -> None:
             if key not in reports:
                 reports[key] = {
                     "created": datetime.now(tz=timezone.utc).date(),
-                    "data": asdict(report.data),
+                    "data": round_coordinates(asdict(report.data)),
                 }
                 break
     path = TESTS_PATH / "current" / "data" / "airsigmet.json"

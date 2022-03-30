@@ -10,7 +10,7 @@ import unittest
 from contextlib import suppress
 from datetime import datetime
 from pathlib import Path
-from typing import Iterator
+from typing import Any, Iterator
 
 # module
 from avwx import structs
@@ -72,4 +72,17 @@ def datetime_parser(data: dict) -> dict:
                     data[key] = datetime.fromisoformat(val)
             with suppress(ValueError):
                 data[key] = datetime.strptime(val, r"%Y-%m-%d")
+    return data
+
+
+def round_coordinates(data: Any) -> Any:
+    """Recursively round lat,lon floats to 2 digits"""
+    if isinstance(data, dict):
+        for key, val in data.items():
+            if key in ("lat", "lon"):
+                data[key] = round(val, 2)
+            else:
+                data[key] = round_coordinates(val)
+    elif isinstance(data, list):
+        data = [round_coordinates(i) for i in data]
     return data
