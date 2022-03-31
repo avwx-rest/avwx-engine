@@ -4,6 +4,7 @@ GFX service static values
 
 #:
 UNITS = {
+    "accumulation": "in",
     "altimeter": "inHg",
     "altitude": "ft",
     "temperature": "F",

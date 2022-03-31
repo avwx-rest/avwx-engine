@@ -63,12 +63,16 @@ def to_coordinates(
     coord = values[0]
     if isinstance(coord, str):
         try:
+            value = coord
             coord = Station.from_icao(coord).coord
+            coord.repr = value
         except BadStation:
             try:
-                coords = [Coord(lat=c[0], lon=c[1]) for c in NAVAIDS[coord]]  # type: ignore
+                coords = [Coord(lat=c[0], lon=c[1], repr=coord) for c in NAVAIDS[coord]]  # type: ignore
             except KeyError:
+                value = coord
                 coord = Station.from_iata(coord).coord  # type: ignore
+                coord.repr = value
             else:
                 if len(coords) == 1:
                     coord = coords[0]

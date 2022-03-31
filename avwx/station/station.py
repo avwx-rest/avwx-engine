@@ -113,7 +113,7 @@ class Station:
     @property
     def coord(self) -> Coord:
         """Returns the station location as a Coord"""
-        return Coord(lat=self.latitude, lon=self.longitude)
+        return Coord(lat=self.latitude, lon=self.longitude, repr=self.icao)
 
     def distance(self, lat: float, lon: float) -> Distance:
         """Returns a geopy Distance using the great circle method"""
