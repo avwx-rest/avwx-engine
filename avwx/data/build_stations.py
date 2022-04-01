@@ -138,7 +138,7 @@ def add_missing_stations(stations: dict) -> dict:
     """Add non-airport stations from NOAA"""
     for line in _SOURCE["stations"].splitlines():
         # Must be data line with METAR reporting
-        if len(line) != 84 or line[0] == "!" or line[62] != "X":
+        if len(line) != 83 or line[0] == "!" or line[62] != "X":
             continue
         icao = line[20:24].strip().upper()
         if not icao or icao in stations:  # or icao in BAD_STATIONS:
