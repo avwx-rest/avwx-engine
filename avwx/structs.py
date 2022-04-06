@@ -13,6 +13,11 @@ from typing import List, Optional, Tuple, Union
 from avwx.load_utils import LazyLoad
 
 
+try:
+    from shapely.geometry import Point, Polygon
+except ModuleNotFoundError:
+    Point, Polygon = None, None
+
 AIRCRAFT = LazyLoad("aircraft")
 
 
@@ -76,6 +81,12 @@ class Coord:
     @property
     def pair(self) -> Tuple[float, float]:
         return self.lat, self.lon
+
+    @property
+    def point(self) -> Point:
+        if Point is None:
+            raise ModuleNotFoundError("Install avwx-engine[shape] to use this feature")
+        return Point(self.lat, self.lon)
 
 
 @dataclass
@@ -287,6 +298,14 @@ class AirSigObservation:
     movement: Optional[Movement]
     intensity: Optional[Code]
     other: List[str]
+
+    @property
+    def poly(self) -> Optional[Polygon]:
+        if Polygon is None:
+            raise ModuleNotFoundError("Install avwx-engine[shape] to use this feature")
+        if len(self.coords) > 2:
+            return Polygon([c.pair for c in self.coords])
+        return None
 
 
 @dataclass

@@ -19,7 +19,7 @@ from avwx.flight_path import to_coordinates
 from avwx.load_utils import LazyLoad
 from avwx.parsing import core
 from avwx.service.bulk import NOAA_Bulk, NOAA_Intl, Service
-from avwx.static.core import CARDINAL_DEGREES, IN_UNITS
+from avwx.static.core import CARDINAL_DEGREES, CARDINALS, IN_UNITS
 from avwx.static.airsigmet import BULLETIN_TYPES, INTENSITY, WEATHER_TYPES
 from avwx.structs import (
     AirSigmetData,
@@ -32,6 +32,11 @@ from avwx.structs import (
     Timestamp,
     Units,
 )
+
+try:
+    from shapely.geometry import LineString
+except ModuleNotFoundError:
+    LineString = None  # pylint: disable=invalid-name
 
 # N1429 W09053 - N1427 W09052 - N1411 W09139 - N1417 W09141
 _COORD_PATTERN = re.compile(r"\b[NS]\d{4} [EW]\d{5}\b( -)?")
@@ -356,7 +361,10 @@ def _make_altitude(
             units.altitude = end.lower()
             # post 3.8 value = value.removesuffix(end)
             value = value[: -len(end)]
-    if force_fl:
+    # F430
+    if value[0] == "F" and value[1:].isdigit():
+        value = "FL" + value[1:]
+    if force_fl and value[:2] != "FL":
         value = "FL" + value
     return core.make_number(value, repr=raw), units
 
@@ -470,7 +478,26 @@ def _observations(
     return units, observation, forecast
 
 
-_REPLACE = {" MO V ": " MOV "}
+_REPLACE = {
+    " MO V ": " MOV ",
+    " STNRY": " STNR",
+    " STCNRY": " STNR",
+    " N-NE ": " NNE ",
+    " N-NW ": " NNW ",
+    " E-NE ": " ENE ",
+    " E-SE ": " ESE ",
+    " S-SE ": " SSE ",
+    " S-SW ": " SSW ",
+    " W-SW ": " WSW ",
+    " W-NW ": " WNW ",
+}
+
+
+def _find_first_digit(item: str) -> int:
+    for i, char in enumerate(item):
+        if char.isdigit():
+            return i
+    return -1
 
 
 def sanitize(report: str) -> str:
@@ -489,6 +516,16 @@ def sanitize(report: str) -> str:
             and _is_altitude(item[:-1])
         ):
             data[i] = item[:-1]
+        # Split attached movement direction Ex: NE05KT
+        if (
+            len(item) > 4
+            and (item.endswith("KT") or item.endswith("KMH"))
+            and item[: _find_first_digit(item)] in CARDINALS
+        ):
+            index = _find_first_digit(item)
+            direction = item[:index]
+            data.insert(i + 1, item[index:])
+            data[i] = direction
     return " ".join(data)
 
 
@@ -540,6 +577,30 @@ class AirSigmet(AVWXBase):
         """Sanitizes the report string"""
         return sanitize(report)
 
+    def intersects(self, path: LineString) -> bool:
+        """Returns True if the report area intersects a flight path"""
+        if LineString is None:
+            raise ModuleNotFoundError("Install avwx-engine[shape] to use this feature")
+        if not self.data:
+            return False
+        for data in (self.data.observation, self.data.forecast):
+            if data:
+                poly = data.poly
+                if poly and path.intersects(poly):
+                    return True
+        return False
+
+    def contains(self, coord: Coord) -> bool:
+        """Returns True if the report area contains a coordinate"""
+        if not self.data:
+            return False
+        for data in (self.data.observation, self.data.forecast):
+            if data:
+                poly = data.poly
+                if poly and coord.point.within(poly):
+                    return True
+        return False
+
 
 class AirSigManager:
     """Class to fetch and manage AIRMET and SIGMET reports"""
@@ -589,3 +650,22 @@ class AirSigManager:
                     parsed.append(obj)
             self.reports = parsed
         return changed
+
+    def along(self, coords: List[Coord]) -> List[AirSigmet]:
+        """Returns available reports the intersect a flight path"""
+        if LineString is None:
+            raise ModuleNotFoundError("Install avwx-engine[shape] to use this feature")
+        ret = []
+        path = LineString([c.pair for c in coords])
+        for report in self.reports:
+            if report.intersects(path):
+                ret.append(report)
+        return ret
+
+    def contains(self, coord: Coord) -> List[AirSigmet]:
+        """Returns available reports that contain a coordinate"""
+        ret = []
+        for report in self.reports:
+            if report.contains(coord):
+                ret.append(report)
+        return ret

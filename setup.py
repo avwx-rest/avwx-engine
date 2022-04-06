@@ -4,7 +4,7 @@ avwx Package Setup
 
 from setuptools import find_namespace_packages, setup
 
-VERSION = "1.7.2"
+VERSION = "1.7.3"
 
 dependencies = [
     "geopy~=2.2",
@@ -18,10 +18,11 @@ test_dependencies = ["pytest-asyncio~=0.18", "time-machine~=2.6"]
 extras = {
     "fuzz": ["rapidfuzz~=2.0"],
     "scipy": ["scipy~=1.8"],
+    "shape": ["shapely~=1.8"],
     "docs": ["mkdocs~=1.3", "mkdocs-material~=8.2", "mkdocs-minify-plugin~=0.5"],
     "tests": test_dependencies,
 }
-extras["all"] = extras["fuzz"] + extras["scipy"]
+extras["all"] = extras["fuzz"] + extras["scipy"] + extras["shape"]
 
 setup(
     name="avwx-engine",

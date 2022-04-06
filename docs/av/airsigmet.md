@@ -19,6 +19,7 @@ Because of the global nature of these report types, we don't initialize a report
 
 ```python
 >>> from avwx import AirSigManager
+>>> from avwx.structs import Coord
 >>> manager = AirSigManager()
 >>> manager.update()
 True
@@ -26,17 +27,27 @@ True
 datetime.datetime(2022, 3, 27, 5, 54, 21, 516741, tzinfo=datetime.timezone.utc)
 >>> len(manager.reports)
 113
+>>> len(manager.contains(Coord(lat=33.12, lon=-105)))
+5
 >>> manager.reports[0].data.bulletin.type
 Code(repr='WA', value='airmet')
 >>> manager.reports[0].data.type
 'AIRMET SIERRA FOR IFR AND MTN OBSCN'
 ```
 
+#### **along**(*coords: List[avwx.structs.Coord]*) -> *List[avwx.AigSigmet]*
+
+Returns available reports the intersect a flight path
+
 #### async **async_update**() -> *bool*
 
 Async updates list of reports by fetching from all sources
 
 Returns `True` if new reports are available, else `False`
+
+#### **contains**(*coord: avwx.structs.Coord*) -> *List[avwx.AigSigmet]*
+
+Returns available reports that contain a coordinate
 
 #### **last_updated**: *datetime.datetime* = *None*
 
@@ -78,6 +89,10 @@ Code(repr='NC', value='No change')
 Number(repr='FL410', value=410, spoken='flight level four one zero')
 ```
 
+#### **contains**(*coord: avwx.structs.Coord*) -> *bool*
+
+Returns True if the report area contains a coordinate
+
 #### **data**: *avwx.structs.AirSigmetData* = *None*
 
 AirSigmetData dataclass of parsed data values and units
@@ -85,6 +100,10 @@ AirSigmetData dataclass of parsed data values and units
 #### **from_report**(*report: str*) -> *avwx.AigSigmet*
 
 Returns an updated report object based on an existing report
+
+#### **intersects**(*path: shapely.geometry.LineString*) -> *bool*
+
+Returns True if the report area intersects a flight path
 
 #### **issued**: *date* = *None*
 
@@ -163,6 +182,8 @@ Units inferred from the report contents
 **movement**: *Optional[avwx.structs.Movement]*
 
 **other**: *List[str]*
+
+**poly**: *Optional[shapely.geometry.Polygon]*
 
 **position**: *Optional[avwx.structs.Coord]*
 

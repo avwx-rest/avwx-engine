@@ -8,6 +8,9 @@ from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
 
+# library
+from shapely.geometry import LineString
+
 # module
 from avwx import structs
 from avwx.current import airsigmet
@@ -17,6 +20,17 @@ from avwx.structs import Code, Coord, Movement, Units
 
 # tests
 from tests.util import BaseTest, datetime_parser, round_coordinates
+
+
+# Used for location filtering tests
+COORD_REPORTS = [
+    "N1000 W01000 - N1000 E01000 - S1000 E01000 - S1000 W01000",
+    "N1000 W00000 - N1000 E02000 - S1000 E02000 - S1000 W00000",
+    "N0000 W00000 - N0000 E02000 - S2000 E02000 - S2000 W00000",
+    "N0000 W00100 - N0000 E01000 - S2000 E01000 - S2000 W01000",
+]
+_PRE = "WAUS43 KKCI 230245 CHIT WA 230245 TS VALID UNTIL 230900 NYC FIR "
+COORD_REPORTS = [airsigmet.AirSigmet.from_report(_PRE + r) for r in COORD_REPORTS]
 
 
 class TestAirSigmet(BaseTest):
@@ -440,6 +454,7 @@ class TestAirSigmet(BaseTest):
         for report, clean in (
             ("WAUS43 KKCI  1 \n 2 3 NC=", "WAUS43 KKCI 1 2 3 NC"),
             ("TOP FL520 MO V NNW 05KT NC", "TOP FL520 MOV NNW 05KT NC"),
+            ("FL450 MOV NE05KT INTSF=", "FL450 MOV NE 05KT INTSF"),
         ):
             self.assertEqual(airsigmet.sanitize(report), clean)
 
@@ -457,6 +472,31 @@ class TestAirSigmet(BaseTest):
         self.assertIsInstance(units, structs.Units)
         self.assertEqual(data.raw, report)
 
+    def test_contains(self):
+        """Tests if report contains a coordinate"""
+        for lat, lon, results in (
+            (5, 5, (True, True, False, False)),
+            (5, -15, (False, False, False, False)),
+            (5, 15, (False, True, False, False)),
+            (5, -5, (True, False, False, False)),
+            (0, 0, (True, False, False, False)),
+        ):
+            coord = Coord(lat, lon)
+            for report, result in zip(COORD_REPORTS, results):
+                self.assertEqual(report.contains(coord), result)
+
+    def test_intersects(self):
+        """Testsif report intersects a path"""
+        for coords, results in (
+            (((20, 20), (0, 0), (-20, -20)), (True, True, True, True)),
+            (((20, 20), (10, 0), (-20, -20)), (True, True, False, False)),
+            (((-20, 20), (-10, -10), (-20, -20)), (True, False, True, True)),
+            (((-20, 20), (-15, -15), (-20, -20)), (False, False, True, True)),
+        ):
+            path = LineString(coords)
+            for report, result in zip(COORD_REPORTS, results):
+                self.assertEqual(report.intersects(path), result)
+
     def test_airsigmet_ete(self):
         """Performs an end-to-end test of reports in the AIRSIGMET JSON file"""
         path = Path(__file__).parent / "data" / "airsigmet.json"
@@ -469,3 +509,34 @@ class TestAirSigmet(BaseTest):
             self.assertIsInstance(airsig.last_updated, datetime)
             self.assertEqual(airsig.issued, created)
             self.assertEqual(round_coordinates(asdict(airsig.data)), ref["data"])
+
+
+class TestAirSigManager(BaseTest):
+    """Tests AirSigManager filtering"""
+
+    def test_contains(self):
+        """Tests filtering reports that contain a coordinate"""
+        manager = airsigmet.AirSigManager()
+        manager.reports = COORD_REPORTS
+        for lat, lon, count in (
+            (5, 5, 2),
+            (5, -15, 0),
+            (5, 15, 1),
+            (5, -5, 1),
+            (0, 0, 1),
+        ):
+            coord = Coord(lat, lon)
+            self.assertEqual(len(manager.contains(coord)), count)
+
+    def test_along(self):
+        """Tests filtering reports the fall along a flight path"""
+        manager = airsigmet.AirSigManager()
+        manager.reports = COORD_REPORTS
+        for coords, count in (
+            (((20, 20), (0, 0), (-20, -20)), 4),
+            (((20, 20), (10, 0), (-20, -20)), 2),
+            (((-20, 20), (-10, -10), (-20, -20)), 3),
+            (((-20, 20), (-15, -15), (-20, -20)), 2),
+        ):
+            path = [Coord(c[0], c[1]) for c in coords]
+            self.assertEqual(len(manager.along(path)), count)

@@ -40,6 +40,18 @@ Load an Aircraft from an ICAO aircraft code
 
 **value**: *str*
 
+## class avwx.structs.**Coord**
+
+**lat**: *float*
+
+**lon**: *float*
+
+**repr**: *str* = *None*
+
+**pair**: *Tuple[float, float]*
+
+**point**: *shapely.geometry.Point*
+
 ## class avwx.structs.**Fraction**
 
 **denominator**: *int*

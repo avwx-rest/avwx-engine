@@ -118,6 +118,7 @@ STR_REPL = {
     "/VRB": " VRB",
     "CALMKT ": "CALM ",
     "CLMKT ": "CALM ",
+    "CLRKT ": "CALM ",
     "N0SIG": "NOSIG",
     " <1/": " M1/",  # <1/4SM <1/8SM
     "/04SM": "/4SM",

@@ -198,6 +198,7 @@ SPECIAL_NUMBERS = {
     "CLM": (0, "calm"),
     "SFC": (0, "surface"),
     "STNR": (0, "stationary"),
+    "LTL": (0, "little"),
     "FRZLVL": (None, "freezing level"),
 }
 
