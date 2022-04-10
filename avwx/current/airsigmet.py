@@ -539,7 +539,7 @@ def parse(report: str, issued: date = None) -> Tuple[AirSigmetData, Units]:
     body = sanitized[sanitized.find(" ".join(data[:2])) :]
     # Trim AIRMET type
     if data[0] == "AIRMET":
-        data = data[data.index("<elip>") :]
+        data = data[data.index("<elip>") + 1:]
     data, region = _region(data)
     units, observation, forecast = _observations(data, units, issued)
     struct = AirSigmetData(
