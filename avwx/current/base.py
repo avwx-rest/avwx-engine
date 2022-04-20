@@ -66,10 +66,10 @@ class Report(ManagedReport):
     #: ReportTrans dataclass of translation strings from data. Parsed on update()
     translations: Optional[ReportTrans] = None
 
-    def __init__(self, icao: str):
-        super().__init__(icao)
+    def __init__(self, code: str):
+        super().__init__(code)
         if self.station is not None:
-            service = get_service(icao, self.station.country)
+            service = get_service(code, self.station.country)
             self.service = service(self.__class__.__name__.lower())  # type: ignore
 
 
@@ -82,9 +82,9 @@ class Reports(ManagedReport):
     data: Optional[List[ReportData]] = None  # type: ignore
     units: Units = Units(**NA_UNITS)
 
-    def __init__(self, icao: str = None, lat: float = None, lon: float = None):
-        if icao:
-            super().__init__(icao)
+    def __init__(self, code: str = None, lat: float = None, lon: float = None):
+        if code:
+            super().__init__(code)
             if self.station is not None:
                 lat = self.station.latitude
                 lon = self.station.longitude

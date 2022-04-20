@@ -31,11 +31,13 @@ TYPE_ORDER = [
 
 def _format_search(airport: dict, keys: Iterable[str]) -> str:
     values = [airport.get(k) for k in keys]
+    code = values[0] or values[2]
+    values.insert(0, code)
     return " - ".join(k for k in values if k)
 
 
 def _build_corpus() -> List[str]:
-    keys = ("icao", "iata", "city", "state", "name")
+    keys = ("icao", "iata", "gps", "city", "state", "name")
     return [_format_search(s, keys) for s in STATIONS.values()]
 
 
@@ -70,7 +72,7 @@ def search(
         raise ModuleNotFoundError(
             'rapidfuzz must be installed to use text search. Run "pip install avwx-engine[fuzz]" to enable this'
         ) from name_error
-    results = [(Station.from_icao(k[:4]), s) for k, s, _ in results]
+    results = [(Station.from_code(k[:4]), s) for k, s, _ in results]
     results.sort(key=_sort_key, reverse=True)
     results = [s for s, _ in results if station_filter(s, is_airport, sends_reports)]
     return results[:limit] if len(results) > limit else results

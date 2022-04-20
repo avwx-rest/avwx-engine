@@ -44,7 +44,11 @@ _SOURCES = {
     "airports": DATA_ROOT + "airports.csv",
     "runways": DATA_ROOT + "runways.csv",
     "stations": "https://www.aviationweather.gov/docs/metar/stations.txt",
+    "icaos": "https://raw.githubusercontent.com/ip2location/ip2location-iata-icao/master/iata-icao.csv",
 }
+
+
+ICAO = []
 
 
 ACCEPTED_STATION_TYPES = [
@@ -72,6 +76,17 @@ def format_coord(coord: str) -> float:
     return neg * float(coord[:-1].strip().replace(" ", "."))
 
 
+def load_icaos() -> None:
+    """Load ICAO ident list"""
+    lines = csv.reader(_SOURCE["icaos"].split("\n"))
+    next(lines)  # Skip header
+    for line in lines:
+        with suppress(IndexError):
+            icao = line[3]
+            if len(icao) == 4:
+                ICAO.append(icao)
+
+
 def validate_icao(code: str) -> Optional[str]:
     """Validates a given station ident"""
     if len(code) != 4:
@@ -81,7 +96,13 @@ def validate_icao(code: str) -> Optional[str]:
 
 def get_icao(station: List[str]) -> Optional[str]:
     """Finds the ICAO by checking ident and GPS code"""
-    return validate_icao(station[12]) or validate_icao(station[1])
+    gps_code = validate_icao(station[12])
+    if gps_code and gps_code in ICAO:
+        return gps_code
+    ident = validate_icao(station[1])
+    if ident and ident in ICAO:
+        return ident
+    return gps_code
 
 
 def clean_source_files():
@@ -92,7 +113,7 @@ def clean_source_files():
     _SOURCE["airports"] = text
 
 
-def format_station(icao: str, station: List[str]) -> dict:
+def format_station(code: str, station: List[str]) -> dict:
     """Converts source station list into info dict"""
     try:
         elev_ft = float(station[6])
@@ -112,26 +133,28 @@ def format_station(icao: str, station: List[str]) -> dict:
         "country": station[9][:index],
         "state": station[9][index + 1 :],
         "city": station[10],
-        "icao": icao,
-        "iata": station[13].upper(),
-        "website": station[15],
-        "wiki": station[16],
-        "note": station[17],
+        "icao": code if code in ICAO else None,
+        "iata": station[13].upper() or None,
+        "gps": station[12].upper() or None,
+        "local": station[14].upper() or None,
+        "website": station[15] or None,
+        "wiki": station[16] or None,
+        "note": station[17] or None,
     }
     return nullify(ret)
 
 
 def build_stations() -> tuple[dict, dict]:
     """Builds the station dict from source file"""
-    stations, icao_map = {}, {}
+    stations, code_map = {}, {}
     data = csv.reader(_SOURCE["airports"].splitlines())
     next(data)  # Skip header
     for station in data:
-        icao = get_icao(station)
-        if icao and station[2] in ACCEPTED_STATION_TYPES:
-            stations[icao] = format_station(icao, station)
-            icao_map[station[0]] = icao
-    return stations, icao_map
+        code = get_icao(station)
+        if code and station[2] in ACCEPTED_STATION_TYPES:
+            stations[code] = format_station(code, station)
+            code_map[station[0]] = code
+    return stations, code_map
 
 
 def add_missing_stations(stations: dict) -> dict:
@@ -157,6 +180,8 @@ def add_missing_stations(stations: dict) -> dict:
             "city": None,
             "icao": icao,
             "iata": line[26:29].strip().upper(),
+            "gps": "",
+            "local": "",
             "website": None,
             "wiki": None,
             "note": None,
@@ -173,7 +198,7 @@ def get_surface_type(surface: str) -> Optional[str]:
     return None
 
 
-def add_runways(stations: dict, icao_map: dict) -> dict:
+def add_runways(stations: dict, code_map: dict) -> dict:
     """Add runway information to station if availabale"""
     data = csv.reader(_SOURCE["runways"].splitlines())
     next(data)  # Skip header
@@ -191,26 +216,26 @@ def add_runways(stations: dict, icao_map: dict) -> dict:
             "bearing1": float(runway[12]) if runway[12] else None,
             "bearing2": float(runway[18]) if runway[18] else None,
         }
-        icao = icao_map.get(runway[1], runway[2])
+        code = code_map.get(runway[1], runway[2])
         with suppress(KeyError):
-            if "runways" in stations[icao]:
-                stations[icao]["runways"].append(out)
+            if "runways" in stations[code]:
+                stations[code]["runways"].append(out)
             else:
-                stations[icao]["runways"] = [out]
+                stations[code]["runways"] = [out]
     # Sort runways by longest length and add missing nulls
-    for icao in stations:
-        if "runways" in stations[icao]:
-            stations[icao]["runways"].sort(key=lambda x: x["length_ft"], reverse=True)
+    for code in stations:
+        if "runways" in stations[code]:
+            stations[code]["runways"].sort(key=lambda x: x["length_ft"], reverse=True)
         else:
-            stations[icao]["runways"] = None
+            stations[code]["runways"] = None
     return stations
 
 
 def add_reporting(stations: dict) -> dict:
     """Add reporting boolean to station if available"""
     good = load_stations(GOOD_PATH)
-    for icao in stations:
-        stations[icao]["reporting"] = icao in good
+    for code in stations:
+        stations[code]["reporting"] = code in good
     return stations
 
 
@@ -246,10 +271,11 @@ def main() -> int:
     LOG.info("Cleaning")
     clean_source_files()
     LOG.info("Building")
-    stations, icao_map = build_stations()
+    load_icaos()
+    stations, code_map = build_stations()
     stations = add_missing_stations(stations)
     stations = add_reporting(stations)
-    stations = add_runways(stations, icao_map)
+    stations = add_runways(stations, code_map)
     LOG.info("Saving")
     json.dump(
         stations,

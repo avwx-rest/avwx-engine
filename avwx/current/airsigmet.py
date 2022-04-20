@@ -34,7 +34,7 @@ from avwx.structs import (
 )
 
 try:
-    from shapely.geometry import LineString
+    from shapely.geometry import LineString  # type: ignore
 except ModuleNotFoundError:
     LineString = None  # pylint: disable=invalid-name
 
@@ -539,7 +539,7 @@ def parse(report: str, issued: date = None) -> Tuple[AirSigmetData, Units]:
     body = sanitized[sanitized.find(" ".join(data[:2])) :]
     # Trim AIRMET type
     if data[0] == "AIRMET":
-        data = data[data.index("<elip>") + 1:]
+        data = data[data.index("<elip>") + 1 :]
     data, region = _region(data)
     units, observation, forecast = _observations(data, units, issued)
     struct = AirSigmetData(
@@ -655,17 +655,13 @@ class AirSigManager:
         """Returns available reports the intersect a flight path"""
         if LineString is None:
             raise ModuleNotFoundError("Install avwx-engine[shape] to use this feature")
-        ret = []
+        if self.reports is None:
+            return []
         path = LineString([c.pair for c in coords])
-        for report in self.reports:
-            if report.intersects(path):
-                ret.append(report)
-        return ret
+        return [r for r in self.reports if r.intersects(path)]
 
     def contains(self, coord: Coord) -> List[AirSigmet]:
         """Returns available reports that contain a coordinate"""
-        ret = []
-        for report in self.reports:
-            if report.contains(coord):
-                ret.append(report)
-        return ret
+        if self.reports is None:
+            return []
+        return [r for r in self.reports if r.contains(coord)]

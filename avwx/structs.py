@@ -14,7 +14,7 @@ from avwx.load_utils import LazyLoad
 
 
 try:
-    from shapely.geometry import Point, Polygon
+    from shapely.geometry import Point, Polygon  # type: ignore
 except ModuleNotFoundError:
     Point, Polygon = None, None
 

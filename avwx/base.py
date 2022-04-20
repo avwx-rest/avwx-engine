@@ -17,14 +17,10 @@ from avwx.structs import ReportData, Units
 
 
 def find_station(report: str) -> Optional[Station]:
-    """Returns the first ICAO ident found in a report string"""
+    """Returns the first Station found in a report string"""
     for item in report.split():
-        if len(item) == 4:
-            with suppress(BadStation):
-                return Station.from_icao(item.upper())
-        if len(item) == 3:
-            with suppress(BadStation):
-                return Station.from_iata(item.upper())
+        with suppress(BadStation):
+            return Station.from_code(item.upper())
     return None
 
 
@@ -100,8 +96,8 @@ class AVWXBase(metaclass=ABCMeta):
 class ManagedReport(AVWXBase, metaclass=ABCMeta):
     """Abstract base class for reports types associated with a single station"""
 
-    #: 4-character ICAO station ident code the report was initialized with
-    icao: Optional[str] = None
+    #: 4-character station code the report was initialized with
+    code: Optional[str] = None
 
     #: Provide basic station info if given at init
     station: Optional[Station] = None
@@ -109,13 +105,13 @@ class ManagedReport(AVWXBase, metaclass=ABCMeta):
     #: Service object used to fetch the report string
     service: Service
 
-    def __init__(self, icao: str):
-        icao = icao.upper()
-        self.icao = icao
-        self.station = Station.from_icao(icao)
+    def __init__(self, code: str):
+        code = code.upper()
+        self.code = code
+        self.station = Station.from_code(code)
 
     def __repr__(self) -> str:
-        return f"<avwx.{self.__class__.__name__} icao={self.icao}>"
+        return f"<avwx.{self.__class__.__name__} code={self.code}>"
 
     @abstractmethod
     async def _post_update(self) -> None:
@@ -128,7 +124,7 @@ class ManagedReport(AVWXBase, metaclass=ABCMeta):
         station = find_station(report)
         if not station:
             return None
-        obj = cls(station.icao)
+        obj = cls(station.lookup_code)
         obj.parse(report, issued=issued)
         return obj
 
@@ -149,7 +145,7 @@ class ManagedReport(AVWXBase, metaclass=ABCMeta):
 
         Returns True if a new report is available, else False
         """
-        report = self.service.fetch(self.icao, timeout=timeout)  # type: ignore
+        report = self.service.fetch(self.code, timeout=timeout)  # type: ignore
         self.source = self.service.root
         return aio.run(self._update(report, None, disable_post))
 
@@ -158,6 +154,6 @@ class ManagedReport(AVWXBase, metaclass=ABCMeta):
 
         Returns True if a new report is available, else False
         """
-        report = await self.service.async_fetch(self.icao, timeout=timeout)  # type: ignore
+        report = await self.service.async_fetch(self.code, timeout=timeout)  # type: ignore
         self.source = self.service.root
         return await self._update(report, None, disable_post)

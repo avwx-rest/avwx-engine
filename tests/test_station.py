@@ -49,10 +49,10 @@ class TestStationFunctions(unittest.TestCase):
         for val in dist.values():
             self.assertIsInstance(val, float)
         for *params, count in (
-            (30, -82, 10, True, True, 0.2, 1),
-            (30, -82, 10, True, False, 0.2, 5),
-            (30, -82, 10, False, False, 0.2, 6),
-            (30, -82, 1000, True, True, 0.5, 6),
+            (30, -82, 10, True, True, 0.3, 1),
+            (30, -82, 10, True, False, 0.3, 6),
+            (30, -82, 10, False, False, 0.3, 8),
+            (30, -82, 1000, True, True, 0.5, 5),
             (30, -82, 1000, False, False, 0.5, 38),
         ):
             stations = station.nearest(*params)
@@ -92,7 +92,7 @@ class TestStation(unittest.TestCase):
             self.assertEqual(icao.upper(), stn.icao)
             self.assertEqual(name, stn.name)
             self.assertEqual(city, stn.city)
-        for bad in ("1234", 1234, None, True, ""):
+        for bad in ("1234", 1234, None, True, "", "KX07"):
             with self.assertRaises(exceptions.BadStation):
                 station.Station.from_icao(bad)
 
@@ -109,9 +109,45 @@ class TestStation(unittest.TestCase):
             self.assertIsInstance(stn, station.Station)
             self.assertEqual(iata.upper(), stn.iata)
             self.assertEqual(icao, stn.icao)
+        for bad in ("1234", 1234, None, True, "", "KMCO"):
+            with self.assertRaises(exceptions.BadStation):
+                station.Station.from_iata(bad)
+
+    def test_from_gps(self):
+        """Tests loading a Station by GPS code"""
+        for gps, icao, name in (
+            ("KJFK", "KJFK", "John F Kennedy International Airport"),
+            ("kjfk", "KJFK", "John F Kennedy International Airport"),
+            ("EGLL", "EGLL", "London Heathrow Airport"),
+            ("KX07", None, "Lake Wales Municipal Airport"),
+        ):
+            stn = station.Station.from_gps(gps)
+            self.assertIsInstance(stn, station.Station)
+            self.assertEqual(gps.upper(), stn.gps)
+            self.assertEqual(icao, stn.icao)
+            self.assertEqual(name, stn.name)
+        for bad in ("1234", 1234, None, True, "", "KMCO"):
+            with self.assertRaises(exceptions.BadStation):
+                station.Station.from_gps(bad)
+
+    def test_from_gps(self):
+        """Tests loading a Station by any code"""
+        for code, icao, name in (
+            ("KJFK", "KJFK", "John F Kennedy International Airport"),
+            ("kjfk", "KJFK", "John F Kennedy International Airport"),
+            ("EGLL", "EGLL", "London Heathrow Airport"),
+            ("LHR", "EGLL", "London Heathrow Airport"),
+            ("LAX", "KLAX", "Los Angeles International Airport"),
+            ("HNL", "PHNL", "Daniel K Inouye International Airport"),
+            ("KX07", None, "Lake Wales Municipal Airport"),
+        ):
+            stn = station.Station.from_code(code)
+            self.assertIsInstance(stn, station.Station)
+            self.assertEqual(icao, stn.icao)
+            self.assertEqual(name, stn.name)
         for bad in ("1234", 1234, None, True, ""):
             with self.assertRaises(exceptions.BadStation):
-                station.Station.from_icao(bad)
+                station.Station.from_code(bad)
 
     def test_nearest(self):
         """Tests loading a Station nearest to a lat,lon coordinate pair"""
@@ -124,18 +160,18 @@ class TestStation(unittest.TestCase):
         # Test with IATA req disabled
         stn, dist = station.Station.nearest(28.43, -81, False, False)
         self.assertIsInstance(stn, station.Station)
-        self.assertEqual(stn.icao, "FA18")
+        self.assertEqual(stn.lookup_code, "FA18")
         for val in dist.values():
             self.assertIsInstance(val, float)
 
     def test_sends_reports(self):
         """Tests bool indicating likely reporting station"""
-        for icao in ("KJFK", "EGLL"):
-            stn = station.Station.from_icao(icao)
+        for code in ("KJFK", "EGLL"):
+            stn = station.Station.from_code(code)
             self.assertTrue(stn.sends_reports)
             self.assertIsNotNone(stn.iata)
-        for icao in ("FA18",):
-            stn = station.Station.from_icao(icao)
+        for code in ("FA18",):
+            stn = station.Station.from_code(code)
             self.assertFalse(stn.sends_reports)
             self.assertIsNone(stn.iata)
 
@@ -161,7 +197,7 @@ class TestStationSearch(unittest.TestCase):
         ):
             results = station.search(text)
             self.assertEqual(len(results), 10)
-            self.assertEqual(results[0].icao, icao)
+            self.assertEqual(results[0].lookup_code, icao)
 
     def test_search_filter(self):
         """Tests search result filtering"""

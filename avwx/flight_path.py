@@ -56,7 +56,7 @@ def to_coordinates(
 ) -> List[Coord]:
     """Convert any known idents found in a flight path into coordinates
 
-    Prefers Coord > ICAO > Navaid > IATA
+    Prefers Coord > ICAO > Navaid > IATA / GPS
     """
     if not values:
         return []
@@ -70,8 +70,8 @@ def to_coordinates(
             try:
                 coords = [Coord(lat=c[0], lon=c[1], repr=coord) for c in NAVAIDS[coord]]  # type: ignore
             except KeyError:
-                value = coord
-                coord = Station.from_iata(coord).coord  # type: ignore
+                value = coord  # type: ignore
+                coord = Station.from_code(coord).coord  # type: ignore
                 coord.repr = value
             else:
                 if len(coords) == 1:

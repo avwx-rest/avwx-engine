@@ -348,11 +348,11 @@ class Metar(Report):
     async def _pull_from_default(self) -> None:
         """Checks for a more recent report from NOAA. Only sync"""
         service = NOAA(self.__class__.__name__.lower())
-        if self.icao is None:
+        if self.code is None:
             return
-        report = await service.async_fetch(self.icao)
+        report = await service.async_fetch(self.code)
         if report is not None:
-            data, units = parse(self.icao, report, self.issued)
+            data, units = parse(self.code, report, self.issued)
             if not data or data.time is None or data.time.dt is None:
                 return
             if (
@@ -396,9 +396,9 @@ class Metar(Report):
         self.data.density_altitude = core.density_altitude(alt, temp, elev, self.units)
 
     async def _post_update(self):
-        if self.icao is None or self.raw is None:
+        if self.code is None or self.raw is None:
             return
-        self.data, self.units = parse(self.icao, self.raw, self.issued)
+        self.data, self.units = parse(self.code, self.raw, self.issued)
         if self._should_check_default:
             await self._pull_from_default()
         if self.data is None or self.units is None:
@@ -407,9 +407,9 @@ class Metar(Report):
         self.translations = translate_metar(self.data, self.units)
 
     def _post_parse(self):
-        if self.icao is None or self.raw is None:
+        if self.code is None or self.raw is None:
             return
-        self.data, self.units = parse(self.icao, self.raw, self.issued)
+        self.data, self.units = parse(self.code, self.raw, self.issued)
         if self.data is None or self.units is None:
             return
         self._calculate_altitudes()

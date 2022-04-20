@@ -179,6 +179,6 @@ class Forecast(ManagedReport):
     report_type: str
     _service_class: Service
 
-    def __init__(self, icao: str):
-        super().__init__(icao)
+    def __init__(self, code: str):
+        super().__init__(code)
         self.service = self._service_class(self.report_type)  # type: ignore

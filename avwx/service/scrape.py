@@ -64,7 +64,7 @@ class ScrapeService(Service, CallsHTTP):  # pylint: disable=too-few-public-metho
 
 
 class StationScrape(ScrapeService):
-    """Service class fetching reports from a station ICAO"""
+    """Service class fetching reports from a station code"""
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
         """Returns a formatted URL and parameters"""

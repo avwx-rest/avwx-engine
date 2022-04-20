@@ -13,3 +13,7 @@ def update_all() -> bool:
         if func():
             return False
     return True
+
+
+if __name__ == "__main__":
+    update_all()

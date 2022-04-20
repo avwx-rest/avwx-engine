@@ -469,11 +469,11 @@ class Taf(Report):
     translations: Optional[TafTrans] = None  # type: ignore
 
     async def _post_update(self):
-        self.data, self.units = parse(self.icao, self.raw, self.issued)
+        self.data, self.units = parse(self.code, self.raw, self.issued)
         self.translations = translate_taf(self.data, self.units)
 
     def _post_parse(self):
-        self.data, self.units = parse(self.icao, self.raw, self.issued)
+        self.data, self.units = parse(self.code, self.raw, self.issued)
         self.translations = translate_taf(self.data, self.units)
 
     @property

@@ -5,6 +5,7 @@ Station handling and coordinate search
 # pylint: disable=invalid-name,too-many-arguments,too-many-instance-attributes
 
 # stdlib
+from contextlib import suppress
 from copy import copy
 from dataclasses import dataclass
 from functools import lru_cache
@@ -35,7 +36,9 @@ class Runway:
 
 
 T = TypeVar("T", bound="Station")
-_IATAS = LazyCalc(lambda: {v["iata"]: k for k, v in STATIONS.items() if v["iata"]})
+_ICAO = LazyCalc(lambda: {v["icao"]: k for k, v in STATIONS.items() if v["icao"]})
+_IATA = LazyCalc(lambda: {v["iata"]: k for k, v in STATIONS.items() if v["iata"]})
+_GPS = LazyCalc(lambda: {v["gps"]: k for k, v in STATIONS.items() if v["gps"]})
 
 
 @dataclass
@@ -48,27 +51,52 @@ class Station:
     country: str
     elevation_ft: int
     elevation_m: int
-    iata: str
-    icao: str
+    gps: Optional[str]
+    iata: Optional[str]
+    icao: Optional[str]
     latitude: float
+    local: Optional[str]
     longitude: float
     name: str
-    note: str
+    note: Optional[str]
     reporting: bool
     runways: List[Runway]
     state: str
     type: str
-    website: str
-    wiki: str
+    website: Optional[str]
+    wiki: Optional[str]
+
+    @classmethod
+    def _from_code(cls: Type[T], ident: str) -> T:
+        try:
+            info: Dict[str, Any] = copy(STATIONS[ident])
+            if info["runways"]:
+                info["runways"] = [Runway(**r) for r in info["runways"]]
+            return cls(**info)
+        except (KeyError, AttributeError) as not_found:
+            raise BadStation(
+                f"Could not find station with ident {ident}"
+            ) from not_found
+
+    @classmethod
+    def from_code(cls: Type[T], ident: str) -> T:
+        """Load a station from ICAO, GPS, or IATA code in that order"""
+        if ident and isinstance(ident, str):
+            if len(ident) == 4:
+                with suppress(BadStation):
+                    return cls.from_icao(ident)
+                with suppress(BadStation):
+                    return cls.from_gps(ident)
+            if len(ident) == 3:
+                with suppress(BadStation):
+                    return cls.from_iata(ident)
+        raise BadStation(f"Could not find station with ident {ident}")
 
     @classmethod
     def from_icao(cls: Type[T], ident: str) -> T:
         """Load a Station from an ICAO station ident"""
         try:
-            info: Dict[str, Any] = copy(STATIONS[ident.upper()])
-            if info["runways"]:
-                info["runways"] = [Runway(**r) for r in info["runways"]]
-            return cls(**info)
+            return cls._from_code(_ICAO.value[ident.upper()])
         except (KeyError, AttributeError) as not_found:
             raise BadStation(
                 f"Could not find station with ICAO ident {ident}"
@@ -78,10 +106,20 @@ class Station:
     def from_iata(cls: Type[T], ident: str) -> T:
         """Load a Station from an IATA code"""
         try:
-            return cls.from_icao(_IATAS.value[ident.upper()])
+            return cls._from_code(_IATA.value[ident.upper()])
         except (KeyError, AttributeError) as not_found:
             raise BadStation(
-                f"Could not find station with ICAO ident {ident}"
+                f"Could not find station with IATA ident {ident}"
+            ) from not_found
+
+    @classmethod
+    def from_gps(cls: Type[T], ident: str) -> T:
+        """Load a Station from a GPS code"""
+        try:
+            return cls._from_code(_GPS.value[ident.upper()])
+        except (KeyError, AttributeError) as not_found:
+            raise BadStation(
+                f"Could not find station with GPS ident {ident}"
             ) from not_found
 
     @classmethod
@@ -106,6 +144,15 @@ class Station:
         return station, ret
 
     @property
+    def lookup_code(self) -> str:
+        """Returns the ICAO or GPS code for report fetch"""
+        if self.icao:
+            return self.icao
+        if self.gps:
+            return self.gps
+        raise BadStation("Station does not have a valid lookup code")
+
+    @property
     def sends_reports(self) -> bool:
         """Returns whether or not a Station likely sends weather reports"""
         return self.reporting is True
@@ -124,7 +171,10 @@ class Station:
 
 
 def _make_coords():
-    return [(s["icao"], s["latitude"], s["longitude"]) for s in STATIONS.values()]
+    return [
+        (s["icao"] or s["gps"], s["latitude"], s["longitude"])
+        for s in STATIONS.values()
+    ]
 
 
 _COORDS = LazyCalc(_make_coords)
@@ -178,8 +228,8 @@ def _query_filter(
         # Ran out of new stations
         if not nodes:
             return stations
-        for icao, dist in nodes:
-            stn = Station.from_icao(icao)
+        for code, dist in nodes:
+            stn = Station.from_code(code)
             if station_filter(stn, is_airport, reporting):
                 stations.append((stn, dist))
             # Reached the desired number of stations
@@ -206,7 +256,7 @@ def nearest(
     # Default state includes all, no filtering necessary
     if not (is_airport or sends_reports):
         data = _query_coords(lat, lon, n, max_coord_distance)
-        stations = [(Station.from_icao(icao), d) for icao, d in data]
+        stations = [(Station.from_code(code), d) for code, d in data]
     else:
         stations = _query_filter(
             lat, lon, n, max_coord_distance, is_airport, sends_reports
