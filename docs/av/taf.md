@@ -2,13 +2,13 @@
 
 A TAF (Terminal Aerodrome Forecast) is a 24-hour weather forecast for the area 5 statute miles from the reporting station. They are update once every three or six hours or when significant changes warrant an update, and the observations are valid for six hours or until the next report is issued
 
-## class avwx.**Taf**(*icao: str*)
+## class avwx.**Taf**(*code: str*)
 
 The Taf class offers an object-oriented approach to managing TAF data for a single station.
 
 ```python
 >>> from avwx import Taf
->>> kjfk = Taf('KJFK')
+>>> kjfk = Taf("KJFK")
 >>> kjfk.station.name
 'John F Kennedy International Airport'
 >>> kjfk.update()
@@ -48,6 +48,10 @@ Async updates report data by fetching and parsing the report
 
 Returns `True` if a new report is available, else `False`
 
+#### **code**: *str*
+
+Station ident code the report was initialized with
+
 #### **data**: *avwx.structs.TafData* = *None*
 
 TafData dataclass of parsed data values and units. Parsed on update()
@@ -55,10 +59,6 @@ TafData dataclass of parsed data values and units. Parsed on update()
 #### **from_report**(*report: str*) -> *avwx.Taf*
 
 Returns an updated report object based on an existing report
-
-#### **icao**: *str*
-
-4-character ICAO station ident code the report was initialized with
 
 #### **issued**: *date* = *None*
 

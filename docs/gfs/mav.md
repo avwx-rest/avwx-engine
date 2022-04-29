@@ -2,7 +2,7 @@
 
 The [MAV report](https://www.nws.noaa.gov/mdl/synop/mavcard.php) is a short-range forecast (6-72 hours) based on the [Global Forecast System](https://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs) model output and is only valid for ICAO stations in the United States, Puerto Rico, and US Virgin Islands. Reports are published every six hours starting at 0000 UTC.
 
-## class avwx.**Mav**(*icao: str*)
+## class avwx.**Mav**(*code: str*)
 
 The Mav class offers an object-oriented approach to managing MOS MAV data for a single station.
 
@@ -10,7 +10,7 @@ Below is typical usage for fetching and pulling MAV data for KJFK.
 
 ```python
 >>> from avwx import Mav
->>> kjfk = Mav('KJFK')
+>>> kjfk = Mav("KJFK")
 >>> kjfk.station.name
 'John F Kennedy International Airport'
 >>> kjfk.update()
@@ -56,6 +56,10 @@ Async updates report data by fetching and parsing the report
 
 Returns `True` if a new report is available, else `False`
 
+#### **code**: *str*
+
+Station ident code the report was initialized with
+
 #### **data**: *avwx.structs.MavData* = *None*
 
 MavData dataclass of parsed data values and units. Parsed on update()
@@ -63,10 +67,6 @@ MavData dataclass of parsed data values and units. Parsed on update()
 #### **from_report**(*report: str*) -> *avwx.Mav*
 
 Returns an updated report object based on an existing report
-
-#### **icao**: *str*
-
-4-character ICAO station ident code the report was initialized with
 
 #### **issued**: *date* = *None*
 

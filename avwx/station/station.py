@@ -80,7 +80,7 @@ class Station:
 
     @classmethod
     def from_code(cls: Type[T], ident: str) -> T:
-        """Load a station from ICAO, GPS, or IATA code in that order"""
+        """Load a Station from ICAO, GPS, or IATA code in that order"""
         if ident and isinstance(ident, str):
             if len(ident) == 4:
                 with suppress(BadStation):

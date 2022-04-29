@@ -2,7 +2,7 @@
 
 A METAR (Meteorological Aerodrome Report) is the surface weather observed at most controlled (and some uncontrolled) airports. They are updated once per hour or when conditions change enough to warrant an update, and the observations are valid for one hour after the report was issued or until the next report is issued.
 
-## class avwx.**Metar**(*icao: str*)
+## class avwx.**Metar**(*code: str*)
 
 The Metar class offers an object-oriented approach to managing METAR data for a single station.
 
@@ -10,7 +10,7 @@ Below is typical usage for fetching and pulling METAR data for KJFK.
 
 ```python
 >>> from avwx import Metar
->>> kjfk = Metar('KJFK')
+>>> kjfk = Metar("KJFK")
 >>> kjfk.station.name
 'John F Kennedy International Airport'
 >>> kjfk.update()
@@ -50,6 +50,10 @@ Async updates report data by fetching and parsing the report
 
 Returns `True` if a new report is available, else `False`
 
+#### **code**: *str*
+
+Station ident code the report was initialized with
+
 #### **data**: *avwx.structs.MetarData* = *None*
 
 MetarData dataclass of parsed data values and units. Parsed on update()
@@ -57,10 +61,6 @@ MetarData dataclass of parsed data values and units. Parsed on update()
 #### **from_report**(*report: str*) -> *avwx.Metar*
 
 Returns an updated report object based on an existing report
-
-#### **icao**: *str*
-
-4-character ICAO station ident code the report was initialized with
 
 #### **issued**: *date* = *None*
 

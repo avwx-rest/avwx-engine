@@ -2,7 +2,7 @@
 
 The [NBE report](https://www.weather.gov/mdl/nbm_textcard_v32#nbe) is an extended-range forecast (24-192 hours) based on the [National Blend of Models](https://www.weather.gov/mdl/nbm_home) and is only valid for ICAO stations in the United States and Puerto Rico, and US Virgin Islands. Reports are in 12-hour increments and published near the top of every hour.
 
-## class avwx.**Nbe**(*icao: str*)
+## class avwx.**Nbe**(*code: str*)
 
 Class to handle NBM NBE report data
 
@@ -10,7 +10,7 @@ Below is typical usage for fetching and pulling NBE data for KJFK.
 
 ```python
 >>> from avwx import Nbe
->>> kjfk = Nbe('KJFK')
+>>> kjfk = Nbe("KJFK")
 >>> kjfk.station.name
 'John F Kennedy International Airport'
 >>> kjfk.update()
@@ -61,6 +61,10 @@ Async updates report data by fetching and parsing the report
 
 Returns `True` if a new report is available, else `False`
 
+#### **code**: *str*
+
+Station ident code the report was initialized with
+
 #### **data**: *avwx.structs.NbeData* = *None*
 
 NbeData dataclass of parsed data values and units. Parsed on update()
@@ -68,10 +72,6 @@ NbeData dataclass of parsed data values and units. Parsed on update()
 #### **from_report**(*report: str*) -> *avwx.Nbe*
 
 Returns an updated report object based on an existing report
-
-#### **icao**: *str*
-
-4-character ICAO station ident code the report was initialized with
 
 #### **issued**: *date* = *None*
 

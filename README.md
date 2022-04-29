@@ -29,7 +29,7 @@ python -m pip install avwx-engine
 
 ## Basic Usage
 
-Reports use ICAO idents when specifying the desired station. Exceptions are thrown if a potentially invalid ident is given.
+Reports use ICAO, IATA, or GPS idents when specifying the desired station. Exceptions are thrown if a potentially invalid ident is given.
 
 ```python
 >>> import avwx

@@ -2,17 +2,17 @@
 
 This module contains station/airport dataclasses and search functions.
 
-For the purposes of AVWX, a station is any location that has an ICAO identification code. These are usually airports, but smaller locations might not generate certain report types or defer to larger stations nearby. For example, small airports with an AWOS system might not send the report to NOAA. They also include remote weather observation stations not associated with airports.
+For the purposes of AVWX, a station is any physical location that has an ICAO or GPS identification code. These are usually airports, but smaller locations might not generate certain report types or defer to larger stations nearby. For example, small airports with an AWOS system might not send the report to NOAA or other local authority. They also include remote weather observation stations not associated with airports like weather buouys.
 
 ## class avwx.Station
 
 The Station dataclass stores basic info about the desired station and available Runways.
 
-The easiest way to get a station is to supply the ICAO code. IATA codes will also work with `from_iata`.
+The easiest way to get a station is to supply the ICAO, IATA, or GPS code. The example below uses `from_code` which checks against all three types, but you can also use `from_icao`, `from_iata`, or `from_gps` if you know what type of code you are using. This can be important if you may be using a code used by more than one station depending on the context. ICAO and IATA codes are guarenteed unique, but not all airports have them. That said, all stations available in AVWX have either an ICAO or GPS code.
 
 ```python
 >>> from avwx import Station
->>> klex = Station.from_icao('KLEX')
+>>> klex = Station.from_code("KLEX")
 >>> f"{klex.name} in {klex.city}, {klex.state}"
 'Blue Grass Airport in Lexington, KY'
 >>> coord = round(klex.latitude, 3), round(klex.longitude, 3)
@@ -50,6 +50,14 @@ Elevation in feet
 
 Elevation in meters
 
+#### **from_code**(*ident: str*) -> *Station*
+
+Load a Station from an ICAO, GPS, or IATA code in that order
+
+#### **from_gps**(*ident: str*) -> *Station*
+
+Load a Station from a GPS code
+
 #### **from_icao**(*ident: str*) -> *Station*
 
 Load a Station from an ICAO station ident
@@ -58,17 +66,29 @@ Load a Station from an ICAO station ident
 
 Load a Station from an IATA code
 
-#### **iata**: *str*
+#### **gps**: *Optional[str]*
+
+Station's code for GPS navigation
+
+#### **iata**: *Optional[str]*
 
 Station's 3-char IATA ident
 
-#### **icao**: *str*
+#### **icao**: *Optional[str]*
 
 Station's 4-char ICAO ident
 
 #### **latitude**: *float*
 
+#### **local**: Optional[str]*
+
+Station's code assigned by its local authority
+
 #### **longitude**: *float*
+
+#### **lookup_code**: *str*
+
+Returns the ICAO or GPS code for report fetch
 
 #### **name**: *str*
 
@@ -89,6 +109,10 @@ Location notes like nearby landmarks
 #### **runways**: *[avwx.station.Runway]*
 
 List of available Runway objects sorted longest to shortest
+
+#### **sends_reports**: *bool*
+
+Returns whether or not a Station likely sends weather reports
 
 #### **state**: *str*
 

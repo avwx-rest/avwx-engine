@@ -2,7 +2,7 @@
 
 The [NBH report](https://www.weather.gov/mdl/nbm_textcard_v32#nbh) is a 25-hour forecast based on the [National Blend of Models](https://www.weather.gov/mdl/nbm_home) and is only valid for ICAO stations in the United States and Puerto Rico, and US Virgin Islands. Reports are in 1-hour increments and are published near the top of every hour.
 
-## class avwx.**Nbh**(*icao: str*)
+## class avwx.**Nbh**(*code: str*)
 
 Class to handle NBM NBH report data
 
@@ -10,7 +10,7 @@ Below is typical usage for fetching and pulling NBH data for KJFK.
 
 ```python
 >>> from avwx import Nbh
->>> kjfk = Nbh('KJFK')
+>>> kjfk = Nbh("KJFK")
 >>> kjfk.station.name
 'John F Kennedy International Airport'
 >>> kjfk.update()
@@ -64,6 +64,10 @@ Async updates report data by fetching and parsing the report
 
 Returns `True` if a new report is available, else `False`
 
+#### **code**: *str*
+
+Station ident code the report was initialized with
+
 #### **data**: *avwx.structs.NbhData* = *None*
 
 NbhData dataclass of parsed data values and units. Parsed on update()
@@ -71,10 +75,6 @@ NbhData dataclass of parsed data values and units. Parsed on update()
 #### **from_report**(*report: str*) -> *avwx.Nbh*
 
 Returns an updated report object based on an existing report
-
-#### **icao**: *str*
-
-4-character ICAO station ident code the report was initialized with
 
 #### **issued**: *date* = *None*
 

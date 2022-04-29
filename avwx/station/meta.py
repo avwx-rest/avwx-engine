@@ -11,7 +11,7 @@ from avwx.exceptions import BadStation
 from avwx.load_utils import LazyLoad
 from avwx.static.core import IN_REGIONS, M_IN_REGIONS, M_NA_REGIONS, NA_REGIONS
 
-__LAST_UPDATED__ = "2022-04-19"
+__LAST_UPDATED__ = "2022-04-29"
 
 # Lazy data loading to speed up import times for unused features
 STATIONS = LazyLoad("stations")
@@ -50,5 +50,5 @@ def valid_station(station: str):
     """
     station = station.strip()
     if len(station) != 4:
-        raise BadStation("ICAO station ident must be four characters long")
+        raise BadStation("Report station ident must be four characters long")
     uses_na_format(station)

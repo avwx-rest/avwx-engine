@@ -41,28 +41,28 @@ class StationTester(Kew):
         self.good_stations = stations
         self.sleep_chance = 0.0
 
-    def should_test(self, icao: str) -> bool:
+    def should_test(self, code: str) -> bool:
         """Returns False if an ident is known good or never good"""
-        if icao in self.good_stations:
+        if code in self.good_stations:
             return False
-        for char in icao:
+        for char in code:
             if char.isdigit():
                 return False
         return True
 
     async def worker(self, data: object) -> bool:
         """Worker to check queued idents and update lists"""
-        icao = data
+        code = data
         try:
-            metar = avwx.Metar(icao)
+            metar = avwx.Metar(code)
             if await metar.async_update():
-                self.good_stations.add(icao)
+                self.good_stations.add(code)
         except avwx.exceptions.SourceError as exc:
-            print("\n", icao, exc, "\n")
+            print("\n", code, exc, "\n")
         except (avwx.exceptions.BadStation, avwx.exceptions.InvalidRequest):
             pass
         except Exception as exc:
-            print("\n", icao, exc, "\n")
+            print("\n", code, exc, "\n")
         return True
 
     async def wait(self):
@@ -74,12 +74,12 @@ class StationTester(Kew):
         """Populate and run ICAO check queue"""
         stations = []
         for station in avwx.station.meta.STATIONS.values():
-            icao = station["icao"]
-            if not station["reporting"] and self.should_test(icao):
-                stations.append(icao)
+            code = station["icao"] or station["gps"]
+            if not station["reporting"] and self.should_test(code):
+                stations.append(code)
         random.shuffle(stations)
-        for icao in stations:
-            await self.add(icao)
+        for code in stations:
+            await self.add(code)
 
 
 async def main() -> int:

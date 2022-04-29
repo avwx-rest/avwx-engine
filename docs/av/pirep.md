@@ -2,7 +2,7 @@
 
 A PIREP (Pilot Report) is an observation made by pilots inflight meant to aid controllers and pilots routing around adverse conditions and other conditions of note. They typically contain icing, turbulence, cloud types/bases/tops, and other info at a known distance and radial from a ground station. They are released as they come in.
 
-## class avwx.**Pireps**(*icao: str = None, lat: float = None, lon: float = None*)
+## class avwx.**Pireps**(*code: str = None, lat: float = None, lon: float = None*)
 
 The Pireps class offers an object-oriented approach to managing multiple PIREP reports for a single station.
 
@@ -10,7 +10,7 @@ Below is typical usage for fetching and pulling PIREP data for KJFK.
 
 ```python
 >>> from avwx import Pireps
->>> kmco = Pireps('KMCO')
+>>> kmco = Pireps("KMCO")
 >>> kmco.station.name
 'Orlando International Airport'
 >>> kmco.update()
@@ -23,29 +23,17 @@ datetime.datetime(2019, 5, 24, 13, 31, 46, 561732, tzinfo=datetime.timezone.utc)
 Location(repr='KFLL275015', station='KFLL', direction=Number(repr='275', value=275, spoken='two seven five'), distance=Number(repr='015', value=15, spoken='one five'))
 ```
 
-The `parse` and `from_report` methods can parse a report string if you want to override the normal fetching process. Here's an example of a really bad day.
-
-```python
->>> from avwx import Metar
->>> ksfo = Metar.from_report(report)
-True
->>> ksfo.station.city
-'San Francisco'
->>> ksfo.last_updated
-datetime.datetime(2018, 3, 4, 23, 54, 4, 353757)
->>> ksfo.data.flight_rules
-'LIFR'
->>> ksfo.translations.clouds
-'Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft - Reported AGL'
->>> ksfo.summary
-'Winds N-360 (variable 320 to 040) at 24kt gusting to 55kt, Vis 0.125sm, Temp 14C, Dew 10C, Alt 29.78inHg, Heavy Thunderstorm, Vicinity Funnel Cloud, Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft'
-```
+The `parse` and `from_report` methods can parse a report string if you want to override the normal fetching process.
 
 #### async **async_update**(*timeout: int = 10*) -> *bool*
 
 Async updates report data by fetching and parsing the report
 
 Returns `True` if a new report is available, else `False`
+
+#### **code**: *Optional[str]*
+
+Station ident code the report was initialized with
 
 #### **data**: *List[avwx.structs.PirepData]* = *None*
 
