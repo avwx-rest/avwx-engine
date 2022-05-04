@@ -166,6 +166,28 @@ class Station:
         """Returns a geopy Distance using the great circle method"""
         return great_circle((lat, lon), (self.latitude, self.longitude))
 
+    def nearby(
+        self,
+        is_airport: bool = False,
+        sends_reports: bool = True,
+        max_coord_distance: float = 10,
+    ) -> List[Tuple[T, dict]]:
+        """Returns Stations nearest to current station and their distances
+
+        NOTE: Becomes less accurate toward poles and doesn't cross +/-180
+        """
+        stations = nearest(
+            self.latitude,
+            self.longitude,
+            11,
+            is_airport,
+            sends_reports,
+            max_coord_distance,
+        )
+        if isinstance(stations, dict):
+            return []
+        return [(s.pop("station"), s) for s in stations[1:]]
+
 
 # Coordinate search and resources
 

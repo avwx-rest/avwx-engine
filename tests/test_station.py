@@ -164,6 +164,18 @@ class TestStation(unittest.TestCase):
         for val in dist.values():
             self.assertIsInstance(val, float)
 
+    def test_nearby(self):
+        """Tests finding nearby airports to the current one"""
+        for code, near in (("KMCO", "KORL",), ("KJFK", "KLGA"), ("PHKO", "PHSF")):
+            target = station.Station.from_code(code)
+            nearby = target.nearby()
+            self.assertIsInstance(nearby, list)
+            self.assertEqual(len(nearby), 10)
+            nearest = nearby[0]
+            self.assertIsInstance(nearest[0], station.Station)
+            self.assertIsInstance(nearest[1], dict)
+            self.assertEqual(nearest[0].lookup_code, near)
+
     def test_sends_reports(self):
         """Tests bool indicating likely reporting station"""
         for code in ("KJFK", "EGLL"):

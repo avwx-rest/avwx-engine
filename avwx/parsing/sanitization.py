@@ -45,6 +45,7 @@ WIND_REPL = {
 WIND_VRB = (
     "BRB",
     "BRV",
+    "BVR",
     "CRB",
     "ERB",
     "NRB",
@@ -115,6 +116,7 @@ STR_REPL = {
     " TMM": " TNM",
     " TNTN": " TN",
     " TXTX": " TX",
+    " TXX": " TX",
     "/VRB": " VRB",
     "CALMKT ": "CALM ",
     "CLMKT ": "CALM ",
