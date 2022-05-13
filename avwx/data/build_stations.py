@@ -44,7 +44,7 @@ _SOURCES = {
     "airports": DATA_ROOT + "airports.csv",
     "runways": DATA_ROOT + "runways.csv",
     "stations": "https://www.aviationweather.gov/docs/metar/stations.txt",
-    "icaos": "https://raw.githubusercontent.com/ip2location/ip2location-iata-icao/master/iata-icao.csv",
+    "icaos": "https://raw.githubusercontent.com/avwx-rest/avwx-engine/master/data/icaos.json",
 }
 
 
@@ -78,13 +78,10 @@ def format_coord(coord: str) -> float:
 
 def load_icaos() -> None:
     """Load ICAO ident list"""
-    lines = csv.reader(_SOURCE["icaos"].split("\n"))
-    next(lines)  # Skip header
-    for line in lines:
-        with suppress(IndexError):
-            icao = line[3]
-            if len(icao) == 4:
-                ICAO.append(icao)
+    # Global can't assign
+    codes = json.loads(_SOURCE["icaos"])
+    for icao in codes:
+        ICAO.append(icao)
 
 
 def validate_icao(code: str) -> Optional[str]:

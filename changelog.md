@@ -7,7 +7,7 @@ Parsing and sanitization improvements are always ongoing and non-breaking
 - Added `AirSigmet` report class and managers
 - Added `data` module to update station info client side
 - Added `flight_path` module for resolving station and navaid coords
-- Added `coord`, `gps`, `local`, `from_code`, `from_gps` to `Station`
+- Added `coord`, `gps`, `local`, `from_code`, `from_gps`, `nearby` to `Station`
 - Split `AVWXBase` some functionality into `ManagedReport`
 - Dropped 3.7 support
 
