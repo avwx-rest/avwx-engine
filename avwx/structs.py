@@ -7,7 +7,7 @@ Contains dataclasses to hold report data
 # stdlib
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Type, TypeVar, Union
 
 # module
 from avwx.load_utils import LazyLoad
@@ -66,10 +66,32 @@ class Timestamp:
     dt: Optional[datetime]
 
 
+CodeType = TypeVar("CodeType", bound="Code")
+
+
 @dataclass
 class Code:
     repr: str
     value: str
+
+    @classmethod
+    def from_dict(
+        cls: Type[CodeType],
+        key: Optional[str],
+        codes: Dict[str, str],
+        default: str = None,
+        error: bool = True,
+    ) -> Optional[CodeType]:
+        """Load a code from a known key and value dict"""
+        if not key:
+            return None
+        try:
+            value = codes.get(key)
+        except KeyError as exc:
+            if error:
+                raise KeyError(f"No code found for {key}") from exc
+            value = default
+        return cls(key, value or "Unknown")
 
 
 @dataclass
@@ -87,6 +109,15 @@ class Coord:
         if Point is None:
             raise ModuleNotFoundError("Install avwx-engine[shape] to use this feature")
         return Point(self.lat, self.lon)
+
+    @staticmethod
+    def to_dms(value: float) -> Tuple[int, int, int]:
+        """Convert a coordinate decimal value to degree, minute, second"""
+        minute, second = divmod(abs(value) * 3600, 60)
+        degree, minute = divmod(minute, 60)
+        if value < 0:
+            degree *= -1
+        return int(degree), int(minute), int(second)
 
 
 @dataclass
@@ -321,6 +352,34 @@ class AirSigmetData(ReportData):
     region: str
     observation: Optional[AirSigObservation]
     forecast: Optional[AirSigObservation]
+
+
+@dataclass
+class Qualifiers:
+    fir: str
+    subject: Optional[Code]
+    condition: Optional[Code]
+    traffic: Optional[Code]
+    purpose: List[Code]
+    scope: List[Code]
+    lower: Optional[Number]
+    upper: Optional[Number]
+    coord: Coord
+    radius: Optional[Number]
+
+
+@dataclass
+class NotamData(ReportData):
+    number: Optional[str]
+    replaces: Optional[str]
+    type: Optional[Code]
+    qualifiers: Optional[Qualifiers]
+    start_time: Optional[Timestamp]
+    end_time: Optional[Timestamp]
+    schedule: Optional[str]
+    body: str
+    lower: Optional[Number]
+    upper: Optional[Number]
 
 
 @dataclass

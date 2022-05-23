@@ -336,39 +336,6 @@ def _bounds(data: List[str]) -> Tuple[List[str], List[Coord], List[str]]:
     return data, coords, bounds
 
 
-def _is_altitude(value: str) -> bool:
-    """Returns True if the value is a possible altitude"""
-    if len(value) < 5:
-        return False
-    if value[:4] == "SFC/":
-        return True
-    if value[:2] == "FL" and value[2:5].isdigit():
-        return True
-    first, *_ = value.split("/")
-    if first[-2:] == "FT" and first[-5:-2].isdigit():
-        return True
-    return False
-
-
-def _make_altitude(
-    value: str, units: Units, force_fl: bool = False
-) -> Tuple[Optional[Number], Units]:
-    """Convert altitude string into a number"""
-    raw = value
-    for end in ("FT", "M"):
-        if value.endswith(end):
-            force_fl = False
-            units.altitude = end.lower()
-            # post 3.8 value = value.removesuffix(end)
-            value = value[: -len(end)]
-    # F430
-    if value[0] == "F" and value[1:].isdigit():
-        value = "FL" + value[1:]
-    if force_fl and value[:2] != "FL":
-        value = "FL" + value
-    return core.make_number(value, repr=raw), units
-
-
 def _altitudes(
     data: List[str], units: Units
 ) -> Tuple[List[str], Units, Optional[Number], Optional[Number]]:
@@ -377,8 +344,8 @@ def _altitudes(
     for i, item in enumerate(data):
         # BTN FL180 AND FL330
         if item == "BTN" and len(data) > i + 2 and data[i + 2] == "AND":
-            floor, units = _make_altitude(data[i + 1], units)
-            ceiling, units = _make_altitude(data[i + 3], units)
+            floor, units = core.make_altitude(data[i + 1], units)
+            ceiling, units = core.make_altitude(data[i + 3], units)
             data = data[:i] + data[i + 4 :]
             break
         # TOPS ABV FL450
@@ -390,25 +357,27 @@ def _altitudes(
             # TOPS TO FL310
             if data[i + 1] == "TO":
                 data.pop(i)
-            ceiling, units = _make_altitude(data[i + 1], units)
+            ceiling, units = core.make_altitude(data[i + 1], units)
             data = data[:i] + data[i + 2 :]
             # CIG BLW 010
             if data[i - 1] == "CIG":
                 data.pop(i - 1)
             break
         # FL060/300 SFC/FL160
-        if _is_altitude(item):
+        if core.is_altitude(item):
             if "/" in item:
                 floor_val, ceiling_val = item.split("/")
-                floor, units = _make_altitude(floor_val, units)
+                floor, units = core.make_altitude(floor_val, units)
                 if (floor_val == "SFC" or floor_val[:2] == "FL") and ceiling_val[
                     :2
                 ] != "FL":
-                    ceiling, units = _make_altitude(ceiling_val, units, True)
+                    ceiling, units = core.make_altitude(
+                        ceiling_val, units, force_fl=True
+                    )
                 else:
-                    ceiling, units = _make_altitude(ceiling_val, units)
+                    ceiling, units = core.make_altitude(ceiling_val, units)
             else:
-                ceiling, units = _make_altitude(item, units)
+                ceiling, units = core.make_altitude(item, units)
             data.pop(i)
             break
     return data, units, floor, ceiling
@@ -513,7 +482,7 @@ def sanitize(report: str) -> str:
             and not item[-1].isdigit()
             and item[-2:] != "FT"
             and item[-1] != "M"
-            and _is_altitude(item[:-1])
+            and core.is_altitude(item[:-1])
         ):
             data[i] = item[:-1]
         # Split attached movement direction Ex: NE05KT

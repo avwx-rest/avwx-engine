@@ -11,9 +11,9 @@ from typing import List, Optional, Tuple, Union
 
 # module
 from avwx.base import ManagedReport
-from avwx.service import get_service, NOAA_ADDS
+from avwx.service import get_service
 from avwx.static.core import NA_UNITS, WX_TRANSLATIONS
-from avwx.structs import Code, ReportData, ReportTrans, Units
+from avwx.structs import Code, Coord, ReportData, ReportTrans, Units
 
 
 def wx_code(code: str) -> Union[Code, str]:
@@ -78,24 +78,24 @@ class Reports(ManagedReport):
     Base class containing multiple reports
     """
 
+    coord: Optional[Coord] = None
     raw: Optional[List[str]] = None  # type: ignore
     data: Optional[List[ReportData]] = None  # type: ignore
     units: Units = Units(**NA_UNITS)
 
-    def __init__(self, code: str = None, lat: float = None, lon: float = None):
+    def __init__(self, code: str = None, coord: Coord = None):
         if code:
             super().__init__(code)
             if self.station is not None:
-                lat = self.station.latitude
-                lon = self.station.longitude
-        elif lat is None or lon is None:
-            raise ValueError("No station or valid coordinates given")
-        self.lat = lat
-        self.lon = lon
-        self.service = NOAA_ADDS("aircraftreport")
+                coord = self.station.coord
+        elif coord is None:
+            raise ValueError("No station or coordinate given")
+        self.coord = coord
 
     def __repr__(self) -> str:
-        return f"<avwx.{self.__class__.__name__} lat={self.lat} lon={self.lon}>"
+        if self.code:
+            return f"<avwx.{self.__class__.__name__} code={self.code}>"
+        return f"<avwx.{self.__class__.__name__} coord={self.coord}>"
 
     @staticmethod
     def _report_filter(reports: List[str]) -> List[str]:
@@ -115,10 +115,7 @@ class Reports(ManagedReport):
 
         Can accept a report issue date if not a recent report string
         """
-        self.source = None
-        if isinstance(reports, str):
-            reports = [reports]
-        return aio.run(self._update(reports, issued, False))
+        return aio.run(self.async_parse(reports, issued))
 
     async def async_parse(
         self, reports: Union[str, List[str]], issued: Optional[date] = None
@@ -132,23 +129,15 @@ class Reports(ManagedReport):
             reports = [reports]
         return await self._update(reports, issued, False)
 
-    def update(
-        self,
-        timeout: int = 10,
-        disable_post: bool = False,
-    ) -> bool:
+    def update(self, timeout: int = 10, disable_post: bool = False) -> bool:
         """Updates report data by fetching and parsing the report
 
         Returns True if new reports are available, else False
         """
-        reports = self.service.fetch(lat=self.lat, lon=self.lon, timeout=timeout)  # type: ignore
-        self.source = self.service.root
-        return aio.run(self._update(reports, None, disable_post))
+        return aio.run(self.async_update(timeout, disable_post))
 
     async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
         """Async updates report data by fetching and parsing the report"""
-        reports = await self.service.async_fetch(  # type: ignore
-            lat=self.lat, lon=self.lon, timeout=timeout
-        )
+        reports = await self.service.async_fetch(coord=self.coord, timeout=timeout)  # type: ignore
         self.source = self.service.root
         return await self._update(reports, None, disable_post)

@@ -13,7 +13,7 @@ import httpx
 
 URL = "https://en.wikipedia.org/wiki/List_of_ICAO_aircraft_type_designators"
 OUTPUT_PATH = Path(__file__).parent / "files" / "aircraft.json"
-TAG_PATTERN = re.compile("<[^>]*>")
+TAG_PATTERN = re.compile(r"<[^>]*>")
 
 
 def main() -> int:

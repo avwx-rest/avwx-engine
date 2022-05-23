@@ -13,7 +13,7 @@ import time_machine
 # module
 from avwx import static, structs
 from avwx.parsing import core
-from avwx.static.core import NA_UNITS
+from avwx.static.core import NA_UNITS, IN_UNITS
 from avwx.structs import Fraction, Number, Units
 
 # tests
@@ -332,6 +332,31 @@ class TestCore(BaseTest):
             if ceiling:
                 ceiling = structs.Cloud(None, *ceiling)
             self.assertEqual(core.get_ceiling(clouds), ceiling)
+
+    def test_is_altitude(self):
+        """Tests if an element is an altitude"""
+        for altitude in ("SFC/FL030", "FL020/030", "6000FT/FL020", "300FT"):
+            self.assertTrue(core.is_altitude(altitude))
+        for item in ("", "50SE", "KFFT"):
+            self.assertFalse(core.is_altitude(item))
+
+    def test_make_altitude(self):
+        """Tests converting altitude text into Number"""
+        for text, force, value, unit, speak in (
+            ("FL030", False, 30, "ft", "flight level three zero"),
+            ("030", False, 30, "ft", "three zero"),
+            ("030", True, 30, "ft", "flight level three zero"),
+            ("6000FT", False, 6000, "ft", "six thousand"),
+            ("10000FT", False, 10000, "ft", "one zero thousand"),
+            ("2000M", False, 2000, "m", "two thousand"),
+            ("ABV FL450", False, 450, "ft", "above flight level four five zero"),
+        ):
+            units = Units(**IN_UNITS)
+            altitude, units = core.make_altitude(text, units, force_fl=force)
+            self.assertEqual(altitude.repr, text)
+            self.assertEqual(units.altitude, unit)
+            self.assertEqual(altitude.value, value)
+            self.assertEqual(altitude.spoken, speak)
 
     def test_parse_date(self):
         """Tests that report timestamp is parsed into a datetime object"""

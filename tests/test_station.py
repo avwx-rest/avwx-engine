@@ -166,7 +166,14 @@ class TestStation(unittest.TestCase):
 
     def test_nearby(self):
         """Tests finding nearby airports to the current one"""
-        for code, near in (("KMCO", "KORL",), ("KJFK", "KLGA"), ("PHKO", "PHSF")):
+        for code, near in (
+            (
+                "KMCO",
+                "KORL",
+            ),
+            ("KJFK", "KLGA"),
+            ("PHKO", "PHSF"),
+        ):
             target = station.Station.from_code(code)
             nearby = target.nearby()
             self.assertIsInstance(nearby, list)

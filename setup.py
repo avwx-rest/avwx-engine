@@ -10,10 +10,10 @@ dependencies = [
     "geopy~=2.2",
     "httpx~=0.22",
     "python-dateutil~=2.8",
-    "xmltodict~=0.12",
+    "xmltodict~=0.13",
 ]
 
-test_dependencies = ["pytest-asyncio~=0.18", "time-machine~=2.6"]
+test_dependencies = ["pytest-asyncio~=0.18", "time-machine~=2.7"]
 
 extras = {
     "fuzz": ["rapidfuzz~=2.0"],

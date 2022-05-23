@@ -2,13 +2,14 @@
 Classes for retrieving raw report strings via web scraping
 """
 
-# pylint: disable=arguments-differ,invalid-name
+# pylint: disable=arguments-differ,invalid-name,too-many-arguments
 
 # stdlib
 import asyncio as aio
 import json
 import random
-from typing import Any, List, Optional, Tuple, Union
+import re
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 # library
 from xmltodict import parse as parsexml  # type: ignore
@@ -16,8 +17,9 @@ from xmltodict import parse as parsexml  # type: ignore
 # module
 from avwx.parsing.core import dedupe
 from avwx.exceptions import InvalidRequest
-from avwx.station import valid_station
 from avwx.service.base import CallsHTTP, Service
+from avwx.station import valid_station
+from avwx.structs import Coord
 
 
 USER_AGENTS = [
@@ -129,7 +131,7 @@ class NOAA_ADDS(ScrapeService):
         super().__init__(self._rtype_map.get(request_type, request_type))
 
     def _make_url(
-        self, station: Optional[str], lat: Optional[float], lon: Optional[float]
+        self, station: Optional[str], coord: Optional[Coord]
     ) -> Tuple[str, dict]:
         """Returns a formatted URL and parameters"""
         # Base request params
@@ -139,8 +141,8 @@ class NOAA_ADDS(ScrapeService):
             "hoursBeforeNow": 2,
             "dataSource": self.report_type + "s",
         }
-        if self.report_type == "aircraftreport":
-            params["radialDistance"] = f"200;{lon},{lat}"
+        if self.report_type == "aircraftreport" and coord is not None:
+            params["radialDistance"] = f"200;{coord.lon},{coord.lat}"
         else:
             params["stationString"] = station
         return self.url, params
@@ -174,26 +176,24 @@ class NOAA_ADDS(ScrapeService):
     def fetch(
         self,
         station: str = None,
-        lat: float = None,
-        lon: float = None,
+        coord: Coord = None,
         timeout: int = 10,
     ) -> Union[str, List[str]]:
         """Fetches a report string from the service"""
-        return aio.run(self.async_fetch(station, lat, lon, timeout))
+        return aio.run(self.async_fetch(station, coord, timeout))
 
     async def async_fetch(
         self,
         station: str = None,
-        lat: float = None,
-        lon: float = None,
+        coord: Coord = None,
         timeout: int = 10,
     ) -> Union[str, List[str]]:
         """Asynchronously fetch a report string from the service"""
         if station:
             valid_station(station)
-        elif lat is None or lon is None:
+        elif coord is None:
             raise ValueError("No valid fetch parameters")
-        url, params = self._make_url(station, lat, lon)
+        url, params = self._make_url(station, coord)
         text = await self._call(url, params=params, timeout=timeout)
         report = self._extract(text)
         return self._clean_report(report)
@@ -412,6 +412,111 @@ class AVT(StationScrape):
             return data[key]["rows"][0]["content"]
         except (TypeError, json.decoder.JSONDecodeError, KeyError, IndexError):
             return ""
+
+
+# Ancilary scrape services
+
+
+TAG_PATTERN = re.compile(r"<[^>]*>")
+
+
+class FAA_NOTAM(ScrapeService):
+    """Sources NOTAMs from official FAA portal"""
+
+    url = "https://notams.aim.faa.gov/notamSearch/search"
+    method = "POST"
+    _valid_types = ("notam",)
+
+    @staticmethod
+    def _make_headers() -> dict:
+        return {"Content-Type": "application/x-www-form-urlencoded"}
+
+    @staticmethod
+    def _split_coord(prefix: str, value: float) -> dict:
+        """Adds coordinate deg/min/sec fields per float value"""
+        degree, minute, second = Coord.to_dms(value)
+        if prefix == "lat":
+            key = "latitude"
+            direction = "N" if degree >= 0 else "S"
+        else:
+            key = "longitude"
+            direction = "E" if degree >= 0 else "W"
+        return {
+            prefix + "Degrees": abs(degree),
+            prefix + "Minutes": minute,
+            prefix + "Seconds": second,
+            key + "Direction": direction,
+        }
+
+    def _post_for(
+        self,
+        icao: str = None,
+        coord: Coord = None,
+        path: List[str] = None,
+        radius: int = 10,
+    ) -> dict:
+        """Generate POST payload for search params in location order"""
+        data: Dict[str, Any] = {"notamsOnly": False, "radius": radius}
+        if icao:
+            data["searchType"] = 0
+            data["designatorsForLocation"] = icao
+        elif coord:
+            data["searchType"] = 3
+            data["radiusSearchOnDesignator"] = False
+            data.update(self._split_coord("lat", coord.lat))
+            data.update(self._split_coord("long", coord.lon))
+        elif path:
+            data["searchType"] = 6
+            data["flightPathText"] = " ".join(path)
+            data["flightPathBuffer"] = radius
+            data["flightPathIncludeNavaids"] = True
+            data["flightPathIncludeArtcc"] = False
+            data["flightPathIncludeTfr"] = True
+            data["flightPathIncludeRegulatory"] = False
+            data["flightPathResultsType"] = "All NOTAMs"
+        else:
+            raise InvalidRequest("Not enough info to request NOTAM data")
+        return data
+
+    def fetch(
+        self,
+        icao: str = None,
+        coord: Coord = None,
+        path: List[str] = None,
+        radius: int = 10,
+        timeout: int = 10,
+    ) -> List[str]:
+        """Fetch NOTAM list from the service via ICAO, coordinate, or ident path"""
+        return aio.run(self.async_fetch(icao, coord, path, radius, timeout))
+
+    async def async_fetch(
+        self,
+        icao: str = None,
+        coord: Coord = None,
+        path: List[str] = None,
+        radius: int = 10,
+        timeout: int = 10,
+    ) -> List[str]:
+        """Async fetch NOTAM list from the service via ICAO, coordinate, or ident path"""
+        headers = self._make_headers()
+        data = self._post_for(icao, coord, path, radius)
+        notams = []
+        while True:
+            text = await self._call(self.url, None, headers, data, timeout)
+            resp = json.loads(text)
+            for item in resp["notamList"]:
+                report = item.get("icaoMessage", "").strip()
+                if report:
+                    report = TAG_PATTERN.sub("", report).strip()
+                    issued = item.get("issueDate")
+                    if issued:
+                        report = f"{issued}||{report}"
+                    notams.append(report)
+            offset = resp["endRecordCount"]
+            if not notams or offset >= resp["totalNotamCount"]:
+                break
+            data["offset"] = offset
+        return notams
 
 
 PREFERRED = {

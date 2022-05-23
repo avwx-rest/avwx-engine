@@ -573,6 +573,41 @@ def get_ceiling(clouds: List[Cloud]) -> Optional[Cloud]:
     return None
 
 
+def is_altitude(value: str) -> bool:
+    """Returns True if the value is a possible altitude"""
+    if len(value) < 5:
+        return False
+    if value[:4] == "SFC/":
+        return True
+    if value[:2] == "FL" and value[2:5].isdigit():
+        return True
+    first, *_ = value.split("/")
+    if first[-2:] == "FT" and first[-5:-2].isdigit():
+        return True
+    return False
+
+
+def make_altitude(
+    value: str, units: Units, repr: str = None, force_fl: bool = False
+) -> Tuple[Optional[Number], Units]:
+    """Convert altitude string into a number"""
+    if not value:
+        return None, units
+    raw = repr or value
+    for end in ("FT", "M"):
+        if value.endswith(end):
+            force_fl = False
+            units.altitude = end.lower()
+            # post 3.8 value = value.removesuffix(end)
+            value = value[: -len(end)]
+    # F430
+    if value[0] == "F" and value[1:].isdigit():
+        value = "FL" + value[1:]
+    if force_fl and value[:2] != "FL":
+        value = "FL" + value
+    return make_number(value, repr=raw), units
+
+
 def parse_date(
     date: str,
     hour_threshold: int = 200,

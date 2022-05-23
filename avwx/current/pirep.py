@@ -11,11 +11,13 @@ from typing import List, Optional, Tuple, Union
 # module
 from avwx.current.base import Reports, get_wx_codes
 from avwx.parsing import core, sanitization
+from avwx.service import NOAA_ADDS
 from avwx.static.core import CARDINALS, CLOUD_LIST, NA_UNITS
 from avwx.structs import (
     Aircraft,
     Cloud,
     Code,
+    Coord,
     Icing,
     Location,
     Number,
@@ -300,6 +302,10 @@ class Pireps(Reports):
     """Class to handle pilot report data"""
 
     data: Optional[List[PirepData]] = None  # type: ignore
+
+    def __init__(self, code: str = None, coord: Coord = None):
+        super().__init__(code, coord)
+        self.service = NOAA_ADDS("aircraftreport")
 
     @staticmethod
     def _report_filter(reports: List[str]) -> List[str]:

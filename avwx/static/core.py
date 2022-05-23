@@ -200,6 +200,7 @@ SPECIAL_NUMBERS = {
     "STNR": (0, "stationary"),
     "LTL": (0, "little"),
     "FRZLVL": (None, "freezing level"),
+    "UNL": (999, "Unlimited"),
 }
 
 #: Static remarks translation elements

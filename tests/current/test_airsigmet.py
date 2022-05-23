@@ -368,31 +368,6 @@ class TestAirSigmet(BaseTest):
                 self.assertEqual(round(coord.lat, 2), lat)
                 self.assertEqual(round(coord.lon, 2), lon)
 
-    def test_is_altitude(self):
-        """Tests if an element is an altitude"""
-        for altitude in ("SFC/FL030", "FL020/030", "6000FT/FL020", "300FT"):
-            self.assertTrue(airsigmet._is_altitude(altitude))
-        for item in ("", "50SE", "KFFT"):
-            self.assertFalse(airsigmet._is_altitude(item))
-
-    def test_make_altitude(self):
-        """Tests converting altitude text into Number"""
-        for text, force, value, unit, speak in (
-            ("FL030", False, 30, "ft", "flight level three zero"),
-            ("030", False, 30, "ft", "three zero"),
-            ("030", True, 30, "ft", "flight level three zero"),
-            ("6000FT", False, 6000, "ft", "six thousand"),
-            ("10000FT", False, 10000, "ft", "one zero thousand"),
-            ("2000M", False, 2000, "m", "two thousand"),
-            ("ABV FL450", False, 450, "ft", "above flight level four five zero"),
-        ):
-            units = Units(**IN_UNITS)
-            altitude, units = airsigmet._make_altitude(text, units, force_fl=force)
-            self.assertEqual(altitude.repr, text)
-            self.assertEqual(units.altitude, unit)
-            self.assertEqual(altitude.value, value)
-            self.assertEqual(altitude.spoken, speak)
-
     def test_altitudes(self):
         """Tests extracting floor and ceiling altitudes from report"""
         for wx, floor, ceiling, unit, extra in (

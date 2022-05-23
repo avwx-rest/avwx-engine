@@ -56,17 +56,24 @@ class CallsHTTP:
         headers: dict = None,
         data: Any = None,
         timeout: int = 10,
+        retries: int = 3,
     ) -> str:
         name = self.__class__.__name__
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:
-                if self.method.lower() == "post":
-                    resp = await client.post(
-                        url, params=params, headers=headers, data=data
-                    )
+                for _ in range(retries):
+                    if self.method.lower() == "post":
+                        resp = await client.post(
+                            url, params=params, headers=headers, data=data
+                        )
+                    else:
+                        resp = await client.get(url, params=params, headers=headers)
+                    if resp.status_code == 200:
+                        break
+                    # Skip retries if remote server error
+                    if resp.status_code >= 500:
+                        raise SourceError(f"{name} server returned {resp.status_code}")
                 else:
-                    resp = await client.get(url, params=params, headers=headers)
-                if resp.status_code != 200:
                     raise SourceError(f"{name} server returned {resp.status_code}")
         except (
             httpx.ConnectTimeout,
