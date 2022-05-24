@@ -1,0 +1,3076 @@
+{
+    "created": "2022-05-24",
+    "icao": "EGLL",
+    "reports": [
+        {
+            "data": {
+                "body": "NDB WCO/WESTCOTT 335KHZ U/S",
+                "end_time": {
+                    "dt": "2023-03-23T13:00:00+00:00",
+                    "repr": "2303231300"
+                },
+                "lower": null,
+                "number": "A2232/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "AS",
+                        "value": "Unserviceable"
+                    },
+                    "coord": {
+                        "lat": 51.51,
+                        "lon": -0.58,
+                        "repr": "5151N00058W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "EGTT/QNBAS/IV/BO /A /000/999/5151N00058W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "NB",
+                        "value": "Nondirectional radio beacon"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "A2232/22 NOTAMN\nQ) EGTT/QNBAS/IV/BO /A /000/999/5151N00058W005\nA) EGLL B) 2203231000 C) 2303231300\nE) NDB WCO/WESTCOTT 335KHZ U/S",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "A2232/22 NOTAMN\nQ) EGTT/QNBAS/IV/BO /A /000/999/5151N00058W005\nA) EGLL B) 2203231000 C) 2303231300\nE) NDB WCO/WESTCOTT 335KHZ U/S",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-03-23T10:00:00+00:00",
+                    "repr": "2203231000"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "THREE CONSTRUCTION SITE CRANES OPERATING AT PSN 513225N 0001659W \n(ALPERTON, WEMBLEY LONDON). UP TO 407FT AGL/508FT AMSL. \nFOR INFO CONTACT 07464 905409 . ON EXPIRY OF THIS NOTAM DETAILS \nWILL BE INCLUDED IN THE UK AIP ENR 5.4 2022-BAL-2160/AS8",
+                "end_time": {
+                    "dt": "2022-06-23T12:00:00+00:00",
+                    "repr": "2206231200"
+                },
+                "lower": null,
+                "number": "A2462/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "CE",
+                        "value": "Erected"
+                    },
+                    "coord": {
+                        "lat": 51.32,
+                        "lon": -0.17,
+                        "repr": "5132N00017W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "001",
+                        "spoken": "one",
+                        "value": 1
+                    },
+                    "repr": "EGTT/QOBCE/IV/M  /AE/000/006/5132N00017W001",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "E",
+                            "value": "En Route"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "OB",
+                        "value": "Obstacle"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "006",
+                        "spoken": "six",
+                        "value": 6
+                    }
+                },
+                "raw": "A2462/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/006/5132N00017W001\nA) EGLL B) 2203251545 C) 2206231200\nE) THREE CONSTRUCTION SITE CRANES OPERATING AT PSN 513225N 0001659W \n(ALPERTON, WEMBLEY LONDON). UP TO 407FT AGL/508FT AMSL. \nFOR INFO CONTACT 07464 905409 . ON EXPIRY OF THIS NOTAM DETAILS \nWILL BE INCLUDED IN THE UK AIP ENR 5.4 2022-BAL-2160/AS8",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "A2462/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/006/5132N00017W001\nA) EGLL B) 2203251545 C) 2206231200\nE) THREE CONSTRUCTION SITE CRANES OPERATING AT PSN 513225N 0001659W \n(ALPERTON, WEMBLEY LONDON). UP TO 407FT AGL/508FT AMSL. \nFOR INFO CONTACT 07464 905409 . ON EXPIRY OF THIS NOTAM DETAILS \nWILL BE INCLUDED IN THE UK AIP ENR 5.4 2022-BAL-2160/AS8",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-03-25T15:45:00+00:00",
+                    "repr": "2203251545"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "STAND 301 CLOSED DUE WIP",
+                "end_time": {
+                    "dt": "2022-05-31T22:59:00+00:00",
+                    "repr": "2205312259"
+                },
+                "lower": null,
+                "number": "A2684/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LC",
+                        "value": "Closed"
+                    },
+                    "coord": {
+                        "lat": 51.29,
+                        "lon": -0.28,
+                        "repr": "5129N00028W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "EGTT/QMPLC/IV/BO /A /000/999/5129N00028W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MP",
+                        "value": "Aircraft stands"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "A2684/22 NOTAMR A1537/22\nQ) EGTT/QMPLC/IV/BO /A /000/999/5129N00028W005\nA) EGLL B) 2204012147 C) 2205312259\nE) STAND 301 CLOSED DUE WIP",
+                "remarks": null,
+                "replaces": "A1537/22",
+                "sanitized": "A2684/22 NOTAMR A1537/22\nQ) EGTT/QMPLC/IV/BO /A /000/999/5129N00028W005\nA) EGLL B) 2204012147 C) 2205312259\nE) STAND 301 CLOSED DUE WIP",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-04-01T21:47:00+00:00",
+                    "repr": "2204012147"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMR",
+                    "value": "Replace"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 2022022449\nTYPE: CRANE\nPOSITION:  513006.00N 0002459.00W\nELEVATION/HEIGHT: 456FT AMSL/341.8FT AGL\nLIGHTING: YES - STEAD RED\nUK AIP EGLL AD 2.10 REFERS.",
+                "end_time": {
+                    "dt": "2100-01-01T00:00:00+00:00",
+                    "repr": "PERM"
+                },
+                "lower": null,
+                "number": "A2248/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "CE",
+                        "value": "Erected"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.25,
+                        "repr": "5130N00025W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "001",
+                        "spoken": "one",
+                        "value": 1
+                    },
+                    "repr": "EGTT/QOBCE/IV/M  /AE/000/005/5130N00025W001",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "E",
+                            "value": "En Route"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "OB",
+                        "value": "Obstacle"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    }
+                },
+                "raw": "A2248/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/005/5130N00025W001\nA) EGLL B) 2204090000 C) PERM\nE) LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 2022022449\nTYPE: CRANE\nPOSITION:  513006.00N 0002459.00W\nELEVATION/HEIGHT: 456FT AMSL/341.8FT AGL\nLIGHTING: YES - STEAD RED\nUK AIP EGLL AD 2.10 REFERS.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "A2248/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/005/5130N00025W001\nA) EGLL B) 2204090000 C) PERM\nE) LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 2022022449\nTYPE: CRANE\nPOSITION:  513006.00N 0002459.00W\nELEVATION/HEIGHT: 456FT AMSL/341.8FT AGL\nLIGHTING: YES - STEAD RED\nUK AIP EGLL AD 2.10 REFERS.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-04-09T00:00:00+00:00",
+                    "repr": "2204090000"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "4 CRANES OPR WITHIN AREA (SOUTHALL):\n513026N 0002321W - 513028N 0002327W - 513027N 0002329W - \n513029N 0002328W - 513026N 0002321W\nMAX HGT 223FT AGL / 328FT AMSL.",
+                "end_time": {
+                    "dt": "2022-07-24T23:59:00+00:00",
+                    "repr": "2207242359"
+                },
+                "lower": null,
+                "number": "A3345/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "CE",
+                        "value": "Erected"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.23,
+                        "repr": "5130N00023W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "001",
+                        "spoken": "one",
+                        "value": 1
+                    },
+                    "repr": "EGTT/QOBCE/IV/M  /AE/000/004/5130N00023W001",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "E",
+                            "value": "En Route"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "OB",
+                        "value": "Obstacle"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "004",
+                        "spoken": "four",
+                        "value": 4
+                    }
+                },
+                "raw": "A3345/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/004/5130N00023W001\nA) EGLL B) 2204271651 C) 2207242359\nE) 4 CRANES OPR WITHIN AREA (SOUTHALL):\n513026N 0002321W - 513028N 0002327W - 513027N 0002329W - \n513029N 0002328W - 513026N 0002321W\nMAX HGT 223FT AGL / 328FT AMSL.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "A3345/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/004/5130N00023W001\nA) EGLL B) 2204271651 C) 2207242359\nE) 4 CRANES OPR WITHIN AREA (SOUTHALL):\n513026N 0002321W - 513028N 0002327W - 513027N 0002329W - \n513029N 0002328W - 513026N 0002321W\nMAX HGT 223FT AGL / 328FT AMSL.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-04-27T16:51:00+00:00",
+                    "repr": "2204271651"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "LIT MOBILE CRANE OPERATING WITHIN:\n513007N 0002452W - 513003N 0002442W - 512958N 0002447W - \n513004N 0002457W - 513007N 0002452W (HAYES). UPTO 125FT AGL / 225FT \nAMSL. NO CRANE OPS DURING LVP. REF 2021120234 REFERS",
+                "end_time": {
+                    "dt": "2022-05-31T16:00:00+00:00",
+                    "repr": "2205311600"
+                },
+                "lower": null,
+                "number": "A3408/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "CE",
+                        "value": "Erected"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.25,
+                        "repr": "5130N00025W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "001",
+                        "spoken": "one",
+                        "value": 1
+                    },
+                    "repr": "EGTT/QOBCE/IV/M  /AE/000/003/5130N00025W001",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "E",
+                            "value": "En Route"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "OB",
+                        "value": "Obstacle"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "003",
+                        "spoken": "three",
+                        "value": 3
+                    }
+                },
+                "raw": "A3408/22 NOTAMR A1742/22\nQ) EGTT/QOBCE/IV/M  /AE/000/003/5130N00025W001\nA) EGLL B) 2204301310 C) 2205311600\nD) MON-FRI 0700-1600\nE) LIT MOBILE CRANE OPERATING WITHIN:\n513007N 0002452W - 513003N 0002442W - 512958N 0002447W - \n513004N 0002457W - 513007N 0002452W (HAYES). UPTO 125FT AGL / 225FT \nAMSL. NO CRANE OPS DURING LVP. REF 2021120234 REFERS",
+                "remarks": null,
+                "replaces": "A1742/22",
+                "sanitized": "A3408/22 NOTAMR A1742/22\nQ) EGTT/QOBCE/IV/M  /AE/000/003/5130N00025W001\nA) EGLL B) 2204301310 C) 2205311600\nD) MON-FRI 0700-1600\nE) LIT MOBILE CRANE OPERATING WITHIN:\n513007N 0002452W - 513003N 0002442W - 512958N 0002447W - \n513004N 0002457W - 513007N 0002452W (HAYES). UPTO 125FT AGL / 225FT \nAMSL. NO CRANE OPS DURING LVP. REF 2021120234 REFERS",
+                "schedule": "MON-FRI 0700-1600",
+                "start_time": {
+                    "dt": "2022-04-30T13:10:00+00:00",
+                    "repr": "2204301310"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMR",
+                    "value": "Replace"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "FLARE FIRING WI 0.6NM RADIUS: 512438N 0002819W (SHEPPERTON,\nMIDDLESEX). FLARES WILL DESCEND BY PARACHUTE. FOR INFO 07447 461248. \n2022-05-0333/AS5.",
+                "end_time": {
+                    "dt": "2022-05-28T04:00:00+00:00",
+                    "repr": "2205280400"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H2653/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LW",
+                        "value": "Will take place"
+                    },
+                    "coord": {
+                        "lat": 51.25,
+                        "lon": -0.28,
+                        "repr": "5125N00028W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QWMLW/IV/BO /AW/000/001/5125N00028W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "WM",
+                        "value": "Missile, gun or rocket firing"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "001",
+                        "spoken": "one",
+                        "value": 1
+                    }
+                },
+                "raw": "H2653/22 NOTAMN\nQ) EGTT/QWMLW/IV/BO /AW/000/001/5125N00028W002\nA) EGLL B) 2205091900 C) 2205280400\nD) 1900-0400\nE) FLARE FIRING WI 0.6NM RADIUS: 512438N 0002819W (SHEPPERTON,\nMIDDLESEX). FLARES WILL DESCEND BY PARACHUTE. FOR INFO 07447 461248. \n2022-05-0333/AS5.\nF) SFC G) 100FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H2653/22 NOTAMN\nQ) EGTT/QWMLW/IV/BO /AW/000/001/5125N00028W002\nA) EGLL B) 2205091900 C) 2205280400\nD) 1900-0400\nE) FLARE FIRING WI 0.6NM RADIUS: 512438N 0002819W (SHEPPERTON,\nMIDDLESEX). FLARES WILL DESCEND BY PARACHUTE. FOR INFO 07447 461248. \n2022-05-0333/AS5.\nF) SFC G) 100FT AMSL",
+                "schedule": "1900-0400",
+                "start_time": {
+                    "dt": "2022-05-09T19:00:00+00:00",
+                    "repr": "2205091900"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "100FT AMSL",
+                    "spoken": "one hundred",
+                    "value": 100
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "CRANES. CONSTRUCTION SITE CRANES OPERATING AT PSN \n513056N 0001123W (BAYSWATER, LONDON). UP TO 427FT AGL/507FT AMSL. \nFOR INFO CONTACT 07990 083943. ON EXPIRY OF THIS NOTAM DETAILS WILL \nBE INCLUDED IN THE UK AIP ENR 5.4. 2020-08-0057/AS8.",
+                "end_time": {
+                    "dt": "2022-07-12T23:59:00+00:00",
+                    "repr": "2207122359"
+                },
+                "lower": null,
+                "number": "A3516/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "CE",
+                        "value": "Erected"
+                    },
+                    "coord": {
+                        "lat": 51.31,
+                        "lon": -0.11,
+                        "repr": "5131N00011W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "001",
+                        "spoken": "one",
+                        "value": 1
+                    },
+                    "repr": "EGTT/QOBCE/IV/M  /AE/000/006/5131N00011W001",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "E",
+                            "value": "En Route"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "OB",
+                        "value": "Obstacle"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "006",
+                        "spoken": "six",
+                        "value": 6
+                    }
+                },
+                "raw": "A3516/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/006/5131N00011W001\nA) EGLL B) 2205140001 C) 2207122359\nE) CRANES. CONSTRUCTION SITE CRANES OPERATING AT PSN \n513056N 0001123W (BAYSWATER, LONDON). UP TO 427FT AGL/507FT AMSL. \nFOR INFO CONTACT 07990 083943. ON EXPIRY OF THIS NOTAM DETAILS WILL \nBE INCLUDED IN THE UK AIP ENR 5.4. 2020-08-0057/AS8.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "A3516/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/006/5131N00011W001\nA) EGLL B) 2205140001 C) 2207122359\nE) CRANES. CONSTRUCTION SITE CRANES OPERATING AT PSN \n513056N 0001123W (BAYSWATER, LONDON). UP TO 427FT AGL/507FT AMSL. \nFOR INFO CONTACT 07990 083943. ON EXPIRY OF THIS NOTAM DETAILS WILL \nBE INCLUDED IN THE UK AIP ENR 5.4. 2020-08-0057/AS8.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-14T00:01:00+00:00",
+                    "repr": "2205140001"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "DIRECTIONAL SIGN BOARD WHEN TAXIING WEST ON TWY ALPHA INDICATING\nTHE LEFT TURN FOR LINK 12 REMOVED DUE WIP",
+                "end_time": {
+                    "dt": "2022-05-31T23:59:00+00:00",
+                    "repr": "2205312359"
+                },
+                "lower": null,
+                "number": "A3704/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 51.29,
+                        "lon": -0.28,
+                        "repr": "5129N00028W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "EGTT/QMXXX/IV/M  /A /000/999/5129N00028W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MX",
+                        "value": "Taxiway"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "A3704/22 NOTAMN\nQ) EGTT/QMXXX/IV/M  /A /000/999/5129N00028W005\nA) EGLL B) 2205142200 C) 2205312359\nE) DIRECTIONAL SIGN BOARD WHEN TAXIING WEST ON TWY ALPHA INDICATING\nTHE LEFT TURN FOR LINK 12 REMOVED DUE WIP",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "A3704/22 NOTAMN\nQ) EGTT/QMXXX/IV/M  /A /000/999/5129N00028W005\nA) EGLL B) 2205142200 C) 2205312359\nE) DIRECTIONAL SIGN BOARD WHEN TAXIING WEST ON TWY ALPHA INDICATING\nTHE LEFT TURN FOR LINK 12 REMOVED DUE WIP",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-14T22:00:00+00:00",
+                    "repr": "2205142200"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 2022040649\nTYPE: CRANE\nPOSITION:  513035.00N 0002706.00W\nELEVATION/HEIGHT: 292FT AMSL/177FT AGL\nLIGHTING: YES - STEADY RED\nUK AIP EGLL AD 2.10 REFERS.",
+                "end_time": {
+                    "dt": "2100-01-01T00:00:00+00:00",
+                    "repr": "PERM"
+                },
+                "lower": null,
+                "number": "A3155/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "CE",
+                        "value": "Erected"
+                    },
+                    "coord": {
+                        "lat": 51.31,
+                        "lon": -0.27,
+                        "repr": "5131N00027W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "001",
+                        "spoken": "one",
+                        "value": 1
+                    },
+                    "repr": "EGTT/QOBCE/IV/M  /AE/000/003/5131N00027W001",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "E",
+                            "value": "En Route"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "OB",
+                        "value": "Obstacle"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "003",
+                        "spoken": "three",
+                        "value": 3
+                    }
+                },
+                "raw": "A3155/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/003/5131N00027W001\nA) EGLL B) 2205160000 C) PERM\nE) LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 2022040649\nTYPE: CRANE\nPOSITION:  513035.00N 0002706.00W\nELEVATION/HEIGHT: 292FT AMSL/177FT AGL\nLIGHTING: YES - STEADY RED\nUK AIP EGLL AD 2.10 REFERS.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "A3155/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/003/5131N00027W001\nA) EGLL B) 2205160000 C) PERM\nE) LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 2022040649\nTYPE: CRANE\nPOSITION:  513035.00N 0002706.00W\nELEVATION/HEIGHT: 292FT AMSL/177FT AGL\nLIGHTING: YES - STEADY RED\nUK AIP EGLL AD 2.10 REFERS.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-16T00:00:00+00:00",
+                    "repr": "2205160000"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 202103082\nTYPE: CRANE\nPOSITION: 513007.00N 0002804.00W\nELEVATION/HEIGHT: 322FT AMSL/230FT AGL\nLIGHTING: YES - STEADY RED\nUK AIP EGLL AD 2.10 REFERS.",
+                "end_time": {
+                    "dt": "2100-01-01T00:00:00+00:00",
+                    "repr": "PERM"
+                },
+                "lower": null,
+                "number": "A3154/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "CE",
+                        "value": "Erected"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.28,
+                        "repr": "5130N00028W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "001",
+                        "spoken": "one",
+                        "value": 1
+                    },
+                    "repr": "EGTT/QOBCE/IV/M  /AE/000/004/5130N00028W001",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "E",
+                            "value": "En Route"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "OB",
+                        "value": "Obstacle"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "004",
+                        "spoken": "four",
+                        "value": 4
+                    }
+                },
+                "raw": "A3154/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/004/5130N00028W001\nA) EGLL B) 2205170000 C) PERM\nE) LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 202103082\nTYPE: CRANE\nPOSITION: 513007.00N 0002804.00W\nELEVATION/HEIGHT: 322FT AMSL/230FT AGL\nLIGHTING: YES - STEADY RED\nUK AIP EGLL AD 2.10 REFERS.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "A3154/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/004/5130N00028W001\nA) EGLL B) 2205170000 C) PERM\nE) LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 202103082\nTYPE: CRANE\nPOSITION: 513007.00N 0002804.00W\nELEVATION/HEIGHT: 322FT AMSL/230FT AGL\nLIGHTING: YES - STEADY RED\nUK AIP EGLL AD 2.10 REFERS.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-17T00:00:00+00:00",
+                    "repr": "2205170000"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "AIP SUP 032/2021 LONDON HEATHROW - TAXIWAY ALPHA (SOUTH) \nREHABILITATION BETWEEN LINK 34 AND LINK 30 CANCELLED. TAXIWAY NOW \nOPEN.",
+                "end_time": {
+                    "dt": "2022-06-01T23:59:00+00:00",
+                    "repr": "2206012359"
+                },
+                "lower": null,
+                "number": "A3816/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 51.29,
+                        "lon": -0.28,
+                        "repr": "5129N00028W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "EGTT/QMXXX/IV/M  /A /000/999/5129N00028W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MX",
+                        "value": "Taxiway"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "A3816/22 NOTAMN\nQ) EGTT/QMXXX/IV/M  /A /000/999/5129N00028W005\nA) EGLL B) 2205190907 C) 2206012359\nE) AIP SUP 032/2021 LONDON HEATHROW - TAXIWAY ALPHA (SOUTH) \nREHABILITATION BETWEEN LINK 34 AND LINK 30 CANCELLED. TAXIWAY NOW \nOPEN.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "A3816/22 NOTAMN\nQ) EGTT/QMXXX/IV/M  /A /000/999/5129N00028W005\nA) EGLL B) 2205190907 C) 2206012359\nE) AIP SUP 032/2021 LONDON HEATHROW - TAXIWAY ALPHA (SOUTH) \nREHABILITATION BETWEEN LINK 34 AND LINK 30 CANCELLED. TAXIWAY NOW \nOPEN.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-19T09:07:00+00:00",
+                    "repr": "2205190907"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "LASER AND SEARCHLIGHT DISPLAY WI 1NM 513005N 0000831W\n(BUCKINGHAM PALACE, LONDON). FOR INFO 07939 720844. 2022-05-0209/AS2.",
+                "end_time": {
+                    "dt": "2022-06-04T06:00:00+00:00",
+                    "repr": "2206040600"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H2983/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LW",
+                        "value": "Will take place"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.09,
+                        "repr": "5130N00009W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QWELW/IV/BO /AW/000/999/5130N00009W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "WE",
+                        "value": "Exercises"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "H2983/22 NOTAMN\nQ) EGTT/QWELW/IV/BO /AW/000/999/5130N00009W002\nA) EGLL B) 2205190915 C) 2206040600\nD) MAY 19 0915-0600, MAY 20-JUN 03 0700-0600\nE) LASER AND SEARCHLIGHT DISPLAY WI 1NM 513005N 0000831W\n(BUCKINGHAM PALACE, LONDON). FOR INFO 07939 720844. 2022-05-0209/AS2.\nF) SFC G) UNL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H2983/22 NOTAMN\nQ) EGTT/QWELW/IV/BO /AW/000/999/5130N00009W002\nA) EGLL B) 2205190915 C) 2206040600\nD) MAY 19 0915-0600, MAY 20-JUN 03 0700-0600\nE) LASER AND SEARCHLIGHT DISPLAY WI 1NM 513005N 0000831W\n(BUCKINGHAM PALACE, LONDON). FOR INFO 07939 720844. 2022-05-0209/AS2.\nF) SFC G) UNL",
+                "schedule": "MAY 19 0915-0600, MAY 20-JUN 03 0700-0600",
+                "start_time": {
+                    "dt": "2022-05-19T09:15:00+00:00",
+                    "repr": "2205190915"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "UNL",
+                    "spoken": "Unlimited",
+                    "value": 999
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7",
+                "end_time": {
+                    "dt": "2022-05-31T21:30:00+00:00",
+                    "repr": "2205312130"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H0892/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LT",
+                        "value": "Limited to"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.06,
+                        "repr": "5130N00006W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "RO",
+                        "value": "Overflying"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "021",
+                        "spoken": "two one",
+                        "value": 21
+                    }
+                },
+                "raw": "H0892/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2205221200 C) 2205312130\nD) 22 1200-1500 1730-2030, 23 24 25 1830-2130, 26 27 28 1300-1600 \n1830-2130, 29 1200-1500 1730-2030, 30 1830-2130, 31 1300-1600 \n1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H0892/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2205221200 C) 2205312130\nD) 22 1200-1500 1730-2030, 23 24 25 1830-2130, 26 27 28 1300-1600 \n1830-2130, 29 1200-1500 1730-2030, 30 1830-2130, 31 1300-1600 \n1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "schedule": "22 1200-1500 1730-2030, 23 24 25 1830-2130, 26 27 28 1300-1600 \n1830-2130, 29 1200-1500 1730-2030, 30 1830-2130, 31 1300-1600 \n1830-2130",
+                "start_time": {
+                    "dt": "2022-05-22T12:00:00+00:00",
+                    "repr": "2205221200"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "2100FT AMSL",
+                    "spoken": "two one hundred",
+                    "value": 2100
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "FIREWORK DISPLAY WI 0.5NM RADIUS 513426N 0002021W (HARROW, NW\nLONDON). FOR INFO 07850 655551. 2022-05-0022/AS7",
+                "end_time": {
+                    "dt": "2022-05-27T21:30:00+00:00",
+                    "repr": "2205272130"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H3203/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LW",
+                        "value": "Will take place"
+                    },
+                    "coord": {
+                        "lat": 51.34,
+                        "lon": -0.2,
+                        "repr": "5134N00020W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "001",
+                        "spoken": "one",
+                        "value": 1
+                    },
+                    "repr": "EGTT/QWMLW/IV/BO /AW/000/010/5134N00020W001",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "WM",
+                        "value": "Missile, gun or rocket firing"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "010",
+                        "spoken": "one zero",
+                        "value": 10
+                    }
+                },
+                "raw": "H3203/22 NOTAMN\nQ) EGTT/QWMLW/IV/BO /AW/000/010/5134N00020W001\nA) EGLL B) 2205252115 C) 2205272130\nD) 2115-2130\nE) FIREWORK DISPLAY WI 0.5NM RADIUS 513426N 0002021W (HARROW, NW\nLONDON). FOR INFO 07850 655551. 2022-05-0022/AS7\nF) SFC G) 1000FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H3203/22 NOTAMN\nQ) EGTT/QWMLW/IV/BO /AW/000/010/5134N00020W001\nA) EGLL B) 2205252115 C) 2205272130\nD) 2115-2130\nE) FIREWORK DISPLAY WI 0.5NM RADIUS 513426N 0002021W (HARROW, NW\nLONDON). FOR INFO 07850 655551. 2022-05-0022/AS7\nF) SFC G) 1000FT AMSL",
+                "schedule": "2115-2130",
+                "start_time": {
+                    "dt": "2022-05-25T21:15:00+00:00",
+                    "repr": "2205252115"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "1000FT AMSL",
+                    "spoken": "one thousand",
+                    "value": 1000
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "THREE CRANES OPERATING AT PSN: 513255N 0001148W (WEST\nHAMPSTEAD, CAMDEN). UP TO 413FT AGL/577FT AMSL. FOR INFO CONTACT \n07843 958548. ON EXPIRY OF THIS NOTAM DETAILS WILL BE INCLUDED IN \nTHE UK AIP ENR 5.4. 2022-05-431/AS8.",
+                "end_time": {
+                    "dt": "2022-07-24T23:59:00+00:00",
+                    "repr": "2207242359"
+                },
+                "lower": null,
+                "number": "A3573/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "CE",
+                        "value": "Erected"
+                    },
+                    "coord": {
+                        "lat": 51.33,
+                        "lon": -0.12,
+                        "repr": "5133N00012W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "001",
+                        "spoken": "one",
+                        "value": 1
+                    },
+                    "repr": "EGTT/QOBCE/IV/M  /AE/000/006/5133N00012W001",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "E",
+                            "value": "En Route"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "OB",
+                        "value": "Obstacle"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "006",
+                        "spoken": "six",
+                        "value": 6
+                    }
+                },
+                "raw": "A3573/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/006/5133N00012W001\nA) EGLL B) 2205260001 C) 2207242359\nE) THREE CRANES OPERATING AT PSN: 513255N 0001148W (WEST\nHAMPSTEAD, CAMDEN). UP TO 413FT AGL/577FT AMSL. FOR INFO CONTACT \n07843 958548. ON EXPIRY OF THIS NOTAM DETAILS WILL BE INCLUDED IN \nTHE UK AIP ENR 5.4. 2022-05-431/AS8.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "A3573/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/006/5133N00012W001\nA) EGLL B) 2205260001 C) 2207242359\nE) THREE CRANES OPERATING AT PSN: 513255N 0001148W (WEST\nHAMPSTEAD, CAMDEN). UP TO 413FT AGL/577FT AMSL. FOR INFO CONTACT \n07843 958548. ON EXPIRY OF THIS NOTAM DETAILS WILL BE INCLUDED IN \nTHE UK AIP ENR 5.4. 2022-05-431/AS8.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-26T00:01:00+00:00",
+                    "repr": "2205260001"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "4 CRANES OPERATING AT PSN: 513459N 0001438W (HENDON, LONDON). UP \nTO 413FT AGL/528FT AMSL. FOR INFO CONTACT 07970 829309. ON EXPIRY OF \nTHIS NOTAM DETAILS WILL BE INCLUDED IN THE UK AIP ENR 5.4. \n2022-05-0597/AS8.",
+                "end_time": {
+                    "dt": "2022-07-26T23:59:00+00:00",
+                    "repr": "2207262359"
+                },
+                "lower": null,
+                "number": "A3931/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "CE",
+                        "value": "Erected"
+                    },
+                    "coord": {
+                        "lat": 51.35,
+                        "lon": -0.15,
+                        "repr": "5135N00015W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "001",
+                        "spoken": "one",
+                        "value": 1
+                    },
+                    "repr": "EGTT/QOBCE/IV/M  /AE/000/006/5135N00015W001",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "E",
+                            "value": "En Route"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "OB",
+                        "value": "Obstacle"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "006",
+                        "spoken": "six",
+                        "value": 6
+                    }
+                },
+                "raw": "A3931/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/006/5135N00015W001\nA) EGLL B) 2205280011 C) 2207262359\nE) 4 CRANES OPERATING AT PSN: 513459N 0001438W (HENDON, LONDON). UP \nTO 413FT AGL/528FT AMSL. FOR INFO CONTACT 07970 829309. ON EXPIRY OF \nTHIS NOTAM DETAILS WILL BE INCLUDED IN THE UK AIP ENR 5.4. \n2022-05-0597/AS8.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "A3931/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/006/5135N00015W001\nA) EGLL B) 2205280011 C) 2207262359\nE) 4 CRANES OPERATING AT PSN: 513459N 0001438W (HENDON, LONDON). UP \nTO 413FT AGL/528FT AMSL. FOR INFO CONTACT 07970 829309. ON EXPIRY OF \nTHIS NOTAM DETAILS WILL BE INCLUDED IN THE UK AIP ENR 5.4. \n2022-05-0597/AS8.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-28T00:11:00+00:00",
+                    "repr": "2205280011"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7",
+                "end_time": {
+                    "dt": "2022-06-18T21:30:00+00:00",
+                    "repr": "2206182130"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H0899/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LT",
+                        "value": "Limited to"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.06,
+                        "repr": "5130N00006W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "RO",
+                        "value": "Overflying"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "021",
+                        "spoken": "two one",
+                        "value": 21
+                    }
+                },
+                "raw": "H0899/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2206011300 C) 2206182130\nD) 01 02 03 04 1300-1600 1830-2130, 05 1200-1500 1730-2030, 10 11 \n1830-2130, 12 1730-2030, 13 14 15 16 17 1830-2130, 18 1300-1600 \n1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H0899/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2206011300 C) 2206182130\nD) 01 02 03 04 1300-1600 1830-2130, 05 1200-1500 1730-2030, 10 11 \n1830-2130, 12 1730-2030, 13 14 15 16 17 1830-2130, 18 1300-1600 \n1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "schedule": "01 02 03 04 1300-1600 1830-2130, 05 1200-1500 1730-2030, 10 11 \n1830-2130, 12 1730-2030, 13 14 15 16 17 1830-2130, 18 1300-1600 \n1830-2130",
+                "start_time": {
+                    "dt": "2022-06-01T13:00:00+00:00",
+                    "repr": "2206011300"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "2100FT AMSL",
+                    "spoken": "two one hundred",
+                    "value": 2100
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 2022021746\nTYPE: CRANE\nPOSITION: 512630.00N 0002455.00W\nELEVATION/HEIGHT: 226FT AMSL/167.3FT AGL\nLIGHTING: YES - STEAD RED\nUK AIP EGLL AD 2.10 REFERS.",
+                "end_time": {
+                    "dt": "2100-01-01T00:00:00+00:00",
+                    "repr": "PERM"
+                },
+                "lower": null,
+                "number": "A2064/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "CE",
+                        "value": "Erected"
+                    },
+                    "coord": {
+                        "lat": 51.27,
+                        "lon": -0.25,
+                        "repr": "5127N00025W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "001",
+                        "spoken": "one",
+                        "value": 1
+                    },
+                    "repr": "EGTT/QOBCE/IV/M  /AE/000/003/5127N00025W001",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "E",
+                            "value": "En Route"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "OB",
+                        "value": "Obstacle"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "003",
+                        "spoken": "three",
+                        "value": 3
+                    }
+                },
+                "raw": "A2064/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/003/5127N00025W001\nA) EGLL B) 2206130000 C) PERM\nE) LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 2022021746\nTYPE: CRANE\nPOSITION: 512630.00N 0002455.00W\nELEVATION/HEIGHT: 226FT AMSL/167.3FT AGL\nLIGHTING: YES - STEAD RED\nUK AIP EGLL AD 2.10 REFERS.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "A2064/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/003/5127N00025W001\nA) EGLL B) 2206130000 C) PERM\nE) LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 2022021746\nTYPE: CRANE\nPOSITION: 512630.00N 0002455.00W\nELEVATION/HEIGHT: 226FT AMSL/167.3FT AGL\nLIGHTING: YES - STEAD RED\nUK AIP EGLL AD 2.10 REFERS.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-06-13T00:00:00+00:00",
+                    "repr": "2206130000"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "SEARCHLIGHT DISPLAY WI 1NM RADIUS 513050N 0001256W (NORTH\nKENSINGTON, LONDON). FOR INFO 07793 538770. 2022-06-0395/ AS2.",
+                "end_time": {
+                    "dt": "2022-06-15T07:00:00+00:00",
+                    "repr": "2206150700"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H3188/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LW",
+                        "value": "Will take place"
+                    },
+                    "coord": {
+                        "lat": 51.31,
+                        "lon": -0.13,
+                        "repr": "5131N00013W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QWELW/IV/BO /AW/000/999/5131N00013W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "WE",
+                        "value": "Exercises"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "H3188/22 NOTAMN\nQ) EGTT/QWELW/IV/BO /AW/000/999/5131N00013W002\nA) EGLL B) 2206132100 C) 2206150700\nE) SEARCHLIGHT DISPLAY WI 1NM RADIUS 513050N 0001256W (NORTH\nKENSINGTON, LONDON). FOR INFO 07793 538770. 2022-06-0395/ AS2.\nF) SFC G) UNL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H3188/22 NOTAMN\nQ) EGTT/QWELW/IV/BO /AW/000/999/5131N00013W002\nA) EGLL B) 2206132100 C) 2206150700\nE) SEARCHLIGHT DISPLAY WI 1NM RADIUS 513050N 0001256W (NORTH\nKENSINGTON, LONDON). FOR INFO 07793 538770. 2022-06-0395/ AS2.\nF) SFC G) UNL",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-06-13T21:00:00+00:00",
+                    "repr": "2206132100"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "UNL",
+                    "spoken": "Unlimited",
+                    "value": 999
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7",
+                "end_time": {
+                    "dt": "2022-06-30T21:30:00+00:00",
+                    "repr": "2206302130"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H0901/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LT",
+                        "value": "Limited to"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.06,
+                        "repr": "5130N00006W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "RO",
+                        "value": "Overflying"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "021",
+                        "spoken": "two one",
+                        "value": 21
+                    }
+                },
+                "raw": "H0901/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2206191200 C) 2206302130\nD) 19 1200-1500 1730-2030, 21 22 23 24 25 1300-1500 1830-2130, 26 \n1200-1500 1730-2030, 27 1830-2130, 28 29 30 1300-1500 1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H0901/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2206191200 C) 2206302130\nD) 19 1200-1500 1730-2030, 21 22 23 24 25 1300-1500 1830-2130, 26 \n1200-1500 1730-2030, 27 1830-2130, 28 29 30 1300-1500 1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "schedule": "19 1200-1500 1730-2030, 21 22 23 24 25 1300-1500 1830-2130, 26 \n1200-1500 1730-2030, 27 1830-2130, 28 29 30 1300-1500 1830-2130",
+                "start_time": {
+                    "dt": "2022-06-19T12:00:00+00:00",
+                    "repr": "2206191200"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "2100FT AMSL",
+                    "spoken": "two one hundred",
+                    "value": 2100
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7",
+                "end_time": {
+                    "dt": "2022-07-11T21:30:00+00:00",
+                    "repr": "2207112130"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H0897/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LT",
+                        "value": "Limited to"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.06,
+                        "repr": "5130N00006W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "RO",
+                        "value": "Overflying"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "021",
+                        "spoken": "two one",
+                        "value": 21
+                    }
+                },
+                "raw": "H0897/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2207011300 C) 2207112130\nD) 01 02 1300-1500 1830-2130, 03 1200-1500 1730-2030, 04 1830-2130, \n05 06 07 08 09 1300-1500 1830-2130, 10 1200-1500 1730-2030, 11 \n1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H0897/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2207011300 C) 2207112130\nD) 01 02 1300-1500 1830-2130, 03 1200-1500 1730-2030, 04 1830-2130, \n05 06 07 08 09 1300-1500 1830-2130, 10 1200-1500 1730-2030, 11 \n1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "schedule": "01 02 1300-1500 1830-2130, 03 1200-1500 1730-2030, 04 1830-2130, \n05 06 07 08 09 1300-1500 1830-2130, 10 1200-1500 1730-2030, 11 \n1830-2130",
+                "start_time": {
+                    "dt": "2022-07-01T13:00:00+00:00",
+                    "repr": "2207011300"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "2100FT AMSL",
+                    "spoken": "two one hundred",
+                    "value": 2100
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "LIT MOBILE CRANE OPR PSN 513008N 0002457W (HAYES). UP TO 276FT \nAGL /377FT AMSL. NO CRANE OPS DURING LVP. 2022022875 REFERS",
+                "end_time": {
+                    "dt": "2022-07-10T18:00:00+00:00",
+                    "repr": "2207101800"
+                },
+                "lower": null,
+                "number": "A2158/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "CE",
+                        "value": "Erected"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.25,
+                        "repr": "5130N00025W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "001",
+                        "spoken": "one",
+                        "value": 1
+                    },
+                    "repr": "EGTT/QOBCE/IV/M  /AE/000/004/5130N00025W001",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "E",
+                            "value": "En Route"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "OB",
+                        "value": "Obstacle"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "004",
+                        "spoken": "four",
+                        "value": 4
+                    }
+                },
+                "raw": "A2158/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/004/5130N00025W001\nA) EGLL B) 2207090500 C) 2207101800\nD) 0500-1800\nE) LIT MOBILE CRANE OPR PSN 513008N 0002457W (HAYES). UP TO 276FT \nAGL /377FT AMSL. NO CRANE OPS DURING LVP. 2022022875 REFERS",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "A2158/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/004/5130N00025W001\nA) EGLL B) 2207090500 C) 2207101800\nD) 0500-1800\nE) LIT MOBILE CRANE OPR PSN 513008N 0002457W (HAYES). UP TO 276FT \nAGL /377FT AMSL. NO CRANE OPS DURING LVP. 2022022875 REFERS",
+                "schedule": "0500-1800",
+                "start_time": {
+                    "dt": "2022-07-09T05:00:00+00:00",
+                    "repr": "2207090500"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TRIGGER NOTAM - TEMPORARY STANDARD INSTRUMENT DEPARTURES UNTIL \nSUNDAY 24 JULY. AIP SUP 029/22 REFERS",
+                "end_time": {
+                    "dt": "2022-07-24T23:59:00+00:00",
+                    "repr": "2207242359"
+                },
+                "lower": null,
+                "number": "A3483/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "TT",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 51.29,
+                        "lon": -0.28,
+                        "repr": "5129N00028W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "EGTT/QPDTT/I /BO /A /000/999/5129N00028W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "PD",
+                        "value": "Standard instrument departure"
+                    },
+                    "traffic": {
+                        "repr": "I",
+                        "value": "IFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "A3483/22 NOTAMN\nQ) EGTT/QPDTT/I /BO /A /000/999/5129N00028W005\nA) EGLL B) 2207110000 C) 2207242359\nE) TRIGGER NOTAM - TEMPORARY STANDARD INSTRUMENT DEPARTURES UNTIL \nSUNDAY 24 JULY. AIP SUP 029/22 REFERS",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "A3483/22 NOTAMN\nQ) EGTT/QPDTT/I /BO /A /000/999/5129N00028W005\nA) EGLL B) 2207110000 C) 2207242359\nE) TRIGGER NOTAM - TEMPORARY STANDARD INSTRUMENT DEPARTURES UNTIL \nSUNDAY 24 JULY. AIP SUP 029/22 REFERS",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-07-11T00:00:00+00:00",
+                    "repr": "2207110000"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7",
+                "end_time": {
+                    "dt": "2022-07-28T21:30:00+00:00",
+                    "repr": "2207282130"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H0896/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LT",
+                        "value": "Limited to"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.06,
+                        "repr": "5130N00006W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "RO",
+                        "value": "Overflying"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "021",
+                        "spoken": "two one",
+                        "value": 21
+                    }
+                },
+                "raw": "H0896/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2207121300 C) 2207282130\nD) 12 13 14 15 16 1300-1500 1830-2130, 19 20 21 22 23 1830-2130, 24 \n1200-1500 1730-2030, 25 26 27 1830-2130, 28 1230-1530 1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H0896/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2207121300 C) 2207282130\nD) 12 13 14 15 16 1300-1500 1830-2130, 19 20 21 22 23 1830-2130, 24 \n1200-1500 1730-2030, 25 26 27 1830-2130, 28 1230-1530 1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "schedule": "12 13 14 15 16 1300-1500 1830-2130, 19 20 21 22 23 1830-2130, 24 \n1200-1500 1730-2030, 25 26 27 1830-2130, 28 1230-1530 1830-2130",
+                "start_time": {
+                    "dt": "2022-07-12T13:00:00+00:00",
+                    "repr": "2207121300"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "2100FT AMSL",
+                    "spoken": "two one hundred",
+                    "value": 2100
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 202204228\nTYPE: CRANES\nPOSITION: 513028.00N 0002325.00W\nELEVATION/HEIGHT: 328FT AMSL/223FT AGL\nLIGHTING: YES - STEADY RED\nREMARKS: SOUTHALL AREA\nUK AIP EGLL AD 2.10 REFERS.",
+                "end_time": {
+                    "dt": "2100-01-01T00:00:00+00:00",
+                    "repr": "PERM"
+                },
+                "lower": null,
+                "number": "A3365/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "CE",
+                        "value": "Erected"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.23,
+                        "repr": "5130N00023W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "001",
+                        "spoken": "one",
+                        "value": 1
+                    },
+                    "repr": "EGTT/QOBCE/IV/M  /AE/000/004/5130N00023W001",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "E",
+                            "value": "En Route"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "OB",
+                        "value": "Obstacle"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "004",
+                        "spoken": "four",
+                        "value": 4
+                    }
+                },
+                "raw": "A3365/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/004/5130N00023W001\nA) EGLL B) 2207240000 C) PERM\nE) LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 202204228\nTYPE: CRANES\nPOSITION: 513028.00N 0002325.00W\nELEVATION/HEIGHT: 328FT AMSL/223FT AGL\nLIGHTING: YES - STEADY RED\nREMARKS: SOUTHALL AREA\nUK AIP EGLL AD 2.10 REFERS.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "A3365/22 NOTAMN\nQ) EGTT/QOBCE/IV/M  /AE/000/004/5130N00023W001\nA) EGLL B) 2207240000 C) PERM\nE) LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 202204228\nTYPE: CRANES\nPOSITION: 513028.00N 0002325.00W\nELEVATION/HEIGHT: 328FT AMSL/223FT AGL\nLIGHTING: YES - STEADY RED\nREMARKS: SOUTHALL AREA\nUK AIP EGLL AD 2.10 REFERS.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-07-24T00:00:00+00:00",
+                    "repr": "2207240000"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7",
+                "end_time": {
+                    "dt": "2022-07-31T20:30:00+00:00",
+                    "repr": "2207312030"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H0900/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LT",
+                        "value": "Limited to"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.06,
+                        "repr": "5130N00006W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "RO",
+                        "value": "Overflying"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "021",
+                        "spoken": "two one",
+                        "value": 21
+                    }
+                },
+                "raw": "H0900/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2207291230 C) 2207312030\nD) 29 1230-1600 1830-2130, 30 1000-2130, 31 1000-2030\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H0900/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2207291230 C) 2207312030\nD) 29 1230-1600 1830-2130, 30 1000-2130, 31 1000-2030\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "schedule": "29 1230-1600 1830-2130, 30 1000-2130, 31 1000-2030",
+                "start_time": {
+                    "dt": "2022-07-29T12:30:00+00:00",
+                    "repr": "2207291230"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "2100FT AMSL",
+                    "spoken": "two one hundred",
+                    "value": 2100
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR\nINFO 02079 021466. 2022-03-0016/AS7",
+                "end_time": {
+                    "dt": "2022-08-12T21:30:00+00:00",
+                    "repr": "2208122130"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H0910/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LT",
+                        "value": "Limited to"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.06,
+                        "repr": "5130N00006W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "RO",
+                        "value": "Overflying"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "021",
+                        "spoken": "two one",
+                        "value": 21
+                    }
+                },
+                "raw": "H0910/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2208011830 C) 2208122130\nD) 01 1830-2130, 02 1300-1600 1830-2130, 03 04 05 1230-1600 \n1830-2130, 06 1000-2130, 07 1000-2030, 09 1000-1600 1830-2130, 10 11 \n1000-2130, 12 1300-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR\nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H0910/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2208011830 C) 2208122130\nD) 01 1830-2130, 02 1300-1600 1830-2130, 03 04 05 1230-1600 \n1830-2130, 06 1000-2130, 07 1000-2030, 09 1000-1600 1830-2130, 10 11 \n1000-2130, 12 1300-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR\nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "schedule": "01 1830-2130, 02 1300-1600 1830-2130, 03 04 05 1230-1600 \n1830-2130, 06 1000-2130, 07 1000-2030, 09 1000-1600 1830-2130, 10 11 \n1000-2130, 12 1300-2130",
+                "start_time": {
+                    "dt": "2022-08-01T18:30:00+00:00",
+                    "repr": "2208011830"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "2100FT AMSL",
+                    "spoken": "two one hundred",
+                    "value": 2100
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7",
+                "end_time": {
+                    "dt": "2022-08-20T02:00:00+00:00",
+                    "repr": "2208200200"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H0895/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LT",
+                        "value": "Limited to"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.06,
+                        "repr": "5130N00006W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "RO",
+                        "value": "Overflying"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "021",
+                        "spoken": "two one",
+                        "value": 21
+                    }
+                },
+                "raw": "H0895/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2208131000 C) 2208200200\nD) 13 1000-2130 2300-0200, 14 1000-2030, 15 1830-2130, 16 1300-1500 \n1830-2130, 17 1230-1600 1830-2130, 18 1000-2130, 19 1000-2130 \n2300-0200\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H0895/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2208131000 C) 2208200200\nD) 13 1000-2130 2300-0200, 14 1000-2030, 15 1830-2130, 16 1300-1500 \n1830-2130, 17 1230-1600 1830-2130, 18 1000-2130, 19 1000-2130 \n2300-0200\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "schedule": "13 1000-2130 2300-0200, 14 1000-2030, 15 1830-2130, 16 1300-1500 \n1830-2130, 17 1230-1600 1830-2130, 18 1000-2130, 19 1000-2130 \n2300-0200",
+                "start_time": {
+                    "dt": "2022-08-13T10:00:00+00:00",
+                    "repr": "2208131000"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "2100FT AMSL",
+                    "spoken": "two one hundred",
+                    "value": 2100
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7",
+                "end_time": {
+                    "dt": "2022-08-31T21:30:00+00:00",
+                    "repr": "2208312130"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H0898/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LT",
+                        "value": "Limited to"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.06,
+                        "repr": "5130N00006W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "RO",
+                        "value": "Overflying"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "021",
+                        "spoken": "two one",
+                        "value": 21
+                    }
+                },
+                "raw": "H0898/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2208201000 C) 2208312130\nD) 20 1000-2130, 21 1000-1700, 25 26 27 1830-2130, 28 1200-1500 \n1830-2130, 29 30 31 1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H0898/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2208201000 C) 2208312130\nD) 20 1000-2130, 21 1000-1700, 25 26 27 1830-2130, 28 1200-1500 \n1830-2130, 29 30 31 1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "schedule": "20 1000-2130, 21 1000-1700, 25 26 27 1830-2130, 28 1200-1500 \n1830-2130, 29 30 31 1830-2130",
+                "start_time": {
+                    "dt": "2022-08-20T10:00:00+00:00",
+                    "repr": "2208201000"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "2100FT AMSL",
+                    "spoken": "two one hundred",
+                    "value": 2100
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7",
+                "end_time": {
+                    "dt": "2022-09-12T21:30:00+00:00",
+                    "repr": "2209122130"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H0907/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LT",
+                        "value": "Limited to"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.06,
+                        "repr": "5130N00006W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "RO",
+                        "value": "Overflying"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "021",
+                        "spoken": "two one",
+                        "value": 21
+                    }
+                },
+                "raw": "H0907/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2209011300 C) 2209122130\nD) 01 02 03 1300-1600 1830-2130, 04 1200-1500 1730-2030, 05 \n1830-2130, 06 07 08 09 10 1300-1600 1830-2130, 11 1200-1500 \n1730-2030, 12 1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H0907/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2209011300 C) 2209122130\nD) 01 02 03 1300-1600 1830-2130, 04 1200-1500 1730-2030, 05 \n1830-2130, 06 07 08 09 10 1300-1600 1830-2130, 11 1200-1500 \n1730-2030, 12 1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "schedule": "01 02 03 1300-1600 1830-2130, 04 1200-1500 1730-2030, 05 \n1830-2130, 06 07 08 09 10 1300-1600 1830-2130, 11 1200-1500 \n1730-2030, 12 1830-2130",
+                "start_time": {
+                    "dt": "2022-09-01T13:00:00+00:00",
+                    "repr": "2209011300"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "2100FT AMSL",
+                    "spoken": "two one hundred",
+                    "value": 2100
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7",
+                "end_time": {
+                    "dt": "2022-09-26T21:30:00+00:00",
+                    "repr": "2209262130"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H0908/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LT",
+                        "value": "Limited to"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.06,
+                        "repr": "5130N00006W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "RO",
+                        "value": "Overflying"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "021",
+                        "spoken": "two one",
+                        "value": 21
+                    }
+                },
+                "raw": "H0908/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2209131300 C) 2209262130\nD) 13 14 15 16 17 1300-1600 1830-2130, 18 1200-1500 1730-2030, 19 \n1830-2130, 20 21 22 23 24 1300-1600 1830-2130, 25 1200-1500 \n1730-2030, 26 1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H0908/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2209131300 C) 2209262130\nD) 13 14 15 16 17 1300-1600 1830-2130, 18 1200-1500 1730-2030, 19 \n1830-2130, 20 21 22 23 24 1300-1600 1830-2130, 25 1200-1500 \n1730-2030, 26 1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "schedule": "13 14 15 16 17 1300-1600 1830-2130, 18 1200-1500 1730-2030, 19 \n1830-2130, 20 21 22 23 24 1300-1600 1830-2130, 25 1200-1500 \n1730-2030, 26 1830-2130",
+                "start_time": {
+                    "dt": "2022-09-13T13:00:00+00:00",
+                    "repr": "2209131300"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "2100FT AMSL",
+                    "spoken": "two one hundred",
+                    "value": 2100
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7",
+                "end_time": {
+                    "dt": "2022-09-30T21:30:00+00:00",
+                    "repr": "2209302130"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H0909/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LT",
+                        "value": "Limited to"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.06,
+                        "repr": "5130N00006W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "RO",
+                        "value": "Overflying"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "021",
+                        "spoken": "two one",
+                        "value": 21
+                    }
+                },
+                "raw": "H0909/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2209271300 C) 2209302130\nD) 27 28 29 30 1300-1600 1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H0909/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2209271300 C) 2209302130\nD) 27 28 29 30 1300-1600 1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "schedule": "27 28 29 30 1300-1600 1830-2130",
+                "start_time": {
+                    "dt": "2022-09-27T13:00:00+00:00",
+                    "repr": "2209271300"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "2100FT AMSL",
+                    "spoken": "two one hundred",
+                    "value": 2100
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7",
+                "end_time": {
+                    "dt": "2022-10-10T21:30:00+00:00",
+                    "repr": "2210102130"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H0906/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LT",
+                        "value": "Limited to"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.06,
+                        "repr": "5130N00006W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "RO",
+                        "value": "Overflying"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "021",
+                        "spoken": "two one",
+                        "value": 21
+                    }
+                },
+                "raw": "H0906/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2210011300 C) 2210102130\nD) 01 1300-1600 1830-2130, 02 1200-1500 1730-2030, 03 1830-2130, 04 \n05 06 07 08 1300-1600 1830-2130, 09 1200-1500 1730-2030, 10 1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H0906/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2210011300 C) 2210102130\nD) 01 1300-1600 1830-2130, 02 1200-1500 1730-2030, 03 1830-2130, 04 \n05 06 07 08 1300-1600 1830-2130, 09 1200-1500 1730-2030, 10 1830-2130\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "schedule": "01 1300-1600 1830-2130, 02 1200-1500 1730-2030, 03 1830-2130, 04 \n05 06 07 08 1300-1600 1830-2130, 09 1200-1500 1730-2030, 10 1830-2130",
+                "start_time": {
+                    "dt": "2022-10-01T13:00:00+00:00",
+                    "repr": "2210011300"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "2100FT AMSL",
+                    "spoken": "two one hundred",
+                    "value": 2100
+                }
+            }
+        },
+        {
+            "data": {
+                "body": "PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7",
+                "end_time": {
+                    "dt": "2022-10-23T15:00:00+00:00",
+                    "repr": "2210231500"
+                },
+                "lower": {
+                    "repr": "SFC",
+                    "spoken": "surface",
+                    "value": 0
+                },
+                "number": "H0905/22",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LT",
+                        "value": "Limited to"
+                    },
+                    "coord": {
+                        "lat": 51.3,
+                        "lon": -0.06,
+                        "repr": "5130N00006W"
+                    },
+                    "fir": "EGTT",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "002",
+                        "spoken": "two",
+                        "value": 2
+                    },
+                    "repr": "EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "W",
+                            "value": "Warning"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "RO",
+                        "value": "Overflying"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "021",
+                        "spoken": "two one",
+                        "value": 21
+                    }
+                },
+                "raw": "H0905/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2210111300 C) 2210231500\nD) 11 12 13 14 15 1300-1600 1830-2130, 16 1200-1500 1730-2030, 17 \n1830-2130, 18 19 20 21 22 1300-1600 1830-2130, 23 1200-1500\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "H0905/22 NOTAMN\nQ) EGTT/QROLT/IV/NBO/AW/000/021/5130N00006W002\nA) EGLL B) 2210111300 C) 2210231500\nD) 11 12 13 14 15 1300-1600 1830-2130, 16 1200-1500 1730-2030, 17 \n1830-2130, 18 19 20 21 22 1300-1600 1830-2130, 23 1200-1500\nE) PILOTS ARE REQUESTED NOT TO OVERFLY FILMING WI 1NM RADIUS\n513029N 0000549W (GLOBE THEATRE, SOUTHBANK, CENTRAL LONDON). FOR \nINFO 02079 021466. 2022-03-0016/AS7\nF) SFC G) 2100FT AMSL",
+                "schedule": "11 12 13 14 15 1300-1600 1830-2130, 16 1200-1500 1730-2030, 17 \n1830-2130, 18 19 20 21 22 1300-1600 1830-2130, 23 1200-1500",
+                "start_time": {
+                    "dt": "2022-10-11T13:00:00+00:00",
+                    "repr": "2210111300"
+                },
+                "station": "EGLL",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": {
+                    "repr": "2100FT AMSL",
+                    "spoken": "two one hundred",
+                    "value": 2100
+                }
+            }
+        }
+    ],
+    "station": {
+        "city": "London",
+        "country": "GB",
+        "elevation_ft": 83,
+        "elevation_m": 25,
+        "gps": "EGLL",
+        "iata": "LHR",
+        "icao": "EGLL",
+        "latitude": 51.4706,
+        "local": null,
+        "longitude": -0.461941,
+        "name": "London Heathrow Airport",
+        "note": "LON, Londres",
+        "reporting": true,
+        "runways": [
+            {
+                "bearing1": 89.6,
+                "bearing2": 269.6,
+                "ident1": "09L",
+                "ident2": "27R",
+                "length_ft": 12799,
+                "lights": true,
+                "surface": "asphalt",
+                "width_ft": 164
+            },
+            {
+                "bearing1": 90.0,
+                "bearing2": 270.0,
+                "ident1": "09R",
+                "ident2": "27L",
+                "length_ft": 12001,
+                "lights": true,
+                "surface": "asphalt",
+                "width_ft": 148
+            }
+        ],
+        "state": "ENG",
+        "type": "large_airport",
+        "website": "http://www.heathrowairport.com/",
+        "wiki": "https://en.wikipedia.org/wiki/Heathrow_Airport"
+    }
+}

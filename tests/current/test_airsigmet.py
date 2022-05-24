@@ -379,6 +379,7 @@ class TestAirSigmet(BaseTest):
             ("1 TOPS ABV FL450 2", None, 450, "ft", "1 2"),
             ("TURB BTN FL180 AND FL330", 180, 330, "ft", "TURB"),
             ("1 CIG BLW 010 2", None, 10, "ft", "1 2"),
+            ("1 TOP BLW FL380 2", None, 380, "ft", "1 2"),
         ):
             units = Units(**IN_UNITS)
             ret_wx, units, ret_floor, ret_ceiling = airsigmet._altitudes(

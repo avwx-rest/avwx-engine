@@ -185,6 +185,9 @@ def make_number(
     if val_str.startswith("ABV "):
         speak_prefix += "above "
         val_str = val_str[4:]
+    if val_str.startswith("BLW "):
+        speak_prefix += "below "
+        val_str = val_str[4:]
     if val_str.startswith("FL"):
         speak_prefix += "flight level "
         val_str, literal = val_str[2:], True

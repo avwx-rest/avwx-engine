@@ -66,8 +66,8 @@ def get_data(filepath: str, report_type: str) -> Iterator:
 def datetime_parser(data: dict) -> dict:
     """Convert ISO strings into datetime objects"""
     for key, val in data.items():
-        if isinstance(val, str):
-            if "+00:00" in val:
+        if isinstance(val, str) and len(val) > 6:
+            if val[-3] == ":" and val[-6] in "+-":
                 with suppress(ValueError):
                     data[key] = datetime.fromisoformat(val)
             with suppress(ValueError):

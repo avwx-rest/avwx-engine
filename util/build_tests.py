@@ -67,6 +67,19 @@ def make_pirep_test(station: str) -> Optional[dict]:
     return {"reports": ret, "station": asdict(p.station)}
 
 
+def make_notam_test(station: str) -> Optional[dict]:
+    """Builds NOTAM test file for station"""
+    n = avwx.Notams(station)
+    n.update()
+    ret = []
+    if not n.data:
+        return None
+    for report in n.data:
+        report.time = None
+        ret.append({"data": asdict(report)})
+    return {"reports": ret, "station": asdict(n.station)}
+
+
 def make_forecast_test(
     report: avwx.forecast.base.Forecast, station: str
 ) -> Optional[dict]:
@@ -127,7 +140,7 @@ def make_airsigmet_tests() -> None:
 def main():
     """Creates source files for end-to-end tests"""
     targets = {
-        "current": ("metar", "taf", "pirep"),
+        "current": ("metar", "taf", "pirep", "notam"),
         "forecast": ("mav", "mex", "nbh", "nbs", "nbe"),
     }
 

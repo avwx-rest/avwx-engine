@@ -356,6 +356,7 @@ class AirSigmetData(ReportData):
 
 @dataclass
 class Qualifiers:
+    repr: str
     fir: str
     subject: Optional[Code]
     condition: Optional[Code]

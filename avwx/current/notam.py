@@ -2,10 +2,15 @@
 NOTAM report parsing
 """
 
+# pylint: disable=invalid-name
+
 # stdlib
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
+
+# library
+from dateutil.tz import gettz
 
 # module
 from avwx.current.base import Reports
@@ -32,12 +37,24 @@ KEY_PATTERN = re.compile(r"[A-GQ]\) ")
 def _rear_coord(value: str) -> Coord:
     """Convert coord strings with direction characters at the end: 5126N00036W"""
     lat = float(f"{value[:2]}.{value[2:4]}")
-    if value[5] == "S":
+    if value[4] == "S":
         lat *= -1
-    lon = float(f"{value[5:7]}.{value[7:9]}")
-    if value[9] == "W":
+    lon = float(f"{value[5:8]}.{value[8:10]}")
+    if value[10] == "W":
         lon *= -1
     return Coord(lat, lon, value)
+
+
+def _header(value: str) -> Tuple[str, Optional[Code], Optional[str]]:
+    """Parse pre-tag headers"""
+    header = value.strip().split()
+    replaces = None
+    if len(header) == 3:
+        number, type_text, replaces = header
+    else:
+        number, type_text = header
+    report_type = Code.from_dict(type_text, REPORT_TYPE)
+    return number, report_type, replaces
 
 
 def _qualifiers(value: str, units: Units) -> Qualifiers:
@@ -54,10 +71,11 @@ def _qualifiers(value: str, units: Units) -> Qualifiers:
         subject = Code.from_dict(q_code[1:3], SUBJECT)
         condition_code = q_code[3:]
         if condition_code.startswith("XX"):
-            condition = Code("XX", condition_code[2:])
+            condition = Code("XX", (condition_code[2:] or "Unknown").strip())
         else:
             condition = Code.from_dict(condition_code, CONDITION)
     return Qualifiers(
+        repr=value,
         fir=fir,
         subject=subject,
         condition=condition,
@@ -71,17 +89,44 @@ def _qualifiers(value: str, units: Units) -> Qualifiers:
     )
 
 
-def make_year_timestamp(timestamp: str) -> Optional[Timestamp]:
-    """Convert NOTAM timestamp which includes year and month"""
-    timestamp = timestamp.strip()
-    if not timestamp:
+def _tz_offset_for(name: Optional[str]) -> Optional[timezone]:
+    """Generates a timezone from tz string name"""
+    if not name:
         return None
-    if timestamp == "PERM":
-        date_obj = datetime(2100, 1, 1)
-    else:
-        dt_format = r"%y%m%d%H%M" if len(timestamp) == 10 else r"%y%m%d%H%M%Z"
-        date_obj = datetime.strptime(timestamp, dt_format)
-    return Timestamp(timestamp, date_obj)
+    if tz := gettz(name):
+        if offset := tz.utcoffset(datetime.utcnow()):
+            return timezone(offset)
+    return None
+
+
+def make_year_timestamp(
+    value: str, repr: str, tzname: str = None  # pylint: disable=redefined-builtin
+) -> Optional[Timestamp]:
+    """Convert NOTAM timestamp which includes year and month"""
+    value = value.strip()
+    if not value:
+        return None
+    if value == "PERM":
+        return Timestamp(repr, datetime(2100, 1, 1, tzinfo=timezone.utc))
+    tz = _tz_offset_for(tzname) or timezone.utc
+    raw = datetime.strptime(value, r"%y%m%d%H%M")
+    date = datetime(raw.year, raw.month, raw.day, raw.hour, raw.minute, tzinfo=tz)
+    return Timestamp(repr, date)
+
+
+def parse_linked_times(
+    start: str, end: str
+) -> Tuple[Optional[Timestamp], Optional[Timestamp]]:
+    """Parse start and end times sharing any found timezone"""
+    start, end = start.strip(), end.strip()
+    start_raw, end_raw, tzname = start, end, None
+    if len(start) > 10:
+        start, tzname = start[:-3], start[-3:]
+    if len(end) > 10:
+        end, tzname = end[:-3], end[-3:]
+    return make_year_timestamp(start, start_raw, tzname), make_year_timestamp(
+        end, end_raw, tzname
+    )
 
 
 def parse(report: str, issued: Timestamp = None) -> Tuple[NotamData, Units]:
@@ -95,12 +140,8 @@ def parse(report: str, issued: Timestamp = None) -> Tuple[NotamData, Units]:
     match = KEY_PATTERN.search(text)
     # Type and number here
     if match and match.start() > 0:
-        header = text[: match.start()].strip().split()
-        if len(header) == 3:
-            number, type_text, replaces = header
-        else:
-            number, type_text = header
-        report_type = Code.from_dict(type_text, REPORT_TYPE)
+        number, report_type, replaces = _header(text[: match.start()])
+    start_text, end_text = "", ""
     while match:
         tag = match.group()[0]
         text = text[match.end() :]
@@ -111,9 +152,9 @@ def parse(report: str, issued: Timestamp = None) -> Tuple[NotamData, Units]:
         elif tag == "A":
             station = item
         elif tag == "B":
-            start_time = make_year_timestamp(item)
+            start_text = item
         elif tag == "C":
-            end_time = make_year_timestamp(item)
+            end_text = item
         elif tag == "D":
             schedule = item
         elif tag == "E":
@@ -122,6 +163,7 @@ def parse(report: str, issued: Timestamp = None) -> Tuple[NotamData, Units]:
             lower = core.make_altitude(item.split()[0], units, repr=item)[0]
         elif tag == "G":
             upper = core.make_altitude(item.split()[0], units, repr=item)[0]
+    start_time, end_time = parse_linked_times(start_text, end_text)
     return (
         NotamData(
             raw=report,

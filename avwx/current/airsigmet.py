@@ -354,6 +354,10 @@ def _altitudes(
                 ceiling = core.make_number("ABV " + data[i + 2])
                 data = data[:i] + data[i + 3 :]
                 break
+            if data[i + 1] == "BLW":
+                ceiling = core.make_number("BLW " + data[i + 2])
+                data = data[:i] + data[i + 3 :]
+                break
             # TOPS TO FL310
             if data[i + 1] == "TO":
                 data.pop(i)

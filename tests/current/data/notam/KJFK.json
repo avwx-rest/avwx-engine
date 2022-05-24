@@ -1,0 +1,3767 @@
+{
+    "created": "2022-05-24",
+    "icao": "KJFK",
+    "reports": [
+        {
+            "data": {
+                "body": "TWY TB BTN TERMINAL 8 RAMP AND TWY A CLSD",
+                "end_time": {
+                    "dt": "2022-09-30T11:00:00+00:00",
+                    "repr": "2209301100"
+                },
+                "lower": null,
+                "number": "01/113",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LC",
+                        "value": "Closed"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MX",
+                        "value": "Taxiway"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "01/113 NOTAMN \r\nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2101081328 \r\nC) 2209301100 \r\n\r\nE) TWY TB BTN TERMINAL 8 RAMP AND TWY A CLSD",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "01/113 NOTAMN \nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2101081328 \nC) 2209301100 \n\nE) TWY TB BTN TERMINAL 8 RAMP AND TWY A CLSD",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2021-01-08T13:28:00+00:00",
+                    "repr": "2101081328"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "VFP JOHN F KENNEDY INTL, NEW YORK, NY.\nBELMONT VISUAL RWY 22L, ORIG...\nPROCEDURE NA EXCEPT FOR AIRCRAFT EQUIPPED WITH SUITABLE RNAV SYSTEM WITH GPS, CRI R-068 UNUSABLE.",
+                "end_time": {
+                    "dt": "2023-01-09T04:00:00-05:00",
+                    "repr": "2301090400EST"
+                },
+                "lower": null,
+                "number": null,
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "repr": "ZNY/QPKXX/V/NBO/A/000/999/4038N07346W025",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "PK",
+                        "value": "VFR approach procedure"
+                    },
+                    "traffic": {
+                        "repr": "V",
+                        "value": "VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "Q) ZNY/QPKXX/V/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2101090401\nC) 2301090400EST\nE) VFP JOHN F KENNEDY INTL, NEW YORK, NY.\nBELMONT VISUAL RWY 22L, ORIG...\nPROCEDURE NA EXCEPT FOR AIRCRAFT EQUIPPED WITH SUITABLE RNAV SYSTEM WITH GPS, CRI R-068 UNUSABLE.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "Q) ZNY/QPKXX/V/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2101090401\nC) 2301090400EST\nE) VFP JOHN F KENNEDY INTL, NEW YORK, NY.\nBELMONT VISUAL RWY 22L, ORIG...\nPROCEDURE NA EXCEPT FOR AIRCRAFT EQUIPPED WITH SUITABLE RNAV SYSTEM WITH GPS, CRI R-068 UNUSABLE.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2021-01-09T04:01:00-05:00",
+                    "repr": "2101090401"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": null,
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 4L, AMDT 11D...\nAUTOPILOT COUPLED APPROACHES NA BELOW 200FT MSL.",
+                "end_time": {
+                    "dt": "2021-11-03T13:40:00-05:00",
+                    "repr": "2111031340EST"
+                },
+                "lower": null,
+                "number": null,
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "repr": "ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "PI",
+                        "value": "Instrument approach procedure"
+                    },
+                    "traffic": {
+                        "repr": "I",
+                        "value": "IFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2103241340\nC) 2111031340EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 4L, AMDT 11D...\nAUTOPILOT COUPLED APPROACHES NA BELOW 200FT MSL.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2103241340\nC) 2111031340EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 4L, AMDT 11D...\nAUTOPILOT COUPLED APPROACHES NA BELOW 200FT MSL.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2021-03-24T13:40:00-05:00",
+                    "repr": "2103241340"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": null,
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 13L, AMDT 18C...\nCIRCLING MDA CATS C/D 700/HAA 687. VISIBILITY CAT C 2, CAT D 2 1/4.\nUXHUB FIX MINIMUMS: CIRCLING MDA CATS C/D 700/HAA 687. VISIBILITY CAT C 2, CAT D 2 1/4.",
+                "end_time": {
+                    "dt": "2021-11-09T13:41:00-05:00",
+                    "repr": "2111091341EST"
+                },
+                "lower": null,
+                "number": null,
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "repr": "ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "PI",
+                        "value": "Instrument approach procedure"
+                    },
+                    "traffic": {
+                        "repr": "I",
+                        "value": "IFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2103301343\nC) 2111091341EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 13L, AMDT 18C...\nCIRCLING MDA CATS C/D 700/HAA 687. VISIBILITY CAT C 2, CAT D 2 1/4.\nUXHUB FIX MINIMUMS: CIRCLING MDA CATS C/D 700/HAA 687. VISIBILITY CAT C 2, CAT D 2 1/4.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2103301343\nC) 2111091341EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 13L, AMDT 18C...\nCIRCLING MDA CATS C/D 700/HAA 687. VISIBILITY CAT C 2, CAT D 2 1/4.\nUXHUB FIX MINIMUMS: CIRCLING MDA CATS C/D 700/HAA 687. VISIBILITY CAT C 2, CAT D 2 1/4.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2021-03-30T13:43:00-05:00",
+                    "repr": "2103301343"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": null,
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 22L, AMDT 26...\nILS OR LOC RWY 22R, AMDT 4...\nILS OR LOC RWY 31L, AMDT 11B...\nILS OR LOC RWY 31R, AMDT 16B...\nILS OR LOC RWY 4L, AMDT 11D...\nILS OR LOC RWY 4R, AMDT 30B...\nRNAV (GPS) RWY 22R, AMDT 1G...\nRNAV (GPS) X RWY 22L, ORIG- A...\nRNAV (GPS) Y RWY 22L, AMDT 1F...\nRNAV (GPS) Y RWY 31L, AMDT 2B...\nRNAV (GPS) Y RWY 31R, AMDT 2C...\nRNAV (GPS) Y RWY 4L, AMDT 3B...\nRNAV (GPS) Y RWY 4R, AMDT 2B...\nVOR RWY 22L, AMDT 4F...\nVOR RWY 31L, ORIG-B...\nVOR RWY 4L, AMDT 1B...\nVOR RWY 4R, ORIG-B...\nCIRCLING MDA CATS C/D 700/HAA 687. VISIBILITY CAT C 2, CAT D 2 1/4.",
+                "end_time": {
+                    "dt": "2022-02-22T14:21:00-05:00",
+                    "repr": "2202221421EST"
+                },
+                "lower": null,
+                "number": null,
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "repr": "ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "PI",
+                        "value": "Instrument approach procedure"
+                    },
+                    "traffic": {
+                        "repr": "I",
+                        "value": "IFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2107131421\nC) 2202221421EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 22L, AMDT 26...\nILS OR LOC RWY 22R, AMDT 4...\nILS OR LOC RWY 31L, AMDT 11B...\nILS OR LOC RWY 31R, AMDT 16B...\nILS OR LOC RWY 4L, AMDT 11D...\nILS OR LOC RWY 4R, AMDT 30B...\nRNAV (GPS) RWY 22R, AMDT 1G...\nRNAV (GPS) X RWY 22L, ORIG- A...\nRNAV (GPS) Y RWY 22L, AMDT 1F...\nRNAV (GPS) Y RWY 31L, AMDT 2B...\nRNAV (GPS) Y RWY 31R, AMDT 2C...\nRNAV (GPS) Y RWY 4L, AMDT 3B...\nRNAV (GPS) Y RWY 4R, AMDT 2B...\nVOR RWY 22L, AMDT 4F...\nVOR RWY 31L, ORIG-B...\nVOR RWY 4L, AMDT 1B...\nVOR RWY 4R, ORIG-B...\nCIRCLING MDA CATS C/D 700/HAA 687. VISIBILITY CAT C 2, CAT D 2 1/4.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2107131421\nC) 2202221421EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 22L, AMDT 26...\nILS OR LOC RWY 22R, AMDT 4...\nILS OR LOC RWY 31L, AMDT 11B...\nILS OR LOC RWY 31R, AMDT 16B...\nILS OR LOC RWY 4L, AMDT 11D...\nILS OR LOC RWY 4R, AMDT 30B...\nRNAV (GPS) RWY 22R, AMDT 1G...\nRNAV (GPS) X RWY 22L, ORIG- A...\nRNAV (GPS) Y RWY 22L, AMDT 1F...\nRNAV (GPS) Y RWY 31L, AMDT 2B...\nRNAV (GPS) Y RWY 31R, AMDT 2C...\nRNAV (GPS) Y RWY 4L, AMDT 3B...\nRNAV (GPS) Y RWY 4R, AMDT 2B...\nVOR RWY 22L, AMDT 4F...\nVOR RWY 31L, ORIG-B...\nVOR RWY 4L, AMDT 1B...\nVOR RWY 4R, ORIG-B...\nCIRCLING MDA CATS C/D 700/HAA 687. VISIBILITY CAT C 2, CAT D 2 1/4.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2021-07-13T14:21:00-05:00",
+                    "repr": "2107131421"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": null,
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 22L, AMDT 26...\nILS OR LOC RWY 31L, AMDT 11B...\nILS OR LOC RWY 31R, AMDT 16B...\nILS OR LOC RWY 4L, AMDT 11D...\nILS OR LOC RWY 4R, AMDT 30B...\nRNAV (GPS) RWY 22R, AMDT 1G...\nRNAV (GPS) X RWY 22L, ORIG-A...\nRNAV (GPS) Y RWY 22L, AMDT 1F...\nRNAV (GPS) Y RWY 31L, AMDT 2B...\nRNAV (GPS) Y RWY 31R, AMDT 2C...\nRNAV (GPS) Y RWY 4L, AMDT 3B...\nRNAV (GPS) Y RWY 4R, AMDT 2B...\nVOR RWY 22L, AMDT 4F...\nVOR RWY 31L, ORIG-B...\nVOR RWY 4L, AMDT 1B...\nVOR RWY 4R, ORIG-B...\nCIRCLING MDA CAT C 700/HAA 687, CAT D 860/HAA 847, VISIBILITY CAT C 2, CAT D 2 3/4. \nEXCEPT WHEN ADVISED BY ATC THAT THIS CRANE IS DOWN. \nTEMPORARY CRANE 508FT MSL 3.92 NM NORTHWEST OF JFK AIRPORT (2021-AEA-9599-OE).",
+                "end_time": {
+                    "dt": "2022-05-26T18:58:00-05:00",
+                    "repr": "2205261858EST"
+                },
+                "lower": null,
+                "number": null,
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "repr": "ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "PI",
+                        "value": "Instrument approach procedure"
+                    },
+                    "traffic": {
+                        "repr": "I",
+                        "value": "IFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2110141859\nC) 2205261858EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 22L, AMDT 26...\nILS OR LOC RWY 31L, AMDT 11B...\nILS OR LOC RWY 31R, AMDT 16B...\nILS OR LOC RWY 4L, AMDT 11D...\nILS OR LOC RWY 4R, AMDT 30B...\nRNAV (GPS) RWY 22R, AMDT 1G...\nRNAV (GPS) X RWY 22L, ORIG-A...\nRNAV (GPS) Y RWY 22L, AMDT 1F...\nRNAV (GPS) Y RWY 31L, AMDT 2B...\nRNAV (GPS) Y RWY 31R, AMDT 2C...\nRNAV (GPS) Y RWY 4L, AMDT 3B...\nRNAV (GPS) Y RWY 4R, AMDT 2B...\nVOR RWY 22L, AMDT 4F...\nVOR RWY 31L, ORIG-B...\nVOR RWY 4L, AMDT 1B...\nVOR RWY 4R, ORIG-B...\nCIRCLING MDA CAT C 700/HAA 687, CAT D 860/HAA 847, VISIBILITY CAT C 2, CAT D 2 3/4. \nEXCEPT WHEN ADVISED BY ATC THAT THIS CRANE IS DOWN. \nTEMPORARY CRANE 508FT MSL 3.92 NM NORTHWEST OF JFK AIRPORT (2021-AEA-9599-OE).",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2110141859\nC) 2205261858EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 22L, AMDT 26...\nILS OR LOC RWY 31L, AMDT 11B...\nILS OR LOC RWY 31R, AMDT 16B...\nILS OR LOC RWY 4L, AMDT 11D...\nILS OR LOC RWY 4R, AMDT 30B...\nRNAV (GPS) RWY 22R, AMDT 1G...\nRNAV (GPS) X RWY 22L, ORIG-A...\nRNAV (GPS) Y RWY 22L, AMDT 1F...\nRNAV (GPS) Y RWY 31L, AMDT 2B...\nRNAV (GPS) Y RWY 31R, AMDT 2C...\nRNAV (GPS) Y RWY 4L, AMDT 3B...\nRNAV (GPS) Y RWY 4R, AMDT 2B...\nVOR RWY 22L, AMDT 4F...\nVOR RWY 31L, ORIG-B...\nVOR RWY 4L, AMDT 1B...\nVOR RWY 4R, ORIG-B...\nCIRCLING MDA CAT C 700/HAA 687, CAT D 860/HAA 847, VISIBILITY CAT C 2, CAT D 2 3/4. \nEXCEPT WHEN ADVISED BY ATC THAT THIS CRANE IS DOWN. \nTEMPORARY CRANE 508FT MSL 3.92 NM NORTHWEST OF JFK AIRPORT (2021-AEA-9599-OE).",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2021-10-14T18:59:00-05:00",
+                    "repr": "2110141859"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": null,
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 13L, AMDT 18C...\nCIRCLING MDA CAT C 700/HAA 687, CAT D 860/HAA 847, VISIBILITY CAT C 2, CAT D 2 3/4. \nUXHUB FIX MINIMUMS: CIRCLING MDA CAT C 700/HAA 687, CAT D 860/HAA 847, VISIBILITY CAT C 2, CAT D 2 3/4. \nEXCEPT WHEN ADVISED BY ATC CRANE IS DOWN.\nTEMPORARY CRANE 508FT MSL 3.92 NM NORTHWEST OF JFK AIRPORT (2021-AEA-9599-OE).",
+                "end_time": {
+                    "dt": "2022-05-24T14:52:00-05:00",
+                    "repr": "2205241452EST"
+                },
+                "lower": null,
+                "number": null,
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "repr": "ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "PI",
+                        "value": "Instrument approach procedure"
+                    },
+                    "traffic": {
+                        "repr": "I",
+                        "value": "IFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2110121506\nC) 2205241452EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 13L, AMDT 18C...\nCIRCLING MDA CAT C 700/HAA 687, CAT D 860/HAA 847, VISIBILITY CAT C 2, CAT D 2 3/4. \nUXHUB FIX MINIMUMS: CIRCLING MDA CAT C 700/HAA 687, CAT D 860/HAA 847, VISIBILITY CAT C 2, CAT D 2 3/4. \nEXCEPT WHEN ADVISED BY ATC CRANE IS DOWN.\nTEMPORARY CRANE 508FT MSL 3.92 NM NORTHWEST OF JFK AIRPORT (2021-AEA-9599-OE).",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2110121506\nC) 2205241452EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 13L, AMDT 18C...\nCIRCLING MDA CAT C 700/HAA 687, CAT D 860/HAA 847, VISIBILITY CAT C 2, CAT D 2 3/4. \nUXHUB FIX MINIMUMS: CIRCLING MDA CAT C 700/HAA 687, CAT D 860/HAA 847, VISIBILITY CAT C 2, CAT D 2 3/4. \nEXCEPT WHEN ADVISED BY ATC CRANE IS DOWN.\nTEMPORARY CRANE 508FT MSL 3.92 NM NORTHWEST OF JFK AIRPORT (2021-AEA-9599-OE).",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2021-10-12T15:06:00-05:00",
+                    "repr": "2110121506"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": null,
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY TA BTN TWY A AND TERMINAL 8 RAMP WIP CONST EAST SHOULDER LGTD AND BARRICADED",
+                "end_time": {
+                    "dt": "2022-12-31T23:59:00+00:00",
+                    "repr": "2212312359"
+                },
+                "lower": null,
+                "number": "10/246",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "HW",
+                        "value": "Work in progress"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMXHW/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MX",
+                        "value": "Taxiway"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "10/246 NOTAMN \r\nQ) ZNY/QMXHW/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2110220151 \r\nC) 2212312359 \r\n\r\nE) TWY TA BTN TWY A AND TERMINAL 8 RAMP WIP CONST EAST SHOULDER LGTD AND BARRICADED",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "10/246 NOTAMN \nQ) ZNY/QMXHW/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2110220151 \nC) 2212312359 \n\nE) TWY TA BTN TWY A AND TERMINAL 8 RAMP WIP CONST EAST SHOULDER LGTD AND BARRICADED",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2021-10-22T01:51:00+00:00",
+                    "repr": "2110220151"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY KE SFC PAINTED HLDG PSN SIGNS FOR RWY 13R/31L NORTH SIDE FADED",
+                "end_time": {
+                    "dt": "2022-07-30T23:00:00+00:00",
+                    "repr": "2207302300"
+                },
+                "lower": null,
+                "number": "10/325",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MM",
+                        "value": "Daylight markings"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "10/325 NOTAMN \r\nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2110310824 \r\nC) 2207302300 \r\n\r\nE) TWY KE SFC PAINTED HLDG PSN SIGNS FOR RWY 13R/31L NORTH SIDE FADED",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "10/325 NOTAMN \nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2110310824 \nC) 2207302300 \n\nE) TWY KE SFC PAINTED HLDG PSN SIGNS FOR RWY 13R/31L NORTH SIDE FADED",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2021-10-31T08:24:00+00:00",
+                    "repr": "2110310824"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "RWY 04L RWY END ID LGT \n U/S",
+                "end_time": {
+                    "dt": "2022-11-08T21:11:00-05:00",
+                    "repr": "2211082111EST"
+                },
+                "lower": null,
+                "number": "12/087",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "AS",
+                        "value": "Unserviceable"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QSAAS/IV/BO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "SA",
+                        "value": "Automatic terminal information service"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "12/087 NOTAMR \r\nQ) ZNY/QSAAS/IV/BO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2112081303 \r\nC) 2211082111EST \r\n\r\nE) RWY 04L RWY END ID LGT \r\n U/S",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "12/087 NOTAMR \nQ) ZNY/QSAAS/IV/BO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2112081303 \nC) 2211082111EST \n\nE) RWY 04L RWY END ID LGT \n U/S",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2021-12-08T13:03:00-05:00",
+                    "repr": "2112081303"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMR",
+                    "value": "Replace"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY Z BTN RWY 04L/22R AND TWY Y CLSD",
+                "end_time": {
+                    "dt": "2022-09-01T04:00:00+00:00",
+                    "repr": "2209010400"
+                },
+                "lower": null,
+                "number": "12/289",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LC",
+                        "value": "Closed"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MX",
+                        "value": "Taxiway"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "12/289 NOTAMN \r\nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2112292126 \r\nC) 2209010400 \r\n\r\nE) TWY Z BTN RWY 04L/22R AND TWY Y CLSD",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "12/289 NOTAMN \nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2112292126 \nC) 2209010400 \n\nE) TWY Z BTN RWY 04L/22R AND TWY Y CLSD",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2021-12-29T21:26:00+00:00",
+                    "repr": "2112292126"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY Y HLDG PSN SIGN FOR ILS NORTHEAST SIDE FOR RWY 13L/31R LGT U/S",
+                "end_time": {
+                    "dt": "2022-12-30T23:00:00+00:00",
+                    "repr": "2212302300"
+                },
+                "lower": null,
+                "number": "01/031",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MM",
+                        "value": "Daylight markings"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "01/031 NOTAMR \r\nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2201031616 \r\nC) 2212302300 \r\n\r\nE) TWY Y HLDG PSN SIGN FOR ILS NORTHEAST SIDE FOR RWY 13L/31R LGT U/S",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "01/031 NOTAMR \nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2201031616 \nC) 2212302300 \n\nE) TWY Y HLDG PSN SIGN FOR ILS NORTHEAST SIDE FOR RWY 13L/31R LGT U/S",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-01-03T16:16:00+00:00",
+                    "repr": "2201031616"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMR",
+                    "value": "Replace"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 22R, AMDT 4...\nCIRCLING MDA CAT C 700/HAA 687, CAT D 860/HAA 847, VISIBILITY CAT C 2,  CAT D 2 3/4. EXCEPT WHEN ADVISED BY ATC THAT THIS CRANE IS DOWN. TEMPORARY CRANE 508FT MSL 3.92 NM NORTHWEST OF JFK AIRPORT (2021-AEA-9599-OE).",
+                "end_time": {
+                    "dt": "2022-08-15T17:19:00-05:00",
+                    "repr": "2208151719EST"
+                },
+                "lower": null,
+                "number": null,
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "repr": "ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "PI",
+                        "value": "Instrument approach procedure"
+                    },
+                    "traffic": {
+                        "repr": "I",
+                        "value": "IFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2201031719\nC) 2208151719EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 22R, AMDT 4...\nCIRCLING MDA CAT C 700/HAA 687, CAT D 860/HAA 847, VISIBILITY CAT C 2,  CAT D 2 3/4. EXCEPT WHEN ADVISED BY ATC THAT THIS CRANE IS DOWN. TEMPORARY CRANE 508FT MSL 3.92 NM NORTHWEST OF JFK AIRPORT (2021-AEA-9599-OE).",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2201031719\nC) 2208151719EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 22R, AMDT 4...\nCIRCLING MDA CAT C 700/HAA 687, CAT D 860/HAA 847, VISIBILITY CAT C 2,  CAT D 2 3/4. EXCEPT WHEN ADVISED BY ATC THAT THIS CRANE IS DOWN. TEMPORARY CRANE 508FT MSL 3.92 NM NORTHWEST OF JFK AIRPORT (2021-AEA-9599-OE).",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-01-03T17:19:00-05:00",
+                    "repr": "2201031719"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": null,
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "APRON BLDG 73 RAMP CLSD ACFT WINGSPAN MORE THAN \n171FT EXC UNDER TOW",
+                "end_time": {
+                    "dt": "2023-01-01T23:00:00+00:00",
+                    "repr": "2301012300"
+                },
+                "lower": null,
+                "number": "01/048",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LC",
+                        "value": "Closed"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMNLC/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MN",
+                        "value": "Apron"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "01/048 NOTAMN \r\nQ) ZNY/QMNLC/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2201040359 \r\nC) 2301012300 \r\n\r\nE) APRON BLDG 73 RAMP CLSD ACFT WINGSPAN MORE THAN \r\n171FT EXC UNDER TOW",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "01/048 NOTAMN \nQ) ZNY/QMNLC/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2201040359 \nC) 2301012300 \n\nE) APRON BLDG 73 RAMP CLSD ACFT WINGSPAN MORE THAN \n171FT EXC UNDER TOW",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-01-04T03:59:00+00:00",
+                    "repr": "2201040359"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY MC HLDG PSN SIGN EAST SIDE FOR RWY 13R/31L MISSING",
+                "end_time": {
+                    "dt": "2022-12-31T23:00:00+00:00",
+                    "repr": "2212312300"
+                },
+                "lower": null,
+                "number": "01/179",
+                "qualifiers": {
+                    "condition": null,
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY//IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": null,
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "01/179 NOTAMN \r\nQ) ZNY//IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2201071714 \r\nC) 2212312300 \r\n\r\nE) TWY MC HLDG PSN SIGN EAST SIDE FOR RWY 13R/31L MISSING",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "01/179 NOTAMN \nQ) ZNY//IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2201071714 \nC) 2212312300 \n\nE) TWY MC HLDG PSN SIGN EAST SIDE FOR RWY 13R/31L MISSING",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-01-07T17:14:00+00:00",
+                    "repr": "2201071714"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "SPECIAL JOHN F KENNEDY INTL, NEW YORK, NY.\nRNAV (RNP) RWY 13L, AMDT 3A...\nRNAV (RNP) RWY 13R, AMDT 3A...\nPROCEDURE NA EXC FOR ACFT USING APPROVED ALTERNATIVE METHODS OF COMPLIANCE DUE TO 5G C-BAND INTERFERENCE PLUS SEE AIRWORTHINESS DIRECTIVES 2021-23-12, 2021-23-13.",
+                "end_time": {
+                    "dt": "2022-08-02T21:38:00-05:00",
+                    "repr": "2208022138EST"
+                },
+                "lower": null,
+                "number": null,
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "repr": "ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "PI",
+                        "value": "Instrument approach procedure"
+                    },
+                    "traffic": {
+                        "repr": "I",
+                        "value": "IFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2112212138\nC) 2208022138EST\nE) SPECIAL JOHN F KENNEDY INTL, NEW YORK, NY.\nRNAV (RNP) RWY 13L, AMDT 3A...\nRNAV (RNP) RWY 13R, AMDT 3A...\nPROCEDURE NA EXC FOR ACFT USING APPROVED ALTERNATIVE METHODS OF COMPLIANCE DUE TO 5G C-BAND INTERFERENCE PLUS SEE AIRWORTHINESS DIRECTIVES 2021-23-12, 2021-23-13.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2112212138\nC) 2208022138EST\nE) SPECIAL JOHN F KENNEDY INTL, NEW YORK, NY.\nRNAV (RNP) RWY 13L, AMDT 3A...\nRNAV (RNP) RWY 13R, AMDT 3A...\nPROCEDURE NA EXC FOR ACFT USING APPROVED ALTERNATIVE METHODS OF COMPLIANCE DUE TO 5G C-BAND INTERFERENCE PLUS SEE AIRWORTHINESS DIRECTIVES 2021-23-12, 2021-23-13.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2021-12-21T21:38:00-05:00",
+                    "repr": "2112212138"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": null,
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS RWY 13L (CAT II), AMDT 18C ...\nILS RWY 04R (CAT II - III), AMDT 30B ...\nILS RWY 22L (CAT II - III), AMDT 26 ...\nPROCEDURE NA EXC FOR ACFT USING APPROVED ALTERNATIVE METHODS OF COMPLIANCE DUE TO 5G C-BAND INTERFERENCE PLUS SEE AIRWORTHINESS DIRECTIVES 2021-23-12, 2021-23-13",
+                "end_time": {
+                    "dt": "2022-08-23T18:14:00-05:00",
+                    "repr": "2208231814EST"
+                },
+                "lower": null,
+                "number": null,
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "repr": "ZNY/QXXXX/I/NBO/A/000/999/4038N07346W025",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "traffic": {
+                        "repr": "I",
+                        "value": "IFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "Q) ZNY/QXXXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2201111815\nC) 2208231814EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS RWY 13L (CAT II), AMDT 18C ...\nILS RWY 04R (CAT II - III), AMDT 30B ...\nILS RWY 22L (CAT II - III), AMDT 26 ...\nPROCEDURE NA EXC FOR ACFT USING APPROVED ALTERNATIVE METHODS OF COMPLIANCE DUE TO 5G C-BAND INTERFERENCE PLUS SEE AIRWORTHINESS DIRECTIVES 2021-23-12, 2021-23-13",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "Q) ZNY/QXXXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2201111815\nC) 2208231814EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS RWY 13L (CAT II), AMDT 18C ...\nILS RWY 04R (CAT II - III), AMDT 30B ...\nILS RWY 22L (CAT II - III), AMDT 26 ...\nPROCEDURE NA EXC FOR ACFT USING APPROVED ALTERNATIVE METHODS OF COMPLIANCE DUE TO 5G C-BAND INTERFERENCE PLUS SEE AIRWORTHINESS DIRECTIVES 2021-23-12, 2021-23-13",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-01-11T18:15:00-05:00",
+                    "repr": "2201111815"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": null,
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "OBST CRANE 61 ( 57 AGL) 0.2 N LGTS FLAGGED AND LGTD (ASN 2022-AEA-10-NRA)",
+                "end_time": {
+                    "dt": "2022-11-30T22:00:00+00:00",
+                    "repr": "2211302200"
+                },
+                "lower": null,
+                "number": "03/235",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "AS",
+                        "value": "Unserviceable"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QOLAS/IV/M/E/000/202/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "E",
+                            "value": "En Route"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "OL",
+                        "value": "Obstacle lights"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "202",
+                        "spoken": "two zero two",
+                        "value": 202
+                    }
+                },
+                "raw": "03/235 NOTAMN \r\nQ) ZNY/QOLAS/IV/M/E/000/202/4038N07346W005 \r\nA) KJFK \r\nB) 2203211810 \r\nC) 2211302200 \r\nE) OBST CRANE 61 ( 57 AGL) 0.2 N LGTS FLAGGED AND LGTD (ASN 2022-AEA-10-NRA)",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "03/235 NOTAMN \nQ) ZNY/QOLAS/IV/M/E/000/202/4038N07346W005 \nA) KJFK \nB) 2203211810 \nC) 2211302200 \nE) OBST CRANE 61 ( 57 AGL) 0.2 N LGTS FLAGGED AND LGTD (ASN 2022-AEA-10-NRA)",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-03-21T18:10:00+00:00",
+                    "repr": "2203211810"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY H CL MARKINGS BTN TWY Y AND TWY Z NONSTD",
+                "end_time": {
+                    "dt": "2022-12-31T23:00:00+00:00",
+                    "repr": "2212312300"
+                },
+                "lower": null,
+                "number": "03/248",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MM",
+                        "value": "Daylight markings"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "03/248 NOTAMN \r\nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2203212040 \r\nC) 2212312300 \r\n\r\nE) TWY H CL MARKINGS BTN TWY Y AND TWY Z NONSTD",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "03/248 NOTAMN \nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2203212040 \nC) 2212312300 \n\nE) TWY H CL MARKINGS BTN TWY Y AND TWY Z NONSTD",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-03-21T20:40:00+00:00",
+                    "repr": "2203212040"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY TA BTN TWY A AND TERMINAL 8 RAMP CLSD",
+                "end_time": {
+                    "dt": "2022-05-29T03:59:00+00:00",
+                    "repr": "2205290359"
+                },
+                "lower": null,
+                "number": "03/320",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LC",
+                        "value": "Closed"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MX",
+                        "value": "Taxiway"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "03/320 NOTAMN \r\nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2203281704 \r\nC) 2205290359 \r\n\r\nE) TWY TA BTN TWY A AND TERMINAL 8 RAMP CLSD",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "03/320 NOTAMN \nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2203281704 \nC) 2205290359 \n\nE) TWY TA BTN TWY A AND TERMINAL 8 RAMP CLSD",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-03-28T17:04:00+00:00",
+                    "repr": "2203281704"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TAXIWAY A \n CLR BAR LGT FOR TWY EA NONSTD",
+                "end_time": {
+                    "dt": "2022-12-31T23:00:00+00:00",
+                    "repr": "2212312300"
+                },
+                "lower": null,
+                "number": "04/023",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "AS",
+                        "value": "Unserviceable"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QXXAS/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "04/023 NOTAMN \r\nQ) ZNY/QXXAS/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2204021658 \r\nC) 2212312300 \r\n\r\nE) TAXIWAY A \r\n CLR BAR LGT FOR TWY EA NONSTD",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "04/023 NOTAMN \nQ) ZNY/QXXAS/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2204021658 \nC) 2212312300 \n\nE) TAXIWAY A \n CLR BAR LGT FOR TWY EA NONSTD",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-04-02T16:58:00+00:00",
+                    "repr": "2204021658"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY D HLDG PSN MARKINGS FOR RWY 13L/31R NORTHWEST SIDE NONSTD",
+                "end_time": {
+                    "dt": "2022-12-31T23:00:00+00:00",
+                    "repr": "2212312300"
+                },
+                "lower": null,
+                "number": "04/054",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MM",
+                        "value": "Daylight markings"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "04/054 NOTAMN \r\nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2204041714 \r\nC) 2212312300 \r\n\r\nE) TWY D HLDG PSN MARKINGS FOR RWY 13L/31R NORTHWEST SIDE NONSTD",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "04/054 NOTAMN \nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2204041714 \nC) 2212312300 \n\nE) TWY D HLDG PSN MARKINGS FOR RWY 13L/31R NORTHWEST SIDE NONSTD",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-04-04T17:14:00+00:00",
+                    "repr": "2204041714"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "DEPARTURE PROCEDURES AMDT 9...\nADD TAKEOFF OBSTACLE NOTE: RWY 31R, TEMPORARY ACFT TAILS 1878FT FROM DER, 476FT LEFT OF CENTERLINE, 64FT AGL/ 74FT MSL (2020-AEA-1302-NRA, LONG TERM CONDITION).\nALL OTHER DATA REMAINS AS PUBLISHED.",
+                "end_time": {
+                    "dt": "2024-04-05T18:56:00-05:00",
+                    "repr": "2404051856EST"
+                },
+                "lower": null,
+                "number": null,
+                "qualifiers": {
+                    "condition": null,
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "repr": "ZNY/undefined/NBO/A/000/999/4038N07346W025",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": null,
+                    "traffic": null,
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "Q) ZNY/undefined/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2204051857\nC) 2404051856EST\nE) ODP JOHN F KENNEDY INTL, NEW YORK, NY.\nTAKEOFF MINIMUMS AND (OBSTACLE) DEPARTURE PROCEDURES AMDT 9...\nADD TAKEOFF OBSTACLE NOTE: RWY 31R, TEMPORARY ACFT TAILS 1878FT FROM DER, 476FT LEFT OF CENTERLINE, 64FT AGL/ 74FT MSL (2020-AEA-1302-NRA, LONG TERM CONDITION).\nALL OTHER DATA REMAINS AS PUBLISHED.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "Q) ZNY/undefined/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2204051857\nC) 2404051856EST\nE) ODP JOHN F KENNEDY INTL, NEW YORK, NY.\nTAKEOFF MINIMUMS AND (OBSTACLE) DEPARTURE PROCEDURES AMDT 9...\nADD TAKEOFF OBSTACLE NOTE: RWY 31R, TEMPORARY ACFT TAILS 1878FT FROM DER, 476FT LEFT OF CENTERLINE, 64FT AGL/ 74FT MSL (2020-AEA-1302-NRA, LONG TERM CONDITION).\nALL OTHER DATA REMAINS AS PUBLISHED.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-04-05T18:57:00-05:00",
+                    "repr": "2204051857"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": null,
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "SID JOHN F KENNEDY INTL, New York, NY.\nKENNEDY FIVE DEPARTURE...\nNOTE: COATE DEPARTURES NA EXCEPT FOR AIRCRAFT EQUIPPED WITH SUITABLE RNAV SYSTEM WITH GPS,\nSAX VOR OUT OF SERVICE.",
+                "end_time": {
+                    "dt": "2020-04-29T16:31:00-05:00",
+                    "repr": "2004291631EST"
+                },
+                "lower": null,
+                "number": null,
+                "qualifiers": {
+                    "condition": {
+                        "repr": "CH",
+                        "value": "Changed"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "repr": "ZNY/QPDCH/I/NBO/A/000/999/4038N07346W025",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "PD",
+                        "value": "Standard instrument departure"
+                    },
+                    "traffic": {
+                        "repr": "I",
+                        "value": "IFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "Q) ZNY/QPDCH/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 1909181634\nC) 2004291631EST\nE) SID JOHN F KENNEDY INTL, New York, NY.\nKENNEDY FIVE DEPARTURE...\nNOTE: COATE DEPARTURES NA EXCEPT FOR AIRCRAFT EQUIPPED WITH SUITABLE RNAV SYSTEM WITH GPS,\nSAX VOR OUT OF SERVICE.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "Q) ZNY/QPDCH/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 1909181634\nC) 2004291631EST\nE) SID JOHN F KENNEDY INTL, New York, NY.\nKENNEDY FIVE DEPARTURE...\nNOTE: COATE DEPARTURES NA EXCEPT FOR AIRCRAFT EQUIPPED WITH SUITABLE RNAV SYSTEM WITH GPS,\nSAX VOR OUT OF SERVICE.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2019-09-18T16:34:00-05:00",
+                    "repr": "1909181634"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": null,
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 4L, AMDT 11D...\nVOR RWY 4L, AMDT 1B...\nDME REQUIRED EXCEPT FOR AIRCRAFT EQUIPPED WITH SUITABLE RNAV SYSTEM WITH GPS,\nCMK VOR OUT OF SERVICE.",
+                "end_time": {
+                    "dt": "2021-10-12T16:53:00-05:00",
+                    "repr": "2110121653EST"
+                },
+                "lower": null,
+                "number": null,
+                "qualifiers": {
+                    "condition": null,
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "repr": "ZNY//NBO/A/000/999/4038N07346W025",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": null,
+                    "traffic": null,
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "Q) ZNY//NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2103021654\nC) 2110121653EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 4L, AMDT 11D...\nVOR RWY 4L, AMDT 1B...\nDME REQUIRED EXCEPT FOR AIRCRAFT EQUIPPED WITH SUITABLE RNAV SYSTEM WITH GPS,\nCMK VOR OUT OF SERVICE.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "Q) ZNY//NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2103021654\nC) 2110121653EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 4L, AMDT 11D...\nVOR RWY 4L, AMDT 1B...\nDME REQUIRED EXCEPT FOR AIRCRAFT EQUIPPED WITH SUITABLE RNAV SYSTEM WITH GPS,\nCMK VOR OUT OF SERVICE.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2021-03-02T16:54:00-05:00",
+                    "repr": "2103021654"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": null,
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 31R, AMDT 16B...\nS-LOC 31R MDA 580/HAT 567 ALL CATS, VISIBILITY CATS C/D RVR 5000. VDP AT I-RTH 1.25 DME; DISTANCE VDP TO THLD 1.62NM. FOR INOPERATIVE ALS, INCREASE S-LOC 31R CAT A/B VISIBILITY TO RVR 5500, CATS C/D TO 1 3/8SM. TEMPORARY CRANE 270 MSL 6.10NM SE RWY 31R (2021-AEA-13250-OE).",
+                "end_time": {
+                    "dt": "2022-12-14T16:37:00-05:00",
+                    "repr": "2212141637EST"
+                },
+                "lower": null,
+                "number": null,
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "repr": "ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "PI",
+                        "value": "Instrument approach procedure"
+                    },
+                    "traffic": {
+                        "repr": "I",
+                        "value": "IFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2205041637\nC) 2212141637EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 31R, AMDT 16B...\nS-LOC 31R MDA 580/HAT 567 ALL CATS, VISIBILITY CATS C/D RVR 5000. VDP AT I-RTH 1.25 DME; DISTANCE VDP TO THLD 1.62NM. FOR INOPERATIVE ALS, INCREASE S-LOC 31R CAT A/B VISIBILITY TO RVR 5500, CATS C/D TO 1 3/8SM. TEMPORARY CRANE 270 MSL 6.10NM SE RWY 31R (2021-AEA-13250-OE).",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2205041637\nC) 2212141637EST\nE) IAP JOHN F KENNEDY INTL, NEW YORK, NY.\nILS OR LOC RWY 31R, AMDT 16B...\nS-LOC 31R MDA 580/HAT 567 ALL CATS, VISIBILITY CATS C/D RVR 5000. VDP AT I-RTH 1.25 DME; DISTANCE VDP TO THLD 1.62NM. FOR INOPERATIVE ALS, INCREASE S-LOC 31R CAT A/B VISIBILITY TO RVR 5500, CATS C/D TO 1 3/8SM. TEMPORARY CRANE 270 MSL 6.10NM SE RWY 31R (2021-AEA-13250-OE).",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-04T16:37:00-05:00",
+                    "repr": "2205041637"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": null,
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "SPECIAL JOHN F KENNEDY INTL, NEW YORK, NY.\nRNAV (RNP) RWY 13R, AMDT 3A...\nRNP 0.30 DA 525/HAT 512 ALL CATS. VISIBILITY 1 1/2 ALL CATS.",
+                "end_time": {
+                    "dt": "2022-12-27T18:02:00-05:00",
+                    "repr": "2212271802EST"
+                },
+                "lower": null,
+                "number": null,
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "repr": "ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "PI",
+                        "value": "Instrument approach procedure"
+                    },
+                    "traffic": {
+                        "repr": "I",
+                        "value": "IFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2205171805\nC) 2212271802EST\nE) SPECIAL JOHN F KENNEDY INTL, NEW YORK, NY.\nRNAV (RNP) RWY 13R, AMDT 3A...\nRNP 0.30 DA 525/HAT 512 ALL CATS. VISIBILITY 1 1/2 ALL CATS.",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "Q) ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025\nA) KJFK\nB) 2205171805\nC) 2212271802EST\nE) SPECIAL JOHN F KENNEDY INTL, NEW YORK, NY.\nRNAV (RNP) RWY 13R, AMDT 3A...\nRNP 0.30 DA 525/HAT 512 ALL CATS. VISIBILITY 1 1/2 ALL CATS.",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-17T18:05:00-05:00",
+                    "repr": "2205171805"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": null,
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "RWY 04L/22R EDGE MARKINGS NE SIDE \n REMOVED",
+                "end_time": {
+                    "dt": "2022-07-05T11:00:00+00:00",
+                    "repr": "2207051100"
+                },
+                "lower": null,
+                "number": "05/256",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MM",
+                        "value": "Daylight markings"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/256 NOTAMN \r\nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205172315 \r\nC) 2207051100 \r\n\r\nE) RWY 04L/22R EDGE MARKINGS NE SIDE \r\n REMOVED",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/256 NOTAMN \nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205172315 \nC) 2207051100 \n\nE) RWY 04L/22R EDGE MARKINGS NE SIDE \n REMOVED",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-17T23:15:00+00:00",
+                    "repr": "2205172315"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY MA CL MARKINGS BTN TWY A AND TWY B NONSTD",
+                "end_time": {
+                    "dt": "2022-12-31T23:00:00+00:00",
+                    "repr": "2212312300"
+                },
+                "lower": null,
+                "number": "05/275",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MM",
+                        "value": "Daylight markings"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/275 NOTAMN \r\nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205181757 \r\nC) 2212312300 \r\n\r\nE) TWY MA CL MARKINGS BTN TWY A AND TWY B NONSTD",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/275 NOTAMN \nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205181757 \nC) 2212312300 \n\nE) TWY MA CL MARKINGS BTN TWY A AND TWY B NONSTD",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-18T17:57:00+00:00",
+                    "repr": "2205181757"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "RWY 13L/31R CL MARKINGS OBSCURED",
+                "end_time": {
+                    "dt": "2022-06-30T22:00:00+00:00",
+                    "repr": "2206302200"
+                },
+                "lower": null,
+                "number": "05/285",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MM",
+                        "value": "Daylight markings"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/285 NOTAMN \r\nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205191610 \r\nC) 2206302200 \r\n\r\nE) RWY 13L/31R CL MARKINGS OBSCURED",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/285 NOTAMN \nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205191610 \nC) 2206302200 \n\nE) RWY 13L/31R CL MARKINGS OBSCURED",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-19T16:10:00+00:00",
+                    "repr": "2205191610"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "APRON TERMINAL 4 RAMP CONST WIP S SIDE TAXILANE G LGTD AND BARRICADED",
+                "end_time": {
+                    "dt": "2022-05-27T11:00:00+00:00",
+                    "repr": "2205271100"
+                },
+                "lower": null,
+                "number": "05/295",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "HW",
+                        "value": "Work in progress"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMNHW/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MN",
+                        "value": "Apron"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/295 NOTAMR \r\nQ) ZNY/QMNHW/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205201527 \r\nC) 2205271100 \r\n\r\nE) APRON TERMINAL 4 RAMP CONST WIP S SIDE TAXILANE G LGTD AND BARRICADED",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/295 NOTAMR \nQ) ZNY/QMNHW/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205201527 \nC) 2205271100 \n\nE) APRON TERMINAL 4 RAMP CONST WIP S SIDE TAXILANE G LGTD AND BARRICADED",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-20T15:27:00+00:00",
+                    "repr": "2205201527"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMR",
+                    "value": "Replace"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "OBST CRANE UNK (37) 2.1 W( 403839N0734930W) FLAGGED AND LGTD",
+                "end_time": {
+                    "dt": "2023-01-30T23:00:00+00:00",
+                    "repr": "2301302300"
+                },
+                "lower": null,
+                "number": "05/301",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "M",
+                            "value": "Miscellaneous"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QOBXX/IV/M/AE/000//4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        },
+                        {
+                            "repr": "E",
+                            "value": "En Route"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "OB",
+                        "value": "Obstacle"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": null
+                },
+                "raw": "05/301 NOTAMN \r\nQ) ZNY/QOBXX/IV/M/AE/000//4038N07346W005 \r\nA) KJFK \r\nB) 2205201831 \r\nC) 2301302300 \r\n\r\nE) OBST CRANE UNK (37) 2.1 W( 403839N0734930W) FLAGGED AND LGTD",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/301 NOTAMN \nQ) ZNY/QOBXX/IV/M/AE/000//4038N07346W005 \nA) KJFK \nB) 2205201831 \nC) 2301302300 \n\nE) OBST CRANE UNK (37) 2.1 W( 403839N0734930W) FLAGGED AND LGTD",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-20T18:31:00+00:00",
+                    "repr": "2205201831"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY D HLDG PSN SIGN SOUTHWEST SIDE FOR RWY 13L/31R LGT U/S",
+                "end_time": {
+                    "dt": "2022-06-03T23:00:00+00:00",
+                    "repr": "2206032300"
+                },
+                "lower": null,
+                "number": "05/320",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MM",
+                        "value": "Daylight markings"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/320 NOTAMN \r\nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205210902 \r\nC) 2206032300 \r\n\r\nE) TWY D HLDG PSN SIGN SOUTHWEST SIDE FOR RWY 13L/31R LGT U/S",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/320 NOTAMN \nQ) ZNY/QMMXX/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205210902 \nC) 2206032300 \n\nE) TWY D HLDG PSN SIGN SOUTHWEST SIDE FOR RWY 13L/31R LGT U/S",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-21T09:02:00+00:00",
+                    "repr": "2205210902"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY Q LOCATION SIGN FOR TWY Q1 OBSCURED",
+                "end_time": {
+                    "dt": "2022-12-31T01:00:00+00:00",
+                    "repr": "2212310100"
+                },
+                "lower": null,
+                "number": "05/346",
+                "qualifiers": {
+                    "condition": null,
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY//IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": null,
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/346 NOTAMN \r\nQ) ZNY//IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205240106 \r\nC) 2212310100 \r\n\r\nE) TWY Q LOCATION SIGN FOR TWY Q1 OBSCURED",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/346 NOTAMN \nQ) ZNY//IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205240106 \nC) 2212310100 \n\nE) TWY Q LOCATION SIGN FOR TWY Q1 OBSCURED",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-24T01:06:00+00:00",
+                    "repr": "2205240106"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY Y LOCATION SIGN FOR TWY FB OBSCURED",
+                "end_time": {
+                    "dt": "2022-12-31T01:00:00+00:00",
+                    "repr": "2212310100"
+                },
+                "lower": null,
+                "number": "05/347",
+                "qualifiers": {
+                    "condition": null,
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY//IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": null,
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/347 NOTAMN \r\nQ) ZNY//IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205240125 \r\nC) 2212310100 \r\n\r\nE) TWY Y LOCATION SIGN FOR TWY FB OBSCURED",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/347 NOTAMN \nQ) ZNY//IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205240125 \nC) 2212310100 \n\nE) TWY Y LOCATION SIGN FOR TWY FB OBSCURED",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-24T01:25:00+00:00",
+                    "repr": "2205240125"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY FB LOCATION SIGN FOR TWY Y OBSCURED",
+                "end_time": {
+                    "dt": "2022-12-31T01:00:00+00:00",
+                    "repr": "2212310100"
+                },
+                "lower": null,
+                "number": "05/348",
+                "qualifiers": {
+                    "condition": null,
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY//IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": null,
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/348 NOTAMN \r\nQ) ZNY//IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205240501 \r\nC) 2212310100 \r\n\r\nE) TWY FB LOCATION SIGN FOR TWY Y OBSCURED",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/348 NOTAMN \nQ) ZNY//IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205240501 \nC) 2212310100 \n\nE) TWY FB LOCATION SIGN FOR TWY Y OBSCURED",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-24T05:01:00+00:00",
+                    "repr": "2205240501"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY E LOCATION SIGN FOR TWY Y OBSCURED",
+                "end_time": {
+                    "dt": "2022-12-31T01:00:00+00:00",
+                    "repr": "2212310100"
+                },
+                "lower": null,
+                "number": "05/352",
+                "qualifiers": {
+                    "condition": null,
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY//IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": null,
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/352 NOTAMN \r\nQ) ZNY//IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205240803 \r\nC) 2212310100 \r\n\r\nE) TWY E LOCATION SIGN FOR TWY Y OBSCURED",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/352 NOTAMN \nQ) ZNY//IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205240803 \nC) 2212310100 \n\nE) TWY E LOCATION SIGN FOR TWY Y OBSCURED",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-24T08:03:00+00:00",
+                    "repr": "2205240803"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TAXIWAY GG \n ELEVATED RWY GUARD LGT BTN RWY 04L/22R AND TWY B U/S",
+                "end_time": {
+                    "dt": "2022-12-31T01:00:00+00:00",
+                    "repr": "2212310100"
+                },
+                "lower": null,
+                "number": "05/366",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "AS",
+                        "value": "Unserviceable"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QXXAS/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "XX",
+                        "value": "Unknown"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/366 NOTAMN \r\nQ) ZNY/QXXAS/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205240846 \r\nC) 2212310100 \r\n\r\nE) TAXIWAY GG \r\n ELEVATED RWY GUARD LGT BTN RWY 04L/22R AND TWY B U/S",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/366 NOTAMN \nQ) ZNY/QXXAS/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205240846 \nC) 2212310100 \n\nE) TAXIWAY GG \n ELEVATED RWY GUARD LGT BTN RWY 04L/22R AND TWY B U/S",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-24T08:46:00+00:00",
+                    "repr": "2205240846"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY A BTN TWY K AND TWY KE CLSD",
+                "end_time": {
+                    "dt": "2022-05-25T00:01:00+00:00",
+                    "repr": "2205250001"
+                },
+                "lower": null,
+                "number": "05/368",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LC",
+                        "value": "Closed"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MX",
+                        "value": "Taxiway"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/368 NOTAMN \r\nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205241131 \r\nC) 2205250001 \r\n\r\nE) TWY A BTN TWY K AND TWY KE CLSD",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/368 NOTAMN \nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205241131 \nC) 2205250001 \n\nE) TWY A BTN TWY K AND TWY KE CLSD",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-24T11:31:00+00:00",
+                    "repr": "2205241131"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY KD BTN TWY A AND TWY B CLSD",
+                "end_time": {
+                    "dt": "2022-05-25T00:01:00+00:00",
+                    "repr": "2205250001"
+                },
+                "lower": null,
+                "number": "05/369",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LC",
+                        "value": "Closed"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MX",
+                        "value": "Taxiway"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/369 NOTAMN \r\nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205241134 \r\nC) 2205250001 \r\n\r\nE) TWY KD BTN TWY A AND TWY B CLSD",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/369 NOTAMN \nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205241134 \nC) 2205250001 \n\nE) TWY KD BTN TWY A AND TWY B CLSD",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-24T11:34:00+00:00",
+                    "repr": "2205241134"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY J BTN TWY K AND TWY A CLSD",
+                "end_time": {
+                    "dt": "2022-05-25T00:01:00+00:00",
+                    "repr": "2205250001"
+                },
+                "lower": null,
+                "number": "05/370",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LC",
+                        "value": "Closed"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MX",
+                        "value": "Taxiway"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/370 NOTAMN \r\nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205241139 \r\nC) 2205250001 \r\n\r\nE) TWY J BTN TWY K AND TWY A CLSD",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/370 NOTAMN \nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205241139 \nC) 2205250001 \n\nE) TWY J BTN TWY K AND TWY A CLSD",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-24T11:39:00+00:00",
+                    "repr": "2205241139"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "RWY 04L/22R CLSD",
+                "end_time": {
+                    "dt": "2022-05-24T22:00:00+00:00",
+                    "repr": "2205242200"
+                },
+                "lower": null,
+                "number": "05/371",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LC",
+                        "value": "Closed"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMRLC/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MR",
+                        "value": "Runway"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/371 NOTAMN \r\nQ) ZNY/QMRLC/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205241148 \r\nC) 2205242200 \r\n\r\nE) \r\nRWY 04L/22R CLSD",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/371 NOTAMN \nQ) ZNY/QMRLC/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205241148 \nC) 2205242200 \n\nE) \nRWY 04L/22R CLSD",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-24T11:48:00+00:00",
+                    "repr": "2205241148"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY K BTN TWY A AND TWY B CLSD ACFT WINGSPAN MORE THAN \n214FT",
+                "end_time": {
+                    "dt": "2022-05-25T00:01:00+00:00",
+                    "repr": "2205250001"
+                },
+                "lower": null,
+                "number": "05/372",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LC",
+                        "value": "Closed"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MX",
+                        "value": "Taxiway"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/372 NOTAMN \r\nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205241237 \r\nC) 2205250001 \r\n\r\nE) TWY K BTN TWY A AND TWY B CLSD ACFT WINGSPAN MORE THAN \r\n214FT",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/372 NOTAMN \nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205241237 \nC) 2205250001 \n\nE) TWY K BTN TWY A AND TWY B CLSD ACFT WINGSPAN MORE THAN \n214FT",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-24T12:37:00+00:00",
+                    "repr": "2205241237"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "TWY J BTN TWY Y AND TWY B CLSD",
+                "end_time": {
+                    "dt": "2022-05-24T19:00:00+00:00",
+                    "repr": "2205241900"
+                },
+                "lower": null,
+                "number": "05/373",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "LC",
+                        "value": "Closed"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "N",
+                            "value": "Immediate"
+                        },
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "MX",
+                        "value": "Taxiway"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/373 NOTAMN \r\nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205241241 \r\nC) 2205241900 \r\n\r\nE) TWY J BTN TWY Y AND TWY B CLSD",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/373 NOTAMN \nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205241241 \nC) 2205241900 \n\nE) TWY J BTN TWY Y AND TWY B CLSD",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-24T12:41:00+00:00",
+                    "repr": "2205241241"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "SVC TAR/SSR U/S",
+                "end_time": {
+                    "dt": "2022-05-25T05:00:00-05:00",
+                    "repr": "2205250500EST"
+                },
+                "lower": null,
+                "number": "05/375",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "AS",
+                        "value": "Unserviceable"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QCTAS/I/BO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "CT",
+                        "value": "Terminal area surveillance radar"
+                    },
+                    "traffic": {
+                        "repr": "I",
+                        "value": "IFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/375 NOTAMN \r\nQ) ZNY/QCTAS/I/BO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205241510 \r\nC) 2205250500EST \r\n\r\nE) SVC TAR/SSR U/S",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/375 NOTAMN \nQ) ZNY/QCTAS/I/BO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205241510 \nC) 2205250500EST \n\nE) SVC TAR/SSR U/S",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-24T15:10:00-05:00",
+                    "repr": "2205241510"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMN",
+                    "value": "New"
+                },
+                "upper": null
+            }
+        },
+        {
+            "data": {
+                "body": "RWY 13L PAPI U/S",
+                "end_time": {
+                    "dt": "2022-06-18T23:59:00+00:00",
+                    "repr": "2206182359"
+                },
+                "lower": null,
+                "number": "05/376",
+                "qualifiers": {
+                    "condition": {
+                        "repr": "AS",
+                        "value": "Unserviceable"
+                    },
+                    "coord": {
+                        "lat": 40.38,
+                        "lon": -73.46,
+                        "repr": "4038N07346W"
+                    },
+                    "fir": "ZNY",
+                    "lower": {
+                        "repr": "000",
+                        "spoken": "zero",
+                        "value": 0
+                    },
+                    "purpose": [
+                        {
+                            "repr": "B",
+                            "value": "Briefing"
+                        },
+                        {
+                            "repr": "O",
+                            "value": "Flight Operations"
+                        }
+                    ],
+                    "radius": {
+                        "repr": "005",
+                        "spoken": "five",
+                        "value": 5
+                    },
+                    "repr": "ZNY/QLPAS/IV/BO/A/000/999/4038N07346W005",
+                    "scope": [
+                        {
+                            "repr": "A",
+                            "value": "Aerodrome"
+                        }
+                    ],
+                    "subject": {
+                        "repr": "LP",
+                        "value": "Precision approach path indicator"
+                    },
+                    "traffic": {
+                        "repr": "IV",
+                        "value": "IFR and VFR"
+                    },
+                    "upper": {
+                        "repr": "999",
+                        "spoken": "nine nine nine",
+                        "value": 999
+                    }
+                },
+                "raw": "05/376 NOTAMR \r\nQ) ZNY/QLPAS/IV/BO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2205241539 \r\nC) 2206182359 \r\n\r\nE) RWY 13L PAPI U/S",
+                "remarks": null,
+                "replaces": null,
+                "sanitized": "05/376 NOTAMR \nQ) ZNY/QLPAS/IV/BO/A/000/999/4038N07346W005 \nA) KJFK \nB) 2205241539 \nC) 2206182359 \n\nE) RWY 13L PAPI U/S",
+                "schedule": null,
+                "start_time": {
+                    "dt": "2022-05-24T15:39:00+00:00",
+                    "repr": "2205241539"
+                },
+                "station": "KJFK",
+                "time": null,
+                "type": {
+                    "repr": "NOTAMR",
+                    "value": "Replace"
+                },
+                "upper": null
+            }
+        }
+    ],
+    "station": {
+        "city": "New York",
+        "country": "US",
+        "elevation_ft": 13,
+        "elevation_m": 4,
+        "gps": "KJFK",
+        "iata": "JFK",
+        "icao": "KJFK",
+        "latitude": 40.639801,
+        "local": "JFK",
+        "longitude": -73.7789,
+        "name": "John F Kennedy International Airport",
+        "note": "Manhattan, New York City, NYC, Idlewild, IDL, KIDL",
+        "reporting": true,
+        "runways": [
+            {
+                "bearing1": 121.0,
+                "bearing2": 301.0,
+                "ident1": "13R",
+                "ident2": "31L",
+                "length_ft": 14511,
+                "lights": true,
+                "surface": "concrete",
+                "width_ft": 200
+            },
+            {
+                "bearing1": 31.0,
+                "bearing2": 211.0,
+                "ident1": "04L",
+                "ident2": "22R",
+                "length_ft": 12079,
+                "lights": true,
+                "surface": null,
+                "width_ft": 200
+            },
+            {
+                "bearing1": 121.0,
+                "bearing2": 301.0,
+                "ident1": "13L",
+                "ident2": "31R",
+                "length_ft": 10000,
+                "lights": true,
+                "surface": "concrete",
+                "width_ft": 200
+            },
+            {
+                "bearing1": 30.6,
+                "bearing2": 210.6,
+                "ident1": "04R",
+                "ident2": "22L",
+                "length_ft": 8400,
+                "lights": true,
+                "surface": "asphalt",
+                "width_ft": 200
+            }
+        ],
+        "state": "NY",
+        "type": "large_airport",
+        "website": "https://www.jfkairport.com/",
+        "wiki": "https://en.wikipedia.org/wiki/John_F._Kennedy_International_Airport"
+    }
+}
