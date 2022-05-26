@@ -2,7 +2,7 @@
 
 ## class avwx.structs.**Aircraft**
 
-#### **from_icao**(*code: str*) -> *avwx.structs.Aircraft*
+**from_icao**(*code: str*) -> *avwx.structs.Aircraft*
 
 Load an Aircraft from an ICAO aircraft code
 
@@ -36,6 +36,10 @@ Load an Aircraft from an ICAO aircraft code
 
 ## class avwx.structs.**Code**
 
+**from_dict**(*key: Optional[str], codes: Dict[str, str], default: str = None, error: bool = True*) -> *avwx.structs.Code*
+
+Load a code from a known key and value dict
+
 **repr**: *str*
 
 **value**: *str*
@@ -51,6 +55,10 @@ Load an Aircraft from an ICAO aircraft code
 **pair**: *Tuple[float, float]*
 
 **point**: *shapely.geometry.Point*
+
+**to_dms**(*value: float*) -> *Tuple[int, int, int]*
+
+Convert a coordinate decimal value to degree, minute, second
 
 ## class avwx.structs.**Fraction**
 
@@ -174,8 +182,7 @@ Load an Aircraft from an ICAO aircraft code
 
 **wind_speed**: *str*
 
-
-## class avwx.structs.**NbmUnits**:
+## class avwx.structs.**NbmUnits**
 
 **accumulation**: *str*
 

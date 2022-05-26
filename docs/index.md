@@ -16,6 +16,7 @@ AVWX currently supports:
 - TAF
 - PIREP
 - AIRMET / SIGMET
+- NOTAM
 - NBM (NBH, NBS, NBE)
 - GFS (MAV, MEX)
 
@@ -40,6 +41,7 @@ These docs could use some love, and I am not a writer. You can help by making a 
 * [TAF](av/taf.md)
 * [PIREP](av/pirep.md)
 * [AIRMET / SIGMET](av/airsigmet.md)
+* [NOTAM](av/notam.md)
 
 ### Model Forecasts
 

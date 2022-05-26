@@ -47,13 +47,9 @@ UTC date object when the report was issued
 
 UTC Datetime object when the reports were last updated
 
-#### **lat**: *float*
+#### **coord**: *avwx.structs.Coord*
 
-Latitude of the radial center. This is supplied by the user or loaded from the station
-
-#### **lon**: *float*
-
-Longitude of the radial center. This is supplied by the user or loaded from the station
+Coordinate of the radial center
 
 #### **parse**(*reports: Union[str, List[str]]*, *issued: Optional[date] = None*) -> *bool*
 

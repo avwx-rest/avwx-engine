@@ -26,6 +26,7 @@ nav:
     - TAF: av/taf.md
     - PIREP: av/pirep.md
     - AIRMET / SIGMET: av/airsigmet.md
+    - NOTAM: av/notam.md
   - Models:
     - NBM NBH: nbm/nbh.md
     - NBM NBS: nbm/nbs.md
