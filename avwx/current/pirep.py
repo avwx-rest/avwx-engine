@@ -5,6 +5,7 @@ Functions for parsing PIREPs
 # pylint: disable=too-many-boolean-expressions
 
 # stdlib
+from contextlib import suppress
 from datetime import date
 from typing import List, Optional, Tuple, Union
 
@@ -46,6 +47,9 @@ def _root(item: str) -> Tuple[Optional[str], Optional[str]]:
 def _location(item: str) -> Optional[Location]:
     """Convert a location element to a Location object"""
     items = item.split()
+    for target in ("MILES", "OF"):
+        with suppress(ValueError):
+            items.remove(target)
     if not items:
         return None
     station, direction, distance = None, None, None
@@ -101,8 +105,17 @@ def _aircraft(item: str) -> Union[Aircraft, str]:
 
 def _non_digit_cloud(cloud: str) -> Tuple[Optional[str], str]:
     """Returns cloud type and altitude for non-digit TOPS BASES cloud elements"""
+    # 5000FT
     if cloud.endswith("FT"):
-        return None, cloud[:-4]
+        cloud = cloud[:-4]
+        if cloud.isdigit():
+            return None, cloud
+    # SCT030-035
+    if "-" in cloud:
+        parts = cloud.split("-")
+        if not parts[0].isdigit():
+            return parts[0][:3], parts[-1]
+        return None, parts[-1]
     return cloud[:3], cloud[3:]
 
 
@@ -125,7 +138,10 @@ def _clouds(item: str) -> List[Cloud]:
 
 def _number(item: str) -> Optional[Number]:
     """Convert an element to a Number"""
-    return core.make_number(item.strip("CF"), item)
+    value = item.strip("CF ")
+    if " " in value:
+        return None
+    return core.make_number(value, item)
 
 
 def _separate_floor_ceiling(item: str) -> Tuple[Optional[Number], Optional[Number]]:
@@ -247,6 +263,7 @@ def parse(report: str, issued: date = None) -> Optional[PirepData]:
     # pylint: disable=too-many-locals,too-many-branches
     if not report:
         return None
+    print(report)
     sanitized = sanitize(report)
     data = sanitized.split("/")
     station, report_type = _root(data.pop(0).strip())

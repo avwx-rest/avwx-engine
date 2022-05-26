@@ -52,6 +52,8 @@ class TestPirepHandlers(BaseTest):
             ("GON 270010", "GON", 270, 10),
             ("10 EAST", None, 90, 10),
             ("15 SW LRP", "LRP", 225, 15),
+            ("3 MILES WEST OF MYF", "MYF", 270, 3),
+            ("6 MILES EAST KAGC", "KAGC", 90, 6),
         ):
             ret_loc = pirep._location(loc)
             self.assertIsInstance(ret_loc, structs.Location)
@@ -108,8 +110,10 @@ class TestPirepHandlers(BaseTest):
             ("BKN030-TOP045", ["BKN", 30, 45]),
             ("BASE027-TOPUNKN", [None, 27, None]),
             ("BASES020-TOPS074", [None, 20, 74]),
+            ("BASES SCT022 TOPS SCT030-035", ["SCT", 22, 35]),
         ):
             parsed = pirep._clouds(cloud)[0]
+            print(parsed)
             self.assertIsInstance(parsed, structs.Cloud)
             self.assertEqual(parsed.repr, cloud)
             for i, key in enumerate(("type", "base", "top")):
@@ -125,7 +129,8 @@ class TestPirepHandlers(BaseTest):
             ("28C", 28),
         ):
             self.assert_number(pirep._number(num), num, value)
-        self.assertIsNone(pirep._number(""))
+        for bad in ("", "LGT RIME"):
+            self.assertIsNone(pirep._number(bad))
 
     def test_turbulence(self):
         """Tests converting turbulence string to Turbulence"""

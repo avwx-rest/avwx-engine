@@ -78,14 +78,22 @@ class CallsHTTP:
         except (
             httpx.ConnectTimeout,
             httpx.ReadTimeout,
+            httpx.WriteTimeout,
+            httpx.PoolTimeout,
             httpcore.ReadTimeout,
+            httpcore.WriteTimeout,
+            httpcore.PoolTimeout,
         ) as timeout_error:
             raise TimeoutError(f"Timeout from {name} server") from timeout_error
         except (gaierror, httpcore.ConnectError, httpx.ConnectError) as connect_error:
             raise ConnectionError(
                 f"Unable to connect to {name} server"
             ) from connect_error
-        except (httpcore.NetworkError, httpcore.RemoteProtocolError) as network_error:
+        except (
+            httpcore.ReadError,
+            httpcore.NetworkError,
+            httpcore.RemoteProtocolError,
+        ) as network_error:
             raise ConnectionError(
                 f"Unable to read data from {name} server"
             ) from network_error
