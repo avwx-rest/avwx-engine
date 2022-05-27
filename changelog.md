@@ -2,6 +2,12 @@
 
 Parsing and sanitization improvements are always ongoing and non-breaking
 
+## 1.8.x
+
+- Added `Notams` report class
+- Added `FAA_NOTAM` service class
+- Replace `lat, lon` on `Pireps` and service search with `Coord`
+
 ## 1.7.x
 
 - Added `AirSigmet` report class and managers
