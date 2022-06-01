@@ -365,7 +365,7 @@ class Qualifiers:
     scope: List[Code]
     lower: Optional[Number]
     upper: Optional[Number]
-    coord: Coord
+    coord: Optional[Coord]
     radius: Optional[Number]
 
 

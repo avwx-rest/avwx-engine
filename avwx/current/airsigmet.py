@@ -14,6 +14,7 @@ from typing import List, Optional, Tuple
 from geopy.distance import distance as geo_distance  # type: ignore
 
 # module
+from avwx import exceptions
 from avwx.base import AVWXBase
 from avwx.flight_path import to_coordinates
 from avwx.load_utils import LazyLoad
@@ -618,9 +619,12 @@ class AirSigManager:
         if not disable_post:
             parsed = []
             for report, source in raw:
-                if obj := AirSigmet.from_report(report):
-                    obj.source = source
-                    parsed.append(obj)
+                try:
+                    if obj := AirSigmet.from_report(report):
+                        obj.source = source
+                        parsed.append(obj)
+                except Exception as exc:  # pylint: disable=broad-except
+                    exceptions.exception_intercept(exc, raw=report)
             self.reports = parsed
         return changed
 

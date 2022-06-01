@@ -11,6 +11,7 @@ from typing import List, Optional
 
 # library
 from dateutil.tz import gettz
+from avwx import exceptions
 
 # module
 from avwx.current.base import Reports
@@ -34,12 +35,15 @@ from avwx.structs import Code, Coord, NotamData, Qualifiers, Timestamp, Tuple, U
 KEY_PATTERN = re.compile(r"[A-GQ]\) ")
 
 
-def _rear_coord(value: str) -> Coord:
+def _rear_coord(value: str) -> Optional[Coord]:
     """Convert coord strings with direction characters at the end: 5126N00036W"""
-    lat = float(f"{value[:2]}.{value[2:4]}")
+    try:
+        lat = float(f"{value[:2]}.{value[2:4]}")
+        lon = float(f"{value[5:8]}.{value[8:10]}")
+    except ValueError:
+        return None
     if value[4] == "S":
         lat *= -1
-    lon = float(f"{value[5:8]}.{value[8:10]}")
     if value[10] == "W":
         lon *= -1
     return Coord(lat, lon, value)
@@ -84,8 +88,8 @@ def _qualifiers(value: str, units: Units) -> Qualifiers:
         scope=[i for i in (Code.from_dict(c, SCOPE) for c in scope) if i],
         lower=core.make_altitude(lower, units)[0],
         upper=core.make_altitude(upper, units)[0],
-        coord=_rear_coord(location[:-3]),
-        radius=core.make_number(location[-3:]),
+        coord=_rear_coord(location[:-3]) if location else None,
+        radius=core.make_number(location[-3:]) if location else None,
     )
 
 
@@ -202,6 +206,9 @@ class Notams(Reports):
         self.service = FAA_NOTAM("notam")
 
     async def _post_update(self):
+        self._post_parse()
+
+    def _post_parse(self):
         self.data = []
         for report in self.raw:
             if "||" in report:
@@ -210,15 +217,11 @@ class Notams(Reports):
                 issued = Timestamp(issue_text, issued_value)
             else:
                 issued = None
-            data, units = parse(report, issued=issued)
-            self.data.append(data)
-        self.units = units
-
-    def _post_parse(self):
-        self.data = []
-        for report in self.raw:
-            data, units = parse(report)
-            self.data.append(data)
+            try:
+                data, units = parse(report, issued=issued)
+                self.data.append(data)
+            except Exception as exc:  # pylint: disable=broad-except
+                exceptions.exception_intercept(exc, raw=report)
         self.units = units
 
     @staticmethod

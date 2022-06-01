@@ -89,6 +89,7 @@ class TestNotam(BaseTest):
         ):
             coord = structs.Coord(lat, lon, text)
             self.assertEqual(notam._rear_coord(text), coord)
+        self.assertIsNone(notam._rear_coord("latNlongE"))
 
     def test_header(self):
         """Tests parsing NOTAM headers"""

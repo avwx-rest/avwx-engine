@@ -10,6 +10,7 @@ from datetime import date
 from typing import List, Optional, Tuple, Union
 
 # module
+from avwx import exceptions
 from avwx.current.base import Reports, get_wx_codes
 from avwx.parsing import core, sanitization
 from avwx.service import NOAA_ADDS
@@ -263,7 +264,6 @@ def parse(report: str, issued: date = None) -> Optional[PirepData]:
     # pylint: disable=too-many-locals,too-many-branches
     if not report:
         return None
-    print(report)
     sanitized = sanitize(report)
     data = sanitized.split("/")
     station, report_type = _root(data.pop(0).strip())
@@ -332,7 +332,10 @@ class Pireps(Reports):
     async def _post_update(self):
         self.data = []
         for report in self.raw:
-            self.data.append(parse(report, issued=self.issued))
+            try:
+                self.data.append(parse(report, issued=self.issued))
+            except Exception as exc:  # pylint: disable=broad-except
+                exceptions.exception_intercept(exc, raw=report)
 
     def _post_parse(self):
         self.data = []

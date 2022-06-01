@@ -113,7 +113,6 @@ class TestPirepHandlers(BaseTest):
             ("BASES SCT022 TOPS SCT030-035", ["SCT", 22, 35]),
         ):
             parsed = pirep._clouds(cloud)[0]
-            print(parsed)
             self.assertIsInstance(parsed, structs.Cloud)
             self.assertEqual(parsed.repr, cloud)
             for i, key in enumerate(("type", "base", "top")):

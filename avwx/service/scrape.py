@@ -419,6 +419,8 @@ class AVT(StationScrape):
 
 TAG_PATTERN = re.compile(r"<[^>]*>")
 
+# Search fields https://notams.aim.faa.gov/NOTAM_Search_User_Guide_V33.pdf
+
 
 class FAA_NOTAM(ScrapeService):
     """Sources NOTAMs from official FAA portal"""
@@ -503,7 +505,9 @@ class FAA_NOTAM(ScrapeService):
         notams = []
         while True:
             text = await self._call(self.url, None, headers, data, timeout)
-            resp = json.loads(text)
+            resp: dict = json.loads(text)
+            if resp.get("error"):
+                raise self._make_err("Search criteria appears to be invalid")
             for item in resp["notamList"]:
                 report = item.get("icaoMessage", "").strip()
                 if report:
