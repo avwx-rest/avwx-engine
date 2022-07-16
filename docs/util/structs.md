@@ -24,8 +24,6 @@ Load an Aircraft from an ICAO aircraft code
 
 **base**: *int* = *None*
 
-**direction**: *str* = *None*
-
 **modifier**: *str* = *None*
 
 **repr**: *str*

@@ -12,7 +12,6 @@
                 "clouds": [
                     {
                         "base": 40,
-                        "direction": null,
                         "modifier": null,
                         "repr": "FEW040",
                         "top": null,
@@ -20,7 +19,6 @@
                     },
                     {
                         "base": 120,
-                        "direction": null,
                         "modifier": null,
                         "repr": "SCT120",
                         "top": null,
@@ -28,7 +26,6 @@
                     },
                     {
                         "base": 250,
-                        "direction": null,
                         "modifier": null,
                         "repr": "BKN250",
                         "top": null,
@@ -76,7 +73,6 @@
                 "clouds": [
                     {
                         "base": 35,
-                        "direction": null,
                         "modifier": null,
                         "repr": "SCT035",
                         "top": null,
@@ -84,7 +80,6 @@
                     },
                     {
                         "base": 250,
-                        "direction": null,
                         "modifier": null,
                         "repr": "BKN250",
                         "top": null,
@@ -136,7 +131,6 @@
                 "clouds": [
                     {
                         "base": 60,
-                        "direction": null,
                         "modifier": null,
                         "repr": "SCT060",
                         "top": null,
@@ -144,7 +138,6 @@
                     },
                     {
                         "base": 200,
-                        "direction": null,
                         "modifier": null,
                         "repr": "BKN200",
                         "top": null,
@@ -196,7 +189,6 @@
                 "clouds": [
                     {
                         "base": 30,
-                        "direction": null,
                         "modifier": null,
                         "repr": "SCT030",
                         "top": null,
@@ -204,7 +196,6 @@
                     },
                     {
                         "base": 200,
-                        "direction": null,
                         "modifier": null,
                         "repr": "BKN200",
                         "top": null,

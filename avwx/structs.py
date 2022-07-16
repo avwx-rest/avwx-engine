@@ -127,7 +127,6 @@ class Cloud:
     base: Optional[int] = None
     top: Optional[int] = None
     modifier: Optional[str] = None
-    direction: Optional[str] = None
 
 
 @dataclass

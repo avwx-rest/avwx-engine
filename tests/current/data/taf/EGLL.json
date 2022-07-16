@@ -12,7 +12,6 @@
                 "clouds": [
                     {
                         "base": 45,
-                        "direction": null,
                         "modifier": null,
                         "repr": "FEW045",
                         "top": null,
@@ -60,7 +59,6 @@
                 "clouds": [
                     {
                         "base": 5,
-                        "direction": null,
                         "modifier": null,
                         "repr": "BKN005",
                         "top": null,

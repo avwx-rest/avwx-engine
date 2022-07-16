@@ -9,7 +9,6 @@
         "clouds": [
             {
                 "base": 35,
-                "direction": null,
                 "modifier": null,
                 "repr": "FEW035",
                 "top": null,
@@ -17,7 +16,6 @@
             },
             {
                 "base": 65,
-                "direction": null,
                 "modifier": null,
                 "repr": "FEW065",
                 "top": null,
@@ -25,7 +23,6 @@
             },
             {
                 "base": 210,
-                "direction": null,
                 "modifier": null,
                 "repr": "OVC210",
                 "top": null,

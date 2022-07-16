@@ -12,7 +12,6 @@
                 "clouds": [
                     {
                         "base": 25,
-                        "direction": null,
                         "modifier": null,
                         "repr": "FEW025",
                         "top": null,
@@ -20,7 +19,6 @@
                     },
                     {
                         "base": 40,
-                        "direction": null,
                         "modifier": null,
                         "repr": "SCT040",
                         "top": null,
@@ -28,7 +26,6 @@
                     },
                     {
                         "base": 70,
-                        "direction": null,
                         "modifier": null,
                         "repr": "SCT070",
                         "top": null,
@@ -80,7 +77,6 @@
                 "clouds": [
                     {
                         "base": 25,
-                        "direction": null,
                         "modifier": null,
                         "repr": "FEW025",
                         "top": null,
@@ -88,7 +84,6 @@
                     },
                     {
                         "base": 40,
-                        "direction": null,
                         "modifier": null,
                         "repr": "SCT040",
                         "top": null,
@@ -136,7 +131,6 @@
                 "clouds": [
                     {
                         "base": 25,
-                        "direction": null,
                         "modifier": null,
                         "repr": "FEW025",
                         "top": null,
@@ -184,7 +178,6 @@
                 "clouds": [
                     {
                         "base": 25,
-                        "direction": null,
                         "modifier": null,
                         "repr": "FEW025",
                         "top": null,
@@ -232,7 +225,6 @@
                 "clouds": [
                     {
                         "base": 25,
-                        "direction": null,
                         "modifier": null,
                         "repr": "FEW025",
                         "top": null,
@@ -240,7 +232,6 @@
                     },
                     {
                         "base": 40,
-                        "direction": null,
                         "modifier": null,
                         "repr": "SCT040",
                         "top": null,

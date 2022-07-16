@@ -9,7 +9,6 @@
         "clouds": [
             {
                 "base": 250,
-                "direction": null,
                 "modifier": null,
                 "repr": "FEW250",
                 "top": null,
