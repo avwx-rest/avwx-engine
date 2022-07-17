@@ -61,3 +61,4 @@ target/
 /notes.txt
 /site
 /build.sh
+.env

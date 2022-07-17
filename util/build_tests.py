@@ -15,9 +15,10 @@ from typing import Optional
 # module
 import avwx
 from tests.util import round_coordinates
+from find_bad_stations import PROJECT_ROOT
 
 
-TESTS_PATH = Path(__file__).parent.parent / "tests"
+TESTS_PATH = PROJECT_ROOT / "tests"
 
 
 def _default(o):
