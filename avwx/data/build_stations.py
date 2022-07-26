@@ -236,6 +236,16 @@ def add_reporting(stations: dict) -> dict:
     return stations
 
 
+def check_local_icaos() -> None:
+    """Load local ICAO file if available"""
+    icao_path = _FILE_DIR.parent.parent / "data" / "icaos.json"
+    if not icao_path.exists():
+        return
+    pre_length = len(_SOURCE["icaos"])
+    _SOURCE["icaos"] = icao_path.open().read().strip()
+    print(f"Local ICAOs found: Pre {pre_length} Post {len(_SOURCE['icaos'])}")
+
+
 def download_source_files() -> bool:
     """Returns True if source files updated successfully"""
     for key, route in _SOURCES.items():
@@ -265,6 +275,7 @@ def main() -> int:
     if not download_source_files():
         LOG.error("Unable to update source files")
         return 1
+    check_local_icaos()
     LOG.info("Cleaning")
     clean_source_files()
     LOG.info("Building")

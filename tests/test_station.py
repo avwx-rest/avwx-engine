@@ -53,7 +53,7 @@ class TestStationFunctions(unittest.TestCase):
             (30, -82, 10, True, False, 0.3, 6),
             (30, -82, 10, False, False, 0.3, 8),
             (30, -82, 1000, True, True, 0.5, 5),
-            (30, -82, 1000, False, False, 0.5, 38),
+            (30, -82, 1000, False, False, 0.5, 39),
         ):
             stations = station.nearest(*params)
             self.assertEqual(len(stations), count)
@@ -69,7 +69,7 @@ class TestStationFunctions(unittest.TestCase):
             (True, True, 6),
             (True, False, 16),
             (False, True, 6),
-            (False, False, 29),
+            (False, False, 30),
         ):
             stations = station.nearest(30, -80, 30, airport, reports, 1.5)
             self.assertEqual(len(stations), count)
