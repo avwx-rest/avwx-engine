@@ -32,7 +32,17 @@ from avwx.structs import Code, Coord, NotamData, Qualifiers, Timestamp, Tuple, U
 # https://www.faa.gov/air_traffic/flight_info/aeronav/notams/media/2021-09-07_ICAO_NOTAM_101_Presentation_for_Airport_Operators.pdf
 
 
-KEY_PATTERN = re.compile(r"[A-GQ]\) ")
+ALL_KEYS_PATTERN = re.compile(r"\b[A-GQ]\) ")
+KEY_PATTERNS = {
+    "Q": re.compile(r"\b[A-G]\) "),
+    "A": re.compile(r"\b[B-G]\) "),
+    "B": re.compile(r"\b[C-G]\) "),
+    "C": re.compile(r"\b[D-G]\) "),
+    "D": re.compile(r"\b[E-G]\) "),
+    "E": re.compile(r"\b[FG]\) "),
+    "F": re.compile(r"\bG\) "),
+    # No "G"
+}
 
 
 def _rear_coord(value: str) -> Optional[Coord]:
@@ -141,7 +151,7 @@ def parse(report: str, issued: Timestamp = None) -> Tuple[NotamData, Units]:
     qualifiers, station, start_time, end_time = None, None, None, None
     body, number, replaces, report_type = "", None, None, None
     schedule, lower, upper, text = None, None, None, sanitized
-    match = KEY_PATTERN.search(text)
+    match = ALL_KEYS_PATTERN.search(text)
     # Type and number here
     if match and match.start() > 0:
         number, report_type, replaces = _header(text[: match.start()])
@@ -149,7 +159,10 @@ def parse(report: str, issued: Timestamp = None) -> Tuple[NotamData, Units]:
     while match:
         tag = match.group()[0]
         text = text[match.end() :]
-        match = KEY_PATTERN.search(text)
+        try:
+            match = KEY_PATTERNS[tag].search(text)
+        except KeyError:
+            match = None
         item = (text[: match.start()] if match else text).strip()
         if tag == "Q":
             qualifiers = _qualifiers(item, units)

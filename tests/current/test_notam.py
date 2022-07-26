@@ -75,6 +75,26 @@ QUALIFIERS = [
 ]
 
 
+COPIED_TAG_REPORT = """
+A3475/22 NOTAMN
+Q) LIMM/QFAXX/IV/NBO/A/000/999/4537N00843E005
+A) LIMC B) 2205182200 C) PERM
+E) REF AIP AD 2 LIMC 1-12 ITEM 20 'LOCAL TRAFFIC REGULATIONS'
+BOX 2 'APRON' PARAGRAPH 2.1 'ORDERLY MOVEMENT OF AIRCRAFT ON
+APRONS' INDENT 4 'SERVICES PROVIDED' POINT C) 'FOLLOW-ME ASSISTANCE
+PROVIDED ON PILOT'S REQUEST AND MANDATORY IN CASE' ADD THE FOLLOWING
+IN CASE:
+- GENERAL AVIATION AIRCRAFT UP TO ICAO CODE B (MAXIMUM WINGSPAN 24
+METERS) AND HELICOPTERS ARRIVING AND DEPARTING FROM STANDS 301 TO 320
+AND FROM 330 TO 336.
+ARR TAXI ROUTE: AFTER TWR INSTRUCTIONS VIA APN TAXIWAY P-K TO
+INTERMEDIATE HOLDING POSITION (IHP) K9 WHERE FOLLOW-ME CAR WILL
+BE WAITING.
+DEP TAXI ROUTE: AFTER TWR INSTRUCTIONS AND WITH FOLLOW-ME
+ASSISTANCE VIA APN TAXIWAY N-K TO IHP K8
+"""
+
+
 class TestNotam(BaseTest):
     """Tests Notam class and parsing"""
 
@@ -163,6 +183,13 @@ class TestNotam(BaseTest):
             end_comp = structs.Timestamp(end, end_dt) if end_dt else None
             self.assertEqual(ret_start, start_comp)
             self.assertEqual(ret_end, end_comp)
+
+    def test_copied_tag(self):
+        """Tests an instance when the body includes a previously used tag value"""
+        data = notam.Notams.from_report(COPIED_TAG_REPORT).data[0]
+        self.assertTrue(data.body.startswith("REF AIP"))
+        self.assertEqual(data.end_time.repr, "PERM")
+        self.assertIsInstance(data.end_time.dt, datetime)
 
     def test_parse(self):
         """Tests returned structs from the parse function"""
