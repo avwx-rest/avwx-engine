@@ -1,0 +1,102 @@
+[tool.poetry]
+name = "avwx-engine"
+version = "1.8.3"
+description = "Aviation weather report parsing library"
+authors = ["Michael duPont <michael@dupont.dev>"]
+license = "MIT"
+readme = "README.md"
+
+documentation = "https://engine.avwx.rest"
+homepage = "https://engine.avwx.rest"
+repository = "https://github.com/avwx-rest/avwx-engine"
+
+classifiers = [
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "License :: OSI Approved :: MIT License",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Typing :: Typed",
+]
+
+packages = [
+    { include = "avwx" }
+]
+
+include = [
+    "avwx/data/files/aircraft.json",
+    "avwx/data/files/navaids.json",
+    "avwx/data/files/stations.json",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.12"
+geopy = ">=2.2"
+httpx = ">=0.23"
+python-dateutil = ">=2.8"
+xmltodict = ">=0.13"
+
+rapidfuzz = { version = ">=2.3", optional = true }
+scipy = { version = ">=1.9", optional = true }
+shapely = { version = ">=1.8", optional = true }
+
+[tool.poetry.extras]
+all = ["rapidfuzz", "Scipy", "shapely"]
+fuzz = ["rapidfuzz"]
+scipy = ["scipy"]
+shape = ["shapely"]
+
+[tool.poetry.dev-dependencies]
+black = "*"
+mkdocs-material = "*"
+mkdocs-minify-plugin = "*"
+mkdocstrings = "*"
+mypy = "*"
+nox = "*"
+pre-commit = "*"
+pylint = "*"
+pymdown-extensions = "*"
+pytest = "*"
+pytest-asyncio = "*"
+pytest-cov = "*"
+pytest-github-actions-annotate-failures = "*"
+pyupgrade = "*"
+time-machine = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+target-version = ["py37", "py38", "py39"]
+include = '\.pyi?$'
+
+[tool.pytest.ini_options]
+addopts = """\
+    --cov avwx \
+    --cov tests \
+    --cov-report term-missing \
+    --no-cov-on-fail \
+"""
+
+[tool.coverage.report]
+fail_under = 100
+exclude_lines = [
+    'if TYPE_CHECKING:',
+    'pragma: no cover'
+]
+
+[tool.mypy]
+disallow_any_unimported = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+strict_equality = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_return_any = true
+check_untyped_defs = true
+show_error_codes = true

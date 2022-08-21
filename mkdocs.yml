@@ -8,9 +8,20 @@ theme:
   name: material
   logo: assets/images/avwx-icon-32-white.png
   favicon: assets/images/favicon.ico
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
 
 markdown_extensions:
   - pymdownx.highlight
+  - pymdownx.snippets:
+    check_paths: true
   - pymdownx.superfences
 
 extra:
@@ -46,6 +57,15 @@ copyright: Copyright &copy; 2022 duPont Technologies LLC
 plugins:
   - search
   - minify:
-      minify_html: true
-      htmlmin_opts:
-        remove_comments: true
+    minify_html: true
+    htmlmin_opts:
+      remove_comments: true
+  - mkdocstrings:
+    default_handler: python
+    handlers:
+      python:
+        rendering:
+          show_signature_annotations: true
+          show_source: true
+    watch:
+      - avwx-engine

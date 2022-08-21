@@ -2,10 +2,19 @@
 
 ![AVWX logo](docs/assets/images/avwx-logo-color-200.png)
 
-[![CircleCI](https://circleci.com/gh/avwx-rest/avwx-engine.svg?style=svg)](https://circleci.com/gh/avwx-rest/avwx-engine)
-[![PyPI version](https://badge.fury.io/py/avwx-engine.svg)](https://badge.fury.io/py/avwx-engine)
-[![Requirements Status](https://requires.io/github/avwx-rest/avwx-engine/requirements.svg?branch=master)](https://requires.io/github/avwx-rest/avwx-engine/requirements/?branch=master)
-[![License](https://img.shields.io/pypi/l/avwx-engine.svg)](https://pypi.org/project/avwx-engine/)
+[![PyPI](https://img.shields.io/pypi/v/avwx-engine?style=flat)](https://pypi.python.org/pypi/avwx-engine/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/avwx-engine?style=flat)](https://pypi.python.org/pypi/avwx-engine/)
+[![PyPI - License](https://img.shields.io/pypi/l/avwx-engine?style=flat)](https://pypi.python.org/pypi/avwx-engine/)
+
+---
+
+**Documentation**: [https://engine.avwx.rest](https://engine.avwx.rest)
+
+**Source Code**: [https://github.com/avwx-rest/avwx-engine](https://github.com/avwx-rest/avwx-engine)
+
+**PyPI**: [https://pypi.org/project/avwx-engine/](https://pypi.org/project/avwx-engine/)
+
+---
 
 AVWX is a global aviation weather fetching and parsing engine. It sources reports from a variety of government sources, parses individual elements, and calculates additional information like flight rules and time range interpolation.
 
@@ -47,50 +56,79 @@ You can learn more by reading the [project documentation](https://engine.avwx.re
 
 **Note**: This library requires Python 3.8 or above
 
-## Develop
+## Development
 
 Download and install the source code and its development dependencies:
 
-```bash
+* Clone this repository
+
+```sh
 git clone https://github.com/avwx-rest/avwx-engine
 cd avwx-engine
-python -m pip install -Ur requirements.txt
-python -m pip install -e .
 ```
 
-Code formatting should be handled by hooks in pre-commit. Before committing any code, be should to install pre-commit into the local git project:
+* Requirements:
+  * [Poetry](https://python-poetry.org/)
+  * Python 3.8+
+* Create a virtual environment and install the dependencies
 
-```bash
-pre-commit install
+```sh
+poetry install
 ```
 
-## Test
+* Activate the virtual environment
 
-The easiest way to test the package is using the `nox` library, which is installed as a dev dependency. It will manage all tests, sessions, supported versions (when available), and cleanup. The tests will pick up the local version of `avwx`.
-
-```bash
-nox
+```sh
+poetry shell
 ```
 
-If you want to run the tests directly, the test suite was built while using the `pytest` library, which is also installed as a dev dependency.
+### Testing
+
+The test suite was built while using the `pytest` library, which is also installed as a dev dependency.
 
 ```bash
 pytest
 ```
 
-The end-to-end test files were generated using `util/build_tests.py` and placed into `tests/{report}`. Because Timestamp generation interprets the text based on the current date, Timestamp objects are nullified in the end-to-end tests.
+The end-to-end test files were generated using `util/build_tests.py` and placed into `tests/{report}/data`. Because Timestamp generation interprets the text based on the current date, Timestamp objects are nullified in the end-to-end tests.
 
-## Docs
+### Documentation
 
-AVWX uses `mkdocs` to build its documentation. It's just another install:
+The documentation is automatically generated from the content of the [docs directory](./docs) and from the docstrings of the public signatures of the source code. The documentation is updated and published to [engine.avwx.rest](https://engine.avwx.rest) automatically as part each release.
 
-```bash
-python -m pip install .[docs]
-```
+ You can also preview local changes during development:
 
-To serve the docs during development:
-
-```bash
+```sh
 cd docs
 mkdocs serve
+```
+
+### Releasing
+
+Trigger the [Draft release workflow](https://github.com/avwx-rest/avwx-engine/actions/workflows/draft_release.yml) (press _Run workflow_). This will update the changelog & version and create a GitHub release which is in _Draft_ state.
+
+Find the draft release from the
+[GitHub releases](https://github.com/avwx-rest/avwx-engine/releases) and publish it. When a release is published, it'll trigger [release](https://github.com/avwx-rest/avwx-engine/blob/master/.github/workflows/release.yml) workflow which creates PyPI
+ release and deploys updated documentation.
+
+### Pre-commit
+
+Pre-commit hooks run all the auto-formatters, linters, and other quality checks to make sure the changeset is in good shape before a commit/push happens.
+
+You can install the hooks with (runs for each commit):
+
+```sh
+pre-commit install
+```
+
+Or if you want them to run only for each push:
+
+```sh
+pre-commit install -t pre-push
+```
+
+Or if you want e.g. want to run all checks manually for all files:
+
+```sh
+pre-commit run --all-files
 ```
