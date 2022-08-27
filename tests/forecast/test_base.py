@@ -17,9 +17,9 @@ from tests.util import BaseTest, get_data
 
 
 MAV_HEAD = """
-KMCO   GFS MOS GUIDANCE    2/11/2020  0000 UTC                      
-DT /FEB  11            /FEB  12                /FEB  13          /  
-HR   06 09 12 15 18 21 00 03 06 09 12 15 18 21 00 03 06 09 12 18 00 
+KMCO   GFS MOS GUIDANCE    2/11/2020  0000 UTC
+DT /FEB  11            /FEB  12                /FEB  13          /
+HR   06 09 12 15 18 21 00 03 06 09 12 15 18 21 00 03 06 09 12 18 00
 """
 
 NBS_HEAD = """
