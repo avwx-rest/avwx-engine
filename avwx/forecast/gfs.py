@@ -134,11 +134,15 @@ class Mav(Forecast):
     report_type = "mav"
     _service_class = NOAA_GFS  # type: ignore
 
-    async def _post_update(self):
+    async def _post_update(self) -> None:
+        if self.raw is None:
+            return
         self.data = parse_mav(self.raw)
         self.units = Units(**static.UNITS)
 
-    def _post_parse(self):
+    def _post_parse(self) -> None:
+        if self.raw is None:
+            return
         self.data = parse_mav(self.raw)
         self.units = Units(**static.UNITS)
 
@@ -149,10 +153,14 @@ class Mex(Forecast):
     report_type = "mex"
     _service_class = NOAA_GFS  # type: ignore
 
-    async def _post_update(self):
+    async def _post_update(self) -> None:
+        if self.raw is None:
+            return
         self.data = parse_mex(self.raw)
         self.units = Units(**static.UNITS)
 
-    def _post_parse(self):
+    def _post_parse(self) -> None:
+        if self.raw is None:
+            return
         self.data = parse_mex(self.raw)
         self.units = Units(**static.UNITS)

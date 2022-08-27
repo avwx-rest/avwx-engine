@@ -229,7 +229,7 @@ def sanitize(report: str) -> Tuple[str, str, List[str]]:
 
 
 def parse(
-    station: str, report: str, issued: date = None
+    station: str, report: str, issued: Optional[date] = None
 ) -> Tuple[Optional[MetarData], Optional[Units]]:
     """Returns MetarData and Units dataclasses with parsed data and their associated units"""
     valid_station(station)
@@ -239,7 +239,7 @@ def parse(
     return parser(report, issued)
 
 
-def parse_na(report: str, issued: date = None) -> Tuple[MetarData, Units]:
+def parse_na(report: str, issued: Optional[date] = None) -> Tuple[MetarData, Units]:
     """Parser for the North American METAR variant"""
     # pylint: disable=too-many-locals
     units = Units(**NA_UNITS)
@@ -286,7 +286,7 @@ def parse_na(report: str, issued: date = None) -> Tuple[MetarData, Units]:
     return struct, units
 
 
-def parse_in(report: str, issued: date = None) -> Tuple[MetarData, Units]:
+def parse_in(report: str, issued: Optional[date] = None) -> Tuple[MetarData, Units]:
     """Parser for the International METAR variant"""
     # pylint: disable=too-many-locals
     units = Units(**IN_UNITS)
@@ -375,9 +375,9 @@ class Metar(Report):
         time_since = datetime.now(tz=timezone.utc) - self.data.time.dt
         return time_since > timedelta(minutes=90)
 
-    def _calculate_altitudes(self):
+    def _calculate_altitudes(self) -> None:
         """Adds the pressure and density altitudes to data if all fields are available"""
-        if self.data is None:
+        if self.data is None or self.station is None or self.units is None:
             return
         # Select decimal temperature if available
         temp = self.data.temperature
@@ -386,16 +386,15 @@ class Metar(Report):
         alt = self.data.altimeter
         if temp is None or temp.value is None or alt is None or alt.value is None:
             return
-        alt, temp = alt.value, temp.value
         elev = self.station.elevation_ft
-        if elev is None:
-            return
         self.data.pressure_altitude = core.pressure_altitude(
-            alt, elev, self.units.altimeter
+            alt.value, elev, self.units.altimeter
         )
-        self.data.density_altitude = core.density_altitude(alt, temp, elev, self.units)
+        self.data.density_altitude = core.density_altitude(
+            alt.value, temp.value, elev, self.units
+        )
 
-    async def _post_update(self):
+    async def _post_update(self) -> None:
         if self.code is None or self.raw is None:
             return
         self.data, self.units = parse(self.code, self.raw, self.issued)
@@ -406,7 +405,7 @@ class Metar(Report):
         self._calculate_altitudes()
         self.translations = translate_metar(self.data, self.units)
 
-    def _post_parse(self):
+    def _post_parse(self) -> None:
         if self.code is None or self.raw is None:
             return
         self.data, self.units = parse(self.code, self.raw, self.issued)

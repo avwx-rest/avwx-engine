@@ -84,7 +84,7 @@ def _location(item: str) -> Optional[Location]:
     return Location(item, station, direction_number, distance_number)
 
 
-def _time(item: str, target: date = None) -> Optional[Timestamp]:
+def _time(item: str, target: Optional[date] = None) -> Optional[Timestamp]:
     """Convert a time element to a Timestamp"""
     return core.make_timestamp(item, time_only=True, target_date=target)
 
@@ -259,7 +259,7 @@ def sanitize(report: str) -> str:
     return " ".join(data)
 
 
-def parse(report: str, issued: date = None) -> Optional[PirepData]:
+def parse(report: str, issued: Optional[date] = None) -> Optional[PirepData]:
     """Returns a PirepData object based on the given report"""
     # pylint: disable=too-many-locals,too-many-branches
     if not report:
@@ -318,9 +318,9 @@ def parse(report: str, issued: date = None) -> Optional[PirepData]:
 class Pireps(Reports):
     """Class to handle pilot report data"""
 
-    data: Optional[List[PirepData]] = None  # type: ignore
+    data: Optional[List[Optional[PirepData]]] = None  # type: ignore
 
-    def __init__(self, code: str = None, coord: Coord = None):
+    def __init__(self, code: Optional[str] = None, coord: Optional[Coord] = None):
         super().__init__(code, coord)
         self.service = NOAA_ADDS("aircraftreport")
 
@@ -329,16 +329,20 @@ class Pireps(Reports):
         """Removes AIREPs before updating raw_reports"""
         return [r for r in reports if not r.startswith("ARP")]
 
-    async def _post_update(self):
+    async def _post_update(self) -> None:
         self.data = []
+        if self.raw is None:
+            return
         for report in self.raw:
             try:
                 self.data.append(parse(report, issued=self.issued))
             except Exception as exc:  # pylint: disable=broad-except
-                exceptions.exception_intercept(exc, raw=report)
+                exceptions.exception_intercept(exc, raw=report)  # type: ignore
 
-    def _post_parse(self):
+    def _post_parse(self) -> None:
         self.data = []
+        if self.raw is None:
+            return
         for report in self.raw:
             self.data.append(parse(report, issued=self.issued))
 

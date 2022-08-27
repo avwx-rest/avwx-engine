@@ -79,7 +79,7 @@ class Code:
         cls: Type[CodeType],
         key: Optional[str],
         codes: Dict[str, str],
-        default: str = None,
+        default: Optional[str] = None,
         error: bool = True,
     ) -> Optional[CodeType]:
         """Load a code from a known key and value dict"""

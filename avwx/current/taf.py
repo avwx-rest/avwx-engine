@@ -277,7 +277,7 @@ def get_taf_flight_rules(lines: List[TafLineData]) -> List[TafLineData]:
 
 
 def parse(
-    station: str, report: str, issued: date = None
+    station: str, report: str, issued: Optional[date] = None
 ) -> Tuple[Optional[TafData], Optional[Units]]:
     """Returns TafData and Units dataclasses with parsed data and their associated units"""
     # pylint: disable=too-many-locals
@@ -356,7 +356,7 @@ def parse(
 
 
 def parse_lines(
-    lines: List[str], units: Units, issued: date = None
+    lines: List[str], units: Units, issued: Optional[date] = None
 ) -> List[TafLineData]:
     """Returns a list of parsed line dictionaries"""
     parsed_lines: List[TafLineData] = []
@@ -422,7 +422,7 @@ def parse_lines(
 #     )
 
 
-def parse_line(line: str, units: Units, issued: date = None) -> TafLineData:
+def parse_line(line: str, units: Units, issued: Optional[date] = None) -> TafLineData:
     """Parser for the International TAF forcast variant"""
     # pylint: disable=too-many-locals
     data = core.dedupe(line.split())
@@ -468,12 +468,20 @@ class Taf(Report):
     data: Optional[TafData] = None
     translations: Optional[TafTrans] = None  # type: ignore
 
-    async def _post_update(self):
+    async def _post_update(self) -> None:
+        if self.code is None or self.raw is None:
+            return
         self.data, self.units = parse(self.code, self.raw, self.issued)
+        if self.data is None or self.units is None:
+            return
         self.translations = translate_taf(self.data, self.units)
 
-    def _post_parse(self):
+    def _post_parse(self) -> None:
+        if self.code is None or self.raw is None:
+            return
         self.data, self.units = parse(self.code, self.raw, self.issued)
+        if self.data is None or self.units is None:
+            return
         self.translations = translate_taf(self.data, self.units)
 
     @property

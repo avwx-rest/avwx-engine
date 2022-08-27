@@ -63,7 +63,9 @@ class AVWXBase(metaclass=ABCMeta):
         pass
 
     @classmethod
-    def from_report(cls: Type[T], report: str, issued: date = None) -> Optional[T]:
+    def from_report(
+        cls: Type[T], report: str, issued: Optional[date] = None
+    ) -> Optional[T]:
         """Returns an updated report object based on an existing report"""
         report = report.strip()
         obj = cls()
@@ -78,7 +80,7 @@ class AVWXBase(metaclass=ABCMeta):
         self.source = None
         if not report or report == self.raw:
             return False
-        self.raw = report  # type: ignore
+        self.raw = report
         self.issued = issued
         self._post_parse()
         self._set_meta()
@@ -118,7 +120,9 @@ class ManagedReport(AVWXBase, metaclass=ABCMeta):
         pass
 
     @classmethod
-    def from_report(cls: Type[MT], report: str, issued: date = None) -> Optional[MT]:
+    def from_report(
+        cls: Type[MT], report: str, issued: Optional[date] = None
+    ) -> Optional[MT]:
         """Returns an updated report object based on an existing report"""
         report = report.strip()
         station = find_station(report)

@@ -21,10 +21,10 @@ class LazyLoad:
             "data", "files", f"{filename}.json"
         )
 
-    def _load(self):
+    def _load(self) -> None:
         self._data = json.load(self.source.open(encoding="utf8"))
 
-    def _check(self):
+    def _check(self) -> None:
         if self._data is None:
             self._load()
 

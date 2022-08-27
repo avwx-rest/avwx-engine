@@ -114,7 +114,9 @@ def _tz_offset_for(name: Optional[str]) -> Optional[timezone]:
 
 
 def make_year_timestamp(
-    value: str, repr: str, tzname: str = None  # pylint: disable=redefined-builtin
+    value: str,
+    repr: str,
+    tzname: Optional[str] = None,  # pylint: disable=redefined-builtin
 ) -> Optional[Timestamp]:
     """Convert NOTAM timestamp which includes year and month"""
     value = value.strip()
@@ -143,7 +145,7 @@ def parse_linked_times(
     )
 
 
-def parse(report: str, issued: Timestamp = None) -> Tuple[NotamData, Units]:
+def parse(report: str, issued: Optional[Timestamp] = None) -> Tuple[NotamData, Units]:
     """Parse NOTAM report string"""
     # pylint: disable=too-many-locals
     units = Units(**IN_UNITS)
@@ -214,15 +216,17 @@ class Notams(Reports):
     data: Optional[List[NotamData]] = None  # type: ignore
     radius: int = 10
 
-    def __init__(self, code: str = None, coord: Coord = None):
+    def __init__(self, code: Optional[str] = None, coord: Optional[Coord] = None):
         super().__init__(code, coord)
         self.service = FAA_NOTAM("notam")
 
-    async def _post_update(self):
+    async def _post_update(self) -> None:
         self._post_parse()
 
-    def _post_parse(self):
+    def _post_parse(self) -> None:
         self.data = []
+        if self.raw is None:
+            return
         for report in self.raw:
             if "||" in report:
                 issue_text, report = report.split("||")
@@ -234,7 +238,7 @@ class Notams(Reports):
                 data, units = parse(report, issued=issued)
                 self.data.append(data)
             except Exception as exc:  # pylint: disable=broad-except
-                exceptions.exception_intercept(exc, raw=report)
+                exceptions.exception_intercept(exc, raw=report)  # type: ignore
         self.units = units
 
     @staticmethod

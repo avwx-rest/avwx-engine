@@ -52,8 +52,8 @@ class CallsHTTP:
     async def _call(  # pylint: disable=too-many-arguments
         self,
         url: str,
-        params: dict = None,
-        headers: dict = None,
+        params: Optional[dict] = None,
+        headers: Optional[dict] = None,
         data: Any = None,
         timeout: int = 10,
         retries: int = 3,
@@ -97,4 +97,4 @@ class CallsHTTP:
             raise ConnectionError(
                 f"Unable to read data from {name} server"
             ) from network_error
-        return resp.text
+        return str(resp.text)

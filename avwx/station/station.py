@@ -12,6 +12,7 @@ from functools import lru_cache
 from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
 
 # library
+import httpx
 from geopy.distance import great_circle, Distance  # type: ignore
 
 # module
@@ -19,6 +20,12 @@ from avwx.exceptions import BadStation
 from avwx.load_utils import LazyCalc
 from avwx.station.meta import STATIONS
 from avwx.structs import Coord
+
+
+def get_ip_location() -> Coord:
+    """Returns the current location according to ipinfo.io"""
+    lat, lon = httpx.get("https://ipinfo.io/loc").text.strip().split(",")
+    return Coord(float(lat), float(lon))
 
 
 @dataclass
@@ -125,18 +132,20 @@ class Station:
     @classmethod
     def nearest(
         cls: Type[T],
-        lat: float,
-        lon: float,
+        lat: Optional[float] = None,
+        lon: Optional[float] = None,
         is_airport: bool = False,
         sends_reports: bool = True,
         max_coord_distance: float = 10,
     ) -> Optional[Tuple[T, dict]]:
-        """Load the Station nearest to a lat,lon coordinate pair
+        """Load the Station nearest to your location or a lat,lon coordinate pair
 
         Returns the Station and distances from source
 
         NOTE: Becomes less accurate toward poles and doesn't cross +/-180
         """
+        if not (lat and lon):
+            lat, lon = get_ip_location().pair
         ret = nearest(lat, lon, 1, is_airport, sends_reports, max_coord_distance)
         if not isinstance(ret, dict):
             return None
@@ -192,7 +201,7 @@ class Station:
 # Coordinate search and resources
 
 
-def _make_coords():
+def _make_coords() -> List[Tuple]:
     return [
         (s["icao"] or s["gps"], s["latitude"], s["longitude"])
         for s in STATIONS.values()
@@ -202,7 +211,7 @@ def _make_coords():
 _COORDS = LazyCalc(_make_coords)
 
 
-def _make_coord_tree():
+def _make_coord_tree():  # type: ignore
     # pylint: disable=import-outside-toplevel
     try:
         from scipy.spatial import KDTree  # type: ignore
@@ -299,5 +308,5 @@ def nearest(
         )
     if n == 1:
         return ret[0]
-    ret.sort(key=lambda x: x["miles"])
+    ret.sort(key=lambda x: x["miles"])  # type: ignore
     return ret

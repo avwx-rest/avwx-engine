@@ -19,7 +19,10 @@ QCoord = Union[Coord, List[Coord]]
 
 
 def _distance(near: Coord, far: Coord) -> float:
-    return great_circle(near.pair, far.pair).nm
+    circle = great_circle(near.pair, far.pair).nm
+    if not isinstance(circle, float):
+        raise ValueError("Could not evaluate great circle distance")
+    return circle
 
 
 def _closest(coord: QCoord, coords: List[Coord]) -> Coord:

@@ -43,7 +43,7 @@ def uses_na_format(station: str) -> bool:
     raise BadStation("Station doesn't start with a recognized character set")
 
 
-def valid_station(station: str):
+def valid_station(station: str) -> None:
     """Checks the validity of a station ident
 
     This function doesn't return anything. It merely raises a BadStation error if needed

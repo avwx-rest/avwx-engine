@@ -102,7 +102,7 @@ def get_icao(station: List[str]) -> Optional[str]:
     return gps_code
 
 
-def clean_source_files():
+def clean_source_files() -> None:
     """Cleans the source data files before parsing"""
     text = _SOURCE["airports"]
     for find, replace in FILE_REPLACE.items():
@@ -256,7 +256,7 @@ def download_source_files() -> bool:
     return True
 
 
-def update_station_info_date():
+def update_station_info_date() -> None:
     """Update the package's station meta date"""
     meta_path = _FILE_DIR.parent / "station" / "meta.py"
     meta = meta_path.open().read()

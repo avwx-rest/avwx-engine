@@ -2,13 +2,17 @@
 
 ## Installation
 
-AVWX is available on PyPI. Note: the package name is ``avwx-engine``, but the import is ``avwx``
+AVWX is available on PyPI and requires Python 3.8 and above. Note: the package name is ``avwx-engine``, but the import is ``avwx``
 
 ```bash
-pip install avwx-engine
+python -m pip install avwx-engine
 ```
 
-AVWX only supports Python 3.8 and above.
+Certain features may require additional libraries which most users won't need. For example, finding stations near a coordinate require scipy which is a large package. Attempting to run these methods without the necessary library will prompt you to install them. If you want to install all dependencies at once, run this instead:
+
+```sh
+python -m pip install avwx-engine[all]
+```
 
 ## Tutorial
 

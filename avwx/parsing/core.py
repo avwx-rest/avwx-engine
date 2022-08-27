@@ -117,7 +117,9 @@ def spoken_number(num: str, literal: bool = False) -> str:
     return " and ".join(ret)
 
 
-def make_fraction(num: str, repr: str = None, literal: bool = False) -> Fraction:
+def make_fraction(
+    num: str, repr: Optional[str] = None, literal: bool = False
+) -> Fraction:
     """Returns a fraction dataclass for numbers with / in them"""
     num_str, den_str = num.split("/")
     # 2-1/2 but not -2 1/2
@@ -138,10 +140,10 @@ def make_fraction(num: str, repr: str = None, literal: bool = False) -> Fraction
 
 def make_number(
     num: Optional[str],
-    repr: str = None,
-    speak: str = None,
+    repr: Optional[str] = None,
+    speak: Optional[str] = None,
     literal: bool = False,
-    special: dict = None,
+    special: Optional[dict] = None,
 ) -> Optional[Number]:
     """Returns a Number or Fraction dataclass for a number string
 
@@ -591,7 +593,7 @@ def is_altitude(value: str) -> bool:
 
 
 def make_altitude(
-    value: str, units: Units, repr: str = None, force_fl: bool = False
+    value: str, units: Units, repr: Optional[str] = None, force_fl: bool = False
 ) -> Tuple[Optional[Number], Units]:
     """Convert altitude string into a number"""
     if not value:
@@ -615,7 +617,7 @@ def parse_date(
     date: str,
     hour_threshold: int = 200,
     time_only: bool = False,
-    target: dt.date = None,
+    target: Optional[dt.date] = None,
 ) -> Optional[dt.datetime]:
     """Parses a report timestamp in ddhhZ or ddhhmmZ format
 
@@ -677,7 +679,9 @@ def parse_date(
 
 
 def make_timestamp(
-    timestamp: Optional[str], time_only: bool = False, target_date: dt.date = None
+    timestamp: Optional[str],
+    time_only: bool = False,
+    target_date: Optional[dt.date] = None,
 ) -> Optional[Timestamp]:
     """Returns a Timestamp dataclass for a report timestamp in ddhhZ or ddhhmmZ format"""
     if not timestamp:

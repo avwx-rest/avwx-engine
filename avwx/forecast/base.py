@@ -76,9 +76,9 @@ def _numbers(
     size: int = 3,
     prefix: str = "",
     postfix: str = "",
-    decimal: int = None,
+    decimal: Optional[int] = None,
     literal: bool = False,
-    special: dict = None,
+    special: Optional[dict] = None,
 ) -> List[Optional[Number]]:
     """Parse line into Number objects
 
@@ -144,7 +144,7 @@ def _parse_lines(
     lines: List[str],
     handlers: Union[dict, Callable],
     size: int = 3,
-):
+) -> None:
     """Add data to time periods by parsing each line (element type)
 
     Adds data in place

@@ -133,7 +133,7 @@ Requests data from NOAA FTP file servers
 
 This class accepts `"metar"`, `"taf"`, `"aircraftreport"`, and `"airsigmet"` as valid report types.
 
-### avwx.service.bulk.NOAA_Bulk(*report_type*)
+### avwx.service.bulk.NOAA_Intl(*report_type*)
 
 Scrapes international reports from NOAA. Designed to accompany `NOAA_Bulk` for AIRMET / SIGMET fetch.
 
@@ -183,11 +183,11 @@ Once your service is created, it can optionally be added to `avwx.service.scrape
 
 ### FileService
 
-For web scraping sources, you'll need to do the following things:
+For file-based sources, you'll need to do the following things:
 
 - Add the base URL and valid report types
 - Implement the `FileService._urls` to iterate through source URLs
-- Implement the `FileService._extract` function to return just the report string (starting at the station ID) from the 
+- Implement the `FileService._extract` function to return just the report string (starting at the station ID) from the response
 
 Let's look at the NOAA_NBM service as an example:
 

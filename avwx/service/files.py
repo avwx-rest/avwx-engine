@@ -27,7 +27,7 @@ _TEMP = Path(_TEMP_DIR.name)
 
 
 @atexit.register
-def _cleanup():
+def _cleanup() -> None:
     """Deletes temporary files and directory at Python exit"""
     _TEMP_DIR.cleanup()
 
@@ -75,7 +75,7 @@ class FileService(Service):
         timestamp = str(now).split(".", maxsplit=1)[0]
         return _TEMP / f"{self._file_stem}.{timestamp}.txt"
 
-    async def _wait_until_updated(self):
+    async def _wait_until_updated(self) -> None:
         while not self._updating:
             await aio.sleep(0.01)
 
@@ -157,7 +157,7 @@ class FileService(Service):
         """
         valid_station(station)
         if wait and self._updating:
-            self._wait_until_updated()
+            await self._wait_until_updated()
         if force or self.is_outdated:
             if not await self.update(wait, timeout):
                 return None

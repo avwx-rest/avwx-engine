@@ -35,7 +35,7 @@ def wind(
     direction: Number,
     speed: Number,
     gust: Optional[Number],
-    vardir: List[Number] = None,
+    vardir: Optional[List[Number]] = None,
     unit: str = "kt",
 ) -> str:
     """Format wind details into a spoken word string"""
@@ -109,7 +109,7 @@ def type_and_times(
     type: str,
     start: Optional[Timestamp],
     end: Optional[Timestamp],
-    probability: Number = None,
+    probability: Optional[Number] = None,
 ) -> str:
     """Format line type and times into the beginning of a spoken line string"""
     if not type:

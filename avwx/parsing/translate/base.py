@@ -74,7 +74,7 @@ def wind(  # pylint: disable=too-many-arguments
     direction: Optional[Number],
     speed: Optional[Number],
     gust: Optional[Number],
-    vardir: List[Number] = None,
+    vardir: Optional[List[Number]] = None,
     unit: str = "kt",
     cardinals: bool = True,
     spoken: bool = False,

@@ -83,7 +83,7 @@ class Reports(ManagedReport):
     data: Optional[List[ReportData]] = None  # type: ignore
     units: Units = Units(**NA_UNITS)
 
-    def __init__(self, code: str = None, coord: Coord = None):
+    def __init__(self, code: Optional[str] = None, coord: Optional[Coord] = None):
         if code:
             super().__init__(code)
             if self.station is not None:
@@ -110,7 +110,9 @@ class Reports(ManagedReport):
         reports = self._report_filter(reports)
         return await super()._update(reports, issued, disable_post)
 
-    def parse(self, reports: Union[str, List[str]], issued: Optional[date] = None):
+    def parse(
+        self, reports: Union[str, List[str]], issued: Optional[date] = None
+    ) -> bool:
         """Updates report data by parsing a given report
 
         Can accept a report issue date if not a recent report string
@@ -119,7 +121,7 @@ class Reports(ManagedReport):
 
     async def async_parse(
         self, reports: Union[str, List[str]], issued: Optional[date] = None
-    ):
+    ) -> bool:
         """Async updates report data by parsing a given report
 
         Can accept a report issue date if not a recent report string

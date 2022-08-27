@@ -8,7 +8,8 @@ Parsing for NOAA NBM forecasts
 
 # stdlib
 from contextlib import suppress
-from typing import Callable, Dict, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional, Tuple, Union
+from typing_extensions import TypeAlias
 
 # module
 from avwx import structs
@@ -26,6 +27,9 @@ from .base import (
     _parse_lines,
     _split_line,
 )
+
+DataType: TypeAlias = Union[structs.NbhData, structs.NbsData, structs.NbeData]
+PeriodType: TypeAlias = Union[structs.NbhPeriod, structs.NbsPeriod, structs.NbePeriod]
 
 UNITS = {
     **UNITS,
@@ -90,8 +94,8 @@ _NBHS_HANDLERS: Dict[str, Tuple[str, Callable]] = {
 
 
 def _parse_factory(
-    data_class,
-    period_class,
+    data_class: DataType,
+    period_class: PeriodType,
     handlers: Dict[str, Tuple[str, Callable]],
     hours: int = 2,
     size: int = 3,
@@ -110,7 +114,7 @@ def _parse_factory(
         root, handler = _HOUR_HANDLERS[key[0]]
         return f"{root}_{key[1:].lstrip('0')}", handler
 
-    def parse(report: str):
+    def parse(report: str) -> Optional[structs.ReportData]:
         """Parser for NBM reports"""
         if not report:
             return None
@@ -125,26 +129,26 @@ def _parse_factory(
             start, end = min(indexes), max(indexes)
             data_lines = [l[:start] + l[end:] for l in data_lines]
         _parse_lines(periods, data_lines, handle, size)
-        return data_class(
+        return data_class(  # type: ignore
             raw=data.raw,
             sanitized=data.sanitized,
             station=data.station,
             time=data.time,
             remarks=data.remarks,
-            forecast=[period_class(**p) for p in periods],
+            forecast=[period_class(**p) for p in periods],  # type: ignore
         )
 
     return parse
 
 
 parse_nbh: Callable[[str], structs.NbhData] = _parse_factory(
-    structs.NbhData, structs.NbhPeriod, _NBHS_HANDLERS, hours=1
+    structs.NbhData, structs.NbhPeriod, _NBHS_HANDLERS, hours=1  # type: ignore
 )
 parse_nbs: Callable[[str], structs.NbsData] = _parse_factory(
-    structs.NbsData, structs.NbsPeriod, _NBHS_HANDLERS
+    structs.NbsData, structs.NbsPeriod, _NBHS_HANDLERS  # type: ignore
 )
 parse_nbe: Callable[[str], structs.NbeData] = _parse_factory(
-    structs.NbeData, structs.NbePeriod, {}, size=4, prefix=5
+    structs.NbeData, structs.NbePeriod, {}, size=4, prefix=5  # type: ignore
 )
 
 
@@ -153,10 +157,10 @@ class _Nbm(Forecast):
     _service_class = NOAA_NBM  # type: ignore
     _parser: staticmethod
 
-    async def _post_update(self):
+    async def _post_update(self) -> None:
         self.data = self._parser(self.raw)
 
-    def _post_parse(self):
+    def _post_parse(self) -> None:
         self.data = self._parser(self.raw)
 
 

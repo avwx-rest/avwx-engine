@@ -9,7 +9,7 @@ import asyncio as aio
 import json
 import random
 import re
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 # library
 from xmltodict import parse as parsexml  # type: ignore
@@ -20,6 +20,9 @@ from avwx.exceptions import InvalidRequest
 from avwx.service.base import CallsHTTP, Service
 from avwx.station import valid_station
 from avwx.structs import Coord
+
+
+T = TypeVar("T")
 
 
 USER_AGENTS = [
@@ -54,14 +57,14 @@ class ScrapeService(Service, CallsHTTP):  # pylint: disable=too-few-public-metho
         """Returns the POST form/data payload"""
         return {}
 
-    def _clean_report(self, report: Any) -> Any:
+    def _clean_report(self, report: T) -> T:
         """Replaces all *whitespace elements with a single space if enabled"""
         if not self._strip_whitespace:
             return report
         if isinstance(report, list):
-            return dedupe(" ".join(r.split()) for r in report)
+            return dedupe(" ".join(r.split()) for r in report)  # type: ignore
         if isinstance(report, str):
-            return " ".join(report.split())
+            return " ".join(report.split())  # type: ignore
         return report
 
 
@@ -149,6 +152,7 @@ class NOAA_ADDS(ScrapeService):
 
     def _extract(self, raw: str) -> Union[str, List[str]]:
         """Extracts the raw_report element from XML response"""
+        ret: Union[str, List[str]]
         resp = parsexml(raw)
         try:
             data = resp["response"]["data"]
@@ -160,7 +164,7 @@ class NOAA_ADDS(ScrapeService):
         # Only one report exists
         if isinstance(reports, dict):
             ret = reports["raw_text"]
-            if self.report_type in self._coallate:
+            if self.report_type in self._coallate and isinstance(ret, str):
                 ret = [ret]
         # Multiple reports exist
         elif isinstance(reports, list) and reports:
@@ -175,8 +179,8 @@ class NOAA_ADDS(ScrapeService):
 
     def fetch(
         self,
-        station: str = None,
-        coord: Coord = None,
+        station: Optional[str] = None,
+        coord: Optional[Coord] = None,
         timeout: int = 10,
     ) -> Union[str, List[str]]:
         """Fetches a report string from the service"""
@@ -184,8 +188,8 @@ class NOAA_ADDS(ScrapeService):
 
     async def async_fetch(
         self,
-        station: str = None,
-        coord: Coord = None,
+        station: Optional[str] = None,
+        coord: Optional[Coord] = None,
         timeout: int = 10,
     ) -> Union[str, List[str]]:
         """Asynchronously fetch a report string from the service"""
@@ -296,7 +300,7 @@ class AUBOM(StationScrape):
     url = "http://www.bom.gov.au/aviation/php/process.php"
     method = "POST"
 
-    def _make_url(self, _) -> Tuple[str, dict]:
+    def _make_url(self, _: Any) -> Tuple[str, dict]:
         """Returns a formatted URL and empty parameters"""
         return self.url, {}
 
@@ -409,7 +413,8 @@ class AVT(StationScrape):
         try:
             data = json.loads(raw)
             key = self.report_type.lower() + "ContentList"
-            return data[key]["rows"][0]["content"]
+            text: str = data[key]["rows"][0]["content"]
+            return text
         except (TypeError, json.decoder.JSONDecodeError, KeyError, IndexError):
             return ""
 
@@ -452,9 +457,9 @@ class FAA_NOTAM(ScrapeService):
 
     def _post_for(
         self,
-        icao: str = None,
-        coord: Coord = None,
-        path: List[str] = None,
+        icao: Optional[str] = None,
+        coord: Optional[Coord] = None,
+        path: Optional[List[str]] = None,
         radius: int = 10,
     ) -> dict:
         """Generate POST payload for search params in location order"""
@@ -482,9 +487,9 @@ class FAA_NOTAM(ScrapeService):
 
     def fetch(
         self,
-        icao: str = None,
-        coord: Coord = None,
-        path: List[str] = None,
+        icao: Optional[str] = None,
+        coord: Optional[Coord] = None,
+        path: Optional[List[str]] = None,
         radius: int = 10,
         timeout: int = 10,
     ) -> List[str]:
@@ -493,9 +498,9 @@ class FAA_NOTAM(ScrapeService):
 
     async def async_fetch(
         self,
-        icao: str = None,
-        coord: Coord = None,
-        path: List[str] = None,
+        icao: Optional[str] = None,
+        coord: Optional[Coord] = None,
+        path: Optional[List[str]] = None,
         radius: int = 10,
         timeout: int = 10,
     ) -> List[str]:

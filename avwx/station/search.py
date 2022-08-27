@@ -15,7 +15,7 @@ from avwx.station.station import Station, station_filter
 
 # Catch import error only if user attemps a text search
 with suppress(ModuleNotFoundError):
-    from rapidfuzz import fuzz, process  # type: ignore
+    from rapidfuzz import fuzz, process
 
 
 TYPE_ORDER = [

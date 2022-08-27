@@ -151,7 +151,7 @@ def _region(data: List[str]) -> Tuple[List[str], str]:
 
 
 def _time(
-    data: List[str], issued: date = None
+    data: List[str], issued: Optional[date] = None
 ) -> Tuple[List[str], Optional[Timestamp], Optional[Timestamp]]:
     """Extracts the start and/or end time based on a couple starting elements"""
     index = _first_index(data, "AT", "FCST", "UNTIL", "VALID", "OUTLOOK", "OTLK")
@@ -411,7 +411,7 @@ def _intensity(data: List[str]) -> Tuple[List[str], Optional[Code]]:
 
 
 def _sigmet_observation(
-    data: List[str], units: Units, issued: date = None
+    data: List[str], units: Units, issued: Optional[date] = None
 ) -> Tuple[AirSigObservation, Units]:
     data, start_time, end_time = _time(data, issued)
     data, position = _position(data)
@@ -437,7 +437,7 @@ def _sigmet_observation(
 
 
 def _observations(
-    data: List[str], units: Units, issued: date = None
+    data: List[str], units: Units, issued: Optional[date] = None
 ) -> Tuple[Units, Optional[AirSigObservation], Optional[AirSigObservation]]:
     observation, forecast, forecast_index = None, None, -1
     forecast_index = _first_index(data, "FCST", "OUTLOOK", "OTLK")
@@ -503,7 +503,7 @@ def sanitize(report: str) -> str:
     return " ".join(data)
 
 
-def parse(report: str, issued: date = None) -> Tuple[AirSigmetData, Units]:
+def parse(report: str, issued: Optional[date] = None) -> Tuple[AirSigmetData, Units]:
     """Parse AIRMET / SIGMET report string"""
     # pylint: disable=too-many-locals
     units = Units(**IN_UNITS)
@@ -579,13 +579,13 @@ class AirSigmet(AVWXBase):
 class AirSigManager:
     """Class to fetch and manage AIRMET and SIGMET reports"""
 
-    _services: List[Service]  # type: ignore
+    _services: List[Service]
     _raw: List[Tuple[str, str]]
     last_updated: Optional[datetime] = None
     raw: List[str]
     reports: Optional[List[AirSigmet]] = None
 
-    def __init__(self):
+    def __init__(self):  # type: ignore
         self._services = [NOAA_Bulk("airsigmet"), NOAA_Intl("airsigmet")]
         self._raw, self.raw = [], []
 
