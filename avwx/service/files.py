@@ -9,6 +9,7 @@ import asyncio as aio
 import atexit
 import datetime as dt
 import tempfile
+import warnings
 from contextlib import suppress
 from pathlib import Path
 from socket import gaierror
@@ -242,6 +243,10 @@ class NOAA_GFS(NOAA_Forecast):
     @property
     def _urls(self) -> Iterator[str]:
         """Iterates through update cycles no older than two days"""
+        warnings.warn(
+            "GFS fetch has been deprecated due to NOAA retiring the format. Migrate to NBM for similar data",
+            DeprecationWarning,
+        )
         now = dt.datetime.now(tz=dt.timezone.utc)
         date = dt.datetime.now(tz=dt.timezone.utc)
         cutoff = date - dt.timedelta(days=1)

@@ -57,15 +57,17 @@ class TestNBM(TestScrapeService):
         self.assertGreater(len(reports), 0)
 
 
-class TestGFS(TestScrapeService):
+# GFS Fetch is deprecated due to data source retirement
 
-    service_class = service.NOAA_GFS
-    report_type = "mav"
-    stations = ["KJFK", "KLAX", "PHNL"]
+# class TestGFS(TestScrapeService):
 
-    def test_fetch(self):
-        """Tests that reports are fetched from service"""
-        super().test_fetch()
-        reports = self.serv.all
-        self.assertIsInstance(reports, list)
-        self.assertGreater(len(reports), 0)
+#     service_class = service.NOAA_GFS
+#     report_type = "mav"
+#     stations = ["KJFK", "KLAX", "PHNL"]
+
+#     def test_fetch(self):
+#         """Tests that reports are fetched from service"""
+#         super().test_fetch()
+#         reports = self.serv.all
+#         self.assertIsInstance(reports, list)
+#         self.assertGreater(len(reports), 0)
