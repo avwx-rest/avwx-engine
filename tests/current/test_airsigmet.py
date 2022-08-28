@@ -38,6 +38,10 @@ class TestAirSigmet(BaseTest):
 
     maxDiff = None
 
+    def test_repr(self):
+        """Test class name in repr string"""
+        self.assertEqual(repr(airsigmet.AirSigmet()), "<avwx.AirSigmet>")
+
     def test_parse_prep(self):
         """Test report elements are replaced to aid parsing"""
         for source, target in (

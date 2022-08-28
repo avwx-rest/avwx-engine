@@ -21,6 +21,10 @@ class TestMetar(BaseTest):
 
     maxDiff = None
 
+    def test_repr(self):
+        """Test type and code in repr string"""
+        self.assertEqual(repr(metar.Metar("KMCO")), "<avwx.Metar code=KMCO>")
+
     def test_get_remarks(self):
         """Remarks get removed first with the remaining components split into a list"""
         for raw, wx, rmk in (

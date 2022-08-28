@@ -83,8 +83,16 @@ addopts = """\
     --no-cov-on-fail \
 """
 
+[tool.coverage.run]
+omit = [
+    "*airep.py",
+    "*glossary.py",
+    "avwx/data/*",
+    "tests/*",
+]
+
 [tool.coverage.report]
-fail_under = 100
+fail_under = 30  # increase over time
 exclude_lines = [
     'if TYPE_CHECKING:',
     'pragma: no cover'
