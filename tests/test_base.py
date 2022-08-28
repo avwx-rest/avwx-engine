@@ -8,6 +8,7 @@ import unittest
 # module
 from avwx import base, Station
 
+
 def test_find_station():
     for code in ("KMCO", "MCO"):
         station = base.find_station(f"1 2 {code} 4")
