@@ -1,0 +1,50 @@
+[
+    {
+        "line": "1 BEC 1",
+        "fixed": "1 BECMG 1",
+        "replaced": {"BEC": "BECMG"},
+        "extra_spaces_needed": false
+    },
+    {
+        "line": "1 BE CMG1",
+        "fixed": "1 BECMG 1",
+        "replaced": {"BE CMG": "BECMG"},
+        "extra_spaces_needed": true
+    },
+    {
+        "line": "1 BEMG 1",
+        "fixed": "1 BECMG 1",
+        "replaced": {"BEMG": "BECMG"},
+        "extra_spaces_needed": false
+    },
+    {
+        "line": "1 TEMP0 1",
+        "fixed": "1 TEMPO 1",
+        "replaced": {"TEMP0": "TEMPO"},
+        "extra_spaces_needed": false
+    },
+    {
+        "line": "1 TEMP 1",
+        "fixed": "1 TEMPO 1",
+        "replaced": {"TEMP": "TEMPO"},
+        "extra_spaces_needed": false
+    },
+    {
+        "line": "1 TEMO1",
+        "fixed": "1 TEMPO 1",
+        "replaced": {"TEMO": "TEMPO"},
+        "extra_spaces_needed": true
+    },
+    {
+        "line": "1 T EMPO1",
+        "fixed": "1 TEMPO 1",
+        "replaced": {"T EMPO": "TEMPO"},
+        "extra_spaces_needed": true
+    },
+    {
+        "line": "1 2 3 4 5",
+        "fixed": "1 2 3 4 5",
+        "replaced": {},
+        "extra_spaces_needed": false
+    }
+]

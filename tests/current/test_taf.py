@@ -5,10 +5,12 @@ TAF Report Tests
 # pylint: disable=protected-access,invalid-name
 
 # stdlib
+import json
 import unittest
 from copy import deepcopy
 from dataclasses import asdict
 from datetime import datetime
+from pathlib import Path
 
 # module
 from avwx import static, structs
@@ -16,6 +18,9 @@ from avwx.current import taf
 from avwx.parsing import core
 
 from tests.util import get_data
+
+
+DATA_DIR = Path(__file__).parent / "data"
 
 
 TAF_FIELDS = (
@@ -67,11 +72,13 @@ class TestTaf(unittest.TestCase):
 
     def test_sanitize_line(self):
         """Tests a function which fixes common new-line signifiers in TAF reports"""
-        for line in ("1 BEC 1", "1 BE CMG1", "1 BEMG 1"):
-            self.assertEqual(taf.sanitize_line(line), "1 BECMG 1")
-        for line in ("1 TEMP0 1", "1 TEMP 1", "1 TEMO1", "1 T EMPO1"):
-            self.assertEqual(taf.sanitize_line(line), "1 TEMPO 1")
-        self.assertEqual(taf.sanitize_line("1 2 3 4 5"), "1 2 3 4 5")
+        case_path = DATA_DIR / "sanitize_taf_line_cases.json"
+        for case in json.load(case_path.open()):
+            sans = structs.Sanitization()
+            fixed = taf.sanitize_line(case["line"], sans)
+            self.assertEqual(fixed, case["fixed"])
+            self.assertEqual(sans.replaced, case["replaced"])
+            self.assertEqual(sans.extra_spaces_needed, case["extra_spaces_needed"])
 
     def test_is_tempo_or_prob(self):
         """Tests a function which checks that an item signifies a new time period"""
@@ -212,7 +219,7 @@ class TestTaf(unittest.TestCase):
             "FM210500 VRB03KT P6SM OVC015"
         )
         expected_flight_rules = ["MVFR", "MVFR", "VFR", "VFR", "MVFR"]
-        data, _ = taf.parse(report[:4], report)
+        data, *_ = taf.parse(report[:4], report)
         self.assertIsInstance(data, structs.TafData)
         for period, flight_rules in zip(data.forecast, expected_flight_rules):
             self.assertEqual(period.flight_rules, flight_rules)
@@ -223,9 +230,10 @@ class TestTaf(unittest.TestCase):
             "PHNL 042339Z 0500/0606 06018G25KT P6SM FEW030 SCT060 FM050600 06010KT "
             "P6SM FEW025 SCT060 FM052000 06012G20KT P6SM FEW030 SCT060"
         )
-        data, units = taf.parse(report[:4], report)
+        data, units, sans = taf.parse(report[:4], report)
         self.assertIsInstance(data, structs.TafData)
         self.assertIsInstance(units, structs.Units)
+        self.assertIsInstance(sans, structs.Sanitization)
         self.assertEqual(data.raw, report)
 
     def test_prob_line(self):
@@ -312,9 +320,11 @@ class TestTaf(unittest.TestCase):
             station = taf.Taf(icao)
             self.assertIsNone(station.last_updated)
             self.assertIsNone(station.issued)
+            self.assertIsNone(station.sanitization)
             self.assertTrue(station.parse(ref["data"]["raw"], issued=issued))
             self.assertIsInstance(station.last_updated, datetime)
             self.assertEqual(station.issued, issued)
+            self.assertIsInstance(station.sanitization, structs.Sanitization)
             self.assertEqual(asdict(station.data), ref["data"])
             self.assertEqual(asdict(station.translations), ref["translations"])
             self.assertEqual(station.summary, ref["summary"])

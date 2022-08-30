@@ -100,11 +100,11 @@ Returns Stations nearest to current station and their distances
 
 NOTE: Becomes less accurate toward poles and doesn't cross +/-180
 
-#### **nearest**(*lat: float, lon: float, is_airport: bool = False, sends_reports: bool = True max_distance: float = 50*) -> *(avwx.Station, dict)*
+#### **nearest**(*lat: float = None, lon: float = None, is_airport: bool = False, sends_reports: bool = True max_distance: float = 50*) -> *(avwx.Station, dict)*
 
-Load the Station nearest to a lat,lon coordinate pair
+Load the Station nearest to your location or a lat,lon coordinate pair
 
-Returns the Station and coordinate distance from source
+Returns the Station and distances from source
 
 NOTE: Becomes less accurate toward poles and doesn't cross +/-180
 

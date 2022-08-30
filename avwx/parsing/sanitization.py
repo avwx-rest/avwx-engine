@@ -20,6 +20,7 @@ from avwx.parsing.core import (
 )
 from avwx.static.core import CLOUD_LIST, CLOUD_TRANSLATIONS
 from avwx.static.taf import TAF_NEWLINE, TAF_NEWLINE_STARTSWITH
+from avwx.structs import Sanitization
 
 WIND_REMV = ("/", "-", "(N)", "(E)", "(S)", "(W)")
 
@@ -155,7 +156,7 @@ def separate_cloud_layers(text: str) -> str:
     return text
 
 
-def sanitize_report_string(text: str) -> str:
+def sanitize_report_string(text: str, sans: Sanitization) -> str:
     """Provides sanitization for operations that work better when the report is a string
 
     Returns the first pass sanitized report string
@@ -169,9 +170,13 @@ def sanitize_report_string(text: str) -> str:
     stid, text = text[:4], text[4:]
     # Replace invalid key-value pairs
     for key, rep in STR_REPL.items():
-        text = text.replace(key, rep)
-    text = separate_cloud_layers(text)
-    return stid + text
+        if key in text:
+            text = text.replace(key, rep)
+            sans.log(key, rep)
+    separated = separate_cloud_layers(text)
+    if text != separated:
+        sans.extra_spaces_needed = True
+    return stid + separated
 
 
 def extra_space_exists(str1: str, str2: str) -> bool:
@@ -303,7 +308,7 @@ VIS_PERMUTATIONS.remove("6MPS")
 
 
 def sanitize_report_list(
-    wxdata: List[str], remove_clr_and_skc: bool = True
+    wxdata: List[str], sans: Sanitization, remove_clr_and_skc: bool = True
 ) -> List[str]:
     """Sanitize wxData
 
@@ -314,46 +319,58 @@ def sanitize_report_list(
         ilen = len(item)
         # Remove elements containing only '/'
         if is_unknown(item):
-            wxdata.pop(i)
+            sans.log(wxdata.pop(i))
             continue
         # Remove empty wind /////KT
         if item.endswith("KT") and is_unknown(item[:-2]):
-            wxdata.pop(i)
+            sans.log(wxdata.pop(i))
             continue
         # Remove RE from wx codes, REVCTS -> VCTS
         if ilen in [4, 6] and item.startswith("RE"):
-            wxdata[i] = item[2:]
+            replaced = item[2:]
+            wxdata[i] = replaced
+            sans.log(item, replaced)
         # Fix a slew of easily identifiable conditions where a space does not belong
         elif i and extra_space_exists(wxdata[i - 1], item):
             wxdata[i - 1] += wxdata.pop(i)
+            sans.extra_spaces_found = True
         # Remove spurious elements
         elif item in ITEM_REMV:
-            wxdata.pop(i)
+            sans.log(wxdata.pop(i))
         # Remove 'Sky Clear' from METAR but not TAF
         elif remove_clr_and_skc and item in ["CLR", "SKC"]:
-            wxdata.pop(i)
+            sans.log(wxdata.pop(i))
         # Replace certain items
         elif item in ITEM_REPL:
-            wxdata[i] = ITEM_REPL[item]
+            replaced = ITEM_REPL[item]
+            wxdata[i] = replaced
+            sans.log(item, replaced)
         # Remove amend signifier from start of report ('CCA', 'CCB',etc)
         elif ilen == 3 and item.startswith("CC") and item[2].isalpha():
-            wxdata.pop(i)
+            sans.log(wxdata.pop(i))
         # Fix inconsistent 'P6SM' Ex: TP6SM or 6PSM -> P6SM
         elif ilen > 3 and item[-4:] in VIS_PERMUTATIONS:
             wxdata[i] = "P6SM"
+            sans.log(item, "P6SM")
         # Fix misplaced KT 22022KTG40
         elif ilen == 10 and "KTG" in item and item[:5].isdigit():
-            wxdata[i] = item.replace("KTG", "G") + "KT"
+            replaced = item.replace("KTG", "G") + "KT"
+            wxdata[i] = replaced
+            sans.log(item, replaced)
         # Fix malformed KT Ex: 06012G22TK
         if (
             ilen >= 7
             and (item[:3].isdigit() or item[:3] == "VRB")
             and item[-2:] in ("TK", "GT")
         ):
-            wxdata[i] = item[:-2] + "KT"
+            replaced = item[:-2] + "KT"
+            wxdata[i] = replaced
+            sans.log(item, replaced)
         # Fix gust double G Ex: 360G17G32KT
         elif ilen > 10 and item.endswith("KT") and item[3] == "G":
-            wxdata[i] = item[:3] + item[4:]
+            replaced = item[:3] + item[4:]
+            wxdata[i] = replaced
+            sans.log(item, replaced)
         # Fix leading character mistypes in wind
         elif (
             ilen > 7
@@ -364,10 +381,13 @@ def sanitize_report_list(
         ):
             while item and not item[0].isdigit() and not item.startswith("VRB"):
                 item = item[1:]
+            sans.log(wxdata[i], item)
             wxdata[i] = item
         # Fix non-G gust Ex: 14010-15KT
         elif ilen == 10 and item.endswith("KT") and item[5] != "G":
-            wxdata[i] = item[:5] + "G" + item[6:]
+            replaced = item[:5] + "G" + item[6:]
+            wxdata[i] = replaced
+            sans.log(item, replaced)
         # Fix leading digits on VRB wind Ex: 2VRB02KT
         elif (
             ilen > 7
@@ -378,6 +398,7 @@ def sanitize_report_list(
         ):
             while item[0].isdigit():
                 item = item[1:]
+            sans.log(wxdata[i], item)
             wxdata[i] = item
         # Fix wind T
         elif not item.endswith("KT") and (
@@ -396,7 +417,9 @@ def sanitize_report_list(
                 and (item[:5].isdigit() or item.startswith("VRB"))
             )
         ):
-            wxdata[i] = item[:-1] + "KT"
+            replaced = item[:-1] + "KT"
+            wxdata[i] = replaced
+            sans.log(item, replaced)
         # Fix joined TX-TN
         elif ilen > 16 and len(item.split("/")) == 3:
             if item.startswith("TX") and "TN" not in item:
@@ -407,18 +430,26 @@ def sanitize_report_list(
                 tx_index = item.find("TX")
                 wxdata.insert(i + 1, item[:tx_index])
                 wxdata[i] = item[tx_index:]
+            sans.log(item, f"{wxdata[i]} {wxdata[i+1]}")
         # Fix situations where a space is missing
         index = extra_space_needed(item)
         if index:
             wxdata.insert(i + 1, item[index:])
             wxdata[i] = item[:index]
+            sans.extra_spaces_needed = True
     # Check for wind sanitization
     for i, item in enumerate(wxdata):
         if is_variable_wind_direction(item):
-            wxdata[i] = item[:7]
+            replaced = item[:7]
+            wxdata[i] = replaced
+            sans.log(item, replaced)
             continue
         possible_wind = sanitize_wind(item)
         if is_wind(possible_wind):
+            if item != possible_wind:
+                sans.log(item, possible_wind)
             wxdata[i] = possible_wind
-    wxdata = dedupe(wxdata, only_neighbors=True)
-    return wxdata
+    deduped = dedupe(wxdata, only_neighbors=True)
+    if len(deduped) != len(wxdata):
+        sans.duplicates_found = True
+    return deduped

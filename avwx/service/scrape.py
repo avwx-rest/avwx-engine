@@ -51,9 +51,7 @@ class ScrapeService(Service, CallsHTTP):  # pylint: disable=too-few-public-metho
         """Returns request headers"""
         return {}
 
-    def _post_data(  # pylint: disable=no-self-use
-        self, station: str  # pylint: disable=unused-argument
-    ) -> dict:
+    def _post_data(self, station: str) -> dict:  # pylint: disable=unused-argument
         """Returns the POST form/data payload"""
         return {}
 

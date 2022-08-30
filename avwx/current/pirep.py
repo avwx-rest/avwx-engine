@@ -24,6 +24,7 @@ from avwx.structs import (
     Location,
     Number,
     PirepData,
+    Sanitization,
     Timestamp,
     Turbulence,
     Units,
@@ -232,7 +233,7 @@ def _wx(item: str) -> Tuple[List[Code], Optional[Number], List[str]]:
     return wx_codes, flight_visibility, other
 
 
-def _sanitize_report_list(data: List[str]) -> List[str]:
+def _sanitize_report_list(data: List[str], sans: Sanitization) -> List[str]:
     """Fixes report elements based on neighbor values"""
     for i, item in reversed(list(enumerate(data))):
         # Fix spaced cloud top Ex: BKN030 TOP045   BASE020 TOPS074
@@ -244,27 +245,35 @@ def _sanitize_report_list(data: List[str]) -> List[str]:
             and len(data[i - 1]) >= 6
             and (data[i - 1][:3] in CLOUD_LIST or data[i - 1].startswith("BASE"))
         ):
+            key = f"{data[i-1]} {item}"
             data[i - 1] += "-" + data.pop(i)
+            sans.log(key, data[i - 1])
         # Fix separated clouds Ex: BASES OVC 049 TOPS 055
         elif item in CLOUD_LIST and i + 1 < len(data) and data[i + 1].isdigit():
             data[i] = item + data.pop(i + 1)
-    wxdata = core.dedupe(data, only_neighbors=True)
-    return wxdata
+            sans.extra_spaces_found = True
+    deduped = core.dedupe(data, only_neighbors=True)
+    if len(data) != len(deduped):
+        sans.duplicates_found = True
+    return deduped
 
 
-def sanitize(report: str) -> str:
+def sanitize(report: str) -> Tuple[str, Sanitization]:
     """Returns a sanitized report ready for parsing"""
-    clean = sanitization.sanitize_report_string(report)
-    data = _sanitize_report_list(clean.split())
-    return " ".join(data)
+    sans = Sanitization()
+    clean = sanitization.sanitize_report_string(report, sans)
+    data = _sanitize_report_list(clean.split(), sans)
+    return " ".join(data), sans
 
 
-def parse(report: str, issued: Optional[date] = None) -> Optional[PirepData]:
+def parse(
+    report: str, issued: Optional[date] = None
+) -> Tuple[Optional[PirepData], Optional[Sanitization]]:
     """Returns a PirepData object based on the given report"""
     # pylint: disable=too-many-locals,too-many-branches
     if not report:
-        return None
-    sanitized = sanitize(report)
+        return None, None
+    sanitized, sans = sanitize(report)
     data = sanitized.split("/")
     station, report_type = _root(data.pop(0).strip())
     time, location, altitude, aircraft = None, None, None, None
@@ -295,23 +304,26 @@ def parse(report: str, issued: Optional[date] = None) -> Optional[PirepData]:
             remarks = _remarks(item)
         elif tag == "WX":
             wx_codes, flight_visibility, other = _wx(item)
-    return PirepData(
-        aircraft=aircraft,
-        altitude=altitude,
-        clouds=clouds,
-        flight_visibility=flight_visibility,
-        icing=icing,
-        location=location,
-        other=other or [],
-        raw=report,
-        remarks=remarks,
-        sanitized=sanitized,
-        station=station,
-        temperature=temperature,
-        time=time,
-        turbulence=turbulence,
-        type=report_type,
-        wx_codes=wx_codes or [],
+    return (
+        PirepData(
+            aircraft=aircraft,
+            altitude=altitude,
+            clouds=clouds,
+            flight_visibility=flight_visibility,
+            icing=icing,
+            location=location,
+            other=other or [],
+            raw=report,
+            remarks=remarks,
+            sanitized=sanitized,
+            station=station,
+            temperature=temperature,
+            time=time,
+            turbulence=turbulence,
+            type=report_type,
+            wx_codes=wx_codes or [],
+        ),
+        sans,
     )
 
 
@@ -319,6 +331,7 @@ class Pireps(Reports):
     """Class to handle pilot report data"""
 
     data: Optional[List[Optional[PirepData]]] = None  # type: ignore
+    sanitization: Optional[List[Optional[Sanitization]]] = None  # type: ignore
 
     def __init__(self, code: Optional[str] = None, coord: Optional[Coord] = None):
         super().__init__(code, coord)
@@ -330,23 +343,27 @@ class Pireps(Reports):
         return [r for r in reports if not r.startswith("ARP")]
 
     async def _post_update(self) -> None:
-        self.data = []
+        self.data, self.sanitization = [], []
         if self.raw is None:
             return
         for report in self.raw:
             try:
-                self.data.append(parse(report, issued=self.issued))
+                data, sans = parse(report, issued=self.issued)
+                self.data.append(data)
+                self.sanitization.append(sans)
             except Exception as exc:  # pylint: disable=broad-except
                 exceptions.exception_intercept(exc, raw=report)  # type: ignore
 
     def _post_parse(self) -> None:
-        self.data = []
+        self.data, self.sanitization = [], []
         if self.raw is None:
             return
         for report in self.raw:
-            self.data.append(parse(report, issued=self.issued))
+            data, sans = parse(report, issued=self.issued)
+            self.data.append(data)
+            self.sanitization.append(sans)
 
     @staticmethod
     def sanitize(report: str) -> str:
         """Sanitizes a PIREP string"""
-        return sanitize(report)
+        return sanitize(report)[0]

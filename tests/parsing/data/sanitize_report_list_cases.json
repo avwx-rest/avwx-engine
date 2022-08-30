@@ -1,0 +1,119 @@
+[
+    {
+        "report": "KJFK AUTO 123456Z ////// KT 10SM 20/10",
+        "fixed": "KJFK 123456Z 10SM 20/10",
+        "removed": ["AUTO", "//////", "KT"],
+        "replaced": {},
+        "duplicates": false,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": false
+    },
+    {
+        "report": "METAR EGLL CALM RETS 6SPM CLR Q 1000",
+        "fixed": "EGLL 00000KT TS P6SM Q1000",
+        "removed": ["METAR", "CLR"],
+        "replaced": {"6SPM": "P6SM", "CALM": "00000KT", "RETS": "TS"},
+        "duplicates": false,
+        "extra_spaces_found": true,
+        "extra_spaces_needed": false
+    },
+    {
+        "report": "TLPL 111200Z 111200Z11020KT Q1015",
+        "fixed": "TLPL 111200Z 11020KT Q1015",
+        "removed": [],
+        "replaced": {},
+        "duplicates": true,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": true
+    },
+    {
+        "report": "SECU 151200Z 151200Z18002KT Q1027",
+        "fixed": "SECU 151200Z 18002KT Q1027",
+        "removed": [],
+        "replaced": {},
+        "duplicates": true,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": true
+    },
+    {
+        "report": "OAKB 211230Z 360G17G32KT Q1011",
+        "fixed": "OAKB 211230Z 36017G32KT Q1011",
+        "removed": [],
+        "replaced": {"360G17G32KT": "36017G32KT"},
+        "duplicates": false,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": false
+    },
+    {
+        "report": "MHLC 090024Z 06012G22TK 5000",
+        "fixed": "MHLC 090024Z 06012G22KT 5000",
+        "removed": [],
+        "replaced": {"06012G22TK": "06012G22KT"},
+        "duplicates": false,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": false
+    },
+    {
+        "report": "SKCL 211600Z 211600ZVRB04KT A3010",
+        "fixed": "SKCL 211600Z VRB04KT A3010",
+        "removed": [],
+        "replaced": {},
+        "duplicates": true,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": true
+    },
+    {
+        "report": "METAR VABO 211600Z VAB04KT A3010",
+        "fixed": "VABO 211600Z VRB04KT A3010",
+        "removed": ["METAR"],
+        "replaced": {"VAB04KT": "VRB04KT"},
+        "duplicates": false,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": false
+    },
+    {
+        "report": "SVMG 072200Z //////KT 9999 FEW010 XX/XX Q1012",
+        "fixed": "SVMG 072200Z 9999 FEW010 Q1012",
+        "removed": ["//////KT", "XX/XX"],
+        "replaced": {},
+        "duplicates": false,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": false
+    },
+    {
+        "report": "AYPY 210600Z 15015GT20KT Q1006",
+        "fixed": "AYPY 210600Z 15015G20KT Q1006",
+        "removed": [],
+        "replaced": {"15015GT20KT": "15015G20KT"},
+        "duplicates": false,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": false
+    },
+    {
+        "report": "KJFK 1 1 1 1 1 1 2 1",
+        "fixed": "KJFK 1 2 1",
+        "removed": [],
+        "replaced": {},
+        "duplicates": true,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": false
+    },
+    {
+        "report": "MPSM VRB10G19MPSM Q1001",
+        "fixed": "MPSM VRB10G19MPS Q1001",
+        "removed": [],
+        "replaced": {"VRB10G19MPSM": "VRB10G19MPS"},
+        "duplicates": false,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": false
+    },
+    {
+        "report": "ENBO 26003KT 200V300KT 8000",
+        "fixed": "ENBO 26003KT 200V300 8000",
+        "removed": [],
+        "replaced": {"200V300KT": "200V300"},
+        "duplicates": false,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": false
+    }
+]

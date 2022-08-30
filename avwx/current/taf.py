@@ -14,7 +14,16 @@ from avwx.parsing.translate.taf import translate_taf
 from avwx.static.core import FLIGHT_RULES, IN_UNITS, NA_UNITS
 from avwx.static.taf import TAF_RMK, TAF_NEWLINE, TAF_NEWLINE_STARTSWITH
 from avwx.station import uses_na_format, valid_station
-from avwx.structs import Cloud, Number, TafData, TafLineData, TafTrans, Timestamp, Units
+from avwx.structs import (
+    Cloud,
+    Number,
+    Sanitization,
+    TafData,
+    TafLineData,
+    TafTrans,
+    Timestamp,
+    Units,
+)
 
 
 LINE_FIXES = {
@@ -36,15 +45,18 @@ LINE_FIXES = {
 }
 
 
-def sanitize_line(txt: str) -> str:
+def sanitize_line(txt: str, sans: Sanitization) -> str:
     """Fixes common mistakes with 'new line' signifiers so that they can be recognized"""
     for key, fix in LINE_FIXES.items():
-        txt = txt.replace(key, fix)
+        if key in txt:
+            txt = txt.replace(key, fix)
+            sans.log(key, fix)
     # Fix when space is missing following new line signifiers
     for item in ["BECMG", "TEMPO"]:
         if item in txt and item + " " not in txt:
             index = txt.find(item) + len(item)
             txt = txt[:index] + " " + txt[index:]
+            sans.extra_spaces_needed = True
     return txt
 
 
@@ -278,17 +290,18 @@ def get_taf_flight_rules(lines: List[TafLineData]) -> List[TafLineData]:
 
 def parse(
     station: str, report: str, issued: Optional[date] = None
-) -> Tuple[Optional[TafData], Optional[Units]]:
+) -> Tuple[Optional[TafData], Optional[Units], Optional[Sanitization]]:
     """Returns TafData and Units dataclasses with parsed data and their associated units"""
     # pylint: disable=too-many-locals
     if not report:
-        return None, None
+        return None, None, None
     valid_station(station)
     while len(report) > 3 and report[:4] in ("TAF ", "AMD ", "COR "):
         report = report[4:]
     start_time: Optional[Timestamp] = None
     end_time: Optional[Timestamp] = None
-    sanitized = sanitization.sanitize_report_string(report)
+    sans = Sanitization()
+    sanitized = sanitization.sanitize_report_string(report, sans)
     _, new_station, time = core.get_station_and_time(sanitized[:20].split())
     if new_station is not None:
         station = new_station
@@ -303,7 +316,7 @@ def parse(
     sanitized, remarks = get_taf_remarks(sanitized)
     # Split and parse each line
     lines = split_taf(sanitized)
-    parsed_lines = parse_lines(lines, units, issued)
+    parsed_lines = parse_lines(lines, units, sans, issued)
     # Perform additional info extract and corrections
     max_temp: Optional[str] = None
     min_temp: Optional[str] = None
@@ -334,8 +347,8 @@ def parse(
             temps,
         ) = get_oceania_temp_and_alt(parsed_lines[-1].other)
     # Convert wx codes
-    for i, line in enumerate(parsed_lines):
-        parsed_lines[i].other, parsed_lines[i].wx_codes = get_wx_codes(line.other)
+    for line in parsed_lines:
+        line.other, line.wx_codes = get_wx_codes(line.other)
     sanitized = " ".join(i for i in (station, time, sanitized) if i)
     struct = TafData(
         raw=report,
@@ -352,18 +365,18 @@ def parse(
         alts=alts,
         temps=temps,
     )
-    return struct, units
+    return struct, units, sans
 
 
 def parse_lines(
-    lines: List[str], units: Units, issued: Optional[date] = None
+    lines: List[str], units: Units, sans: Sanitization, issued: Optional[date] = None
 ) -> List[TafLineData]:
     """Returns a list of parsed line dictionaries"""
     parsed_lines: List[TafLineData] = []
     prob = ""
     while lines:
         raw_line = lines[0].strip()
-        line = sanitize_line(raw_line)
+        line = sanitize_line(raw_line, sans)
         # Remove prob from the beginning of a line
         if line.startswith("PROB"):
             # Add standalone prob to next line
@@ -375,7 +388,7 @@ def parse_lines(
                 prob = line[:6]
                 line = line[6:].strip()
         if line:
-            parsed_line = parse_line(line, units, issued)
+            parsed_line = parse_line(line, units, sans, issued)
             parsed_line.probability = (
                 None if " " in prob else core.make_number(prob[4:])
             )
@@ -422,11 +435,13 @@ def parse_lines(
 #     )
 
 
-def parse_line(line: str, units: Units, issued: Optional[date] = None) -> TafLineData:
+def parse_line(
+    line: str, units: Units, sans: Sanitization, issued: Optional[date] = None
+) -> TafLineData:
     """Parser for the International TAF forcast variant"""
     # pylint: disable=too-many-locals
     data = core.dedupe(line.split())
-    data = sanitization.sanitize_report_list(data, remove_clr_and_skc=False)
+    data = sanitization.sanitize_report_list(data, sans, remove_clr_and_skc=False)
     sanitized = " ".join(data)
     data, report_type, start_time, end_time, transition = get_type_and_times(data)
     data, wind_shear = get_wind_shear(data)
@@ -471,7 +486,9 @@ class Taf(Report):
     async def _post_update(self) -> None:
         if self.code is None or self.raw is None:
             return
-        self.data, self.units = parse(self.code, self.raw, self.issued)
+        self.data, self.units, self.sanitization = parse(
+            self.code, self.raw, self.issued
+        )
         if self.data is None or self.units is None:
             return
         self.translations = translate_taf(self.data, self.units)
@@ -479,7 +496,9 @@ class Taf(Report):
     def _post_parse(self) -> None:
         if self.code is None or self.raw is None:
             return
-        self.data, self.units = parse(self.code, self.raw, self.issued)
+        self.data, self.units, self.sanitization = parse(
+            self.code, self.raw, self.issued
+        )
         if self.data is None or self.units is None:
             return
         self.translations = translate_taf(self.data, self.units)

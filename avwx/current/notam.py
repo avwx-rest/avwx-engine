@@ -115,8 +115,8 @@ def _tz_offset_for(name: Optional[str]) -> Optional[timezone]:
 
 def make_year_timestamp(
     value: str,
-    repr: str,
-    tzname: Optional[str] = None,  # pylint: disable=redefined-builtin
+    repr: str,  # pylint: disable=redefined-builtin
+    tzname: Optional[str] = None,
 ) -> Optional[Timestamp]:
     """Convert NOTAM timestamp which includes year and month"""
     value = value.strip()

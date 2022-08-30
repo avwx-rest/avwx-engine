@@ -206,8 +206,9 @@ class TestPirep(unittest.TestCase):
             "EWR UA /OV SBJ090/010/TM 2108/FL060/TP B738/TB MOD",
             "SMQ UA /OV BWZ/TM 0050/FL280/TP A320/TB MOD",
         ):
-            data = pirep.parse(report)
+            data, sans = pirep.parse(report)
             self.assertIsInstance(data, structs.PirepData)
+            self.assertIsInstance(sans, structs.Sanitization)
             self.assertEqual(data.raw, report)
 
     def test_sanitize(self):
@@ -216,7 +217,9 @@ class TestPirep(unittest.TestCase):
             ("DAB UA /SK BKN030 TOP045", "DAB UA /SK BKN030-TOP045"),
             ("DAB UA /SK BASES OVC 049 TOPS 055", "DAB UA /SK BASES OVC049 TOPS 055"),
         ):
-            self.assertEqual(pirep.sanitize(line), fixed)
+            ret_fixed, sans = pirep.sanitize(line)
+            self.assertEqual(ret_fixed, fixed)
+            self.assertTrue(sans.errors_found)
 
     def test_pirep_ete(self):
         """Performs an end-to-end test of all PIREP JSON files"""

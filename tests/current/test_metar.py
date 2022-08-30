@@ -213,19 +213,24 @@ class TestMetar(BaseTest):
         clean = "KJFK 032151Z VRB08KT FEW034 BKN250 CAVOK RMK TEST"
         remarks = "RMK TEST"
         data = ["KJFK", "032151Z", "VRB08KT", "FEW034", "BKN250", "CAVOK"]
-        ret_clean, ret_remarks, ret_data = metar.sanitize(report)
+        sans = structs.Sanitization(
+            ["METAR", "AUTO", "?"], {"C A V O K": "CAVOK"}, extra_spaces_needed=True
+        )
+        ret_clean, ret_remarks, ret_data, ret_sans = metar.sanitize(report)
         self.assertEqual(clean, ret_clean)
         self.assertEqual(remarks, ret_remarks)
         self.assertEqual(data, ret_data)
+        self.assertEqual(sans, ret_sans)
 
     def test_parse(self):
         """Tests returned structs from the parse function"""
         report = (
             "KJFK 032151Z 16008KT 10SM FEW034 FEW130 BKN250 27/23 A3013 RMK AO2 SLP201"
         )
-        data, units = metar.parse(report[:4], report)
+        data, units, sans = metar.parse(report[:4], report)
         self.assertIsInstance(data, structs.MetarData)
         self.assertIsInstance(units, structs.Units)
+        self.assertIsInstance(sans, structs.Sanitization)
         self.assertEqual(data.raw, report)
 
     def test_metar_ete(self):
@@ -236,9 +241,11 @@ class TestMetar(BaseTest):
             self.assertEqual(station.sanitize(raw), ref["data"]["sanitized"])
             self.assertIsNone(station.last_updated)
             self.assertIsNone(station.issued)
+            self.assertIsNone(station.sanitization)
             self.assertTrue(station.parse(raw, issued=issued))
             self.assertIsInstance(station.last_updated, datetime)
             self.assertEqual(station.issued, issued)
+            self.assertIsInstance(station.sanitization, structs.Sanitization)
             self.assertEqual(asdict(station.data), ref["data"])
             self.assertEqual(asdict(station.translations), ref["translations"])
             self.assertEqual(station.summary, ref["summary"])

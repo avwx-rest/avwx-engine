@@ -66,7 +66,7 @@ class Timestamp:
     dt: Optional[datetime]
 
 
-CodeType = TypeVar("CodeType", bound="Code")
+CodeType = TypeVar("CodeType", bound="Code")  # pylint: disable=invalid-name
 
 
 @dataclass
@@ -552,3 +552,36 @@ class NbeData(ReportData):
 #     severe_storm_24: str
 #     rain_snow_mix: str
 #     snow_amount_24: str
+
+
+@dataclass
+class Sanitization:
+    removed: List[str] = field(default_factory=list)
+    replaced: Dict[str, str] = field(default_factory=dict)
+    duplicates_found: bool = False
+    extra_spaces_found: bool = False
+    extra_spaces_needed: bool = False
+
+    @property
+    def errors_found(self) -> bool:
+        return bool(
+            self.removed
+            or self.replaced
+            or self.duplicates_found
+            or self.extra_spaces_found
+            or self.extra_spaces_needed
+        )
+
+    def log(self, item: str, replacement: Optional[str] = None) -> None:
+        """Log a changed item. Calling without a replacement assumes removal"""
+        item = item.strip()
+        if not item:
+            return
+        if replacement is None:
+            self.removed.insert(0, item)
+            return
+        replacement = replacement.strip()
+        if not replacement:
+            self.removed.insert(0, item)
+        elif item != replacement:
+            self.replaced[item] = replacement

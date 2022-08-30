@@ -26,6 +26,7 @@ AVWX currently supports:
 - TAF
 - PIREP
 - AIRMET / SIGMET
+- NOTAM
 - NBM (NBH, NBS, NBE)
 - GFS (MAV, MEX)
 

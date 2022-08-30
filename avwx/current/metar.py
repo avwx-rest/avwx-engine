@@ -24,6 +24,7 @@ from avwx.structs import (
     Number,
     RemarksData,
     RunwayVisibility,
+    Sanitization,
     Units,
 )
 
@@ -216,34 +217,37 @@ def get_relative_humidity(
     return core.relative_humidity(temp.value, dew.value, units.temperature)
 
 
-def sanitize(report: str) -> Tuple[str, str, List[str]]:
+def sanitize(report: str) -> Tuple[str, str, List[str], Sanitization]:
     """Returns a sanitized report, remarks, and elements ready for parsing"""
-    clean = sanitization.sanitize_report_string(report)
+    sans = Sanitization()
+    clean = sanitization.sanitize_report_string(report, sans)
     data, remark_str = get_remarks(clean)
     data = core.dedupe(data)
-    data = sanitization.sanitize_report_list(data)
+    data = sanitization.sanitize_report_list(data, sans)
     clean = " ".join(data)
     if remark_str:
         clean += " " + remark_str
-    return clean, remark_str, data
+    return clean, remark_str, data, sans
 
 
 def parse(
     station: str, report: str, issued: Optional[date] = None
-) -> Tuple[Optional[MetarData], Optional[Units]]:
+) -> Tuple[Optional[MetarData], Optional[Units], Optional[Sanitization]]:
     """Returns MetarData and Units dataclasses with parsed data and their associated units"""
     valid_station(station)
     if not report:
-        return None, None
+        return None, None, None
     parser = parse_na if uses_na_format(station[:2]) else parse_in
     return parser(report, issued)
 
 
-def parse_na(report: str, issued: Optional[date] = None) -> Tuple[MetarData, Units]:
+def parse_na(
+    report: str, issued: Optional[date] = None
+) -> Tuple[MetarData, Units, Sanitization]:
     """Parser for the North American METAR variant"""
     # pylint: disable=too-many-locals
     units = Units(**NA_UNITS)
-    sanitized, remarks_str, data = sanitize(report)
+    sanitized, remarks_str, data, sans = sanitize(report)
     data, station, time = core.get_station_and_time(data)
     data, runway_visibility = get_runway_visibility(data)
     data, clouds = core.get_clouds(data)
@@ -283,14 +287,16 @@ def parse_na(report: str, issued: Optional[date] = None) -> Tuple[MetarData, Uni
         wind_variable_direction=wind_variable_direction,
         wx_codes=wx_codes,
     )
-    return struct, units
+    return struct, units, sans
 
 
-def parse_in(report: str, issued: Optional[date] = None) -> Tuple[MetarData, Units]:
+def parse_in(
+    report: str, issued: Optional[date] = None
+) -> Tuple[MetarData, Units, Sanitization]:
     """Parser for the International METAR variant"""
     # pylint: disable=too-many-locals
     units = Units(**IN_UNITS)
-    sanitized, remarks_str, data = sanitize(report)
+    sanitized, remarks_str, data, sans = sanitize(report)
     data, station, time = core.get_station_and_time(data)
     data, runway_visibility = get_runway_visibility(data)
     if "CAVOK" not in data:
@@ -336,7 +342,7 @@ def parse_in(report: str, issued: Optional[date] = None) -> Tuple[MetarData, Uni
         wind_variable_direction=wind_variable_direction,
         wx_codes=wx_codes,
     )
-    return struct, units
+    return struct, units, sans
 
 
 class Metar(Report):
@@ -352,7 +358,7 @@ class Metar(Report):
             return
         report = await service.async_fetch(self.code)
         if report is not None:
-            data, units = parse(self.code, report, self.issued)
+            data, units, sans = parse(self.code, report, self.issued)
             if not data or data.time is None or data.time.dt is None:
                 return
             if (
@@ -361,7 +367,7 @@ class Metar(Report):
                 or self.data.time.dt is None
                 or data.time.dt > self.data.time.dt
             ):
-                self.data, self.units = data, units
+                self.data, self.units, self.sanitization = data, units, sans
                 self.source = service.root
 
     @property
@@ -397,7 +403,9 @@ class Metar(Report):
     async def _post_update(self) -> None:
         if self.code is None or self.raw is None:
             return
-        self.data, self.units = parse(self.code, self.raw, self.issued)
+        self.data, self.units, self.sanitization = parse(
+            self.code, self.raw, self.issued
+        )
         if self._should_check_default:
             await self._pull_from_default()
         if self.data is None or self.units is None:
@@ -408,7 +416,9 @@ class Metar(Report):
     def _post_parse(self) -> None:
         if self.code is None or self.raw is None:
             return
-        self.data, self.units = parse(self.code, self.raw, self.issued)
+        self.data, self.units, self.sanitization = parse(
+            self.code, self.raw, self.issued
+        )
         if self.data is None or self.units is None:
             return
         self._calculate_altitudes()
