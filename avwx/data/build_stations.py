@@ -237,7 +237,7 @@ def add_reporting(stations: dict) -> dict:
 
 
 def check_local_icaos() -> None:
-    """Load local ICAO file if available"""
+    """Load local ICAO file if available. Not included in distro"""
     icao_path = _FILE_DIR.parent.parent / "data" / "icaos.json"
     if not icao_path.exists():
         return
