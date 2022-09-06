@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "avwx-engine"
-version = "1.8.3"
+version = "1.8.4"
 description = "Aviation weather report parsing library"
 authors = ["Michael duPont <michael@dupont.dev>"]
 license = "MIT"
