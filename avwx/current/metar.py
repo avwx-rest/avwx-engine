@@ -393,6 +393,8 @@ class Metar(Report):
         if temp is None or temp.value is None or alt is None or alt.value is None:
             return
         elev = self.station.elevation_ft
+        if elev is None:
+            return
         self.data.pressure_altitude = core.pressure_altitude(
             alt.value, elev, self.units.altimeter
         )

@@ -54,10 +54,10 @@ class Station:
 
     # pylint: disable=too-many-instance-attributes
 
-    city: str
+    city: Optional[str]
     country: str
-    elevation_ft: int
-    elevation_m: int
+    elevation_ft: Optional[int]
+    elevation_m: Optional[int]
     gps: Optional[str]
     iata: Optional[str]
     icao: Optional[str]
@@ -68,7 +68,7 @@ class Station:
     note: Optional[str]
     reporting: bool
     runways: List[Runway]
-    state: str
+    state: Optional[str]
     type: str
     website: Optional[str]
     wiki: Optional[str]
