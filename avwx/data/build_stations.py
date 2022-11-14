@@ -45,10 +45,14 @@ _SOURCES = {
     "runways": DATA_ROOT + "runways.csv",
     "stations": "https://www.aviationweather.gov/docs/metar/stations.txt",
     "icaos": "https://raw.githubusercontent.com/avwx-rest/avwx-engine/master/data/icaos.json",
+    "awos": "https://raw.githubusercontent.com/avwx-rest/avwx-engine/master/data/awos.json",
 }
 
 
+# Managed list of official ICAO idents
 ICAO = []
+# Allow-listed AWOS stations not covered by ICAO-GPS codes
+AWOS = []
 
 
 ACCEPTED_STATION_TYPES = [
@@ -76,17 +80,17 @@ def format_coord(coord: str) -> float:
     return neg * float(coord[:-1].strip().replace(" ", "."))
 
 
-def load_icaos() -> None:
-    """Load ICAO ident list"""
+def load_codes() -> None:
+    """Load ident lists"""
     # Global can't assign
-    codes = json.loads(_SOURCE["icaos"])
-    for icao in codes:
-        ICAO.append(icao)
+    for key, out in (("icaos", ICAO), ("awos", AWOS)):
+        for code in json.loads(_SOURCE[key]):
+            out.append(code)
 
 
 def validate_icao(code: str) -> Optional[str]:
     """Validates a given station ident"""
-    if len(code) != 4:
+    if not (len(code) == 4 or code in AWOS):
         return None
     return code.upper()
 
@@ -97,7 +101,7 @@ def get_icao(station: List[str]) -> Optional[str]:
     if gps_code and gps_code in ICAO:
         return gps_code
     ident = validate_icao(station[1])
-    if ident and ident in ICAO:
+    if ident and (ident in ICAO or ident in AWOS):
         return ident
     return gps_code
 
@@ -241,9 +245,15 @@ def check_local_icaos() -> None:
     icao_path = _FILE_DIR.parent.parent / "data" / "icaos.json"
     if not icao_path.exists():
         return
-    pre_length = len(_SOURCE["icaos"])
     _SOURCE["icaos"] = icao_path.open().read().strip()
-    print(f"Local ICAOs found: Pre {pre_length} Post {len(_SOURCE['icaos'])}")
+
+
+def check_local_awos() -> None:
+    """Load local AWOS file if available. Not included in distro"""
+    awos_path = _FILE_DIR.parent.parent / "data" / "awos.json"
+    if not awos_path.exists():
+        return
+    _SOURCE["awos"] = awos_path.open().read().strip()
 
 
 def download_source_files() -> bool:
@@ -276,10 +286,11 @@ def main() -> int:
         LOG.error("Unable to update source files")
         return 1
     check_local_icaos()
+    check_local_awos()
     LOG.info("Cleaning")
     clean_source_files()
     LOG.info("Building")
-    load_icaos()
+    load_codes()
     stations, code_map = build_stations()
     stations = add_missing_stations(stations)
     stations = add_reporting(stations)
@@ -298,5 +309,5 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    LOG.setLevel("info")
+    LOG.setLevel("INFO")
     main()

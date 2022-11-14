@@ -208,6 +208,7 @@ REMARKS_ELEMENTS = {
     "$": "ASOS requires maintenance",
     "AO1": "Automated with no precipitation sensor",
     "AO2": "Automated with precipitation sensor",
+    "ADVISORY": "Advisory only. Do not use for flight planning",
     "BINOVC": "Breaks in Overcast",
     "FZRANO": "Freezing rain information not available",
     "NOSPECI": "No SPECI reports taken",

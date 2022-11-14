@@ -224,7 +224,7 @@ class Notams(Reports):
         self._post_parse()
 
     def _post_parse(self) -> None:
-        self.data = []
+        self.data, units = [], None
         if self.raw is None:
             return
         for report in self.raw:

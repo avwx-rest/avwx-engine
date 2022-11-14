@@ -231,13 +231,18 @@ def sanitize(report: str) -> Tuple[str, str, List[str], Sanitization]:
 
 
 def parse(
-    station: str, report: str, issued: Optional[date] = None
+    station: str,
+    report: str,
+    issued: Optional[date] = None,
+    use_na: Optional[bool] = None,
 ) -> Tuple[Optional[MetarData], Optional[Units], Optional[Sanitization]]:
     """Returns MetarData and Units dataclasses with parsed data and their associated units"""
     valid_station(station)
     if not report:
         return None, None, None
-    parser = parse_na if uses_na_format(station[:2]) else parse_in
+    if use_na is None:
+        use_na = uses_na_format(station[:2])
+    parser = parse_na if use_na else parse_in
     return parser(report, issued)
 
 

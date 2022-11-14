@@ -59,7 +59,7 @@ class TestStationFunctions(unittest.TestCase):
             (30, -82, 10, True, False, 0.3, 6),
             (30, -82, 10, False, False, 0.3, 8),
             (30, -82, 1000, True, True, 0.5, 5),
-            (30, -82, 1000, False, False, 0.5, 39),
+            (30, -82, 1000, False, False, 0.5, 38),
         ):
             stations = station.nearest(*params)
             self.assertEqual(len(stations), count)

@@ -4,14 +4,14 @@ Shared list and metadata
 
 # stdlib
 from functools import lru_cache
-from typing import List
+from typing import List, Optional
 
 # module
 from avwx.exceptions import BadStation
 from avwx.load_utils import LazyLoad
 from avwx.static.core import IN_REGIONS, M_IN_REGIONS, M_NA_REGIONS, NA_REGIONS
 
-__LAST_UPDATED__ = "2022-09-05"
+__LAST_UPDATED__ = "2022-11-14"
 
 # Lazy data loading to speed up import times for unused features
 STATIONS = LazyLoad("stations")
@@ -27,7 +27,7 @@ def station_list(reporting: bool = True) -> List[str]:
     return stations
 
 
-def uses_na_format(station: str) -> bool:
+def uses_na_format(station: str, default: Optional[bool] = None) -> bool:
     """Returns True if the station uses the North American format,
 
     False if the International format
@@ -40,6 +40,8 @@ def uses_na_format(station: str) -> bool:
         return True
     if station[:2] in M_IN_REGIONS:
         return False
+    if default is not None:
+        return default
     raise BadStation("Station doesn't start with a recognized character set")
 
 

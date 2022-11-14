@@ -233,6 +233,16 @@ class TestMetar(BaseTest):
         self.assertIsInstance(sans, structs.Sanitization)
         self.assertEqual(data.raw, report)
 
+    def test_parse_awos(self):
+        """Tests an AWOS weather report. Only used for advisory"""
+        report = "3J0 140347Z AUTO 05003KT 07/02 RMK ADVISORY A01  $"
+        data, units, sans = metar.parse("KJFK", report, use_na=True)
+        self.assertIsInstance(data, structs.MetarData)
+        self.assertIsInstance(units, structs.Units)
+        self.assertIsInstance(sans, structs.Sanitization)
+        self.assertEqual(data.raw, report)
+        self.assertEqual(units.altimeter, "inHg")
+
     def test_metar_ete(self):
         """Performs an end-to-end test of all METAR JSON files"""
         for ref, icao, issued in get_data(__file__, "metar"):

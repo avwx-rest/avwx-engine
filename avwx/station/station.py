@@ -46,6 +46,7 @@ T = TypeVar("T", bound="Station")
 _ICAO = LazyCalc(lambda: {v["icao"]: k for k, v in STATIONS.items() if v["icao"]})
 _IATA = LazyCalc(lambda: {v["iata"]: k for k, v in STATIONS.items() if v["iata"]})
 _GPS = LazyCalc(lambda: {v["gps"]: k for k, v in STATIONS.items() if v["gps"]})
+_LOCAL = LazyCalc(lambda: {v["local"]: k for k, v in STATIONS.items() if v["local"]})
 
 
 @dataclass
@@ -97,6 +98,8 @@ class Station:
             if len(ident) == 3:
                 with suppress(BadStation):
                     return cls.from_iata(ident)
+            with suppress(BadStation):
+                return cls.from_local(ident)
         raise BadStation(f"Could not find station with ident {ident}")
 
     @classmethod
@@ -127,6 +130,16 @@ class Station:
         except (KeyError, AttributeError) as not_found:
             raise BadStation(
                 f"Could not find station with GPS ident {ident}"
+            ) from not_found
+
+    @classmethod
+    def from_local(cls: Type[T], ident: str) -> T:
+        """Load a Station from a local code"""
+        try:
+            return cls._from_code(_LOCAL.value[ident.upper()])
+        except (KeyError, AttributeError) as not_found:
+            raise BadStation(
+                f"Could not find station with local ident {ident}"
             ) from not_found
 
     @classmethod
