@@ -239,7 +239,8 @@ class Notams(Reports):
                 self.data.append(data)
             except Exception as exc:  # pylint: disable=broad-except
                 exceptions.exception_intercept(exc, raw=report)  # type: ignore
-        self.units = units
+        if units:
+            self.units = units
 
     @staticmethod
     def sanitize(report: str) -> str:

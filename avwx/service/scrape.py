@@ -69,6 +69,8 @@ class ScrapeService(Service, CallsHTTP):  # pylint: disable=too-few-public-metho
 class StationScrape(ScrapeService):
     """Service class fetching reports from a station code"""
 
+    default_timeout = 10
+
     def _make_url(self, station: str) -> Tuple[str, dict]:
         """Returns a formatted URL and parameters"""
         raise NotImplementedError()
@@ -103,13 +105,15 @@ class StationScrape(ScrapeService):
     def fetch(
         self,
         station: str,
-        timeout: int = 10,
+        timeout: Optional[int] = None,
     ) -> str:
         """Fetches a report string from the service"""
         return aio.run(self.async_fetch(station, timeout))
 
-    async def async_fetch(self, station: str, timeout: int = 10) -> str:
+    async def async_fetch(self, station: str, timeout: Optional[int] = None) -> str:
         """Asynchronously fetch a report string from the service"""
+        if timeout is None:
+            timeout = self.default_timeout
         valid_station(station)
         url, params = self._make_url(station)
         return await self._fetch(station, url, params, timeout)
@@ -250,6 +254,7 @@ class AMO(StationScrape):
     """Requests data from AMO KMA for Korean stations"""
 
     url = "http://amoapi.kma.go.kr/amoApi/{}"
+    default_timeout = 60
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
         """Returns a formatted URL and parameters"""
@@ -528,7 +533,7 @@ class FAA_NOTAM(ScrapeService):
 
 PREFERRED = {
     "RK": AMO,
-    # "SK": MAC,
+    "SK": MAC,
 }
 BY_COUNTRY = {
     "AU": AUBOM,

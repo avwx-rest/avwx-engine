@@ -69,16 +69,16 @@ class TestNOAA(TestStationScrape):
     stations = ["KJFK", "EGLL", "PHNL"]
 
 
-class TestAMO(TestStationScrape):
+# class TestAMO(TestStationScrape):
 
-    service_class = service.AMO
-    stations = ["RKSI", "RKSS", "RKNY"]
+#     service_class = service.AMO
+#     stations = ["RKSI", "RKSS", "RKNY"]
 
 
-# class TestMAC(TestStationScrape):
+class TestMAC(TestStationScrape):
 
-#     service_class = service.MAC
-#     stations = ["SKBO"]
+    service_class = service.MAC
+    stations = ["SKBO"]
 
 
 class TestAUBOM(TestStationScrape):
@@ -112,7 +112,7 @@ class TestModule(unittest.TestCase):
             (("KJFK", "PHNL"), "US", service.NOAA),
             (("EGLL",), "GB", service.NOAA),
             (("RKSI",), "KR", service.AMO),
-            # (("SKBO", "SKPP"), "CO", service.MAC),
+            (("SKBO", "SKPP"), "CO", service.MAC),
             (("YWOL", "YSSY"), "AU", service.AUBOM),
             (("VAPO", "VEGT"), "IN", service.OLBS),
             # (("ZJQH", "ZYCC", "ZSWZ"), "CN", service.AVT),

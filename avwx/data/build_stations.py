@@ -50,9 +50,9 @@ _SOURCES = {
 
 
 # Managed list of official ICAO idents
-ICAO = []
+ICAO: List[str] = []
 # Allow-listed AWOS stations not covered by ICAO-GPS codes
-AWOS = []
+AWOS: List[str] = []
 
 
 ACCEPTED_STATION_TYPES = [
