@@ -18,6 +18,7 @@ classifiers = [
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
   "License :: OSI Approved :: MIT License",
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed",
@@ -72,7 +73,7 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
-target-version = ["py38", "py39", "py310"]
+target-version = ["py38", "py39", "py310", "py311"]
 include = '\.pyi?$'
 
 [tool.pytest.ini_options]
@@ -92,7 +93,7 @@ omit = [
 ]
 
 [tool.coverage.report]
-fail_under = 87  # increase over time
+fail_under = 86  # increase over time
 exclude_lines = [
     'if TYPE_CHECKING:',
     'pragma: no cover'
