@@ -17,25 +17,25 @@ jobs:
       - name: Gather outdated dependencies
         id: check_for_outdated_dependencies
         run: |
-          body=$(poetry show -o -n)
-          echo "name=\"body::$body\"" >> $GITHUB_OUTPUT
+          body="$(poetry show -o -n)"
+          echo name=body::"$body" >> $GITHUB_OUTPUT
 
       - name: Format PR message
         if: ${{ steps.check_for_outdated_dependencies.outputs.body != 0 }}
         id: get_outdated_dependencies
         shell: bash
         run: |
-          body=$(poetry show -o -n | sed 's/(!)//' | awk 'BEGIN {print "Package","Used","Update"}; {print $1,$2,$3}' | tabulate --header --format github -)
-          body=$(cat <<EOF
+          body="$(poetry show -o -n | sed 's/(!)//' | awk 'BEGIN {print "Package","Used","Update"}; {print $1,$2,$3}' | tabulate --header --format github -)"
+          body="$(cat <<EOF
           The following packages are outdated
 
           $body
           EOF
-          )
+          )"
           body="${body//'%'/'%25'}"
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
-          echo "name=\"body::$body\"" >> $GITHUB_OUTPUT
+          echo name=body::"$body" >> $GITHUB_OUTPUT
 
       - name: Update outdated packages
         if: ${{ steps.check_for_outdated_dependencies.outputs.body != 0 }}
