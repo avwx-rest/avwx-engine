@@ -17,7 +17,10 @@ jobs:
       - name: Update version
         id: updated_version
         shell: bash
-        run: poetry version ${{ github.event.inputs.version }} | version=$(poetry version --short) | echo name=version::"$version" >> $GITHUB_OUTPUT
+        run: |
+          poetry version ${{ github.event.inputs.version }}
+          version=$(poetry version --short)
+          echo "name=version::$version" >> $GITHUB_OUTPUT
       - name: Commit changes
         uses: EndBug/add-and-commit@v7
         with:
