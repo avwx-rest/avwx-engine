@@ -44,8 +44,8 @@ _SOURCES = {
     "airports": DATA_ROOT + "airports.csv",
     "runways": DATA_ROOT + "runways.csv",
     "stations": "https://www.aviationweather.gov/docs/metar/stations.txt",
-    "icaos": "https://raw.githubusercontent.com/avwx-rest/avwx-engine/master/data/icaos.json",
-    "awos": "https://raw.githubusercontent.com/avwx-rest/avwx-engine/master/data/awos.json",
+    "icaos": "https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/data/icaos.json",
+    "awos": "https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/data/awos.json",
 }
 
 

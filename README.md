@@ -110,7 +110,7 @@ mkdocs serve
 Trigger the [Draft release workflow](https://github.com/avwx-rest/avwx-engine/actions/workflows/draft_release.yml) (press _Run workflow_). This will update the changelog & version and create a GitHub release which is in _Draft_ state.
 
 Find the draft release from the
-[GitHub releases](https://github.com/avwx-rest/avwx-engine/releases) and publish it. When a release is published, it'll trigger [release](https://github.com/avwx-rest/avwx-engine/blob/master/.github/workflows/release.yml) workflow which creates PyPI
+[GitHub releases](https://github.com/avwx-rest/avwx-engine/releases) and publish it. When a release is published, it'll trigger [release](https://github.com/avwx-rest/avwx-engine/blob/main/.github/workflows/release.yml) workflow which creates PyPI
  release and deploys updated documentation.
 
 ### Pre-commit
