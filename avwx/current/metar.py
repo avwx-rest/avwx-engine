@@ -64,6 +64,7 @@ def is_runway_visibility(item: str) -> bool:
 
 _RVR_CODES = {
     "M": "less than",
+    "A": "greater than",
     "P": "greater than",
     "U": "increasing",
     "I": "increasing",

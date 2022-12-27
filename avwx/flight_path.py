@@ -63,6 +63,7 @@ def to_coordinates(
     """
     if not values:
         return []
+    values = [v for v in values if v]
     coord = values[0]
     if isinstance(coord, str):
         try:

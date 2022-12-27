@@ -68,7 +68,7 @@ class LazyCalc:
     _value: Optional[Any] = None
 
     def __init__(self, func: Callable):
-        self._func = func  # type: ignore
+        self._func = func
 
     @property
     def value(self) -> Any:

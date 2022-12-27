@@ -9,7 +9,11 @@ Parsing for NOAA NBM forecasts
 # stdlib
 from contextlib import suppress
 from typing import Callable, Dict, List, Optional, Tuple, Union
-from typing_extensions import TypeAlias
+
+try:
+    from typing import TypeAlias
+except ImportError:
+    from typing_extensions import TypeAlias
 
 # module
 from avwx import structs

@@ -585,3 +585,9 @@ class Sanitization:
             self.removed.insert(0, item)
         elif item != replacement:
             self.replaced[item] = replacement
+
+    def log_list(self, before: List[str], after: List[str]) -> None:
+        """Log list differences. Assumes that list length and order haven't changed"""
+        for item, replacement in zip(before, after):
+            if item != replacement:
+                self.log(item, replacement)

@@ -36,6 +36,7 @@ WIND_REPL = {
     "ZKT": "KT",
     "KTKT": "KT",
     "KKT": "KT",
+    "JKT": "KT",
     "KLT": "KT",
     "TKT": "KT",
     "GKT": "KT",
@@ -107,6 +108,8 @@ STR_REPL = {
     "'": "",
     "`": "",
     ".": "",
+    "(": " ",
+    ")": " ",
     "MISSINGKT": "",
     " 0I0": " 090",
     " PROBB": " PROB",
@@ -126,12 +129,15 @@ STR_REPL = {
     "N0SIG": "NOSIG",
     " <1/": " M1/",  # <1/4SM <1/8SM
     "/04SM": "/4SM",
+    "/4SSM": "/4SM",
     "/08SM": "/8SM",
     " /34SM": "3/4SM",
     "SCATTERED": "SCT",
     "BROKEN": "BKN",
     "OVERCAST": "OVC",
 }
+
+FINAL_ITEM_STRIP = "./\\"
 
 
 def separate_cloud_layers(text: str) -> str:
@@ -303,7 +309,7 @@ ITEM_REMV = [
     "CORR",
     "TTF",
 ]
-ITEM_REPL = {"CALM": "00000KT"}
+ITEM_REPL = {"CALM": "00000KT", "A01": "AO1", "A02": "AO2"}
 VIS_PERMUTATIONS = ["".join(p) for p in permutations("P6SM")]
 VIS_PERMUTATIONS.remove("6MPS")
 
@@ -450,7 +456,11 @@ def sanitize_report_list(
             if item != possible_wind:
                 sans.log(item, possible_wind)
             wxdata[i] = possible_wind
-    deduped = dedupe(wxdata, only_neighbors=True)
+    # Strip extra characters before dedupe
+    stripped = [i.strip(FINAL_ITEM_STRIP) for i in wxdata]
+    if wxdata != stripped:
+        sans.log_list(wxdata, stripped)
+    deduped = dedupe(stripped, only_neighbors=True)
     if len(deduped) != len(wxdata):
         sans.duplicates_found = True
     return deduped

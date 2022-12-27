@@ -153,6 +153,7 @@ class TestMetar(BaseTest):
             ("R35L/1000", "35L", ("1000", 1000, "one thousand"), None, None),
             ("R06/M0500", "06", ("M0500", None, "less than five hundred"), None, None),
             ("R33/////", "33", None, None, None),
+            ("R29/A2000", "29", ("A2000", None, "greater than two thousand"), None, None),
             (
                 "R09C/P6000D",
                 "09C",

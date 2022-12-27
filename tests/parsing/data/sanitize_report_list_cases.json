@@ -115,5 +115,14 @@
         "duplicates": false,
         "extra_spaces_found": false,
         "extra_spaces_needed": false
+    },
+    {
+        "report": "KTRK 241545Z 00000KT /1/4SM FZFG",
+        "fixed": "KTRK 241545Z 00000KT 1/4SM FZFG",
+        "removed": [],
+        "replaced": {"/1/4SM": "1/4SM"},
+        "duplicates": false,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": false
     }
 ]

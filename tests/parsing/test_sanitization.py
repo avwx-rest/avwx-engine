@@ -83,7 +83,8 @@ class TestSanitization(BaseTest):
         for case in json.load(case_path.open()):
             line, fixed = case["report"].split(), case["fixed"].split()
             sans = Sanitization()
-            self.assertEqual(sanitization.sanitize_report_list(line, sans), fixed)
+            data = sanitization.sanitize_report_list(line, sans)
+            self.assertEqual(data, fixed)
             self.assertTrue(sans.errors_found)
             self.assertEqual(sans.removed, case["removed"])
             self.assertEqual(sans.replaced, case["replaced"])
