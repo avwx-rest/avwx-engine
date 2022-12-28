@@ -175,6 +175,19 @@ class Station:
         raise BadStation("Station does not have a valid lookup code")
 
     @property
+    def storage_code(self) -> str:
+        """Returns the first unique-ish code from what's available"""
+        if self.icao:
+            return self.icao
+        if self.iata:
+            return self.iata
+        if self.gps:
+            return self.gps
+        if self.local:
+            return self.local
+        raise BadStation("Station does not have any useable codes")
+
+    @property
     def sends_reports(self) -> bool:
         """Returns whether or not a Station likely sends weather reports"""
         return self.reporting is True

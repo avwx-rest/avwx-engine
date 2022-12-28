@@ -76,7 +76,7 @@ class StationTester(Kew):
         stations = []
         for station in avwx.station.meta.STATIONS.values():
             code = station["icao"] or station["gps"]
-            if not station["reporting"] and self.should_test(code):
+            if code and not station["reporting"] and self.should_test(code):
                 stations.append(code)
         random.shuffle(stations)
         for code in stations:

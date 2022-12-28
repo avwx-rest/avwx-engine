@@ -84,6 +84,24 @@ class TestStationFunctions(unittest.TestCase):
 class TestStation(unittest.TestCase):
     """Tests the Station class"""
 
+    def test_storage_code(self):
+        """Tests ID code selection"""
+        stn = station.Station.from_icao("KJFK")
+        stn.icao = "ICAO"
+        stn.iata = "IATA"
+        stn.gps = "GPS"
+        stn.local = "LOCAL"
+        self.assertEqual(stn.storage_code, "ICAO")
+        stn.icao = None
+        self.assertEqual(stn.storage_code, "IATA")
+        stn.iata = None
+        self.assertEqual(stn.storage_code, "GPS")
+        stn.gps = None
+        self.assertEqual(stn.storage_code, "LOCAL")
+        stn.local = None
+        with self.assertRaises(exceptions.BadStation):
+            stn.storage_code
+
     def test_from_icao(self):
         """Tests loading a Station by ICAO ident"""
         for icao, name, city in (
@@ -98,7 +116,7 @@ class TestStation(unittest.TestCase):
             self.assertEqual(icao.upper(), stn.icao)
             self.assertEqual(name, stn.name)
             self.assertEqual(city, stn.city)
-        for bad in ("1234", 1234, None, True, "", "KX07"):
+        for bad in ("1234", 1234, None, True, "", "KX07", "TX35"):
             with self.assertRaises(exceptions.BadStation):
                 station.Station.from_icao(bad)
 
@@ -115,7 +133,7 @@ class TestStation(unittest.TestCase):
             self.assertIsInstance(stn, station.Station)
             self.assertEqual(iata.upper(), stn.iata)
             self.assertEqual(icao, stn.icao)
-        for bad in ("1234", 1234, None, True, "", "KMCO"):
+        for bad in ("1234", 1234, None, True, "", "KMCO", "X35"):
             with self.assertRaises(exceptions.BadStation):
                 station.Station.from_iata(bad)
 
@@ -132,11 +150,11 @@ class TestStation(unittest.TestCase):
             self.assertEqual(gps.upper(), stn.gps)
             self.assertEqual(icao, stn.icao)
             self.assertEqual(name, stn.name)
-        for bad in ("1234", 1234, None, True, "", "KMCO"):
+        for bad in ("1234", 1234, None, True, "", "KX35"):
             with self.assertRaises(exceptions.BadStation):
                 station.Station.from_gps(bad)
 
-    def test_from_gps(self):
+    def test_from_code(self):
         """Tests loading a Station by any code"""
         for code, icao, name in (
             ("KJFK", "KJFK", "John F Kennedy International Airport"),
