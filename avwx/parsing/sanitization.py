@@ -51,6 +51,7 @@ WIND_VRB = (
     "BVR",
     "CRB",
     "ERB",
+    "HRB",
     "NRB",
     "RB0",
     "RRB",
@@ -132,9 +133,12 @@ STR_REPL = {
     "/4SSM": "/4SM",
     "/08SM": "/8SM",
     " /34SM": "3/4SM",
+    " 3/SM": " 3/4SM",
     "SCATTERED": "SCT",
     "BROKEN": "BKN",
     "OVERCAST": "OVC",
+    "P6000F ": "P6000FT ",
+    "P6000FTQ ": "P6000FT ",
 }
 
 FINAL_ITEM_STRIP = "./\\"
@@ -257,6 +261,7 @@ CLOUD_SPACE_PATTERNS = [
         r"M?\d{2}\/M?\d{2}$",  # BKN01826/25
     )
 ]
+RVR_PATTERN = re.compile(r"R\d{2}[RCL]?/\S+")
 
 
 def extra_space_needed(item: str) -> Optional[int]:
@@ -291,6 +296,9 @@ def extra_space_needed(item: str) -> Optional[int]:
     if "TX" in item and "TN" in item and item.endswith("Z") and "/" in item:
         tx_index, tn_index = item.find("TX"), item.find("TN")
         return max(tx_index, tn_index)
+    # Connected RVR elements Ex: R36/1500DR18/P2000
+    if match := RVR_PATTERN.search(item[1:]):
+        return match.start() + 1
     return None
 
 
@@ -306,8 +314,10 @@ ITEM_REMV = [
     "RTD",
     "SPECI",
     "METAR",
+    "TAF",
     "CORR",
     "TTF",
+    "1/SM",
 ]
 ITEM_REPL = {"CALM": "00000KT", "A01": "AO1", "A02": "AO2"}
 VIS_PERMUTATIONS = ["".join(p) for p in permutations("P6SM")]
@@ -427,17 +437,6 @@ def sanitize_report_list(
             replaced = item[:-1] + "KT"
             wxdata[i] = replaced
             sans.log(item, replaced)
-        # Fix joined TX-TN
-        elif ilen > 16 and len(item.split("/")) == 3:
-            if item.startswith("TX") and "TN" not in item:
-                tn_index = item.find("TN")
-                wxdata.insert(i + 1, item[:tn_index])
-                wxdata[i] = item[tn_index:]
-            elif item.startswith("TN") and item.find("TX") != -1:
-                tx_index = item.find("TX")
-                wxdata.insert(i + 1, item[:tx_index])
-                wxdata[i] = item[tx_index:]
-            sans.log(item, f"{wxdata[i]} {wxdata[i+1]}")
         # Fix situations where a space is missing
         index = extra_space_needed(item)
         if index:

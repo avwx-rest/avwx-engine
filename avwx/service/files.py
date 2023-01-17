@@ -27,6 +27,9 @@ _TEMP_DIR = tempfile.TemporaryDirectory()  # pylint: disable=consider-using-with
 _TEMP = Path(_TEMP_DIR.name)
 
 
+HTTPX_EXCEPTIONS = (httpx.ConnectTimeout, httpx.ReadTimeout, httpx.RemoteProtocolError)
+
+
 @atexit.register
 def _cleanup() -> None:
     """Deletes temporary files and directory at Python exit"""
@@ -101,7 +104,7 @@ class FileService(Service):
                     resp = await client.get(url)
                     if resp.status_code == 200:
                         break
-                except (httpx.ConnectTimeout, httpx.ReadTimeout):
+                except HTTPX_EXCEPTIONS:
                     return False
                 except gaierror:
                     return False

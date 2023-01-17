@@ -112,6 +112,7 @@ def wind(  # pylint: disable=too-many-arguments
 
 VIS_REPR = {
     "P6": "Greater than 6sm ( >10km )",
+    "M1/2": "Less than .5sm ( <0.8km )",
     "M1/4": "Less than .25sm ( <0.4km )",
     "M1/8": "Less than .125sm ( <0.2km )",
 }

@@ -59,6 +59,7 @@ def is_runway_visibility(item: str) -> bool:
         and item[0] == "R"
         and (item[3] == "/" or item[4] == "/")
         and item[1:3].isdigit()
+        and "CLRD" not in item  # R28/CLRD70 Runway State
     )
 
 
@@ -69,12 +70,15 @@ _RVR_CODES = {
     "U": "increasing",
     "I": "increasing",
     "D": "decreasing",
+    "F": "decreasing",
     "N": "no change",
     "V": "variable",
 }
 
 
 def _parse_rvr_number(value: str) -> Optional[Number]:
+    if not value:
+        return None
     raw, prefix = value, None
     with suppress(KeyError):
         prefix = _RVR_CODES[value[0]]

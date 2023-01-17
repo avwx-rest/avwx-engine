@@ -25,6 +25,7 @@ class NOAA_Bulk(Service, CallsHTTP):
 
     @staticmethod
     def _clean_report(report: str) -> str:
+        report = report.strip(" '\"")
         for remove in (r"\x07", "\x07"):
             report = report.replace(remove, " ")
         return " ".join(report.split())

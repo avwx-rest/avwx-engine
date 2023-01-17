@@ -18,6 +18,23 @@ from avwx.exceptions import SourceError
 _VALUE_ERROR = "'{}' is not a valid report type for {}. Expected {}"
 
 
+TIMEOUT_ERRORS = (
+    httpx.ConnectTimeout,
+    httpx.ReadTimeout,
+    httpx.WriteTimeout,
+    httpx.PoolTimeout,
+    httpcore.ReadTimeout,
+    httpcore.WriteTimeout,
+    httpcore.PoolTimeout,
+)
+CONNECTION_ERRORS = (gaierror, httpcore.ConnectError, httpx.ConnectError)
+NETWORK_ERRORS = (
+    httpcore.ReadError,
+    httpcore.NetworkError,
+    httpcore.RemoteProtocolError,
+)
+
+
 class Service:
     """Base Service class for fetching reports"""
 
@@ -75,25 +92,13 @@ class CallsHTTP:
                         raise SourceError(f"{name} server returned {resp.status_code}")
                 else:
                     raise SourceError(f"{name} server returned {resp.status_code}")
-        except (
-            httpx.ConnectTimeout,
-            httpx.ReadTimeout,
-            httpx.WriteTimeout,
-            httpx.PoolTimeout,
-            httpcore.ReadTimeout,
-            httpcore.WriteTimeout,
-            httpcore.PoolTimeout,
-        ) as timeout_error:
+        except TIMEOUT_ERRORS as timeout_error:
             raise TimeoutError(f"Timeout from {name} server") from timeout_error
-        except (gaierror, httpcore.ConnectError, httpx.ConnectError) as connect_error:
+        except CONNECTION_ERRORS as connect_error:
             raise ConnectionError(
                 f"Unable to connect to {name} server"
             ) from connect_error
-        except (
-            httpcore.ReadError,
-            httpcore.NetworkError,
-            httpcore.RemoteProtocolError,
-        ) as network_error:
+        except NETWORK_ERRORS as network_error:
             raise ConnectionError(
                 f"Unable to read data from {name} server"
             ) from network_error

@@ -124,5 +124,32 @@
         "duplicates": false,
         "extra_spaces_found": false,
         "extra_spaces_needed": false
+    },
+    {
+        "report": "KTRK 241545Z RMK A02",
+        "fixed": "KTRK 241545Z RMK AO2",
+        "removed": [],
+        "replaced": {"A02": "AO2"},
+        "duplicates": false,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": false
+    },
+    {
+        "report": "PHKO 0412/0512 09005KT 9999 BKN013 TX33/0419ZTN23/0408Z",
+        "fixed": "PHKO 0412/0512 09005KT 9999 BKN013 TX33/0419Z TN23/0408Z",
+        "removed": [],
+        "replaced": {},
+        "duplicates": false,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": true
+    },
+    {
+        "report": "OPLA 081625Z 00000KT 1200 R36/1500DR18/P2000 BR",
+        "fixed": "OPLA 081625Z 00000KT 1200 R36/1500D R18/P2000 BR",
+        "removed": [],
+        "replaced": {},
+        "duplicates": false,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": true
     }
 ]

@@ -66,8 +66,10 @@ class TestSanitization(BaseTest):
 
     def test_sanitize_report_string(self):
         """Tests a function which fixes common mistakes while the report is a string"""
-        line = "KJFK 36010 ? TSFEW004SCT012FEW///CBBKN080 C A V O K A2992"
-        fixed = "KJFK 36010   TS FEW004 SCT012 FEW///CB BKN080 CAVOK A2992"
+        line = (
+            "KJFK 36010 ? TSFEW004SCT012FEW///CBBKN080 R02L/4000VP6000F C A V O K A2992"
+        )
+        fixed = "KJFK 36010   TS FEW004 SCT012 FEW///CB BKN080 R02L/4000VP6000FT CAVOK A2992"
         sans = Sanitization()
         self.assertEqual(sanitization.sanitize_report_string(line, sans), fixed)
         self.assertTrue(sans.errors_found)
@@ -75,7 +77,13 @@ class TestSanitization(BaseTest):
         self.assertFalse(sans.duplicates_found)
         self.assertFalse(sans.extra_spaces_found)
         self.assertEqual(sans.removed, ["?"])
-        self.assertEqual(sans.replaced, {"C A V O K": "CAVOK"})
+        self.assertEqual(
+            sans.replaced,
+            {
+                "C A V O K": "CAVOK",
+                "P6000F": "P6000FT",
+            },
+        )
 
     def test_sanitize_report_list(self):
         """Tests a function which fixes common mistakes while the report is a list"""
