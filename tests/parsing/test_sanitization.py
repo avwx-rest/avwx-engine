@@ -55,6 +55,7 @@ class TestSanitization(BaseTest):
             ("VCSHINTER", 4),
             ("151200Z18002KT", 7),
             ("2301/2303VRB02KT", 9),
+            ("2902/2904VRB03KT", 9),
             ("33015G25KT4500", 10),
             ("211600ZVRB04KT", 7),
             ("PROB30", None),

@@ -144,10 +144,10 @@
         "extra_spaces_needed": true
     },
     {
-        "report": "OPLA 081625Z 00000KT 1200 R36/1500DR18/P2000 BR",
-        "fixed": "OPLA 081625Z 00000KT 1200 R36/1500D R18/P2000 BR",
+        "report": "OPLA 081625Z 00000KT 1200 R36/1500DR18/P2000 R02L/4000VP6000F BR",
+        "fixed": "OPLA 081625Z 00000KT 1200 R36/1500D R18/P2000 R02L/4000VP6000FT BR",
         "removed": [],
-        "replaced": {},
+        "replaced": {"R02L/4000VP6000F": "R02L/4000VP6000FT"},
         "duplicates": false,
         "extra_spaces_found": false,
         "extra_spaces_needed": true

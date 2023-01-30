@@ -195,6 +195,7 @@ class TestCore(BaseTest):
             ),
             (["VRB10MPS", "1"], "m/s", ("VRB",), ("10", 10), (None,), []),
             (["VRB20G30KMH", "1"], "km/h", ("VRB",), ("20", 20), ("30", 30), []),
+            (["03015G21MPH", "1"], "mi/h", ("030", 30), ("15", 15), ("21", 21), []),
             (["16006GP99KT", "1"], "kt", ("160", 160), ("06", 6), ("P99", None), []),
         ):
             units = structs.Units(**static.core.NA_UNITS)

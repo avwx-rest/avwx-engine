@@ -229,7 +229,7 @@ class Station:
 
 def _make_coords() -> List[Tuple]:
     return [
-        (s["icao"] or s["gps"], s["latitude"], s["longitude"])
+        (s["icao"] or s["gps"] or s["iata"] or s["local"], s["latitude"], s["longitude"])
         for s in STATIONS.values()
     ]
 
@@ -286,6 +286,8 @@ def _query_filter(
         if not nodes:
             return stations
         for code, dist in nodes:
+            if not code:
+                continue
             stn = Station.from_code(code)
             if station_filter(stn, is_airport, reporting):
                 stations.append((stn, dist))

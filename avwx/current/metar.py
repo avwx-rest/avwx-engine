@@ -52,17 +52,6 @@ def get_remarks(txt: str) -> Tuple[List[str], str]:
     return txt.strip().split(), ""
 
 
-def is_runway_visibility(item: str) -> bool:
-    """Returns True if the item is a runway visibility range string"""
-    return (
-        len(item) > 4
-        and item[0] == "R"
-        and (item[3] == "/" or item[4] == "/")
-        and item[1:3].isdigit()
-        and "CLRD" not in item  # R28/CLRD70 Runway State
-    )
-
-
 _RVR_CODES = {
     "M": "less than",
     "A": "greater than",
@@ -119,7 +108,7 @@ def get_runway_visibility(data: List[str]) -> Tuple[List[str], List[RunwayVisibi
     """Returns the report list and the remove runway visibility list"""
     runway_vis = []
     for i, item in reversed(list(enumerate(data))):
-        if is_runway_visibility(item):
+        if core.is_runway_visibility(item):
             runway_vis.append(parse_runway_visibility(data.pop(i)))
     runway_vis.sort(key=lambda x: x.runway)
     return data, runway_vis

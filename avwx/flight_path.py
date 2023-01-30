@@ -54,18 +54,14 @@ def _best_coord(
     return _closest(up_next, current)  # type: ignore
 
 
-def to_coordinates(
+def _to_coordinates(
     values: List[Union[Coord, str]], last_value: Optional[QCoord] = None
 ) -> List[Coord]:
-    """Convert any known idents found in a flight path into coordinates
-
-    Prefers Coord > ICAO > Navaid > IATA / GPS
-    """
     if not values:
         return []
-    values = [v for v in values if v]
     coord = values[0]
     if isinstance(coord, str):
+        coord = coord.strip()
         try:
             value = coord
             coord = Station.from_icao(coord).coord
@@ -81,8 +77,27 @@ def to_coordinates(
                 if len(coords) == 1:
                     coord = coords[0]
                 else:
-                    new_coords = to_coordinates(values[1:], coords)
+                    new_coords = _to_coordinates(values[1:], coords)
                     new_coord = new_coords[0] if new_coords else None
                     coord = _best_coord(last_value, coords, new_coord)
                     return [coord] + new_coords
-    return [coord] + to_coordinates(values[1:], coord)
+    return [coord] + _to_coordinates(values[1:], coord)
+
+
+def to_coordinates(values: List[Union[Coord, str]]) -> List[Coord]:
+    """Convert any known idents found in a flight path into coordinates
+
+    Prefers Coord > ICAO > Navaid > IATA / GPS
+    """
+    if not values:
+        return []
+    cleaned = []
+    for value in values:
+        if not value:
+            continue
+        if isinstance(value, str):
+            value = value.strip()
+            if not value:
+                continue
+        cleaned.append(value)
+    return _to_coordinates(values)

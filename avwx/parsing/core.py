@@ -378,6 +378,9 @@ def get_wind(
             elif item.endswith("KMH"):
                 units.wind_speed = "km/h"
                 item = item.replace("KMH", "")
+            elif item.endswith("MPH"):
+                units.wind_speed = "mi/h"
+                item = item.replace("MPH", "")
             direction, speed, gust = separate_wind(item)
             data.pop(0)
     # Separated Gust
@@ -688,3 +691,14 @@ def make_timestamp(
         return None
     date_obj = parse_date(timestamp, time_only=time_only, target=target_date)
     return Timestamp(timestamp, date_obj)
+
+
+def is_runway_visibility(item: str) -> bool:
+    """Returns True if the item is a runway visibility range string"""
+    return (
+        len(item) > 4
+        and item[0] == "R"
+        and (item[3] == "/" or item[4] == "/")
+        and item[1:3].isdigit()
+        and "CLRD" not in item  # R28/CLRD70 Runway State
+    )

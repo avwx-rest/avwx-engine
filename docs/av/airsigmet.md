@@ -8,7 +8,7 @@ A SIGMET (Significant Meteorological Information) is a weather advisory for the 
 An AIRMET (Airman's Meteorological Information) is a weather advisory for smaller aircraft or VFR navigation. They are divided into:
 
 - Sierra - IFR conditions like low ceilings and mountain obscuration
-- Tango - turbulance and high surface winds
+- Tango - turbulence and high surface winds
 - Zulu - icing and freezing levels
 
 Both types share a similar report format and therefore are combined into a single handling class. The `Bulletin` and weather type can be used to classify each as a SIGMET or AIRMET for filtering purposes.

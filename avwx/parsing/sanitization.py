@@ -12,6 +12,7 @@ from typing import List, Optional
 # module
 from avwx.parsing.core import (
     dedupe,
+    is_runway_visibility,
     is_timerange,
     is_timestamp,
     is_unknown,
@@ -45,40 +46,7 @@ WIND_REPL = {
     "MPSM": "MPS",
 }
 
-WIND_VRB = (
-    "BRB",
-    "BRV",
-    "BVR",
-    "CRB",
-    "ERB",
-    "HRB",
-    "NRB",
-    "RB0",
-    "RRB",
-    "V0",
-    "VAB",
-    "VAR",
-    "VB0",
-    "VBB",
-    "VBR",
-    "VEB",
-    "VER",
-    "VFB",
-    "VFR",
-    "VGB",
-    "VKB",
-    "VR0",
-    "VRBL",
-    "VRBN",
-    "VRC",
-    "VRE",
-    "VRG",
-    "VRN",
-    "VRR",
-    "VRV",
-    "VTB",
-    "WBB",
-)
+WIND_VRB = ("V0", "WBB")
 
 
 def sanitize_wind(text: str) -> str:
@@ -87,11 +55,19 @@ def sanitize_wind(text: str) -> str:
         text = text.replace(rep, "")
     for key, rep in WIND_REPL.items():
         text = text.replace(key, rep)
-    for key in WIND_VRB:  # NOTE: profiled slow, revisit
-        if text.startswith(key):
-            zero = "0" if key[-1] == "0" else ""
-            text = text.replace(key, "VRB" + zero)
-            break
+    if len(text) > 4 and not (text.startswith("VRB") or text[:3].isdigit()):
+        # Catches majority of cases where at least two valid letters are found
+        if len(set(text[:4]).intersection({"V", "R", "B"})) > 1:
+            for i, char in enumerate(text):
+                if char.isdigit():
+                    text = "VRB" + text[i:]
+                    break
+        else:
+            for key in WIND_VRB:
+                if text.startswith(key):
+                    zero = "0" if key[-1] == "0" else ""
+                    text = text.replace(key, "VRB" + zero)
+                    break
     return text
 
 
@@ -120,6 +96,8 @@ STR_REPL = {
     "NOSIGKT ": "KT NOSIG ",
     "KNOSIGT ": "KT NOSIG ",
     " TMM": " TNM",
+    " TMN": " TNM",
+    " TXN": " TXM",
     " TNTN": " TN",
     " TXTX": " TX",
     " TXX": " TX",
@@ -372,6 +350,11 @@ def sanitize_report_list(
         # Fix misplaced KT 22022KTG40
         elif ilen == 10 and "KTG" in item and item[:5].isdigit():
             replaced = item.replace("KTG", "G") + "KT"
+            wxdata[i] = replaced
+            sans.log(item, replaced)
+        # Fix cut-short RVR unit
+        elif is_runway_visibility(item) and item.endswith("F"):
+            replaced = item + "T"
             wxdata[i] = replaced
             sans.log(item, replaced)
         # Fix malformed KT Ex: 06012G22TK
