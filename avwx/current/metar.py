@@ -60,6 +60,7 @@ _RVR_CODES = {
     "I": "increasing",
     "D": "decreasing",
     "F": "decreasing",
+    "R": "decreasing",
     "N": "no change",
     "V": "variable",
 }

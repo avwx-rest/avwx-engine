@@ -199,6 +199,7 @@ SPECIAL_NUMBERS = {
     "VRB": (None, "variable"),
     "CLM": (0, "calm"),
     "SFC": (0, "surface"),
+    "GND": (0, "ground"),
     "STNR": (0, "stationary"),
     "LTL": (0, "little"),
     "FRZLVL": (None, "freezing level"),
