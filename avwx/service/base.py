@@ -43,13 +43,12 @@ class Service:
     _valid_types: Tuple[str, ...] = tuple()
 
     def __init__(self, report_type: str):
-        if self._valid_types:
-            if report_type not in self._valid_types:
-                raise ValueError(
-                    _VALUE_ERROR.format(
-                        report_type, self.__class__.__name__, self._valid_types
-                    )
+        if self._valid_types and report_type not in self._valid_types:
+            raise ValueError(
+                _VALUE_ERROR.format(
+                    report_type, self.__class__.__name__, self._valid_types
                 )
+            )
         self.report_type = report_type
 
     @property

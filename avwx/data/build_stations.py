@@ -41,8 +41,8 @@ OUTPUT_PATH = _DATA / "stations.json"
 DATA_ROOT = "https://davidmegginson.github.io/ourairports-data/"
 _SOURCE: Dict[str, str] = {}
 _SOURCES = {
-    "airports": DATA_ROOT + "airports.csv",
-    "runways": DATA_ROOT + "runways.csv",
+    "airports": f"{DATA_ROOT}airports.csv",
+    "runways": f"{DATA_ROOT}runways.csv",
     "stations": "https://www.aviationweather.gov/docs/metar/stations.txt",
     "icaos": "https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/data/icaos.json",
     "awos": "https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/data/awos.json",
@@ -90,9 +90,7 @@ def load_codes() -> None:
 
 def validate_icao(code: str) -> Optional[str]:
     """Validates a given station ident"""
-    if not (len(code) == 4 or code in AWOS):
-        return None
-    return code.upper()
+    return None if len(code) != 4 and code not in AWOS else code.upper()
 
 
 def get_icao(station: List[str]) -> Optional[str]:
@@ -101,9 +99,7 @@ def get_icao(station: List[str]) -> Optional[str]:
     if gps_code and gps_code in ICAO:
         return gps_code
     ident = validate_icao(station[1])
-    if ident and (ident in ICAO or ident in AWOS):
-        return ident
-    return gps_code
+    return ident if ident and (ident in ICAO or ident in AWOS) else gps_code
 
 
 def clean_source_files() -> None:
@@ -193,10 +189,7 @@ def add_missing_stations(stations: dict) -> dict:
 
 def get_surface_type(surface: str) -> Optional[str]:
     """Returns the normalize surface type value"""
-    for key, items in SURFACE_TYPES.items():
-        if surface in items:
-            return key
-    return None
+    return next((key for key, items in SURFACE_TYPES.items() if surface in items), None)
 
 
 def add_runways(stations: dict, code_map: dict) -> dict:

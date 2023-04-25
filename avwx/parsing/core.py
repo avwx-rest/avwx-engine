@@ -43,7 +43,7 @@ def is_unknown(value: str) -> bool:
     """Returns True if val represents and unknown value"""
     if not isinstance(value, str):
         raise TypeError
-    if not value or value.upper() in ("UNKN", "UNK", "UKN"):
+    if not value or value.upper() in {"UNKN", "UNK", "UKN"}:
         return True
     for char in value:
         if char not in ("/", "X", "."):
@@ -67,7 +67,7 @@ def get_digit_list(data: List[str], from_index: int) -> Tuple[List[str], List[st
 def unpack_fraction(num: str) -> str:
     """Returns unpacked fraction string 5/2 -> 2 1/2"""
     numbers = [int(n) for n in num.split("/") if n]
-    if not (len(numbers) == 2 and numbers[0] > numbers[1]):
+    if len(numbers) != 2 or numbers[0] <= numbers[1]:
         return num
     numerator, denominator = numbers
     over = numerator // denominator
@@ -196,13 +196,8 @@ def make_number(
     # Create Number
     if not val_str:
         return None
-    if "." in num:
-        value = float(val_str)
-        # Overwrite float 0 due to "0.0" literal
-        if not value:
-            value = 0
-    else:
-        value = int(val_str)
+    # Overwrite float 0 due to "0.0" literal
+    value = float(val_str) or 0 if "." in num else int(val_str)
     spoken = speak_prefix + spoken_number(speak or str(value), literal)
     return Number(repr or num, value, spoken)
 
@@ -233,17 +228,14 @@ def is_timerange(item: str) -> bool:
 
 def is_possible_temp(temp: str) -> bool:
     """Returns True if all characters are digits or 'M' (for minus)"""
-    for char in temp:
-        if not (char.isdigit() or char == "M"):
-            return False
-    return True
+    return all((char.isdigit() or char == "M") for char in temp)
 
 
-_numeric = Union[int, float]
+_Numeric = Union[int, float]
 
 
 def relative_humidity(
-    temperature: _numeric, dewpoint: _numeric, unit: str = "C"
+    temperature: _Numeric, dewpoint: _Numeric, unit: str = "C"
 ) -> float:
     """Calculates the relative humidity as a 0 to 1 percentage"""
 
@@ -260,7 +252,7 @@ def relative_humidity(
 # https://aviation.stackexchange.com/questions/47971/how-do-i-calculate-density-altitude-by-hand
 
 
-def pressure_altitude(pressure: float, altitude: _numeric, unit: str = "inHg") -> int:
+def pressure_altitude(pressure: float, altitude: _Numeric, unit: str = "inHg") -> int:
     """Calculates the pressure altitude in feet. Converts pressure units"""
     if unit == "hPa":
         pressure *= 0.02953
@@ -268,7 +260,7 @@ def pressure_altitude(pressure: float, altitude: _numeric, unit: str = "inHg") -
 
 
 def density_altitude(
-    pressure: float, temperature: _numeric, altitude: _numeric, units: Units
+    pressure: float, temperature: _Numeric, altitude: _Numeric, units: Units
 ) -> int:
     """Calculates the density altitude in feet. Converts pressure and temperature units"""
     if units.temperature == "F":
@@ -293,7 +285,7 @@ def get_station_and_time(
     if data and q_time.endswith("Z") and q_time[:-1].isdigit():
         r_time = data.pop(0)
     elif data and len(q_time) == 6 and q_time.isdigit():
-        r_time = data.pop(0) + "Z"
+        r_time = f"{data.pop(0)}Z"
     return data, station, r_time
 
 
@@ -308,11 +300,7 @@ def is_wind(text: str) -> bool:
             if text.endswith(ending):
                 return True
     # 09010  09010G15 VRB10
-    if not (
-        len(text) == 5
-        or (len(text) >= 8 and text.find("G") != -1)
-        and text.find("/") == -1
-    ):
+    if len(text) != 5 and (len(text) < 8 or "G" not in text or "/" in text):
         return False
     return text[:5].isdigit() or (text.startswith("VRB") and text[3:5].isdigit())
 
@@ -429,7 +417,7 @@ def get_visibility(data: List[str], units: Units) -> Tuple[List[str], Optional[N
             visibility = data.pop(0)[1:]
             units.visibility = "m"
         elif item.endswith("KM") and item[:-2].isdigit():
-            visibility = item[:-2] + "000"
+            visibility = f"{item[:-2]}000"
             data.pop(0)
             units.visibility = "m"
         # Vis statute miles but split Ex: 2 1/2SM
@@ -453,18 +441,16 @@ def sanitize_cloud(cloud: str) -> str:
     if not cloud[3].isdigit() and cloud[3] not in ("/", "-"):
         # Bad "O": FEWO03 -> FEW003
         if cloud[3] == "O":
-            cloud = cloud[:3] + "0" + cloud[4:]
+            cloud = f"{cloud[:3]}0{cloud[4:]}"
         # Move modifiers to end: BKNC015 -> BKN015C
-        elif cloud[3] != "U" and cloud[:4] not in ("BASE", "UNKN"):
+        elif cloud[3] != "U" and cloud[:4] not in {"BASE", "UNKN"}:
             cloud = cloud[:3] + cloud[4:] + cloud[3]
     return cloud
 
 
 def _null_or_int(val: Optional[str]) -> Optional[int]:
     """Nullify unknown elements and convert ints"""
-    if not isinstance(val, str) or is_unknown(val):
-        return None
-    return int(val)
+    return None if not isinstance(val, str) or is_unknown(val) else int(val)
 
 
 _TOP_OFFSETS = ("-TOPS", "-TOP")
@@ -476,7 +462,7 @@ def make_cloud(cloud: str) -> Cloud:
     This function assumes the input is potentially valid
     """
     raw_cloud = cloud
-    type = ""
+    cloud_type = ""
     base: Optional[str] = None
     top: Optional[str] = None
     modifier: Optional[str] = None
@@ -495,13 +481,13 @@ def make_cloud(cloud: str) -> Cloud:
         cloud = cloud[4:]
     ## VV003
     elif cloud.startswith("VV"):
-        type, cloud = cloud[:2], cloud[2:]
+        cloud_type, cloud = cloud[:2], cloud[2:]
     ## FEW010
     elif len(cloud) >= 3 and cloud[:3] in CLOUD_LIST:
-        type, cloud = cloud[:3], cloud[3:]
+        cloud_type, cloud = cloud[:3], cloud[3:]
     ## BKN-OVC065
     if len(cloud) > 4 and cloud[0] == "-" and cloud[1:4] in CLOUD_LIST:
-        type += cloud[:4]
+        cloud_type += cloud[:4]
         cloud = cloud[4:]
     # Separate base
     if len(cloud) >= 3 and cloud[:3].isdigit():
@@ -513,7 +499,7 @@ def make_cloud(cloud: str) -> Cloud:
         modifier = cloud
     # Make Cloud
     return Cloud(
-        raw_cloud, type or None, _null_or_int(base), _null_or_int(top), modifier
+        raw_cloud, cloud_type or None, _null_or_int(base), _null_or_int(top), modifier
     )
 
 
@@ -533,6 +519,7 @@ def get_clouds(data: List[str]) -> Tuple[List[str], list]:
 
 
 def get_flight_rules(visibility: Optional[Number], ceiling: Optional[Cloud]) -> int:
+    # sourcery skip: assign-if-exp, reintroduce-else
     """Returns int based on current flight rules from parsed METAR data
 
     0=VFR, 1=MVFR, 2=IFR, 3=LIFR
@@ -575,24 +562,19 @@ def get_ceiling(clouds: List[Cloud]) -> Optional[Cloud]:
 
     Prevents errors due to lack of cloud information (eg. '' or 'FEW///')
     """
-    for cloud in clouds:
-        if cloud.base and cloud.type in ("OVC", "BKN", "VV"):
-            return cloud
-    return None
+    return next((c for c in clouds if c.base and c.type in {"OVC", "BKN", "VV"}), None)
 
 
 def is_altitude(value: str) -> bool:
     """Returns True if the value is a possible altitude"""
     if len(value) < 5:
         return False
-    if value[:4] == "SFC/":
+    if value.startswith("SFC/"):
         return True
-    if value[:2] == "FL" and value[2:5].isdigit():
+    if value.startswith("FL") and value[2:5].isdigit():
         return True
     first, *_ = value.split("/")
-    if first[-2:] == "FT" and first[-5:-2].isdigit():
-        return True
-    return False
+    return bool(first[-2:] == "FT" and first[-5:-2].isdigit())
 
 
 def make_altitude(
@@ -610,9 +592,9 @@ def make_altitude(
             value = value[: -len(end)]
     # F430
     if value[0] == "F" and value[1:].isdigit():
-        value = "FL" + value[1:]
+        value = f"FL{value[1:]}"
     if force_fl and value[:2] != "FL":
-        value = "FL" + value
+        value = f"FL{value}"
     return make_number(value, repr=raw), units
 
 
@@ -650,7 +632,7 @@ def parse_date(
         )
     else:
         target = dt.datetime.now(tz=dt.timezone.utc)
-    day = target.day if time_only else int(date[0:2])
+    day = target.day if time_only else int(date[:2])
     hour = int(date[index_hour : index_hour + 2])
     # Handle situation where next month has less days than current month
     # Shifted value makes sure that a month shift doesn't happen twice

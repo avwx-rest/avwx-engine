@@ -49,7 +49,7 @@ class FileService(Service):
     @property
     def _file(self) -> Optional[Path]:
         """Path object of the managed data file"""
-        for path in _TEMP.glob(self._file_stem + "*"):
+        for path in _TEMP.glob(f"{self._file_stem}*"):
             return path
         return None
 
@@ -162,9 +162,8 @@ class FileService(Service):
         valid_station(station)
         if wait and self._updating:
             await self._wait_until_updated()
-        if force or self.is_outdated:
-            if not await self.update(wait, timeout):
-                return None
+        if (force or self.is_outdated) and not await self.update(wait, timeout):
+            return None
         file = self._file
         if file is None:
             return None
@@ -186,8 +185,7 @@ class NOAA_Forecast(FileService):
         reports = []
         report = ""
         for line in lines:
-            line = line.strip()
-            if line:
+            if line := line.strip():
                 report += "\n" + line
             else:
                 if len(report) > 10:
@@ -232,7 +230,7 @@ class NOAA_NBM(NOAA_Forecast):
             date -= dt.timedelta(hours=1)
 
     def _index_target(self, station: str) -> Tuple[str, str]:
-        return station + "   ", self.report_type.upper() + " GUIDANCE"
+        return f"{station}   ", f"{self.report_type.upper()} GUIDANCE"
 
 
 class NOAA_GFS(NOAA_Forecast):
@@ -264,4 +262,7 @@ class NOAA_GFS(NOAA_Forecast):
             date -= dt.timedelta(hours=1)
 
     def _index_target(self, station: str) -> Tuple[str, str]:
-        return station + "   GFS", self.report_type.upper() + " GUIDANCE"
+        return f"{station}   GFS", f"{self.report_type.upper()} GUIDANCE"
+
+
+# https://www.ncei.noaa.gov/data/ncep-global-data-assimilation/access/202304/20230415/

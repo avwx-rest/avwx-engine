@@ -15,8 +15,8 @@ class TestStationFunctions(unittest.TestCase):
     def test_station_list(self):
         """Test reporting filter for full station list"""
         reporting = station.station_list()
-        all = station.station_list(False)
-        self.assertTrue(len(all) > len(reporting))
+        full = station.station_list(False)
+        self.assertTrue(len(full) > len(reporting))
 
     def test_uses_na_format(self):
         """METAR and TAF reports come in two flavors: North American and International

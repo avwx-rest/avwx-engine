@@ -12,7 +12,6 @@ from .test_base import BaseTestService
 
 
 class TestScrapeService(BaseTestService):
-
     service_class = service.files.FileService
     required_attrs = (
         "update_interval",
@@ -44,7 +43,6 @@ class TestScrapeService(BaseTestService):
 
 
 class TestNBM(TestScrapeService):
-
     service_class = service.NOAA_NBM
     report_type = "nbs"
     stations = ["KJFK", "KMCO", "PHNL"]

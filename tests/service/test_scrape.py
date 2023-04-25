@@ -15,7 +15,6 @@ from .test_base import BaseTestService
 
 
 class TestStationScrape(BaseTestService):
-
     service_class = service.scrape.StationScrape
     report_type = "metar"
     required_attrs = ("method", "_strip_whitespace", "_extract")
@@ -64,7 +63,6 @@ class TestStationScrape(BaseTestService):
 
 
 class TestNOAA(TestStationScrape):
-
     service_class = service.NOAA
     stations = ["KJFK", "EGLL", "PHNL"]
 
@@ -76,25 +74,21 @@ class TestNOAA(TestStationScrape):
 
 
 class TestMAC(TestStationScrape):
-
     service_class = service.MAC
     stations = ["SKBO"]
 
 
 class TestAUBOM(TestStationScrape):
-
     service_class = service.AUBOM
     stations = ["YBBN", "YSSY", "YCNK"]
 
 
 class TestOLBS(TestStationScrape):
-
     service_class = service.OLBS
     stations = ["VAPO", "VEGT"]
 
 
 class TestNAM(TestStationScrape):
-
     service_class = service.NAM
     stations = ["EHAM", "ENGM", "BIRK"]
 

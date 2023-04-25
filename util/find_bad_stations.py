@@ -7,6 +7,7 @@ Manages good/bad station lists by calling METARs
 # stdlib
 import random
 import asyncio as aio
+from contextlib import suppress
 from datetime import datetime
 from pathlib import Path
 
@@ -46,10 +47,7 @@ class StationTester(Kew):
         """Returns False if an ident is known good or never good"""
         if code in self.good_stations:
             return False
-        for char in code:
-            if char.isdigit():
-                return False
-        return True
+        return not any(char.isdigit() for char in code)
 
     async def worker(self, data: object) -> bool:
         """Worker to check queued idents and update lists"""
@@ -105,7 +103,5 @@ async def main() -> int:
 
 
 if __name__ == "__main__":
-    try:
+    with suppress(KeyboardInterrupt):
         aio.run(main())
-    except KeyboardInterrupt:
-        pass

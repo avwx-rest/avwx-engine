@@ -18,7 +18,7 @@ def pressure_tendency(pressure: PressureTendency, unit: str = "mb") -> str:
     Ex: "50123" -> 12.3 mb: Increasing, then decreasing
     """
     value = f"{pressure.change} {unit} - {pressure.tendency}"
-    return "3-hour pressure difference: +/- " + value
+    return f"3-hour pressure difference: +/- {value}"
 
 
 def precip(label: str, code: Number, unit: str = "in") -> str:
@@ -79,10 +79,8 @@ def translate(raw: Optional[str], data: Optional[RemarksData]) -> Dict[str, str]
     """Translates elements in the remarks string"""
     if not (raw and data):
         return {}
-    ret = {}
     # Add static codes
-    for code in data.codes:
-        ret[code.repr] = code.value
+    ret = {code.repr: code.value for code in data.codes}
     # Add features from the parsed remarks data
     ret.update(remarks_data(data))
     return ret

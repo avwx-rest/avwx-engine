@@ -90,9 +90,7 @@ def _bulletin(value: str) -> Bulletin:
 
 def _header(data: List[str]) -> Tuple[List[str], Bulletin, str, str, Optional[str]]:
     bulletin = _bulletin(data[0])
-    correction, end = None, 3
-    if len(data[3]) == 3:
-        correction, end = data[3], 4
+    correction, end = (data[3], 4) if len(data[3]) == 3 else (None, 3)
     return data[end:], bulletin, data[1], data[2], correction
 
 
@@ -221,7 +219,7 @@ def _movement(
     # MOV CNL
     if direction_str == "CNL":
         return data, units, None
-    raw += " " + direction_str + " "
+    raw += f" {direction_str} "
     # MOV FROM 23040KT
     if direction_str == "FROM":
         value = data[index][:3]
@@ -256,9 +254,7 @@ def _info_from_match(match: re.Match, start: int) -> Tuple[str, int]:
 
 def _pre_break(report: str) -> str:
     break_index = report.find(" <break> ")
-    if break_index != -1:
-        return report[:break_index]
-    return report
+    return report[:break_index] if break_index != -1 else report
 
 
 def _bounds_from_latterals(report: str, start: int) -> Tuple[str, List[str], int]:
@@ -296,7 +292,7 @@ def _coords_from_navaids(report: str, start: int) -> Tuple[str, List[Coord], int
         report = report.replace(group, " ")
         group = group.strip("-")  # post 3.8 .removeprefix("FROM ").removeprefix("TO ")
         for end in ("FROM", "TO"):
-            if group.startswith(end + " "):
+            if group.startswith(f"{end} "):
                 group = group[(len(end) + 1) :]
         navs.append((group, *group.split()))
     locs = to_coordinates([n[2 if len(n) == 3 else 1] for n in navs])
@@ -329,7 +325,7 @@ def _bounds(data: List[str]) -> Tuple[List[str], List[Coord], List[str]]:
     report, navs, start = _coords_from_navaids(report, start)
     coords += navs
     for target in ("FROM", "WI", "BOUNDED", "OBS"):
-        index = report.find(target + " ")
+        index = report.find(f"{target} ")
         if index != -1 and index < start:
             start = index
     report = report[:start] + report[report.rfind("  ") :]
@@ -352,11 +348,11 @@ def _altitudes(
         # TOPS ABV FL450
         if item in ("TOP", "TOPS", "BLW"):
             if data[i + 1] == "ABV":
-                ceiling = core.make_number("ABV " + data[i + 2])
+                ceiling = core.make_number(f"ABV {data[i + 2]}")
                 data = data[:i] + data[i + 3 :]
                 break
             if data[i + 1] == "BLW":
-                ceiling = core.make_number("BLW " + data[i + 2])
+                ceiling = core.make_number(f"BLW {data[i + 2]}")
                 data = data[:i] + data[i + 3 :]
                 break
             # TOPS TO FL310
@@ -468,10 +464,7 @@ _REPLACE = {
 
 
 def _find_first_digit(item: str) -> int:
-    for i, char in enumerate(item):
-        if char.isdigit():
-            return i
-    return -1
+    return next((i for i, char in enumerate(item) if char.isdigit()), -1)
 
 
 def sanitize(report: str) -> str:
@@ -594,11 +587,9 @@ class AirSigManager:
     ) -> List[Tuple[str, Optional[str]]]:
         source = self._services[index].root
         reports = await self._services[index].async_fetch(timeout=timeout)  # type: ignore
-        raw: List[Tuple[str, Optional[str]]] = []
-        for report in reports:
-            if not report:
-                continue
-            raw.append((report, source))
+        raw: List[Tuple[str, Optional[str]]] = [
+            (report, source) for report in reports if report
+        ]
         return raw
 
     def update(self, timeout: int = 10, disable_post: bool = False) -> bool:

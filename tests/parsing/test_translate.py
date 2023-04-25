@@ -62,7 +62,7 @@ class TestShared(unittest.TestCase):
         ):
             clouds = [core.make_cloud(cloud) for cloud in clouds]
             self.assertEqual(
-                translate.base.clouds(clouds), translation + " - Reported AGL"
+                translate.base.clouds(clouds), f"{translation} - Reported AGL"
             )
 
     def test_wx_codes(self):

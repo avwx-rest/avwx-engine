@@ -141,7 +141,7 @@ class TestMetar(BaseTest):
                 "inHg",
             ),
         ):
-            units = structs.Units(**getattr(static.core, version + "_UNITS"))
+            units = structs.Units(**getattr(static.core, f"{version}_UNITS"))
             ret, ret_alt = metar.get_altimeter(wx, units, version)
             self.assertEqual(ret, ["1"])
             self.assert_number(ret_alt, *alt)

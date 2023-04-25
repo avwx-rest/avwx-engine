@@ -95,7 +95,7 @@ def wind(  # pylint: disable=too-many-arguments
             ret += direction.repr
         else:
             if cardinals:
-                ret += get_cardinal_direction(direction.value) + "-"
+                ret += f"{get_cardinal_direction(direction.value)}-"
             ret += getattr(direction, target)
     # Variable direction
     if vardir and isinstance(vardir, list):
@@ -123,7 +123,7 @@ def visibility(vis: Optional[Number], unit: str = "m") -> str:
 
     Ex: 8km ( 5sm )
     """
-    if not (vis and unit in ("m", "sm")):
+    if not (vis and unit in {"m", "sm"}):
         return ""
     with suppress(KeyError):
         return VIS_REPR[vis.repr]
@@ -153,14 +153,14 @@ def temperature(temp: Optional[Number], unit: str = "C") -> str:
     Ex: 34°C (93°F)
     """
     unit = unit.upper()
-    if not (temp and temp.value is not None and unit in ("C", "F")):
+    if not (temp and temp.value is not None and unit in {"C", "F"}):
         return ""
     if unit == "C":
         fahrenheit = temp.value * 1.8 + 32
-        converted = str(int(round(fahrenheit))) + "°F"
+        converted = f"{int(round(fahrenheit))}°F"
     elif unit == "F":
         celsius = (temp.value - 32) / 1.8
-        converted = str(int(round(celsius))) + "°C"
+        converted = f"{int(round(celsius))}°C"
     else:
         return ""
     return f"{temp.value}°{unit} ({converted})"
@@ -171,7 +171,7 @@ def altimeter(alt: Optional[Number], unit: str = "hPa") -> str:
 
     Ex: 30.11 inHg (10.20 hPa)
     """
-    if not (alt and alt.value is not None and unit in ("hPa", "inHg")):
+    if not (alt and alt.value is not None and unit in {"hPa", "inHg"}):
         return ""
     if unit == "hPa":
         value = str(alt.value)
@@ -180,7 +180,7 @@ def altimeter(alt: Optional[Number], unit: str = "hPa") -> str:
     elif unit == "inHg":
         value = str(alt.value).ljust(5, "0")
         pascals = alt.value * 33.8638866667
-        converted = str(int(round(pascals))) + " hPa"
+        converted = f"{int(round(pascals))} hPa"
     else:
         return ""
     return f"{value} {unit} ({converted})"
@@ -203,9 +203,7 @@ def clouds(values: Optional[List[Cloud]], unit: str = "ft") -> str:
         if cloud.modifier and cloud.modifier in CLOUD_TRANSLATIONS:
             cloud_str += f" ({CLOUD_TRANSLATIONS[cloud.modifier]})"
         ret.append(cloud_str.format(cloud.base * 100, unit))
-    if ret:
-        return ", ".join(ret) + " - Reported AGL"
-    return "Sky clear"
+    return ", ".join(ret) + " - Reported AGL" if ret else "Sky clear"
 
 
 def wx_codes(codes: List[Code]) -> str:

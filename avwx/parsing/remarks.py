@@ -33,7 +33,7 @@ def temp_dew_decimal(codes: Codes) -> Tuple[Codes, Optional[Number], Optional[Nu
     """Returns the decimal temperature and dewpoint values"""
     temp, dew = None, None
     for i, code in reversed(list(enumerate(codes))):
-        if len(code) in [5, 9] and code[0] == "T" and code[1:].isdigit():
+        if len(code) in {5, 9} and code[0] == "T" and code[1:].isdigit():
             codes.pop(i)
             temp, dew = decimal_code(code[1:5]), decimal_code(code[5:])
             break

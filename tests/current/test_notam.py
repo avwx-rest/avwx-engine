@@ -117,7 +117,7 @@ class TestNotam(BaseTest):
             ("01/113 NOTAMN", "01/113", "N", "New", None),
         ):
             ret_number, ret_type, ret_replaces = notam._header(text)
-            code = structs.Code("NOTAM" + char, rtype)
+            code = structs.Code(f"NOTAM{char}", rtype)
             self.assertEqual(ret_number, number)
             self.assertEqual(ret_type, code)
             self.assertEqual(ret_replaces, replaces)

@@ -6,6 +6,7 @@ Update ICAO list from Avio source
 import gzip
 import json
 import asyncio as aio
+from contextlib import suppress
 from os import environ
 
 # library
@@ -34,8 +35,7 @@ async def fetch_data() -> dict:
             headers=HEADERS,
         )
     data_bytes = gzip.decompress(resp.content)
-    data = json.loads(data_bytes.decode("utf8"))
-    return data
+    return json.loads(data_bytes.decode("utf8"))
 
 
 async def main() -> None:
@@ -49,7 +49,5 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    try:
+    with suppress(KeyboardInterrupt):
         aio.run(main())
-    except KeyboardInterrupt:
-        pass

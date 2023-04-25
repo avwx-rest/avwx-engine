@@ -108,7 +108,7 @@ def _tz_offset_for(name: Optional[str]) -> Optional[timezone]:
     if not name:
         return None
     if tz := gettz(name):
-        if offset := tz.utcoffset(datetime.utcnow()):
+        if offset := tz.utcoffset(datetime.now(timezone.utc)):
             return timezone(offset)
     return None
 

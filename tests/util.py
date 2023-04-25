@@ -79,10 +79,9 @@ def round_coordinates(data: Any) -> Any:
     """Recursively round lat,lon floats to 2 digits"""
     if isinstance(data, dict):
         for key, val in data.items():
-            if key in ("lat", "lon"):
-                data[key] = round(val, 2)
-            else:
-                data[key] = round_coordinates(val)
+            data[key] = (
+                round(val, 2) if key in {"lat", "lon"} else round_coordinates(val)
+            )
     elif isinstance(data, list):
         data = [round_coordinates(i) for i in data]
     return data

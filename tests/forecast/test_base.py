@@ -145,7 +145,6 @@ class TestForecastBase(BaseTest):
 
 
 class ForecastBase(BaseTest):
-
     maxDiff = None
 
     def _test_forecast_ete(self, report: base.Forecast):

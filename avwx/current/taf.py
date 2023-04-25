@@ -53,9 +53,9 @@ def sanitize_line(txt: str, sans: Sanitization) -> str:
             sans.log(key, fix)
     # Fix when space is missing following new line signifiers
     for item in ["BECMG", "TEMPO"]:
-        if item in txt and item + " " not in txt:
+        if item in txt and f"{item} " not in txt:
             index = txt.find(item) + len(item)
-            txt = txt[:index] + " " + txt[index:]
+            txt = f"{txt[:index]} {txt[index:]}"
             sans.extra_spaces_needed = True
     return txt
 
@@ -80,7 +80,7 @@ def get_alt_ice_turb(
         if len(item) > 6 and item.startswith("QNH") and item[3:7].isdigit():
             altimeter = data.pop(i)[3:7]
             if altimeter[0] in ("2", "3"):
-                altimeter = altimeter[:2] + "." + altimeter[2:]
+                altimeter = f"{altimeter[:2]}.{altimeter[2:]}"
             altimeter_number = core.make_number(altimeter, literal=True)
         elif item.isdigit():
             if item[0] == "6":
@@ -94,10 +94,7 @@ def starts_new_line(item: str) -> bool:
     """Returns True if the given element should start a new report line"""
     if item in TAF_NEWLINE:
         return True
-    for start in TAF_NEWLINE_STARTSWITH:
-        if item.startswith(start):
-            return True
-    return False
+    return any(item.startswith(start) for start in TAF_NEWLINE_STARTSWITH)
 
 
 def split_taf(txt: str) -> List[str]:
@@ -203,7 +200,7 @@ def find_missing_taf_times(
             target += "_time"
             if not getattr(line, target):
                 setattr(
-                    line, target, _get_next_time(lines[i::direc][1:], other + "_time")
+                    line, target, _get_next_time(lines[i::direc][1:], f"{other}_time")
                 )
     # Special case for final forcast
     if last_fm_line:
@@ -242,12 +239,11 @@ def get_temp_min_and_max(
                     if int(temp_min[2 : temp_min.find("/")].replace("M", "-")) > int(
                         item[1 : item.find("/")].replace("M", "-")
                     ):
-                        temp_max = "TX" + temp_min[2:]
-                        temp_min = "TN" + item[1:]
+                        temp_max, temp_min = f"TX{temp_min[2:]}", f"TN{item[1:]}"
                     else:
-                        temp_max = "TX" + item[1:]
+                        temp_max = f"TX{item[1:]}"
                 else:
-                    temp_min = "TN" + item[1:]
+                    temp_min = f"TN{item[1:]}"
                 data.pop(i)
     return data, temp_max or None, temp_min or None
 
@@ -308,10 +304,7 @@ def parse(
     sanitized = sanitized.replace(station, "")
     if time:
         sanitized = sanitized.replace(time, "").strip()
-    if uses_na_format(station):
-        units = Units(**NA_UNITS)
-    else:
-        units = Units(**IN_UNITS)
+    units = Units(**NA_UNITS) if uses_na_format(station) else Units(**IN_UNITS)
     # Find and remove remarks
     sanitized, remarks = get_taf_remarks(sanitized)
     # Split and parse each line
@@ -394,45 +387,11 @@ def parse_lines(
             )
             parsed_line.raw = raw_line
             if prob:
-                parsed_line.sanitized = prob + " " + parsed_line.sanitized
+                parsed_line.sanitized = f"{prob} {parsed_line.sanitized}"
             prob = ""
             parsed_lines.append(parsed_line)
         lines.pop(0)
     return parsed_lines
-
-
-# def parse_na_line(line: str, units: Units) -> TafLineData:
-#     """Parser for the North American TAF forcast variant"""
-#     data = core.dedupe(line.split())
-#     data = sanitization.sanitize_report_list(data, remove_clr_and_skc=False)
-#     sanitized = " ".join(data)
-#     data, report_type, start_time, end_time, transition = get_type_and_times(data)
-#     data, wind_shear = get_wind_shear(data)
-#     data, wind_direction, wind_speed, wind_gust, _ = core.get_wind(data, units)
-#     data, visibility = core.get_visibility(data, units)
-#     data, clouds = core.get_clouds(data)
-#     other, altimeter, icing, turbulence = get_alt_ice_turb(data)
-#     return TafLineData(
-#         altimeter=altimeter,
-#         clouds=clouds,
-#         flight_rules="",
-#         other=other,
-#         visibility=visibility,
-#         wind_direction=wind_direction,
-#         wind_gust=wind_gust,
-#         wind_speed=wind_speed,
-#         wx_codes=[],
-#         end_time=end_time,
-#         icing=icing,
-#         probability=None,
-#         raw=line,
-#         sanitized=sanitized,
-#         start_time=start_time,
-#         transition_start=transition,
-#         turbulence=turbulence,
-#         type=report_type,
-#         wind_shear=wind_shear,
-#     )
 
 
 def parse_line(

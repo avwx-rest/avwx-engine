@@ -24,8 +24,7 @@ def _split_line(
     while len(line) >= size:
         ret.append(line[:size].strip(strip))
         line = line[size:]
-    line = line.strip(strip)
-    if line:
+    if line := line.strip(strip):
         ret.append(line)
     return ret
 
@@ -94,7 +93,7 @@ def _numbers(
             if decimal is not None:
                 if abs(decimal) > len(value):
                     value = value.zfill(abs(decimal))
-                value = value[:decimal] + "." + value[decimal:]
+                value = f"{value[:decimal]}.{value[decimal:]}"
         ret.append(core.make_number(value, repr=item, literal=literal, special=special))
     return ret
 

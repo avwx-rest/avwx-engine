@@ -75,7 +75,7 @@ def _parse_rvr_number(value: str) -> Optional[Number]:
         value = value[1:]
     number = core.make_number(value, raw)
     if number is not None and prefix is not None:
-        number.spoken = prefix + " " + number.spoken
+        number.spoken = f"{prefix} {number.spoken}"
         number.value = None
     return number
 
@@ -91,9 +91,7 @@ def parse_runway_visibility(value: str) -> RunwayVisibility:
     if value:
         possible_numbers = [_parse_rvr_number(n) for n in value.split("V")]
         numbers = [n for n in possible_numbers if n is not None]
-        visibility = None
-        if len(numbers) == 1:
-            visibility = numbers.pop()
+        visibility = numbers.pop() if len(numbers) == 1 else None
     else:
         visibility, numbers = None, []
     return RunwayVisibility(
@@ -107,10 +105,11 @@ def parse_runway_visibility(value: str) -> RunwayVisibility:
 
 def get_runway_visibility(data: List[str]) -> Tuple[List[str], List[RunwayVisibility]]:
     """Returns the report list and the remove runway visibility list"""
-    runway_vis = []
-    for i, item in reversed(list(enumerate(data))):
-        if core.is_runway_visibility(item):
-            runway_vis.append(parse_runway_visibility(data.pop(i)))
+    runway_vis = [
+        parse_runway_visibility(data.pop(i))
+        for i, item in reversed(list(enumerate(data)))
+        if core.is_runway_visibility(item)
+    ]
     runway_vis.sort(key=lambda x: x.runway)
     return data, runway_vis
 
@@ -121,18 +120,18 @@ def parse_altimeter(value: str) -> Optional[Number]:
         return None
     # QNH3003INS
     if len(value) >= 7 and value.endswith("INS"):
-        return core.make_number(value[-7:-5] + "." + value[-5:-3], value, literal=True)
+        return core.make_number(f"{value[-7:-5]}.{value[-5:-3]}", value, literal=True)
     number = value.replace(".", "")
     # Q1000/10
     if "/" in number:
         number = number.split("/")[0]
     if number.startswith("QNH"):
-        number = "Q" + number[1:]
-    if not (len(number) in (4, 5) and number[-4:].isdigit()):
+        number = f"Q{number[1:]}"
+    if not (len(number) in {4, 5} and number[-4:].isdigit()):
         return None
     number = number.lstrip("AQ")
     if number[0] in ("2", "3"):
-        number = number[:2] + "." + number[2:]
+        number = f"{number[:2]}.{number[2:]}"
     elif number[0] not in ("0", "1"):
         return None
     return core.make_number(number, value, number, literal=True)
@@ -221,7 +220,7 @@ def sanitize(report: str) -> Tuple[str, str, List[str], Sanitization]:
     data = sanitization.sanitize_report_list(data, sans)
     clean = " ".join(data)
     if remark_str:
-        clean += " " + remark_str
+        clean += f" {remark_str}"
     return clean, remark_str, data, sans
 
 
@@ -436,9 +435,7 @@ class Metar(Report):
         """Condensed report summary created from translations"""
         if not self.translations:
             self.update()
-        if self.translations is None:
-            return None
-        return summary.metar(self.translations)
+        return None if self.translations is None else summary.metar(self.translations)
 
     @property
     def speech(self) -> Optional[str]:

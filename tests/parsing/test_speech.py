@@ -41,7 +41,7 @@ class TestSpeech(unittest.TestCase):
             wind = [core.make_number(v, literal=(not i)) for i, v in enumerate(wind)]
             if vardir:
                 vardir = [core.make_number(i, speak=i, literal=True) for i in vardir]
-            self.assertEqual(speech.wind(*wind, vardir), "Winds " + spoken)
+            self.assertEqual(speech.wind(*wind, vardir), f"Winds {spoken}")
 
     def test_temperature(self):
         """Tests converting a temperature into a spoken string"""
@@ -54,7 +54,7 @@ class TestSpeech(unittest.TestCase):
         ):
             self.assertEqual(
                 speech.temperature("Temp", core.make_number(temp), unit),
-                "Temp " + spoken,
+                f"Temp {spoken}",
             )
 
     def test_visibility(self):
@@ -71,7 +71,8 @@ class TestSpeech(unittest.TestCase):
             ("3", "sm", "three miles"),
         ):
             self.assertEqual(
-                speech.visibility(core.make_number(vis), unit), "Visibility " + spoken
+                speech.visibility(core.make_number(vis), unit),
+                f"Visibility {spoken}",
             )
 
     def test_altimeter(self):
@@ -86,7 +87,7 @@ class TestSpeech(unittest.TestCase):
             ("3005", "inHg", "three zero point zero five"),
         ):
             self.assertEqual(
-                speech.altimeter(parse_altimeter(alt), unit), "Altimeter " + spoken
+                speech.altimeter(parse_altimeter(alt), unit), f"Altimeter {spoken}"
             )
 
     def test_wx_codes(self):

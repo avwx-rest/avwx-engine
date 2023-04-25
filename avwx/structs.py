@@ -32,7 +32,8 @@ class Aircraft:
         try:
             return cls(code=code, type=AIRCRAFT[code])
         except KeyError as key_error:
-            raise ValueError(code + " is not a known aircraft code") from key_error
+            msg = f"{code} is not a known aircraft code"
+            raise ValueError(msg) from key_error
 
 
 @dataclass
@@ -333,9 +334,7 @@ class AirSigObservation:
     def poly(self) -> Optional[Polygon]:
         if Polygon is None:
             raise ModuleNotFoundError("Install avwx-engine[shape] to use this feature")
-        if len(self.coords) > 2:
-            return Polygon([c.pair for c in self.coords])
-        return None
+        return Polygon([c.pair for c in self.coords]) if len(self.coords) > 2 else None
 
 
 @dataclass

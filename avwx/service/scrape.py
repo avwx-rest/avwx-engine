@@ -61,9 +61,7 @@ class ScrapeService(Service, CallsHTTP):  # pylint: disable=too-few-public-metho
             return report
         if isinstance(report, list):
             return dedupe(" ".join(r.split()) for r in report)  # type: ignore
-        if isinstance(report, str):
-            return " ".join(report.split())  # type: ignore
-        return report
+        return " ".join(report.split()) if isinstance(report, str) else report  # type: ignore
 
 
 class StationScrape(ScrapeService):
@@ -81,10 +79,7 @@ class StationScrape(ScrapeService):
 
     def _simple_extract(self, raw: str, starts: Union[str, List[str]], end: str) -> str:
         """Simple extract by cutting at sequential start and end points"""
-        if isinstance(starts, str):
-            targets = [starts]
-        else:
-            targets = starts
+        targets = [starts] if isinstance(starts, str) else starts
         for target in targets:
             index = raw.find(target)
             if index == -1:
@@ -144,7 +139,7 @@ class NOAA_ADDS(ScrapeService):
             "requestType": "retrieve",
             "format": "XML",
             "hoursBeforeNow": 2,
-            "dataSource": self.report_type + "s",
+            "dataSource": f"{self.report_type}s",
         }
         if self.report_type == "aircraftreport" and coord is not None:
             params["radialDistance"] = f"200;{coord.lon},{coord.lat}"
@@ -265,7 +260,7 @@ class AMO(StationScrape):
         resp = parsexml(raw)
         try:
             report = resp["response"]["body"]["items"]["item"][
-                self.report_type.lower() + "Msg"
+                f"{self.report_type.lower()}Msg"
             ]
         except KeyError as key_error:
             raise self._make_err(raw) from key_error
@@ -275,7 +270,7 @@ class AMO(StationScrape):
         report = report.replace("\n", "")
         # Remove excess leading and trailing data
         for item in (self.report_type.upper(), "SPECI"):
-            if report.startswith(item + " "):
+            if report.startswith(f"{item} "):
                 report = report[len(item) + 1 :]
         report = report.rstrip("=")
         # Make every element single-spaced and stripped
@@ -294,7 +289,7 @@ class MAC(StationScrape):
 
     def _extract(self, raw: str, station: str) -> str:
         """Extracts the report message using string finding"""
-        return self._simple_extract(raw, station.upper() + " ", "=")
+        return self._simple_extract(raw, f"{station.upper()} ", "=")
 
 
 class AUBOM(StationScrape):
@@ -415,7 +410,7 @@ class AVT(StationScrape):
         """Extracts the reports from HTML response"""
         try:
             data = json.loads(raw)
-            key = self.report_type.lower() + "ContentList"
+            key = f"{self.report_type.lower()}ContentList"
             text: str = data[key]["rows"][0]["content"]
             return text
         except (TypeError, json.decoder.JSONDecodeError, KeyError, IndexError):
@@ -452,10 +447,10 @@ class FAA_NOTAM(ScrapeService):
             key = "longitude"
             direction = "E" if degree >= 0 else "W"
         return {
-            prefix + "Degrees": abs(degree),
-            prefix + "Minutes": minute,
-            prefix + "Seconds": second,
-            key + "Direction": direction,
+            f"{prefix}Degrees": abs(degree),
+            f"{prefix}Minutes": minute,
+            f"{prefix}Seconds": second,
+            f"{key}Direction": direction,
         }
 
     def _post_for(
@@ -517,11 +512,9 @@ class FAA_NOTAM(ScrapeService):
             if resp.get("error"):
                 raise self._make_err("Search criteria appears to be invalid")
             for item in resp["notamList"]:
-                report = item.get("icaoMessage", "").strip()
-                if report:
+                if report := item.get("icaoMessage", "").strip():
                     report = TAG_PATTERN.sub("", report).strip()
-                    issued = item.get("issueDate")
-                    if issued:
+                    if issued := item.get("issueDate"):
                         report = f"{issued}||{report}"
                     notams.append(report)
             offset = resp["endRecordCount"]

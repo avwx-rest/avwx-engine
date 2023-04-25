@@ -16,15 +16,16 @@ __LAST_UPDATED__ = "2023-03-11"
 # Lazy data loading to speed up import times for unused features
 STATIONS = LazyLoad("stations")
 
+
 # maxsize = 2 ** number of boolean options
 @lru_cache(maxsize=2)
 def station_list(reporting: bool = True) -> List[str]:
     """Returns a list of station idents matching the search criteria"""
-    stations = []
-    for code, station in STATIONS.items():
-        if not reporting or station["reporting"]:
-            stations.append(code)
-    return stations
+    return [
+        code
+        for code, station in STATIONS.items()
+        if not reporting or station["reporting"]
+    ]
 
 
 def uses_na_format(station: str, default: Optional[bool] = None) -> bool:

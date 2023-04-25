@@ -33,6 +33,7 @@ WIND_REPL = {
     "GS": "G",
     "K5": "KT",
     "JT": "KT",
+    "TK": "KT",
     "LKT": "KT",
     "ZKT": "KT",
     "KTKT": "KT",
@@ -55,18 +56,18 @@ def sanitize_wind(text: str) -> str:
         text = text.replace(rep, "")
     for key, rep in WIND_REPL.items():
         text = text.replace(key, rep)
-    if len(text) > 4 and not (text.startswith("VRB") or text[:3].isdigit()):
+    if len(text) > 4 and not text.startswith("VRB") and not text[:3].isdigit():
         # Catches majority of cases where at least two valid letters are found
         if len(set(text[:4]).intersection({"V", "R", "B"})) > 1:
             for i, char in enumerate(text):
                 if char.isdigit():
-                    text = "VRB" + text[i:]
+                    text = f"VRB{text[i:]}"
                     break
         else:
             for key in WIND_VRB:
                 if text.startswith(key):
                     zero = "0" if key[-1] == "0" else ""
-                    text = text.replace(key, "VRB" + zero)
+                    text = text.replace(key, f"VRB{zero}")
                     break
     return text
 
@@ -127,16 +128,16 @@ def separate_cloud_layers(text: str) -> str:
     Ex: TSFEW004SCT012FEW///CBBKN080
     """
     for cloud in CLOUD_LIST:
-        if cloud in text and " " + cloud not in text:
+        if cloud in text and f" {cloud}" not in text:
             start, counter = 0, 0
-            while text.count(cloud) != text.count(" " + cloud):
+            while text.count(cloud) != text.count(f" {cloud}"):
                 cloud_index = start + text[start:].find(cloud)
                 if len(text[cloud_index:]) >= 3:
                     target = text[
                         cloud_index + len(cloud) : cloud_index + len(cloud) + 3
                     ]
                     if target.isdigit() or not target.strip("/"):
-                        text = text[:cloud_index] + " " + text[cloud_index:]
+                        text = f"{text[:cloud_index]} {text[cloud_index:]}"
                 start = cloud_index + len(cloud) + 1
                 # Prevent infinite loops
                 if counter > text.count(cloud):
@@ -173,7 +174,7 @@ def extra_space_exists(str1: str, str2: str) -> bool:
     ls1, ls2 = len(str1), len(str2)
     if str1.isdigit():
         # 10 SM
-        if str2 in ["SM", "0SM"]:
+        if str2 in {"SM", "0SM"}:
             return True
         # 12 /10
         if ls2 > 2 and str2[0] == "/" and str2[1:].isdigit():
@@ -195,7 +196,7 @@ def extra_space_exists(str1: str, str2: str) -> bool:
         ):
             return True
         # Q 1001
-        if str1 in ["Q", "A"]:
+        if str1 in {"Q", "A"}:
             return True
     # 36010G20 KT
     if (
@@ -221,21 +222,19 @@ def extra_space_exists(str1: str, str2: str) -> bool:
     ):
         return True
     # FM 122400
-    if str1 in ["FM", "TL"] and (
+    if str1 in {"FM", "TL"} and (
         str2.isdigit() or (str2.endswith("Z") and str2[:-1].isdigit())
     ):
         return True
     # TX 20/10
-    if str1 in ["TX", "TN"] and str2.find("/") != -1:
-        return True
-    return False
+    return str1 in {"TX", "TN"} and "/" in str2
 
 
 _CLOUD_GROUP = "(" + "|".join(CLOUD_LIST) + ")"
 CLOUD_SPACE_PATTERNS = [
     re.compile(pattern)
     for pattern in (
-        r"(?=.+)" + _CLOUD_GROUP + r"\d{3}(\w{2,3})?$",  # SCT010BKN021
+        f"(?=.+){_CLOUD_GROUP}" + r"\d{3}(\w{2,3})?$",  # SCT010BKN021
         r"M?\d{2}\/M?\d{2}$",  # BKN01826/25
     )
 ]
@@ -275,9 +274,7 @@ def extra_space_needed(item: str) -> Optional[int]:
         tx_index, tn_index = item.find("TX"), item.find("TN")
         return max(tx_index, tn_index)
     # Connected RVR elements Ex: R36/1500DR18/P2000
-    if match := RVR_PATTERN.search(item[1:]):
-        return match.start() + 1
-    return None
+    return match.start() + 1 if (match := RVR_PATTERN.search(item[1:])) else None
 
 
 ITEM_REMV = [
@@ -321,7 +318,7 @@ def sanitize_report_list(
             sans.log(wxdata.pop(i))
             continue
         # Remove RE from wx codes, REVCTS -> VCTS
-        if ilen in [4, 6] and item.startswith("RE"):
+        if ilen in {4, 6} and item.startswith("RE"):
             replaced = item[2:]
             wxdata[i] = replaced
             sans.log(item, replaced)
@@ -354,20 +351,11 @@ def sanitize_report_list(
             sans.log(item, replaced)
         # Fix cut-short RVR unit
         elif is_runway_visibility(item) and item.endswith("F"):
-            replaced = item + "T"
-            wxdata[i] = replaced
-            sans.log(item, replaced)
-        # Fix malformed KT Ex: 06012G22TK
-        if (
-            ilen >= 7
-            and (item[:3].isdigit() or item[:3] == "VRB")
-            and item[-2:] in ("TK", "GT")
-        ):
-            replaced = item[:-2] + "KT"
+            replaced = f"{item}T"
             wxdata[i] = replaced
             sans.log(item, replaced)
         # Fix gust double G Ex: 360G17G32KT
-        elif ilen > 10 and item.endswith("KT") and item[3] == "G":
+        if ilen > 10 and item.endswith("KT") and item[3] == "G":
             replaced = item[:3] + item[4:]
             wxdata[i] = replaced
             sans.log(item, replaced)
@@ -385,7 +373,7 @@ def sanitize_report_list(
             wxdata[i] = item
         # Fix non-G gust Ex: 14010-15KT
         elif ilen == 10 and item.endswith("KT") and item[5] != "G":
-            replaced = item[:5] + "G" + item[6:]
+            replaced = f"{item[:5]}G{item[6:]}"
             wxdata[i] = replaced
             sans.log(item, replaced)
         # Fix leading digits on VRB wind Ex: 2VRB02KT
@@ -417,12 +405,11 @@ def sanitize_report_list(
                 and (item[:5].isdigit() or item.startswith("VRB"))
             )
         ):
-            replaced = item[:-1] + "KT"
+            replaced = f"{item[:-1]}KT"
             wxdata[i] = replaced
             sans.log(item, replaced)
         # Fix situations where a space is missing
-        index = extra_space_needed(item)
-        if index:
+        if index := extra_space_needed(item):
             wxdata.insert(i + 1, item[index:])
             wxdata[i] = item[:index]
             sans.extra_spaces_needed = True

@@ -62,7 +62,7 @@ def _location(item: str) -> Optional[Location]:
         if ilen < 5:
             station = item
         # MKK360002 or KLGA220015
-        elif ilen in (9, 10) and item[-6:].isdigit():
+        elif ilen in {9, 10} and item[-6:].isdigit():
             station, direction, distance = item[:-6], item[-6:-3], item[-3:]
     # 10 WGON
     # 10 EAST
@@ -92,9 +92,7 @@ def _time(item: str, target: Optional[date] = None) -> Optional[Timestamp]:
 
 def _altitude(item: str) -> Union[Optional[Number], str]:
     """Convert reporting altitude to a Number or string"""
-    if item.isdigit():
-        return core.make_number(item)
-    return item
+    return core.make_number(item) if item.isdigit() else item
 
 
 def _aircraft(item: str) -> Union[Aircraft, str]:
@@ -112,13 +110,11 @@ def _non_digit_cloud(cloud: str) -> Tuple[Optional[str], str]:
         cloud = cloud[:-4]
         if cloud.isdigit():
             return None, cloud
+    if "-" not in cloud:
+        return cloud[:3], cloud[3:]
     # SCT030-035
-    if "-" in cloud:
-        parts = cloud.split("-")
-        if not parts[0].isdigit():
-            return parts[0][:3], parts[-1]
-        return None, parts[-1]
-    return cloud[:3], cloud[3:]
+    parts = cloud.split("-")
+    return (None, parts[-1]) if parts[0].isdigit() else (parts[0][:3], parts[-1])
 
 
 def _clouds(item: str) -> List[Cloud]:
@@ -141,9 +137,7 @@ def _clouds(item: str) -> List[Cloud]:
 def _number(item: str) -> Optional[Number]:
     """Convert an element to a Number"""
     value = item.strip("CF ")
-    if " " in value:
-        return None
-    return core.make_number(value, item)
+    return None if " " in value else core.make_number(value, item)
 
 
 def _separate_floor_ceiling(item: str) -> Tuple[Optional[Number], Optional[Number]]:
@@ -246,7 +240,7 @@ def _sanitize_report_list(data: List[str], sans: Sanitization) -> List[str]:
             and (data[i - 1][:3] in CLOUD_LIST or data[i - 1].startswith("BASE"))
         ):
             key = f"{data[i-1]} {item}"
-            data[i - 1] += "-" + data.pop(i)
+            data[i - 1] += f"-{data.pop(i)}"
             sans.log(key, data[i - 1])
         # Fix separated clouds Ex: BASES OVC 049 TOPS 055
         elif item in CLOUD_LIST and i + 1 < len(data) and data[i + 1].isdigit():

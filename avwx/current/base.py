@@ -36,7 +36,7 @@ def wx_code(code: str) -> Union[Code, str]:
         return code
     while code:
         try:
-            ret += WX_TRANSLATIONS[code[:2]] + " "
+            ret += f"{WX_TRANSLATIONS[code[:2]]} "
         except KeyError:
             ret += code[:2]
         code = code[2:]

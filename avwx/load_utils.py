@@ -22,7 +22,8 @@ class LazyLoad:
         )
 
     def _load(self) -> None:
-        self._data = json.load(self.source.open(encoding="utf8"))
+        with self.source.open(encoding="utf8") as fin:
+            self._data = json.load(fin)
 
     def _check(self) -> None:
         if self._data is None:
@@ -46,8 +47,7 @@ class LazyLoad:
 
     def __iter__(self) -> Iterable[str]:
         self._check()
-        for key in self.data:
-            yield key
+        yield from self.data
 
     def items(self) -> ItemsView:
         self._check()

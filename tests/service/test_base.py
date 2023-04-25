@@ -15,7 +15,6 @@ BASE_ATTRS = ("url", "report_type", "_valid_types")
 
 
 class BaseTestService(unittest.IsolatedAsyncioTestCase):
-
     serv: service.Service
     service_class = service.Service
     report_type: str = ""

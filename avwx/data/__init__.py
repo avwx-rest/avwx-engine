@@ -9,10 +9,7 @@ from avwx.data.build_stations import main as update_stations
 
 def update_all() -> bool:
     """Update all local data. Requires a reimport to guarentee update"""
-    for func in (update_navaids, update_stations):
-        if func():
-            return False
-    return True
+    return not any(func() for func in (update_navaids, update_stations))
 
 
 if __name__ == "__main__":

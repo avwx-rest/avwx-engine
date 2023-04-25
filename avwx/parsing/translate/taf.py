@@ -48,10 +48,7 @@ def turb_ice(values: List[str], unit: str = "ft") -> str:
     else:
         return ""
     # Create list of split items (type, floor, height)
-    split = []
-    for item in values:
-        if len(item) == 6:
-            split.append([item[1:2], item[2:5], item[5]])
+    split = [[item[1:2], item[2:5], item[5]] for item in values if len(item) == 6]
     # Combine items that cover a layer greater than 9000ft
     for i in reversed(range(len(split) - 1)):
         if (
@@ -88,7 +85,7 @@ def min_max_temp(temp: Optional[str], unit: str = "C") -> str:
         return ""
     value, time = temp[2:].replace("M", "-").replace("Z", "").strip("/").split("/")
     if len(time) > 2:
-        time = time[:2] + "-" + time[2:]
+        time = f"{time[:2]}-{time[2:]}"
     translation = _trans.temperature(core.make_number(value), unit)
     return f"{temp_type} temperature of {translation} at {time}:00Z"
 

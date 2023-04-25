@@ -50,10 +50,10 @@ def wind(
 def temperature(header: str, temp: Number, unit: str = "C") -> str:
     """Format temperature details into a spoken word string"""
     if not (temp and temp.value):
-        return header + " unknown"
+        return f"{header} unknown"
     unit = SPOKEN_UNITS.get(unit, unit)
     use_s = "" if temp.spoken in ("one", "minus one") else "s"
-    return " ".join((header, temp.spoken, "degree" + use_s, unit))
+    return " ".join((header, temp.spoken, f"degree{use_s}", unit))
 
 
 def visibility(vis: Number, unit: str = "m") -> str:
@@ -68,12 +68,12 @@ def visibility(vis: Number, unit: str = "m") -> str:
             unit = "km"
         ret_vis = ret_vis[: ret_vis.find(" (")].lower().replace(unit, "").strip()
         ret_vis = core.spoken_number(core.remove_leading_zeros(ret_vis))
-    ret = "Visibility " + ret_vis
+    ret = f"Visibility {ret_vis}"
     if unit in SPOKEN_UNITS:
         if "/" in vis.repr and "half" not in ret:
             ret += " of a"
-        ret += " " + SPOKEN_UNITS[unit]
-        if not (("one half" in ret and " and " not in ret) or "of a" in ret):
+        ret += f" {SPOKEN_UNITS[unit]}"
+        if ("one half" not in ret or " and " in ret) and "of a" not in ret:
             ret += "s"
     else:
         ret += unit
@@ -200,7 +200,7 @@ def taf_line(line: TafLineData, units: Units) -> str:
         speech.append(translate_taf.turb_ice(line.turbulence, units.altitude))
     if line.icing:
         speech.append(translate_taf.turb_ice(line.icing, units.altitude))
-    return start + " " + (". ".join([l for l in speech if l])).replace(",", ".")
+    return f"{start} " + (". ".join([l for l in speech if l])).replace(",", ".")
 
 
 def taf(data: TafData, units: Units) -> str:

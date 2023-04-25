@@ -60,11 +60,9 @@ def make_pirep_test(station: str) -> Optional[dict]:
     """Builds PIREP test file for station"""
     p = avwx.Pireps(station)
     p.update()
-    ret = []
     if not p.data:
         return None
-    for report in p.data:
-        ret.append({"data": asdict(report)})
+    ret = [{"data": asdict(report)} for report in p.data]
     return {"reports": ret, "station": asdict(p.station)}
 
 
@@ -87,9 +85,7 @@ def make_forecast_test(
     """Builds GFS service test file for station"""
     g = report(station)
     g.update()
-    if not g.data:
-        return None
-    return {"data": asdict(g.data), "station": asdict(g.station)}
+    return {"data": asdict(g.data), "station": asdict(g.station)} if g.data else None
 
 
 def make_mav_test(station: str) -> Optional[dict]:
@@ -148,12 +144,11 @@ def main():
     for target, reports in targets.items():
         for report_type in reports:
             for icao in ("KJFK", "KMCO", "PHNL", "EGLL"):
-                data = globals()[f"make_{report_type}_test"](icao)
-                if data:
+                if data := globals()[f"make_{report_type}_test"](icao):
                     data["icao"] = icao
                     data["created"] = datetime.now(tz=timezone.utc).date()
                     path = TESTS_PATH.joinpath(
-                        target, "data", report_type, icao + ".json"
+                        target, "data", report_type, f"{icao}.json"
                     )
                     save(data, path)
     make_airsigmet_tests()

@@ -271,9 +271,7 @@ def station_filter(station: Station, is_airport: bool, reporting: bool) -> bool:
     """Return True if station matches given criteria"""
     if is_airport and "airport" not in station.type:
         return False
-    if reporting and not station.sends_reports:
-        return False
-    return True
+    return bool(not reporting or station.sends_reports)
 
 
 @lru_cache(maxsize=128)
@@ -317,13 +315,13 @@ def nearest(
     NOTE: Becomes less accurate toward poles and doesn't cross +/-180
     """
     # Default state includes all, no filtering necessary
-    if not (is_airport or sends_reports):
-        data = _query_coords(lat, lon, n, max_coord_distance)
-        stations = [(Station.from_code(code), d) for code, d in data]
-    else:
+    if is_airport or sends_reports:
         stations = _query_filter(
             lat, lon, n, max_coord_distance, is_airport, sends_reports
         )
+    else:
+        data = _query_coords(lat, lon, n, max_coord_distance)
+        stations = [(Station.from_code(code), d) for code, d in data]
     if not stations:
         return []
     ret = []
