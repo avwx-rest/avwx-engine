@@ -5,7 +5,7 @@ Station text-based search
 # stdlib
 from contextlib import suppress
 from functools import lru_cache
-from typing import Iterable, List, Tuple
+from typing import Iterable, List, Optional, Tuple
 
 # module
 from avwx.load_utils import LazyCalc
@@ -29,16 +29,18 @@ TYPE_ORDER = [
 ]
 
 
-def _format_search(airport: dict, keys: Iterable[str]) -> str:
+def _format_search(airport: dict, keys: Iterable[str]) -> Optional[str]:
     values = [airport.get(k) for k in keys]
     code = values[0] or values[2]
+    if not code:
+        return
     values.insert(0, code)
     return " - ".join(k for k in values if k)
 
 
 def _build_corpus() -> List[str]:
     keys = ("icao", "iata", "gps", "city", "state", "name")
-    return [_format_search(s, keys) for s in STATIONS.values()]
+    return [search for s in STATIONS.values() if (search := _format_search(s, keys))]
 
 
 _CORPUS = LazyCalc(_build_corpus)

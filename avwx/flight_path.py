@@ -44,7 +44,7 @@ def _best_coord(
     """
     if previous is None and up_next is None:
         if isinstance(current, list):
-            raise Exception("Unable to determine best coordinate")
+            raise ValueError("Unable to determine best coordinate")
         return current
     # NOTE: add handling to determine best midpoint
     if up_next is None:
