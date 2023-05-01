@@ -387,6 +387,7 @@ class GfsPeriod:
     temperature: Number
     dewpoint: Number
     cloud: Code
+    temperature_minmax: Optional[Number] = None
     precip_chance_12: Optional[Number] = None
     precip_amount_12: Optional[Code] = None
     thunderstorm_12: Optional[Number] = None
@@ -478,6 +479,7 @@ class NbhPeriod(NbhsShared):
 
 @dataclass
 class NbsPeriod(NbhsShared):
+    temperature_minmax: Optional[Number] = None
     precip_chance_6: Optional[Number] = None
     precip_chance_12: Optional[Number] = None
     precip_amount_6: Optional[Number] = None
@@ -492,6 +494,7 @@ class NbsPeriod(NbhsShared):
 
 @dataclass
 class NbePeriod(NbmPeriod):
+    temperature_minmax: Optional[Number] = None
     precip_chance_12: Optional[Number] = None
     precip_amount_12: Optional[Number] = None
     precip_amount_24: Optional[Number] = None

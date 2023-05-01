@@ -2,27 +2,30 @@
 Current Report Base Tests
 """
 
-# stdlib
-import unittest
+# library
+import pytest
 
 # module
 from avwx import current
 from avwx.structs import Code
 
 
-class BaseTest(unittest.TestCase):
-    """Current report base test class"""
+@pytest.mark.parametrize(
+    "code,value",
+    (
+        ("+RATS", "Heavy Rain Thunderstorm"),
+        ("VCFC", "Vicinity Funnel Cloud"),
+        ("-GR", "Light Hail"),
+        ("FZFG", "Freezing Fog"),
+        ("BCBLSN", "Patchy Blowing Snow"),
+    ),
+)
+def test_wxcode(code: str, value: str):
+    """Tests expanding weather codes or ignoring them"""
+    obj = Code(code, value)
+    assert current.base.wx_code(code) == obj
 
-    def test_wxcode(self):
-        """Tests expanding weather codes or ignoring them"""
-        for code, value in (("", ""), ("R03/03002V03", "R03/03002V03")):
-            self.assertEqual(current.base.wx_code(code), value)
-        for code, value in (
-            ("+RATS", "Heavy Rain Thunderstorm"),
-            ("VCFC", "Vicinity Funnel Cloud"),
-            ("-GR", "Light Hail"),
-            ("FZFG", "Freezing Fog"),
-            ("BCBLSN", "Patchy Blowing Snow"),
-        ):
-            obj = Code(code, value)
-            self.assertEqual(current.base.wx_code(code), obj)
+
+@pytest.mark.parametrize("code,value", (("", ""), ("R03/03002V03", "R03/03002V03")))
+def test_unknown_code(code: str, value: str):
+    assert current.base.wx_code(code) == value

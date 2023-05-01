@@ -90,9 +90,10 @@ def _time(item: str, target: Optional[date] = None) -> Optional[Timestamp]:
     return core.make_timestamp(item, time_only=True, target_date=target)
 
 
-def _altitude(item: str) -> Union[Optional[Number], str]:
+def _altitude(item: str) -> Union[Number, str, None]:
     """Convert reporting altitude to a Number or string"""
-    return core.make_number(item) if item.isdigit() else item
+    alt = core.make_number(item) if item.isdigit() else item
+    return alt or None
 
 
 def _aircraft(item: str) -> Union[Aircraft, str]:

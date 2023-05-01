@@ -6,7 +6,9 @@ Service API Tests
 
 # stdlib
 from typing import Tuple
-import unittest
+
+# library
+import pytest
 
 # module
 from avwx import service
@@ -14,37 +16,34 @@ from avwx import service
 BASE_ATTRS = ("url", "report_type", "_valid_types")
 
 
-class BaseTestService(unittest.IsolatedAsyncioTestCase):
-    serv: service.Service
+class BaseServiceTest:
     service_class = service.Service
     report_type: str = ""
-    stations: Tuple[str] = tuple()
     required_attrs: Tuple[str] = tuple()
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.serv = self.service_class(self.report_type)
-        self.required_attrs = BASE_ATTRS + self.required_attrs
+    @pytest.fixture
+    def serv(self) -> service.Service:
+        return self.service_class(self.report_type)
 
-    def test_init(self):
+
+class ServiceClassTest(BaseServiceTest):
+    def test_init(self, serv: service.Service):
         """Tests that the Service class is initialized properly"""
-        for attr in self.required_attrs:
-            self.assertTrue(hasattr(self.serv, attr))
-        self.assertEqual(self.serv.report_type, self.report_type)
+        for attr in BASE_ATTRS + self.required_attrs:
+            assert hasattr(serv, attr) is True
+        assert serv.report_type == self.report_type
 
-    def test_fetch(self):
+
+class ServiceFetchTest(BaseServiceTest):
+    def test_fetch(self, station: str, serv: service.Service):
         """Tests that reports are fetched from service"""
-        try:
-            station = self.stations[0]
-        except IndexError:
-            return
-        report = self.serv.fetch(station)
-        self.assertIsInstance(report, str)
-        self.assertTrue(station in report)
+        report = serv.fetch(station)
+        assert isinstance(report, str)
+        assert station in report
 
-    async def test_async_fetch(self):
+    @pytest.mark.asyncio
+    async def test_async_fetch(self, station: str, serv: service.Service):
         """Tests that reports are fetched from async service"""
-        for station in self.stations:
-            report = await self.serv.async_fetch(station)
-            self.assertIsInstance(report, str)
-            self.assertTrue(station in report)
+        report = await serv.async_fetch(station)
+        assert isinstance(report, str)
+        assert station in report

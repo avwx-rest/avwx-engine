@@ -30,6 +30,7 @@ from .base import (
     _number_100,
     _parse_lines,
     _split_line,
+    _trim_lines,
 )
 
 DataType: TypeAlias = Union[structs.NbhData, structs.NbsData, structs.NbeData]
@@ -62,6 +63,7 @@ def _wind(line: str, size: int = 3) -> List[Optional[structs.Number]]:
 
 
 _HANDLERS: Dict[str, Tuple[str, Callable]] = {
+    "X/N": ("temperature_minmax", _numbers),
     "TMP": ("temperature", _numbers),
     "DPT": ("dewpoint", _numbers),
     "SKY": ("sky_cover", _numbers),
@@ -123,6 +125,7 @@ def _parse_factory(
         if not report:
             return None
         data, lines = _init_parse(report)
+        lines = _trim_lines(lines, 2)
         period_strings = _split_line(lines[hours], size, prefix)
         timestamp = data.time.dt if data.time else None
         periods = _find_time_periods(period_strings, timestamp)

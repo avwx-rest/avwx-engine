@@ -26,6 +26,7 @@ from .base import (
     _numbers,
     _parse_lines,
     _split_line,
+    _trim_lines,
 )
 
 
@@ -52,6 +53,7 @@ def _thunder(line: str, size: int = 3) -> ThunderList:
 _precip_amount = _code(static.PRECIPITATION_AMOUNT)
 
 _HANDLERS = {
+    "X/N": ("temperature_minmax", _numbers),
     "TMP": ("temperature", _numbers),
     "DPT": ("dewpoint", _numbers),
     "CLD": ("cloud", _code(static.CLOUD)),
@@ -95,6 +97,7 @@ def parse_mav(report: str) -> Optional[MavData]:
     if not report:
         return None
     data, lines = _init_parse(report)
+    lines = _trim_lines(lines, 2)
     period_strings = _split_line(lines[2])
     timestamp = data.time.dt if data.time else None
     periods = _find_time_periods(period_strings, timestamp)
@@ -114,6 +117,7 @@ def parse_mex(report: str) -> Optional[MexData]:
     if not report:
         return None
     data, lines = _init_parse(report)
+    lines = _trim_lines(lines, 1)
     period_strings = _split_line(lines[1], size=4, prefix=4)
     timestamp = data.time.dt if data.time else None
     periods = _find_time_periods(period_strings, timestamp)

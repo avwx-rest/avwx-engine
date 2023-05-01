@@ -33,14 +33,14 @@ def _format_search(airport: dict, keys: Iterable[str]) -> Optional[str]:
     values = [airport.get(k) for k in keys]
     code = values[0] or values[2]
     if not code:
-        return
+        return None
     values.insert(0, code)
     return " - ".join(k for k in values if k)
 
 
 def _build_corpus() -> List[str]:
     keys = ("icao", "iata", "gps", "city", "state", "name")
-    return [search for s in STATIONS.values() if (search := _format_search(s, keys))]
+    return [text for s in STATIONS.values() if (text := _format_search(s, keys))]
 
 
 _CORPUS = LazyCalc(_build_corpus)

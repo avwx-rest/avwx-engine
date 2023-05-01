@@ -2,16 +2,19 @@
 AVWX Base class tests
 """
 
-# stdlib
-import unittest
+# library
+import pytest
 
 # module
 from avwx import base, Station
 
 
-def test_find_station():
-    for code in ("KMCO", "MCO"):
-        station = base.find_station(f"1 2 {code} 4")
-        assert isinstance(station, Station)
-        assert station.icao == "KMCO"
+@pytest.mark.parametrize("code", ("KMCO", "MCO"))
+def test_find_station(code: str):
+    station = base.find_station(f"1 2 {code} 4")
+    assert isinstance(station, Station)
+    assert station.icao == "KMCO"
+
+
+def test_no_station():
     assert base.find_station("1 2 3 4") is None

@@ -88,14 +88,14 @@ def make_forecast_test(
     return {"data": asdict(g.data), "station": asdict(g.station)} if g.data else None
 
 
-def make_mav_test(station: str) -> Optional[dict]:
-    """Builds MAV test file for station"""
-    return make_forecast_test(avwx.Mav, station)
+# def make_mav_test(station: str) -> Optional[dict]:
+#     """Builds MAV test file for station"""
+#     return make_forecast_test(avwx.Mav, station)
 
 
-def make_mex_test(station: str) -> Optional[dict]:
-    """Builds MEX test file for station"""
-    return make_forecast_test(avwx.Mex, station)
+# def make_mex_test(station: str) -> Optional[dict]:
+#     """Builds MEX test file for station"""
+#     return make_forecast_test(avwx.Mex, station)
 
 
 def make_nbh_test(station: str) -> Optional[dict]:
@@ -138,7 +138,7 @@ def main():
     """Creates source files for end-to-end tests"""
     targets = {
         "current": ("metar", "taf", "pirep", "notam"),
-        "forecast": ("mav", "mex", "nbh", "nbs", "nbe"),
+        "forecast": ("nbh", "nbs", "nbe"),
     }
 
     for target, reports in targets.items():

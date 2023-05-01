@@ -4,14 +4,17 @@ FileService API Tests
 
 # pylint: disable=protected-access,missing-class-docstring,unidiomatic-typecheck
 
+# library
+import pytest
+
 # module
 from avwx import exceptions, service
 
 # tests
-from .test_base import BaseTestService
+from .test_base import ServiceClassTest, ServiceFetchTest
 
 
-class TestScrapeService(BaseTestService):
+class TestScrapeService(ServiceClassTest):
     service_class = service.files.FileService
     required_attrs = (
         "update_interval",
@@ -21,51 +24,45 @@ class TestScrapeService(BaseTestService):
         "update",
     )
 
-    def test_not_implemented(self):
+    def test_not_implemented(self, serv: service.Service):
         """Tests that the base FileService class throws NotImplemented errors"""
-        if type(self.serv) != service.files.FileService:
+        if type(serv) != service.files.FileService:
             return
         # pylint: disable=no-member.pointless-statement
-        with self.assertRaises(NotImplementedError):
-            self.serv._extract(None, None)
-        with self.assertRaises(NotImplementedError):
-            self.serv._urls
+        with pytest.raises(NotImplementedError):
+            serv._extract(None, None)
+        with pytest.aises(NotImplementedError):
+            serv._urls
 
-    async def test_async_fetch_exceptions(self):
-        """Tests async fetch exception handling"""
+    @pytest.mark.asyncio
+    async def test_fetch_bad_station(self, serv: service.Service):
+        """Tests fetch exception handling"""
         for station in ("12K", "MAYT"):
-            with self.assertRaises(exceptions.BadStation):
-                await self.serv.async_fetch(station)  # pylint: disable=no-member
-        # Should raise exception due to empty url
-        if type(self.serv) == service.scrape.ScrapeService:
-            with self.assertRaises(NotImplementedError):
-                await self.serv.async_fetch("KJFK")  # pylint: disable=no-member
+            with pytest.raises(exceptions.BadStation):
+                await serv.async_fetch(station)  # pylint: disable=no-member
+
+    @pytest.mark.asyncio
+    async def test_not_implemented(self, serv: service.Service):
+        """Should raise exception due to empty url"""
+        if type(serv) == service.scrape.ScrapeService:
+            with pytest.raises(NotImplementedError):
+                await serv.async_fetch("KJFK")  # pylint: disable=no-member
 
 
-class TestNBM(TestScrapeService):
+@pytest.mark.parametrize("station", ("KJFK", "KMCO", "PHNL"))
+class TestNBM(ServiceFetchTest):
     service_class = service.NOAA_NBM
     report_type = "nbs"
-    stations = ["KJFK", "KMCO", "PHNL"]
-
-    def test_fetch(self):
-        """Tests that reports are fetched from service"""
-        super().test_fetch()
-        reports = self.serv.all
-        self.assertIsInstance(reports, list)
-        self.assertGreater(len(reports), 0)
 
 
-# GFS Fetch is deprecated due to data source retirement
+def test_nbm_all():
+    """Tests extracting all reports from the requested file"""
+    reports = service.NOAA_NBM("nbs").all
+    assert isinstance(reports, list)
+    assert len(reports) > 0
 
-# class TestGFS(TestScrapeService):
 
+# @pytest.mark.parametrize("station", ("KJFK", "KLAX", "PHNL"))
+# class TestGFS(ServiceFetchTest):
 #     service_class = service.NOAA_GFS
 #     report_type = "mav"
-#     stations = ["KJFK", "KLAX", "PHNL"]
-
-#     def test_fetch(self):
-#         """Tests that reports are fetched from service"""
-#         super().test_fetch()
-#         reports = self.serv.all
-#         self.assertIsInstance(reports, list)
-#         self.assertGreater(len(reports), 0)

@@ -2,7 +2,13 @@
 Flight path tests
 """
 
-from typing import List, Union
+# stdlib
+from typing import List, Tuple, Union
+
+# library
+import pytest
+
+# module
 from avwx import flight_path
 from avwx.structs import Coord
 
@@ -56,18 +62,22 @@ FLIGHT_PATHS = (
 )
 
 
-def _to_coord(coords: List[Union[tuple, str]]) -> List[Union[Coord, str]]:
+COORD = Tuple[float, float, str]
+COORD_SRC = List[Union[COORD, str]]
+
+
+def _to_coord(coords: COORD_SRC) -> List[Union[Coord, str]]:
     for i, item in enumerate(coords):
         if isinstance(item, tuple):
             coords[i] = Coord(lat=item[0], lon=item[1], repr=item[2])
     return coords
 
 
-def test_to_coordinates():
+@pytest.mark.parametrize("source,target", FLIGHT_PATHS)
+def test_to_coordinates(source: List[str], target: COORD_SRC):
     """Test coord routing from coords, stations, and navaids"""
-    for source, target in FLIGHT_PATHS:
-        source = _to_coord(source)
-        coords = flight_path.to_coordinates(source)
-        # Round to prevent minor coord changes from breaking tests
-        coords = [(round(c.lat, 2), round(c.lon, 2), c.repr) for c in coords]
-        assert coords == target
+    source = _to_coord(source)
+    coords = flight_path.to_coordinates(source)
+    # Round to prevent minor coord changes from breaking tests
+    coords = [(round(c.lat, 2), round(c.lon, 2), c.repr) for c in coords]
+    assert coords == target

@@ -6,54 +6,60 @@ Testing utilities
 
 # stdlib
 import json
-import unittest
 from contextlib import suppress
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Iterator, Optional, Tuple, Union
 
 # module
 from avwx import structs
 
 
-class BaseTest(unittest.TestCase):
-    """TestCase with added assert methods"""
-
-    def assert_number(
-        self, num: structs.Number, repr: str, value: object = None, spoken: str = None
-    ):
-        """Tests string conversion into a Number dataclass"""
-        if not repr:
-            self.assertIsNone(num)
-        else:
-            self.assertIsInstance(num, structs.Number)
-            self.assertEqual(num.repr, repr)
-            self.assertEqual(num.value, value)
-            if spoken:
-                self.assertEqual(num.spoken, spoken)
-
-    def assert_timestamp(self, ts: structs.Timestamp, repr: str, value: datetime):
-        """Tests string conversion into a Timestamp dataclass"""
-        if not repr:
-            self.assertIsNone(ts)
-        else:
-            self.assertIsInstance(ts, structs.Timestamp)
-            self.assertEqual(ts.repr, repr)
-            self.assertEqual(ts.dt, value)
-
-    def assert_code(self, code: structs.Code, repr: object, value: object):
-        """Tests string conversion into a conditional Code dataclass"""
-        if not repr:
-            self.assertIsNone(code)
-        elif isinstance(code, str):
-            self.assertEqual(code, repr)
-        else:
-            self.assertIsInstance(code, structs.Code)
-            self.assertEqual(code.repr, repr)
-            self.assertEqual(code.value, value)
+def assert_number(
+    num: structs.Number, repr: str, value: object = None, spoken: str = None
+):
+    """Tests string conversion into a Number dataclass"""
+    if not repr:
+        assert num is None
+    else:
+        assert isinstance(num, structs.Number)
+        assert num.repr == repr
+        assert num.value == value
+        if spoken:
+            assert num.spoken == spoken
 
 
-def get_data(filepath: str, report_type: str) -> Iterator:
+def assert_timestamp(ts: structs.Timestamp, repr: str, value: datetime):
+    """Tests string conversion into a Timestamp dataclass"""
+    if not repr:
+        assert ts is None
+    else:
+        assert isinstance(ts, structs.Timestamp)
+        assert ts.repr == repr
+        assert ts.dt == value
+
+
+def assert_code(code: structs.Code, repr: Any, value: Any):
+    """Tests string conversion into a conditional Code dataclass"""
+    if not repr:
+        assert code is None
+    elif isinstance(code, str):
+        assert code == repr
+    else:
+        assert isinstance(code, structs.Code)
+        assert code.repr == repr
+        assert code.value == value
+
+
+def assert_value(src: Optional[structs.Number], value: Union[int, float, None]):
+    """Tests a number's value matches the expected value while handling nulls"""
+    if value is None:
+        assert src is None
+    else:
+        assert src.value == value
+
+
+def get_data(filepath: str, report_type: str) -> Iterator[Tuple[dict, str, datetime]]:
     """Returns a glob iterable of JSON files"""
     path = Path(filepath).parent.joinpath("data", report_type)
     for result in path.glob("*.json"):

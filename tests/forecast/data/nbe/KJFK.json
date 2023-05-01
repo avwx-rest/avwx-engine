@@ -1,12 +1,12 @@
 {
-    "created": "2020-07-26",
+    "created": "2023-04-30",
     "data": {
         "forecast": [
             {
                 "dewpoint": {
-                    "repr": "67",
-                    "spoken": "six seven",
-                    "value": 67
+                    "repr": "42",
+                    "spoken": "four two",
+                    "value": 42
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -19,335 +19,30 @@
                     "value": 0
                 },
                 "precip_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
+                    "repr": "52",
+                    "spoken": "zero point five two",
+                    "value": 0.52
                 },
                 "precip_amount_24": null,
                 "precip_chance_12": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
+                    "repr": "91",
+                    "spoken": "nine one",
+                    "value": 91
                 },
                 "precip_duration": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "rain": {
-                    "repr": "100",
-                    "spoken": "one hundred",
-                    "value": 100
-                },
-                "sky_cover": {
-                    "repr": "41",
-                    "spoken": "four one",
-                    "value": 41
-                },
-                "sleet": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": null,
-                "snow_level": {
-                    "repr": "103",
-                    "spoken": "one zero three hundred",
-                    "value": 10300
-                },
-                "solar_radiation": {
-                    "repr": "110",
-                    "spoken": "one one zero",
-                    "value": 110
-                },
-                "temperature": {
-                    "repr": "85",
-                    "spoken": "eight five",
-                    "value": 85
-                },
-                "thunderstorm_12": {
-                    "repr": "1",
-                    "spoken": "one",
-                    "value": 1
-                },
-                "time": {
-                    "dt": "2020-07-27T00:00:00+00:00",
-                    "repr": "00"
-                },
-                "wave_height": null,
-                "wind_direction": {
-                    "repr": "24",
-                    "spoken": "two four zero",
-                    "value": 240
-                },
-                "wind_gust": {
-                    "repr": "14",
-                    "spoken": "one four",
-                    "value": 14
-                },
-                "wind_speed": {
-                    "repr": "7",
-                    "spoken": "seven",
-                    "value": 7
-                }
-            },
-            {
-                "dewpoint": {
-                    "repr": "67",
-                    "spoken": "six seven",
-                    "value": 67
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "icing_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_24": null,
-                "precip_chance_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_duration": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "rain": {
-                    "repr": "100",
-                    "spoken": "one hundred",
-                    "value": 100
-                },
-                "sky_cover": {
-                    "repr": "11",
-                    "spoken": "one one",
-                    "value": 11
-                },
-                "sleet": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": null,
-                "snow_level": {
-                    "repr": "102",
-                    "spoken": "one zero two hundred",
-                    "value": 10200
-                },
-                "solar_radiation": {
-                    "repr": "330",
-                    "spoken": "three three zero",
-                    "value": 330
-                },
-                "temperature": {
-                    "repr": "81",
-                    "spoken": "eight one",
-                    "value": 81
-                },
-                "thunderstorm_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "time": {
-                    "dt": "2020-07-27T12:00:00+00:00",
-                    "repr": "12"
-                },
-                "wave_height": null,
-                "wind_direction": {
-                    "repr": "26",
-                    "spoken": "two six zero",
-                    "value": 260
-                },
-                "wind_gust": {
-                    "repr": "9",
-                    "spoken": "nine",
-                    "value": 9
-                },
-                "wind_speed": {
                     "repr": "5",
                     "spoken": "five",
                     "value": 5
-                }
-            },
-            {
-                "dewpoint": {
-                    "repr": "68",
-                    "spoken": "six eight",
-                    "value": 68
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "icing_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_24": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_chance_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_duration": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
                 },
                 "rain": {
-                    "repr": "100",
-                    "spoken": "one hundred",
-                    "value": 100
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
                 },
                 "sky_cover": {
-                    "repr": "13",
-                    "spoken": "one three",
-                    "value": 13
-                },
-                "sleet": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_level": {
-                    "repr": "106",
-                    "spoken": "one zero six hundred",
-                    "value": 10600
-                },
-                "solar_radiation": {
-                    "repr": "190",
-                    "spoken": "one nine zero",
-                    "value": 190
-                },
-                "temperature": {
-                    "repr": "88",
-                    "spoken": "eight eight",
-                    "value": 88
-                },
-                "thunderstorm_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "time": {
-                    "dt": "2020-07-28T00:00:00+00:00",
-                    "repr": "00"
-                },
-                "wave_height": null,
-                "wind_direction": {
-                    "repr": "24",
-                    "spoken": "two four zero",
-                    "value": 240
-                },
-                "wind_gust": {
-                    "repr": "16",
-                    "spoken": "one six",
-                    "value": 16
-                },
-                "wind_speed": {
                     "repr": "8",
                     "spoken": "eight",
                     "value": 8
-                }
-            },
-            {
-                "dewpoint": {
-                    "repr": "72",
-                    "spoken": "seven two",
-                    "value": 72
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "icing_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_24": null,
-                "precip_chance_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_duration": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "rain": {
-                    "repr": "100",
-                    "spoken": "one hundred",
-                    "value": 100
-                },
-                "sky_cover": {
-                    "repr": "9",
-                    "spoken": "nine",
-                    "value": 9
                 },
                 "sleet": {
                     "repr": "0",
@@ -365,365 +60,53 @@
                     "value": 0
                 },
                 "snow_amount_24": null,
-                "snow_level": {
-                    "repr": "118",
-                    "spoken": "one one eight hundred",
-                    "value": 11800
-                },
+                "snow_level": null,
                 "solar_radiation": {
-                    "repr": "310",
-                    "spoken": "three one zero",
-                    "value": 310
+                    "repr": "21",
+                    "spoken": "two one",
+                    "value": 21
                 },
                 "temperature": {
-                    "repr": "83",
-                    "spoken": "eight three",
-                    "value": 83
+                    "repr": "51",
+                    "spoken": "five one",
+                    "value": 51
                 },
+                "temperature_minmax": null,
                 "thunderstorm_12": {
-                    "repr": "4",
-                    "spoken": "four",
-                    "value": 4
+                    "repr": "31",
+                    "spoken": "three one",
+                    "value": 31
                 },
                 "time": {
-                    "dt": "2020-07-28T12:00:00+00:00",
+                    "dt": "2023-05-01T12:00:00+00:00",
                     "repr": "12"
                 },
-                "wave_height": null,
-                "wind_direction": {
-                    "repr": "24",
-                    "spoken": "two four zero",
-                    "value": 240
-                },
-                "wind_gust": {
-                    "repr": "11",
-                    "spoken": "one one",
-                    "value": 11
-                },
-                "wind_speed": {
+                "wave_height": {
                     "repr": "6",
                     "spoken": "six",
                     "value": 6
-                }
-            },
-            {
-                "dewpoint": {
-                    "repr": "72",
-                    "spoken": "seven two",
-                    "value": 72
                 },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "icing_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": {
-                    "repr": "5",
-                    "spoken": "zero point zero five",
-                    "value": 0.05
-                },
-                "precip_amount_24": {
-                    "repr": "5",
-                    "spoken": "zero point zero five",
-                    "value": 0.05
-                },
-                "precip_chance_12": {
-                    "repr": "40",
-                    "spoken": "four zero",
-                    "value": 40
-                },
-                "precip_duration": {
-                    "repr": "4",
-                    "spoken": "four",
-                    "value": 4
-                },
-                "rain": {
-                    "repr": "100",
-                    "spoken": "one hundred",
-                    "value": 100
-                },
-                "sky_cover": {
-                    "repr": "55",
-                    "spoken": "five five",
-                    "value": 55
-                },
-                "sleet": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_level": {
-                    "repr": "138",
-                    "spoken": "one three eight hundred",
-                    "value": 13800
-                },
-                "solar_radiation": {
-                    "repr": "340",
-                    "spoken": "three four zero",
-                    "value": 340
-                },
-                "temperature": {
-                    "repr": "84",
-                    "spoken": "eight four",
-                    "value": 84
-                },
-                "thunderstorm_12": {
-                    "repr": "43",
-                    "spoken": "four three",
-                    "value": 43
-                },
-                "time": {
-                    "dt": "2020-07-29T00:00:00+00:00",
-                    "repr": "00"
-                },
-                "wave_height": null,
                 "wind_direction": {
-                    "repr": "27",
-                    "spoken": "two seven zero",
-                    "value": 270
+                    "repr": "25",
+                    "spoken": "two five zero",
+                    "value": 250
                 },
                 "wind_gust": {
-                    "repr": "13",
-                    "spoken": "one three",
-                    "value": 13
+                    "repr": "25",
+                    "spoken": "two five",
+                    "value": 25
                 },
                 "wind_speed": {
-                    "repr": "6",
-                    "spoken": "six",
-                    "value": 6
+                    "repr": "17",
+                    "spoken": "one seven",
+                    "value": 17
                 }
             },
             {
                 "dewpoint": {
-                    "repr": "70",
-                    "spoken": "seven zero",
-                    "value": 70
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "icing_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_24": null,
-                "precip_chance_12": {
-                    "repr": "27",
-                    "spoken": "two seven",
-                    "value": 27
-                },
-                "precip_duration": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "rain": {
-                    "repr": "100",
-                    "spoken": "one hundred",
-                    "value": 100
-                },
-                "sky_cover": {
-                    "repr": "46",
-                    "spoken": "four six",
-                    "value": 46
-                },
-                "sleet": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": null,
-                "snow_level": {
-                    "repr": "130",
-                    "spoken": "one three thousand",
-                    "value": 13000
-                },
-                "solar_radiation": {
-                    "repr": "280",
-                    "spoken": "two eight zero",
-                    "value": 280
-                },
-                "temperature": {
-                    "repr": "79",
-                    "spoken": "seven nine",
-                    "value": 79
-                },
-                "thunderstorm_12": {
-                    "repr": "36",
-                    "spoken": "three six",
-                    "value": 36
-                },
-                "time": {
-                    "dt": "2020-07-29T12:00:00+00:00",
-                    "repr": "12"
-                },
-                "wave_height": null,
-                "wind_direction": {
-                    "repr": "26",
-                    "spoken": "two six zero",
-                    "value": 260
-                },
-                "wind_gust": {
-                    "repr": "8",
-                    "spoken": "eight",
-                    "value": 8
-                },
-                "wind_speed": {
-                    "repr": "3",
-                    "spoken": "three",
-                    "value": 3
-                }
-            },
-            {
-                "dewpoint": {
-                    "repr": "68",
-                    "spoken": "six eight",
-                    "value": 68
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "icing_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_24": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_chance_12": {
-                    "repr": "29",
-                    "spoken": "two nine",
-                    "value": 29
-                },
-                "precip_duration": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "rain": {
-                    "repr": "100",
-                    "spoken": "one hundred",
-                    "value": 100
-                },
-                "sky_cover": {
-                    "repr": "24",
-                    "spoken": "two four",
-                    "value": 24
-                },
-                "sleet": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_level": {
-                    "repr": "107",
-                    "spoken": "one zero seven hundred",
-                    "value": 10700
-                },
-                "solar_radiation": {
-                    "repr": "390",
-                    "spoken": "three nine zero",
-                    "value": 390
-                },
-                "temperature": {
-                    "repr": "82",
-                    "spoken": "eight two",
-                    "value": 82
-                },
-                "thunderstorm_12": {
-                    "repr": "27",
-                    "spoken": "two seven",
-                    "value": 27
-                },
-                "time": {
-                    "dt": "2020-07-30T00:00:00+00:00",
-                    "repr": "00"
-                },
-                "wave_height": null,
-                "wind_direction": {
-                    "repr": "22",
-                    "spoken": "two two zero",
-                    "value": 220
-                },
-                "wind_gust": {
-                    "repr": "14",
-                    "spoken": "one four",
-                    "value": 14
-                },
-                "wind_speed": {
-                    "repr": "6",
-                    "spoken": "six",
-                    "value": 6
-                }
-            },
-            {
-                "dewpoint": {
-                    "repr": "67",
-                    "spoken": "six seven",
-                    "value": 67
+                    "repr": "44",
+                    "spoken": "four four",
+                    "value": 44
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -752,14 +135,14 @@
                     "value": 0
                 },
                 "rain": {
-                    "repr": "100",
-                    "spoken": "one hundred",
-                    "value": 100
+                    "repr": "3",
+                    "spoken": "three",
+                    "value": 3
                 },
                 "sky_cover": {
-                    "repr": "37",
-                    "spoken": "three seven",
-                    "value": 37
+                    "repr": "26",
+                    "spoken": "two six",
+                    "value": 26
                 },
                 "sleet": {
                     "repr": "0",
@@ -777,258 +160,53 @@
                     "value": 0
                 },
                 "snow_amount_24": null,
-                "snow_level": {
-                    "repr": "110",
-                    "spoken": "one one thousand",
-                    "value": 11000
-                },
+                "snow_level": null,
                 "solar_radiation": {
-                    "repr": "90",
-                    "spoken": "nine zero",
-                    "value": 90
+                    "repr": "41",
+                    "spoken": "four one",
+                    "value": 41
                 },
                 "temperature": {
-                    "repr": "78",
-                    "spoken": "seven eight",
-                    "value": 78
+                    "repr": "54",
+                    "spoken": "five four",
+                    "value": 54
                 },
+                "temperature_minmax": null,
                 "thunderstorm_12": {
-                    "repr": "18",
-                    "spoken": "one eight",
-                    "value": 18
-                },
-                "time": {
-                    "dt": "2020-07-30T12:00:00+00:00",
-                    "repr": "12"
-                },
-                "wave_height": null,
-                "wind_direction": {
-                    "repr": "31",
-                    "spoken": "three one zero",
-                    "value": 310
-                },
-                "wind_gust": {
-                    "repr": "7",
-                    "spoken": "seven",
-                    "value": 7
-                },
-                "wind_speed": {
-                    "repr": "4",
-                    "spoken": "four",
-                    "value": 4
-                }
-            },
-            {
-                "dewpoint": {
-                    "repr": "66",
-                    "spoken": "six six",
-                    "value": 66
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "icing_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_24": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_chance_12": {
-                    "repr": "14",
-                    "spoken": "one four",
-                    "value": 14
-                },
-                "precip_duration": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "rain": {
-                    "repr": "100",
-                    "spoken": "one hundred",
-                    "value": 100
-                },
-                "sky_cover": {
-                    "repr": "59",
-                    "spoken": "five nine",
-                    "value": 59
-                },
-                "sleet": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_level": {
-                    "repr": "105",
-                    "spoken": "one zero five hundred",
-                    "value": 10500
-                },
-                "solar_radiation": {
-                    "repr": "280",
-                    "spoken": "two eight zero",
-                    "value": 280
-                },
-                "temperature": {
-                    "repr": "80",
-                    "spoken": "eight zero",
-                    "value": 80
-                },
-                "thunderstorm_12": {
-                    "repr": "19",
-                    "spoken": "one nine",
-                    "value": 19
-                },
-                "time": {
-                    "dt": "2020-07-31T00:00:00+00:00",
-                    "repr": "00"
-                },
-                "wave_height": null,
-                "wind_direction": {
-                    "repr": "23",
-                    "spoken": "two three zero",
-                    "value": 230
-                },
-                "wind_gust": {
-                    "repr": "12",
-                    "spoken": "one two",
-                    "value": 12
-                },
-                "wind_speed": {
-                    "repr": "5",
-                    "spoken": "five",
-                    "value": 5
-                }
-            },
-            {
-                "dewpoint": {
-                    "repr": "63",
-                    "spoken": "six three",
-                    "value": 63
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "icing_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_24": null,
-                "precip_chance_12": {
                     "repr": "6",
                     "spoken": "six",
                     "value": 6
                 },
-                "precip_duration": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "rain": {
-                    "repr": "100",
-                    "spoken": "one hundred",
-                    "value": 100
-                },
-                "sky_cover": {
-                    "repr": "28",
-                    "spoken": "two eight",
-                    "value": 28
-                },
-                "sleet": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": null,
-                "snow_level": {
-                    "repr": "102",
-                    "spoken": "one zero two hundred",
-                    "value": 10200
-                },
-                "solar_radiation": {
-                    "repr": "290",
-                    "spoken": "two nine zero",
-                    "value": 290
-                },
-                "temperature": {
-                    "repr": "76",
-                    "spoken": "seven six",
-                    "value": 76
-                },
-                "thunderstorm_12": {
-                    "repr": "16",
-                    "spoken": "one six",
-                    "value": 16
-                },
                 "time": {
-                    "dt": "2020-07-31T12:00:00+00:00",
-                    "repr": "12"
+                    "dt": "2023-05-02T00:00:00+00:00",
+                    "repr": "00"
                 },
-                "wave_height": null,
+                "wave_height": {
+                    "repr": "4",
+                    "spoken": "four",
+                    "value": 4
+                },
                 "wind_direction": {
-                    "repr": "36",
-                    "spoken": "three six zero",
-                    "value": 360
+                    "repr": "20",
+                    "spoken": "two zero zero",
+                    "value": 200
                 },
                 "wind_gust": {
-                    "repr": "9",
-                    "spoken": "nine",
-                    "value": 9
+                    "repr": "15",
+                    "spoken": "one five",
+                    "value": 15
                 },
                 "wind_speed": {
-                    "repr": "5",
-                    "spoken": "five",
-                    "value": 5
+                    "repr": "12",
+                    "spoken": "one two",
+                    "value": 12
                 }
             },
             {
                 "dewpoint": {
-                    "repr": "64",
-                    "spoken": "six four",
-                    "value": 64
+                    "repr": "42",
+                    "spoken": "four two",
+                    "value": 42
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -1041,34 +219,34 @@
                     "value": 0
                 },
                 "precip_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
+                    "repr": "6",
+                    "spoken": "zero point zero six",
+                    "value": 0.06
                 },
                 "precip_amount_24": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
+                    "repr": "6",
+                    "spoken": "zero point zero six",
+                    "value": 0.06
                 },
                 "precip_chance_12": {
-                    "repr": "7",
-                    "spoken": "seven",
-                    "value": 7
+                    "repr": "34",
+                    "spoken": "three four",
+                    "value": 34
                 },
                 "precip_duration": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
+                    "repr": "2",
+                    "spoken": "two",
+                    "value": 2
                 },
                 "rain": {
-                    "repr": "100",
-                    "spoken": "one hundred",
-                    "value": 100
+                    "repr": "74",
+                    "spoken": "seven four",
+                    "value": 74
                 },
                 "sky_cover": {
-                    "repr": "33",
-                    "spoken": "three three",
-                    "value": 33
+                    "repr": "91",
+                    "spoken": "nine one",
+                    "value": 91
                 },
                 "sleet": {
                     "repr": "0",
@@ -1090,52 +268,53 @@
                     "spoken": "zero",
                     "value": 0
                 },
-                "snow_level": {
-                    "repr": "105",
-                    "spoken": "one zero five hundred",
-                    "value": 10500
-                },
+                "snow_level": null,
                 "solar_radiation": {
-                    "repr": "390",
-                    "spoken": "three nine zero",
-                    "value": 390
+                    "repr": "12",
+                    "spoken": "one two",
+                    "value": 12
                 },
                 "temperature": {
-                    "repr": "79",
-                    "spoken": "seven nine",
-                    "value": 79
+                    "repr": "50",
+                    "spoken": "five zero",
+                    "value": 50
                 },
+                "temperature_minmax": null,
                 "thunderstorm_12": {
                     "repr": "13",
                     "spoken": "one three",
                     "value": 13
                 },
                 "time": {
-                    "dt": "2020-08-01T00:00:00+00:00",
-                    "repr": "00"
+                    "dt": "2023-05-02T12:00:00+00:00",
+                    "repr": "12"
                 },
-                "wave_height": null,
-                "wind_direction": {
-                    "repr": "18",
-                    "spoken": "one eight zero",
-                    "value": 180
-                },
-                "wind_gust": {
-                    "repr": "10",
-                    "spoken": "one zero",
-                    "value": 10
-                },
-                "wind_speed": {
+                "wave_height": {
                     "repr": "4",
                     "spoken": "four",
                     "value": 4
+                },
+                "wind_direction": {
+                    "repr": "23",
+                    "spoken": "two three zero",
+                    "value": 230
+                },
+                "wind_gust": {
+                    "repr": "14",
+                    "spoken": "one four",
+                    "value": 14
+                },
+                "wind_speed": {
+                    "repr": "11",
+                    "spoken": "one one",
+                    "value": 11
                 }
             },
             {
                 "dewpoint": {
-                    "repr": "64",
-                    "spoken": "six four",
-                    "value": 64
+                    "repr": "40",
+                    "spoken": "four zero",
+                    "value": 40
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -1148,30 +327,30 @@
                     "value": 0
                 },
                 "precip_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
+                    "repr": "5",
+                    "spoken": "zero point zero five",
+                    "value": 0.05
                 },
                 "precip_amount_24": null,
                 "precip_chance_12": {
-                    "repr": "4",
-                    "spoken": "four",
-                    "value": 4
+                    "repr": "61",
+                    "spoken": "six one",
+                    "value": 61
                 },
                 "precip_duration": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
                 },
                 "rain": {
-                    "repr": "100",
-                    "spoken": "one hundred",
-                    "value": 100
+                    "repr": "13",
+                    "spoken": "one three",
+                    "value": 13
                 },
                 "sky_cover": {
-                    "repr": "24",
-                    "spoken": "two four",
-                    "value": 24
+                    "repr": "57",
+                    "spoken": "five seven",
+                    "value": 57
                 },
                 "sleet": {
                     "repr": "0",
@@ -1189,52 +368,53 @@
                     "value": 0
                 },
                 "snow_amount_24": null,
-                "snow_level": {
-                    "repr": "103",
-                    "spoken": "one zero three hundred",
-                    "value": 10300
-                },
+                "snow_level": null,
                 "solar_radiation": {
-                    "repr": "290",
-                    "spoken": "two nine zero",
-                    "value": 290
+                    "repr": "36",
+                    "spoken": "three six",
+                    "value": 36
                 },
                 "temperature": {
-                    "repr": "76",
-                    "spoken": "seven six",
-                    "value": 76
+                    "repr": "52",
+                    "spoken": "five two",
+                    "value": 52
                 },
+                "temperature_minmax": null,
                 "thunderstorm_12": {
-                    "repr": "10",
-                    "spoken": "one zero",
-                    "value": 10
+                    "repr": "11",
+                    "spoken": "one one",
+                    "value": 11
                 },
                 "time": {
-                    "dt": "2020-08-01T12:00:00+00:00",
-                    "repr": "12"
+                    "dt": "2023-05-03T00:00:00+00:00",
+                    "repr": "00"
                 },
-                "wave_height": null,
+                "wave_height": {
+                    "repr": "3",
+                    "spoken": "three",
+                    "value": 3
+                },
                 "wind_direction": {
-                    "repr": "2",
-                    "spoken": "two zero",
-                    "value": 20
+                    "repr": "25",
+                    "spoken": "two five zero",
+                    "value": 250
                 },
                 "wind_gust": {
-                    "repr": "9",
-                    "spoken": "nine",
-                    "value": 9
+                    "repr": "15",
+                    "spoken": "one five",
+                    "value": 15
                 },
                 "wind_speed": {
-                    "repr": "5",
-                    "spoken": "five",
-                    "value": 5
+                    "repr": "12",
+                    "spoken": "one two",
+                    "value": 12
                 }
             },
             {
                 "dewpoint": {
-                    "repr": "67",
-                    "spoken": "six seven",
-                    "value": 67
+                    "repr": "37",
+                    "spoken": "three seven",
+                    "value": 37
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -1252,113 +432,10 @@
                     "value": 0
                 },
                 "precip_amount_24": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
+                    "repr": "5",
+                    "spoken": "zero point zero five",
+                    "value": 0.05
                 },
-                "precip_chance_12": {
-                    "repr": "8",
-                    "spoken": "eight",
-                    "value": 8
-                },
-                "precip_duration": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "rain": {
-                    "repr": "100",
-                    "spoken": "one hundred",
-                    "value": 100
-                },
-                "sky_cover": {
-                    "repr": "29",
-                    "spoken": "two nine",
-                    "value": 29
-                },
-                "sleet": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_amount_24": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "snow_level": {
-                    "repr": "111",
-                    "spoken": "one one one hundred",
-                    "value": 11100
-                },
-                "solar_radiation": {
-                    "repr": "360",
-                    "spoken": "three six zero",
-                    "value": 360
-                },
-                "temperature": {
-                    "repr": "78",
-                    "spoken": "seven eight",
-                    "value": 78
-                },
-                "thunderstorm_12": {
-                    "repr": "16",
-                    "spoken": "one six",
-                    "value": 16
-                },
-                "time": {
-                    "dt": "2020-08-02T00:00:00+00:00",
-                    "repr": "00"
-                },
-                "wave_height": null,
-                "wind_direction": {
-                    "repr": "17",
-                    "spoken": "one seven zero",
-                    "value": 170
-                },
-                "wind_gust": {
-                    "repr": "12",
-                    "spoken": "one two",
-                    "value": 12
-                },
-                "wind_speed": {
-                    "repr": "7",
-                    "spoken": "seven",
-                    "value": 7
-                }
-            },
-            {
-                "dewpoint": {
-                    "repr": "67",
-                    "spoken": "six seven",
-                    "value": 67
-                },
-                "freezing_precip": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "icing_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_12": {
-                    "repr": "0",
-                    "spoken": "zero",
-                    "value": 0
-                },
-                "precip_amount_24": null,
                 "precip_chance_12": {
                     "repr": "11",
                     "spoken": "one one",
@@ -1370,14 +447,118 @@
                     "value": 0
                 },
                 "rain": {
-                    "repr": "100",
-                    "spoken": "one hundred",
-                    "value": 100
+                    "repr": "9",
+                    "spoken": "nine",
+                    "value": 9
                 },
                 "sky_cover": {
-                    "repr": "38",
-                    "spoken": "three eight",
-                    "value": 38
+                    "repr": "61",
+                    "spoken": "six one",
+                    "value": 61
+                },
+                "sleet": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_24": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_level": null,
+                "solar_radiation": {
+                    "repr": "2",
+                    "spoken": "two",
+                    "value": 2
+                },
+                "temperature": {
+                    "repr": "47",
+                    "spoken": "four seven",
+                    "value": 47
+                },
+                "temperature_minmax": null,
+                "thunderstorm_12": {
+                    "repr": "2",
+                    "spoken": "two",
+                    "value": 2
+                },
+                "time": {
+                    "dt": "2023-05-03T12:00:00+00:00",
+                    "repr": "12"
+                },
+                "wave_height": {
+                    "repr": "2",
+                    "spoken": "two",
+                    "value": 2
+                },
+                "wind_direction": {
+                    "repr": "26",
+                    "spoken": "two six zero",
+                    "value": 260
+                },
+                "wind_gust": {
+                    "repr": "13",
+                    "spoken": "one three",
+                    "value": 13
+                },
+                "wind_speed": {
+                    "repr": "10",
+                    "spoken": "one zero",
+                    "value": 10
+                }
+            },
+            {
+                "dewpoint": {
+                    "repr": "40",
+                    "spoken": "four zero",
+                    "value": 40
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "icing_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": {
+                    "repr": "2",
+                    "spoken": "zero point zero two",
+                    "value": 0.02
+                },
+                "precip_amount_24": null,
+                "precip_chance_12": {
+                    "repr": "58",
+                    "spoken": "five eight",
+                    "value": 58
+                },
+                "precip_duration": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "rain": {
+                    "repr": "55",
+                    "spoken": "five five",
+                    "value": 55
+                },
+                "sky_cover": {
+                    "repr": "72",
+                    "spoken": "seven two",
+                    "value": 72
                 },
                 "sleet": {
                     "repr": "0",
@@ -1395,52 +576,469 @@
                     "value": 0
                 },
                 "snow_amount_24": null,
-                "snow_level": {
-                    "repr": "110",
-                    "spoken": "one one thousand",
-                    "value": 11000
-                },
+                "snow_level": null,
                 "solar_radiation": {
-                    "repr": "280",
-                    "spoken": "two eight zero",
-                    "value": 280
+                    "repr": "36",
+                    "spoken": "three six",
+                    "value": 36
                 },
                 "temperature": {
-                    "repr": "77",
-                    "spoken": "seven seven",
-                    "value": 77
+                    "repr": "51",
+                    "spoken": "five one",
+                    "value": 51
                 },
+                "temperature_minmax": null,
                 "thunderstorm_12": {
-                    "repr": "12",
-                    "spoken": "one two",
-                    "value": 12
+                    "repr": "11",
+                    "spoken": "one one",
+                    "value": 11
                 },
                 "time": {
-                    "dt": "2020-08-02T12:00:00+00:00",
-                    "repr": "12"
+                    "dt": "2023-05-04T00:00:00+00:00",
+                    "repr": "00"
                 },
-                "wave_height": null,
+                "wave_height": {
+                    "repr": "2",
+                    "spoken": "two",
+                    "value": 2
+                },
                 "wind_direction": {
-                    "repr": "28",
-                    "spoken": "two eight zero",
-                    "value": 280
+                    "repr": "29",
+                    "spoken": "two nine zero",
+                    "value": 290
                 },
                 "wind_gust": {
-                    "repr": "6",
-                    "spoken": "six",
-                    "value": 6
+                    "repr": "11",
+                    "spoken": "one one",
+                    "value": 11
                 },
                 "wind_speed": {
-                    "repr": "3",
-                    "spoken": "three",
-                    "value": 3
+                    "repr": "8",
+                    "spoken": "eight",
+                    "value": 8
                 }
             },
             {
                 "dewpoint": {
-                    "repr": "68",
-                    "spoken": "six eight",
-                    "value": 68
+                    "repr": "41",
+                    "spoken": "four one",
+                    "value": 41
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "icing_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": {
+                    "repr": "1",
+                    "spoken": "zero point zero one",
+                    "value": 0.01
+                },
+                "precip_amount_24": {
+                    "repr": "3",
+                    "spoken": "zero point zero three",
+                    "value": 0.03
+                },
+                "precip_chance_12": {
+                    "repr": "29",
+                    "spoken": "two nine",
+                    "value": 29
+                },
+                "precip_duration": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "rain": {
+                    "repr": "31",
+                    "spoken": "three one",
+                    "value": 31
+                },
+                "sky_cover": {
+                    "repr": "72",
+                    "spoken": "seven two",
+                    "value": 72
+                },
+                "sleet": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_24": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_level": null,
+                "solar_radiation": {
+                    "repr": "5",
+                    "spoken": "five",
+                    "value": 5
+                },
+                "temperature": {
+                    "repr": "48",
+                    "spoken": "four eight",
+                    "value": 48
+                },
+                "temperature_minmax": null,
+                "thunderstorm_12": {
+                    "repr": "10",
+                    "spoken": "one zero",
+                    "value": 10
+                },
+                "time": {
+                    "dt": "2023-05-04T12:00:00+00:00",
+                    "repr": "12"
+                },
+                "wave_height": {
+                    "repr": "2",
+                    "spoken": "two",
+                    "value": 2
+                },
+                "wind_direction": {
+                    "repr": "36",
+                    "spoken": "three six zero",
+                    "value": 360
+                },
+                "wind_gust": {
+                    "repr": "15",
+                    "spoken": "one five",
+                    "value": 15
+                },
+                "wind_speed": {
+                    "repr": "10",
+                    "spoken": "one zero",
+                    "value": 10
+                }
+            },
+            {
+                "dewpoint": {
+                    "repr": "42",
+                    "spoken": "four two",
+                    "value": 42
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "icing_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": {
+                    "repr": "1",
+                    "spoken": "zero point zero one",
+                    "value": 0.01
+                },
+                "precip_amount_24": null,
+                "precip_chance_12": {
+                    "repr": "48",
+                    "spoken": "four eight",
+                    "value": 48
+                },
+                "precip_duration": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "rain": {
+                    "repr": "40",
+                    "spoken": "four zero",
+                    "value": 40
+                },
+                "sky_cover": {
+                    "repr": "73",
+                    "spoken": "seven three",
+                    "value": 73
+                },
+                "sleet": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_24": null,
+                "snow_level": null,
+                "solar_radiation": {
+                    "repr": "39",
+                    "spoken": "three nine",
+                    "value": 39
+                },
+                "temperature": {
+                    "repr": "52",
+                    "spoken": "five two",
+                    "value": 52
+                },
+                "temperature_minmax": null,
+                "thunderstorm_12": {
+                    "repr": "9",
+                    "spoken": "nine",
+                    "value": 9
+                },
+                "time": {
+                    "dt": "2023-05-05T00:00:00+00:00",
+                    "repr": "00"
+                },
+                "wave_height": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "wind_direction": {
+                    "repr": "34",
+                    "spoken": "three four zero",
+                    "value": 340
+                },
+                "wind_gust": {
+                    "repr": "14",
+                    "spoken": "one four",
+                    "value": 14
+                },
+                "wind_speed": {
+                    "repr": "9",
+                    "spoken": "nine",
+                    "value": 9
+                }
+            },
+            {
+                "dewpoint": {
+                    "repr": "42",
+                    "spoken": "four two",
+                    "value": 42
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "icing_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_24": {
+                    "repr": "1",
+                    "spoken": "zero point zero one",
+                    "value": 0.01
+                },
+                "precip_chance_12": {
+                    "repr": "18",
+                    "spoken": "one eight",
+                    "value": 18
+                },
+                "precip_duration": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "rain": {
+                    "repr": "7",
+                    "spoken": "seven",
+                    "value": 7
+                },
+                "sky_cover": {
+                    "repr": "64",
+                    "spoken": "six four",
+                    "value": 64
+                },
+                "sleet": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_24": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_level": null,
+                "solar_radiation": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "temperature": {
+                    "repr": "49",
+                    "spoken": "four nine",
+                    "value": 49
+                },
+                "temperature_minmax": null,
+                "thunderstorm_12": {
+                    "repr": "8",
+                    "spoken": "eight",
+                    "value": 8
+                },
+                "time": {
+                    "dt": "2023-05-05T12:00:00+00:00",
+                    "repr": "12"
+                },
+                "wave_height": {
+                    "repr": "2",
+                    "spoken": "two",
+                    "value": 2
+                },
+                "wind_direction": {
+                    "repr": "36",
+                    "spoken": "three six zero",
+                    "value": 360
+                },
+                "wind_gust": {
+                    "repr": "12",
+                    "spoken": "one two",
+                    "value": 12
+                },
+                "wind_speed": {
+                    "repr": "8",
+                    "spoken": "eight",
+                    "value": 8
+                }
+            },
+            {
+                "dewpoint": {
+                    "repr": "43",
+                    "spoken": "four three",
+                    "value": 43
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "icing_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_24": null,
+                "precip_chance_12": {
+                    "repr": "21",
+                    "spoken": "two one",
+                    "value": 21
+                },
+                "precip_duration": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "rain": {
+                    "repr": "23",
+                    "spoken": "two three",
+                    "value": 23
+                },
+                "sky_cover": {
+                    "repr": "54",
+                    "spoken": "five four",
+                    "value": 54
+                },
+                "sleet": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_24": null,
+                "snow_level": null,
+                "solar_radiation": {
+                    "repr": "29",
+                    "spoken": "two nine",
+                    "value": 29
+                },
+                "temperature": {
+                    "repr": "53",
+                    "spoken": "five three",
+                    "value": 53
+                },
+                "temperature_minmax": null,
+                "thunderstorm_12": {
+                    "repr": "10",
+                    "spoken": "one zero",
+                    "value": 10
+                },
+                "time": {
+                    "dt": "2023-05-06T00:00:00+00:00",
+                    "repr": "00"
+                },
+                "wave_height": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "wind_direction": {
+                    "repr": "16",
+                    "spoken": "one six zero",
+                    "value": 160
+                },
+                "wind_gust": {
+                    "repr": "10",
+                    "spoken": "one zero",
+                    "value": 10
+                },
+                "wind_speed": {
+                    "repr": "7",
+                    "spoken": "seven",
+                    "value": 7
+                }
+            },
+            {
+                "dewpoint": {
+                    "repr": "42",
+                    "spoken": "four two",
+                    "value": 42
                 },
                 "freezing_precip": {
                     "repr": "0",
@@ -1463,9 +1061,9 @@
                     "value": 0
                 },
                 "precip_chance_12": {
-                    "repr": "18",
-                    "spoken": "one eight",
-                    "value": 18
+                    "repr": "10",
+                    "spoken": "one zero",
+                    "value": 10
                 },
                 "precip_duration": {
                     "repr": "0",
@@ -1473,14 +1071,14 @@
                     "value": 0
                 },
                 "rain": {
-                    "repr": "100",
-                    "spoken": "one hundred",
-                    "value": 100
+                    "repr": "8",
+                    "spoken": "eight",
+                    "value": 8
                 },
                 "sky_cover": {
-                    "repr": "44",
-                    "spoken": "four four",
-                    "value": 44
+                    "repr": "39",
+                    "spoken": "three nine",
+                    "value": 39
                 },
                 "sleet": {
                     "repr": "0",
@@ -1502,54 +1100,472 @@
                     "spoken": "zero",
                     "value": 0
                 },
-                "snow_level": {
-                    "repr": "127",
-                    "spoken": "one two seven hundred",
-                    "value": 12700
-                },
+                "snow_level": null,
                 "solar_radiation": {
-                    "repr": "460",
-                    "spoken": "four six zero",
-                    "value": 460
+                    "repr": "6",
+                    "spoken": "six",
+                    "value": 6
                 },
                 "temperature": {
-                    "repr": "77",
-                    "spoken": "seven seven",
-                    "value": 77
+                    "repr": "51",
+                    "spoken": "five one",
+                    "value": 51
                 },
+                "temperature_minmax": null,
                 "thunderstorm_12": {
-                    "repr": "20",
-                    "spoken": "two zero",
-                    "value": 20
+                    "repr": "7",
+                    "spoken": "seven",
+                    "value": 7
                 },
                 "time": {
-                    "dt": "2020-08-03T00:00:00+00:00",
-                    "repr": "00"
+                    "dt": "2023-05-06T12:00:00+00:00",
+                    "repr": "12"
                 },
-                "wave_height": null,
+                "wave_height": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
                 "wind_direction": {
-                    "repr": "18",
-                    "spoken": "one eight zero",
-                    "value": 180
+                    "repr": "33",
+                    "spoken": "three three zero",
+                    "value": 330
                 },
                 "wind_gust": {
-                    "repr": "14",
-                    "spoken": "one four",
-                    "value": 14
+                    "repr": "12",
+                    "spoken": "one two",
+                    "value": 12
                 },
                 "wind_speed": {
                     "repr": "8",
                     "spoken": "eight",
                     "value": 8
                 }
+            },
+            {
+                "dewpoint": {
+                    "repr": "44",
+                    "spoken": "four four",
+                    "value": 44
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "icing_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_24": null,
+                "precip_chance_12": {
+                    "repr": "16",
+                    "spoken": "one six",
+                    "value": 16
+                },
+                "precip_duration": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "rain": {
+                    "repr": "8",
+                    "spoken": "eight",
+                    "value": 8
+                },
+                "sky_cover": {
+                    "repr": "48",
+                    "spoken": "four eight",
+                    "value": 48
+                },
+                "sleet": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_24": null,
+                "snow_level": null,
+                "solar_radiation": {
+                    "repr": "55",
+                    "spoken": "five five",
+                    "value": 55
+                },
+                "temperature": {
+                    "repr": "57",
+                    "spoken": "five seven",
+                    "value": 57
+                },
+                "temperature_minmax": null,
+                "thunderstorm_12": {
+                    "repr": "4",
+                    "spoken": "four",
+                    "value": 4
+                },
+                "time": {
+                    "dt": "2023-05-07T00:00:00+00:00",
+                    "repr": "00"
+                },
+                "wave_height": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "wind_direction": {
+                    "repr": "29",
+                    "spoken": "two nine zero",
+                    "value": 290
+                },
+                "wind_gust": {
+                    "repr": "12",
+                    "spoken": "one two",
+                    "value": 12
+                },
+                "wind_speed": {
+                    "repr": "8",
+                    "spoken": "eight",
+                    "value": 8
+                }
+            },
+            {
+                "dewpoint": {
+                    "repr": "44",
+                    "spoken": "four four",
+                    "value": 44
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "icing_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_24": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_chance_12": {
+                    "repr": "6",
+                    "spoken": "six",
+                    "value": 6
+                },
+                "precip_duration": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "rain": {
+                    "repr": "4",
+                    "spoken": "four",
+                    "value": 4
+                },
+                "sky_cover": {
+                    "repr": "31",
+                    "spoken": "three one",
+                    "value": 31
+                },
+                "sleet": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_24": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_level": null,
+                "solar_radiation": {
+                    "repr": "6",
+                    "spoken": "six",
+                    "value": 6
+                },
+                "temperature": {
+                    "repr": "55",
+                    "spoken": "five five",
+                    "value": 55
+                },
+                "temperature_minmax": null,
+                "thunderstorm_12": {
+                    "repr": "4",
+                    "spoken": "four",
+                    "value": 4
+                },
+                "time": {
+                    "dt": "2023-05-07T12:00:00+00:00",
+                    "repr": "12"
+                },
+                "wave_height": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "wind_direction": {
+                    "repr": "33",
+                    "spoken": "three three zero",
+                    "value": 330
+                },
+                "wind_gust": {
+                    "repr": "12",
+                    "spoken": "one two",
+                    "value": 12
+                },
+                "wind_speed": {
+                    "repr": "8",
+                    "spoken": "eight",
+                    "value": 8
+                }
+            },
+            {
+                "dewpoint": {
+                    "repr": "46",
+                    "spoken": "four six",
+                    "value": 46
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "icing_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_24": null,
+                "precip_chance_12": {
+                    "repr": "9",
+                    "spoken": "nine",
+                    "value": 9
+                },
+                "precip_duration": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "rain": {
+                    "repr": "7",
+                    "spoken": "seven",
+                    "value": 7
+                },
+                "sky_cover": {
+                    "repr": "35",
+                    "spoken": "three five",
+                    "value": 35
+                },
+                "sleet": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_24": null,
+                "snow_level": null,
+                "solar_radiation": {
+                    "repr": "45",
+                    "spoken": "four five",
+                    "value": 45
+                },
+                "temperature": {
+                    "repr": "61",
+                    "spoken": "six one",
+                    "value": 61
+                },
+                "temperature_minmax": null,
+                "thunderstorm_12": {
+                    "repr": "6",
+                    "spoken": "six",
+                    "value": 6
+                },
+                "time": {
+                    "dt": "2023-05-08T00:00:00+00:00",
+                    "repr": "00"
+                },
+                "wave_height": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "wind_direction": {
+                    "repr": "25",
+                    "spoken": "two five zero",
+                    "value": 250
+                },
+                "wind_gust": {
+                    "repr": "13",
+                    "spoken": "one three",
+                    "value": 13
+                },
+                "wind_speed": {
+                    "repr": "9",
+                    "spoken": "nine",
+                    "value": 9
+                }
+            },
+            {
+                "dewpoint": {
+                    "repr": "46",
+                    "spoken": "four six",
+                    "value": 46
+                },
+                "freezing_precip": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "icing_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_amount_24": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "precip_chance_12": {
+                    "repr": "7",
+                    "spoken": "seven",
+                    "value": 7
+                },
+                "precip_duration": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "rain": {
+                    "repr": "6",
+                    "spoken": "six",
+                    "value": 6
+                },
+                "sky_cover": {
+                    "repr": "22",
+                    "spoken": "two two",
+                    "value": 22
+                },
+                "sleet": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_12": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_amount_24": {
+                    "repr": "0",
+                    "spoken": "zero",
+                    "value": 0
+                },
+                "snow_level": null,
+                "solar_radiation": {
+                    "repr": "6",
+                    "spoken": "six",
+                    "value": 6
+                },
+                "temperature": {
+                    "repr": "57",
+                    "spoken": "five seven",
+                    "value": 57
+                },
+                "temperature_minmax": null,
+                "thunderstorm_12": {
+                    "repr": "5",
+                    "spoken": "five",
+                    "value": 5
+                },
+                "time": {
+                    "dt": "2023-05-08T12:00:00+00:00",
+                    "repr": "12"
+                },
+                "wave_height": {
+                    "repr": "1",
+                    "spoken": "one",
+                    "value": 1
+                },
+                "wind_direction": {
+                    "repr": "30",
+                    "spoken": "three zero zero",
+                    "value": 300
+                },
+                "wind_gust": {
+                    "repr": "13",
+                    "spoken": "one three",
+                    "value": 13
+                },
+                "wind_speed": {
+                    "repr": "9",
+                    "spoken": "nine",
+                    "value": 9
+                }
             }
         ],
-        "raw": "KJFK    NBM V3.2 NBE GUIDANCE    7/26/2020  0500 UTC\nMON 27| TUE 28| WED 29| THU 30| FRI 31| SAT 01| SUN 02|MON CLIMO\nUTC    00  12| 00  12| 00  12| 00  12| 00  12| 00  12| 00  12| 00\nFHR    19  31| 43  55| 67  79| 91 103|115 127|139 151|163 175|187\nX/N    94  76| 95  79| 94  75| 90  74| 88  72| 87  72| 87  73| 86 69 83\nTMP    85  81| 88  83| 84  79| 82  78| 80  76| 79  76| 78  77| 77\nDPT    67  67| 68  72| 72  70| 68  67| 66  63| 64  64| 67  67| 68\nSKY    41  11| 13   9| 55  46| 24  37| 59  28| 33  24| 29  38| 44\nWDR    24  26| 24  24| 27  26| 22  31| 23  36| 18   2| 17  28| 18\nWSP     7   5|  8   6|  6   3|  6   4|  5   5|  4   5|  7   3|  8\nGST    14   9| 16  11| 13   8| 14   7| 12   9| 10   9| 12   6| 14\nP12     1   0|  0   0| 40  27| 29  17| 14   6|  7   4|  8  11| 18 19 18\nQ12     0   0|  0   0|  5   0|  0   0|  0   0|  0   0|  0   0|  0\nQ24          |  0    |  5    |  0    |  0    |  0    |  0    |  0\nDUR     0   0|  0   0|  4   0|  0   0|  0   0|  0   0|  0   0|  0\nT12     1   0|  0   4| 43  36| 27  18| 19  16| 13  10| 16  12| 20\nPZR     0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0\nPSN     0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0\nPPL     0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0\nPRA   100 100|100 100|100 100|100 100|100 100|100 100|100 100|100\nS12     0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0\nSLV   103 102|106 118|138 130|107 110|105 102|105 103|111 110|127\nI12     0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0\nS24          |  0    |  0    |  0    |  0    |  0    |  0    |  0\nSOL   110 330|190 310|340 280|390  90|280 290|390 290|360 280|460",
+        "raw": "KJFK    NBM V4.1 NBE GUIDANCE    4/30/2023  1900 UTC\n   MON 01 |TUE 02 |WED 03 |THU 04 |FRI 05 |SAT 06 |SUN 07 |MON 08  CLIMO \nUTC    12| 00  12| 00  12| 00  12| 00  12| 00  12| 00  12| 00  12\nFHR    17| 29  41| 53  65| 77  89|101 113|125 137|149 161|173 185\nTXN    48| 60  47| 57  44| 56  44| 59  46| 59  46| 64  50| 69  53  49 66\nXND     1|  2   2|  2   1|  2   1|  2   1|  2   1|  2   2|  2   2\nTMP    51| 54  50| 52  47| 51  48| 52  49| 53  51| 57  55| 61  57\nTSD     2|  2   2|  2   1|  2   1|  2   2|  2   2|  2   2|  3   2\nDPT    42| 44  42| 40  37| 40  41| 42  42| 43  42| 44  44| 46  46\nDSD     2|  2   2|  2   1|  2   1|  1   2|  2   2|  2   1|  1   1\nSKY     8| 26  91| 57  61| 72  72| 73  64| 54  39| 48  31| 35  22\nSSD     9| 28   8| 21  34| 20  20| 15  21| 22  27| 21  21| 17  13\nWDR    25| 20  23| 25  26| 29  36| 34  36| 16  33| 29  33| 25  30\nWSP    17| 12  11| 12  10|  8  10|  9   8|  7   8|  8   8|  9   9\nWSD     2|  2   2|  2   1|  2   2|  2   2|  2   2|  2   1|  2   2\nGST    25| 15  14| 15  13| 11  15| 14  12| 10  12| 12  12| 13  13\nGSD     3|  3   3|  1   3|  2   2|  4   3|  2   2|  2   2|  3   3\nP12    91| 17  34| 61  11| 58  29| 48  18| 21  10| 16   6|  9   7  32 26\nQ12    52|  0   6|  5   0|  2   1|  1   0|  0   0|  0   0|  0   0\nQ24      |      6|      5|      3|      1|      0|      0|      0  91\nDUR     5|  0   2|  1   0|  1   1|  0   0|  0   0|  0   0|  0   0\nT12    31|  6  13| 11   2| 11  10|  9   8| 10   7|  4   4|  6   5\nPZR     0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0\nPSN     0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0\nPPL     0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0\nPRA     0|  3  74| 13   9| 55  31| 40   7| 23   8|  8   4|  7   6\nS12     0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0\nI12     0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0\nS24      |      0|      0|      0|      0|      0|      0|      0\nSOL    21| 41  12| 36   2| 36   5| 39   1| 29   6| 55   6| 45   6\nSWH     6|  4   4|  3   2|  2   2|  1   2|  1   1|  1   1|  1   1",
         "remarks": null,
+        "sanitized": "KJFK    NBM V4.1 NBE GUIDANCE    4/30/2023  1900 UTC\n   MON 01 |TUE 02 |WED 03 |THU 04 |FRI 05 |SAT 06 |SUN 07 |MON 08  CLIMO \nUTC    12| 00  12| 00  12| 00  12| 00  12| 00  12| 00  12| 00  12\nFHR    17| 29  41| 53  65| 77  89|101 113|125 137|149 161|173 185\nTXN    48| 60  47| 57  44| 56  44| 59  46| 59  46| 64  50| 69  53  49 66\nXND     1|  2   2|  2   1|  2   1|  2   1|  2   1|  2   2|  2   2\nTMP    51| 54  50| 52  47| 51  48| 52  49| 53  51| 57  55| 61  57\nTSD     2|  2   2|  2   1|  2   1|  2   2|  2   2|  2   2|  3   2\nDPT    42| 44  42| 40  37| 40  41| 42  42| 43  42| 44  44| 46  46\nDSD     2|  2   2|  2   1|  2   1|  1   2|  2   2|  2   1|  1   1\nSKY     8| 26  91| 57  61| 72  72| 73  64| 54  39| 48  31| 35  22\nSSD     9| 28   8| 21  34| 20  20| 15  21| 22  27| 21  21| 17  13\nWDR    25| 20  23| 25  26| 29  36| 34  36| 16  33| 29  33| 25  30\nWSP    17| 12  11| 12  10|  8  10|  9   8|  7   8|  8   8|  9   9\nWSD     2|  2   2|  2   1|  2   2|  2   2|  2   2|  2   1|  2   2\nGST    25| 15  14| 15  13| 11  15| 14  12| 10  12| 12  12| 13  13\nGSD     3|  3   3|  1   3|  2   2|  4   3|  2   2|  2   2|  3   3\nP12    91| 17  34| 61  11| 58  29| 48  18| 21  10| 16   6|  9   7  32 26\nQ12    52|  0   6|  5   0|  2   1|  1   0|  0   0|  0   0|  0   0\nQ24      |      6|      5|      3|      1|      0|      0|      0  91\nDUR     5|  0   2|  1   0|  1   1|  0   0|  0   0|  0   0|  0   0\nT12    31|  6  13| 11   2| 11  10|  9   8| 10   7|  4   4|  6   5\nPZR     0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0\nPSN     0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0\nPPL     0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0\nPRA     0|  3  74| 13   9| 55  31| 40   7| 23   8|  8   4|  7   6\nS12     0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0\nI12     0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0|  0   0\nS24      |      0|      0|      0|      0|      0|      0|      0\nSOL    21| 41  12| 36   2| 36   5| 39   1| 29   6| 55   6| 45   6\nSWH     6|  4   4|  3   2|  2   2|  1   2|  1   1|  1   1|  1   1",
         "station": "KJFK",
         "time": {
-            "dt": "2020-07-26T05:00:00+00:00",
-            "repr": "7/26/2020  0500"
+            "dt": "2023-04-30T19:00:00+00:00",
+            "repr": "4/30/2023  1900"
         }
     },
     "icao": "KJFK",
@@ -1558,15 +1574,19 @@
         "country": "US",
         "elevation_ft": 13,
         "elevation_m": 4,
+        "gps": "KJFK",
         "iata": "JFK",
         "icao": "KJFK",
-        "latitude": 40.639801,
-        "longitude": -73.7789,
+        "latitude": 40.639447,
+        "local": "JFK",
+        "longitude": -73.779317,
         "name": "John F Kennedy International Airport",
-        "note": "Manhattan, New York City, NYC, Idlewild",
+        "note": "Manhattan, New York City, NYC, Idlewild, IDL, KIDL",
         "reporting": true,
         "runways": [
             {
+                "bearing1": 121.0,
+                "bearing2": 301.0,
                 "ident1": "13R",
                 "ident2": "31L",
                 "length_ft": 14511,
@@ -1575,6 +1595,8 @@
                 "width_ft": 200
             },
             {
+                "bearing1": 31.0,
+                "bearing2": 211.0,
                 "ident1": "04L",
                 "ident2": "22R",
                 "length_ft": 12079,
@@ -1583,6 +1605,8 @@
                 "width_ft": 200
             },
             {
+                "bearing1": 121.0,
+                "bearing2": 301.0,
                 "ident1": "13L",
                 "ident2": "31R",
                 "length_ft": 10000,
@@ -1591,6 +1615,8 @@
                 "width_ft": 200
             },
             {
+                "bearing1": 30.6,
+                "bearing2": 210.6,
                 "ident1": "04R",
                 "ident2": "22L",
                 "length_ft": 8400,

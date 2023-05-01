@@ -5,113 +5,153 @@ ScrapeService API Tests
 # pylint: disable=protected-access,missing-class-docstring,unidiomatic-typecheck
 
 # stdlib
-import unittest
+from typing import Tuple
+
+# library
+import pytest
 
 # module
 from avwx import exceptions, service
 
 # tests
-from .test_base import BaseTestService
+from .test_base import ServiceClassTest, ServiceFetchTest
 
 
-class TestStationScrape(BaseTestService):
+class TestStationScrape(ServiceClassTest):
     service_class = service.scrape.StationScrape
     report_type = "metar"
     required_attrs = ("method", "_strip_whitespace", "_extract")
 
-    def test_service(self):
+    def test_service(self, serv: service.Service):
         """Tests for expected values and method implementation"""
         # pylint: disable=no-member
-        if type(self.serv) == service.scrape.StationScrape:
-            self.assertIsNone(self.serv.url)
+        if type(serv) == service.scrape.StationScrape:
+            assert serv.url is None
         else:
-            self.assertIsInstance(self.serv.url, str)
-        self.assertIsInstance(self.serv.method, str)
-        self.assertIn(self.serv.method, ("GET", "POST"))
+            assert isinstance(serv.url, str)
+        assert isinstance(serv.method, str)
+        assert serv.method in {"GET", "POST"}
 
-    def test_make_err(self):
+    def test_make_err(self, serv: service.Service):
         """Tests that InvalidRequest exceptions are generated with the right message"""
         # pylint: disable=no-member
         key, msg = "test_key", "testing"
-        err = self.serv._make_err(msg, key)
-        err_str = (
-            f"Could not find {key} in {self.serv.__class__.__name__} response\n{msg}"
-        )
-        self.assertIsInstance(err, exceptions.InvalidRequest)
-        self.assertEqual(err.args, (err_str,))
-        self.assertEqual(str(err), err_str)
+        name = serv.__class__.__name__
+        err = serv._make_err(msg, key)
+        err_str = f"Could not find {key} in {name} response\n{msg}"
+        assert isinstance(err, exceptions.InvalidRequest)
+        assert err.args == (err_str,)
+        assert str(err) == err_str
 
-    def test_fetch_exceptions(self):
+    def test_fetch_bad_station(self, serv: service.Service):
         """Tests fetch exception handling"""
         for station in ("12K", "MAYT"):
-            with self.assertRaises(exceptions.BadStation):
-                self.serv.fetch(station)  # pylint: disable=no-member
-        # Should raise exception due to empty url
-        if type(self.serv) == service.scrape.ScrapeService:
-            with self.assertRaises(NotImplementedError):
-                self.serv.fetch("KJFK")  # pylint: disable=no-member
+            with pytest.raises(exceptions.BadStation):
+                serv.fetch(station)  # pylint: disable=no-member
 
-    async def test_async_fetch_exceptions(self):
-        """Tests async fetch exception handling"""
+    def test_not_implemented(self, serv: service.Service):
+        """Should raise exception due to empty url"""
+        if type(serv) == service.scrape.ScrapeService:
+            with pytest.raises(NotImplementedError):
+                serv.fetch("KJFK")  # pylint: disable=no-member
+
+    @pytest.mark.asyncio
+    async def test_fetch_bad_station(self, serv: service.Service):
+        """Tests fetch exception handling"""
         for station in ("12K", "MAYT"):
-            with self.assertRaises(exceptions.BadStation):
-                await self.serv.async_fetch(station)  # pylint: disable=no-member
-        # Should raise exception due to empty url
-        if type(self.serv) == service.scrape.ScrapeService:
-            with self.assertRaises(NotImplementedError):
-                await self.serv.async_fetch("KJFK")  # pylint: disable=no-member
+            with pytest.raises(exceptions.BadStation):
+                await serv.async_fetch(station)  # pylint: disable=no-member
+
+    @pytest.mark.asyncio
+    async def test_not_implemented(self, serv: service.Service):
+        """Should raise exception due to empty url"""
+        if type(serv) == service.scrape.ScrapeService:
+            with pytest.raises(NotImplementedError):
+                await serv.async_fetch("KJFK")  # pylint: disable=no-member
 
 
-class TestNOAA(TestStationScrape):
+@pytest.mark.parametrize("station", ("KJFK", "EGLL", "PHNL"))
+class TestNOAA(ServiceFetchTest):
     service_class = service.NOAA
-    stations = ["KJFK", "EGLL", "PHNL"]
+    report_type = "metar"
 
 
+class TestNOAAClass(TestStationScrape):
+    service_class = service.NOAA
+
+
+# @pytest.mark.parametrize("station", ("RKSI", "RKSS", "RKNY"))
 # class TestAMO(TestStationScrape):
-
 #     service_class = service.AMO
-#     stations = ["RKSI", "RKSS", "RKNY"]
+#     report_type = "metar"
+
+# class TestAMOClass(TestStationScrape):
+#     service_class = service.AMO
 
 
-class TestMAC(TestStationScrape):
+@pytest.mark.parametrize("station", ("SKBO",))
+class TestMAC(ServiceFetchTest):
     service_class = service.MAC
-    stations = ["SKBO"]
+    report_type = "metar"
 
 
-class TestAUBOM(TestStationScrape):
+class TestMACClass(TestStationScrape):
+    service_class = service.MAC
+
+
+@pytest.mark.parametrize("station", ("YBBN", "YSSY", "YCNK"))
+class TestAUBOM(ServiceFetchTest):
     service_class = service.AUBOM
-    stations = ["YBBN", "YSSY", "YCNK"]
+    report_type = "metar"
 
 
-class TestOLBS(TestStationScrape):
+class TestAUBOMClass(TestStationScrape):
+    service_class = service.AUBOM
+
+
+@pytest.mark.parametrize("station", ("VAPO", "VEGT"))
+class TestOLBS(ServiceFetchTest):
     service_class = service.OLBS
-    stations = ["VAPO", "VEGT"]
+    report_type = "metar"
 
 
-class TestNAM(TestStationScrape):
+class TestOLBSClass(TestStationScrape):
+    service_class = service.OLBS
+
+
+@pytest.mark.parametrize("station", ("EHAM", "ENGM", "BIRK"))
+class TestNAM(ServiceFetchTest):
     service_class = service.NAM
-    stations = ["EHAM", "ENGM", "BIRK"]
+    report_type = "metar"
 
 
-# class TestAVT(TestStationScrape):
+class TestNAMClass(TestStationScrape):
+    service_class = service.NAM
 
+
+# @pytest.mark.parametrize("station", ("ZJQH", "ZYCC", "ZSWZ"))
+# class TestAVT(ServiceFetchTest):
 #     service_class = service.AVT
-#     stations = ["ZJQH", "ZYCC", "ZSWZ"]
+#     report_type = "metar"
+
+# class TestAVTClass(TestStationScrape):
+#     service_class = service.AVT
 
 
-class TestModule(unittest.TestCase):
-    def test_get_service(self):
-        """Tests that the correct service class is returned"""
-        for stations, country, serv in (
-            (("KJFK", "PHNL"), "US", service.NOAA),
-            (("EGLL",), "GB", service.NOAA),
-            (("RKSI",), "KR", service.AMO),
-            (("SKBO", "SKPP"), "CO", service.MAC),
-            (("YWOL", "YSSY"), "AU", service.AUBOM),
-            (("VAPO", "VEGT"), "IN", service.OLBS),
-            # (("ZJQH", "ZYCC", "ZSWZ"), "CN", service.AVT),
-        ):
-            for station in stations:
-                self.assertIsInstance(
-                    service.get_service(station, country)("metar"), serv
-                )
+@pytest.mark.parametrize(
+    "stations,country,serv",
+    (
+        (("KJFK", "PHNL"), "US", service.NOAA),
+        (("EGLL",), "GB", service.NOAA),
+        (("RKSI",), "KR", service.AMO),
+        (("SKBO", "SKPP"), "CO", service.MAC),
+        (("YWOL", "YSSY"), "AU", service.AUBOM),
+        (("VAPO", "VEGT"), "IN", service.OLBS),
+        # (("ZJQH", "ZYCC", "ZSWZ"), "CN", service.AVT),
+    ),
+)
+def test_get_service(stations: Tuple[str], country: str, serv: service.Service):
+    """Tests that the correct service class is returned"""
+    for station in stations:
+        fetched = service.get_service(station, country)("metar")
+        assert isinstance(fetched, serv)
