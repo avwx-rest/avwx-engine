@@ -71,7 +71,7 @@ def _header(value: str) -> Tuple[str, Optional[Code], Optional[str]]:
     return number, report_type, replaces
 
 
-def _find_q_codes(codes: List[str]) -> Tuple[Code | None, List[Code], List[Code]]:
+def _find_q_codes(codes: List[str]) -> Tuple[Optional[Code], List[Code], List[Code]]:
     """Identify traffic, purpose, and scope codes"""
     # The 'K' code can be both purpose and scope, but they have the same value
     traffic = None
