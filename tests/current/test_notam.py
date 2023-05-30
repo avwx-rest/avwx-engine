@@ -74,6 +74,21 @@ QUALIFIERS = [
         coord=structs.Coord(51.25, -0.28, "5125N00028W"),
         radius=structs.Number("002", 2, "two"),
     ),
+    structs.Qualifiers(
+        repr="OIIX/QPIXX/A/000/999/",
+        fir="OIIX",
+        subject=structs.Code("PI", "Instrument approach procedure"),
+        condition=structs.Code("XX", "Unknown"),
+        traffic=None,
+        purpose=[],
+        scope=[
+            structs.Code("A", "Aerodrome"),
+        ],
+        lower=structs.Number("000", 0, "zero"),
+        upper=structs.Number("999", 999, "nine nine nine"),
+        coord=None,
+        radius=None,
+    ),
 ]
 
 

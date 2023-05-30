@@ -71,15 +71,27 @@ def _header(value: str) -> Tuple[str, Optional[Code], Optional[str]]:
     return number, report_type, replaces
 
 
+def _find_q_codes(codes: List[str]) -> Tuple[Code | None, List[Code], List[Code]]:
+    """Identify traffic, purpose, and scope codes"""
+    # The 'K' code can be both purpose and scope, but they have the same value
+    traffic = None
+    purpose: List[Code] = []
+    scope: List[Code] = []
+    for code in codes:
+        if not traffic and code in TRAFFIC_TYPE:
+            traffic = Code.from_dict(code, TRAFFIC_TYPE)
+        if not purpose:
+            purpose = Code.from_list(code, PURPOSE, exclusive=True)
+        if not scope:
+            scope = Code.from_list(code, SCOPE, exclusive=True)
+    return traffic, purpose, scope
+
+
 def _qualifiers(value: str, units: Units) -> Qualifiers:
     """Parse the NOTAM Q) line into components"""
     data = [i.strip() for i in value.strip().split("/")]
-    # Some reports exclude the traffic element
-    if len(data) == 7:
-        fir, q_code, purpose, scope, lower, upper, location = data
-        traffic = None
-    else:
-        fir, q_code, traffic, purpose, scope, lower, upper, location = data
+    fir, q_code, *codes, lower, upper, location = data
+    traffic, purpose, scope = _find_q_codes(codes)
     subject, condition = None, None
     if q_code.startswith("Q"):
         subject = Code.from_dict(q_code[1:3], SUBJECT)
@@ -93,9 +105,9 @@ def _qualifiers(value: str, units: Units) -> Qualifiers:
         fir=fir,
         subject=subject,
         condition=condition,
-        traffic=Code.from_dict(traffic, TRAFFIC_TYPE),
-        purpose=[i for i in (Code.from_dict(c, PURPOSE) for c in purpose) if i],
-        scope=[i for i in (Code.from_dict(c, SCOPE) for c in scope) if i],
+        traffic=traffic,
+        purpose=purpose,
+        scope=scope,
         lower=core.make_altitude(lower, units)[0],
         upper=core.make_altitude(upper, units)[0],
         coord=_rear_coord(location[:-3]) if location else None,

@@ -94,6 +94,24 @@ class Code:
             value = default
         return cls(key, value or "Unknown")
 
+    @classmethod
+    def from_list(
+        cls: Type[CodeType],
+        keys: Optional[str],
+        codes: Dict[str, str],
+        exclusive: bool = False,
+    ) -> List[CodeType]:
+        """Load a list of codes from string characters"""
+        if not keys:
+            return []
+        out = []
+        for key in keys.strip():
+            if value := codes.get(key):
+                out.append(cls(key, value))
+            elif exclusive:
+                return []
+        return out
+
 
 @dataclass
 class Coord:
