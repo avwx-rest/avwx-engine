@@ -6,6 +6,7 @@ NOTAM report parsing
 
 # stdlib
 import re
+from contextlib import suppress
 from datetime import datetime, timezone
 from typing import List, Optional
 
@@ -47,6 +48,8 @@ KEY_PATTERNS = {
 
 def _rear_coord(value: str) -> Optional[Coord]:
     """Convert coord strings with direction characters at the end: 5126N00036W"""
+    if len(value) != 11:
+        return None
     try:
         lat = float(f"{value[:2]}.{value[2:4]}")
         lon = float(f"{value[5:8]}.{value[8:10]}")
@@ -71,27 +74,49 @@ def _header(value: str) -> Tuple[str, Optional[Code], Optional[str]]:
     return number, report_type, replaces
 
 
-def _find_q_codes(codes: List[str]) -> Tuple[Optional[Code], List[Code], List[Code]]:
+def _find_q_codes(
+    codes: List[str],
+) -> Tuple[
+    Optional[Code],
+    List[Code],
+    List[Code],
+    Optional[Code],
+    Optional[Code],
+    Optional[Code],
+]:
     """Identify traffic, purpose, and scope codes"""
     # The 'K' code can be both purpose and scope, but they have the same value
-    traffic = None
+    traffic, lower, upper, location = None, None, None, None
     purpose: List[Code] = []
     scope: List[Code] = []
     for code in codes:
+        # Altitudes can be int or float values
+        with suppress(ValueError):
+            float(code)
+            if not lower:
+                lower = code
+            else:
+                upper = code
+            continue
+        # location will always be the longest element if available
+        if len(code) > 10:
+            location = code
+            continue
+        # Remaining elements must match known value dictionary combinations
         if not traffic and code in TRAFFIC_TYPE:
             traffic = Code.from_dict(code, TRAFFIC_TYPE)
+            continue
         if not purpose:
             purpose = Code.from_list(code, PURPOSE, exclusive=True)
         if not scope:
             scope = Code.from_list(code, SCOPE, exclusive=True)
-    return traffic, purpose, scope
+    return traffic, purpose, scope, lower, upper, location
 
 
 def _qualifiers(value: str, units: Units) -> Qualifiers:
     """Parse the NOTAM Q) line into components"""
-    data = [i.strip() for i in value.strip().split("/")]
-    fir, q_code, *codes, lower, upper, location = data
-    traffic, purpose, scope = _find_q_codes(codes)
+    fir, q_code, *codes = [i.strip() for i in value.strip().split("/")]
+    traffic, purpose, scope, lower, upper, location = _find_q_codes(codes)
     subject, condition = None, None
     if q_code.startswith("Q"):
         subject = Code.from_dict(q_code[1:3], SUBJECT)
@@ -134,10 +159,10 @@ def make_year_timestamp(
     value = value.strip()
     if not value:
         return None
-    if value == "PERM":
+    if value.startswith("PERM"):
         return Timestamp(repr, datetime(2100, 1, 1, tzinfo=timezone.utc))
     tz = _tz_offset_for(tzname) or timezone.utc
-    raw = datetime.strptime(value, r"%y%m%d%H%M")
+    raw = datetime.strptime(value[:10], r"%y%m%d%H%M")
     date = datetime(raw.year, raw.month, raw.day, raw.hour, raw.minute, tzinfo=tz)
     return Timestamp(repr, date)
 

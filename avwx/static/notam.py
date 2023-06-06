@@ -184,6 +184,7 @@ SUBJECT = {
     "WW": "Significant volcanic activity",
     "WY": "Aerial survey",
     "WZ": "Model flying",
+    "XX": "Unknown",
 }
 
 CONDITION = {

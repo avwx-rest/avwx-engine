@@ -89,6 +89,26 @@ QUALIFIERS = [
         coord=None,
         radius=None,
     ),
+    structs.Qualifiers(
+        repr="FSSS/QXXXX/IV/NBO/AE/000/999",
+        fir="FSSS",
+        subject=structs.Code("XX", "Unknown"),
+        condition=structs.Code("XX", "Unknown"),
+        traffic=structs.Code("IV", "IFR and VFR"),
+        purpose=[
+            structs.Code("N", "Immediate"),
+            structs.Code("B", "Briefing"),
+            structs.Code("O", "Flight Operations"),
+        ],
+        scope=[
+            structs.Code("A", "Aerodrome"),
+            structs.Code("E", "En Route"),
+        ],
+        lower=structs.Number("000", 0, "zero"),
+        upper=structs.Number("999", 999, "nine nine nine"),
+        coord=None,
+        radius=None,
+    ),
 ]
 
 
@@ -126,8 +146,9 @@ def test_rear_coord(text: str, lat: float, lon: float):
     assert notam._rear_coord(text) == coord
 
 
-def test_bad_rear_coord():
-    assert notam._rear_coord("latNlongE") is None
+@pytest.mark.parametrize("text", ("latNlongE", "2102N086"))
+def test_bad_rear_coord(text: str):
+    assert notam._rear_coord(text) is None
 
 
 @pytest.mark.parametrize(
@@ -203,6 +224,12 @@ def test_bad_year_timestamp():
             "2107221958",
             None,
             datetime(2021, 7, 22, 19, 58, tzinfo=timezone.utc),
+        ),
+        (
+            "2303070658",
+            "2306042200 EST",
+            datetime(2023, 3, 7, 6, 58, tzinfo=gettz("EST")),
+            datetime(2023, 6, 4, 22, 0, tzinfo=gettz("EST")),
         ),
         ("", "", None, None),
     ),
