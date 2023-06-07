@@ -184,6 +184,8 @@ Returns `True` if a new report is available, else `False`
 
 **wind_speed**: *avwx.structs.Number*
 
+**wind_variable_direction**: *avwx.structs.Number*
+
 ## class avwx.structs.**TafLineTrans**
 
 **altimeter**: *str*
