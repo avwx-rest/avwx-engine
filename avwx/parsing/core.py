@@ -589,7 +589,8 @@ def make_altitude(
         if value.endswith(end):
             force_fl = False
             units.altitude = end.lower()
-            value = value.removesuffix(end)
+            # post 3.8 value = value.removesuffix(end)
+            value = value[: -len(end)]
     # F430
     if value[0] == "F" and value[1:].isdigit():
         value = f"FL{value[1:]}"

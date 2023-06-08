@@ -350,6 +350,7 @@ def test_wind_shear():
     assert lines[0].wind_shear == "WS015/20055"
     assert tafobj.translations.forecast[1].clouds == ""
 
+
 def test_wind_variable_direction():
     """Variable wind direction should be recognized when present"""
     report = (
@@ -360,6 +361,7 @@ def test_wind_variable_direction():
     lines = tafobj.data.forecast
     assert len(lines) == 2
     assert len(lines[0].wind_variable_direction) == 2
+
 
 def test_prob_tempo():
     """Non-PROB types should take precident but still fill the probability value"""
