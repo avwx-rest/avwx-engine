@@ -46,6 +46,7 @@ TAF_FIELDS = (
     "transition_start",
     "start_time",
     "end_time",
+    "wind_variable_direction",
 )
 
 
@@ -349,6 +350,16 @@ def test_wind_shear():
     assert lines[0].wind_shear == "WS015/20055"
     assert tafobj.translations.forecast[1].clouds == ""
 
+def test_wind_variable_direction():
+    """Variable wind direction should be recognized when present"""
+    report = (
+        "MNPC 301530Z 3018/3118 16006KT 100V200 5000 RA/TSRA FEW014CB BKN016TCU "
+        "BECMG 3100/3102 VRB04KT 6000 -RA/HZ BKN016"
+    )
+    tafobj = taf.Taf.from_report(report)
+    lines = tafobj.data.forecast
+    assert len(lines) == 2
+    assert len(lines[0].wind_variable_direction) == 2
 
 def test_prob_tempo():
     """Non-PROB types should take precident but still fill the probability value"""

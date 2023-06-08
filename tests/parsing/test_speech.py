@@ -232,6 +232,7 @@ def test_taf_line():  # sourcery skip: dict-assign-update-to-union
         "wind_shear": "WS020/07040KT",
         "wind_speed": core.make_number("12"),
         "wx_codes": get_wx_codes(["+RA"])[1],
+        "wind_variable_direction": [core.make_number("40"), core.make_number("120")],
     }
     line.update({k: None for k in empty_fields})
     line = structs.TafLineData(**line)

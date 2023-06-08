@@ -59,6 +59,7 @@
                     "spoken": "zero six zero",
                     "value": 60
                 },
+                "wind_variable_direction": [],
                 "wind_gust": {
                     "repr": "22",
                     "spoken": "two two",
@@ -117,6 +118,7 @@
                     "spoken": "zero six zero",
                     "value": 60
                 },
+                "wind_variable_direction": [],
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
@@ -164,6 +166,7 @@
                     "spoken": "zero six zero",
                     "value": 60
                 },
+                "wind_variable_direction": [],
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
@@ -211,6 +214,7 @@
                     "spoken": "zero six zero",
                     "value": 60
                 },
+                "wind_variable_direction": [],
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
@@ -265,6 +269,7 @@
                     "spoken": "zero six zero",
                     "value": 60
                 },
+                "wind_variable_direction": [],
                 "wind_gust": {
                     "repr": "22",
                     "spoken": "two two",
