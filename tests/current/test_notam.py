@@ -109,6 +109,43 @@ QUALIFIERS = [
         coord=None,
         radius=None,
     ),
+    structs.Qualifiers(
+        repr="FQBE/QWLPW/IV/NBO/W/000/012 255550S323435E",
+        fir="FQBE",
+        subject=structs.Code("WL", "Ascent of free balloon"),
+        condition=structs.Code(repr="PW", value="Unknown"),
+        traffic=structs.Code("IV", "IFR and VFR"),
+        purpose=[
+            structs.Code("N", "Immediate"),
+            structs.Code("B", "Briefing"),
+            structs.Code("O", "Flight Operations"),
+        ],
+        scope=[
+            structs.Code("W", "Warning"),
+        ],
+        lower=structs.Number("000", 0, "zero"),
+        upper=structs.Number("012", 12, "one two"),
+        coord=None,
+        radius=None,
+    ),
+    structs.Qualifiers(
+        repr="MMFR/QOBCE//M/AE/000/999/1645N09947W",
+        fir="MMFR",
+        subject=structs.Code("OB", "Obstacle"),
+        condition=structs.Code("CE", "Erected"),
+        traffic=None,
+        purpose=[
+            structs.Code("M", "Miscellaneous"),
+        ],
+        scope=[
+            structs.Code("A", "Aerodrome"),
+            structs.Code("E", "En Route"),
+        ],
+        lower=structs.Number("000", 0, "zero"),
+        upper=structs.Number("999", 999, "nine nine nine"),
+        coord=structs.Coord(16.45, -99.47, "1645N09947W"),
+        radius=None,
+    ),
 ]
 
 
@@ -185,13 +222,25 @@ def test_qualifiers(qualifier: structs.Qualifiers):
             "EST",
             datetime(2022, 5, 24, 14, 52, tzinfo=gettz("EST")),
         ),
-        ("PERM", "PERM", None, datetime(2100, 1, 1, tzinfo=timezone.utc)),
     ),
 )
 def test_make_year_timestamp(raw: str, trim: str, tz: Optional[str], dt: datetime):
     """Tests datetime conversion from year-prefixed strings"""
     timestamp = structs.Timestamp(raw, dt)
     assert notam.make_year_timestamp(trim, raw, tz) == timestamp
+
+
+@pytest.mark.parametrize(
+    "raw,code,value",
+    (
+        ("PERM", "PERM", "Permanent"),
+        ("PERM\n123", "PERM", "Permanent"),
+        ("WIE", "WIE", "With Immediate Effect"),
+    ),
+)
+def test_timestamp_codes(raw: str, code: str, value: str):
+    """Tests datetime conversion when given a known code"""
+    assert notam.make_year_timestamp(raw, raw) == structs.Code(code, value)
 
 
 def test_bad_year_timestamp():
@@ -249,8 +298,8 @@ def test_copied_tag():
     """Tests an instance when the body includes a previously used tag value"""
     data = notam.Notams.from_report(COPIED_TAG_REPORT).data[0]
     assert data.body.startswith("REF AIP") is True
+    assert isinstance(data.end_time, structs.Code)
     assert data.end_time.repr == "PERM"
-    assert isinstance(data.end_time.dt, datetime)
 
 
 def test_parse():

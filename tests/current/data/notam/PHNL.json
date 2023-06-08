@@ -2446,7 +2446,7 @@
             "data": {
                 "body": "IAP DANIEL K INOUYE INTL, HONOLULU, HI.\nILS Y RWY 4R, AMDT 2...\nRAISE THE S-ILS 4R(ASTERISK) FROM DA 209/HAT 200 TO DA 258/HAT 250. CHART: TDZE 8.\nTHIS IS ILS Y RWY 4R, AMDT 2A.",
                 "end_time": {
-                    "dt": "2100-01-01T00:00:00+00:00",
+                    "value": "Permanent",
                     "repr": "PERM"
                 },
                 "lower": null,
@@ -2526,7 +2526,7 @@
             "data": {
                 "body": "IAP DANIEL K INOUYE INTL, HONOLULU, HI.\nILS Z RWY 4R, AMDT 2...\nRAISE THE S-ILS 4R(ASTERISK) FROM DA 209/HAT 200 TO DA 258/HAT 250. CHART: TDZE 8.\nTHIS IS ILS Z RWY 4R, AMDT 2A.",
                 "end_time": {
-                    "dt": "2100-01-01T00:00:00+00:00",
+                    "value": "Permanent",
                     "repr": "PERM"
                 },
                 "lower": null,
@@ -2997,7 +2997,7 @@
             "data": {
                 "body": "IAP DANIEL K INOUYE INTL, HONOLULU, HI.\nRNAV (GPS) Y RWY 8L, AMDT 3A...\nCIRCLING CAT A/B MDA 680/HAA 667, CAT C MDA 820/HAA 807. \nALTERNATE MINIMUMS: STANDARD EXCEPT CAT C 900-2 1/4, CAT D 1300-3.\nTHIS IS RNAV (GPS) Y RWY 8L, AMDT 3B.",
                 "end_time": {
-                    "dt": "2100-01-01T00:00:00+00:00",
+                    "value": "Permanent",
                     "repr": "PERM"
                 },
                 "lower": null,
@@ -3077,7 +3077,7 @@
             "data": {
                 "body": "IAP DANIEL K INOUYE INTL, HONOLULU, HI.\nRNAV (GPS) RWY 4L, ORIG-B...\nLNAV CAT E MDA 980/HAT 970, VIS 3.\nCIRCLING CAT A/B MDA 680/HAA 667, CAT C MDA 820/HAA 807. \nALTERNATE MINIMUMS: STANDARD EXCEPT CAT C 900-2 1/4, CAT D 1400-3, CAT E 2000-3.\nCHART NOTE: RWY 4L HELICOPTER VISIBILITY REDUCTION BELOW 3/4 SM NOT AUTHORIZED.\nTHIS IS RNAV (GPS) RWY 4L, ORIG-C.",
                 "end_time": {
-                    "dt": "2100-01-01T00:00:00+00:00",
+                    "value": "Permanent",
                     "repr": "PERM"
                 },
                 "lower": null,

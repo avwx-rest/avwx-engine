@@ -17,9 +17,14 @@ from tests.util import assert_value
 
 
 @pytest.mark.parametrize("code,temp", (("1045", -4.5), ("0237", 23.7), ("0987", 98.7)))
-def test_decimal_code(code: str, temp: float):
+def test_decimal_code(code: str, temp: Optional[float]):
     """Tests that a 4-digit number gets decoded into a temperature number"""
     assert remarks.decimal_code(code).value == temp
+
+
+def test_bad_decimal_code():
+    """Tests empty code value"""
+    assert remarks.decimal_code("") is None
 
 
 @pytest.mark.parametrize(

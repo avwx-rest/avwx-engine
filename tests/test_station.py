@@ -33,6 +33,10 @@ def test_is_na_format(code: str):
     assert station.uses_na_format(code) is True
 
 
+def test_na_format_default():
+    assert station.uses_na_format("KJFK", True) is True
+
+
 @pytest.mark.parametrize("code", IN_CODES)
 def test_is_in_format(code: str):
     assert station.uses_na_format(code) is False

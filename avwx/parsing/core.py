@@ -172,6 +172,7 @@ def make_number(
     num = num.rstrip("M.")
     num = num.replace("O", "0")
     num = num.replace("+", "")
+    num = num.replace(",", "")
     # Create Fraction
     if "/" in num:
         return make_fraction(num, repr, literal)
@@ -588,8 +589,7 @@ def make_altitude(
         if value.endswith(end):
             force_fl = False
             units.altitude = end.lower()
-            # post 3.8 value = value.removesuffix(end)
-            value = value[: -len(end)]
+            value = value.removesuffix(end)
     # F430
     if value[0] == "F" and value[1:].isdigit():
         value = f"FL{value[1:]}"

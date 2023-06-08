@@ -243,7 +243,7 @@
             "data": {
                 "body": "LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 2022022449\nTYPE: CRANE\nPOSITION:  513006.00N 0002459.00W\nELEVATION/HEIGHT: 456FT AMSL/341.8FT AGL\nLIGHTING: YES - STEAD RED\nUK AIP EGLL AD 2.10 REFERS.",
                 "end_time": {
-                    "dt": "2100-01-01T00:00:00+00:00",
+                    "value": "Permanent",
                     "repr": "PERM"
                 },
                 "lower": null,
@@ -725,7 +725,7 @@
             "data": {
                 "body": "LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 2022040649\nTYPE: CRANE\nPOSITION:  513035.00N 0002706.00W\nELEVATION/HEIGHT: 292FT AMSL/177FT AGL\nLIGHTING: YES - STEADY RED\nUK AIP EGLL AD 2.10 REFERS.",
                 "end_time": {
-                    "dt": "2100-01-01T00:00:00+00:00",
+                    "value": "Permanent",
                     "repr": "PERM"
                 },
                 "lower": null,
@@ -804,7 +804,7 @@
             "data": {
                 "body": "LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 202103082\nTYPE: CRANE\nPOSITION: 513007.00N 0002804.00W\nELEVATION/HEIGHT: 322FT AMSL/230FT AGL\nLIGHTING: YES - STEADY RED\nUK AIP EGLL AD 2.10 REFERS.",
                 "end_time": {
-                    "dt": "2100-01-01T00:00:00+00:00",
+                    "value": "Permanent",
                     "repr": "PERM"
                 },
                 "lower": null,
@@ -1488,7 +1488,7 @@
             "data": {
                 "body": "LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 2022021746\nTYPE: CRANE\nPOSITION: 512630.00N 0002455.00W\nELEVATION/HEIGHT: 226FT AMSL/167.3FT AGL\nLIGHTING: YES - STEAD RED\nUK AIP EGLL AD 2.10 REFERS.",
                 "end_time": {
-                    "dt": "2100-01-01T00:00:00+00:00",
+                    "value": "Permanent",
                     "repr": "PERM"
                 },
                 "lower": null,
@@ -2101,7 +2101,7 @@
             "data": {
                 "body": "LONDON HEATHROW OBSTACLE\nADD A NEW CRANE TO AD OBSTACLES - IN CIRCLING AREA AND AT AD \nOBSTACLE ID: 202204228\nTYPE: CRANES\nPOSITION: 513028.00N 0002325.00W\nELEVATION/HEIGHT: 328FT AMSL/223FT AGL\nLIGHTING: YES - STEADY RED\nREMARKS: SOUTHALL AREA\nUK AIP EGLL AD 2.10 REFERS.",
                 "end_time": {
-                    "dt": "2100-01-01T00:00:00+00:00",
+                    "value": "Permanent",
                     "repr": "PERM"
                 },
                 "lower": null,

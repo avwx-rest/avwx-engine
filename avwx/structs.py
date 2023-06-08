@@ -84,10 +84,11 @@ class Code:
         error: bool = True,
     ) -> Optional[CodeType]:
         """Load a code from a known key and value dict"""
+        value: Optional[str]
         if not key:
             return None
         try:
-            value = codes.get(key)
+            value = codes[key]
         except KeyError as exc:
             if error:
                 raise KeyError(f"No code found for {key}") from exc
@@ -391,8 +392,8 @@ class NotamData(ReportData):
     replaces: Optional[str]
     type: Optional[Code]
     qualifiers: Optional[Qualifiers]
-    start_time: Optional[Timestamp]
-    end_time: Optional[Timestamp]
+    start_time: Union[Timestamp, Code, None]
+    end_time: Union[Timestamp, Code, None]
     schedule: Optional[str]
     body: str
     lower: Optional[Number]

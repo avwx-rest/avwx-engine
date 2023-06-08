@@ -8,7 +8,7 @@ NOTAM report parsing
 import re
 from contextlib import suppress
 from datetime import datetime, timezone
-from typing import List, Optional
+from typing import List, Optional, Union
 
 # library
 from dateutil.tz import gettz
@@ -20,6 +20,7 @@ from avwx.parsing import core
 from avwx.service import FAA_NOTAM
 from avwx.static.core import IN_UNITS
 from avwx.static.notam import (
+    CODES,
     CONDITION,
     PURPOSE,
     REPORT_TYPE,
@@ -27,7 +28,16 @@ from avwx.static.notam import (
     SUBJECT,
     TRAFFIC_TYPE,
 )
-from avwx.structs import Code, Coord, NotamData, Qualifiers, Timestamp, Tuple, Units
+from avwx.structs import (
+    Code,
+    Coord,
+    NotamData,
+    Number,
+    Qualifiers,
+    Timestamp,
+    Tuple,
+    Units,
+)
 
 # https://www.navcanada.ca/en/briefing-on-the-transition-to-icao-notam-format.pdf
 # https://www.faa.gov/air_traffic/flight_info/aeronav/notams/media/2021-09-07_ICAO_NOTAM_101_Presentation_for_Airport_Operators.pdf
@@ -62,6 +72,21 @@ def _rear_coord(value: str) -> Optional[Coord]:
     return Coord(lat, lon, value)
 
 
+def _split_location(
+    location: Optional[str],
+) -> Tuple[Optional[Coord], Optional[Number]]:
+    """Identify coordinate and radius from location element"""
+    if not location:
+        return None, None
+    coord, radius = None, None
+    if len(location) == 14 and location[-3:].isdigit():
+        radius = core.make_number(location[-3:])
+        location = location[:-3]
+    if len(location) == 11 and location[-1] in {"E", "W"}:
+        coord = _rear_coord(location)
+    return coord, radius
+
+
 def _header(value: str) -> Tuple[str, Optional[Code], Optional[str]]:
     """Parse pre-tag headers"""
     header = value.strip().split()
@@ -80,9 +105,9 @@ def _find_q_codes(
     Optional[Code],
     List[Code],
     List[Code],
-    Optional[Code],
-    Optional[Code],
-    Optional[Code],
+    Optional[str],
+    Optional[str],
+    Optional[str],
 ]:
     """Identify traffic, purpose, and scope codes"""
     # The 'K' code can be both purpose and scope, but they have the same value
@@ -90,6 +115,8 @@ def _find_q_codes(
     purpose: List[Code] = []
     scope: List[Code] = []
     for code in codes:
+        if not code:
+            continue
         # Altitudes can be int or float values
         with suppress(ValueError):
             float(code)
@@ -115,7 +142,8 @@ def _find_q_codes(
 
 def _qualifiers(value: str, units: Units) -> Qualifiers:
     """Parse the NOTAM Q) line into components"""
-    fir, q_code, *codes = [i.strip() for i in value.strip().split("/")]
+    # pylint: disable=too-many-locals
+    fir, q_code, *codes = [i.strip() for i in re.split("/| ", value.strip())]
     traffic, purpose, scope, lower, upper, location = _find_q_codes(codes)
     subject, condition = None, None
     if q_code.startswith("Q"):
@@ -124,7 +152,8 @@ def _qualifiers(value: str, units: Units) -> Qualifiers:
         if condition_code.startswith("XX"):
             condition = Code("XX", (condition_code[2:] or "Unknown").strip())
         else:
-            condition = Code.from_dict(condition_code, CONDITION)
+            condition = Code.from_dict(condition_code, CONDITION, error=False)
+    coord, radius = _split_location(location)
     return Qualifiers(
         repr=value,
         fir=fir,
@@ -133,10 +162,10 @@ def _qualifiers(value: str, units: Units) -> Qualifiers:
         traffic=traffic,
         purpose=purpose,
         scope=scope,
-        lower=core.make_altitude(lower, units)[0],
-        upper=core.make_altitude(upper, units)[0],
-        coord=_rear_coord(location[:-3]) if location else None,
-        radius=core.make_number(location[-3:]) if location else None,
+        lower=make_altitude(lower, units),
+        upper=make_altitude(upper, units),
+        coord=coord,
+        radius=radius,
     )
 
 
@@ -154,13 +183,14 @@ def make_year_timestamp(
     value: str,
     repr: str,  # pylint: disable=redefined-builtin
     tzname: Optional[str] = None,
-) -> Optional[Timestamp]:
+) -> Union[Timestamp, Code, None]:
     """Convert NOTAM timestamp which includes year and month"""
-    value = value.strip()
-    if not value:
+    values = value.strip().split()
+    if not values:
         return None
-    if value.startswith("PERM"):
-        return Timestamp(repr, datetime(2100, 1, 1, tzinfo=timezone.utc))
+    value = values[0]
+    if code := CODES.get(value):
+        return Code(value, code)
     tz = _tz_offset_for(tzname) or timezone.utc
     raw = datetime.strptime(value[:10], r"%y%m%d%H%M")
     date = datetime(raw.year, raw.month, raw.day, raw.hour, raw.minute, tzinfo=tz)
@@ -169,7 +199,7 @@ def make_year_timestamp(
 
 def parse_linked_times(
     start: str, end: str
-) -> Tuple[Optional[Timestamp], Optional[Timestamp]]:
+) -> Tuple[Union[Timestamp, Code, None], Union[Timestamp, Code, None]]:
     """Parse start and end times sharing any found timezone"""
     start, end = start.strip(), end.strip()
     start_raw, end_raw, tzname = start, end, None
@@ -180,6 +210,17 @@ def parse_linked_times(
     return make_year_timestamp(start, start_raw, tzname), make_year_timestamp(
         end, end_raw, tzname
     )
+
+
+def make_altitude(value: Optional[str], units: Units) -> Optional[Number]:
+    """Parse NOTAM altitudes"""
+    if not value:
+        return None
+    trimmed = value.split()[0]
+    # May need to replace with known bad NOTAM values
+    if trimmed == "AGL":
+        return None
+    return core.make_altitude(trimmed, units, repr=value)[0]
 
 
 def parse(report: str, issued: Optional[Timestamp] = None) -> Tuple[NotamData, Units]:
@@ -216,9 +257,9 @@ def parse(report: str, issued: Optional[Timestamp] = None) -> Tuple[NotamData, U
         elif tag == "E":
             body = item
         elif tag == "F":
-            lower = core.make_altitude(item.split()[0], units, repr=item)[0]
+            lower = make_altitude(item, units)
         elif tag == "G":
-            upper = core.make_altitude(item.split()[0], units, repr=item)[0]
+            upper = make_altitude(item, units)
     start_time, end_time = parse_linked_times(start_text, end_text)
     return (
         NotamData(
