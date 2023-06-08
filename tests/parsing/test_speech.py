@@ -232,12 +232,12 @@ def test_taf_line():  # sourcery skip: dict-assign-update-to-union
         "wind_shear": "WS020/07040KT",
         "wind_speed": core.make_number("12"),
         "wx_codes": get_wx_codes(["+RA"])[1],
-        "wind_variable_direction": [core.make_number("40"), core.make_number("120")],
+        "wind_variable_direction": [core.make_number("320"), core.make_number("370")],
     }
     line.update({k: None for k in empty_fields})
     line = structs.TafLineData(**line)
     spoken = (
-        "From 2 to 6 zulu, Winds three six zero at 12 knots gusting to 20 knots. "
+        "From 2 to 6 zulu, Winds three six zero (variable three two zero to three seven zero) at 12 knots gusting to 20 knots. "
         "Wind shear 2000ft from zero seven zero at 40 knots. Visibility three miles. "
         "Altimeter two nine point nine two. Heavy Rain. "
         "Broken layer at 1500ft (Cumulonimbus). "

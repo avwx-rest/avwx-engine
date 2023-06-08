@@ -180,6 +180,7 @@ def taf_line(line: TafLineData, units: Units) -> str:
                 line.wind_direction,
                 line.wind_speed,
                 line.wind_gust,
+                line.wind_variable_direction,
                 unit=units.wind_speed,
             )
         )
