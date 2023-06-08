@@ -277,6 +277,7 @@ def test_taf():
         "type",
         "flight_rules",
         "sanitized",
+        "wind_variable_direction",
     )
     empty_fields = (
         "raw",

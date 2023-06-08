@@ -45,6 +45,7 @@
                     "spoken": "one nine zero",
                     "value": 190
                 },
+                "wind_variable_direction": [],
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
@@ -92,6 +93,7 @@
                     "value": 7000
                 },
                 "wind_direction": null,
+                "wind_variable_direction": [],
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": null,

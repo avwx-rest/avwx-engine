@@ -108,6 +108,7 @@ def translate_taf(wxdata: TafData, units: Units) -> TafTrans:
                 line.wind_direction,
                 line.wind_speed,
                 line.wind_gust,
+                line.wind_variable_direction,
                 unit=units.wind_speed,
             ),
             wind_shear=wind_shear(line.wind_shear, units.altitude, units.wind_speed),

@@ -241,6 +241,7 @@ class TafLineData(SharedData):
     turbulence: List[str]
     type: str
     wind_shear: Optional[str]
+    wind_variable_direction: Optional[List[Number]]
 
 
 @dataclass

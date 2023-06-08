@@ -2,6 +2,9 @@
 
 Parsing and sanitization improvements are always ongoing and non-breaking
 
+## 1.8.14
+- Added support for `wind_variable_direction` to TAF report forcasts
+
 ## 1.8.x
 
 - Added `Notams` report class

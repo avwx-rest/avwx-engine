@@ -404,7 +404,13 @@ def parse_line(
     sanitized = " ".join(data)
     data, report_type, start_time, end_time, transition = get_type_and_times(data)
     data, wind_shear = get_wind_shear(data)
-    data, wind_direction, wind_speed, wind_gust, _ = core.get_wind(data, units)
+    (
+        data, 
+        wind_direction, 
+        wind_speed, 
+        wind_gust, 
+        wind_variable_direction
+     ) = core.get_wind(data, units)
     if "CAVOK" in data:
         visibility = core.make_number("CAVOK")
         clouds: List[Cloud] = []
@@ -433,6 +439,7 @@ def parse_line(
         turbulence=turbulence,
         type=report_type,
         wind_shear=wind_shear,
+        wind_variable_direction=wind_variable_direction,
     )
 
 

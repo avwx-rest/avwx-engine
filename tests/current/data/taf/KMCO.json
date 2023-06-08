@@ -59,6 +59,7 @@
                     "spoken": "one two zero",
                     "value": 120
                 },
+                "wind_variable_direction": [],
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
@@ -113,6 +114,7 @@
                     "spoken": "one three zero",
                     "value": 130
                 },
+                "wind_variable_direction": [],
                 "wind_gust": {
                     "repr": "15",
                     "spoken": "one five",
@@ -171,6 +173,7 @@
                     "spoken": "one one zero",
                     "value": 110
                 },
+                "wind_variable_direction": [],
                 "wind_gust": {
                     "repr": "18",
                     "spoken": "one eight",
@@ -229,6 +232,7 @@
                     "spoken": "one two zero",
                     "value": 120
                 },
+                "wind_variable_direction": [],
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
