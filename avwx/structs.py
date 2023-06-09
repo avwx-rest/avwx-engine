@@ -11,6 +11,7 @@ from typing import Dict, List, Optional, Tuple, Type, TypeVar, Union
 
 # module
 from avwx.load_utils import LazyLoad
+from avwx.static.core import IN_UNITS, NA_UNITS
 
 
 try:
@@ -44,6 +45,16 @@ class Units:
     temperature: str
     visibility: str
     wind_speed: str
+
+    @classmethod
+    def international(cls) -> "Units":
+        """Create default internation units"""
+        return cls(**IN_UNITS)
+
+    @classmethod
+    def north_american(cls) -> "Units":
+        """Create default North American units"""
+        return cls(**NA_UNITS)
 
 
 @dataclass

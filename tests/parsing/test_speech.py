@@ -116,7 +116,7 @@ def test_wx_codes(codes: List[str], spoken: str):
 
 def test_metar():  # sourcery skip: dict-assign-update-to-union
     """Tests converting METAR data into into a single spoken string"""
-    units = structs.Units(**static.core.NA_UNITS)
+    units = structs.Units.north_american()
     empty_fields = (
         "raw",
         "remarks",
@@ -214,7 +214,7 @@ def test_wind_shear(shear: str, spoken: str):
 
 def test_taf_line():  # sourcery skip: dict-assign-update-to-union
     """Tests converting TAF line data into into a single spoken string"""
-    units = structs.Units(**static.core.NA_UNITS)
+    units = structs.Units.north_american()
     empty_fields = ("flight_rules", "probability", "raw", "sanitized")
     line = {
         "altimeter": parse_altimeter("2992"),
@@ -251,7 +251,7 @@ def test_taf_line():  # sourcery skip: dict-assign-update-to-union
 
 def test_taf():
     """Tests converting a TafData report into a single spoken string"""
-    units = structs.Units(**static.core.NA_UNITS)
+    units = structs.Units.north_american()
     # pylint: disable=no-member
     empty_line = {k: None for k in structs.TafLineData.__dataclass_fields__.keys()}
     forecast = [

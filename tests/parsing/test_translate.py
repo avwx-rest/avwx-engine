@@ -90,7 +90,7 @@ def test_wx_codes(codes: List[str], translation: str):
 
 def test_shared():
     """Tests availability of shared values between the METAR and TAF translations"""
-    units = structs.Units(**static.core.NA_UNITS)
+    units = structs.Units.north_american()
     data = structs.SharedData(
         altimeter=core.make_number("29.92"),
         clouds=[core.make_cloud("OVC060")],
@@ -170,7 +170,7 @@ def test_temperature(temp: str, unit: str, translation: str):
 
 def test_metar():  # sourcery skip: dict-assign-update-to-union
     """Tests end-to-end METAR translation"""
-    units = structs.Units(**static.core.NA_UNITS)
+    units = structs.Units.north_american()
     empty_fields = (
         "raw",
         "remarks",
@@ -267,7 +267,7 @@ def test_min_max_temp(temp: str, translation: str):
 
 def test_taf():
     """Tests end-to-end TAF translation"""
-    units = structs.Units(**static.core.NA_UNITS)
+    units = structs.Units.north_american()
     empty_line_fields = (
         "raw",
         "end_time",

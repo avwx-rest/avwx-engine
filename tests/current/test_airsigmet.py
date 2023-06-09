@@ -17,8 +17,8 @@ from shapely.geometry import LineString
 from avwx import structs
 from avwx.current import airsigmet
 from avwx.parsing import core
-from avwx.static.core import CARDINAL_DEGREES, IN_UNITS
-from avwx.structs import Code, Coord, Movement, Units
+from avwx.static.core import CARDINAL_DEGREES
+from avwx.structs import Coord, Movement, Units
 
 # tests
 from tests.util import assert_code, assert_value, datetime_parser, round_coordinates
@@ -307,7 +307,7 @@ def test_position(wx: str, coord: Optional[Coord], extra: str):
 )
 def test_movement(wx: str, movement: Optional[Movement], unit: str, extra: str):
     """Test weather movement extraction"""
-    units = Units(**IN_UNITS)
+    units = Units.international()
     ret_wx, units, ret_movement = airsigmet._movement(wx.split(), units)
     assert ret_wx == extra.split()
     assert ret_movement == movement
@@ -451,7 +451,7 @@ def test_altitudes(
     wx: str, floor: Optional[int], ceiling: Optional[int], unit: str, extra: str
 ):
     """Tests extracting floor and ceiling altitudes from report"""
-    units = Units(**IN_UNITS)
+    units = Units.international()
     ret_wx, units, ret_floor, ret_ceiling = airsigmet._altitudes(wx.split(), units)
     assert ret_wx == extra.split()
     assert units.altitude == unit

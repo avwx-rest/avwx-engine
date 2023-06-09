@@ -12,7 +12,7 @@ from typing import List, Optional, Tuple, Union
 # module
 from avwx.base import ManagedReport
 from avwx.service import get_service
-from avwx.static.core import NA_UNITS, WX_TRANSLATIONS
+from avwx.static.core import WX_TRANSLATIONS
 from avwx.structs import Code, Coord, ReportData, ReportTrans, Sanitization, Units
 
 
@@ -83,7 +83,7 @@ class Reports(ManagedReport):
     coord: Optional[Coord] = None
     raw: Optional[List[str]] = None  # type: ignore
     data: Optional[List[ReportData]] = None  # type: ignore
-    units: Units = Units(**NA_UNITS)
+    units: Units = Units.north_american()
     sanitization: Optional[List[Sanitization]] = None
 
     def __init__(self, code: Optional[str] = None, coord: Optional[Coord] = None):

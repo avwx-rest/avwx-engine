@@ -14,7 +14,7 @@ from avwx.current.base import Report, get_wx_codes
 from avwx.parsing import core, remarks, sanitization, speech, summary
 from avwx.parsing.translate.metar import translate_metar
 from avwx.service import NOAA
-from avwx.static.core import FLIGHT_RULES, IN_UNITS, NA_UNITS
+from avwx.static.core import FLIGHT_RULES
 from avwx.static.metar import METAR_RMK
 from avwx.station import uses_na_format, valid_station
 from avwx.structs import (
@@ -245,7 +245,7 @@ def parse_na(
 ) -> Tuple[MetarData, Units, Sanitization]:
     """Parser for the North American METAR variant"""
     # pylint: disable=too-many-locals
-    units = Units(**NA_UNITS)
+    units = Units.north_american()
     sanitized, remarks_str, data, sans = sanitize(report)
     data, station, time = core.get_station_and_time(data)
     data, runway_visibility = get_runway_visibility(data)
@@ -294,7 +294,7 @@ def parse_in(
 ) -> Tuple[MetarData, Units, Sanitization]:
     """Parser for the International METAR variant"""
     # pylint: disable=too-many-locals
-    units = Units(**IN_UNITS)
+    units = Units.international()
     sanitized, remarks_str, data, sans = sanitize(report)
     data, station, time = core.get_station_and_time(data)
     data, runway_visibility = get_runway_visibility(data)

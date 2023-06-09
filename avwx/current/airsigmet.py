@@ -20,7 +20,7 @@ from avwx.flight_path import to_coordinates
 from avwx.load_utils import LazyLoad
 from avwx.parsing import core
 from avwx.service.bulk import NOAA_Bulk, NOAA_Intl, Service
-from avwx.static.core import CARDINAL_DEGREES, CARDINALS, IN_UNITS
+from avwx.static.core import CARDINAL_DEGREES, CARDINALS
 from avwx.static.airsigmet import BULLETIN_TYPES, INTENSITY, WEATHER_TYPES
 from avwx.structs import (
     AirSigmetData,
@@ -499,7 +499,7 @@ def sanitize(report: str) -> str:
 def parse(report: str, issued: Optional[date] = None) -> Tuple[AirSigmetData, Units]:
     """Parse AIRMET / SIGMET report string"""
     # pylint: disable=too-many-locals
-    units = Units(**IN_UNITS)
+    units = Units.international()
     sanitized = sanitize(report)
     data, bulletin, issuer, time, correction = _header(_parse_prep(sanitized))
     data, area, report_type, start_time, end_time, station = _spacetime(data)

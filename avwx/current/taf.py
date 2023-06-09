@@ -11,7 +11,7 @@ from avwx.current.base import Report, get_wx_codes
 from avwx.parsing import core, sanitization, speech, summary
 from avwx.parsing.remarks import parse as parse_remarks
 from avwx.parsing.translate.taf import translate_taf
-from avwx.static.core import FLIGHT_RULES, IN_UNITS, NA_UNITS
+from avwx.static.core import FLIGHT_RULES
 from avwx.static.taf import TAF_RMK, TAF_NEWLINE, TAF_NEWLINE_STARTSWITH
 from avwx.station import uses_na_format, valid_station
 from avwx.structs import (
@@ -304,7 +304,7 @@ def parse(
     sanitized = sanitized.replace(station, "")
     if time:
         sanitized = sanitized.replace(time, "").strip()
-    units = Units(**NA_UNITS) if uses_na_format(station) else Units(**IN_UNITS)
+    units = Units.north_american() if uses_na_format(station) else Units.international()
     # Find and remove remarks
     sanitized, remarks = get_taf_remarks(sanitized)
     # Split and parse each line

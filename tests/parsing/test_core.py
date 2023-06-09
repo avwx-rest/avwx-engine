@@ -15,7 +15,6 @@ import time_machine
 # module
 from avwx import static, structs
 from avwx.parsing import core
-from avwx.static.core import NA_UNITS, IN_UNITS
 from avwx.structs import Fraction, Number, Units
 
 # tests
@@ -251,7 +250,7 @@ def test_get_station_and_time(
 def test_get_wind(wx: List[str], unit: str, wind: Tuple[tuple], varv: List[tuple]):
     """Tests that the wind item gets removed and split into its components"""
     # Both use knots as the default unit, so just test North American default
-    units = structs.Units(**static.core.NA_UNITS)
+    units = structs.Units.north_american()
     wx, *winds, var = core.get_wind(wx, units)
     assert wx == ["1"]
     for parsed, ref in zip(winds, wind):
@@ -284,7 +283,7 @@ def test_get_wind(wx: List[str], unit: str, wind: Tuple[tuple], varv: List[tuple
 )
 def test_get_visibility(wx: List[str], unit: str, visibility: tuple):
     """Tests that the visibility item(s) gets removed and cleaned"""
-    units = structs.Units(**static.core.NA_UNITS)
+    units = structs.Units.north_american()
     wx, vis = core.get_visibility(wx, units)
     assert wx == ["1"]
     assert units.visibility == unit
@@ -439,7 +438,7 @@ def test_is_not_altitude(value: str):
 )
 def test_make_altitude(text: str, force: bool, value: int, unit: str, speak: str):
     """Tests converting altitude text into Number"""
-    units = Units(**IN_UNITS)
+    units = Units.international()
     altitude, units = core.make_altitude(text, units, force_fl=force)
     assert altitude.repr == text
     assert units.altitude == unit
@@ -534,6 +533,6 @@ def test_density_altitude(
     pressure: float, temperature: int, altitude: int, density: int
 ):
     """Tests calculating density altitude in feet"""
-    units = Units(**NA_UNITS)
+    units = Units.north_american()
     value = core.density_altitude(pressure, temperature, altitude, units)
     assert value == density

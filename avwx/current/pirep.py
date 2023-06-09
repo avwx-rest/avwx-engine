@@ -14,7 +14,7 @@ from avwx import exceptions
 from avwx.current.base import Reports, get_wx_codes
 from avwx.parsing import core, sanitization
 from avwx.service import NOAA_ADDS
-from avwx.static.core import CARDINALS, CLOUD_LIST, NA_UNITS
+from avwx.static.core import CARDINALS, CLOUD_LIST
 from avwx.structs import (
     Aircraft,
     Cloud,
@@ -30,7 +30,7 @@ from avwx.structs import (
     Units,
 )
 
-_UNITS = Units(**NA_UNITS)
+_UNITS = Units.north_american()
 
 
 def _root(item: str) -> Tuple[Optional[str], Optional[str]]:

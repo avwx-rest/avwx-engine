@@ -82,7 +82,7 @@ def test_get_relative_humidity(
     temp: Optional[int], dew: Optional[int], rmk: str, humidity: Optional[float]
 ):
     """Tests calculating relative humidity from available temperatures"""
-    units = metar.Units(**metar.NA_UNITS)
+    units = metar.Units.north_american()
     if temp is not None:
         temp = metar.Number("", temp, "")
     if dew is not None:
