@@ -14,7 +14,6 @@ from dateutil.tz import gettz
 # module
 from avwx import structs
 from avwx.current import notam
-from avwx.static.core import IN_UNITS
 
 # tests
 from tests.util import get_data
@@ -203,7 +202,7 @@ def test_header(text: str, number: str, char: str, rtype: str, replaces: Optiona
 @pytest.mark.parametrize("qualifier", QUALIFIERS)
 def test_qualifiers(qualifier: structs.Qualifiers):
     """Tests Qualifier struct parsing"""
-    units = structs.Units(**IN_UNITS)
+    units = structs.Units.international()
     assert notam._qualifiers(qualifier.repr, units) == qualifier
 
 
@@ -292,6 +291,23 @@ def test_parse_linked_times(
     end_comp = structs.Timestamp(end, end_dt) if end_dt else None
     assert ret_start == start_comp
     assert ret_end == end_comp
+
+
+@pytest.mark.parametrize(
+    "raw,value",
+    (("000", 0), ("999", 999), ("9500FT.", 9500)),
+)
+def test_make_altitude(raw: str, value: int):
+    """Tests altitude parsing"""
+    altitude = notam.make_altitude(raw, structs.Units.international())
+    assert isinstance(altitude, structs.Number)
+    assert altitude.value == value
+
+
+@pytest.mark.parametrize("raw", ("", "G", "AGL"))
+def test_bad_altitude(raw: str):
+    """Tests filtering bad altitude values"""
+    assert notam.make_altitude(raw, structs.Units.international()) is None
 
 
 def test_copied_tag():

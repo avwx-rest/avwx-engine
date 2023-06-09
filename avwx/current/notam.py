@@ -18,7 +18,7 @@ from avwx import exceptions
 from avwx.current.base import Reports
 from avwx.parsing import core
 from avwx.service import FAA_NOTAM
-from avwx.static.core import IN_UNITS
+from avwx.static.core import SPECIAL_NUMBERS
 from avwx.static.notam import (
     CODES,
     CONDITION,
@@ -216,17 +216,16 @@ def make_altitude(value: Optional[str], units: Units) -> Optional[Number]:
     """Parse NOTAM altitudes"""
     if not value:
         return None
-    trimmed = value.split()[0]
-    # May need to replace with known bad NOTAM values
-    if trimmed == "AGL":
-        return None
-    return core.make_altitude(trimmed, units, repr=value)[0]
+    if trimmed := value.split()[0].strip(" ."):
+        if trimmed in SPECIAL_NUMBERS or trimmed[0].isdigit():
+            return core.make_altitude(trimmed, units, repr=value)[0]
+    return None
 
 
 def parse(report: str, issued: Optional[Timestamp] = None) -> Tuple[NotamData, Units]:
     """Parse NOTAM report string"""
     # pylint: disable=too-many-locals
-    units = Units(**IN_UNITS)
+    units = Units.international()
     sanitized = sanitize(report)
     qualifiers, station, start_time, end_time = None, None, None, None
     body, number, replaces, report_type = "", None, None, None
