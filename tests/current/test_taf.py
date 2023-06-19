@@ -351,6 +351,23 @@ def test_wind_shear():
     assert tafobj.translations.forecast[1].clouds == ""
 
 
+def test_space_in_forcast_times():
+    """Forecast time can occasionally use a space rather than a slash"""
+    report = (
+        "TAF VIGR 041530Z 0500/0512 04005KT 6000 SCT025 BKN090 "
+        "0501 0503 05010KT 4000 -RA/BR SCT015 SCT025 BKN090 " 
+        "TEMPO 0507 0511 05010G20KT 2000 RASH/TS SCT025 FEWCB035 SCT090"
+    )
+    tafobj = taf.Taf("VIGR")
+    tafobj.parse(report)
+    lines = tafobj.data.forecast
+    assert len(lines) == 2
+    assert lines[0].start_time == core.make_timestamp("0500")
+    assert lines[0].end_time == core.make_timestamp("0512")
+    assert lines[1].start_time == core.make_timestamp("0507")
+    assert lines[1].end_time == core.make_timestamp("0511")
+
+
 def test_wind_variable_direction():
     """Variable wind direction should be recognized when present"""
     report = (
