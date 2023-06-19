@@ -135,7 +135,7 @@ def get_type_and_times(
             and data[0][5:].isdigit()
         ):
             start_time, end_time = data.pop(0).split("/")
-        
+
         # 1200 1306
         elif (
             len(data) == 8

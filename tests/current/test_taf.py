@@ -355,7 +355,7 @@ def test_space_in_forcast_times():
     """Forecast time can occasionally use a space rather than a slash"""
     report = (
         "TAF VIGR 041530Z 0500/0512 04005KT 6000 SCT025 BKN090 "
-        "0501 0503 05010KT 4000 -RA/BR SCT015 SCT025 BKN090 " 
+        "0501 0503 05010KT 4000 -RA/BR SCT015 SCT025 BKN090 "
         "TEMPO 0507 0511 05010G20KT 2000 RASH/TS SCT025 FEWCB035 SCT090"
     )
     tafobj = taf.Taf("VIGR")
