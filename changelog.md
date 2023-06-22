@@ -2,7 +2,7 @@
 
 Parsing and sanitization improvements are always ongoing and non-breaking
 
-## 1.8.16
+## 1.8.17
 
 - Added handling for special visibility string `M1SM` as `less than one`
 
