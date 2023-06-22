@@ -269,6 +269,7 @@ def test_get_wind(wx: List[str], unit: str, wind: Tuple[tuple], varv: List[tuple
         (["05SM", "1"], "sm", ("5", 5)),
         (["10SM", "1"], "sm", ("10", 10)),
         (["P6SM", "1"], "sm", ("P6",)),
+        (["M1SM", "1"], "sm", ("M1",)),
         (["M1/2SM", "1"], "sm", ("M1/2",)),
         (["M1/4SM", "1"], "sm", ("M1/4",)),
         (["1/2SM", "1"], "sm", ("1/2", 0.5)),

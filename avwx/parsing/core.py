@@ -395,7 +395,7 @@ def get_visibility(data: List[str], units: Units) -> Tuple[List[str], Optional[N
         item = copy(data[0])
         # Vis reported in statue miles
         if item.endswith("SM"):  # 10SM
-            if item in ("P6SM", "M1/2SM", "M1/4SM", "M1/8SM"):
+            if item in ("P6SM", "M1SM", "M1/2SM", "M1/4SM", "M1/8SM"):
                 visibility = item[:-2]
             elif item[:-2].isdigit():
                 visibility = str(int(item[:-2]))
