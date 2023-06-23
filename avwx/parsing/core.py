@@ -118,7 +118,7 @@ def spoken_number(num: str, literal: bool = False) -> str:
 
 
 def make_fraction(
-    num: str, repr: Optional[str] = None, literal: bool = False
+    num: str, repr: Optional[str] = None, literal: bool = False, speak_prefix: str = ""
 ) -> Fraction:
     """Returns a fraction dataclass for numbers with / in them"""
     num_str, den_str = num.split("/")
@@ -134,7 +134,7 @@ def make_fraction(
         numerator = int(num_str)
     value = numerator / denominator
     unpacked = unpack_fraction(num)
-    spoken = spoken_number(unpacked, literal)
+    spoken = speak_prefix + spoken_number(unpacked, literal)
     return Fraction(repr or num, value, spoken, numerator, denominator, unpacked)
 
 
@@ -144,6 +144,7 @@ def make_number(
     speak: Optional[str] = None,
     literal: bool = False,
     special: Optional[dict] = None,
+    m_minus: bool = True,
 ) -> Optional[Number]:
     """Returns a Number or Fraction dataclass for a number string
 
@@ -168,21 +169,21 @@ def make_number(
         if not repr:
             repr = num
         num = str(CARDINALS[num])
+    val_str = num
+    # Remove unit suffixes
+    if val_str.endswith("SM"):
+        repr = val_str[:]
+        val_str = val_str[:-2]
     # Remove spurious characters from the end
     num = num.rstrip("M.")
     num = num.replace("O", "0")
     num = num.replace("+", "")
     num = num.replace(",", "")
-    # Create Fraction
-    if "/" in num:
-        return make_fraction(num, repr, literal)
     # Handle Minus values with errors like 0M04
-    if "M" in num:
+    if m_minus and "M" in num:
         val_str = num.replace("MM", "-").replace("M", "-")
         while val_str[0] != "-":
             val_str = val_str[1:]
-    else:
-        val_str = num
     # Check value prefixes
     speak_prefix = ""
     if val_str.startswith("ABV "):
@@ -194,13 +195,30 @@ def make_number(
     if val_str.startswith("FL"):
         speak_prefix += "flight level "
         val_str, literal = val_str[2:], True
+    if val_str.startswith("M"):
+        speak_prefix += "less than "
+        repr = repr or val_str
+        val_str = val_str[1:]
+    if val_str.startswith("P"):
+        speak_prefix += "greater than "
+        repr = repr or val_str
+        val_str = val_str[1:]
     # Create Number
     if not val_str:
         return None
-    # Overwrite float 0 due to "0.0" literal
-    value = float(val_str) or 0 if "." in num else int(val_str)
-    spoken = speak_prefix + spoken_number(speak or str(value), literal)
-    return Number(repr or num, value, spoken)
+    ret = None
+    # Create Fraction
+    if "/" in val_str:
+        ret = make_fraction(val_str, repr, literal, speak_prefix=speak_prefix)
+    else:
+        # Overwrite float 0 due to "0.0" literal
+        value = float(val_str) or 0 if "." in num else int(val_str)
+        spoken = speak_prefix + spoken_number(speak or str(value), literal)
+        ret = Number(repr or num, value, spoken)
+    # Null the value if "greater than"/"less than"
+    if not m_minus and repr and repr.startswith(("M", "P")):
+        ret.value = None
+    return ret
 
 
 def find_first_in_list(txt: str, str_list: List[str]) -> int:
@@ -383,8 +401,8 @@ def get_wind(
                 variable.append(value)
     # Convert to Number
     direction_value = make_number(direction, speak=direction, literal=True)
-    speed_value = make_number(speed.strip("BV"))
-    gust_value = make_number(gust)
+    speed_value = make_number(speed.strip("BV"), m_minus=False)
+    gust_value = make_number(gust, m_minus=False)
     return data, direction_value, speed_value, gust_value, variable
 
 
@@ -395,12 +413,12 @@ def get_visibility(data: List[str], units: Units) -> Tuple[List[str], Optional[N
         item = copy(data[0])
         # Vis reported in statue miles
         if item.endswith("SM"):  # 10SM
-            if item in ("P6SM", "M1/2SM", "M1/4SM", "M1/8SM"):
-                visibility = item[:-2]
-            elif item[:-2].isdigit():
+            if item[:-2].isdigit():
                 visibility = str(int(item[:-2]))
             elif "/" in item:
                 visibility = item[: item.find("SM")]  # 1/2SM
+            else:
+                visibility = item[:-2]
             data.pop(0)
             units.visibility = "sm"
         # Vis reported in meters
@@ -417,7 +435,7 @@ def get_visibility(data: List[str], units: Units) -> Tuple[List[str], Optional[N
         elif len(item) == 5 and item[1:].isdigit() and item[0] in ["M", "P", "B"]:
             visibility = data.pop(0)[1:]
             units.visibility = "m"
-        elif item.endswith("KM") and item[:-2].isdigit():
+        elif item.endswith("KM"):
             visibility = f"{item[:-2]}000"
             data.pop(0)
             units.visibility = "m"
@@ -432,7 +450,7 @@ def get_visibility(data: List[str], units: Units) -> Tuple[List[str], Optional[N
             vis2 = data.pop(0).replace("SM", "")  # 1/2
             visibility = str(int(vis1) * int(vis2[2]) + int(vis2[0])) + vis2[1:]  # 5/2
             units.visibility = "sm"
-    return data, make_number(visibility)
+    return data, make_number(visibility, m_minus=False)
 
 
 def sanitize_cloud(cloud: str) -> str:
