@@ -296,6 +296,41 @@ def get_taf_flight_rules(lines: List[TafLineData]) -> List[TafLineData]:
     return lines
 
 
+def fix_report_header(report_str):
+    # Split the report string into individual components
+    split_report = report_str.split()
+
+    # Extract TAF, AMD, and COR components if present
+    taf = ""
+    amd = ""
+    cor = ""
+    non_header_tokens = []
+
+    if "TAF" in split_report:
+        taf_index = split_report.index("TAF")
+        taf = " ".join(split_report[taf_index : taf_index + 1])
+
+    if "AMD" in split_report:
+        amd_index = split_report.index("AMD")
+        amd = " ".join(split_report[amd_index : amd_index + 1])
+
+    if "COR" in split_report:
+        cor_index = split_report.index("COR")
+        cor = " ".join(split_report[cor_index : cor_index + 1])
+
+    # Extract the rest of the components
+    non_header_tokens = [
+        token for token in split_report if token not in ["TAF", "AMD", "COR"]
+    ]
+
+    # Reassemble the fixed report string
+    fixed_report_str = (
+        " ".join([taf, amd, cor] + non_header_tokens).replace("  ", " ").strip()
+    )
+
+    return fixed_report_str
+
+
 def parse(
     station: str, report: str, issued: Optional[date] = None
 ) -> Tuple[Optional[TafData], Optional[Units], Optional[Sanitization]]:
@@ -304,6 +339,7 @@ def parse(
     if not report:
         return None, None, None
     valid_station(station)
+    report = fix_report_header(report)
     while len(report) > 3 and report[:4] in ("TAF ", "AMD ", "COR "):
         report = report[4:]
     start_time: Optional[Timestamp] = None
