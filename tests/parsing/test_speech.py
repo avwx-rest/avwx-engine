@@ -74,7 +74,10 @@ def test_temperature(temp: str, unit: str, spoken: str):
 )
 def test_visibility(vis: str, unit: str, spoken: str):
     """Tests converting visibility distance into a spoken string"""
-    assert speech.visibility(core.make_number(vis), unit) == f"Visibility {spoken}"
+    assert (
+        speech.visibility(core.make_number(vis, m_minus=False), unit)
+        == f"Visibility {spoken}"
+    )
 
 
 @pytest.mark.parametrize(
@@ -271,7 +274,7 @@ def test_taf():
                 "probability": core.make_number("45"),
                 "start_time": core.make_timestamp("0412Z"),
                 "end_time": core.make_timestamp("0414Z"),
-                "visibility": core.make_number("M1/4"),
+                "visibility": core.make_number("M1/4", m_minus=False),
             },
         )
     ]

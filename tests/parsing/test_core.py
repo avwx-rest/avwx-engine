@@ -125,8 +125,6 @@ def test_spoken_number(num: str, spoken: str):
         ("300", 300, "three hundred"),
         ("25000", 25000, "two five thousand"),
         ("M10", -10, "minus one zero"),
-        ("P6SM", None, "greater than six"),
-        ("M1/4", None, "less than one quarter"),
         ("FL310", 310, "flight level three one zero"),
         ("ABV FL480", 480, "above flight level four eight zero"),
     ),
@@ -134,6 +132,22 @@ def test_spoken_number(num: str, spoken: str):
 def test_make_number(num: str, value: Union[int, float, None], spoken: str):
     """Tests Number dataclass generation from a number string"""
     number = core.make_number(num)
+    assert isinstance(number, Number)
+    assert number.repr == num
+    assert number.value == value
+    assert number.spoken == spoken
+
+
+@pytest.mark.parametrize(
+    "num,value,spoken",
+    (
+        ("P6SM", None, "greater than six"),
+        ("M1/4", None, "less than one quarter"),
+    ),
+)
+def test_make_number_gt_lt(num: str, value: Union[int, float, None], spoken: str):
+    """Tests Number dataclass generation when using P/M for greater/less than"""
+    number = core.make_number(num, m_minus=False)
     assert isinstance(number, Number)
     assert number.repr == num
     assert number.value == value
@@ -385,7 +399,7 @@ def test_get_flight_rules(vis: Optional[str], ceiling: Optional[tuple], rule: st
 
     Note: Only 'Broken', 'Overcast', and 'Vertical Visibility' are considered ceilings
     """
-    vis = core.make_number(vis)
+    vis = core.make_number(vis, m_minus=False)
     if ceiling:
         ceiling = structs.Cloud(None, *ceiling)
     assert static.core.FLIGHT_RULES[core.get_flight_rules(vis, ceiling)] == rule
