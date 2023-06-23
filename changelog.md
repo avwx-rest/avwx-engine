@@ -2,10 +2,16 @@
 
 Parsing and sanitization improvements are always ongoing and non-breaking
 
+## 1.8.17
+
+- Add optional `m_minus` parameter to `make_number()` for prefixes 'M' as "less than" and 'P' as "greater than"
+
 ## 1.8.15
+
 - Added support for TAF forecast times that use a space rather than a forward slash
 
 ## 1.8.14
+
 - Added support for `wind_variable_direction` to TAF report forcasts
 
 ## 1.8.x
