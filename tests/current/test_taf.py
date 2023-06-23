@@ -343,7 +343,7 @@ def test_bad_header():
     tafobj = taf.Taf.from_report(report)
     lines = tafobj.data.forecast
     assert len(lines) == 7
-    assert tafobj.data.station == "KGNU"
+    assert tafobj.data.station == "KNGU"
 
 
 def test_wind_shear():
