@@ -4,7 +4,7 @@ Parsing and sanitization improvements are always ongoing and non-breaking
 
 ## 1.8.18
 
- - Added function `fix_report_header()`. Provides additional santization of report string to handle cases where the ICAO code is out of order.
+ - Added function `fix_report_header()`. Provides additional sanitization of report string to handle cases where the ICAO code is out of order.
  - Updated unit tests to reflect changes.
 
 ## 1.8.17
