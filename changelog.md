@@ -2,10 +2,20 @@
 
 Parsing and sanitization improvements are always ongoing and non-breaking
 
+## 1.8.17
+
+- Added optional `m_minus` parameter (bool, defaults to `True`) to `make_number()`, as well as logic changes, to allow for generic parsing of prefixes 'M' as "less than" and 'P' as "greater than" without breaking existing 'M' as "-" logic.
+- Added optional `speak_prefix` parameter (str, defaults to "")  to `make_fraction()` to allow `make_number()` to determine "greater than" or "less than" prefix on a fractional value.
+- Removes static mappings for strings that utilize "P"/"M" prefixes.
+- Updates `get_wind()` and `get_visibility()` to set `m_minus=False` in calls to `make_number()`.
+- Updates unit tests to reflect changes.
+
 ## 1.8.15
+
 - Added support for TAF forecast times that use a space rather than a forward slash
 
 ## 1.8.14
+
 - Added support for `wind_variable_direction` to TAF report forcasts
 
 ## 1.8.x
