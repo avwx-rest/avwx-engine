@@ -2,6 +2,11 @@
 
 Parsing and sanitization improvements are always ongoing and non-breaking
 
+## 1.8.18
+
+ - Added function `fix_report_header()`. Provides additional sanitization of report string to handle cases where the ICAO code is out of order.
+ - Updated unit tests to reflect changes.
+
 ## 1.8.17
 
 - Added optional `m_minus` parameter (bool, defaults to `True`) to `make_number()`, as well as logic changes, to allow for generic parsing of prefixes 'M' as "less than" and 'P' as "greater than" without breaking existing 'M' as "-" logic.
