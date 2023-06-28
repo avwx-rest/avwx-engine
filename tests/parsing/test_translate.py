@@ -32,7 +32,10 @@ from avwx.parsing import core, remarks, translate
 )
 def test_visibility(vis: str, unit: str, translation: str):
     """Tests visibility translation and conversion"""
-    assert translate.base.visibility(core.make_number(vis), unit) == translation
+    assert (
+        translate.base.visibility(core.make_number(vis, m_minus=False), unit)
+        == translation
+    )
 
 
 @pytest.mark.parametrize(
