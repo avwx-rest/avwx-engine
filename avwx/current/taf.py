@@ -3,6 +3,7 @@ Contains TAF-specific functions for report parsing
 """
 
 # stdlib
+from contextlib import suppress
 from datetime import date
 from typing import List, Tuple, Optional
 
@@ -296,39 +297,21 @@ def get_taf_flight_rules(lines: List[TafLineData]) -> List[TafLineData]:
     return lines
 
 
-def fix_report_header(report_str):
-    # Split the report string into individual components
-    split_report = report_str.split()
+def fix_report_header(report: str) -> str:
+    """Corrects the header order for key elements"""
+    split_report = report.split()
 
-    # Extract TAF, AMD, and COR components if present
-    taf = ""
-    amd = ""
-    cor = ""
-    non_header_tokens = []
+    # Limit scope to only the first few elements. Remarks may include similar tokens
+    header_length = min(len(split_report), 6)
+    headers = split_report[:header_length]
 
-    if "TAF" in split_report:
-        taf_index = split_report.index("TAF")
-        taf = " ".join(split_report[taf_index : taf_index + 1])
+    fixed_headers = []
+    for target in ("TAF", "AMD", "COR"):
+        with suppress(ValueError):
+            headers.remove(target)
+            fixed_headers.append(target)
 
-    if "AMD" in split_report:
-        amd_index = split_report.index("AMD")
-        amd = " ".join(split_report[amd_index : amd_index + 1])
-
-    if "COR" in split_report:
-        cor_index = split_report.index("COR")
-        cor = " ".join(split_report[cor_index : cor_index + 1])
-
-    # Extract the rest of the components
-    non_header_tokens = [
-        token for token in split_report if token not in ["TAF", "AMD", "COR"]
-    ]
-
-    # Reassemble the fixed report string
-    fixed_report_str = (
-        " ".join([taf, amd, cor] + non_header_tokens).replace("  ", " ").strip()
-    )
-
-    return fixed_report_str
+    return " ".join(fixed_headers + headers + split_report[header_length:])
 
 
 def parse(

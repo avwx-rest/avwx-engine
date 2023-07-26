@@ -145,7 +145,7 @@ def make_number(
     literal: bool = False,
     special: Optional[dict] = None,
     m_minus: bool = True,
-) -> Optional[Number]:
+) -> Union[Number, Fraction, None]:  # sourcery skip: avoid-builtin-shadow
     """Returns a Number or Fraction dataclass for a number string
 
     If literal, spoken string will not convert to hundreds/thousands
@@ -206,7 +206,7 @@ def make_number(
     # Create Number
     if not val_str:
         return None
-    ret = None
+    ret: Union[Number, Fraction, None] = None
     # Create Fraction
     if "/" in val_str:
         ret = make_fraction(val_str, repr, literal, speak_prefix=speak_prefix)
@@ -216,7 +216,7 @@ def make_number(
         spoken = speak_prefix + spoken_number(speak or str(value), literal)
         ret = Number(repr or num, value, spoken)
     # Null the value if "greater than"/"less than"
-    if not m_minus and repr and repr.startswith(("M", "P")):
+    if ret and not m_minus and repr and repr.startswith(("M", "P")):
         ret.value = None
     return ret
 
