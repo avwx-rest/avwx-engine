@@ -332,16 +332,22 @@ def test_prob_end():
     assert lines[-1].end_time.repr == "2602"
 
 
-@pytest.mark.parametrize("report,fixed", (
-    ("KNGU TAF COR 2315/2415 18011KT 9999 VCTS", "TAF COR KNGU 2315/2415 18011KT 9999 VCTS"),
-    ("1 2 COR AMD TAF 3 4", "TAF AMD COR 1 2 3 4"),
-    ("TAF 1 2", "TAF 1 2"),
-    ("TAF AMD COR", "TAF AMD COR"),
-    ("1 COR 2 TAF 3", "TAF COR 1 2 3"),
-    ("1 2 3 4 5 6 7 8", "1 2 3 4 5 6 7 8"),
-    ("1 2 TAF 3 4 5 6 7 8 COR 9", "TAF 1 2 3 4 5 6 7 8 COR 9"),
-    ("", ""),
-))
+@pytest.mark.parametrize(
+    "report,fixed",
+    (
+        (
+            "KNGU TAF COR 2315/2415 18011KT 9999 VCTS",
+            "TAF COR KNGU 2315/2415 18011KT 9999 VCTS",
+        ),
+        ("1 2 COR AMD TAF 3 4", "TAF AMD COR 1 2 3 4"),
+        ("TAF 1 2", "TAF 1 2"),
+        ("TAF AMD COR", "TAF AMD COR"),
+        ("1 COR 2 TAF 3", "TAF COR 1 2 3"),
+        ("1 2 3 4 5 6 7 8", "1 2 3 4 5 6 7 8"),
+        ("1 2 TAF 3 4 5 6 7 8 COR 9", "TAF 1 2 3 4 5 6 7 8 COR 9"),
+        ("", ""),
+    ),
+)
 def test_bad_header(report: str, fixed: str):
     """Should fix the header order for key elements ignoring copies later on"""
     assert taf.fix_report_header(report) == fixed

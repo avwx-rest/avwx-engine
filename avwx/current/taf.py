@@ -9,8 +9,9 @@ from typing import List, Tuple, Optional
 
 # module
 from avwx.current.base import Report, get_wx_codes
-from avwx.parsing import core, sanitization, speech, summary
+from avwx.parsing import core, speech, summary
 from avwx.parsing.remarks import parse as parse_remarks
+from avwx.parsing.sanitization.taf import clean_taf_list, clean_taf_string
 from avwx.parsing.translate.taf import translate_taf
 from avwx.static.core import FLIGHT_RULES
 from avwx.static.taf import TAF_RMK, TAF_NEWLINE, TAF_NEWLINE_STARTSWITH
@@ -328,7 +329,7 @@ def parse(
     start_time: Optional[Timestamp] = None
     end_time: Optional[Timestamp] = None
     sans = Sanitization()
-    sanitized = sanitization.sanitize_report_string(report, sans)
+    sanitized = clean_taf_string(report, sans)
     _, new_station, time = core.get_station_and_time(sanitized[:20].split())
     if new_station is not None:
         station = new_station
@@ -431,7 +432,7 @@ def parse_line(
     """Parser for the International TAF forcast variant"""
     # pylint: disable=too-many-locals
     data = core.dedupe(line.split())
-    data = sanitization.sanitize_report_list(data, sans, remove_clr_and_skc=False)
+    data = clean_taf_list(data, sans)
     sanitized = " ".join(data)
     data, report_type, start_time, end_time, transition = get_type_and_times(data)
     data, wind_shear = get_wind_shear(data)

@@ -23,6 +23,7 @@ from avwx.static.core import (
     FRACTIONS,
     NUMBER_REPL,
     SPECIAL_NUMBERS,
+    WIND_UNITS,
 )
 from avwx.structs import Cloud, Fraction, Number, Timestamp, Units
 
@@ -315,8 +316,9 @@ def is_wind(text: str) -> bool:
         return False
     # 09010KT, 09010G15KT
     if len(text) > 4:
-        for ending in ("KT", "KTS", "MPS", "KMH"):
-            if text.endswith(ending):
+        for ending in WIND_UNITS:
+            unit_index = text.find(ending)
+            if text.endswith(ending) and text[unit_index - 2 : unit_index].isdigit():
                 return True
     # 09010  09010G15 VRB10
     if len(text) != 5 and (len(text) < 8 or "G" not in text or "/" in text):
@@ -371,23 +373,15 @@ def get_wind(
     """
     direction, speed, gust = "", "", ""
     variable: List[Number] = []
+    # Remove unit and split elements
     if data:
         item = copy(data[0])
         if is_wind(item):
-            # Select and remove unit in order of frequency
-            if item.endswith("KT"):
-                item = item.replace("KT", "")
-            elif item.endswith("KTS"):
-                item = item.replace("KTS", "")
-            elif item.endswith("MPS"):
-                units.wind_speed = "m/s"
-                item = item.replace("MPS", "")
-            elif item.endswith("KMH"):
-                units.wind_speed = "km/h"
-                item = item.replace("KMH", "")
-            elif item.endswith("MPH"):
-                units.wind_speed = "mi/h"
-                item = item.replace("MPH", "")
+            for key, unit in WIND_UNITS.items():
+                if item.endswith(key):
+                    units.wind_speed = unit
+                    item = item.replace(key, "")
+                    break
             direction, speed, gust = separate_wind(item)
             data.pop(0)
     # Separated Gust

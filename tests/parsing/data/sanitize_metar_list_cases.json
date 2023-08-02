@@ -135,15 +135,6 @@
         "extra_spaces_needed": false
     },
     {
-        "report": "PHKO 0412/0512 09005KT 9999 BKN013 TX33/0419ZTN23/0408Z",
-        "fixed": "PHKO 0412/0512 09005KT 9999 BKN013 TX33/0419Z TN23/0408Z",
-        "removed": [],
-        "replaced": {},
-        "duplicates": false,
-        "extra_spaces_found": false,
-        "extra_spaces_needed": true
-    },
-    {
         "report": "OPLA 081625Z 00000KT 1200 R36/1500DR18/P2000 R02L/4000VP6000F BR",
         "fixed": "OPLA 081625Z 00000KT 1200 R36/1500D R18/P2000 R02L/4000VP6000FT BR",
         "removed": [],

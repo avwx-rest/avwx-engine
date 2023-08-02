@@ -11,7 +11,8 @@ from typing import List, Tuple, Optional
 
 # module
 from avwx.current.base import Report, get_wx_codes
-from avwx.parsing import core, remarks, sanitization, speech, summary
+from avwx.parsing import core, remarks, speech, summary
+from avwx.parsing.sanitization.metar import clean_metar_list, clean_metar_string
 from avwx.parsing.translate.metar import translate_metar
 from avwx.service import NOAA
 from avwx.static.core import FLIGHT_RULES
@@ -83,6 +84,7 @@ def _parse_rvr_number(value: str) -> Optional[Number]:
 def parse_runway_visibility(value: str) -> RunwayVisibility:
     """Parse a runway visibility range string"""
     raw, trend = value, None
+    # TODO: update to check and convert units post visibility parse
     value = value.replace("FT", "")
     with suppress(KeyError):
         trend = Code(value[-1], _RVR_CODES[value[-1]])
@@ -214,10 +216,10 @@ def get_relative_humidity(
 def sanitize(report: str) -> Tuple[str, str, List[str], Sanitization]:
     """Returns a sanitized report, remarks, and elements ready for parsing"""
     sans = Sanitization()
-    clean = sanitization.sanitize_report_string(report, sans)
+    clean = clean_metar_string(report, sans)
     data, remark_str = get_remarks(clean)
     data = core.dedupe(data)
-    data = sanitization.sanitize_report_list(data, sans)
+    data = clean_metar_list(data, sans)
     clean = " ".join(data)
     if remark_str:
         clean += f" {remark_str}"

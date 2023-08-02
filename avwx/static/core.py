@@ -3,9 +3,14 @@ Core static values for internal and external use
 """
 
 #: Station Location Identifiers - North American formatting
-NA_REGIONS = ["C", "K", "P", "T"]
+NA_REGIONS = (
+    "C",
+    "K",
+    "P",
+    "T",
+)
 #: Station Location Identifiers - International formatting
-IN_REGIONS = [
+IN_REGIONS = (
     "A",
     "B",
     "D",
@@ -23,13 +28,30 @@ IN_REGIONS = [
     "W",
     "Y",
     "Z",
-]
+)
 
 # The Central American region is split. Therefore we need to use the first two letters
 #: Central America Station Location Identifiers - North American formatting
-M_NA_REGIONS = ["MB", "MM", "MT", "MY"]
+M_NA_REGIONS = (
+    "MB",
+    "MM",
+    "MT",
+    "MY",
+)
 #: Central America Station Location Identifiers - International formatting
-M_IN_REGIONS = ["MD", "MG", "MH", "MK", "MN", "MP", "MR", "MS", "MU", "MW", "MZ"]
+M_IN_REGIONS = (
+    "MD",
+    "MG",
+    "MH",
+    "MK",
+    "MN",
+    "MP",
+    "MR",
+    "MS",
+    "MU",
+    "MW",
+    "MZ",
+)
 
 #: North American variant units
 NA_UNITS = {
@@ -50,11 +72,30 @@ IN_UNITS = {
     "wind_speed": "kt",
 }
 
+#: Expected unit postfixes for wind elements in order of frequency
+WIND_UNITS = {
+    "KT": "kt",
+    "KTS": "kt",
+    "MPS": "m/s",
+    "KMH": "km/h",
+    "MPH": "mi/h",
+}
+
 #: List of flight rules abbreviations
-FLIGHT_RULES = ["VFR", "MVFR", "IFR", "LIFR"]
+FLIGHT_RULES = (
+    "VFR",
+    "MVFR",
+    "IFR",
+    "LIFR",
+)
 
 #: List of cloud layer abbreviations
-CLOUD_LIST = ["FEW", "SCT", "BKN", "OVC"]
+CLOUD_LIST = (
+    "FEW",
+    "SCT",
+    "BKN",
+    "OVC",
+)
 
 #: Dictionary of cardinal direction values
 CARDINALS = {
@@ -157,6 +198,7 @@ CLOUD_TRANSLATIONS = {
 #: Units required to be translated in order to be spoken properly
 SPOKEN_UNITS = {
     "sm": "mile",
+    "mi": "mile",
     "km": "kilometer",
     "C": "Celsius",
     "F": "Fahrenheit",

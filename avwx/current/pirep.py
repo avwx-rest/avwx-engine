@@ -12,7 +12,8 @@ from typing import List, Optional, Tuple, Union
 # module
 from avwx import exceptions
 from avwx.current.base import Reports, get_wx_codes
-from avwx.parsing import core, sanitization
+from avwx.parsing import core
+from avwx.parsing.sanitization.pirep import clean_pirep_string
 from avwx.service import NOAA_ADDS
 from avwx.static.core import CARDINALS, CLOUD_LIST
 from avwx.structs import (
@@ -256,7 +257,7 @@ def _sanitize_report_list(data: List[str], sans: Sanitization) -> List[str]:
 def sanitize(report: str) -> Tuple[str, Sanitization]:
     """Returns a sanitized report ready for parsing"""
     sans = Sanitization()
-    clean = sanitization.sanitize_report_string(report, sans)
+    clean = clean_pirep_string(report, sans)
     data = _sanitize_report_list(clean.split(), sans)
     return " ".join(data), sans
 

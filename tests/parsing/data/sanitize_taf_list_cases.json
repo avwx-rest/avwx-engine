@@ -1,0 +1,11 @@
+[
+    {
+        "report": "PHKO 0412/0512 09005KT 9999 BKN013 TX33/0419ZTN23/0408Z",
+        "fixed": "PHKO 0412/0512 09005KT 9999 BKN013 TX33/0419Z TN23/0408Z",
+        "removed": [],
+        "replaced": {},
+        "duplicates": false,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": true
+    }
+]
