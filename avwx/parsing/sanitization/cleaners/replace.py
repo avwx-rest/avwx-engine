@@ -53,7 +53,12 @@ _CLOUD = {
     "OVERCAST": "OVC",
 }
 
-CURRENT = _SHARED | _WIND | _VISIBILITY | _CLOUD
+CURRENT = {
+    **_SHARED,
+    **_WIND,
+    **_VISIBILITY,
+    **_CLOUD,
+}
 
 
 # These are item replacements after the report has been split

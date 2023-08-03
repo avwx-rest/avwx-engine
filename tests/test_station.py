@@ -69,8 +69,7 @@ def test_nearest():
     stn = dist.pop("station")
     assert isinstance(stn, station.Station)
     assert stn.icao == "KMCO"
-    for val in dist.values():
-        assert isinstance(val, float)
+    assert all(isinstance(val, float) for val in dist.values())
 
 
 # These airport counts may change during data updates but should be valid otherwise
@@ -90,8 +89,7 @@ def test_nearest_params(params: tuple, count: int):
     for dist in stations:
         stn = dist.pop("station")
         assert isinstance(stn, station.Station)
-        for val in dist.values():
-            assert isinstance(val, float)
+        assert all(isinstance(val, float) for val in dist.values())
 
 
 @pytest.mark.parametrize(
@@ -240,8 +238,7 @@ def test_station_nearest(lat: float, lon: float, icao: str):
     stn, dist = station.Station.nearest(lat, lon, is_airport=True)
     assert isinstance(stn, station.Station)
     assert stn.icao == icao
-    for val in dist.values():
-        assert isinstance(val, float)
+    assert all(isinstance(val, float) for val in dist.values())
 
 
 def test_station_nearest_without_iata():
@@ -249,8 +246,7 @@ def test_station_nearest_without_iata():
     stn, dist = station.Station.nearest(28.43, -81, False, False)
     assert isinstance(stn, station.Station)
     assert stn.lookup_code == "FA18"
-    for val in dist.values():
-        assert isinstance(val, float)
+    assert all(isinstance(val, float) for val in dist.values())
 
 
 @pytest.mark.parametrize(
