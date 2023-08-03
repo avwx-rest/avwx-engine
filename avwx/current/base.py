@@ -34,6 +34,9 @@ def wx_code(code: str) -> Union[Code, str]:
     # Return code if code is not a code, ex R03/03002V03
     if len(code) not in [2, 4, 6] or code.isdigit():
         return code
+    # Return code if no translatable codes are present
+    if not any(wx_tok in code for wx_tok in WX_TRANSLATIONS.keys()):
+        return code
     while code:
         try:
             ret += f"{WX_TRANSLATIONS[code[:2]]} "
