@@ -26,6 +26,9 @@ def test_wxcode(code: str, value: str):
     assert current.base.wx_code(code) == obj
 
 
-@pytest.mark.parametrize("code,value", (("", ""), ("R03/03002V03", "R03/03002V03")))
+@pytest.mark.parametrize(
+    "code,value",
+    (("", ""), ("R03/03002V03", "R03/03002V03"), ("CB", "CB"), ("0800SE", "0800SE")),
+)
 def test_unknown_code(code: str, value: str):
     assert current.base.wx_code(code) == value

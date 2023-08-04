@@ -2,10 +2,14 @@
 
 Parsing and sanitization improvements are always ongoing and non-breaking
 
+## 1.8.19
+
+- Updated `wx_code()` to parse tokens without translations end up in `other` rather than `wx_codes`.
+
 ## 1.8.18
 
- - Added function `fix_report_header()`. Provides additional sanitization of report string to handle cases where the ICAO code is out of order.
- - Updated unit tests to reflect changes.
+- Added function `fix_report_header()`. Provides additional sanitization of report string to handle cases where the ICAO code is out of order.
+- Updated unit tests to reflect changes.
 
 ## 1.8.17
 
