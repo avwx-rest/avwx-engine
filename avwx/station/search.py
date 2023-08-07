@@ -15,7 +15,7 @@ from avwx.station.station import Station, station_filter
 
 # Catch import error only if user attemps a text search
 with suppress(ModuleNotFoundError):
-    from rapidfuzz import fuzz, process
+    from rapidfuzz import fuzz, process, utils
 
 
 TYPE_ORDER = [
@@ -68,7 +68,11 @@ def search(
     """
     try:
         results = process.extract(
-            text, _CORPUS.value, limit=limit * 20, scorer=fuzz.token_set_ratio
+            text,
+            _CORPUS.value,
+            limit=limit * 20,
+            scorer=fuzz.token_set_ratio,
+            processor=utils.default_process,
         )
     except NameError as name_error:
         raise ModuleNotFoundError(
