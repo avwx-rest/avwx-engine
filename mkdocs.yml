@@ -21,7 +21,7 @@ theme:
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.snippets:
-    check_paths: true
+      check_paths: true
   - pymdownx.superfences
 
 extra:
@@ -57,15 +57,15 @@ copyright: Copyright &copy; 2022 duPont Technologies LLC
 plugins:
   - search
   - minify:
-    minify_html: true
-    htmlmin_opts:
-      remove_comments: true
+      minify_html: true
+      htmlmin_opts:
+        remove_comments: true
   - mkdocstrings:
-    default_handler: python
-    handlers:
-      python:
-        rendering:
-          show_signature_annotations: true
-          show_source: true
-    watch:
-      - avwx-engine
+      default_handler: python
+      handlers:
+        python:
+          rendering:
+            show_signature_annotations: true
+            show_source: true
+      # watch:
+      #   - avwx-engine
