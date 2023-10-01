@@ -101,7 +101,6 @@ The documentation is automatically generated from the content of the [docs direc
  You can also preview local changes during development:
 
 ```sh
-cd docs
 mkdocs serve
 ```
 
