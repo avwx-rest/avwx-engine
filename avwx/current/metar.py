@@ -1,5 +1,9 @@
 """
-Contains METAR-specific functions for report parsing
+A METAR (Meteorological Aerodrome Report) is the surface weather observed at
+most controlled (and some uncontrolled) airports. They are updated once per hour
+or when conditions change enough to warrant an update, and the observations are
+valid for one hour after the report was issued or until the next report is
+issued.
 """
 
 # pylint: disable=invalid-overridden-method
@@ -30,7 +34,7 @@ from avwx.structs import (
 )
 
 
-def get_remarks(txt: str) -> Tuple[List[str], str]:
+def __get_remarks(txt: str) -> Tuple[List[str], str]:
     """Returns the report split into components and the remarks string
 
     Remarks can include items like RMK and on, NOSIG and on, and BECMG and on
@@ -81,7 +85,7 @@ def _parse_rvr_number(value: str) -> Optional[Number]:
     return number
 
 
-def parse_runway_visibility(value: str) -> RunwayVisibility:
+def __parse_runway_visibility(value: str) -> RunwayVisibility:
     """Parse a runway visibility range string"""
     raw, trend = value, None
     # TODO: update to check and convert units post visibility parse
@@ -105,10 +109,10 @@ def parse_runway_visibility(value: str) -> RunwayVisibility:
     )
 
 
-def get_runway_visibility(data: List[str]) -> Tuple[List[str], List[RunwayVisibility]]:
+def __get_runway_visibility(data: List[str]) -> Tuple[List[str], List[RunwayVisibility]]:
     """Returns the report list and the remove runway visibility list"""
     runway_vis = [
-        parse_runway_visibility(data.pop(i))
+        __parse_runway_visibility(data.pop(i))
         for i, item in reversed(list(enumerate(data)))
         if core.is_runway_visibility(item)
     ]
@@ -116,7 +120,7 @@ def get_runway_visibility(data: List[str]) -> Tuple[List[str], List[RunwayVisibi
     return data, runway_vis
 
 
-def parse_altimeter(value: str) -> Optional[Number]:
+def __parse_altimeter(value: str) -> Optional[Number]:
     """Parse an altimeter string into a Number"""
     if not value or len(value) < 4:
         return None
@@ -139,7 +143,7 @@ def parse_altimeter(value: str) -> Optional[Number]:
     return core.make_number(number, value, number, literal=True)
 
 
-def get_altimeter(
+def __get_altimeter(
     data: List[str], units: Units, version: str = "NA"
 ) -> Tuple[List[str], Optional[Number]]:
     """Returns the report list and the removed altimeter item
@@ -150,7 +154,7 @@ def get_altimeter(
     for _ in range(2):
         if not data:
             break
-        value = parse_altimeter(data[-1])
+        value = __parse_altimeter(data[-1])
         if value is None:
             break
         values.append(value)
@@ -164,7 +168,7 @@ def get_altimeter(
     return data, altimeter
 
 
-def get_temp_and_dew(
+def __get_temp_and_dew(
     data: List[str],
 ) -> Tuple[List[str], Optional[Number], Optional[Number]]:
     """Returns the report list and removed temperature and dewpoint strings"""
@@ -193,7 +197,7 @@ def get_temp_and_dew(
     return data, None, None
 
 
-def get_relative_humidity(
+def __get_relative_humidity(
     temperature: Optional[Number],
     dewpoint: Optional[Number],
     remarks_info: Optional[RemarksData],
@@ -213,11 +217,11 @@ def get_relative_humidity(
     return core.relative_humidity(temp.value, dew.value, units.temperature)
 
 
-def sanitize(report: str) -> Tuple[str, str, List[str], Sanitization]:
+def __sanitize(report: str) -> Tuple[str, str, List[str], Sanitization]:
     """Returns a sanitized report, remarks, and elements ready for parsing"""
     sans = Sanitization()
     clean = clean_metar_string(report, sans)
-    data, remark_str = get_remarks(clean)
+    data, remark_str = __get_remarks(clean)
     data = core.dedupe(data)
     data = clean_metar_list(data, sans)
     clean = " ".join(data)
@@ -226,7 +230,7 @@ def sanitize(report: str) -> Tuple[str, str, List[str], Sanitization]:
     return clean, remark_str, data, sans
 
 
-def parse(
+def __parse(
     station: str,
     report: str,
     issued: Optional[date] = None,
@@ -238,19 +242,19 @@ def parse(
         return None, None, None
     if use_na is None:
         use_na = uses_na_format(station[:2])
-    parser = parse_na if use_na else parse_in
+    parser = __parse_na if use_na else __parse_in
     return parser(report, issued)
 
 
-def parse_na(
+def __parse_na(
     report: str, issued: Optional[date] = None
 ) -> Tuple[MetarData, Units, Sanitization]:
     """Parser for the North American METAR variant"""
     # pylint: disable=too-many-locals
     units = Units.north_american()
-    sanitized, remarks_str, data, sans = sanitize(report)
+    sanitized, remarks_str, data, sans = __sanitize(report)
     data, station, time = core.get_station_and_time(data)
-    data, runway_visibility = get_runway_visibility(data)
+    data, runway_visibility = __get_runway_visibility(data)
     data, clouds = core.get_clouds(data)
     (
         data,
@@ -259,13 +263,13 @@ def parse_na(
         wind_gust,
         wind_variable_direction,
     ) = core.get_wind(data, units)
-    data, altimeter = get_altimeter(data, units, "NA")
+    data, altimeter = __get_altimeter(data, units, "NA")
     data, visibility = core.get_visibility(data, units)
-    data, temperature, dewpoint = get_temp_and_dew(data)
+    data, temperature, dewpoint = __get_temp_and_dew(data)
     condition = core.get_flight_rules(visibility, core.get_ceiling(clouds))
     other, wx_codes = get_wx_codes(data)
     remarks_info = remarks.parse(remarks_str)
-    humidity = get_relative_humidity(temperature, dewpoint, remarks_info, units)
+    humidity = __get_relative_humidity(temperature, dewpoint, remarks_info, units)
     struct = MetarData(
         altimeter=altimeter,
         clouds=clouds,
@@ -291,15 +295,15 @@ def parse_na(
     return struct, units, sans
 
 
-def parse_in(
+def __parse_in(
     report: str, issued: Optional[date] = None
 ) -> Tuple[MetarData, Units, Sanitization]:
     """Parser for the International METAR variant"""
     # pylint: disable=too-many-locals
     units = Units.international()
-    sanitized, remarks_str, data, sans = sanitize(report)
+    sanitized, remarks_str, data, sans = __sanitize(report)
     data, station, time = core.get_station_and_time(data)
-    data, runway_visibility = get_runway_visibility(data)
+    data, runway_visibility = __get_runway_visibility(data)
     if "CAVOK" not in data:
         data, clouds = core.get_clouds(data)
     (
@@ -309,18 +313,18 @@ def parse_in(
         wind_gust,
         wind_variable_direction,
     ) = core.get_wind(data, units)
-    data, altimeter = get_altimeter(data, units, "IN")
+    data, altimeter = __get_altimeter(data, units, "IN")
     if "CAVOK" in data:
         visibility = core.make_number("CAVOK")
         clouds = []
         data.remove("CAVOK")
     else:
         data, visibility = core.get_visibility(data, units)
-    data, temperature, dewpoint = get_temp_and_dew(data)
+    data, temperature, dewpoint = __get_temp_and_dew(data)
     condition = core.get_flight_rules(visibility, core.get_ceiling(clouds))
     other, wx_codes = get_wx_codes(data)
     remarks_info = remarks.parse(remarks_str)
-    humidity = get_relative_humidity(temperature, dewpoint, remarks_info, units)
+    humidity = __get_relative_humidity(temperature, dewpoint, remarks_info, units)
     struct = MetarData(
         altimeter=altimeter,
         clouds=clouds,
@@ -359,7 +363,7 @@ class Metar(Report):
             return
         report = await service.async_fetch(self.code)
         if report is not None:
-            data, units, sans = parse(self.code, report, self.issued)
+            data, units, sans = __parse(self.code, report, self.issued)
             if not data or data.time is None or data.time.dt is None:
                 return
             if (
@@ -406,7 +410,7 @@ class Metar(Report):
     async def _post_update(self) -> None:
         if self.code is None or self.raw is None:
             return
-        self.data, self.units, self.sanitization = parse(
+        self.data, self.units, self.sanitization = __parse(
             self.code, self.raw, self.issued
         )
         if self._should_check_default:
@@ -419,7 +423,7 @@ class Metar(Report):
     def _post_parse(self) -> None:
         if self.code is None or self.raw is None:
             return
-        self.data, self.units, self.sanitization = parse(
+        self.data, self.units, self.sanitization = __parse(
             self.code, self.raw, self.issued
         )
         if self.data is None or self.units is None:
@@ -430,7 +434,7 @@ class Metar(Report):
     @staticmethod
     def sanitize(report: str) -> str:
         """Sanitizes a METAR string"""
-        return sanitize(report)[0]
+        return __sanitize(report)[0]
 
     @property
     def summary(self) -> Optional[str]:

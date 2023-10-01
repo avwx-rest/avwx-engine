@@ -36,7 +36,7 @@ def test_repr():
 )
 def test_get_remarks(raw: str, wx: List[str], rmk: str):
     """Remarks get removed first with the remaining components split into a list"""
-    test_wx, test_rmk = metar.get_remarks(raw)
+    test_wx, test_rmk = metar.__get_remarks(raw)
     assert wx == test_wx
     assert rmk == test_rmk
 
@@ -56,14 +56,14 @@ def test_get_remarks(raw: str, wx: List[str], rmk: str):
 )
 def test_get_temp_and_dew(wx: List[str], temp: tuple, dew: tuple):
     """Tests temperature and dewpoint extraction"""
-    ret_wx, ret_temp, ret_dew = metar.get_temp_and_dew(wx)
+    ret_wx, ret_temp, ret_dew = metar.__get_temp_and_dew(wx)
     assert ret_wx == ["1", "2"]
     assert_number(ret_temp, *temp)
     assert_number(ret_dew, *dew)
 
 
 def test_not_temp_or_dew():
-    assert metar.get_temp_and_dew(["MX/01"]) == (["MX/01"], None, None)
+    assert metar.__get_temp_and_dew(["MX/01"]) == (["MX/01"], None, None)
 
 
 @pytest.mark.parametrize(
@@ -88,7 +88,7 @@ def test_get_relative_humidity(
     if dew is not None:
         dew = metar.Number("", dew, "")
     remarks_info = metar.remarks.parse(rmk)
-    value = metar.get_relative_humidity(temp, dew, remarks_info, units)
+    value = metar.__get_relative_humidity(temp, dew, remarks_info, units)
     if value is not None:
         value = round(value, 5)
     assert humidity == value
@@ -109,12 +109,12 @@ def test_get_relative_humidity(
 )
 def test_parse_altimeter(text: str, alt: Tuple[float, str]):
     """Tests that an atlimiter is correctly parsed into a Number"""
-    assert_number(metar.parse_altimeter(text), text, *alt)
+    assert_number(metar.__parse_altimeter(text), text, *alt)
 
 
 @pytest.mark.parametrize("text", (None, "12/10", "RMK", "ABCDE", "15KM", "10SM"))
 def test_bad_altimeter(text: Optional[str]):
-    assert metar.parse_altimeter(text) is None
+    assert metar.__parse_altimeter(text) is None
 
 
 @pytest.mark.parametrize(
@@ -169,7 +169,7 @@ def test_bad_altimeter(text: Optional[str]):
 def test_get_altimeter(version: str, wx: List[str], alt: tuple, unit: str):
     """Tests that the correct alimeter item gets removed from the end of the wx list"""
     units = structs.Units(**getattr(static.core, f"{version}_UNITS"))
-    ret, ret_alt = metar.get_altimeter(wx, units, version)
+    ret, ret_alt = metar.__get_altimeter(wx, units, version)
     assert ret == ["1"]
     assert_number(ret_alt, *alt)
     assert units.altimeter == unit
@@ -229,7 +229,7 @@ def test_parse_runway_visibility(
     trend: Optional[structs.Code],
 ):
     """Tests parsing runway visibility range values"""
-    rvr = metar.parse_runway_visibility(value)
+    rvr = metar.__parse_runway_visibility(value)
     assert rvr.runway == runway
     if vis is None:
         assert rvr.visibility is None
@@ -251,7 +251,7 @@ def test_parse_runway_visibility(
 )
 def test_get_runway_visibility(wx: List[str], count: int):
     """Tests extracting runway visibility"""
-    items, rvr = metar.get_runway_visibility(wx)
+    items, rvr = metar.__get_runway_visibility(wx)
     assert items == ["1", "2"]
     assert len(rvr) == count
 
@@ -265,7 +265,7 @@ def test_sanitize():
     sans = structs.Sanitization(
         ["METAR", "AUTO", "?"], {"C A V O K": "CAVOK"}, extra_spaces_needed=True
     )
-    ret_clean, ret_remarks, ret_data, ret_sans = metar.sanitize(report)
+    ret_clean, ret_remarks, ret_data, ret_sans = metar.__sanitize(report)
     assert clean == ret_clean
     assert remarks == ret_remarks
     assert data == ret_data
@@ -275,7 +275,7 @@ def test_sanitize():
 def test_parse():
     """Tests returned structs from the parse function"""
     report = "KJFK 032151Z 16008KT 10SM FEW034 FEW130 BKN250 27/23 A3013 RMK AO2 SLP201"
-    data, units, sans = metar.parse(report[:4], report)
+    data, units, sans = metar.__parse(report[:4], report)
     assert isinstance(data, structs.MetarData)
     assert isinstance(units, structs.Units)
     assert isinstance(sans, structs.Sanitization)
@@ -285,7 +285,7 @@ def test_parse():
 def test_parse_awos():
     """Tests an AWOS weather report. Only used for advisory"""
     report = "3J0 140347Z AUTO 05003KT 07/02 RMK ADVISORY A01  $"
-    data, units, sans = metar.parse("KJFK", report, use_na=True)
+    data, units, sans = metar.__parse("KJFK", report, use_na=True)
     assert isinstance(data, structs.MetarData)
     assert isinstance(units, structs.Units)
     assert isinstance(sans, structs.Sanitization)
