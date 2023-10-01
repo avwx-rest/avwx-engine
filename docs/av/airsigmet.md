@@ -93,11 +93,11 @@ Number(repr='FL410', value=410, spoken='flight level four one zero')
 
 Returns True if the report area contains a coordinate
 
-#### **data**: *avwx.structs.AirSigmetData* = *None*
+#### **data**: *[avwx.structs.AirSigmetData](#class-avwxstructsairsigmetdata)* = *None*
 
 AirSigmetData dataclass of parsed data values and units
 
-#### **from_report**(*report: str*) -> *avwx.AigSigmet*
+#### **from_report**(*report: str*) -> *[avwx.AigSigmet](#class-avwxaigsigmet)*
 
 Returns an updated report object based on an existing report
 
@@ -127,7 +127,7 @@ The unparsed report string
 
 Source URL root used to pull the current report data
 
-#### **units**: *avwx.structs.Units*
+#### **units**: *[avwx.structs.Units](../util/structs#class-avwxstructsunits)*
 
 Units inferred from the report contents
 
@@ -137,7 +137,7 @@ Units inferred from the report contents
 
 **body**: *str*
 
-**bulletin**: *avwx.structs.Bulletin*
+**bulletin**: *[avwx.structs.Bulletin](../util/structs#class-avwxstructsbulletin)*
 
 **correction**: *Optional[str]*
 
