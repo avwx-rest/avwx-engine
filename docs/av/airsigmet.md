@@ -35,7 +35,7 @@ Code(repr='WA', value='airmet')
 'AIRMET SIERRA FOR IFR AND MTN OBSCN'
 ```
 
-#### **along**(*coords: List[avwx.structs.Coord]*) -> *List[avwx.AigSigmet]*
+#### **along**(*coords: List[[avwx.structs.Coord](../util/structs.md#class-avwxstructscoord)]* -> *List[[avwx.AigSigmet](#class-avwxaigsigmet)]*
 
 Returns available reports the intersect a flight path
 
@@ -45,7 +45,7 @@ Async updates list of reports by fetching from all sources
 
 Returns `True` if new reports are available, else `False`
 
-#### **contains**(*coord: avwx.structs.Coord*) -> *List[avwx.AigSigmet]*
+#### **contains**(*coord: [avwx.structs.Coord](../util/structs.md#class-avwxstructscoord)*) -> *List[avwx.AigSigmet]*
 
 Returns available reports that contain a coordinate
 
@@ -57,7 +57,7 @@ UTC Datetime object when the reports were last updated
 
 List of the original fetched report strings
 
-#### **reports**: *List[avwx.AirSigmet]* = *None*
+#### **reports**: *List[[avwx.AigSigmet](#class-avwxaigsigmet)]* = *None*
 
 List of parsed `avwx.AirSigmet` objects
 
@@ -89,7 +89,7 @@ Code(repr='NC', value='No change')
 Number(repr='FL410', value=410, spoken='flight level four one zero')
 ```
 
-#### **contains**(*coord: avwx.structs.Coord*) -> *bool*
+#### **contains**(*coord: [avwx.structs.Coord](../util/structs.md#class-avwxstructscoord)*) -> *bool*
 
 Returns True if the report area contains a coordinate
 
@@ -127,7 +127,7 @@ The unparsed report string
 
 Source URL root used to pull the current report data
 
-#### **units**: *[avwx.structs.Units](../util/structs#class-avwxstructsunits)*
+#### **units**: *[avwx.structs.Units](../util/structs.md#class-avwxstructsunits)*
 
 Units inferred from the report contents
 
@@ -137,7 +137,7 @@ Units inferred from the report contents
 
 **body**: *str*
 
-**bulletin**: *[avwx.structs.Bulletin](../util/structs#class-avwxstructsbulletin)*
+**bulletin**: *[avwx.structs.Bulletin](../util/structs.md#class-avwxstructsbulletin)*
 
 **correction**: *Optional[str]*
 
