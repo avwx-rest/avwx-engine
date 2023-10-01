@@ -45,7 +45,7 @@ Async updates list of reports by fetching from all sources
 
 Returns `True` if new reports are available, else `False`
 
-#### **contains**(*coord: [avwx.structs.Coord](../util/structs.md#class-avwxstructscoord)*) -> *List[avwx.AigSigmet]*
+#### **contains**(*coord: [avwx.structs.Coord](../util/structs.md#class-avwxstructscoord)*) -> *List[[avwx.AigSigmet](#class-avwxaigsigmet)]*
 
 Returns available reports that contain a coordinate
 
@@ -141,13 +141,13 @@ Units inferred from the report contents
 
 **correction**: *Optional[str]*
 
-**end_time**: *Optional[avwx.structs.Timestamp]*
+**end_time**: *Optional[[avwx.structs.Timestamp](../util/structs.md#class-avwxstructstimestamp)]*
 
-**forecast**: *Optional[avwx.structs.AirSigObservation]*
+**forecast**: *Optional[[avwx.structs.AirSigObservation](#class-avwxstructsairsigmetobservation)]*
 
 **issuer**: *str*
 
-**observation**: *Optional[avwx.structs.AirSigObservation]*
+**observation**: *Optional[[avwx.structs.AirSigObservation](#class-avwxstructsairsigmetobservation)]*
 
 **raw**: *str*
 
@@ -157,11 +157,11 @@ Units inferred from the report contents
 
 **sanitized**: *str*
 
-**start_time**: *Optional[avwx.structs.Timestamp]*
+**start_time**: *Optional[[avwx.structs.Timestamp](../util/structs.md#class-avwxstructstimestamp)]*
 
 **station**: *Optional[str]*
 
-**time**: *Optional[avwx.structs.Timestamp]*
+**time**: *Optional[[avwx.structs.Timestamp](../util/structs.md#class-avwxstructstimestamp)]*
 
 **type**: *str*
 
@@ -169,24 +169,24 @@ Units inferred from the report contents
 
 **bounds**: *List[str]*
 
-**ceiling**: *Optional[avwx.structs.Number]*
+**ceiling**: *Optional[[avwx.structs.Number](../util/structs.md#class-avwxstructsnumber)]*
 
-**coords**: *List[avwx.structs.Coord]*
+**coords**: *List[[avwx.structs.Coord](../util/structs.md#class-avwxstructscoord)]*
 
-**end_time**: *Optional[avwx.structs.Timestamp]*
+**end_time**: *Optional[[avwx.structs.Timestamp](../util/structs.md#class-avwxstructstimestamp)]*
 
-**floor**: *Optional[avwx.structs.Number]*
+**floor**: *Optional[[avwx.structs.Number](../util/structs.md#class-avwxstructsnumber)]*
 
-**intensity**: *Optional[avwx.structs.Code]*
+**intensity**: *Optional[[avwx.structs.Code](../util/structs.md#class-avwxstructscode)]*
 
-**movement**: *Optional[avwx.structs.Movement]*
+**movement**: *Optional[[avwx.structs.Movement](../util/structs.md#class-avwxstructsmovement)]*
 
 **other**: *List[str]*
 
 **poly**: *Optional[shapely.geometry.Polygon]*
 
-**position**: *Optional[avwx.structs.Coord]*
+**position**: *Optional[[avwx.structs.Coord](../util/structs.md#class-avwxstructscoord)]*
 
-**start_time**: *Optional[avwx.structs.Timestamp]*
+**start_time**: *Optional[[avwx.structs.Timestamp](../util/structs.md#class-avwxstructstimestamp)]*
 
-**type**: *Optional[avwx.structs.Code]*
+**type**: *Optional[[avwx.structs.Code](../util/structs.md#class-avwxstructscode)]*
