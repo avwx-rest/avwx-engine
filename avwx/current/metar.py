@@ -374,7 +374,9 @@ class Metar(Report):
     {'AO2': 'Automated with precipitation sensor', 'SLP184': 'Sea level pressure: 1018.4 hPa', 'T00441078': 'Temperature 4.4°C and dewpoint -7.8°C'}
     ```
 
-    The `parse` and `from_report` methods can parse a report string if you want to override the normal fetching process. Here's an example of a really bad day.
+    The `parse` and `from_report` methods can parse a report string if you want
+    to override the normal fetching process. Here's an example of a really bad
+    day.
 
     ```python
     >>> from avwx import Metar
