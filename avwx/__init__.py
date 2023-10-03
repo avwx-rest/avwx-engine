@@ -93,11 +93,11 @@ Here we start of the same with the Taf object, this time for Honolulu. Because T
 
 # Model Forecasts
 
-* [NBM NBH](./avwx/forecast/nbm.html#Nbh)
-* [NBM NBS](./avwx/forecast/nbm.html#Nbs)
-* [NBM NBE](./avwx/forecast/nbm.html#Nbe)
-* [GFS MOS MAV](./avwx/gfs.html#Mav)
-* [GFS MOS MEX](./avwx/gfs.html#Mex)
+* [NBM NBH](./avwx/forecast/nbm.html#nbh)
+* [NBM NBS](./avwx/forecast/nbm.html#nbs)
+* [NBM NBE](./avwx/forecast/nbm.html#nbe)
+* [GFS MOS MAV](./avwx/gfs.html#mav)
+* [GFS MOS MEX](./avwx/gfs.html#mex)
 
 # Utilities
 
