@@ -106,7 +106,7 @@ Here we start of the same with the Taf object, this time for Honolulu. Because T
 * [Data Updates]()
 * [Other Data Structures]()
 * [Static Values]()
-* [Exceptions]()
+* [Exceptions](./avwx/exceptions.html)
 """
 
 from .current.airsigmet import AirSigmet, AirSigManager
