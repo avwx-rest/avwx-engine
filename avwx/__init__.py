@@ -101,7 +101,7 @@ Here we start of the same with the Taf object, this time for Honolulu. Because T
 
 # Utilities
 
-* [Station](./avwx/station/station.html)
+* [Station](./avwx/station.html)
 * [Service]()
 * [Data Updates]()
 * [Other Data Structures]()
