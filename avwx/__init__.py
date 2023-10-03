@@ -6,7 +6,10 @@ r"""
 [![PyPI - License](https://img.shields.io/pypi/l/avwx-engine?style=flat)](https://pypi.python.org/pypi/avwx-engine/)
 [![GitHub - Test Suite Status](https://github.com/avwx-rest/avwx-engine/actions/workflows/test.yml/badge.svg)]()
 
-AVWX is a global aviation weather fetching and parsing engine. It sources reports from a variety of government sources, parses individual elements, and calculates additional information like flight rules and time range interpolation.
+AVWX is a global aviation weather fetching and parsing engine. It sources
+reports from a variety of government sources, parses individual elements, and
+calculates additional information like flight rules and time range
+interpolation.
 
 AVWX currently supports:
 
@@ -28,17 +31,23 @@ True
 'VFR'
 ```
 
-These docs could use some love, and I am not a writer. You can help by making a pull request on [GitHub](https://github.com/avwx-rest/avwx-engine)
+These docs could use some love, and I am not a writer. You can help by making a
+pull request on [GitHub](https://github.com/avwx-rest/avwx-engine)
 
 # Installation
 
-AVWX is available on PyPI and requires Python 3.8 and above. Note: the package name is ``avwx-engine``, but the import is ``avwx``
+AVWX is available on PyPI and requires Python 3.8 and above. Note: the package
+name is ``avwx-engine``, but the import is ``avwx``
 
 ```bash
 python -m pip install avwx-engine
 ```
 
-Certain features may require additional libraries which most users won't need. For example, finding stations near a coordinate require scipy which is a large package. Attempting to run these methods without the necessary library will prompt you to install them. If you want to install all dependencies at once, run this instead:
+Certain features may require additional libraries which most users won't need.
+For example, finding stations near a coordinate require scipy which is a large
+package. Attempting to run these methods without the necessary library will
+prompt you to install them. If you want to install all dependencies at once,
+run this instead:
 
 ```sh
 python -m pip install avwx-engine[all]
@@ -46,7 +55,8 @@ python -m pip install avwx-engine[all]
 
 # Tutorial
 
-Let's run through a quick example of fetching and parsing a METAR and TAF. There are other report types, but they follow the same basic API.
+Let's run through a quick example of fetching and parsing a METAR and TAF.
+There are other report types, but they follow the same basic API.
 
 ```python
 >>> import avwx
@@ -63,7 +73,11 @@ True
 'John F Kennedy International Airport'
 ```
 
-Here, we create a METAR object and initialize it to pull data for JFK International airport. The update call fetches the current report, parses it into its individual components, and formats the translations. We then view the original report, the calculated flight rules, and a summary string from the translations. We can also see details of the station if available.
+Here, we create a METAR object and initialize it to pull data for JFK
+International airport. The update call fetches the current report, parses it
+into its individual components, and formats the translations. We then view the
+original report, the calculated flight rules, and a summary string from the
+translations. We can also see details of the station if available.
 
 ```python
 >>> hnl_taf = avwx.Taf('PHNL')
@@ -81,7 +95,11 @@ VFR from 01-05:00 to 01-20:00
 MVFR from 01-20:00 to 01-24:00
 ```
 
-Here we start of the same with the Taf object, this time for Honolulu. Because TAFs are forecasts, they contain multiple time periods. Here, we have three: a base and two amendments. Our code shows the different forecasted flight rules for each time period (day-hour). Taf objects have most of the same attributes as Metar objects, so we could also grab the station info if we needed to.
+Here we start of the same with the Taf object, this time for Honolulu. Because
+TAFs are forecasts, they contain multiple time periods. Here, we have three: a
+base and two amendments. Our code shows the different forecasted flight rules
+for each time period (day-hour). Taf objects have most of the same attributes
+as Metar objects, so we could also grab the station info if we needed to.
 
 # Aviation Reports
 
