@@ -103,7 +103,7 @@ Here we start of the same with the Taf object, this time for Honolulu. Because T
 
 * [Station](./avwx/station.html)
 * [Service]()
-* [Data Updates]()
+* [Data Updates](./avwx/data.html)
 * [Other Data Structures]()
 * [Static Values]()
 * [Exceptions](./avwx/exceptions.html)
