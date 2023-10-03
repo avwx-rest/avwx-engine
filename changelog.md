@@ -5,6 +5,7 @@ Parsing and sanitization improvements are always ongoing and non-breaking
 ## 1.8.20
 
 - Updated wind sanitization to ensure Station ID is protected.
+- Updated unit test to validate fix.
 
 ## 1.8.19
 
