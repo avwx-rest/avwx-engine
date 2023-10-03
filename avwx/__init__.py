@@ -30,9 +30,7 @@ True
 
 These docs could use some love, and I am not a writer. You can help by making a pull request on [GitHub](https://github.com/avwx-rest/avwx-engine)
 
-# Getting Started
-
-## Installation
+# Installation
 
 AVWX is available on PyPI and requires Python 3.8 and above. Note: the package name is ``avwx-engine``, but the import is ``avwx``
 
@@ -46,7 +44,7 @@ Certain features may require additional libraries which most users won't need. F
 python -m pip install avwx-engine[all]
 ```
 
-## Tutorial
+# Tutorial
 
 Let's run through a quick example of fetching and parsing a METAR and TAF. There are other report types, but they follow the same basic API.
 
@@ -85,30 +83,30 @@ MVFR from 01-20:00 to 01-24:00
 
 Here we start of the same with the Taf object, this time for Honolulu. Because TAFs are forecasts, they contain multiple time periods. Here, we have three: a base and two amendments. Our code shows the different forecasted flight rules for each time period (day-hour). Taf objects have most of the same attributes as Metar objects, so we could also grab the station info if we needed to.
 
-## Aviation Reports
+# Aviation Reports
 
 * [METAR](./avwx/current/metar.html)
-* [TAF](av/taf.md)
-* [PIREP](av/pirep.md)
-* [AIRMET / SIGMET](av/airsigmet.md)
-* [NOTAM](av/notam.md)
+* [TAF](./avwx/current/taf.html)
+* [PIREP](./avwx/current/pirep.html)
+* [AIRMET / SIGMET](./avwx/current/airsigmet.html)
+* [NOTAM](./avwx/current/notam.html)
 
-## Model Forecasts
+# Model Forecasts
 
-* [NBM NBH](nbm/nbh.md)
-* [NBM NBS](nbm/nbs.md)
-* [NBM NBE](nbm/nbe.md)
-* [GFS MOS MAV](gfs/mav.md)
-* [GFS MOS MEX](gfs/mex.md)
+* [NBM NBH](./avwx/forecast/nbm.html#Nbh)
+* [NBM NBS](./avwx/forecast/nbm.html#Nbs)
+* [NBM NBE](./avwx/forecast/nbm.html#Nbe)
+* [GFS MOS MAV](./avwx/gfs.html#Mav)
+* [GFS MOS MEX](./avwx/gfs.html#Mex)
 
-## Utilities
+# Utilities
 
-* [Station](util/station.md)
-* [Service](util/service.md)
-* [Data Updates](util/data.md)
-* [Other Data Structures](util/structs.md)
-* [Static Values](util/static.md)
-* [Exceptions](util/exceptions.md)
+* [Station](./avwx/station/station.html)
+* [Service]()
+* [Data Updates]()
+* [Other Data Structures]()
+* [Static Values]()
+* [Exceptions]()
 """
 
 from .current.airsigmet import AirSigmet, AirSigManager

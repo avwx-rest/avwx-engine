@@ -13,7 +13,7 @@ import pytest
 # module
 from avwx import static, structs
 from avwx.current.base import get_wx_codes
-from avwx.current.metar import __parse_altimeter
+from avwx.current.metar import parse_altimeter
 from avwx.parsing import core, speech
 
 
@@ -94,7 +94,7 @@ def test_visibility(vis: str, unit: str, spoken: str):
 )
 def test_altimeter(alt: str, unit: str, spoken: str):
     """Tests converting altimeter reading into a spoken string"""
-    assert speech.altimeter(__parse_altimeter(alt), unit) == f"Altimeter {spoken}"
+    assert speech.altimeter(parse_altimeter(alt), unit) == f"Altimeter {spoken}"
 
 
 @pytest.mark.parametrize(
@@ -131,7 +131,7 @@ def test_metar():  # sourcery skip: dict-assign-update-to-union
         "sanitized",
     )
     data = {
-        "altimeter": __parse_altimeter("2992"),
+        "altimeter": parse_altimeter("2992"),
         "clouds": [core.make_cloud("BKN015CB")],
         "dewpoint": core.make_number("M01"),
         "other": [],
@@ -220,7 +220,7 @@ def test_taf_line():  # sourcery skip: dict-assign-update-to-union
     units = structs.Units.north_american()
     empty_fields = ("flight_rules", "probability", "raw", "sanitized")
     line = {
-        "altimeter": __parse_altimeter("2992"),
+        "altimeter": parse_altimeter("2992"),
         "clouds": [core.make_cloud("BKN015CB")],
         "end_time": core.make_timestamp("1206"),
         "icing": ["611005"],
