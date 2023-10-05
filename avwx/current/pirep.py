@@ -1,5 +1,9 @@
 """
-Functions for parsing PIREPs
+A PIREP (Pilot Report) is an observation made by pilots inflight meant to aid
+controllers and pilots routing around adverse conditions and other conditions
+of note. They typically contain icing, turbulence, cloud types/bases/tops, and
+other info at a known distance and radial from a ground station. They are
+released as they come in.
 """
 
 # pylint: disable=too-many-boolean-expressions
@@ -324,7 +328,30 @@ def parse(
 
 
 class Pireps(Reports):
-    """Class to handle pilot report data"""
+    """
+    The Pireps class offers an object-oriented approach to managing multiple
+    PIREP reports for a single station.
+
+    Below is typical usage for fetching and pulling PIREP data for KJFK.
+
+    ```python
+    >>> from avwx import Pireps
+    >>> kmco = Pireps("KMCO")
+    >>> kmco.station.name
+    'Orlando International Airport'
+    >>> kmco.update()
+    True
+    >>> kmco.last_updated
+    datetime.datetime(2019, 5, 24, 13, 31, 46, 561732, tzinfo=datetime.timezone.utc)
+    >>> kmco.raw[0]
+    'FLL UA /OV KFLL275015/TM 1241/FL020/TP B737/SK TOP020/RM DURD RY10L'
+    >>> kmco.data[0].location
+    Location(repr='KFLL275015', station='KFLL', direction=Number(repr='275', value=275, spoken='two seven five'), distance=Number(repr='015', value=15, spoken='one five'))
+    ```
+
+    The `parse` and `from_report` methods can parse a report string if you want
+    to override the normal fetching process.
+    """
 
     data: Optional[List[Optional[PirepData]]] = None  # type: ignore
     sanitization: Optional[List[Optional[Sanitization]]] = None  # type: ignore

@@ -1,5 +1,20 @@
 """
-AIRMET / SIGMET report parsing
+A SIGMET (Significant Meteorological Information) is a weather advisory for the
+safety of all aircraft. They are divided into:
+
+- Convective - thunderstorms, hail, and cyclones
+- Non-Convective - turbulence, icing, dust clouds, volcanic activity, and radiation
+
+An AIRMET (Airman's Meteorological Information) is a weather advisory for
+smaller aircraft or VFR navigation. They are divided into:
+
+- Sierra - IFR conditions like low ceilings and mountain obscuration
+- Tango - turbulence and high surface winds
+- Zulu - icing and freezing levels
+
+Both types share a similar report format and therefore are combined into a
+single handling class. The `Bulletin` and weather type can be used to classify
+each as a SIGMET or AIRMET for filtering purposes.
 """
 
 # stdlib
@@ -531,7 +546,29 @@ def parse(report: str, issued: Optional[date] = None) -> Tuple[AirSigmetData, Un
 
 
 class AirSigmet(AVWXBase):
-    """Class representing an AIRMET or SIGMET report"""
+    """
+    In addition to the manager, you can use the `avwx.AirSigmet` class like any
+    other report when you supply the report string via `parse` or
+    `from_report`.
+
+    ```python
+    >>> from avwx import AirSigmet
+    >>> report = 'WSPR31 SPJC 270529 SPIM SIGMET 3 VALID 270530/270830 SPJC- SPIM LIMA FIR EMBD TS OBS AT 0510Z NE OF LINE S0406 W07103 - S0358 W07225 - S0235 W07432 - S0114 W07503 TOP FL410 MOV SW NC='
+    >>> sigmet = AirSigmet.from_report(report)
+    True
+    >>> sigmet.last_updated
+    datetime.datetime(2022, 3, 27, 6, 29, 33, 300935, tzinfo=datetime.timezone.utc)
+    >>> sigmet.data.observation.coords
+    [Coord(lat=-4.06, lon=-71.03, repr='S0406 W07103'),
+    Coord(lat=-3.58, lon=-72.25, repr='S0358 W07225'),
+    Coord(lat=-2.35, lon=-74.32, repr='S0235 W07432'),
+    Coord(lat=-1.14, lon=-75.03, repr='S0114 W07503')]
+    >>> sigmet.data.observation.intensity
+    Code(repr='NC', value='No change')
+    >>> sigmet.data.observation.ceiling
+    Number(repr='FL410', value=410, spoken='flight level four one zero')
+    ```
+    """
 
     data: Optional[AirSigmetData] = None
 
@@ -570,7 +607,30 @@ class AirSigmet(AVWXBase):
 
 
 class AirSigManager:
-    """Class to fetch and manage AIRMET and SIGMET reports"""
+    """
+    Because of the global nature of these report types, we don't initialize a
+    report class with a station ident like the other report types. Instead, we
+    use a class to manage and update the list of all active SIGMET and AIRMET
+    reports.
+
+    ```python
+    >>> from avwx import AirSigManager
+    >>> from avwx.structs import Coord
+    >>> manager = AirSigManager()
+    >>> manager.update()
+    True
+    >>> manager.last_updated
+    datetime.datetime(2022, 3, 27, 5, 54, 21, 516741, tzinfo=datetime.timezone.utc)
+    >>> len(manager.reports)
+    113
+    >>> len(manager.contains(Coord(lat=33.12, lon=-105)))
+    5
+    >>> manager.reports[0].data.bulletin.type
+    Code(repr='WA', value='airmet')
+    >>> manager.reports[0].data.type
+    'AIRMET SIERRA FOR IFR AND MTN OBSCN'
+    ```
+    """
 
     _services: List[Service]
     _raw: List[Tuple[str, str]]

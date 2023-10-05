@@ -72,6 +72,7 @@ class Report(ManagedReport):
     sanitization: Optional[Sanitization] = None
 
     def __init__(self, code: str):
+        """Add doc string to show constructor"""
         super().__init__(code)
         if self.station is not None:
             service = get_service(code, self.station.country)

@@ -1,5 +1,25 @@
 """
-NOTAM report parsing
+A NOTAM (Notice to Air Missions) is a report detailing special events or
+conditions affecting airport and flight operations. These can include, but are
+in no way limitted to:
+
+- Runway closures
+- Lack of radar services
+- Rocket launches
+- Hazard locations
+- Airspace restrictions
+- Construction updates
+- Unusual aircraft activity
+
+NOTAMs have varius classifications and apply to certain types or size of
+aircraft. Some apply only to IFR operations, like when an ILS is out of
+service. Others apply only to airport operations the en route aircraft can
+ignore.
+
+Every NOTAM has a start and end date and time. Additional NOTAMs may be issued
+to update, replace, or cancel existing NOTAMs as well. Some NOTAMs may still be
+served up to 10 days after the end date, so it's up to the developer to include
+or filter these reports.
 """
 
 # pylint: disable=invalid-name
@@ -288,7 +308,77 @@ def sanitize(report: str) -> str:
 
 
 class Notams(Reports):
-    """Class to handle NOTAM reports"""
+    '''
+    The Notams class provides two ways of requesting all applicable NOTAMs in
+    an area: airport code and coordinate. The service will fetch all reports
+    within 10 nautical miles of the desired center point. You can change the
+    distance by updating the `Notams.radius` member before calling `update()`.
+
+    ```python
+    >>> from pprint import pprint
+    >>> from avwx import Notams
+    >>> from avwx.structs import Coord
+    >>>
+    >>> kjfk = Notams("KJFK")
+    >>> kjfk.update()
+    True
+    >>> kjfk.last_updated
+    datetime.datetime(2022, 5, 26, 0, 43, 22, 44753, tzinfo=datetime.timezone.utc)
+    >>> print(kjfk.data[0].raw)
+    01/113 NOTAMN
+    Q) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005
+    A) KJFK
+    B) 2101081328
+    C) 2209301100
+
+    E) TWY TB BTN TERMINAL 8 RAMP AND TWY A CLSD
+    >>> pprint(kjfk.data[0].qualifiers)
+    Qualifiers(repr='ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005',
+            fir='ZNY',
+            subject=Code(repr='MX', value='Taxiway'),
+            condition=Code(repr='LC', value='Closed'),
+            traffic=Code(repr='IV', value='IFR and VFR'),
+            purpose=[Code(repr='N', value='Immediate'),
+                        Code(repr='B', value='Briefing'),
+                        Code(repr='O', value='Flight Operations')],
+            scope=[Code(repr='A', value='Aerodrome')],
+            lower=Number(repr='000', value=0, spoken='zero'),
+            upper=Number(repr='999', value=999, spoken='nine nine nine'),
+            coord=Coord(lat=40.38, lon=-73.46, repr='4038N07346W'),
+            radius=Number(repr='005', value=5, spoken='five'))
+    >>>
+    >>> coord = Notams(coord=Coord(lat=52, lon=-0.23))
+    >>> coord.update()
+    True
+    >>> coord.data[0].station
+    'EGSS'
+    >>> print(coord.data[0].body)
+    LONDON STANSTED ATC SURVEILLANCE MINIMUM ALTITUDE CHART - IN
+    FREQUENCY BOX RENAME ESSEX RADAR TO STANSTED RADAR.
+    UK AIP AD 2.EGSS-5-1 REFERS
+    ```
+
+    The `parse` and `from_report` methods can parse a report string if you want
+    to override the normal fetching process.
+
+    ```python
+    >>> from avwx import Notams
+    >>> report = """
+    05/295 NOTAMR
+    Q) ZNY/QMNHW/IV/NBO/A/000/999/4038N07346W005
+    A) KJFK
+    B) 2205201527
+    C) 2205271100
+
+    E) APRON TERMINAL 4 RAMP CONST WIP S SIDE TAXILANE G LGTD AND BARRICADED
+    """
+    >>> kjfk = Notams.from_report(report)
+    >>> kjfk.data[0].type
+    Code(repr='NOTAMR', value='Replace')
+    >>> kjfk.data[0].start_time
+    Timestamp(repr='2205201527', dt=datetime.datetime(2022, 5, 20, 15, 27, tzinfo=datetime.timezone.utc))
+    ```
+    '''
 
     data: Optional[List[NotamData]] = None  # type: ignore
     radius: int = 10

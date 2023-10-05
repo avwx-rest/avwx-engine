@@ -51,7 +51,40 @@ _LOCAL = LazyCalc(lambda: {v["local"]: k for k, v in STATIONS.items() if v["loca
 
 @dataclass
 class Station:
-    """Stores basic station information"""
+    """
+    The Station dataclass stores basic info about the desired station and
+    available Runways.
+
+    The easiest way to get a station is to supply the ICAO, IATA, or GPS code.
+    The example below uses `from_code` which checks against all three types,
+    but you can also use `from_icao`, `from_iata`, or `from_gps` if you know
+    what type of code you are using. This can be important if you may be using
+    a code used by more than one station depending on the context. ICAO and
+    IATA codes are guarenteed unique, but not all airports have them. That
+    said, all stations available in AVWX have either an ICAO or GPS code.
+
+    ```python
+    >>> from avwx import Station
+    >>> klex = Station.from_code("KLEX")
+    >>> f"{klex.name} in {klex.city}, {klex.state}"
+    'Blue Grass Airport in Lexington, KY'
+    >>> coord = round(klex.latitude, 3), round(klex.longitude, 3)
+    >>> f"Located at {coord} at {klex.elevation_ft} feet ({klex.elevation_m} meters)"
+    'Located at (38.036, -84.606) at 979 feet (298 meters)'
+    >>> rw = max(klex.runways, key=lambda r: r.length_ft)
+    >>> f"Its longest runway is {rw.ident1}/{rw.ident2} at {rw.length_ft} feet"
+    'Its longest runway is 04/22 at 7003 feet'
+    ```
+
+    This is also the same information you'd get from calling Report.station.
+
+    ```python
+    >>> from avwx import Metar
+    >>> klex = Metar('KLEX')
+    >>> klex.station.name
+    'Blue Grass Airport'
+    ```
+    """
 
     # pylint: disable=too-many-instance-attributes
 
