@@ -126,8 +126,8 @@
         "extra_spaces_needed": false
     },
     {
-        "report": "KTRK 241545Z RMK A02",
-        "fixed": "KTRK 241545Z RMK AO2",
+        "report": "K13K 241545Z RMK A02",
+        "fixed": "K13K 241545Z RMK AO2",
         "removed": [],
         "replaced": {"A02": "AO2"},
         "duplicates": false,

@@ -83,6 +83,9 @@ def sanitize_list_with(
 
         # Check for wind sanitization
         for i, item in enumerate(wxdata):
+            # Skip Station
+            if i == 0:
+                continue
             if is_variable_wind_direction(item):
                 replaced = item[:7]
                 wxdata[i] = replaced
