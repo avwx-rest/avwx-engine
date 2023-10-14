@@ -35,6 +35,72 @@ from avwx.structs import (
     Units,
 )
 
+
+class Pireps(Reports):
+    """
+    The Pireps class offers an object-oriented approach to managing multiple
+    PIREP reports for a single station.
+
+    Below is typical usage for fetching and pulling PIREP data for KJFK.
+
+    ```python
+    >>> from avwx import Pireps
+    >>> kmco = Pireps("KMCO")
+    >>> kmco.station.name
+    'Orlando International Airport'
+    >>> kmco.update()
+    True
+    >>> kmco.last_updated
+    datetime.datetime(2019, 5, 24, 13, 31, 46, 561732, tzinfo=datetime.timezone.utc)
+    >>> kmco.raw[0]
+    'FLL UA /OV KFLL275015/TM 1241/FL020/TP B737/SK TOP020/RM DURD RY10L'
+    >>> kmco.data[0].location
+    Location(repr='KFLL275015', station='KFLL', direction=Number(repr='275', value=275, spoken='two seven five'), distance=Number(repr='015', value=15, spoken='one five'))
+    ```
+
+    The `parse` and `from_report` methods can parse a report string if you want
+    to override the normal fetching process.
+    """
+
+    data: Optional[List[Optional[PirepData]]] = None  # type: ignore
+    sanitization: Optional[List[Optional[Sanitization]]] = None  # type: ignore
+
+    def __init__(self, code: Optional[str] = None, coord: Optional[Coord] = None):
+        super().__init__(code, coord)
+        self.service = NOAA_ADDS("aircraftreport")
+
+    @staticmethod
+    def _report_filter(reports: List[str]) -> List[str]:
+        """Removes AIREPs before updating raw_reports"""
+        return [r for r in reports if not r.startswith("ARP")]
+
+    async def _post_update(self) -> None:
+        self.data, self.sanitization = [], []
+        if self.raw is None:
+            return
+        for report in self.raw:
+            try:
+                data, sans = parse(report, issued=self.issued)
+                self.data.append(data)
+                self.sanitization.append(sans)
+            except Exception as exc:  # pylint: disable=broad-except
+                exceptions.exception_intercept(exc, raw=report)  # type: ignore
+
+    def _post_parse(self) -> None:
+        self.data, self.sanitization = [], []
+        if self.raw is None:
+            return
+        for report in self.raw:
+            data, sans = parse(report, issued=self.issued)
+            self.data.append(data)
+            self.sanitization.append(sans)
+
+    @staticmethod
+    def sanitize(report: str) -> str:
+        """Sanitizes a PIREP string"""
+        return sanitize(report)[0]
+
+
 _UNITS = Units.north_american()
 
 
@@ -325,68 +391,3 @@ def parse(
         ),
         sans,
     )
-
-
-class Pireps(Reports):
-    """
-    The Pireps class offers an object-oriented approach to managing multiple
-    PIREP reports for a single station.
-
-    Below is typical usage for fetching and pulling PIREP data for KJFK.
-
-    ```python
-    >>> from avwx import Pireps
-    >>> kmco = Pireps("KMCO")
-    >>> kmco.station.name
-    'Orlando International Airport'
-    >>> kmco.update()
-    True
-    >>> kmco.last_updated
-    datetime.datetime(2019, 5, 24, 13, 31, 46, 561732, tzinfo=datetime.timezone.utc)
-    >>> kmco.raw[0]
-    'FLL UA /OV KFLL275015/TM 1241/FL020/TP B737/SK TOP020/RM DURD RY10L'
-    >>> kmco.data[0].location
-    Location(repr='KFLL275015', station='KFLL', direction=Number(repr='275', value=275, spoken='two seven five'), distance=Number(repr='015', value=15, spoken='one five'))
-    ```
-
-    The `parse` and `from_report` methods can parse a report string if you want
-    to override the normal fetching process.
-    """
-
-    data: Optional[List[Optional[PirepData]]] = None  # type: ignore
-    sanitization: Optional[List[Optional[Sanitization]]] = None  # type: ignore
-
-    def __init__(self, code: Optional[str] = None, coord: Optional[Coord] = None):
-        super().__init__(code, coord)
-        self.service = NOAA_ADDS("aircraftreport")
-
-    @staticmethod
-    def _report_filter(reports: List[str]) -> List[str]:
-        """Removes AIREPs before updating raw_reports"""
-        return [r for r in reports if not r.startswith("ARP")]
-
-    async def _post_update(self) -> None:
-        self.data, self.sanitization = [], []
-        if self.raw is None:
-            return
-        for report in self.raw:
-            try:
-                data, sans = parse(report, issued=self.issued)
-                self.data.append(data)
-                self.sanitization.append(sans)
-            except Exception as exc:  # pylint: disable=broad-except
-                exceptions.exception_intercept(exc, raw=report)  # type: ignore
-
-    def _post_parse(self) -> None:
-        self.data, self.sanitization = [], []
-        if self.raw is None:
-            return
-        for report in self.raw:
-            data, sans = parse(report, issued=self.issued)
-            self.data.append(data)
-            self.sanitization.append(sans)
-
-    @staticmethod
-    def sanitize(report: str) -> str:
-        """Sanitizes a PIREP string"""
-        return sanitize(report)[0]

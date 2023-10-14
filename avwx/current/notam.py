@@ -63,6 +63,122 @@ from avwx.structs import (
 # https://www.faa.gov/air_traffic/flight_info/aeronav/notams/media/2021-09-07_ICAO_NOTAM_101_Presentation_for_Airport_Operators.pdf
 
 
+class Notams(Reports):
+    '''
+    The Notams class provides two ways of requesting all applicable NOTAMs in
+    an area: airport code and coordinate. The service will fetch all reports
+    within 10 nautical miles of the desired center point. You can change the
+    distance by updating the `Notams.radius` member before calling `update()`.
+
+    ```python
+    >>> from pprint import pprint
+    >>> from avwx import Notams
+    >>> from avwx.structs import Coord
+    >>>
+    >>> kjfk = Notams("KJFK")
+    >>> kjfk.update()
+    True
+    >>> kjfk.last_updated
+    datetime.datetime(2022, 5, 26, 0, 43, 22, 44753, tzinfo=datetime.timezone.utc)
+    >>> print(kjfk.data[0].raw)
+    01/113 NOTAMN
+    Q) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005
+    A) KJFK
+    B) 2101081328
+    C) 2209301100
+
+    E) TWY TB BTN TERMINAL 8 RAMP AND TWY A CLSD
+    >>> pprint(kjfk.data[0].qualifiers)
+    Qualifiers(repr='ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005',
+            fir='ZNY',
+            subject=Code(repr='MX', value='Taxiway'),
+            condition=Code(repr='LC', value='Closed'),
+            traffic=Code(repr='IV', value='IFR and VFR'),
+            purpose=[Code(repr='N', value='Immediate'),
+                        Code(repr='B', value='Briefing'),
+                        Code(repr='O', value='Flight Operations')],
+            scope=[Code(repr='A', value='Aerodrome')],
+            lower=Number(repr='000', value=0, spoken='zero'),
+            upper=Number(repr='999', value=999, spoken='nine nine nine'),
+            coord=Coord(lat=40.38, lon=-73.46, repr='4038N07346W'),
+            radius=Number(repr='005', value=5, spoken='five'))
+    >>>
+    >>> coord = Notams(coord=Coord(lat=52, lon=-0.23))
+    >>> coord.update()
+    True
+    >>> coord.data[0].station
+    'EGSS'
+    >>> print(coord.data[0].body)
+    LONDON STANSTED ATC SURVEILLANCE MINIMUM ALTITUDE CHART - IN
+    FREQUENCY BOX RENAME ESSEX RADAR TO STANSTED RADAR.
+    UK AIP AD 2.EGSS-5-1 REFERS
+    ```
+
+    The `parse` and `from_report` methods can parse a report string if you want
+    to override the normal fetching process.
+
+    ```python
+    >>> from avwx import Notams
+    >>> report = """
+    05/295 NOTAMR
+    Q) ZNY/QMNHW/IV/NBO/A/000/999/4038N07346W005
+    A) KJFK
+    B) 2205201527
+    C) 2205271100
+
+    E) APRON TERMINAL 4 RAMP CONST WIP S SIDE TAXILANE G LGTD AND BARRICADED
+    """
+    >>> kjfk = Notams.from_report(report)
+    >>> kjfk.data[0].type
+    Code(repr='NOTAMR', value='Replace')
+    >>> kjfk.data[0].start_time
+    Timestamp(repr='2205201527', dt=datetime.datetime(2022, 5, 20, 15, 27, tzinfo=datetime.timezone.utc))
+    ```
+    '''
+
+    data: Optional[List[NotamData]] = None  # type: ignore
+    radius: int = 10
+
+    def __init__(self, code: Optional[str] = None, coord: Optional[Coord] = None):
+        super().__init__(code, coord)
+        self.service = FAA_NOTAM("notam")
+
+    async def _post_update(self) -> None:
+        self._post_parse()
+
+    def _post_parse(self) -> None:
+        self.data, units = [], None
+        if self.raw is None:
+            return
+        for report in self.raw:
+            if "||" in report:
+                issue_text, report = report.split("||")
+                issued_value = datetime.strptime(issue_text, r"%m/%d/%Y %H%M")
+                issued = Timestamp(issue_text, issued_value)
+            else:
+                issued = None
+            try:
+                data, units = parse(report, issued=issued)
+                self.data.append(data)
+            except Exception as exc:  # pylint: disable=broad-except
+                exceptions.exception_intercept(exc, raw=report)  # type: ignore
+        if units:
+            self.units = units
+
+    @staticmethod
+    def sanitize(report: str) -> str:
+        """Sanitizes a NOTAM string"""
+        return sanitize(report)
+
+    async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
+        """Async updates report data by fetching and parsing the report"""
+        reports = await self.service.async_fetch(  # type: ignore
+            icao=self.code, coord=self.coord, radius=self.radius, timeout=timeout
+        )
+        self.source = self.service.root
+        return await self._update(reports, None, disable_post)
+
+
 ALL_KEYS_PATTERN = re.compile(r"\b[A-GQ]\) ")
 KEY_PATTERNS = {
     "Q": re.compile(r"\b[A-G]\) "),
@@ -305,119 +421,3 @@ def parse(report: str, issued: Optional[Timestamp] = None) -> Tuple[NotamData, U
 def sanitize(report: str) -> str:
     """Retuns a sanitized report ready for parsing"""
     return report.replace("\r", "").strip()
-
-
-class Notams(Reports):
-    '''
-    The Notams class provides two ways of requesting all applicable NOTAMs in
-    an area: airport code and coordinate. The service will fetch all reports
-    within 10 nautical miles of the desired center point. You can change the
-    distance by updating the `Notams.radius` member before calling `update()`.
-
-    ```python
-    >>> from pprint import pprint
-    >>> from avwx import Notams
-    >>> from avwx.structs import Coord
-    >>>
-    >>> kjfk = Notams("KJFK")
-    >>> kjfk.update()
-    True
-    >>> kjfk.last_updated
-    datetime.datetime(2022, 5, 26, 0, 43, 22, 44753, tzinfo=datetime.timezone.utc)
-    >>> print(kjfk.data[0].raw)
-    01/113 NOTAMN
-    Q) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005
-    A) KJFK
-    B) 2101081328
-    C) 2209301100
-
-    E) TWY TB BTN TERMINAL 8 RAMP AND TWY A CLSD
-    >>> pprint(kjfk.data[0].qualifiers)
-    Qualifiers(repr='ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005',
-            fir='ZNY',
-            subject=Code(repr='MX', value='Taxiway'),
-            condition=Code(repr='LC', value='Closed'),
-            traffic=Code(repr='IV', value='IFR and VFR'),
-            purpose=[Code(repr='N', value='Immediate'),
-                        Code(repr='B', value='Briefing'),
-                        Code(repr='O', value='Flight Operations')],
-            scope=[Code(repr='A', value='Aerodrome')],
-            lower=Number(repr='000', value=0, spoken='zero'),
-            upper=Number(repr='999', value=999, spoken='nine nine nine'),
-            coord=Coord(lat=40.38, lon=-73.46, repr='4038N07346W'),
-            radius=Number(repr='005', value=5, spoken='five'))
-    >>>
-    >>> coord = Notams(coord=Coord(lat=52, lon=-0.23))
-    >>> coord.update()
-    True
-    >>> coord.data[0].station
-    'EGSS'
-    >>> print(coord.data[0].body)
-    LONDON STANSTED ATC SURVEILLANCE MINIMUM ALTITUDE CHART - IN
-    FREQUENCY BOX RENAME ESSEX RADAR TO STANSTED RADAR.
-    UK AIP AD 2.EGSS-5-1 REFERS
-    ```
-
-    The `parse` and `from_report` methods can parse a report string if you want
-    to override the normal fetching process.
-
-    ```python
-    >>> from avwx import Notams
-    >>> report = """
-    05/295 NOTAMR
-    Q) ZNY/QMNHW/IV/NBO/A/000/999/4038N07346W005
-    A) KJFK
-    B) 2205201527
-    C) 2205271100
-
-    E) APRON TERMINAL 4 RAMP CONST WIP S SIDE TAXILANE G LGTD AND BARRICADED
-    """
-    >>> kjfk = Notams.from_report(report)
-    >>> kjfk.data[0].type
-    Code(repr='NOTAMR', value='Replace')
-    >>> kjfk.data[0].start_time
-    Timestamp(repr='2205201527', dt=datetime.datetime(2022, 5, 20, 15, 27, tzinfo=datetime.timezone.utc))
-    ```
-    '''
-
-    data: Optional[List[NotamData]] = None  # type: ignore
-    radius: int = 10
-
-    def __init__(self, code: Optional[str] = None, coord: Optional[Coord] = None):
-        super().__init__(code, coord)
-        self.service = FAA_NOTAM("notam")
-
-    async def _post_update(self) -> None:
-        self._post_parse()
-
-    def _post_parse(self) -> None:
-        self.data, units = [], None
-        if self.raw is None:
-            return
-        for report in self.raw:
-            if "||" in report:
-                issue_text, report = report.split("||")
-                issued_value = datetime.strptime(issue_text, r"%m/%d/%Y %H%M")
-                issued = Timestamp(issue_text, issued_value)
-            else:
-                issued = None
-            try:
-                data, units = parse(report, issued=issued)
-                self.data.append(data)
-            except Exception as exc:  # pylint: disable=broad-except
-                exceptions.exception_intercept(exc, raw=report)  # type: ignore
-        if units:
-            self.units = units
-
-    @staticmethod
-    def sanitize(report: str) -> str:
-        """Sanitizes a NOTAM string"""
-        return sanitize(report)
-
-    async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
-        """Async updates report data by fetching and parsing the report"""
-        reports = await self.service.async_fetch(  # type: ignore
-            icao=self.code, coord=self.coord, radius=self.radius, timeout=timeout
-        )
-        self.source = self.service.root
-        return await self._update(reports, None, disable_post)

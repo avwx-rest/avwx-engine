@@ -34,6 +34,153 @@ from avwx.structs import (
 )
 
 
+class Metar(Report):
+    """
+    The Metar class offers an object-oriented approach to managing METAR data
+    for a single station.
+
+    Below is typical usage for fetching and pulling METAR data for KJFK.
+
+    ```python
+    >>> from avwx import Metar
+    >>> kjfk = Metar("KJFK")
+    >>> kjfk.station.name
+    'John F Kennedy International Airport'
+    >>> kjfk.update()
+    True
+    >>> kjfk.last_updated
+    datetime.datetime(2018, 3, 4, 23, 36, 6, 62376)
+    >>> kjfk.raw
+    'KJFK 042251Z 32023G32KT 10SM BKN060 04/M08 A3008 RMK AO2 PK WND 32032/2251 SLP184 T00441078'
+    >>> kjfk.data.flight_rules
+    'VFR'
+    >>> kjfk.translations.remarks
+    {'AO2': 'Automated with precipitation sensor', 'SLP184': 'Sea level pressure: 1018.4 hPa', 'T00441078': 'Temperature 4.4°C and dewpoint -7.8°C'}
+    ```
+
+    The `parse` and `from_report` methods can parse a report string if you want
+    to override the normal fetching process. Here's an example of a really bad
+    day.
+
+    ```python
+    >>> from avwx import Metar
+    >>> report = 'KSFO 031254Z 36024G55KT 320V040 1/8SM R06/0200D +TS VCFC OVC050 BKN040TCU 14/10 A2978 RMK AIRPORT CLOSED'
+    >>> ksfo = Metar.from_report(report)
+    True
+    >>> ksfo.station.city
+    'San Francisco'
+    >>> ksfo.last_updated
+    datetime.datetime(2018, 3, 4, 23, 54, 4, 353757, tzinfo=datetime.timezone.utc)
+    >>> ksfo.data.flight_rules
+    'LIFR'
+    >>> ksfo.translations.clouds
+    'Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft - Reported AGL'
+    >>> ksfo.summary
+    'Winds N-360 (variable 320 to 040) at 24kt gusting to 55kt, Vis 0.125sm, Temp 14C, Dew 10C, Alt 29.78inHg, Heavy Thunderstorm, Vicinity Funnel Cloud, Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft'
+    ```
+    """
+
+    data: Optional[MetarData] = None
+    translations: Optional[MetarTrans] = None
+
+    async def _pull_from_default(self) -> None:
+        """Checks for a more recent report from NOAA. Only sync"""
+        service = NOAA(self.__class__.__name__.lower())
+        if self.code is None:
+            return
+        report = await service.async_fetch(self.code)
+        if report is not None:
+            data, units, sans = parse(self.code, report, self.issued)
+            if not data or data.time is None or data.time.dt is None:
+                return
+            if (
+                not self.data
+                or self.data.time is None
+                or self.data.time.dt is None
+                or data.time.dt > self.data.time.dt
+            ):
+                self.data, self.units, self.sanitization = data, units, sans
+                self.source = service.root
+
+    @property
+    def _should_check_default(self) -> bool:
+        """Returns True if pulled from regional source and potentially out of date"""
+        if isinstance(self.service, NOAA) or self.source is None:
+            return False
+
+        if self.data is None or self.data.time is None or self.data.time.dt is None:
+            return True
+        time_since = datetime.now(tz=timezone.utc) - self.data.time.dt
+        return time_since > timedelta(minutes=90)
+
+    def _calculate_altitudes(self) -> None:
+        """Adds the pressure and density altitudes to data if all fields are available"""
+        if self.data is None or self.station is None or self.units is None:
+            return
+        # Select decimal temperature if available
+        temp = self.data.temperature
+        if self.data.remarks_info is not None:
+            temp = self.data.remarks_info.temperature_decimal or temp
+        alt = self.data.altimeter
+        if temp is None or temp.value is None or alt is None or alt.value is None:
+            return
+        elev = self.station.elevation_ft
+        if elev is None:
+            return
+        self.data.pressure_altitude = core.pressure_altitude(
+            alt.value, elev, self.units.altimeter
+        )
+        self.data.density_altitude = core.density_altitude(
+            alt.value, temp.value, elev, self.units
+        )
+
+    async def _post_update(self) -> None:
+        if self.code is None or self.raw is None:
+            return
+        self.data, self.units, self.sanitization = parse(
+            self.code, self.raw, self.issued
+        )
+        if self._should_check_default:
+            await self._pull_from_default()
+        if self.data is None or self.units is None:
+            return
+        self._calculate_altitudes()
+        self.translations = translate_metar(self.data, self.units)
+
+    def _post_parse(self) -> None:
+        if self.code is None or self.raw is None:
+            return
+        self.data, self.units, self.sanitization = parse(
+            self.code, self.raw, self.issued
+        )
+        if self.data is None or self.units is None:
+            return
+        self._calculate_altitudes()
+        self.translations = translate_metar(self.data, self.units)
+
+    @staticmethod
+    def sanitize(report: str) -> str:
+        """Sanitizes a METAR string"""
+        return sanitize(report)[0]
+
+    @property
+    def summary(self) -> Optional[str]:
+        """Condensed report summary created from translations"""
+        if not self.translations:
+            self.update()
+        return None if self.translations is None else summary.metar(self.translations)
+
+    @property
+    def speech(self) -> Optional[str]:
+        """Report summary designed to be read by a text-to-speech program"""
+        if not self.data:
+            self.update()
+        if self.data is None or self.units is None:
+            return None
+        return speech.metar(self.data, self.units)
+
+
+
 def get_remarks(txt: str) -> Tuple[List[str], str]:
     """Returns the report split into components and the remarks string
 
@@ -348,149 +495,3 @@ def parse_in(
         wx_codes=wx_codes,
     )
     return struct, units, sans
-
-
-class Metar(Report):
-    """
-    The Metar class offers an object-oriented approach to managing METAR data
-    for a single station.
-
-    Below is typical usage for fetching and pulling METAR data for KJFK.
-
-    ```python
-    >>> from avwx import Metar
-    >>> kjfk = Metar("KJFK")
-    >>> kjfk.station.name
-    'John F Kennedy International Airport'
-    >>> kjfk.update()
-    True
-    >>> kjfk.last_updated
-    datetime.datetime(2018, 3, 4, 23, 36, 6, 62376)
-    >>> kjfk.raw
-    'KJFK 042251Z 32023G32KT 10SM BKN060 04/M08 A3008 RMK AO2 PK WND 32032/2251 SLP184 T00441078'
-    >>> kjfk.data.flight_rules
-    'VFR'
-    >>> kjfk.translations.remarks
-    {'AO2': 'Automated with precipitation sensor', 'SLP184': 'Sea level pressure: 1018.4 hPa', 'T00441078': 'Temperature 4.4°C and dewpoint -7.8°C'}
-    ```
-
-    The `parse` and `from_report` methods can parse a report string if you want
-    to override the normal fetching process. Here's an example of a really bad
-    day.
-
-    ```python
-    >>> from avwx import Metar
-    >>> report = 'KSFO 031254Z 36024G55KT 320V040 1/8SM R06/0200D +TS VCFC OVC050 BKN040TCU 14/10 A2978 RMK AIRPORT CLOSED'
-    >>> ksfo = Metar.from_report(report)
-    True
-    >>> ksfo.station.city
-    'San Francisco'
-    >>> ksfo.last_updated
-    datetime.datetime(2018, 3, 4, 23, 54, 4, 353757, tzinfo=datetime.timezone.utc)
-    >>> ksfo.data.flight_rules
-    'LIFR'
-    >>> ksfo.translations.clouds
-    'Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft - Reported AGL'
-    >>> ksfo.summary
-    'Winds N-360 (variable 320 to 040) at 24kt gusting to 55kt, Vis 0.125sm, Temp 14C, Dew 10C, Alt 29.78inHg, Heavy Thunderstorm, Vicinity Funnel Cloud, Broken layer at 4000ft (Towering Cumulus), Overcast layer at 5000ft'
-    ```
-    """
-
-    data: Optional[MetarData] = None
-    translations: Optional[MetarTrans] = None
-
-    async def _pull_from_default(self) -> None:
-        """Checks for a more recent report from NOAA. Only sync"""
-        service = NOAA(self.__class__.__name__.lower())
-        if self.code is None:
-            return
-        report = await service.async_fetch(self.code)
-        if report is not None:
-            data, units, sans = parse(self.code, report, self.issued)
-            if not data or data.time is None or data.time.dt is None:
-                return
-            if (
-                not self.data
-                or self.data.time is None
-                or self.data.time.dt is None
-                or data.time.dt > self.data.time.dt
-            ):
-                self.data, self.units, self.sanitization = data, units, sans
-                self.source = service.root
-
-    @property
-    def _should_check_default(self) -> bool:
-        """Returns True if pulled from regional source and potentially out of date"""
-        if isinstance(self.service, NOAA) or self.source is None:
-            return False
-
-        if self.data is None or self.data.time is None or self.data.time.dt is None:
-            return True
-        time_since = datetime.now(tz=timezone.utc) - self.data.time.dt
-        return time_since > timedelta(minutes=90)
-
-    def _calculate_altitudes(self) -> None:
-        """Adds the pressure and density altitudes to data if all fields are available"""
-        if self.data is None or self.station is None or self.units is None:
-            return
-        # Select decimal temperature if available
-        temp = self.data.temperature
-        if self.data.remarks_info is not None:
-            temp = self.data.remarks_info.temperature_decimal or temp
-        alt = self.data.altimeter
-        if temp is None or temp.value is None or alt is None or alt.value is None:
-            return
-        elev = self.station.elevation_ft
-        if elev is None:
-            return
-        self.data.pressure_altitude = core.pressure_altitude(
-            alt.value, elev, self.units.altimeter
-        )
-        self.data.density_altitude = core.density_altitude(
-            alt.value, temp.value, elev, self.units
-        )
-
-    async def _post_update(self) -> None:
-        if self.code is None or self.raw is None:
-            return
-        self.data, self.units, self.sanitization = parse(
-            self.code, self.raw, self.issued
-        )
-        if self._should_check_default:
-            await self._pull_from_default()
-        if self.data is None or self.units is None:
-            return
-        self._calculate_altitudes()
-        self.translations = translate_metar(self.data, self.units)
-
-    def _post_parse(self) -> None:
-        if self.code is None or self.raw is None:
-            return
-        self.data, self.units, self.sanitization = parse(
-            self.code, self.raw, self.issued
-        )
-        if self.data is None or self.units is None:
-            return
-        self._calculate_altitudes()
-        self.translations = translate_metar(self.data, self.units)
-
-    @staticmethod
-    def sanitize(report: str) -> str:
-        """Sanitizes a METAR string"""
-        return sanitize(report)[0]
-
-    @property
-    def summary(self) -> Optional[str]:
-        """Condensed report summary created from translations"""
-        if not self.translations:
-            self.update()
-        return None if self.translations is None else summary.metar(self.translations)
-
-    @property
-    def speech(self) -> Optional[str]:
-        """Report summary designed to be read by a text-to-speech program"""
-        if not self.data:
-            self.update()
-        if self.data is None or self.units is None:
-            return None
-        return speech.metar(self.data, self.units)

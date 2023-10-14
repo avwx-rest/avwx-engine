@@ -54,6 +54,157 @@ try:
 except ModuleNotFoundError:
     LineString = None  # pylint: disable=invalid-name
 
+
+class AirSigmet(AVWXBase):
+    """
+    In addition to the manager, you can use the `avwx.AirSigmet` class like any
+    other report when you supply the report string via `parse` or
+    `from_report`.
+
+    ```python
+    >>> from avwx import AirSigmet
+    >>> report = 'WSPR31 SPJC 270529 SPIM SIGMET 3 VALID 270530/270830 SPJC- SPIM LIMA FIR EMBD TS OBS AT 0510Z NE OF LINE S0406 W07103 - S0358 W07225 - S0235 W07432 - S0114 W07503 TOP FL410 MOV SW NC='
+    >>> sigmet = AirSigmet.from_report(report)
+    True
+    >>> sigmet.last_updated
+    datetime.datetime(2022, 3, 27, 6, 29, 33, 300935, tzinfo=datetime.timezone.utc)
+    >>> sigmet.data.observation.coords
+    [Coord(lat=-4.06, lon=-71.03, repr='S0406 W07103'),
+    Coord(lat=-3.58, lon=-72.25, repr='S0358 W07225'),
+    Coord(lat=-2.35, lon=-74.32, repr='S0235 W07432'),
+    Coord(lat=-1.14, lon=-75.03, repr='S0114 W07503')]
+    >>> sigmet.data.observation.intensity
+    Code(repr='NC', value='No change')
+    >>> sigmet.data.observation.ceiling
+    Number(repr='FL410', value=410, spoken='flight level four one zero')
+    ```
+    """
+
+    data: Optional[AirSigmetData] = None
+
+    def _post_parse(self) -> None:
+        if self.raw:
+            self.data, self.units = parse(self.raw, self.issued)
+
+    @staticmethod
+    def sanitize(report: str) -> str:
+        """Sanitizes the report string"""
+        return sanitize(report)
+
+    def intersects(self, path: LineString) -> bool:
+        """Returns True if the report area intersects a flight path"""
+        if LineString is None:
+            raise ModuleNotFoundError("Install avwx-engine[shape] to use this feature")
+        if not self.data:
+            return False
+        for data in (self.data.observation, self.data.forecast):
+            if data:
+                poly = data.poly
+                if poly and path.intersects(poly):
+                    return True
+        return False
+
+    def contains(self, coord: Coord) -> bool:
+        """Returns True if the report area contains a coordinate"""
+        if not self.data:
+            return False
+        for data in (self.data.observation, self.data.forecast):
+            if data:
+                poly = data.poly
+                if poly and coord.point.within(poly):
+                    return True
+        return False
+
+
+class AirSigManager:
+    """
+    Because of the global nature of these report types, we don't initialize a
+    report class with a station ident like the other report types. Instead, we
+    use a class to manage and update the list of all active SIGMET and AIRMET
+    reports.
+
+    ```python
+    >>> from avwx import AirSigManager
+    >>> from avwx.structs import Coord
+    >>> manager = AirSigManager()
+    >>> manager.update()
+    True
+    >>> manager.last_updated
+    datetime.datetime(2022, 3, 27, 5, 54, 21, 516741, tzinfo=datetime.timezone.utc)
+    >>> len(manager.reports)
+    113
+    >>> len(manager.contains(Coord(lat=33.12, lon=-105)))
+    5
+    >>> manager.reports[0].data.bulletin.type
+    Code(repr='WA', value='airmet')
+    >>> manager.reports[0].data.type
+    'AIRMET SIERRA FOR IFR AND MTN OBSCN'
+    ```
+    """
+
+    _services: List[Service]
+    _raw: List[Tuple[str, str]]
+    last_updated: Optional[datetime] = None
+    raw: List[str]
+    reports: Optional[List[AirSigmet]] = None
+
+    def __init__(self):  # type: ignore
+        self._services = [NOAA_Bulk("airsigmet"), NOAA_Intl("airsigmet")]
+        self._raw, self.raw = [], []
+
+    async def _update(
+        self, index: int, timeout: int
+    ) -> List[Tuple[str, Optional[str]]]:
+        source = self._services[index].root
+        reports = await self._services[index].async_fetch(timeout=timeout)  # type: ignore
+        raw: List[Tuple[str, Optional[str]]] = [
+            (report, source) for report in reports if report
+        ]
+        return raw
+
+    def update(self, timeout: int = 10, disable_post: bool = False) -> bool:
+        """Updates fetched reports and returns whether they've changed"""
+        return aio.run(self.async_update(timeout, disable_post))
+
+    async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
+        """Updates fetched reports and returns whether they've changed"""
+        coros = [self._update(i, timeout) for i in range(len(self._services))]
+        data = await aio.gather(*coros)
+        raw = list(chain.from_iterable(data))
+        reports = [i[0] for i in raw]
+        changed = raw != self.raw
+        if changed:
+            self._raw, self.raw = raw, reports
+            self.last_updated = datetime.now(tz=timezone.utc)
+        # Parse reports if not disabled
+        if not disable_post:
+            parsed = []
+            for report, source in raw:
+                try:
+                    if obj := AirSigmet.from_report(report):
+                        obj.source = source
+                        parsed.append(obj)
+                except Exception as exc:  # pylint: disable=broad-except
+                    exceptions.exception_intercept(exc, raw=report)
+            self.reports = parsed
+        return changed
+
+    def along(self, coords: List[Coord]) -> List[AirSigmet]:
+        """Returns available reports the intersect a flight path"""
+        if LineString is None:
+            raise ModuleNotFoundError("Install avwx-engine[shape] to use this feature")
+        if self.reports is None:
+            return []
+        path = LineString([c.pair for c in coords])
+        return [r for r in self.reports if r.intersects(path)]
+
+    def contains(self, coord: Coord) -> List[AirSigmet]:
+        """Returns available reports that contain a coordinate"""
+        if self.reports is None:
+            return []
+        return [r for r in self.reports if r.contains(coord)]
+
+
 # N1429 W09053 - N1427 W09052 - N1411 W09139 - N1417 W09141
 _COORD_PATTERN = re.compile(r"\b[NS]\d{4} [EW]\d{5}\b( -)?")
 
@@ -543,153 +694,3 @@ def parse(report: str, issued: Optional[date] = None) -> Tuple[AirSigmetData, Un
         forecast=forecast,
     )
     return struct, units
-
-
-class AirSigmet(AVWXBase):
-    """
-    In addition to the manager, you can use the `avwx.AirSigmet` class like any
-    other report when you supply the report string via `parse` or
-    `from_report`.
-
-    ```python
-    >>> from avwx import AirSigmet
-    >>> report = 'WSPR31 SPJC 270529 SPIM SIGMET 3 VALID 270530/270830 SPJC- SPIM LIMA FIR EMBD TS OBS AT 0510Z NE OF LINE S0406 W07103 - S0358 W07225 - S0235 W07432 - S0114 W07503 TOP FL410 MOV SW NC='
-    >>> sigmet = AirSigmet.from_report(report)
-    True
-    >>> sigmet.last_updated
-    datetime.datetime(2022, 3, 27, 6, 29, 33, 300935, tzinfo=datetime.timezone.utc)
-    >>> sigmet.data.observation.coords
-    [Coord(lat=-4.06, lon=-71.03, repr='S0406 W07103'),
-    Coord(lat=-3.58, lon=-72.25, repr='S0358 W07225'),
-    Coord(lat=-2.35, lon=-74.32, repr='S0235 W07432'),
-    Coord(lat=-1.14, lon=-75.03, repr='S0114 W07503')]
-    >>> sigmet.data.observation.intensity
-    Code(repr='NC', value='No change')
-    >>> sigmet.data.observation.ceiling
-    Number(repr='FL410', value=410, spoken='flight level four one zero')
-    ```
-    """
-
-    data: Optional[AirSigmetData] = None
-
-    def _post_parse(self) -> None:
-        if self.raw:
-            self.data, self.units = parse(self.raw, self.issued)
-
-    @staticmethod
-    def sanitize(report: str) -> str:
-        """Sanitizes the report string"""
-        return sanitize(report)
-
-    def intersects(self, path: LineString) -> bool:
-        """Returns True if the report area intersects a flight path"""
-        if LineString is None:
-            raise ModuleNotFoundError("Install avwx-engine[shape] to use this feature")
-        if not self.data:
-            return False
-        for data in (self.data.observation, self.data.forecast):
-            if data:
-                poly = data.poly
-                if poly and path.intersects(poly):
-                    return True
-        return False
-
-    def contains(self, coord: Coord) -> bool:
-        """Returns True if the report area contains a coordinate"""
-        if not self.data:
-            return False
-        for data in (self.data.observation, self.data.forecast):
-            if data:
-                poly = data.poly
-                if poly and coord.point.within(poly):
-                    return True
-        return False
-
-
-class AirSigManager:
-    """
-    Because of the global nature of these report types, we don't initialize a
-    report class with a station ident like the other report types. Instead, we
-    use a class to manage and update the list of all active SIGMET and AIRMET
-    reports.
-
-    ```python
-    >>> from avwx import AirSigManager
-    >>> from avwx.structs import Coord
-    >>> manager = AirSigManager()
-    >>> manager.update()
-    True
-    >>> manager.last_updated
-    datetime.datetime(2022, 3, 27, 5, 54, 21, 516741, tzinfo=datetime.timezone.utc)
-    >>> len(manager.reports)
-    113
-    >>> len(manager.contains(Coord(lat=33.12, lon=-105)))
-    5
-    >>> manager.reports[0].data.bulletin.type
-    Code(repr='WA', value='airmet')
-    >>> manager.reports[0].data.type
-    'AIRMET SIERRA FOR IFR AND MTN OBSCN'
-    ```
-    """
-
-    _services: List[Service]
-    _raw: List[Tuple[str, str]]
-    last_updated: Optional[datetime] = None
-    raw: List[str]
-    reports: Optional[List[AirSigmet]] = None
-
-    def __init__(self):  # type: ignore
-        self._services = [NOAA_Bulk("airsigmet"), NOAA_Intl("airsigmet")]
-        self._raw, self.raw = [], []
-
-    async def _update(
-        self, index: int, timeout: int
-    ) -> List[Tuple[str, Optional[str]]]:
-        source = self._services[index].root
-        reports = await self._services[index].async_fetch(timeout=timeout)  # type: ignore
-        raw: List[Tuple[str, Optional[str]]] = [
-            (report, source) for report in reports if report
-        ]
-        return raw
-
-    def update(self, timeout: int = 10, disable_post: bool = False) -> bool:
-        """Updates fetched reports and returns whether they've changed"""
-        return aio.run(self.async_update(timeout, disable_post))
-
-    async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
-        """Updates fetched reports and returns whether they've changed"""
-        coros = [self._update(i, timeout) for i in range(len(self._services))]
-        data = await aio.gather(*coros)
-        raw = list(chain.from_iterable(data))
-        reports = [i[0] for i in raw]
-        changed = raw != self.raw
-        if changed:
-            self._raw, self.raw = raw, reports
-            self.last_updated = datetime.now(tz=timezone.utc)
-        # Parse reports if not disabled
-        if not disable_post:
-            parsed = []
-            for report, source in raw:
-                try:
-                    if obj := AirSigmet.from_report(report):
-                        obj.source = source
-                        parsed.append(obj)
-                except Exception as exc:  # pylint: disable=broad-except
-                    exceptions.exception_intercept(exc, raw=report)
-            self.reports = parsed
-        return changed
-
-    def along(self, coords: List[Coord]) -> List[AirSigmet]:
-        """Returns available reports the intersect a flight path"""
-        if LineString is None:
-            raise ModuleNotFoundError("Install avwx-engine[shape] to use this feature")
-        if self.reports is None:
-            return []
-        path = LineString([c.pair for c in coords])
-        return [r for r in self.reports if r.intersects(path)]
-
-    def contains(self, coord: Coord) -> List[AirSigmet]:
-        """Returns available reports that contain a coordinate"""
-        if self.reports is None:
-            return []
-        return [r for r in self.reports if r.contains(coord)]
