@@ -180,7 +180,6 @@ class Metar(Report):
         return speech.metar(self.data, self.units)
 
 
-
 def get_remarks(txt: str) -> Tuple[List[str], str]:
     """Returns the report split into components and the remarks string
 

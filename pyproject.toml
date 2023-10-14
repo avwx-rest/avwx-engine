@@ -58,15 +58,11 @@ shape = ["shapely"]
 
 [tool.poetry.dev-dependencies]
 black = "*"
-mkdocs-material = "*"
-mkdocs-minify-plugin = "*"
-mkdocstrings = "*"
 mypy = "*"
 nox = "*"
 pdoc = "*"
 pre-commit = "*"
 pylint = "*"
-pymdown-extensions = "*"
 pyroma = "*"
 pytest = "*"
 pytest-asyncio = "*"

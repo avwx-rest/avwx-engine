@@ -4,15 +4,40 @@ on:
   release:
     types: [ published ]
 
+permissions:
+  contents: read
+
 jobs:
+  # Build code and docs then deploy to PyPI
   build-and-publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/python-poetry-env
       - name: Publish to pypi
         run: |
           poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
           poetry publish --build --no-interaction
       - name: Deploy docs
-        run: poetry run mkdocs gh-deploy --force
+        run: |
+          poetry run python -m pdoc -o docsbuild/ \
+          --favicon https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/favicon.ico \
+          --logo https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/avwx-logo-color-200.png \
+          --logo-link https://info.avwx.rest
+      - uses: actions/upload-pages-artifact@v2
+        with:
+          path: docsbuild/
+
+  # Deploy the doc build to GitHub pages
+  deploy:
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v2
