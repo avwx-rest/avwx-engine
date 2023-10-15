@@ -5,6 +5,16 @@
 [![PyPI - License](https://img.shields.io/pypi/l/avwx-engine?style=flat)](https://pypi.python.org/pypi/avwx-engine/)
 [![GitHub - Test Suite Status](https://github.com/avwx-rest/avwx-engine/actions/workflows/test.yml/badge.svg)]()
 
+---
+
+**Documentation**: [https://engine.avwx.rest](https://engine.avwx.rest)
+
+**Source Code**: [https://github.com/avwx-rest/avwx-engine](https://github.com/avwx-rest/avwx-engine)
+
+**PyPI**: [https://pypi.org/project/avwx-engine/](https://pypi.org/project/avwx-engine/)
+
+---
+
 AVWX is a global aviation weather fetching and parsing engine. It sources
 reports from a variety of government sources, parses individual elements, and
 calculates additional information like flight rules and time range
@@ -102,25 +112,30 @@ as Metar objects, so we could also grab the station info if we needed to.
 
 # Aviation Reports
 
-* [METAR](./avwx/current/metar.html)
-* [TAF](./avwx/current/taf.html)
-* [PIREP](./avwx/current/pirep.html)
-* [AIRMET / SIGMET](./avwx/current/airsigmet.html)
-* [NOTAM](./avwx/current/notam.html)
+* [METAR](./avwx/current/metar.html) - Current surface conditions
+* [TAF](./avwx/current/taf.html) - Localized 24-hour forecast
+* [PIREP](./avwx/current/pirep.html) - Inflight pilot reports
+* [AIRMET / SIGMET](./avwx/current/airsigmet.html) - Weather advisories
+* [NOTAM](./avwx/current/notam.html) - Special events or conditions
 
 # Model Forecasts
 
-* [NBM NBH](./avwx/forecast/nbm.html#nbh)
-* [NBM NBS](./avwx/forecast/nbm.html#nbs)
-* [NBM NBE](./avwx/forecast/nbm.html#nbe)
-* [GFS MOS MAV](./avwx/gfs.html#mav)
-* [GFS MOS MEX](./avwx/gfs.html#mex)
+## NBM
+
+* [NBH](./avwx/forecast/nbm.html#nbh) - Current hourly forecast (25 hours)
+* [NBS](./avwx/forecast/nbm.html#nbs) - Short-range forecast (6-72 hours)
+* [NBE](./avwx/forecast/nbm.html#nbe) - Extended-range forecast (24-192 hours)
+
+## GFS
+
+* [MOS MAV](./avwx/forecast/gfs.html#mav) - Short-range forecast (6-72 hours)
+* [MOS MEX](./avwx/forecast/gfs.html#mex) - Extended-range forecast (24-192 hours)
 
 # Utilities
 
-* [Station](./avwx/station.html)
-* [Service]()
-* [Data Updates](./avwx/data.html)
-* [Other Data Structures]()
-* [Static Values]()
-* [Exceptions](./avwx/exceptions.html)
+* [Station](./avwx/station.html) - Airport information
+* [Service](./avwx/service.html) - Report fetching services
+* [Data Updates](./avwx/data.html) - Local database updates
+* [Data Structures](./avwx/structs.html) - Underlying data structures
+* [Static Values](./avwx/static.html) - Parsing controls and term glossary
+* [Exceptions](./avwx/exceptions.html) - Custom exception handling

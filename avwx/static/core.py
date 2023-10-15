@@ -1,15 +1,20 @@
 """
 Core static values for internal and external use
+
+METAR and TAF reports come in two variants depending on the station's
+location: North American & International. This affects both element
+parsing and inferred units of measurement. AVWX determines this by
+looking at the station's ICAO value.
 """
 
-#: Station Location Identifiers - North American formatting
 NA_REGIONS = (
     "C",
     "K",
     "P",
     "T",
 )
-#: Station Location Identifiers - International formatting
+"""Station Location Identifiers - North American formatting"""
+
 IN_REGIONS = (
     "A",
     "B",
@@ -29,16 +34,17 @@ IN_REGIONS = (
     "Y",
     "Z",
 )
+"""Station Location Identifiers - International formatting"""
 
 # The Central American region is split. Therefore we need to use the first two letters
-#: Central America Station Location Identifiers - North American formatting
 M_NA_REGIONS = (
     "MB",
     "MM",
     "MT",
     "MY",
 )
-#: Central America Station Location Identifiers - International formatting
+"""Central America Station Location Identifiers - North American formatting"""
+
 M_IN_REGIONS = (
     "MD",
     "MG",
@@ -52,8 +58,8 @@ M_IN_REGIONS = (
     "MW",
     "MZ",
 )
+"""Central America Station Location Identifiers - International formatting"""
 
-#: North American variant units
 NA_UNITS = {
     "altimeter": "inHg",
     "altitude": "ft",
@@ -62,7 +68,8 @@ NA_UNITS = {
     "visibility": "sm",
     "wind_speed": "kt",
 }
-#: International variant units
+"""North American variant units"""
+
 IN_UNITS = {
     "altimeter": "hPa",
     "altitude": "ft",
@@ -71,8 +78,8 @@ IN_UNITS = {
     "visibility": "m",
     "wind_speed": "kt",
 }
+"""International variant units"""
 
-#: Expected unit postfixes for wind elements in order of frequency
 WIND_UNITS = {
     "KT": "kt",
     "KTS": "kt",
@@ -80,24 +87,24 @@ WIND_UNITS = {
     "KMH": "km/h",
     "MPH": "mi/h",
 }
+"""Expected unit postfixes for wind elements in order of frequency"""
 
-#: List of flight rules abbreviations
 FLIGHT_RULES = (
     "VFR",
     "MVFR",
     "IFR",
     "LIFR",
 )
+"""List of flight rules abbreviations"""
 
-#: List of cloud layer abbreviations
 CLOUD_LIST = (
     "FEW",
     "SCT",
     "BKN",
     "OVC",
 )
+"""List of cloud layer abbreviations"""
 
-#: Dictionary of cardinal direction values
 CARDINALS = {
     "N": 360,
     "NORTH": 360,
@@ -112,8 +119,8 @@ CARDINALS = {
     "WEST": 270,
     "NW": 315,
 }
+"""Dictionary of cardinal direction values"""
 
-#: Dictionary of tertiary cardinal directions to degree values with North at 0
 CARDINAL_DEGREES = {
     "NNE": 22.5,
     "NE": 45,
@@ -132,8 +139,8 @@ CARDINAL_DEGREES = {
     "NNW": 337.5,
     "N": 0,
 }
+"""Dictionary of tertiary cardinal directions to degree values with North at 0"""
 
-#: Dictionary associating WX codes with descriptions
 WX_TRANSLATIONS = {
     "BC": "Patchy",
     "BL": "Blowing",
@@ -168,8 +175,8 @@ WX_TRANSLATIONS = {
     "VA": "Volcanic Ash",
     "VC": "Vicinity",
 }
+"""Dictionary associating WX codes with descriptions"""
 
-#: Dictionary associating cloud layer and cloud codes with descriptions
 CLOUD_TRANSLATIONS = {
     "OVC": "Overcast layer at {0}{1}",
     "BKN": "Broken layer at {0}{1}",
@@ -194,8 +201,8 @@ CLOUD_TRANSLATIONS = {
     "TCU": "Towering Cumulus",
     None: "Unknown",
 }
+"""Dictionary associating cloud layer and cloud codes with descriptions"""
 
-#: Units required to be translated in order to be spoken properly
 SPOKEN_UNITS = {
     "sm": "mile",
     "mi": "mile",
@@ -204,8 +211,8 @@ SPOKEN_UNITS = {
     "F": "Fahrenheit",
     "kt": "knot",
 }
+"""Units required to be translated in order to be spoken properly"""
 
-#: Dictionary associating algebraic signs with their spoken version
 NUMBER_REPL = {
     ".": "point",
     "-": "minus",
@@ -221,11 +228,11 @@ NUMBER_REPL = {
     "8": "eight",
     "9": "nine",
 }
+"""Dictionary associating algebraic signs with their spoken version"""
 
-#: Dictionary associating fraction strings with their spoken version
 FRACTIONS = {"1/4": "one quarter", "1/2": "one half", "3/4": "three quarters"}
+"""Dictionary associating fraction strings with their spoken version"""
 
-#: Dictionary associating special number values with their spoken version
 SPECIAL_NUMBERS = {
     "CAVOK": (9999, "ceiling and visibility ok"),
     "VRB": (None, "variable"),
@@ -237,8 +244,8 @@ SPECIAL_NUMBERS = {
     "FRZLVL": (None, "freezing level"),
     "UNL": (999, "Unlimited"),
 }
+"""Dictionary associating special number values with their spoken version"""
 
-#: Static remarks translation elements
 REMARKS_ELEMENTS = {
     "$": "ASOS requires maintenance",
     "AO1": "Automated with no precipitation sensor",
@@ -257,6 +264,7 @@ REMARKS_ELEMENTS = {
     "SOG": "Snow on the ground",
     "TSNO": "Thunderstorm information not available",
 }
+"""Static remarks translation elements"""
 
-#: Static remarks translation groups
 REMARKS_GROUPS = {"ACFT MSHP": "Aircraft mishap"}
+"""Static remarks translation groups"""

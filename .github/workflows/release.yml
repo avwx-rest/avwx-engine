@@ -18,15 +18,17 @@ jobs:
         run: |
           poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
           poetry publish --build --no-interaction
-      - name: Deploy docs
+      - name: Build docs
         run: |
-          poetry run python -m pdoc -o docsbuild/ \
+          poetry run python -m pdoc -o docs_b/ \
+          !avwx.flight_path !avwx.current.airep \
           --favicon https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/favicon.ico \
           --logo https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/avwx-logo-color-200.png \
           --logo-link https://info.avwx.rest
+          echo "engine.avwx.rest" > docs_b/CNAME
       - uses: actions/upload-pages-artifact@v2
         with:
-          path: docsbuild/
+          path: docs_b/
 
   # Deploy the doc build to GitHub pages
   deploy:

@@ -1,5 +1,11 @@
 """
-Classes for bulk fetching report strings
+These services are specifically for returning multiple reports at a time.
+For example, we'd want to know all SIGMETs currently in circulation.
+The sources can be FTP, scraping, or any other method. There is no need
+for specific stations or updating files behind the scenes.
+
+The `fetch` and `async_fetch` methods are identical except they return
+`List[str]` instead.
 """
 
 # pylint: disable=invalid-name
@@ -13,9 +19,13 @@ from avwx.service.base import CallsHTTP, Service
 
 
 class NOAA_Bulk(Service, CallsHTTP):
-    """Subclass for extracting current reports from NOAA CSV files"""
+    """Subclass for extracting current reports from NOAA CSV files
 
-    url = "https://aviationweather.gov/adds/dataserver_current/current/{}s.cache.csv"
+    This class accepts `"metar"`, `"taf"`, `"aircraftreport"`, and
+    `"airsigmet"` as valid report types.
+    """
+
+    _url = "https://aviationweather.gov/adds/dataserver_current/current/{}s.cache.csv"
     _valid_types = ("metar", "taf", "aircraftreport", "airsigmet")
     _rtype_map = {"airep": "aircraftreport", "pirep": "aircraftreport"}
     _targets = {"aircraftreport": -2}  # else 0
@@ -46,15 +56,19 @@ class NOAA_Bulk(Service, CallsHTTP):
 
     async def async_fetch(self, timeout: int = 10) -> List[str]:
         """Asynchronously bulk fetch report strings from the service"""
-        url = self.url.format(self.report_type)
+        url = self._url.format(self.report_type)
         text = await self._call(url, timeout=timeout)
         return self._extract(text)
 
 
 class NOAA_Intl(Service, CallsHTTP):
-    """Bulk scrape international NOAA data"""
+    """Scrapes international reports from NOAA. Designed to
+    accompany `NOAA_Bulk` for AIRMET / SIGMET fetch.
 
-    url = "https://www.aviationweather.gov/{}/intl"
+    Currently, this class only accepts `"airsigmet"` as a valid report type.
+    """
+
+    _url = "https://www.aviationweather.gov/{}/intl"
     _valid_types = ("airsigmet",)
     _url_map = {"airsigmet": "sigmet"}
 
@@ -78,6 +92,6 @@ class NOAA_Intl(Service, CallsHTTP):
 
     async def async_fetch(self, timeout: int = 10) -> List[str]:
         """Asynchronously bulk fetch report strings from the service"""
-        url = self.url.format(self._url_map[self.report_type])
+        url = self._url.format(self._url_map[self.report_type])
         text = await self._call(url, timeout=timeout)
         return self._extract(text)

@@ -1,5 +1,5 @@
 """
-Service base class
+All service classes are based on the base Service class. Implementation is mostly left to the other high-level subclasses.
 """
 
 # pylint: disable=too-few-public-methods,unsubscriptable-object
@@ -15,10 +15,8 @@ import httpcore
 # module
 from avwx.exceptions import SourceError
 
-_VALUE_ERROR = "'{}' is not a valid report type for {}. Expected {}"
 
-
-TIMEOUT_ERRORS = (
+_TIMEOUT_ERRORS = (
     httpx.ConnectTimeout,
     httpx.ReadTimeout,
     httpx.WriteTimeout,
@@ -27,8 +25,8 @@ TIMEOUT_ERRORS = (
     httpcore.WriteTimeout,
     httpcore.PoolTimeout,
 )
-CONNECTION_ERRORS = (gaierror, httpcore.ConnectError, httpx.ConnectError)
-NETWORK_ERRORS = (
+_CONNECTION_ERRORS = (gaierror, httpcore.ConnectError, httpx.ConnectError)
+_NETWORK_ERRORS = (
     httpcore.ReadError,
     httpcore.NetworkError,
     httpcore.RemoteProtocolError,
@@ -38,30 +36,28 @@ NETWORK_ERRORS = (
 class Service:
     """Base Service class for fetching reports"""
 
-    url: Optional[str] = None
     report_type: str
+    _url: Optional[str] = None
     _valid_types: Tuple[str, ...] = tuple()
 
     def __init__(self, report_type: str):
         if self._valid_types and report_type not in self._valid_types:
             raise ValueError(
-                _VALUE_ERROR.format(
-                    report_type, self.__class__.__name__, self._valid_types
-                )
+                f"'{report_type}' is not a valid report type for {self.__class__.__name__}. Expected {self._valid_types}"
             )
         self.report_type = report_type
 
     @property
     def root(self) -> Optional[str]:
         """Returns the service's root URL"""
-        if self.url is None:
+        if self._url is None:
             return None
-        url = self.url[self.url.find("//") + 2 :]
+        url = self._url[self._url.find("//") + 2 :]
         return url[: url.find("/")]
 
 
 class CallsHTTP:
-    """Service supporting HTTP requests"""
+    """Service mixin supporting HTTP requests"""
 
     method: str = "GET"
 
@@ -91,13 +87,13 @@ class CallsHTTP:
                         raise SourceError(f"{name} server returned {resp.status_code}")
                 else:
                     raise SourceError(f"{name} server returned {resp.status_code}")
-        except TIMEOUT_ERRORS as timeout_error:
+        except _TIMEOUT_ERRORS as timeout_error:
             raise TimeoutError(f"Timeout from {name} server") from timeout_error
-        except CONNECTION_ERRORS as connect_error:
+        except _CONNECTION_ERRORS as connect_error:
             raise ConnectionError(
                 f"Unable to connect to {name} server"
             ) from connect_error
-        except NETWORK_ERRORS as network_error:
+        except _NETWORK_ERRORS as network_error:
             raise ConnectionError(
                 f"Unable to read data from {name} server"
             ) from network_error

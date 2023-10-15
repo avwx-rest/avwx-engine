@@ -56,10 +56,10 @@ from .base import (
     _trim_lines,
 )
 
-DataType: TypeAlias = Union[structs.NbhData, structs.NbsData, structs.NbeData]
-PeriodType: TypeAlias = Union[structs.NbhPeriod, structs.NbsPeriod, structs.NbePeriod]
+DataT: TypeAlias = Union[structs.NbhData, structs.NbsData, structs.NbeData]
+PeriodT: TypeAlias = Union[structs.NbhPeriod, structs.NbsPeriod, structs.NbePeriod]
 
-UNITS = {
+_UNITS = {
     **UNITS,
     "accumulation": "in",
     "duration": "hour",
@@ -123,8 +123,8 @@ _NBHS_HANDLERS: Dict[str, Tuple[str, Callable]] = {
 
 
 def _parse_factory(
-    data_class: DataType,
-    period_class: PeriodType,
+    data_class: DataT,
+    period_class: PeriodT,
     handlers: Dict[str, Tuple[str, Callable]],
     hours: int = 2,
     size: int = 3,
@@ -183,7 +183,7 @@ parse_nbe: Callable[[str], structs.NbeData] = _parse_factory(
 
 
 class _Nbm(Forecast):
-    units = structs.NbmUnits(**UNITS)
+    units = structs.NbmUnits(**_UNITS)
     _service_class = NOAA_NBM  # type: ignore
     _parser: staticmethod
 

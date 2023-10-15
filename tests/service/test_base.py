@@ -13,7 +13,7 @@ import pytest
 # module
 from avwx import service
 
-BASE_ATTRS = ("url", "report_type", "_valid_types")
+BASE_ATTRS = ("_url", "report_type", "_valid_types")
 
 
 class BaseServiceTest:

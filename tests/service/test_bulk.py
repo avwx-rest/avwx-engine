@@ -2,36 +2,32 @@
 Bulk Service Tests
 """
 
+# stdlib
+from typing import Tuple
+
 # library
 import pytest
 
 # module
 from avwx.service import bulk
 
-BASE_ATTRS = ("url", "report_type", "_valid_types")
+# tests
+from .test_base import ServiceClassTest
 
 
-class TestBulkService:
+class BulkServiceTest(ServiceClassTest):
     """Tests bulk downloads from NOAA file server"""
 
-    report_types = (
-        "metar",
-        "taf",
-        "aircraftreport",
-    )
-    required_attrs = BASE_ATTRS
+    service_class: bulk.Service
+    report_types: Tuple[str, ...]
 
-    def test_init(self):
-        """Tests that the Bulk class is initialized properly"""
-        service = bulk.NOAA_Bulk(self.report_types[0])
-        for attr in self.required_attrs:
-            assert hasattr(service, attr) is True
-        assert service.report_type == self.report_types[0]
+    @property
+    def report_type(self) -> str:
+        return self.report_types[0]
 
     def test_fetch(self):
         """Tests that reports are fetched from service"""
-        service = bulk.NOAA_Bulk(self.report_types[0])
-        reports = service.fetch()
+        reports = self.service_class(self.report_type).fetch()
         assert isinstance(reports, list)
         assert bool(reports)
 
@@ -39,7 +35,26 @@ class TestBulkService:
     async def test_async_fetch(self):
         """Tests that reports are fetched from async service"""
         for report_type in self.report_types:
-            service = bulk.NOAA_Bulk(report_type)
+            service = self.service_class(report_type)
             reports = await service.async_fetch()
             assert isinstance(reports, list)
             assert bool(reports)
+
+
+class TestNOAABulk(BulkServiceTest):
+    """Tests bulk downloads from NOAA file server"""
+
+    service_class = bulk.NOAA_Bulk
+    report_types = (
+        "metar",
+        "taf",
+        "aircraftreport",
+        "airsigmet",
+    )
+
+
+class TestIntlBulk(BulkServiceTest):
+    """Tests bulk downloads from NOAA file server"""
+
+    service_class = bulk.NOAA_Intl
+    report_types = ("airsigmet",)

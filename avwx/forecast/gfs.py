@@ -176,12 +176,12 @@ class Mex(Forecast):
         self.units = Units(**static.UNITS)
 
 
-ThunderList = List[Optional[Tuple[Optional[Number], Optional[Number]]]]
+_ThunderList = List[Optional[Tuple[Optional[Number], Optional[Number]]]]
 
 
-def _thunder(line: str, size: int = 3) -> ThunderList:
+def _thunder(line: str, size: int = 3) -> _ThunderList:
     """Parse thunder line into Number tuples"""
-    ret: ThunderList = []
+    ret: _ThunderList = []
     previous = None
     for item in _split_line(line, size=size, prefix=5, strip=" /"):
         if not item:

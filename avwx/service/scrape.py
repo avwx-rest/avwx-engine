@@ -1,5 +1,6 @@
 """
-Classes for retrieving raw report strings via web scraping
+These services request reports via HTML scraping or direct API requests.
+Requests are ephemeral and will call the selected service each time.
 """
 
 # pylint: disable=arguments-differ,invalid-name,too-many-arguments
@@ -9,6 +10,7 @@ import asyncio as aio
 import json
 import random
 import re
+from contextlib import suppress
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 # library
@@ -22,10 +24,10 @@ from avwx.station import valid_station
 from avwx.structs import Coord
 
 
-T = TypeVar("T")
+_T = TypeVar("_T")
 
 
-USER_AGENTS = [
+_USER_AGENTS = [
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15"
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0",
@@ -36,7 +38,10 @@ USER_AGENTS = [
 
 
 class ScrapeService(Service, CallsHTTP):  # pylint: disable=too-few-public-methods
-    """Service class for fetching reports via direct web requests"""
+    """Service class for fetching reports via direct web requests
+
+    Unless overwritten, this class accepts `"metar"` and `"taf"` as valid report types
+    """
 
     _valid_types: Tuple[str, ...] = ("metar", "taf")
     _strip_whitespace: bool = True
@@ -55,7 +60,7 @@ class ScrapeService(Service, CallsHTTP):  # pylint: disable=too-few-public-metho
         """Returns the POST form/data payload"""
         return {}
 
-    def _clean_report(self, report: T) -> T:
+    def _clean_report(self, report: _T) -> _T:
         """Replaces all *whitespace elements with a single space if enabled"""
         if not self._strip_whitespace:
             return report
@@ -118,9 +123,12 @@ class StationScrape(ScrapeService):
 
 
 class NOAA_ADDS(ScrapeService):
-    """Requests data from NOAA ADDS"""
+    """Requests data from NOAA ADDS
 
-    url = "https://aviationweather.gov/adds/dataserver_current/httpparam"
+    This class accepts `"metar"`, `"taf"`, and `"aircraftreport"` as valid report types.
+    """
+
+    _url = "https://aviationweather.gov/adds/dataserver_current/httpparam"
 
     _valid_types = ("metar", "taf", "aircraftreport")
     _rtype_map = {"airep": "aircraftreport"}
@@ -145,7 +153,7 @@ class NOAA_ADDS(ScrapeService):
             params["radialDistance"] = f"200;{coord.lon},{coord.lat}"
         else:
             params["stationString"] = station
-        return self.url, params
+        return self._url, params
 
     def _extract(self, raw: str) -> Union[str, List[str]]:
         """Extracts the raw_report element from XML response"""
@@ -203,12 +211,12 @@ class NOAA_ADDS(ScrapeService):
 class NOAA_FTP(StationScrape):
     """Requests data from NOAA via FTP"""
 
-    url = "https://tgftp.nws.noaa.gov/data/{}/{}/stations/{}.TXT"
+    _url = "https://tgftp.nws.noaa.gov/data/{}/{}/stations/{}.TXT"
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
         """Returns a formatted URL and parameters"""
         root = "forecasts" if self.report_type == "taf" else "observations"
-        return self.url.format(root, self.report_type, station), {}
+        return self._url.format(root, self.report_type, station), {}
 
     def _extract(self, raw: str, station: str) -> str:
         """Extracts the report using string finding"""
@@ -219,13 +227,13 @@ class NOAA_FTP(StationScrape):
 class NOAA_Scrape(StationScrape):
     """Requests data from NOAA via site scraping"""
 
-    url = "https://aviationweather.gov/{}/data"
+    _url = "https://aviationweather.gov/{}/data"
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
         """Returns a formatted URL and parameters"""
         hours = 7 if self.report_type == "taf" else 2
         return (
-            self.url.format(self.report_type),
+            self._url.format(self.report_type),
             {"ids": station, "format": "raw", "hours": hours},
         )
 
@@ -248,12 +256,12 @@ NOAA = NOAA_Scrape
 class AMO(StationScrape):
     """Requests data from AMO KMA for Korean stations"""
 
-    url = "http://amoapi.kma.go.kr/amoApi/{}"
+    _url = "http://amoapi.kma.go.kr/amoApi/{}"
     default_timeout = 60
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
         """Returns a formatted URL and parameters"""
-        return self.url.format(self.report_type), {"icao": station}
+        return self._url.format(self.report_type), {"icao": station}
 
     def _extract(self, raw: str, station: str) -> str:
         """Extracts the report message from XML response"""
@@ -280,12 +288,12 @@ class AMO(StationScrape):
 class MAC(StationScrape):
     """Requests data from Meteorologia Aeronautica Civil for Columbian stations"""
 
-    url = "http://meteorologia.aerocivil.gov.co/expert_text_query/parse"
+    _url = "http://meteorologia.aerocivil.gov.co/expert_text_query/parse"
     method = "POST"
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
         """Returns a formatted URL and parameters"""
-        return self.url, {"query": f"{self.report_type} {station}"}
+        return self._url, {"query": f"{self.report_type} {station}"}
 
     def _extract(self, raw: str, station: str) -> str:
         """Extracts the report message using string finding"""
@@ -295,12 +303,12 @@ class MAC(StationScrape):
 class AUBOM(StationScrape):
     """Requests data from the Australian Bureau of Meteorology"""
 
-    url = "http://www.bom.gov.au/aviation/php/process.php"
+    _url = "http://www.bom.gov.au/aviation/php/process.php"
     method = "POST"
 
     def _make_url(self, _: Any) -> Tuple[str, dict]:
         """Returns a formatted URL and empty parameters"""
-        return self.url, {}
+        return self._url, {}
 
     @staticmethod
     def _make_headers() -> dict:
@@ -312,7 +320,7 @@ class AUBOM(StationScrape):
             "Accept-Encoding": "gzip, deflate",
             "Host": "www.bom.gov.au",
             "Origin": "http://www.bom.gov.au",
-            "User-Agent": random.choice(USER_AGENTS),
+            "User-Agent": random.choice(_USER_AGENTS),
             "Connection": "keep-alive",
         }
 
@@ -337,15 +345,15 @@ class AUBOM(StationScrape):
 class OLBS(StationScrape):
     """Requests data from India OLBS flight briefing"""
 
-    # url = "https://olbs.amsschennai.gov.in/nsweb/FlightBriefing/showopmetquery.php"
+    # _url = "https://olbs.amsschennai.gov.in/nsweb/FlightBriefing/showopmetquery.php"
     # method = "POST"
 
     # Temp redirect
-    url = "https://avbrief3.el.r.appspot.com/"
+    _url = "https://avbrief3.el.r.appspot.com/"
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
         """Returns a formatted URL and empty parameters"""
-        return self.url, {"icao": station}
+        return self._url, {"icao": station}
 
     def _post_data(self, station: str) -> dict:
         """Returns the POST form"""
@@ -361,7 +369,7 @@ class OLBS(StationScrape):
             # "Accept-Language": "en-us",
             "Accept-Encoding": "gzip, deflate, br",
             # "Host": "olbs.amsschennai.gov.in",
-            "User-Agent": random.choice(USER_AGENTS),
+            "User-Agent": random.choice(_USER_AGENTS),
             "Connection": "keep-alive",
             # "Referer": "https://olbs.amsschennai.gov.in/nsweb/FlightBriefing/",
             # "X-Requested-With": "XMLHttpRequest",
@@ -382,11 +390,11 @@ class OLBS(StationScrape):
 class NAM(StationScrape):
     """Requests data from NorthAviMet for North Atlantic and Nordic countries"""
 
-    url = "https://www.northavimet.com/NamConWS/rest/opmet/command/0/"
+    _url = "https://www.northavimet.com/NamConWS/rest/opmet/command/0/"
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
         """Returns a formatted URL and empty parameters"""
-        return self.url + station, {}
+        return self._url + station, {}
 
     def _extract(self, raw: str, station: str) -> str:
         """Extracts the reports from HTML response"""
@@ -400,11 +408,11 @@ class AVT(StationScrape):
     NOTE: This should be replaced later with a gov+https source
     """
 
-    url = "http://www.avt7.com/Home/AirportMetarInfo?airport4Code="
+    _url = "http://www.avt7.com/Home/AirportMetarInfo?airport4Code="
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
         """Returns a formatted URL and empty parameters"""
-        return self.url + station, {}
+        return self._url + station, {}
 
     def _extract(self, raw: str, station: str) -> str:
         """Extracts the reports from HTML response"""
@@ -420,7 +428,7 @@ class AVT(StationScrape):
 # Ancilary scrape services
 
 
-TAG_PATTERN = re.compile(r"<[^>]*>")
+_TAG_PATTERN = re.compile(r"<[^>]*>")
 
 # Search fields https://notams.aim.faa.gov/NOTAM_Search_User_Guide_V33.pdf
 
@@ -428,7 +436,7 @@ TAG_PATTERN = re.compile(r"<[^>]*>")
 class FAA_NOTAM(ScrapeService):
     """Sources NOTAMs from official FAA portal"""
 
-    url = "https://notams.aim.faa.gov/notamSearch/search"
+    _url = "https://notams.aim.faa.gov/notamSearch/search"
     method = "POST"
     _valid_types = ("notam",)
 
@@ -507,13 +515,13 @@ class FAA_NOTAM(ScrapeService):
         data = self._post_for(icao, coord, path, radius)
         notams = []
         while True:
-            text = await self._call(self.url, None, headers, data, timeout)
+            text = await self._call(self._url, None, headers, data, timeout)
             resp: dict = json.loads(text)
             if resp.get("error"):
                 raise self._make_err("Search criteria appears to be invalid")
             for item in resp["notamList"]:
                 if report := item.get("icaoMessage", "").strip():
-                    report = TAG_PATTERN.sub("", report).strip()
+                    report = _TAG_PATTERN.sub("", report).strip()
                     if issued := item.get("issueDate"):
                         report = f"{issued}||{report}"
                     notams.append(report)
@@ -545,8 +553,19 @@ BY_COUNTRY = {
 
 
 def get_service(station: str, country_code: str) -> ScrapeService:
-    """Returns the preferred service for a given station"""
-    for prefix, service in PREFERRED.items():
-        if station.startswith(prefix):
-            return service  # type: ignore
+    """Returns the preferred scrape service for a given station
+
+    ```python
+    # Fetch Australian reports
+    station = 'YWOL'
+    country = 'AU' # can source from avwx.Station.country
+    # Get the station's preferred service and initialize to fetch METARs
+    service = avwx.service.get_service(station, country)('metar')
+    # service is now avwx.service.AUBOM init'd to fetch METARs
+    # Fetch the current METAR
+    report = service.fetch(station)
+    ```
+    """
+    with suppress(KeyError):
+        return PREFERRED[station[:2]]  # type: ignore
     return BY_COUNTRY.get(country_code, NOAA)  # type: ignore

@@ -1,5 +1,5 @@
 """
-Services for fetching reports
+.. include:: ../../docs/service.md
 """
 
 from .base import Service

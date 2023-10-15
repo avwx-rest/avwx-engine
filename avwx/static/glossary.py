@@ -1,5 +1,8 @@
 """
-General aviation report glossary
+AVWX includes a compiled glossary of common report abbreviations that are
+listed separate from any other parsing mechanism. This is provided just
+for you to assist in translating the original reports or any item left in
+the `other` element.
 """
 
 # Initial reference:
@@ -7,6 +10,7 @@ General aviation report glossary
 
 # Duplicate enitries prioritized for METAR
 METAR = {"BR": "Mist", "SS": "Sandstorm"}
+"""Glossary conflicts used only in METARs."""
 
 # Regional locations. Some duplicates
 NA_REGIONAL = {
@@ -102,6 +106,9 @@ NA_REGIONAL = {
     "YKN": "Yukon",
     "YLSTN": "Yellowstone",
 }
+"""Glossary items and conflicts used for reports referencing locations
+in North America.
+"""
 
 GLOBAL = {
     "ABNDT": "Abundant",
@@ -1525,3 +1532,6 @@ GLOBAL = {
     "ZNS": "Zones",
     "ZR": "Freezing rain",
 }
+"""Glossary of abreviations found in reports. These should be treated as
+default values. OTher elements may overwrite in specific instances.
+"""

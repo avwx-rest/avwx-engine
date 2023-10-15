@@ -1,5 +1,10 @@
 """
-Classes for retrieving raw report strings via managed files
+These services are directed at FTP servers to find the most recent file
+associated with the search criteria. Files are stored in a temporary directory
+which is deleted when the program ends. Fetch requests will extract reports
+from the downloaded file until an update interval has been exceeded, at which
+point the service will check for a newer file. You can also have direct access
+to all downloaded reports.
 """
 
 # pylint: disable=invalid-name,arguments-differ
@@ -27,7 +32,7 @@ _TEMP_DIR = tempfile.TemporaryDirectory()  # pylint: disable=consider-using-with
 _TEMP = Path(_TEMP_DIR.name)
 
 
-HTTPX_EXCEPTIONS = (httpx.ConnectTimeout, httpx.ReadTimeout, httpx.RemoteProtocolError)
+_HTTPX_EXCEPTIONS = (httpx.ConnectTimeout, httpx.ReadTimeout, httpx.RemoteProtocolError)
 
 
 @atexit.register
@@ -104,7 +109,7 @@ class FileService(Service):
                     resp = await client.get(url)
                     if resp.status_code == 200:
                         break
-                except HTTPX_EXCEPTIONS:
+                except _HTTPX_EXCEPTIONS:
                     return False
                 except gaierror:
                     return False
@@ -215,7 +220,7 @@ class NOAA_Forecast(FileService):
 class NOAA_NBM(NOAA_Forecast):
     """Requests forecast data from NOAA NBM FTP servers"""
 
-    url = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/blend/prod/blend.{}/{}/text/blend_{}tx.t{}z"
+    _url = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/blend/prod/blend.{}/{}/text/blend_{}tx.t{}z"
     _valid_types = ("nbh", "nbs", "nbe")
 
     @property
@@ -226,7 +231,7 @@ class NOAA_NBM(NOAA_Forecast):
         while date > cutoff:
             timestamp = date.strftime(r"%Y%m%d")
             hour = str(date.hour).zfill(2)
-            yield self.url.format(timestamp, hour, self.report_type, hour)
+            yield self._url.format(timestamp, hour, self.report_type, hour)
             date -= dt.timedelta(hours=1)
 
     def _index_target(self, station: str) -> Tuple[str, str]:
@@ -236,7 +241,7 @@ class NOAA_NBM(NOAA_Forecast):
 class NOAA_GFS(NOAA_Forecast):
     """Requests forecast data from NOAA GFS FTP servers"""
 
-    url = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfsmos.{}/mdl_gfs{}.t{}z"
+    _url = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfsmos.{}/mdl_gfs{}.t{}z"
     _valid_types = ("mav", "mex")
 
     _cycles: Dict[str, Tuple[int, ...]] = {"mav": (0, 6, 12, 18), "mex": (0, 12)}
@@ -258,7 +263,7 @@ class NOAA_GFS(NOAA_Forecast):
                     continue
                 timestamp = date.strftime(r"%Y%m%d")
                 hour = str(date.hour).zfill(2)
-                yield self.url.format(timestamp, self.report_type, hour)
+                yield self._url.format(timestamp, self.report_type, hour)
             date -= dt.timedelta(hours=1)
 
     def _index_target(self, station: str) -> Tuple[str, str]:

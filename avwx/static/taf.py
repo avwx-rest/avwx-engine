@@ -2,7 +2,6 @@
 TAF static values
 """
 
-#: Dictionary associating turbulence report IDs with descriptions
 TURBULENCE_CONDITIONS = {
     "0": "None",
     "1": "Light turbulence",
@@ -16,8 +15,8 @@ TURBULENCE_CONDITIONS = {
     "9": "Frequent severe turbulence in clouds",
     "X": "Extreme turbulence",
 }
+"""Dictionary associating turbulence report IDs with descriptions"""
 
-#: Dictionary associating icing report IDs with descriptions
 ICING_CONDITIONS = {
     "0": "No icing",
     "1": "Light icing",
@@ -30,8 +29,8 @@ ICING_CONDITIONS = {
     "8": "Severe icing in clouds",
     "9": "Severe icing in precipitation",
 }
+"""Dictionary associating icing report IDs with descriptions"""
 
-#: Dictionary associating pressure change IDs with descriptions
 PRESSURE_TENDENCIES = {
     "0": "Increasing, then decreasing",
     "1": "Increasing, then steady",
@@ -44,8 +43,8 @@ PRESSURE_TENDENCIES = {
     "8": "Steady or increasing, then decreasing",
     "9": "Unknown",
 }
+"""Dictionary associating pressure change IDs with descriptions"""
 
-#: Strings signifying the start of the remarks section of a TAF
 TAF_RMK = [
     "RMK ",
     "AUTOMATED ",
@@ -61,9 +60,10 @@ TAF_RMK = [
     " QFE",
     " QFF",
 ]
+"""Strings signifying the start of the remarks section of a TAF"""
 
-#: Strings signifying the start of a new TAF time period
 TAF_NEWLINE = ["INTER", "BECMG", "TEMPO"]
+"""Strings signifying the start of a new TAF time period"""
 
-#: Addendum to TAF_NEWLINE but string startswith and the rest are only digits
 TAF_NEWLINE_STARTSWITH = ["FM", "PROB"]
+"""Addendum to TAF_NEWLINE but string startswith and the rest are only digits"""

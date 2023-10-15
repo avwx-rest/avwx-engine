@@ -2,7 +2,6 @@
 METAR static values
 """
 
-#: Strings signifying the start of the remarks section of a METAR
 METAR_RMK = [
     " BLU",
     " BLU+",
@@ -24,3 +23,4 @@ METAR_RMK = [
     " RWY",
     " CHECK",
 ]
+"""Strings signifying the start of the remarks section of a METAR"""

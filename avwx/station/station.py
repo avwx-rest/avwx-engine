@@ -22,7 +22,7 @@ from avwx.station.meta import STATIONS
 from avwx.structs import Coord
 
 
-def get_ip_location() -> Coord:
+def _get_ip_location() -> Coord:
     """Returns the current location according to ipinfo.io"""
     lat, lon = httpx.get("https://ipinfo.io/loc").text.strip().split(",")
     return Coord(float(lat), float(lon))
@@ -191,7 +191,7 @@ class Station:
         NOTE: Becomes less accurate toward poles and doesn't cross +/-180
         """
         if not (lat and lon):
-            lat, lon = get_ip_location().pair
+            lat, lon = _get_ip_location().pair
         ret = nearest(lat, lon, 1, is_airport, sends_reports, max_coord_distance)
         if not isinstance(ret, dict):
             return None
@@ -371,5 +371,5 @@ def nearest(
         )
     if n == 1:
         return ret[0]
-    ret.sort(key=lambda x: x["miles"])  # type: ignore
+    ret.sort(key=lambda x: x["miles"])
     return ret

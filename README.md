@@ -86,10 +86,10 @@ poetry shell
 
 ### Testing
 
-The test suite was built while using the `pytest` library, which is also installed as a dev dependency.
+The test suite was built while using the `pytest` library, which is also installed as a dev dependency. The project uses `poethepoet` (dev dependency) to run basic tasks.
 
 ```bash
-pytest
+poe test
 ```
 
 The end-to-end test files were generated using `util/build_tests.py` and placed into `tests/{report}/data`. Because Timestamp generation interprets the text based on the current date, Timestamp objects are nullified in the end-to-end tests.
@@ -101,7 +101,7 @@ The documentation is automatically generated from the content of the [docs direc
  You can also preview local changes during development:
 
 ```sh
-mkdocs serve
+poe docs
 ```
 
 ### Releasing

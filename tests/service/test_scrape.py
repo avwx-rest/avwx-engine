@@ -26,9 +26,9 @@ class TestStationScrape(ServiceClassTest):
         """Tests for expected values and method implementation"""
         # pylint: disable=no-member
         if type(serv) == service.scrape.StationScrape:
-            assert serv.url is None
+            assert serv._url is None
         else:
-            assert isinstance(serv.url, str)
+            assert isinstance(serv._url, str)
         assert isinstance(serv.method, str)
         assert serv.method in {"GET", "POST"}
 

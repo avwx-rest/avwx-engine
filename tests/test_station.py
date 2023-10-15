@@ -34,7 +34,7 @@ def test_is_na_format(code: str):
 
 
 def test_na_format_default():
-    assert station.uses_na_format("KJFK", True) is True
+    assert station.uses_na_format("XXXX", True) is True
 
 
 @pytest.mark.parametrize("code", IN_CODES)
@@ -238,6 +238,13 @@ def test_station_nearest(lat: float, lon: float, icao: str):
     stn, dist = station.Station.nearest(lat, lon, is_airport=True)
     assert isinstance(stn, station.Station)
     assert stn.icao == icao
+    assert all(isinstance(val, float) for val in dist.values())
+
+
+def test_station_nearest_ip():
+    """Tests loading a Station nearest to IP location"""
+    stn, dist = station.Station.nearest()
+    assert isinstance(stn, station.Station)
     assert all(isinstance(val, float) for val in dist.values())
 
 
