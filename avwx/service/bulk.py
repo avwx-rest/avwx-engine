@@ -25,7 +25,7 @@ class NOAA_Bulk(Service, CallsHTTP):
     `"airsigmet"` as valid report types.
     """
 
-    _url = "https://aviationweather.gov/adds/dataserver_current/current/{}s.cache.csv"
+    _url = "https://aviationweather.gov/data/cache/{}s.cache.csv"
     _valid_types = ("metar", "taf", "aircraftreport", "airsigmet")
     _rtype_map = {"airep": "aircraftreport", "pirep": "aircraftreport"}
     _targets = {"aircraftreport": -2}  # else 0
@@ -68,21 +68,18 @@ class NOAA_Intl(Service, CallsHTTP):
     Currently, this class only accepts `"airsigmet"` as a valid report type.
     """
 
-    _url = "https://www.aviationweather.gov/{}/intl"
+    _url = "https://www.aviationweather.gov/api/data/{}"
     _valid_types = ("airsigmet",)
-    _url_map = {"airsigmet": "sigmet"}
+    _url_map = {"airsigmet": "isigmet"}
 
     @staticmethod
     def _clean_report(report: str) -> str:
-        # for remove in (r"\x07",):
-        #     report = report.replace(remove, " ")
-        return " ".join(report.split())
+        lines = report.split()
+        return " ".join([line for line in lines if not line.startswith("Hazard:")])
 
     def _extract(self, raw: str) -> List[str]:
         reports = []
-        raw = raw[raw.find("<pre>") + 5 :]
-        raw = raw[: raw.find("</pre>")]
-        for line in raw.split("<br/>"):
+        for line in raw.split("----------------------"):
             reports.append(self._clean_report(line.strip().strip('"')))
         return reports
 
