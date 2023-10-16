@@ -72,7 +72,10 @@ class CallsHTTP:
     ) -> str:
         name = self.__class__.__name__
         try:
-            async with httpx.AsyncClient(timeout=timeout) as client:
+            async with httpx.AsyncClient(
+                timeout=timeout,
+                follow_redirects=True,
+            ) as client:
                 for _ in range(retries):
                     if self.method.lower() == "post":
                         resp = await client.post(
