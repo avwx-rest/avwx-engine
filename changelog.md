@@ -6,6 +6,7 @@ Parsing and sanitization improvements are always ongoing and non-breaking
 
 - Updated wind sanitization to ensure Station ID is protected.
 - Updated unit test to validate fix.
+- Update `NOAA_Bulk` and `NOAA_Intl` to work with the AviationWeather.gov v3.0 update.
 
 ## 1.8.19
 
