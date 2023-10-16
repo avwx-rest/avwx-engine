@@ -247,7 +247,7 @@ class NOAA_Scrape(StationScrape):
         return raw
 
 
-NOAA = NOAA_Scrape
+NOAA = NOAA_FTP
 
 
 # Regional data sources
