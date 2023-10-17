@@ -1,6 +1,6 @@
 {
     "created": "2023-10-17",
-    "icao": "KMCO",
+    "icao": "PHNL",
     "reports": [
         {
             "data": {
@@ -623,64 +623,84 @@
         }
     ],
     "station": {
-        "city": "Orlando",
+        "city": "Honolulu",
         "country": "US",
-        "elevation_ft": 96,
-        "elevation_m": 29,
-        "gps": "KMCO",
-        "iata": "MCO",
-        "icao": "KMCO",
-        "latitude": 28.429399490356445,
-        "local": "MCO",
-        "longitude": -81.30899810791016,
-        "name": "Orlando International Airport",
-        "note": "Disney World,Epcot Center",
+        "elevation_ft": 13,
+        "elevation_m": 4,
+        "gps": "PHNL",
+        "iata": "HNL",
+        "icao": "PHNL",
+        "latitude": 21.32062,
+        "local": "HNL",
+        "longitude": -157.924228,
+        "name": "Daniel K Inouye International Airport",
+        "note": "Hickam Air Force Base, HIK, PHIK, KHNL, Honolulu International",
         "reporting": true,
         "runways": [
             {
-                "bearing1": 179.0,
-                "bearing2": 359.0,
-                "ident1": "18L",
-                "ident2": "36R",
-                "length_ft": 12005,
-                "lights": true,
-                "surface": "concrete",
-                "width_ft": 200
-            },
-            {
-                "bearing1": 179.0,
-                "bearing2": 359.0,
-                "ident1": "18R",
-                "ident2": "36L",
-                "length_ft": 12004,
-                "lights": true,
-                "surface": "concrete",
-                "width_ft": 200
-            },
-            {
-                "bearing1": 179.0,
-                "bearing2": 359.0,
-                "ident1": "17R",
-                "ident2": "35L",
-                "length_ft": 10000,
-                "lights": true,
-                "surface": "concrete",
+                "bearing1": 90.0,
+                "bearing2": 270.0,
+                "ident1": "08L",
+                "ident2": "26R",
+                "length_ft": 12300,
+                "lights": false,
+                "surface": "asphalt",
                 "width_ft": 150
             },
             {
-                "bearing1": 179.5,
-                "bearing2": 359.5,
-                "ident1": "17L",
-                "ident2": "35R",
-                "length_ft": 9000,
-                "lights": true,
+                "bearing1": 90.0,
+                "bearing2": 270.0,
+                "ident1": "08R",
+                "ident2": "26L",
+                "length_ft": 12000,
+                "lights": false,
                 "surface": "asphalt",
+                "width_ft": 200
+            },
+            {
+                "bearing1": 53.0,
+                "bearing2": 233.0,
+                "ident1": "04R",
+                "ident2": "22L",
+                "length_ft": 9000,
+                "lights": false,
+                "surface": "asphalt",
+                "width_ft": 150
+            },
+            {
+                "bearing1": 53.0,
+                "bearing2": 233.0,
+                "ident1": "04L",
+                "ident2": "22R",
+                "length_ft": 6952,
+                "lights": false,
+                "surface": "asphalt",
+                "width_ft": 150
+            },
+            {
+                "bearing1": 91.0,
+                "bearing2": 271.0,
+                "ident1": "08W",
+                "ident2": "26W",
+                "length_ft": 5000,
+                "lights": false,
+                "surface": "water",
+                "width_ft": 300
+            },
+            {
+                "bearing1": 51.0,
+                "bearing2": 231.0,
+                "ident1": "04W",
+                "ident2": "22W",
+                "length_ft": 3000,
+                "lights": false,
+                "surface": "water",
                 "width_ft": 150
             }
         ],
-        "state": "FL",
+        "state": "HI",
         "type": "large_airport",
-        "website": "http://www.orlandoairports.net/",
-        "wiki": "https://en.wikipedia.org/wiki/Orlando_International_Airport"
+        "website": "http://airports.hawaii.gov/hnl/",
+        "wiki": "https://en.wikipedia.org/wiki/Daniel_K._Inouye_International_Airport"
     }
 }

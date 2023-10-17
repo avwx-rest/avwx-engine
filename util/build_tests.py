@@ -113,6 +113,11 @@ def make_nbe_test(station: str) -> Optional[dict]:
     return make_forecast_test(avwx.Nbe, station)
 
 
+def make_nbx_test(station: str) -> Optional[dict]:
+    """Builds NBX test file for station"""
+    return make_forecast_test(avwx.Nbx, station)
+
+
 def make_airsigmet_tests() -> None:
     """Builds IRMET/SIGMET test file"""
     a = avwx.AirSigManager()
@@ -138,7 +143,7 @@ def main():
     """Creates source files for end-to-end tests"""
     targets = {
         "current": ("metar", "taf", "pirep", "notam"),
-        "forecast": ("nbh", "nbs", "nbe"),
+        "forecast": ("nbh", "nbs", "nbe", "nbx"),
     }
 
     for target, reports in targets.items():

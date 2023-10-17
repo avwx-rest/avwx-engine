@@ -1,28 +1,32 @@
 """
 # NBH
 
-The [NBH report](https://www.weather.gov/mdl/nbm_textcard_v32#nbh) is a 25-hour
-forecast based on the [National Blend of
-Models](https://www.weather.gov/mdl/nbm_home) and is only valid for ICAO
-stations in the United States and Puerto Rico, and US Virgin Islands. Reports
-are in 1-hour increments and are published near the top of every hour.
+The NBH report is a 25-hour forecast based on the
+[National Blend of Models](https://vlab.noaa.gov/web/mdl/nbm) and is only valid
+for ICAO stations in the United States and Puerto Rico, and US Virgin Islands.
+Reports are in 1-hour increments and are published near the top of every hour.
 
 # NBS
 
-The [NBS report](https://www.weather.gov/mdl/nbm_textcard_v32#nbs) is a
-short-range forecast (6-72 hours) based on the [National Blend of
-Models](https://www.weather.gov/mdl/nbm_home) and is only valid for ICAO
-stations in the United States and Puerto Rico, and US Virgin Islands. Reports
-are in 3-hour increments and published near the top of every hour.
+The NBS report is a
+short-range forecast (6-72 hours) based on the
+[National Blend of Models](https://vlab.noaa.gov/web/mdl/nbm) and is only valid
+for ICAO stations in the United States and Puerto Rico, and US Virgin Islands.
+Reports are in 3-hour increments and published near the top of every hour.
 
 # NBE
 
-The [NBE report](https://www.weather.gov/mdl/nbm_textcard_v32#nbe) is an
-extended-range forecast (24-192 hours) based on the [National Blend of
-Models](https://www.weather.gov/mdl/nbm_home) and is only valid for ICAO
-stations in the United States and Puerto Rico, and US Virgin Islands. Reports
-are in 12-hour increments and published near the top of every hour.
+The NBE report is an extended-range forecast (24-192 hours) based on the
+[National Blend of Models](https://vlab.noaa.gov/web/mdl/nbm) and is only valid
+for ICAO stations in the United States and Puerto Rico, and US Virgin Islands.
+Reports are in 12-hour increments and published near the top of every hour.
 
+# NBX
+
+The NBX report is a continuation of the NBE forecast (204-264 hours) based on the
+[National Blend of Models](https://vlab.noaa.gov/web/mdl/nbm) and is only valid
+for ICAO stations in the United States and Puerto Rico, and US Virgin Islands.
+Reports are in 12-hour increments and published near the top of every hour.
 """
 
 # Reference: https://www.weather.gov/mdl/nbm_textcard_v32
@@ -179,6 +183,9 @@ parse_nbs: Callable[[str], structs.NbsData] = _parse_factory(
 )
 parse_nbe: Callable[[str], structs.NbeData] = _parse_factory(
     structs.NbeData, structs.NbePeriod, {}, size=4, prefix=5  # type: ignore
+)
+parse_nbx: Callable[[str], structs.NbeData] = _parse_factory(
+    structs.NbxData, structs.NbxPeriod, {}, size=4, prefix=4  # type: ignore
 )
 
 
@@ -341,7 +348,7 @@ class Nbe(_Nbm):
     >>> print(kjfk.raw)
     """
     KJFK    NBM V3.2 NBE GUIDANCE    7/28/2020  0000 UTC
-        WED 29| THU 30| FRI 31| SAT 01| SUN 02| MON 03| TUE 04|WED CLIMO
+           WED 29| THU 30| FRI 31| SAT 01| SUN 02| MON 03| TUE 04|WED CLIMO
     UTC    00  12| 00  12| 00  12| 00  12| 00  12| 00  12| 00  12| 00
     FHR    24  36| 48  60| 72  84| 96 108|120 132|144 156|168 180|192
     X/N    93  76| 91  76| 90  74| 86  72| 87  73| 85  74| 86  72| 84 68 83
@@ -380,3 +387,65 @@ class Nbe(_Nbm):
 
     report_type = "nbe"
     _parser = staticmethod(parse_nbe)
+
+
+class Nbx(_Nbm):
+    '''
+    Class to handle NBM NBX report data
+
+    Below is typical usage for fetching and pulling NBX data for KJFK.
+
+    ```python
+    >>> from avwx import Nbx
+    >>> kjfk = Nbx("KJFK")
+    >>> kjfk.station.name
+    'John F Kennedy International Airport'
+    >>> kjfk.update()
+    True
+    >>> kjfk.last_updated
+    datetime.datetime(2023, 10, 17, 4, 0, 0, 909939, tzinfo=datetime.timezone.utc)
+    >>> print(kjfk.raw)
+    """
+    086092  NBM V4.1 NBX GUIDANCE   10/17/2023  0300 UTC
+    WED 25 |THU 26 |FRI 27 |SAT 28
+    UTC 12 |00  12 |00  12 |00
+    FHR 201|213 225|237 249|261
+    TXN  76| 81  75| 81  75| 81
+    XND   1|  1   1|  2   1|  0
+    TMP  77| 77  77| 78  76| 78
+    TSD   1|  2   1|  1   2|  1
+    DPT  67| 67  69| 68  70| 69
+    DSD   1|  2   1|  1   2|  1
+    SKY  34| 46  27| 50  26| 37
+    SSD  12| 22  13| 22  12|  7
+    WDR   7|  7   7|  6   5|  5
+    WSP  15| 16  15| 17  15| 17
+    WSD   3|  4   3|  3   4|  3
+    GST  22| 24  22| 25  22| 25
+    GSD   2|  2   2|  1   1|  1
+    P12   8|  8   9|  7   7|  7
+    Q12   0|  0   0|  3   0|  0
+    Q24   0|      0|      3|
+    DUR   0|  0   0|  0   0|  0
+    PZR   0|  0   0|  0   0|  0
+    PSN   0|  0   0|  0   0|  0
+    PPL   0|  0   0|  0   0|  0
+    PRA   7| 16  14| 10   6| 11
+    S12   0|  0   0|  0   0|  0
+    I12   0|  0   0|  0   0|  0
+    SOL   1| 35   1| 15   1| 38
+    """
+    >>> len(kjfk.data.forecast)
+    25
+    >>> kjfk.data.forecast[0].wind_speed
+    Number(repr='15', value=150, spoken='one five zero')
+    >>> print(kjfk.data.forecast[1].solar_radiation.value, kjfk.units.solar_radiation)
+    35 W/m2
+    ```
+
+    The `parse` and `from_report` methods can parse a report string if you want
+    to override the normal fetching process.
+    '''
+
+    report_type = "nbx"
+    _parser = staticmethod(parse_nbx)

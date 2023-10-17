@@ -221,7 +221,7 @@ class NOAA_NBM(NOAA_Forecast):
     """Requests forecast data from NOAA NBM FTP servers"""
 
     _url = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/blend/prod/blend.{}/{}/text/blend_{}tx.t{}z"
-    _valid_types = ("nbh", "nbs", "nbe")
+    _valid_types = ("nbh", "nbs", "nbe", "nbx")
 
     @property
     def _urls(self) -> Iterator[str]:

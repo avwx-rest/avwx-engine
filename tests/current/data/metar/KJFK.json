@@ -1,84 +1,107 @@
 {
-    "created": "2021-06-07",
+    "created": "2023-10-17",
     "data": {
         "altimeter": {
-            "repr": "A3009",
-            "spoken": "three zero point zero nine",
-            "value": 30.09
+            "repr": "A2979",
+            "spoken": "two nine point seven nine",
+            "value": 29.79
         },
         "clouds": [
             {
-                "base": 250,
+                "base": 85,
                 "modifier": null,
-                "repr": "FEW250",
+                "repr": "FEW085",
                 "top": null,
                 "type": "FEW"
+            },
+            {
+                "base": 250,
+                "modifier": null,
+                "repr": "SCT250",
+                "top": null,
+                "type": "SCT"
             }
         ],
-        "density_altitude": 518,
+        "density_altitude": -250,
         "dewpoint": {
-            "repr": "17",
-            "spoken": "one seven",
-            "value": 17
+            "repr": "07",
+            "spoken": "seven",
+            "value": 7
         },
         "flight_rules": "VFR",
         "other": [],
-        "pressure_altitude": -157,
-        "raw": "KJFK 070451Z 18005KT 10SM FEW250 21/17 A3009 RMK AO2 SLP188 T02060172 403060206",
-        "relative_humidity": 0.8085816533417106,
-        "remarks": "RMK AO2 SLP188 T02060172 403060206",
+        "pressure_altitude": 143,
+        "raw": "KJFK 170551Z 36007KT 10SM FEW085 SCT250 11/07 A2979 RMK AO2 SLP086 T01110072 10144 20106 53017 KJFK 170451Z 35007KT 10SM FEW080 SCT250 12/07 A2977 RMK AO2 SLP080 T01170072 401890083",
+        "relative_humidity": 0.7388718895416357,
+        "remarks": "RMK AO2 SLP086 T01110072 10144 20106 53017 KJFK 170451Z 35007KT 10SM FEW080 SCT250 12/07 A2977 RMK AO2 SLP080 T01170072 401890083",
         "remarks_info": {
             "codes": [
+                {
+                    "repr": "AO2",
+                    "value": "Automated with precipitation sensor"
+                },
                 {
                     "repr": "AO2",
                     "value": "Automated with precipitation sensor"
                 }
             ],
             "dewpoint_decimal": {
-                "repr": "0172",
-                "spoken": "one seven point two",
-                "value": 17.2
+                "repr": "0072",
+                "spoken": "seven point two",
+                "value": 7.2
             },
             "maximum_temperature_24": {
-                "repr": "0306",
-                "spoken": "three zero point six",
-                "value": 30.6
+                "repr": "0189",
+                "spoken": "one eight point nine",
+                "value": 18.9
             },
-            "maximum_temperature_6": null,
+            "maximum_temperature_6": {
+                "repr": "10144",
+                "spoken": "one four point four",
+                "value": 14.4
+            },
             "minimum_temperature_24": {
-                "repr": "0206",
-                "spoken": "two zero point six",
-                "value": 20.6
+                "repr": "0083",
+                "spoken": "eight point three",
+                "value": 8.3
             },
-            "minimum_temperature_6": null,
+            "minimum_temperature_6": {
+                "repr": "20106",
+                "spoken": "one zero point six",
+                "value": 10.6
+            },
             "precip_24_hours": null,
             "precip_36_hours": null,
             "precip_hourly": null,
-            "pressure_tendency": null,
+            "pressure_tendency": {
+                "change": 1.7,
+                "repr": "53017",
+                "tendency": "Decreasing or steady, then increasing"
+            },
             "sea_level_pressure": {
-                "repr": "SLP188",
-                "spoken": "one zero one eight point eight",
-                "value": 1018.8
+                "repr": "SLP086",
+                "spoken": "one zero zero eight point six",
+                "value": 1008.6
             },
             "snow_depth": null,
             "sunshine_minutes": null,
             "temperature_decimal": {
-                "repr": "0206",
-                "spoken": "two zero point six",
-                "value": 20.6
+                "repr": "0117",
+                "spoken": "one one point seven",
+                "value": 11.7
             }
         },
         "runway_visibility": [],
-        "sanitized": "KJFK 070451Z 18005KT 10SM FEW250 21/17 A3009 RMK AO2 SLP188 T02060172 403060206",
+        "sanitized": "KJFK 170551Z 36007KT 10SM FEW085 SCT250 11/07 A2979 RMK AO2 SLP086 T01110072 10144 20106 53017 KJFK 170451Z 35007KT 10SM FEW080 SCT250 12/07 A2977 RMK AO2 SLP080 T01170072 401890083",
         "station": "KJFK",
         "temperature": {
-            "repr": "21",
-            "spoken": "two one",
-            "value": 21
+            "repr": "11",
+            "spoken": "one one",
+            "value": 11
         },
         "time": {
-            "dt": "2021-06-07T04:51:00+00:00",
-            "repr": "070451Z"
+            "dt": "2023-10-17T05:51:00+00:00",
+            "repr": "170551Z"
         },
         "visibility": {
             "repr": "10",
@@ -86,35 +109,38 @@
             "value": 10
         },
         "wind_direction": {
-            "repr": "180",
-            "spoken": "one eight zero",
-            "value": 180
+            "repr": "360",
+            "spoken": "three six zero",
+            "value": 360
         },
         "wind_gust": null,
         "wind_speed": {
-            "repr": "05",
-            "spoken": "five",
-            "value": 5
+            "repr": "07",
+            "spoken": "seven",
+            "value": 7
         },
         "wind_variable_direction": [],
         "wx_codes": []
     },
     "icao": "KJFK",
-    "speech": "Winds one eight zero at 5 knots. Visibility one zero miles. Temperature two one degrees Celsius. Dew point one seven degrees Celsius. Altimeter three zero point zero nine. Few clouds at 25000ft",
-    "summary": "Winds S-180 at 5kt, Vis 10sm, Temp 21\u00b0C, Dew 17\u00b0C, Alt 30.09 inHg, Few clouds at 25000ft",
+    "speech": "Winds three six zero at 7 knots. Visibility one zero miles. Temperature one one degrees Celsius. Dew point seven degrees Celsius. Altimeter two nine point seven nine. Few clouds at 8500ft. Scattered clouds at 25000ft",
+    "summary": "Winds N-360 at 7kt, Vis 10sm, Temp 11\u00b0C, Dew 7\u00b0C, Alt 29.79 inHg, Few clouds at 8500ft, Scattered clouds at 25000ft",
     "translations": {
-        "altimeter": "30.09 inHg (1019 hPa)",
-        "clouds": "Few clouds at 25000ft - Reported AGL",
-        "dewpoint": "17\u00b0C (63\u00b0F)",
+        "altimeter": "29.79 inHg (1009 hPa)",
+        "clouds": "Few clouds at 8500ft, Scattered clouds at 25000ft - Reported AGL",
+        "dewpoint": "7\u00b0C (45\u00b0F)",
         "remarks": {
-            "402060306": "24-hour temperature: max 30.6 min 20.6",
+            "10144": "6-hour maximum temperature 14.4\u00b0C",
+            "20106": "6-hour minimum temperature 10.6\u00b0C",
+            "400830189": "24-hour temperature: max 18.9 min 8.3",
+            "53017": "3-hour pressure difference: +/- 1.7 mb - Decreasing or steady, then increasing",
             "AO2": "Automated with precipitation sensor",
-            "SLP188": "Sea level pressure: 1018.8 hPa",
-            "T02060172": "Temperature 20.6\u00b0C and dewpoint 17.2\u00b0C"
+            "SLP086": "Sea level pressure: 1008.6 hPa",
+            "T01170072": "Temperature 11.7\u00b0C and dewpoint 7.2\u00b0C"
         },
-        "temperature": "21\u00b0C (70\u00b0F)",
+        "temperature": "11\u00b0C (52\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "S-180 at 5kt",
+        "wind": "N-360 at 7kt",
         "wx_codes": ""
     }
 }

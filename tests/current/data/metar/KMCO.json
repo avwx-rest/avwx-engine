@@ -1,98 +1,92 @@
 {
-    "created": "2021-06-07",
+    "created": "2023-10-17",
     "data": {
         "altimeter": {
-            "repr": "A3012",
-            "spoken": "three zero point one two",
-            "value": 30.12
+            "repr": "A2999",
+            "spoken": "two nine point nine nine",
+            "value": 29.99
         },
-        "clouds": [
-            {
-                "base": 35,
-                "modifier": null,
-                "repr": "FEW035",
-                "top": null,
-                "type": "FEW"
-            },
-            {
-                "base": 65,
-                "modifier": null,
-                "repr": "FEW065",
-                "top": null,
-                "type": "FEW"
-            },
-            {
-                "base": 210,
-                "modifier": null,
-                "repr": "OVC210",
-                "top": null,
-                "type": "OVC"
-            }
-        ],
-        "density_altitude": 1251,
+        "clouds": [],
+        "density_altitude": 49,
         "dewpoint": {
-            "repr": "23",
-            "spoken": "two three",
-            "value": 23
+            "repr": "09",
+            "spoken": "nine",
+            "value": 9
         },
         "flight_rules": "VFR",
         "other": [],
-        "pressure_altitude": -104,
-        "raw": "KMCO 070453Z 13006KT 10SM FEW035 FEW065 OVC210 26/23 A3012 RMK AO2 SLP197 T02610233 403390233",
-        "relative_humidity": 0.8457854173562626,
-        "remarks": "RMK AO2 SLP197 T02610233 403390233",
+        "pressure_altitude": 26,
+        "raw": "KMCO 170553Z 31007KT 10SM CLR 15/09 A2999 RMK AO2 SLP153 T01500094 10183 20150 51010 KMCO 170453Z 29005KT 10SM FEW050 15/09 A2998 RMK AO2 SLP150 T01500094 402220150",
+        "relative_humidity": 0.6917262023081956,
+        "remarks": "RMK AO2 SLP153 T01500094 10183 20150 51010 KMCO 170453Z 29005KT 10SM FEW050 15/09 A2998 RMK AO2 SLP150 T01500094 402220150",
         "remarks_info": {
             "codes": [
+                {
+                    "repr": "AO2",
+                    "value": "Automated with precipitation sensor"
+                },
                 {
                     "repr": "AO2",
                     "value": "Automated with precipitation sensor"
                 }
             ],
             "dewpoint_decimal": {
-                "repr": "0233",
-                "spoken": "two three point three",
-                "value": 23.3
+                "repr": "0094",
+                "spoken": "nine point four",
+                "value": 9.4
             },
             "maximum_temperature_24": {
-                "repr": "0339",
-                "spoken": "three three point nine",
-                "value": 33.9
+                "repr": "0222",
+                "spoken": "two two point two",
+                "value": 22.2
             },
-            "maximum_temperature_6": null,
+            "maximum_temperature_6": {
+                "repr": "10183",
+                "spoken": "one eight point three",
+                "value": 18.3
+            },
             "minimum_temperature_24": {
-                "repr": "0233",
-                "spoken": "two three point three",
-                "value": 23.3
+                "repr": "0150",
+                "spoken": "one five point zero",
+                "value": 15.0
             },
-            "minimum_temperature_6": null,
+            "minimum_temperature_6": {
+                "repr": "20150",
+                "spoken": "one five point zero",
+                "value": 15.0
+            },
             "precip_24_hours": null,
             "precip_36_hours": null,
             "precip_hourly": null,
-            "pressure_tendency": null,
+            "pressure_tendency": {
+                "change": 1.0,
+                "repr": "51010",
+                "tendency": "Increasing, then steady"
+            },
             "sea_level_pressure": {
-                "repr": "SLP197",
-                "spoken": "one zero one nine point seven",
-                "value": 1019.7
+                "repr": "SLP153",
+                "spoken": "one zero one five point three",
+                "value": 1015.3
             },
             "snow_depth": null,
             "sunshine_minutes": null,
             "temperature_decimal": {
-                "repr": "0261",
-                "spoken": "two six point one",
-                "value": 26.1
+                "repr": "0150",
+                "spoken": "one five point zero",
+                "value": 15.0
             }
         },
         "runway_visibility": [],
-        "sanitized": "KMCO 070453Z 13006KT 10SM FEW035 FEW065 OVC210 26/23 A3012 RMK AO2 SLP197 T02610233 403390233",
+        "sanitized": "KMCO 170553Z 31007KT 10SM 15/09 A2999 RMK AO2 SLP153 T01500094 10183 20150 51010 KMCO 170453Z 29005KT 10SM FEW050 15/09 A2998 RMK AO2 SLP150 T01500094 402220150",
         "station": "KMCO",
         "temperature": {
-            "repr": "26",
-            "spoken": "two six",
-            "value": 26
+            "repr": "15",
+            "spoken": "one five",
+            "value": 15
         },
         "time": {
-            "dt": "2021-06-07T04:53:00+00:00",
-            "repr": "070453Z"
+            "dt": "2023-10-17T05:53:00+00:00",
+            "repr": "170553Z"
         },
         "visibility": {
             "repr": "10",
@@ -100,35 +94,38 @@
             "value": 10
         },
         "wind_direction": {
-            "repr": "130",
-            "spoken": "one three zero",
-            "value": 130
+            "repr": "310",
+            "spoken": "three one zero",
+            "value": 310
         },
         "wind_gust": null,
         "wind_speed": {
-            "repr": "06",
-            "spoken": "six",
-            "value": 6
+            "repr": "07",
+            "spoken": "seven",
+            "value": 7
         },
         "wind_variable_direction": [],
         "wx_codes": []
     },
     "icao": "KMCO",
-    "speech": "Winds one three zero at 6 knots. Visibility one zero miles. Temperature two six degrees Celsius. Dew point two three degrees Celsius. Altimeter three zero point one two. Few clouds at 3500ft. Few clouds at 6500ft. Overcast layer at 21000ft",
-    "summary": "Winds SE-130 at 6kt, Vis 10sm, Temp 26\u00b0C, Dew 23\u00b0C, Alt 30.12 inHg, Few clouds at 3500ft, Few clouds at 6500ft, Overcast layer at 21000ft",
+    "speech": "Winds three one zero at 7 knots. Visibility one zero miles. Temperature one five degrees Celsius. Dew point nine degrees Celsius. Altimeter two nine point nine nine. Sky clear",
+    "summary": "Winds NW-310 at 7kt, Vis 10sm, Temp 15\u00b0C, Dew 9\u00b0C, Alt 29.99 inHg, Sky clear",
     "translations": {
-        "altimeter": "30.12 inHg (1020 hPa)",
-        "clouds": "Few clouds at 3500ft, Few clouds at 6500ft, Overcast layer at 21000ft - Reported AGL",
-        "dewpoint": "23\u00b0C (73\u00b0F)",
+        "altimeter": "29.99 inHg (1016 hPa)",
+        "clouds": "Sky clear",
+        "dewpoint": "9\u00b0C (48\u00b0F)",
         "remarks": {
-            "402330339": "24-hour temperature: max 33.9 min 23.3",
+            "10183": "6-hour maximum temperature 18.3\u00b0C",
+            "20150": "6-hour minimum temperature 15.0\u00b0C",
+            "401500222": "24-hour temperature: max 22.2 min 15.0",
+            "51010": "3-hour pressure difference: +/- 1.0 mb - Increasing, then steady",
             "AO2": "Automated with precipitation sensor",
-            "SLP197": "Sea level pressure: 1019.7 hPa",
-            "T02610233": "Temperature 26.1\u00b0C and dewpoint 23.3\u00b0C"
+            "SLP153": "Sea level pressure: 1015.3 hPa",
+            "T01500094": "Temperature 15.0\u00b0C and dewpoint 9.4\u00b0C"
         },
-        "temperature": "26\u00b0C (79\u00b0F)",
+        "temperature": "15\u00b0C (59\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "SE-130 at 6kt",
+        "wind": "NW-310 at 7kt",
         "wx_codes": ""
     }
 }

@@ -1,36 +1,51 @@
 {
-    "created": "2021-06-07",
+    "created": "2023-10-17",
     "data": {
         "altimeter": {
-            "repr": "Q1024",
-            "spoken": "one zero two four",
-            "value": 1024
+            "repr": "Q1016",
+            "spoken": "one zero one six",
+            "value": 1016
         },
         "clouds": [],
-        "density_altitude": -336,
+        "density_altitude": -579,
         "dewpoint": {
-            "repr": "13",
-            "spoken": "one three",
-            "value": 13
+            "repr": "05",
+            "spoken": "five",
+            "value": 5
         },
         "flight_rules": "VFR",
         "other": [],
-        "pressure_altitude": -236,
-        "raw": "EGLL 070520Z AUTO 18005KT 9999 NCD 14/13 Q1024",
-        "relative_humidity": 0.9369330286066342,
-        "remarks": "",
-        "remarks_info": null,
+        "pressure_altitude": 1,
+        "raw": "EGLL 170550Z AUTO 09011KT 9999 NCD 10/05 Q1016 NOSIG EGLL 170520Z AUTO 09011KT 9999 NCD 10/05 Q1016 NOSIG EGLL 170450Z AUTO 09011KT 9999 NCD 11/05 Q1016 EGLL 170420Z AUTO 09011KT 9999 NCD 11/05 Q1016",
+        "relative_humidity": 0.7106976250052686,
+        "remarks": "NOSIG EGLL 170520Z AUTO 09011KT 9999 NCD 10/05 Q1016 NOSIG EGLL 170450Z AUTO 09011KT 9999 NCD 11/05 Q1016 EGLL 170420Z AUTO 09011KT 9999 NCD 11/05 Q1016",
+        "remarks_info": {
+            "codes": [],
+            "dewpoint_decimal": null,
+            "maximum_temperature_24": null,
+            "maximum_temperature_6": null,
+            "minimum_temperature_24": null,
+            "minimum_temperature_6": null,
+            "precip_24_hours": null,
+            "precip_36_hours": null,
+            "precip_hourly": null,
+            "pressure_tendency": null,
+            "sea_level_pressure": null,
+            "snow_depth": null,
+            "sunshine_minutes": null,
+            "temperature_decimal": null
+        },
         "runway_visibility": [],
-        "sanitized": "EGLL 070520Z 18005KT 9999 14/13 Q1024",
+        "sanitized": "EGLL 170550Z 09011KT 9999 10/05 Q1016 NOSIG EGLL 170520Z AUTO 09011KT 9999 NCD 10/05 Q1016 NOSIG EGLL 170450Z AUTO 09011KT 9999 NCD 11/05 Q1016 EGLL 170420Z AUTO 09011KT 9999 NCD 11/05 Q1016",
         "station": "EGLL",
         "temperature": {
-            "repr": "14",
-            "spoken": "one four",
-            "value": 14
+            "repr": "10",
+            "spoken": "one zero",
+            "value": 10
         },
         "time": {
-            "dt": "2021-06-07T05:20:00+00:00",
-            "repr": "070520Z"
+            "dt": "2023-10-17T05:50:00+00:00",
+            "repr": "170550Z"
         },
         "visibility": {
             "repr": "9999",
@@ -38,30 +53,30 @@
             "value": 9999
         },
         "wind_direction": {
-            "repr": "180",
-            "spoken": "one eight zero",
-            "value": 180
+            "repr": "090",
+            "spoken": "zero nine zero",
+            "value": 90
         },
         "wind_gust": null,
         "wind_speed": {
-            "repr": "05",
-            "spoken": "five",
-            "value": 5
+            "repr": "11",
+            "spoken": "one one",
+            "value": 11
         },
         "wind_variable_direction": [],
         "wx_codes": []
     },
     "icao": "EGLL",
-    "speech": "Winds one eight zero at 5 knots. Visibility one zero kilometers. Temperature one four degrees Celsius. Dew point one three degrees Celsius. Altimeter one zero two four. Sky clear",
-    "summary": "Winds S-180 at 5kt, Vis 10km, Temp 14\u00b0C, Dew 13\u00b0C, Alt 1024 hPa, Sky clear",
+    "speech": "Winds zero nine zero at 11 knots. Visibility one zero kilometers. Temperature one zero degrees Celsius. Dew point five degrees Celsius. Altimeter one zero one six. Sky clear",
+    "summary": "Winds E-090 at 11kt, Vis 10km, Temp 10\u00b0C, Dew 5\u00b0C, Alt 1016 hPa, Sky clear",
     "translations": {
-        "altimeter": "1024 hPa (30.24 inHg)",
+        "altimeter": "1016 hPa (30.00 inHg)",
         "clouds": "Sky clear",
-        "dewpoint": "13\u00b0C (55\u00b0F)",
+        "dewpoint": "5\u00b0C (41\u00b0F)",
         "remarks": {},
-        "temperature": "14\u00b0C (57\u00b0F)",
+        "temperature": "10\u00b0C (50\u00b0F)",
         "visibility": "10km (6.2sm)",
-        "wind": "S-180 at 5kt",
+        "wind": "E-090 at 11kt",
         "wx_codes": ""
     }
 }

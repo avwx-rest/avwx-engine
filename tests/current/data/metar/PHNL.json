@@ -1,46 +1,46 @@
 {
-    "created": "2021-06-07",
+    "created": "2023-10-17",
     "data": {
         "altimeter": {
-            "repr": "A3003",
-            "spoken": "three zero point zero three",
-            "value": 30.03
+            "repr": "A3000",
+            "spoken": "three zero point zero zero",
+            "value": 30.0
         },
         "clouds": [
             {
-                "base": 24,
+                "base": 25,
                 "modifier": null,
-                "repr": "FEW024",
+                "repr": "FEW025",
                 "top": null,
                 "type": "FEW"
             },
             {
-                "base": 40,
+                "base": 35,
                 "modifier": null,
-                "repr": "FEW040",
+                "repr": "FEW035",
                 "top": null,
                 "type": "FEW"
             },
             {
-                "base": 65,
+                "base": 50,
                 "modifier": null,
-                "repr": "FEW065",
+                "repr": "FEW050",
                 "top": null,
                 "type": "FEW"
             }
         ],
-        "density_altitude": 1238,
+        "density_altitude": 1268,
         "dewpoint": {
-            "repr": "17",
-            "spoken": "one seven",
-            "value": 17
+            "repr": "21",
+            "spoken": "two one",
+            "value": 21
         },
         "flight_rules": "VFR",
         "other": [],
-        "pressure_altitude": -97,
-        "raw": "PHNL 070453Z 06010G18KT 10SM FEW024 FEW040 FEW065 26/17 A3003 RMK AO2 RAE48 SLP167 SHRA DSNT N P0000 T02610172",
-        "relative_humidity": 0.5799377532715835,
-        "remarks": "RMK AO2 RAE48 SLP167 SHRA DSNT N P0000 T02610172",
+        "pressure_altitude": -67,
+        "raw": "PHNL 170553Z 01003KT 10SM FEW025 FEW035 FEW050 26/21 A3000 RMK AO2 SLP159 T02560206 10317 20256 53020 PHNL 170453Z 04006KT 10SM FEW025 FEW035 FEW050 26/21 A2998 RMK AO2 SLP152 T02610206",
+        "relative_humidity": 0.7172284343514518,
+        "remarks": "RMK AO2 SLP159 T02560206 10317 20256 53020 PHNL 170453Z 04006KT 10SM FEW025 FEW035 FEW050 26/21 A2998 RMK AO2 SLP152 T02610206",
         "remarks_info": {
             "codes": [
                 {
@@ -48,31 +48,39 @@
                     "value": "Automated with precipitation sensor"
                 },
                 {
-                    "repr": "P0000",
-                    "value": "Trace amount of rain in the last hour"
-                },
-                {
-                    "repr": "RAE48",
-                    "value": "Rain ended at :48"
+                    "repr": "AO2",
+                    "value": "Automated with precipitation sensor"
                 }
             ],
             "dewpoint_decimal": {
-                "repr": "0172",
-                "spoken": "one seven point two",
-                "value": 17.2
+                "repr": "0206",
+                "spoken": "two zero point six",
+                "value": 20.6
             },
             "maximum_temperature_24": null,
-            "maximum_temperature_6": null,
+            "maximum_temperature_6": {
+                "repr": "10317",
+                "spoken": "three one point seven",
+                "value": 31.7
+            },
             "minimum_temperature_24": null,
-            "minimum_temperature_6": null,
+            "minimum_temperature_6": {
+                "repr": "20256",
+                "spoken": "two five point six",
+                "value": 25.6
+            },
             "precip_24_hours": null,
             "precip_36_hours": null,
             "precip_hourly": null,
-            "pressure_tendency": null,
+            "pressure_tendency": {
+                "change": 2.0,
+                "repr": "53020",
+                "tendency": "Decreasing or steady, then increasing"
+            },
             "sea_level_pressure": {
-                "repr": "SLP167",
-                "spoken": "one zero one six point seven",
-                "value": 1016.7
+                "repr": "SLP159",
+                "spoken": "one zero one five point nine",
+                "value": 1015.9
             },
             "snow_depth": null,
             "sunshine_minutes": null,
@@ -83,7 +91,7 @@
             }
         },
         "runway_visibility": [],
-        "sanitized": "PHNL 070453Z 06010G18KT 10SM FEW024 FEW040 FEW065 26/17 A3003 RMK AO2 RAE48 SLP167 SHRA DSNT N P0000 T02610172",
+        "sanitized": "PHNL 170553Z 01003KT 10SM FEW025 FEW035 FEW050 26/21 A3000 RMK AO2 SLP159 T02560206 10317 20256 53020 PHNL 170453Z 04006KT 10SM FEW025 FEW035 FEW050 26/21 A2998 RMK AO2 SLP152 T02610206",
         "station": "PHNL",
         "temperature": {
             "repr": "26",
@@ -91,8 +99,8 @@
             "value": 26
         },
         "time": {
-            "dt": "2021-06-07T04:53:00+00:00",
-            "repr": "070453Z"
+            "dt": "2023-10-17T05:53:00+00:00",
+            "repr": "170553Z"
         },
         "visibility": {
             "repr": "10",
@@ -100,40 +108,37 @@
             "value": 10
         },
         "wind_direction": {
-            "repr": "060",
-            "spoken": "zero six zero",
-            "value": 60
-        },
-        "wind_gust": {
-            "repr": "18",
-            "spoken": "one eight",
-            "value": 18
-        },
-        "wind_speed": {
-            "repr": "10",
-            "spoken": "one zero",
+            "repr": "010",
+            "spoken": "zero one zero",
             "value": 10
+        },
+        "wind_gust": null,
+        "wind_speed": {
+            "repr": "03",
+            "spoken": "three",
+            "value": 3
         },
         "wind_variable_direction": [],
         "wx_codes": []
     },
     "icao": "PHNL",
-    "speech": "Winds zero six zero at 10 knots gusting to 18 knots. Visibility one zero miles. Temperature two six degrees Celsius. Dew point one seven degrees Celsius. Altimeter three zero point zero three. Few clouds at 2400ft. Few clouds at 4000ft. Few clouds at 6500ft",
-    "summary": "Winds ENE-060 at 10kt gusting to 18kt, Vis 10sm, Temp 26\u00b0C, Dew 17\u00b0C, Alt 30.03 inHg, Few clouds at 2400ft, Few clouds at 4000ft, Few clouds at 6500ft",
+    "speech": "Winds zero one zero at 3 knots. Visibility one zero miles. Temperature two six degrees Celsius. Dew point two one degrees Celsius. Altimeter three zero point zero zero. Few clouds at 2500ft. Few clouds at 3500ft. Few clouds at 5000ft",
+    "summary": "Winds N-010 at 3kt, Vis 10sm, Temp 26\u00b0C, Dew 21\u00b0C, Alt 30.00 inHg, Few clouds at 2500ft, Few clouds at 3500ft, Few clouds at 5000ft",
     "translations": {
-        "altimeter": "30.03 inHg (1017 hPa)",
-        "clouds": "Few clouds at 2400ft, Few clouds at 4000ft, Few clouds at 6500ft - Reported AGL",
-        "dewpoint": "17\u00b0C (63\u00b0F)",
+        "altimeter": "30.00 inHg (1016 hPa)",
+        "clouds": "Few clouds at 2500ft, Few clouds at 3500ft, Few clouds at 5000ft - Reported AGL",
+        "dewpoint": "21\u00b0C (70\u00b0F)",
         "remarks": {
+            "10317": "6-hour maximum temperature 31.7\u00b0C",
+            "20256": "6-hour minimum temperature 25.6\u00b0C",
+            "53020": "3-hour pressure difference: +/- 2.0 mb - Decreasing or steady, then increasing",
             "AO2": "Automated with precipitation sensor",
-            "P0000": "Trace amount of rain in the last hour",
-            "RAE48": "Rain ended at :48",
-            "SLP167": "Sea level pressure: 1016.7 hPa",
-            "T02610172": "Temperature 26.1\u00b0C and dewpoint 17.2\u00b0C"
+            "SLP159": "Sea level pressure: 1015.9 hPa",
+            "T02610206": "Temperature 26.1\u00b0C and dewpoint 20.6\u00b0C"
         },
         "temperature": "26\u00b0C (79\u00b0F)",
         "visibility": "10sm (16.1km)",
-        "wind": "ENE-060 at 10kt gusting to 18kt",
+        "wind": "N-010 at 3kt",
         "wx_codes": ""
     }
 }

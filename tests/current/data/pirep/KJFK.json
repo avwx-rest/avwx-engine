@@ -1,52 +1,622 @@
 {
-    "created": "2020-05-17",
+    "created": "2023-10-17",
     "icao": "KJFK",
     "reports": [
         {
             "data": {
-                "aircraft": "C68A",
+                "aircraft": {
+                    "code": "B738",
+                    "type": "Boeing 737-800"
+                },
                 "altitude": {
-                    "repr": "180",
-                    "spoken": "one eight zero",
-                    "value": 180
+                    "repr": "380",
+                    "spoken": "three eight zero",
+                    "value": 380
                 },
                 "clouds": null,
                 "flight_visibility": null,
-                "icing": {
-                    "ceiling": null,
-                    "floor": null,
-                    "severity": "MOD",
-                    "type": "RIME"
-                },
+                "icing": null,
                 "location": {
                     "direction": {
-                        "repr": "360",
-                        "spoken": "three six zero",
-                        "value": 360
+                        "repr": "132",
+                        "spoken": "one three two",
+                        "value": 132
+                    },
+                    "distance": {
+                        "repr": "050",
+                        "spoken": "five zero",
+                        "value": 50
+                    },
+                    "repr": "SWR132050",
+                    "station": "SWR"
+                },
+                "other": [],
+                "raw": "RNO UA /OV SWR132050/TM 0448/FL380/TP B738/TB MOD BLO 380/RM FL380-370 AWC-WEB",
+                "remarks": "FL380-370 AWC-WEB",
+                "sanitized": "RNO UA /OV SWR132050/TM 0448/FL380/TP B738/TB MOD BLO 380/RM FL380-370 AWC-WEB",
+                "station": "RNO",
+                "temperature": null,
+                "time": {
+                    "dt": "2023-10-17T04:48:00+00:00",
+                    "repr": "0448"
+                },
+                "turbulence": {
+                    "ceiling": {
+                        "repr": "380",
+                        "spoken": "three eight zero",
+                        "value": 380
+                    },
+                    "floor": null,
+                    "severity": "MOD"
+                },
+                "type": "UA",
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "B737",
+                    "type": "Boeing 737-700 / Boeing 737-700ER"
+                },
+                "altitude": {
+                    "repr": "380",
+                    "spoken": "three eight zero",
+                    "value": 380
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": null,
+                    "distance": null,
+                    "repr": "BAE",
+                    "station": "BAE"
+                },
+                "other": [],
+                "raw": "UES UA /OV BAE/TM 0450/FL380/TP B737/TB LGT CHOP",
+                "remarks": null,
+                "sanitized": "UES UA /OV BAE/TM 0450/FL380/TP B737/TB LGT CHOP",
+                "station": "UES",
+                "temperature": null,
+                "time": {
+                    "dt": "2023-10-17T04:50:00+00:00",
+                    "repr": "0450"
+                },
+                "turbulence": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "LGT CHOP"
+                },
+                "type": "UA",
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "B752",
+                    "type": "Boeing 757-200"
+                },
+                "altitude": "DURGD",
+                "clouds": [
+                    {
+                        "base": 31,
+                        "modifier": null,
+                        "repr": "031",
+                        "top": null,
+                        "type": null
+                    },
+                    {
+                        "base": 47,
+                        "modifier": null,
+                        "repr": "BKN047",
+                        "top": null,
+                        "type": "BKN"
+                    }
+                ],
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": {
+                        "repr": "230",
+                        "spoken": "two three zero",
+                        "value": 230
                     },
                     "distance": {
                         "repr": "015",
                         "spoken": "one five",
                         "value": 15
                     },
-                    "repr": "IGN360015",
-                    "station": "IGN"
+                    "repr": "VHP230015",
+                    "station": "VHP"
                 },
                 "other": [],
-                "raw": "POU UA /OV IGN360015/TM 2327/FL180/TP C68A/TA M08/IC MOD RIME/RM 180-160",
-                "remarks": "180-160",
-                "sanitized": "POU UA /OV IGN360015/TM 2327/FL180/TP C68A/TA M08/IC MOD RIME/RM 180-160",
-                "station": "POU",
-                "temperature": {
-                    "repr": "M08",
-                    "spoken": "minus eight",
-                    "value": -8
-                },
+                "raw": "IND UA /OV VHP230015/TM 0456/FLDURGD/TP B752/SK 031BKN047",
+                "remarks": null,
+                "sanitized": "IND UA /OV VHP230015/TM 0456/FLDURGD/TP B752/SK 031 BKN047",
+                "station": "IND",
+                "temperature": null,
                 "time": {
-                    "dt": "2020-05-17T23:27:00+00:00",
-                    "repr": "2327"
+                    "dt": "2023-10-17T04:56:00+00:00",
+                    "repr": "0456"
                 },
                 "turbulence": null,
+                "type": "UA",
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": null,
+                "altitude": null,
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": null,
+                "other": [],
+                "raw": "ANZ271 3518S 16418E 0508 F360 MS46 299/42",
+                "remarks": null,
+                "sanitized": "ANZ271 3518S 16418E 0508 F360 MS46 299/42",
+                "station": "ANZ271",
+                "temperature": null,
+                "time": null,
+                "turbulence": null,
+                "type": null,
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "B752",
+                    "type": "Boeing 757-200"
+                },
+                "altitude": {
+                    "repr": "032",
+                    "spoken": "three two",
+                    "value": 32
+                },
+                "clouds": [
+                    {
+                        "base": 32,
+                        "modifier": "0VCUNK",
+                        "repr": "032OVCUNK",
+                        "top": null,
+                        "type": null
+                    }
+                ],
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": null,
+                    "distance": null,
+                    "repr": "IND",
+                    "station": "IND"
+                },
+                "other": [],
+                "raw": "IND UA /OV IND/TM 0509/FL032/TP B752/SK 032OVCUNK/RM DURD",
+                "remarks": "DURD",
+                "sanitized": "IND UA /OV IND/TM 0509/FL032/TP B752/SK 032OVCUNK/RM DURD",
+                "station": "IND",
+                "temperature": null,
+                "time": {
+                    "dt": "2023-10-17T05:09:00+00:00",
+                    "repr": "0509"
+                },
+                "turbulence": null,
+                "type": "UA",
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": null,
+                "altitude": null,
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": null,
+                "other": [],
+                "raw": "ANZ241 3924S 17036E 0511 F360 MS57 288/48",
+                "remarks": null,
+                "sanitized": "ANZ241 3924S 17036E 0511 F360 MS57 288/48",
+                "station": "ANZ241",
+                "temperature": null,
+                "time": null,
+                "turbulence": null,
+                "type": null,
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": null,
+                "altitude": null,
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": null,
+                "other": [],
+                "raw": "UAL870 1324S 17248W 0511 F330 MS37 216/18",
+                "remarks": null,
+                "sanitized": "UAL870 1324S 17248W 0511 F330 MS37 216/18",
+                "station": "UAL870",
+                "temperature": null,
+                "time": null,
+                "turbulence": null,
+                "type": null,
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "B77W",
+                    "type": "Boeing 777-300ER"
+                },
+                "altitude": {
+                    "repr": "330",
+                    "spoken": "three three zero",
+                    "value": 330
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": null,
+                    "distance": null,
+                    "repr": "4716N03402W",
+                    "station": null
+                },
+                "other": [],
+                "raw": "QX UA /OV 4716N03402W /TM 0511 /FL330 /TP B77W /RM DEV 20NM STH AND NTH DUE WX",
+                "remarks": "DEV 20NM STH AND NTH DUE WX",
+                "sanitized": "QX UA /OV 4716N03402W /TM 0511 /FL330 /TP B77W /RM DEV 20NM STH AND NTH DUE WX",
+                "station": "QX",
+                "temperature": null,
+                "time": {
+                    "dt": "2023-10-17T05:11:00+00:00",
+                    "repr": "0511"
+                },
+                "turbulence": null,
+                "type": "UA",
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": null,
+                "altitude": null,
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": null,
+                "other": [],
+                "raw": "QFA11 1124S 16254W 0513 F350 MS46 240/20",
+                "remarks": null,
+                "sanitized": "QFA11 1124S 16254W 0513 F350 MS46 240/20",
+                "station": "QFA11",
+                "temperature": null,
+                "time": null,
+                "turbulence": null,
+                "type": null,
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": null,
+                "altitude": null,
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": null,
+                "other": [],
+                "raw": "ANZ147 3354S 16648E 0515 F319 MS45 306/87",
+                "remarks": null,
+                "sanitized": "ANZ147 3354S 16648E 0515 F319 MS45 306/87",
+                "station": "ANZ147",
+                "temperature": null,
+                "time": null,
+                "turbulence": null,
+                "type": null,
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "A333",
+                    "type": "Airbus A330-300"
+                },
+                "altitude": {
+                    "repr": "390",
+                    "spoken": "three nine zero",
+                    "value": 390
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": null,
+                    "distance": null,
+                    "repr": "50N035W",
+                    "station": null
+                },
+                "other": [],
+                "raw": "QX UA /OV 50N035W /TM 0515 /FL390 /TP A333 /RM DEV 3NM NTH DUE WX",
+                "remarks": "DEV 3NM NTH DUE WX",
+                "sanitized": "QX UA /OV 50N035W /TM 0515 /FL390 /TP A333 /RM DEV 3NM NTH DUE WX",
+                "station": "QX",
+                "temperature": null,
+                "time": {
+                    "dt": "2023-10-17T05:15:00+00:00",
+                    "repr": "0515"
+                },
+                "turbulence": null,
+                "type": "UA",
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "B737",
+                    "type": "Boeing 737-700 / Boeing 737-700ER"
+                },
+                "altitude": {
+                    "repr": "370",
+                    "spoken": "three seven zero",
+                    "value": 370
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": {
+                        "repr": "315",
+                        "spoken": "three one five",
+                        "value": 315
+                    },
+                    "distance": {
+                        "repr": "040",
+                        "spoken": "four zero",
+                        "value": 40
+                    },
+                    "repr": "DBQ315040",
+                    "station": "DBQ"
+                },
+                "other": [],
+                "raw": "DBQ UA /OV DBQ315040/TM 0517/FL370/TP B737/TB NEG",
+                "remarks": null,
+                "sanitized": "DBQ UA /OV DBQ315040/TM 0517/FL370/TP B737/TB NEG",
+                "station": "DBQ",
+                "temperature": null,
+                "time": {
+                    "dt": "2023-10-17T05:17:00+00:00",
+                    "repr": "0517"
+                },
+                "turbulence": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "NEG"
+                },
+                "type": "UA",
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "E75L",
+                    "type": "Embraer 175 (long wing)"
+                },
+                "altitude": {
+                    "repr": "250",
+                    "spoken": "two five zero",
+                    "value": 250
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "LGT",
+                    "type": "RIME"
+                },
+                "location": {
+                    "direction": {
+                        "repr": "240",
+                        "spoken": "two four zero",
+                        "value": 240
+                    },
+                    "distance": {
+                        "repr": "025",
+                        "spoken": "two five",
+                        "value": 25
+                    },
+                    "repr": "PDT240025",
+                    "station": "PDT"
+                },
+                "other": [],
+                "raw": "PDT UA /OV PDT240025/TM 0519/FL250/TP E75L/TA M31/IC LGT RIME/RM ZSE",
+                "remarks": "ZSE",
+                "sanitized": "PDT UA /OV PDT240025/TM 0519/FL250/TP E75L/TA M31/IC LGT RIME/RM ZSE",
+                "station": "PDT",
+                "temperature": {
+                    "repr": "M31",
+                    "spoken": "minus three one",
+                    "value": -31
+                },
+                "time": {
+                    "dt": "2023-10-17T05:19:00+00:00",
+                    "repr": "0519"
+                },
+                "turbulence": null,
+                "type": "UA",
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": null,
+                "altitude": null,
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": null,
+                "other": [],
+                "raw": "DAL40 0524S 16348W 0521 F380 MS48 111/08",
+                "remarks": null,
+                "sanitized": "DAL40 0524S 16348W 0521 F380 MS48 111/08",
+                "station": "DAL40",
+                "temperature": null,
+                "time": null,
+                "turbulence": null,
+                "type": null,
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "B77W",
+                    "type": "Boeing 777-300ER"
+                },
+                "altitude": {
+                    "repr": "310",
+                    "spoken": "three one zero",
+                    "value": 310
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": null,
+                    "distance": null,
+                    "repr": "46N035W",
+                    "station": null
+                },
+                "other": [],
+                "raw": "QX UA /OV 46N035W /TM 0524 /FL310 /TP B77W /RM DEV 15NM STH DUE WX",
+                "remarks": "DEV 15NM STH DUE WX",
+                "sanitized": "QX UA /OV 46N035W /TM 0524 /FL310 /TP B77W /RM DEV 15NM STH DUE WX",
+                "station": "QX",
+                "temperature": null,
+                "time": {
+                    "dt": "2023-10-17T05:24:00+00:00",
+                    "repr": "0524"
+                },
+                "turbulence": null,
+                "type": "UA",
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "B763",
+                    "type": "Boeing 767-300"
+                },
+                "altitude": "DURGD",
+                "clouds": [
+                    {
+                        "base": null,
+                        "modifier": "B041",
+                        "repr": "B041",
+                        "top": null,
+                        "type": null
+                    },
+                    {
+                        "base": null,
+                        "modifier": null,
+                        "repr": "OVC",
+                        "top": null,
+                        "type": "OVC"
+                    },
+                    {
+                        "base": null,
+                        "modifier": "T061",
+                        "repr": "T061",
+                        "top": null,
+                        "type": null
+                    }
+                ],
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": {
+                        "repr": "180",
+                        "spoken": "one eight zero",
+                        "value": 180
+                    },
+                    "distance": {
+                        "repr": "017",
+                        "spoken": "one seven",
+                        "value": 17
+                    },
+                    "repr": "CVG180017",
+                    "station": "CVG"
+                },
+                "other": [],
+                "raw": "CVG UA /OV CVG180017/TM 0525/FLDURGD/TP B763/SK B041 OVC T061",
+                "remarks": null,
+                "sanitized": "CVG UA /OV CVG180017/TM 0525/FLDURGD/TP B763/SK B041 OVC T061",
+                "station": "CVG",
+                "temperature": null,
+                "time": {
+                    "dt": "2023-10-17T05:25:00+00:00",
+                    "repr": "0525"
+                },
+                "turbulence": null,
+                "type": "UA",
+                "wx_codes": []
+            }
+        },
+        {
+            "data": {
+                "aircraft": {
+                    "code": "B737",
+                    "type": "Boeing 737-700 / Boeing 737-700ER"
+                },
+                "altitude": {
+                    "repr": "360",
+                    "spoken": "three six zero",
+                    "value": 360
+                },
+                "clouds": null,
+                "flight_visibility": null,
+                "icing": null,
+                "location": {
+                    "direction": {
+                        "repr": "180",
+                        "spoken": "one eight zero",
+                        "value": 180
+                    },
+                    "distance": {
+                        "repr": "015",
+                        "spoken": "one five",
+                        "value": 15
+                    },
+                    "repr": "ALO180015",
+                    "station": "ALO"
+                },
+                "other": [],
+                "raw": "ALO UA /OV ALO180015/TM 0528/FL360/TP B737/TB NEG",
+                "remarks": null,
+                "sanitized": "ALO UA /OV ALO180015/TM 0528/FL360/TP B737/TB NEG",
+                "station": "ALO",
+                "temperature": null,
+                "time": {
+                    "dt": "2023-10-17T05:28:00+00:00",
+                    "repr": "0528"
+                },
+                "turbulence": {
+                    "ceiling": null,
+                    "floor": null,
+                    "severity": "NEG"
+                },
                 "type": "UA",
                 "wx_codes": []
             }
@@ -57,42 +627,60 @@
         "country": "US",
         "elevation_ft": 13,
         "elevation_m": 4,
+        "gps": "KJFK",
         "iata": "JFK",
         "icao": "KJFK",
-        "latitude": 40.63980103,
-        "longitude": -73.77890015,
+        "latitude": 40.639447,
+        "local": "JFK",
+        "longitude": -73.779317,
         "name": "John F Kennedy International Airport",
-        "note": "Manhattan, New York City, NYC, Idlewild",
+        "note": "Manhattan, New York City, NYC, Idlewild, IDL, KIDL",
         "reporting": true,
         "runways": [
             {
+                "bearing1": 121.0,
+                "bearing2": 301.0,
                 "ident1": "13R",
                 "ident2": "31L",
                 "length_ft": 14511,
+                "lights": true,
+                "surface": "concrete",
                 "width_ft": 200
             },
             {
+                "bearing1": 31.0,
+                "bearing2": 211.0,
                 "ident1": "04L",
                 "ident2": "22R",
                 "length_ft": 12079,
+                "lights": true,
+                "surface": null,
                 "width_ft": 200
             },
             {
+                "bearing1": 121.0,
+                "bearing2": 301.0,
                 "ident1": "13L",
                 "ident2": "31R",
                 "length_ft": 10000,
+                "lights": true,
+                "surface": "concrete",
                 "width_ft": 200
             },
             {
+                "bearing1": 30.6,
+                "bearing2": 210.6,
                 "ident1": "04R",
                 "ident2": "22L",
                 "length_ft": 8400,
+                "lights": true,
+                "surface": "asphalt",
                 "width_ft": 200
             }
         ],
         "state": "NY",
         "type": "large_airport",
-        "website": "http://www.panynj.gov/CommutingTravel/airports/html/kennedy.html",
+        "website": "https://www.jfkairport.com/",
         "wiki": "https://en.wikipedia.org/wiki/John_F._Kennedy_International_Airport"
     }
 }

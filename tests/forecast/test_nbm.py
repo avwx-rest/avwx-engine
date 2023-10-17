@@ -60,3 +60,8 @@ class TestNbs(ForecastBase):
 @pytest.mark.parametrize("ref,icao,issued", get_data(__file__, "nbe"))
 class TestNbe(ForecastBase):
     report = nbm.Nbe
+
+
+@pytest.mark.parametrize("ref,icao,issued", get_data(__file__, "nbx"))
+class TestNbx(ForecastBase):
+    report = nbm.Nbx

@@ -20,7 +20,7 @@ from xmltodict import parse as parsexml  # type: ignore
 from avwx.parsing.core import dedupe
 from avwx.exceptions import InvalidRequest
 from avwx.service.base import CallsHTTP, Service
-from avwx.station import valid_station
+from avwx.station import valid_station, Station
 from avwx.structs import Coord
 
 
@@ -145,10 +145,10 @@ class _NOAA_ScrapeURL:
     report_type: str
     _url = "https://aviationweather.gov/cgi-bin/data/{}.php"
 
-    def _make_url(self, station: str) -> Tuple[str, dict]:
+    def _make_url(self, station: str, **kwargs: Union[int, str]) -> Tuple[str, dict]:
         """Returns a formatted URL and parameters"""
         hours = 7 if self.report_type == "taf" else 2
-        params = {"ids": station, "format": "raw", "hours": hours}
+        params = {"ids": station, "format": "raw", "hours": hours, **kwargs}
         return self._url.format(self.report_type), params
 
 
@@ -182,22 +182,36 @@ class NOAA_ScrapeList(_NOAA_ScrapeURL, ScrapeService):
 
     def fetch(
         self,
-        station: str,
+        icao: Optional[str] = None,
+        coord: Optional[Coord] = None,
+        radius: int = 10,
         timeout: Optional[int] = None,
     ) -> List[str]:
         """Fetches a report string from the service"""
-        return aio.run(self.async_fetch(station, timeout))
+        return aio.run(self.async_fetch(icao, coord, radius, timeout))
 
     async def async_fetch(
         self,
-        station: str,
+        icao: Optional[str] = None,
+        coord: Optional[Coord] = None,
+        radius: int = 10,
         timeout: Optional[int] = None,
     ) -> List[str]:
         """Asynchronously fetch a report string from the service"""
         if timeout is None:
             timeout = self.default_timeout
-        valid_station(station)
-        url, params = self._make_url(station)
+        station: str
+        if icao:
+            valid_station(icao)
+            station = icao
+        elif coord:
+            if ret := Station.nearest(coord.lat, coord.lon, max_coord_distance=radius):
+                station = ret[0].icao or ""
+            else:
+                raise ValueError(
+                    f"No reference station near enough to {coord} to call service"
+                )
+        url, params = self._make_url(station, distance=radius)
         return await self._fetch(station, url, params, timeout)
 
 
