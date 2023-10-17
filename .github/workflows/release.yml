@@ -21,7 +21,6 @@ jobs:
       - name: Build docs
         run: |
           poetry run python -m pdoc -o docs_b/ \
-          !avwx.flight_path !avwx.current.airep \
           --favicon https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/favicon.ico \
           --logo https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/avwx-logo-color-200.png \
           --logo-link https://info.avwx.rest

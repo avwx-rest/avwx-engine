@@ -37,7 +37,7 @@ class Service:
     """Base Service class for fetching reports"""
 
     report_type: str
-    _url: Optional[str] = None
+    _url: str = ""
     _valid_types: Tuple[str, ...] = tuple()
 
     def __init__(self, report_type: str):

@@ -43,6 +43,7 @@ class ScrapeService(Service, CallsHTTP):  # pylint: disable=too-few-public-metho
     Unless overwritten, this class accepts `"metar"` and `"taf"` as valid report types
     """
 
+    default_timeout = 10
     _valid_types: Tuple[str, ...] = ("metar", "taf")
     _strip_whitespace: bool = True
 
@@ -71,8 +72,6 @@ class ScrapeService(Service, CallsHTTP):  # pylint: disable=too-few-public-metho
 
 class StationScrape(ScrapeService):
     """Service class fetching reports from a station code"""
-
-    default_timeout = 10
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
         """Returns a formatted URL and parameters"""
@@ -122,92 +121,6 @@ class StationScrape(ScrapeService):
 # Multiple sources for NOAA data
 
 
-class NOAA_ADDS(ScrapeService):
-    """Requests data from NOAA ADDS
-
-    This class accepts `"metar"`, `"taf"`, and `"aircraftreport"` as valid report types.
-    """
-
-    _url = "https://aviationweather.gov/adds/dataserver_current/httpparam"
-
-    _valid_types = ("metar", "taf", "aircraftreport")
-    _rtype_map = {"airep": "aircraftreport"}
-    _targets = {"metar": "METAR", "taf": "TAF", "aircraftreport": "AircraftReport"}
-    _coallate = ("aircraftreport",)
-
-    def __init__(self, request_type: str):
-        super().__init__(self._rtype_map.get(request_type, request_type))
-
-    def _make_url(
-        self, station: Optional[str], coord: Optional[Coord]
-    ) -> Tuple[str, dict]:
-        """Returns a formatted URL and parameters"""
-        # Base request params
-        params = {
-            "requestType": "retrieve",
-            "format": "XML",
-            "hoursBeforeNow": 2,
-            "dataSource": f"{self.report_type}s",
-        }
-        if self.report_type == "aircraftreport" and coord is not None:
-            params["radialDistance"] = f"200;{coord.lon},{coord.lat}"
-        else:
-            params["stationString"] = station
-        return self._url, params
-
-    def _extract(self, raw: str) -> Union[str, List[str]]:
-        """Extracts the raw_report element from XML response"""
-        ret: Union[str, List[str]]
-        resp = parsexml(raw)
-        try:
-            data = resp["response"]["data"]
-            if data["@num_results"] == "0":
-                return ""
-            reports = data[self._targets[self.report_type]]
-        except KeyError as key_error:
-            raise self._make_err(raw) from key_error
-        # Only one report exists
-        if isinstance(reports, dict):
-            ret = reports["raw_text"]
-            if self.report_type in self._coallate and isinstance(ret, str):
-                ret = [ret]
-        # Multiple reports exist
-        elif isinstance(reports, list) and reports:
-            if self.report_type in self._coallate:
-                ret = [r["raw_text"] for r in reports]
-            else:
-                ret = reports[0]["raw_text"]
-        # Something went wrong
-        else:
-            raise self._make_err(raw, '"raw_text"')
-        return ret
-
-    def fetch(
-        self,
-        station: Optional[str] = None,
-        coord: Optional[Coord] = None,
-        timeout: int = 10,
-    ) -> Union[str, List[str]]:
-        """Fetches a report string from the service"""
-        return aio.run(self.async_fetch(station, coord, timeout))
-
-    async def async_fetch(
-        self,
-        station: Optional[str] = None,
-        coord: Optional[Coord] = None,
-        timeout: int = 10,
-    ) -> Union[str, List[str]]:
-        """Asynchronously fetch a report string from the service"""
-        if station:
-            valid_station(station)
-        elif coord is None:
-            raise ValueError("No valid fetch parameters")
-        url, params = self._make_url(station, coord)
-        text = await self._call(url, params=params, timeout=timeout)
-        report = self._extract(text)
-        return self._clean_report(report)
-
-
 class NOAA_FTP(StationScrape):
     """Requests data from NOAA via FTP"""
 
@@ -224,30 +137,71 @@ class NOAA_FTP(StationScrape):
         return raw[: raw.find('"')]
 
 
-class NOAA_Scrape(StationScrape):
-    """Requests data from NOAA via site scraping"""
+class _NOAA_ScrapeURL:
+    """Mixin implementing NOAA scrape service URL"""
 
-    _url = "https://aviationweather.gov/{}/data"
+    # pylint: disable=too-few-public-methods
+
+    report_type: str
+    _url = "https://aviationweather.gov/cgi-bin/data/{}.php"
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
         """Returns a formatted URL and parameters"""
         hours = 7 if self.report_type == "taf" else 2
-        return (
-            self._url.format(self.report_type),
-            {"ids": station, "format": "raw", "hours": hours},
-        )
+        params = {"ids": station, "format": "raw", "hours": hours}
+        return self._url.format(self.report_type), params
+
+
+class NOAA_Scrape(_NOAA_ScrapeURL, StationScrape):
+    """Requests data from NOAA via response scraping"""
 
     def _extract(self, raw: str, station: str) -> str:
         """Extracts the report using string finding"""
-        raw = raw[raw.find("<code>") :]
-        raw = raw[raw.find(station) :]
-        raw = raw[: raw.find("</code>")]
-        for char in ("<br/>", "&nbsp;"):
-            raw = raw.replace(char, " ")
         return raw
 
 
-NOAA = NOAA_FTP
+class NOAA_ScrapeList(_NOAA_ScrapeURL, ScrapeService):
+    """Request listed data from NOAA via response scraping"""
+
+    _valid_types = ("pirep",)
+
+    def _extract(self, raw: str, station: str) -> List[str]:
+        """Extracts the report strings"""
+        return raw.strip().split("\n")
+
+    async def _fetch(
+        self, station: str, url: str, params: dict, timeout: int
+    ) -> List[str]:
+        headers = self._make_headers()
+        data = self._post_data(station) if self.method.lower() == "post" else None
+        text = await self._call(
+            url, params=params, headers=headers, data=data, timeout=timeout
+        )
+        report = self._extract(text, station)
+        return self._clean_report(report)
+
+    def fetch(
+        self,
+        station: str,
+        timeout: Optional[int] = None,
+    ) -> List[str]:
+        """Fetches a report string from the service"""
+        return aio.run(self.async_fetch(station, timeout))
+
+    async def async_fetch(
+        self,
+        station: str,
+        timeout: Optional[int] = None,
+    ) -> List[str]:
+        """Asynchronously fetch a report string from the service"""
+        if timeout is None:
+            timeout = self.default_timeout
+        valid_station(station)
+        url, params = self._make_url(station)
+        return await self._fetch(station, url, params, timeout)
+
+
+NOAA = NOAA_Scrape
 
 
 # Regional data sources

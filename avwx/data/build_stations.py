@@ -43,7 +43,8 @@ _SOURCE: Dict[str, str] = {}
 _SOURCES = {
     "airports": f"{DATA_ROOT}airports.csv",
     "runways": f"{DATA_ROOT}runways.csv",
-    "stations": "https://www.aviationweather.gov/docs/metar/stations.txt",
+    # Station link no longer available after NOAA v3 update
+    # "stations": "https://www.aviationweather.gov/docs/metar/stations.txt",
     "icaos": "https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/data/icaos.json",
     "awos": "https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/data/awos.json",
 }
@@ -285,7 +286,8 @@ def main() -> int:
     LOG.info("Building")
     load_codes()
     stations, code_map = build_stations()
-    stations = add_missing_stations(stations)
+    # Disabled until a secondary source can be found
+    # stations = add_missing_stations(stations)
     stations = add_reporting(stations)
     stations = add_runways(stations, code_map)
     LOG.info("Saving")
