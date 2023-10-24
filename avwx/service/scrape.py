@@ -157,7 +157,7 @@ class NOAA_Scrape(_NOAA_ScrapeURL, StationScrape):
 
     def _extract(self, raw: str, station: str) -> str:
         """Extracts the report using string finding"""
-        return raw
+        return raw.strip().split("\n")[0]
 
 
 class NOAA_ScrapeList(_NOAA_ScrapeURL, ScrapeService):

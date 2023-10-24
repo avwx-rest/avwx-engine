@@ -20,7 +20,10 @@ jobs:
           poetry publish --build --no-interaction
       - name: Build docs
         run: |
-          poetry run python -m pdoc -o docs_b/ --favicon https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/favicon.ico --logo https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/avwx-logo-color-200.png --logo-link https://info.avwx.rest
+          poetry run python -m pdoc ./avwx -o docs_b/ \
+          --favicon https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/favicon.ico \
+          --logo https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/avwx-logo-color-200.png \
+          --logo-link https://info.avwx.rest
           echo "engine.avwx.rest" > docs_b/CNAME
       - uses: actions/upload-pages-artifact@v2
         with:
