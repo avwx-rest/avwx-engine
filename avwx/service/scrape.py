@@ -147,7 +147,7 @@ class _NOAA_ScrapeURL:
 
     def _make_url(self, station: str, **kwargs: Union[int, str]) -> Tuple[str, dict]:
         """Returns a formatted URL and parameters"""
-        hours = 24 if self.report_type == "taf" else 2
+        hours = 7 if self.report_type == "taf" else 2
         params = {"ids": station, "format": "raw", "hours": hours, **kwargs}
         return self._url.format(self.report_type), params
 
