@@ -16,6 +16,8 @@ from kewkew import Kew
 
 # module
 import avwx
+from avwx.service.bulk import NOAA_Bulk
+from avwx.service.scrape import NOAA
 
 
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -30,6 +32,17 @@ def load_stations(path: Path) -> set[str]:
 def save_stations(data: set[str], path: Path):
     """Save a sation set to a path"""
     path.write_text("\n".join(sorted(data)))
+
+
+async def get_noaa_codes() -> {str}:
+    """Create a set of current NOAA codes from bulk access"""
+    codes = set()
+    for report in await NOAA_Bulk("metar").async_fetch():
+        items = report.strip(" '\"").split()
+        if items[0] == "METAR":
+            items.pop(0)
+        codes.add(items[0])
+    return codes
 
 
 class StationTester(Kew):
@@ -54,6 +67,8 @@ class StationTester(Kew):
         code = data
         try:
             metar = avwx.Metar(code)
+            if isinstance(metar.service, NOAA):  # Skip NOAA if not in bulk pull
+                return True
             if await metar.async_update():
                 self.good_stations.add(code)
         except avwx.exceptions.SourceError as exc:
@@ -83,7 +98,7 @@ class StationTester(Kew):
 
 async def main() -> int:
     """Update ICAO lists with 1 hour sleep cycle"""
-    tester = StationTester(load_stations(GOOD_PATH))
+    tester = StationTester(load_stations(GOOD_PATH).union(await get_noaa_codes()))
     try:
         while True:
             print("\nStarting", datetime.now())
