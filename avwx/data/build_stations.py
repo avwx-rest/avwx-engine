@@ -39,14 +39,14 @@ OUTPUT_PATH = _DATA / "stations.json"
 
 
 DATA_ROOT = "https://davidmegginson.github.io/ourairports-data/"
+REPO_ROOT = "https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/data/"
 _SOURCE: Dict[str, str] = {}
 _SOURCES = {
     "airports": f"{DATA_ROOT}airports.csv",
     "runways": f"{DATA_ROOT}runways.csv",
-    # Station link no longer available after NOAA v3 update
-    # "stations": "https://www.aviationweather.gov/docs/metar/stations.txt",
-    "icaos": "https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/data/icaos.json",
-    "awos": "https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/data/awos.json",
+    "weather_stations": f"{REPO_ROOT}weather_stations.json",
+    "icaos": f"{REPO_ROOT}icaos.json",
+    "awos": f"{REPO_ROOT}awos.json",
 }
 
 
@@ -156,35 +156,8 @@ def build_stations() -> tuple[dict, dict]:
 
 
 def add_missing_stations(stations: dict) -> dict:
-    """Add non-airport stations from NOAA"""
-    for line in _SOURCE["stations"].splitlines():
-        # Must be data line with METAR reporting
-        if len(line) != 83 or line[0] == "!" or line[62] != "X":
-            continue
-        icao = line[20:24].strip().upper()
-        if not icao or icao in stations:  # or icao in BAD_STATIONS:
-            continue
-        elev_m = int(line[55:59].strip())
-        ret = {
-            "type": "weather_station",
-            "name": line[3:19].strip(),
-            "reporting": None,
-            "latitude": format_coord(line[39:45]),
-            "longitude": format_coord(line[47:54]),
-            "elevation_ft": round(elev_m * 3.28084),
-            "elevation_m": elev_m,
-            "country": line[81:83].strip(),
-            "state": line[:2],
-            "city": None,
-            "icao": icao,
-            "iata": line[26:29].strip().upper(),
-            "gps": "",
-            "local": "",
-            "website": None,
-            "wiki": None,
-            "note": None,
-        }
-        stations[icao] = nullify(ret)
+    """Add non-airport stations from NOAA extract"""
+    stations.update(json.loads(_SOURCE["weather_stations"]))
     return stations
 
 
@@ -273,6 +246,17 @@ def update_station_info_date() -> None:
         out.write(output)
 
 
+def save_station_data(stations: dict) -> None:
+    """Save stations to JSON package data"""
+    json.dump(
+        stations,
+        OUTPUT_PATH.open("w", encoding="utf8"),
+        sort_keys=True,
+        indent=1,
+        ensure_ascii=False,
+    )
+
+
 def main() -> int:
     """Build/update the stations.json main file"""
     LOG.info("Fetching")
@@ -286,18 +270,11 @@ def main() -> int:
     LOG.info("Building")
     load_codes()
     stations, code_map = build_stations()
-    # Disabled until a secondary source can be found
-    # stations = add_missing_stations(stations)
+    stations = add_missing_stations(stations)
     stations = add_reporting(stations)
     stations = add_runways(stations, code_map)
     LOG.info("Saving")
-    json.dump(
-        stations,
-        OUTPUT_PATH.open("w", encoding="utf8"),
-        sort_keys=True,
-        indent=1,
-        ensure_ascii=False,
-    )
+    save_station_data(stations)
     LOG.info("Updating station date")
     update_station_info_date()
     return 0
