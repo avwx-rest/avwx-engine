@@ -7,10 +7,13 @@ python util/build_tests.py
 # stdlib
 import json
 import random
+import sys
 from dataclasses import asdict
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Optional
+
+sys.path.insert(0, str(Path(__file__).parent.parent.absolute()))
 
 # module
 import avwx

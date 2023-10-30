@@ -484,6 +484,7 @@ class NbmPeriod:
     sleet: Optional[Number] = None
     rain: Optional[Number] = None
     solar_radiation: Optional[Number] = None
+    wave_height: Optional[Number] = None
 
 
 @dataclass
@@ -495,7 +496,6 @@ class NbhsShared(NbmPeriod):
     transport_wind_direction: Optional[Number] = None
     transport_wind_speed: Optional[Number] = None
     haines: Optional[List[Number]] = None
-    wave_height: Optional[Number] = None
 
 
 @dataclass
@@ -533,7 +533,6 @@ class NbePeriod(NbmPeriod):
     snow_amount_12: Optional[Number] = None
     snow_amount_24: Optional[Number] = None
     icing_amount_12: Optional[Number] = None
-    wave_height: Optional[Number] = None
 
 
 @dataclass
