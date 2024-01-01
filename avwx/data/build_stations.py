@@ -12,11 +12,10 @@ https://www.aviationweather.gov/docs/metar/stations.txt
 import csv
 import json
 import logging
-from collections.abc import Iterable
 from contextlib import suppress
 from datetime import date
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, Iterable, List, Optional
 
 # library
 import httpx
