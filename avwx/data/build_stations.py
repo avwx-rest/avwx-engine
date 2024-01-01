@@ -15,7 +15,7 @@ import logging
 from contextlib import suppress
 from datetime import date
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional
+from typing import Dict, Iterable, List, Optional, Tuple
 
 # library
 import httpx
@@ -142,7 +142,7 @@ def format_station(code: str, station: List[str]) -> dict:
     return nullify(ret)
 
 
-def build_stations() -> tuple[dict, dict]:
+def build_stations() -> Tuple[dict, dict]:
     """Builds the station dict from source file"""
     stations, code_map = {}, {}
     data = csv.reader(_SOURCE["airports"].splitlines())
