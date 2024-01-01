@@ -143,7 +143,7 @@ class AirSigManager:
     """
 
     _services: List[Service]
-    _raw: List[Tuple[str, str]]
+    _raw: List[Tuple[str, Optional[str]]]
     last_updated: Optional[datetime] = None
     raw: List[str]
     reports: Optional[List[AirSigmet]] = None
@@ -172,10 +172,10 @@ class AirSigManager:
         data = await aio.gather(*coros)
         raw = list(chain.from_iterable(data))
         reports = [i[0] for i in raw]
-        changed = raw != self.raw
-        if changed:
-            self._raw, self.raw = raw, reports
-            self.last_updated = datetime.now(tz=timezone.utc)
+        if raw == self._raw:
+            return False
+        self._raw, self.raw = raw, reports
+        self.last_updated = datetime.now(tz=timezone.utc)
         # Parse reports if not disabled
         if not disable_post:
             parsed = []
@@ -185,9 +185,9 @@ class AirSigManager:
                         obj.source = source
                         parsed.append(obj)
                 except Exception as exc:  # pylint: disable=broad-except
-                    exceptions.exception_intercept(exc, raw=report)
+                    exceptions.exception_intercept(exc, raw={"report": report})
             self.reports = parsed
-        return changed
+        return True
 
     def along(self, coords: List[Coord]) -> List[AirSigmet]:
         """Returns available reports the intersect a flight path"""
@@ -299,10 +299,8 @@ def _first_index(data: List[str], *targets: str) -> int:
 
 def _region(data: List[str]) -> Tuple[List[str], str]:
     # FIR/CTA region name
-    name_end = _first_index(data, "FIR", "CTA") + 1
-    # Non-standard name using lookahead Ex: FL CSTL WTRS FROM 100SSW
-    if not name_end:
-        name_end = _first_index(data, "FROM")
+    # Or non-standard name using lookahead Ex: FL CSTL WTRS FROM 100SSW
+    name_end = _first_index(data, "FIR", "CTA") + 1 or _first_index(data, "FROM")
     # State list
     if not name_end:
         for item in data:

@@ -12,6 +12,7 @@ https://www.aviationweather.gov/docs/metar/stations.txt
 import csv
 import json
 import logging
+from collections.abc import Iterable
 from contextlib import suppress
 from datetime import date
 from pathlib import Path
@@ -27,7 +28,7 @@ from avwx.data.mappers import FILE_REPLACE, SURFACE_TYPES
 LOG = logging.getLogger("avwx.data.build_stations")
 
 
-def load_stations(path: Path) -> set[str]:
+def load_stations(path: Path) -> Iterable[str]:
     """Load a station set from a path"""
     return set(path.read_text().strip().split("\n"))
 
