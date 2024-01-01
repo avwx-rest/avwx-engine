@@ -152,9 +152,9 @@ def test_metar():  # sourcery skip: dict-assign-update-to-union
     spoken = (
         "Winds three six zero (variable three four zero to zero two zero) "
         "at 12 knots gusting to 20 knots. Visibility three miles. "
+        "Broken layer at 1500ft (Cumulonimbus). Heavy Rain. "
         "Temperature three degrees Celsius. Dew point minus one degree Celsius. "
-        "Altimeter two nine point nine two. Heavy Rain. "
-        "Broken layer at 1500ft (Cumulonimbus)"
+        "Altimeter two nine point nine two"
     )
     ret = speech.metar(data, units)
     assert isinstance(ret, str)

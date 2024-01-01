@@ -64,7 +64,7 @@ CURRENT = {
 
 # These are item replacements after the report has been split
 
-ITEM_REPL = {"CALM": "00000KT", "A01": "AO1", "A02": "AO2"}
+ITEM_REPL = {"CALM": "00000KT", "A01": "AO1", "A02": "AO2", "PROB3O": "PROB30"}
 
 
 class ReplaceItem(CleanItem):

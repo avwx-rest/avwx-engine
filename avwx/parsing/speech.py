@@ -49,7 +49,7 @@ def wind(
 
 def temperature(header: str, temp: Number, unit: str = "C") -> str:
     """Format temperature details into a spoken word string"""
-    if not (temp and temp.value):
+    if not temp or temp.value is None:
         return f"{header} unknown"
     unit = SPOKEN_UNITS.get(unit, unit)
     use_s = "" if temp.spoken in ("one", "minus one") else "s"
@@ -154,19 +154,19 @@ def metar(data: MetarData, units: Units) -> str:
         )
     if data.visibility:
         speech.append(visibility(data.visibility, units.visibility))
+    speech.append(
+        translate_base.clouds(data.clouds, units.altitude).replace(
+            " - Reported AGL", ""
+        )
+    )
+    if data.wx_codes:
+        speech.append(wx_codes(data.wx_codes))
     if data.temperature:
         speech.append(temperature("Temperature", data.temperature, units.temperature))
     if data.dewpoint:
         speech.append(temperature("Dew point", data.dewpoint, units.temperature))
     if data.altimeter:
         speech.append(altimeter(data.altimeter, units.altimeter))
-    if data.wx_codes:
-        speech.append(wx_codes(data.wx_codes))
-    speech.append(
-        translate_base.clouds(data.clouds, units.altitude).replace(
-            " - Reported AGL", ""
-        )
-    )
     return (". ".join([l for l in speech if l])).replace(",", ".")
 
 

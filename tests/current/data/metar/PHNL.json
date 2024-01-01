@@ -122,7 +122,7 @@
         "wx_codes": []
     },
     "icao": "PHNL",
-    "speech": "Winds zero one zero at 3 knots. Visibility one zero miles. Temperature two six degrees Celsius. Dew point two one degrees Celsius. Altimeter three zero point zero zero. Few clouds at 2500ft. Few clouds at 3500ft. Few clouds at 5000ft",
+    "speech": "Winds zero one zero at 3 knots. Visibility one zero miles. Few clouds at 2500ft. Few clouds at 3500ft. Few clouds at 5000ft. Temperature two six degrees Celsius. Dew point two one degrees Celsius. Altimeter three zero point zero zero",
     "summary": "Winds N-010 at 3kt, Vis 10sm, Temp 26\u00b0C, Dew 21\u00b0C, Alt 30.00 inHg, Few clouds at 2500ft, Few clouds at 3500ft, Few clouds at 5000ft",
     "translations": {
         "altimeter": "30.00 inHg (1016 hPa)",

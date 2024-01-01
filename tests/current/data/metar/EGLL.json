@@ -67,7 +67,7 @@
         "wx_codes": []
     },
     "icao": "EGLL",
-    "speech": "Winds zero nine zero at 11 knots. Visibility one zero kilometers. Temperature one zero degrees Celsius. Dew point five degrees Celsius. Altimeter one zero one six. Sky clear",
+    "speech": "Winds zero nine zero at 11 knots. Visibility one zero kilometers. Sky clear. Temperature one zero degrees Celsius. Dew point five degrees Celsius. Altimeter one zero one six",
     "summary": "Winds E-090 at 11kt, Vis 10km, Temp 10\u00b0C, Dew 5\u00b0C, Alt 1016 hPa, Sky clear",
     "translations": {
         "altimeter": "1016 hPa (30.00 inHg)",

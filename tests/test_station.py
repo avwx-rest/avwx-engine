@@ -136,7 +136,7 @@ def test_storage_code():
     (
         ("KJFK", "John F Kennedy International Airport", "New York"),
         ("kjfk", "John F Kennedy International Airport", "New York"),
-        ("KLAX", "Los Angeles / Tom Bradley International Airport", "Los Angeles"),
+        ("KLAX", "Los Angeles International Airport", "Los Angeles"),
         ("PHNL", "Daniel K Inouye International Airport", "Honolulu"),
         ("EGLL", "London Heathrow Airport", "London"),
     ),
@@ -211,7 +211,7 @@ def test_from_bad_gps(code: Any):
         ("kjfk", "KJFK", "John F Kennedy International Airport"),
         ("EGLL", "EGLL", "London Heathrow Airport"),
         ("LHR", "EGLL", "London Heathrow Airport"),
-        ("LAX", "KLAX", "Los Angeles / Tom Bradley International Airport"),
+        ("LAX", "KLAX", "Los Angeles International Airport"),
         ("HNL", "PHNL", "Daniel K Inouye International Airport"),
         ("KX07", None, "Lake Wales Municipal Airport"),
     ),

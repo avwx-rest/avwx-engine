@@ -75,7 +75,7 @@ class StationScrape(ScrapeService):
 
     def _make_url(self, station: str) -> Tuple[str, dict]:
         """Returns a formatted URL and parameters"""
-        raise NotImplementedError()
+        return self._url, {}
 
     def _extract(self, raw: str, station: str) -> str:
         """Extracts the report string from the service response"""
@@ -262,12 +262,17 @@ class AMO(StationScrape):
 class MAC(StationScrape):
     """Requests data from Meteorologia Aeronautica Civil for Columbian stations"""
 
-    _url = "http://meteorologia.aerocivil.gov.co/expert_text_query/parse"
+    _url = "https://meteorologia.aerocivil.gov.co/expert_text_query/parse"
     method = "POST"
 
-    def _make_url(self, station: str) -> Tuple[str, dict]:
-        """Returns a formatted URL and parameters"""
-        return self._url, {"query": f"{self.report_type} {station}"}
+    @staticmethod
+    def _make_headers() -> dict:
+        """Returns request headers"""
+        return {"X-Requested-With": "XMLHttpRequest"}
+
+    def _post_data(self, station: str) -> dict:
+        """Returns the POST form/data payload"""
+        return {"query": f"{self.report_type} {station}"}
 
     def _extract(self, raw: str, station: str) -> str:
         """Extracts the report message using string finding"""
@@ -279,10 +284,6 @@ class AUBOM(StationScrape):
 
     _url = "http://www.bom.gov.au/aviation/php/process.php"
     method = "POST"
-
-    def _make_url(self, _: Any) -> Tuple[str, dict]:
-        """Returns a formatted URL and empty parameters"""
-        return self._url, {}
 
     @staticmethod
     def _make_headers() -> dict:

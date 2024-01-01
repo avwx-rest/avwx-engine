@@ -108,7 +108,7 @@
         "wx_codes": []
     },
     "icao": "KMCO",
-    "speech": "Winds three one zero at 7 knots. Visibility one zero miles. Temperature one five degrees Celsius. Dew point nine degrees Celsius. Altimeter two nine point nine nine. Sky clear",
+    "speech": "Winds three one zero at 7 knots. Visibility one zero miles. Sky clear. Temperature one five degrees Celsius. Dew point nine degrees Celsius. Altimeter two nine point nine nine",
     "summary": "Winds NW-310 at 7kt, Vis 10sm, Temp 15\u00b0C, Dew 9\u00b0C, Alt 29.99 inHg, Sky clear",
     "translations": {
         "altimeter": "29.99 inHg (1016 hPa)",

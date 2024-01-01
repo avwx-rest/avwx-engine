@@ -12,6 +12,7 @@ from avwx.parsing.sanitization.cleaners import replace as cleaners
     (
         ("CALM", "00000KT"),
         ("A01", "AO1"),
+        ("PROB3O", "PROB30"),
     ),
 )
 def test_replace_item(item: str, clean: str):

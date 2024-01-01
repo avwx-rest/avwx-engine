@@ -123,7 +123,7 @@
         "wx_codes": []
     },
     "icao": "KJFK",
-    "speech": "Winds three six zero at 7 knots. Visibility one zero miles. Temperature one one degrees Celsius. Dew point seven degrees Celsius. Altimeter two nine point seven nine. Few clouds at 8500ft. Scattered clouds at 25000ft",
+    "speech": "Winds three six zero at 7 knots. Visibility one zero miles. Few clouds at 8500ft. Scattered clouds at 25000ft. Temperature one one degrees Celsius. Dew point seven degrees Celsius. Altimeter two nine point seven nine",
     "summary": "Winds N-360 at 7kt, Vis 10sm, Temp 11\u00b0C, Dew 7\u00b0C, Alt 29.79 inHg, Few clouds at 8500ft, Scattered clouds at 25000ft",
     "translations": {
         "altimeter": "29.79 inHg (1009 hPa)",

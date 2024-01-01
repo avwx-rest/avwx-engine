@@ -66,12 +66,8 @@ async def update_icaos() -> None:
 
 async def update_awos() -> None:
     """Update AWOS code list"""
-    codes = []
-    for report in await fetch_data(
-        environ["AWOS_URL"],
-        params={"authKey": environ["AWOS_KEY"]},
-    ):
-        codes.append(report.strip().split()[0])
+    fetch = fetch_data(environ["AWOS_URL"], params={"authKey": environ["AWOS_KEY"]})
+    codes = [report.strip().split()[0] for report in await fetch]
     save(codes, DATA_PATH / "awos.json")
 
 
