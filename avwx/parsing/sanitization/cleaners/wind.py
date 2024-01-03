@@ -21,10 +21,10 @@ WIND_REPL = {
     "K5": "KT",
     "JT": "KT",
     "SM": "KT",
+    "KTKT": "KT",  # Must come before TK
     "TK": "KT",
     "LKT": "KT",
     "ZKT": "KT",
-    "KTKT": "KT",
     "KKT": "KT",
     "JKT": "KT",
     "KLT": "KT",
@@ -35,10 +35,7 @@ WIND_REPL = {
     "VRBL": "VRB",  # Not caught in WIND_VRB
 }
 
-WIND_VRB = (
-    "V0",
-    "WBB",
-)
+WIND_VRB = ("WBB",)
 
 
 def sanitize_wind(text: str) -> str:

@@ -24,7 +24,7 @@ def sanitize_string_with(
 
     def sanitize_report_string(text: str, sans: Sanitization) -> str:
         """Provides sanitization for operations that work better when the report is a string"""
-        text = text.upper().rstrip("=")
+        text = text.strip().upper().rstrip("=")
         if len(text) < 4:
             return text
         # Standardize whitespace

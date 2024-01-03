@@ -16,6 +16,8 @@ from avwx.parsing.sanitization.cleaners import wind as cleaners
         ("16010FG16KT", "16010G16KT"),
         ("20017SQ28KT", "20017G28KT"),
         ("VRB10G19MPSM", "VRB10G19MPS"),
+        ("33010G20KTKT", "33010G20KT"),
+        ("WBB010", "VRB010"),
     ),
 )
 def test_sanitize_wind(wind: str, fixed: str):

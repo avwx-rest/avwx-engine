@@ -42,6 +42,7 @@ _VISIBILITY = {
     "/08SM": "/8SM",
     " /34SM": "3/4SM",
     " 3/SM": " 3/4SM",
+    "PQ6SM ": "P6SM ",
     "P6000F ": "P6000FT ",
     "P6000FTQ ": "P6000FT ",
 }
