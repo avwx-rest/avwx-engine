@@ -52,14 +52,14 @@ class TestStationScrape(ServiceClassTest):
                 serv.fetch("KJFK")  # pylint: disable=no-member
 
     @pytest.mark.asyncio
-    async def test_fetch_bad_station(self, serv: service.scrape.ScrapeService):
+    async def test_async_fetch_bad_station(self, serv: service.scrape.ScrapeService):
         """Tests fetch exception handling"""
         for station in ("12K", "MAYT"):
             with pytest.raises(exceptions.BadStation):
                 await serv.async_fetch(station)  # pylint: disable=no-member
 
     @pytest.mark.asyncio
-    async def test_not_implemented(self, serv: service.scrape.ScrapeService):
+    async def test_async_not_implemented(self, serv: service.scrape.ScrapeService):
         """Should raise exception due to empty url"""
         if type(serv) == service.scrape.ScrapeService:
             with pytest.raises(NotImplementedError):

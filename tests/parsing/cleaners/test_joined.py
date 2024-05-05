@@ -42,7 +42,7 @@ def test_joined_timestamp(item: str, index: str):
 
 @pytest.mark.parametrize(
     "item",
-    ("123456Z", "1210/1216", "TX12/12/12"),
+    ("123456Z", "1210/1216", "TX12/12/12", "PROB30", "KTFM"),
 )
 def test_not_joined_timestamp(item: str):
     assert cleaners.JoinedTimestamp().split_at(item) is None
@@ -78,14 +78,6 @@ def test_not_joined_wind(item: str):
 )
 def test_joined_taf_new_line(item: str, index: str):
     assert cleaners.JoinedTafNewLine().split_at(item) == index
-
-
-@pytest.mark.parametrize(
-    "item",
-    ("123456Z", "1210/1216", "PROB30", "KTFM"),
-)
-def test_not_joined_timestamp(item: str):
-    assert cleaners.JoinedTimestamp().split_at(item) is None
 
 
 @pytest.mark.parametrize(

@@ -582,7 +582,7 @@ def test_airsigmet_ete(ref: dict):
         (0, 0, 1),
     ),
 )
-def test_contains(lat: int, lon: int, count: int):
+def test_manager_contains(lat: int, lon: int, count: int):
     """Tests filtering reports that contain a coordinate"""
     manager = airsigmet.AirSigManager()
     manager.reports = COORD_REPORTS

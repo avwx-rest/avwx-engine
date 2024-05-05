@@ -11,7 +11,7 @@ from typing import List, Optional, Tuple
 import pytest
 
 # module
-from avwx import static, structs
+from avwx import structs
 from avwx.current.base import get_wx_codes
 from avwx.current.metar import parse_altimeter
 from avwx.parsing import core, speech

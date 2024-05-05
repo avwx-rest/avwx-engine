@@ -24,14 +24,14 @@ class TestScrapeService(ServiceClassTest):
         "update",
     )
 
-    def test_not_implemented(self, serv: service.Service):
+    def test_file_service_not_implemented(self, serv: service.Service):
         """Tests that the base FileService class throws NotImplemented errors"""
         if type(serv) != service.files.FileService:
             return
         # pylint: disable=no-member.pointless-statement
         with pytest.raises(NotImplementedError):
             serv._extract(None, None)
-        with pytest.aises(NotImplementedError):
+        with pytest.raises(NotImplementedError):
             serv._urls
 
     @pytest.mark.asyncio
@@ -42,7 +42,7 @@ class TestScrapeService(ServiceClassTest):
                 await serv.async_fetch(station)  # pylint: disable=no-member
 
     @pytest.mark.asyncio
-    async def test_not_implemented(self, serv: service.Service):
+    async def test_scrape_service_not_implemented(self, serv: service.Service):
         """Should raise exception due to empty url"""
         if type(serv) == service.scrape.ScrapeService:
             with pytest.raises(NotImplementedError):
