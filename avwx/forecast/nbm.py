@@ -60,8 +60,12 @@ from .base import (
     _trim_lines,
 )
 
-DataT: TypeAlias = Union[structs.NbhData, structs.NbsData, structs.NbeData]
-PeriodT: TypeAlias = Union[structs.NbhPeriod, structs.NbsPeriod, structs.NbePeriod]
+DataT: TypeAlias = type[
+    Union[structs.NbhData, structs.NbsData, structs.NbeData, structs.NbxData]
+]
+PeriodT: TypeAlias = type[
+    Union[structs.NbhPeriod, structs.NbsPeriod, structs.NbePeriod, structs.NbxPeriod]
+]
 
 _UNITS = {
     **UNITS,
@@ -163,7 +167,7 @@ def _parse_factory(
             start, end = min(indexes), max(indexes)
             data_lines = [line[:start] + line[end:] for line in data_lines]
         _parse_lines(periods, data_lines, handle, size)
-        return data_class(  # type: ignore
+        return data_class(
             raw=data.raw,
             sanitized=data.sanitized,
             station=data.station,
@@ -179,26 +183,26 @@ parse_nbh: Callable[[str], structs.NbhData] = _parse_factory(
     structs.NbhData,
     structs.NbhPeriod,
     _NBHS_HANDLERS,
-    hours=1,  # type: ignore
+    hours=1,
 )
 parse_nbs: Callable[[str], structs.NbsData] = _parse_factory(
     structs.NbsData,
     structs.NbsPeriod,
-    _NBHS_HANDLERS,  # type: ignore
+    _NBHS_HANDLERS,
 )
 parse_nbe: Callable[[str], structs.NbeData] = _parse_factory(
     structs.NbeData,
     structs.NbePeriod,
     {},
     size=4,
-    prefix=5,  # type: ignore
+    prefix=5,
 )
-parse_nbx: Callable[[str], structs.NbeData] = _parse_factory(
+parse_nbx: Callable[[str], structs.NbxData] = _parse_factory(
     structs.NbxData,
     structs.NbxPeriod,
     {},
     size=4,
-    prefix=4,  # type: ignore
+    prefix=4,
 )
 
 

@@ -33,7 +33,8 @@ def main() -> int:
         code = TAG_PATTERN.sub("", cols[1]).strip()
         if code not in craft:
             craft[code] = name
-    json.dump(craft, OUTPUT_PATH.open("w", encoding="utf8"))
+    old_craft = json.load(OUTPUT_PATH.open(encoding="utf8"))
+    json.dump(old_craft | craft, OUTPUT_PATH.open("w", encoding="utf8"))
     return 0
 
 
