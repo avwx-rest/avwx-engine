@@ -18,7 +18,7 @@ from .cleaners.wind import sanitize_wind
 
 
 def sanitize_string_with(
-    replacements: Dict[str, str]
+    replacements: Dict[str, str],
 ) -> Callable[[str, Sanitization], str]:
     """Returns a function to sanitize the report string with a given list of replacements"""
 

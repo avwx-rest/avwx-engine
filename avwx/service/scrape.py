@@ -14,7 +14,7 @@ from contextlib import suppress
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 # library
-from xmltodict import parse as parsexml  # type: ignore
+from xmltodict import parse as parsexml
 
 # module
 from avwx.parsing.core import dedupe

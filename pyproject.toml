@@ -19,10 +19,10 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed",
 ]
@@ -38,7 +38,7 @@ include = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.12"
+python = ">=3.9,<3.13"
 geopy = ">=2.4"
 httpx = ">=0.26"
 python-dateutil = ">=2.8"
@@ -57,19 +57,17 @@ scipy = ["scipy"]
 shape = ["shapely"]
 
 [tool.poetry.dev-dependencies]
-black = "*"
 mypy = "*"
 nox = "*"
 pdoc = "*"
 poethepoet = "*"
 pre-commit = "*"
-pylint = "*"
 pyroma = "*"
 pytest = "*"
 pytest-asyncio = "*"
 pytest-cov = "*"
 pytest-github-actions-annotate-failures = "*"
-pyupgrade = "*"
+ruff = "*"
 time-machine = "*"
 
 [build-system]
@@ -79,18 +77,14 @@ build-backend = "poetry.core.masonry.api"
 [tool.poe.tasks]
 test = "pytest"
 type = "mypy avwx/"
-lint = "pylint avwx/"
-clean = "black avwx/"
+lint = "ruff check avwx/"
+clean = "ruff format avwx/"
 docs = """python -m pdoc ./avwx \
     !avwx.flight_path !avwx.current.airep \
     --favicon https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/favicon.ico \
     --logo https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/avwx-logo-color-200.png \
     --logo-link https://info.avwx.rest \
 """
-
-[tool.black]
-target-version = ["py38", "py39", "py310", "py311", "py312"]
-include = '\.pyi?$'
 
 [tool.pytest.ini_options]
 addopts = """\
@@ -125,3 +119,14 @@ warn_redundant_casts = true
 warn_return_any = true
 check_untyped_defs = true
 show_error_codes = true
+
+[tool.ruff]
+lint.extend-select = [
+    "UP",
+    # "D",
+]
+lint.ignore = [
+    "D105",
+    "D203",
+    "D213",
+]

@@ -16,8 +16,13 @@ repos:
     - id: mixed-line-ending
 - repo: local
   hooks:
-    - id: black
-      name: black
-      entry: poetry run black
+    - id: ruff-format
+      name: ruff-format
+      entry: poetry run ruff format avwx
+      language: system
+      types: [python]
+    - id: ruff-check
+      name: ruff-check
+      entry: poetry run ruff check avwx
       language: system
       types: [python]

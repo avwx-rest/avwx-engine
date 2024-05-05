@@ -18,7 +18,7 @@ from avwx.structs import Code, Number, ReportData, Timestamp
 def _trim_lines(lines: List[str], target: int) -> List[str]:
     """Trim all lines to match the trimmed length of the target line"""
     length = len(lines[target].strip())
-    return [l[:length] for l in lines]
+    return [line[:length] for line in lines]
 
 
 def _split_line(

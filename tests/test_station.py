@@ -302,6 +302,14 @@ def test_exact_icao(icao: str):
     assert results[0].icao == icao
 
 
+@pytest.mark.parametrize("code,gps", (("MCO", "KMCO"), ("1A5", "K1A5"),))
+def test_secondary_code(code: str, gps: str):
+    """Tests searching for a Station by non-ICAO codes"""
+    results = station.search(code)
+    assert len(results) == 10
+    assert results[0].gps == gps
+
+
 @pytest.mark.parametrize(
     "text,icao",
     (

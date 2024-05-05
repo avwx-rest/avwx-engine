@@ -167,7 +167,7 @@ def metar(data: MetarData, units: Units) -> str:
         speech.append(temperature("Dew point", data.dewpoint, units.temperature))
     if data.altimeter:
         speech.append(altimeter(data.altimeter, units.altimeter))
-    return (". ".join([l for l in speech if l])).replace(",", ".")
+    return (". ".join([el for el in speech if el])).replace(",", ".")
 
 
 def taf_line(line: TafLineData, units: Units) -> str:
@@ -201,7 +201,7 @@ def taf_line(line: TafLineData, units: Units) -> str:
         speech.append(translate_taf.turb_ice(line.turbulence, units.altitude))
     if line.icing:
         speech.append(translate_taf.turb_ice(line.icing, units.altitude))
-    return f"{start} " + (". ".join([l for l in speech if l])).replace(",", ".")
+    return f"{start} " + (". ".join([el for el in speech if el])).replace(",", ".")
 
 
 def taf(data: TafData, units: Units) -> str:

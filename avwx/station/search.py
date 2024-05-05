@@ -39,7 +39,7 @@ def _format_search(airport: dict, keys: Iterable[str]) -> Optional[str]:
 
 
 def _build_corpus() -> List[str]:
-    keys = ("icao", "iata", "gps", "city", "state", "name")
+    keys = ("icao", "iata", "gps", "local", "city", "state", "name")
     return [text for s in STATIONS.values() if (text := _format_search(s, keys))]
 
 

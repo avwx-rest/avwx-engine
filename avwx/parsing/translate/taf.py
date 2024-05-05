@@ -60,12 +60,7 @@ def turb_ice(values: List[str], unit: str = "ft") -> str:
             split.pop(i + 1)
     # Return joined, formatted string from split items
     return ", ".join(
-        "{conditions} from {low_alt}{unit} to {high_alt}{unit}".format(
-            conditions=conditions[item[0]],
-            low_alt=int(item[1]) * 100,
-            high_alt=int(item[1]) * 100 + int(item[2]) * 1000,
-            unit=unit,
-        )
+        f"{conditions[item[0]]} from {int(item[1]) * 100}{unit} to {int(item[1]) * 100 + int(item[2]) * 1000}{unit}"
         for item in split
     )
 

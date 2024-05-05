@@ -161,7 +161,7 @@ def _parse_factory(
         if prefix != 4:
             indexes = (4, prefix)
             start, end = min(indexes), max(indexes)
-            data_lines = [l[:start] + l[end:] for l in data_lines]
+            data_lines = [line[:start] + line[end:] for line in data_lines]
         _parse_lines(periods, data_lines, handle, size)
         return data_class(  # type: ignore
             raw=data.raw,
@@ -176,16 +176,29 @@ def _parse_factory(
 
 
 parse_nbh: Callable[[str], structs.NbhData] = _parse_factory(
-    structs.NbhData, structs.NbhPeriod, _NBHS_HANDLERS, hours=1  # type: ignore
+    structs.NbhData,
+    structs.NbhPeriod,
+    _NBHS_HANDLERS,
+    hours=1,  # type: ignore
 )
 parse_nbs: Callable[[str], structs.NbsData] = _parse_factory(
-    structs.NbsData, structs.NbsPeriod, _NBHS_HANDLERS  # type: ignore
+    structs.NbsData,
+    structs.NbsPeriod,
+    _NBHS_HANDLERS,  # type: ignore
 )
 parse_nbe: Callable[[str], structs.NbeData] = _parse_factory(
-    structs.NbeData, structs.NbePeriod, {}, size=4, prefix=5  # type: ignore
+    structs.NbeData,
+    structs.NbePeriod,
+    {},
+    size=4,
+    prefix=5,  # type: ignore
 )
 parse_nbx: Callable[[str], structs.NbeData] = _parse_factory(
-    structs.NbxData, structs.NbxPeriod, {}, size=4, prefix=4  # type: ignore
+    structs.NbxData,
+    structs.NbxPeriod,
+    {},
+    size=4,
+    prefix=4,  # type: ignore
 )
 
 

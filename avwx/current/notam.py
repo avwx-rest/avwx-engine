@@ -279,7 +279,7 @@ def _find_q_codes(
 def _qualifiers(value: str, units: Units) -> Qualifiers:
     """Parse the NOTAM Q) line into components"""
     # pylint: disable=too-many-locals
-    fir, q_code, *codes = [i.strip() for i in re.split("/| ", value.strip())]
+    fir, q_code, *codes = (i.strip() for i in re.split("/| ", value.strip()))
     traffic, purpose, scope, lower, upper, location = _find_q_codes(codes)
     subject, condition = None, None
     if q_code.startswith("Q"):

@@ -40,6 +40,7 @@ def test_sanitize_empty_report_string():
     """Tests that the sanitization minimaly affects short text"""
     assert clean_metar_string("  MVP=", Sanitization()) == "MVP"
 
+
 def _test_list_sanitizer(cleaner: Callable, case: dict):
     """Tests a function which fixes common mistakes while the report is a list"""
     line, fixed = case["report"].split(), case["fixed"].split()
