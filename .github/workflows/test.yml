@@ -36,4 +36,4 @@ jobs:
       - uses: ./.github/actions/python-poetry-env
         with:
           python-version: ${{ matrix.python-version }}
-      - run: poetry run pytest
+      - run: poetry run pytest -v
