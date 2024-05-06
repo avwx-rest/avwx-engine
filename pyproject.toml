@@ -59,7 +59,6 @@ shape = ["shapely"]
 
 [tool.poetry.dev-dependencies]
 mypy = "*"
-nox = "*"
 pdoc = "*"
 poethepoet = "*"
 pre-commit = "*"
