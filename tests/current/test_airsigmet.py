@@ -496,6 +496,7 @@ def test_intensity(wx: str, code: Optional[str], name: Optional[str], extra: str
         ("WAUS43 KKCI  1 \n 2 3 NC=", "WAUS43 KKCI 1 2 3 NC"),
         ("TOP FL520 MO V NNW 05KT NC", "TOP FL520 MOV NNW 05KT NC"),
         ("FL450 MOV NE05KT INTSF=", "FL450 MOV NE 05KT INTSF"),
+        ("TOP FL420 MOV E2KT INTSF=", "TOP FL420 MOV E 2KT INTSF"),
     ),
 )
 def test_sanitize(report: str, clean: str):

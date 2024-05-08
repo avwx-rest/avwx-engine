@@ -217,48 +217,51 @@ def get_type_and_times(
         elif len(data[0]) == 6 and data[0].startswith("PROB"):
             report_type = data.pop(0)
     if data:
+        item, length = data[0], len(data[0])
         # 1200/1306
-        if (
-            len(data[0]) == 9
-            and data[0][4] == "/"
-            and data[0][:4].isdigit()
-            and data[0][5:].isdigit()
-        ):
+        if length == 9 and item[4] == "/" and item[:4].isdigit() and item[5:].isdigit():
             start_time, end_time = data.pop(0).split("/")
 
         # 1200 1306
         elif (
             len(data) == 8
-            and len(data[0]) == 4
+            and length == 4
             and len(data[1]) == 4
-            and data[0].isdigit()
+            and item.isdigit()
             and data[1].isdigit()
         ):
             start_time = data.pop(0)
             end_time = data.pop(0)
 
         # 120000
-        elif len(data[0]) == 6 and data[0].isdigit() and data[0][-2:] == "00":
+        elif length == 6 and item.isdigit() and item[-2:] == "00":
             start_time = data.pop(0)[:4]
         # FM120000
-        elif len(data[0]) > 7 and data[0].startswith("FM"):
+        elif length > 7 and item.startswith("FM"):
             report_type = "FROM"
             if (
-                "/" in data[0]
-                and data[0][2:].split("/")[0].isdigit()
-                and data[0][2:].split("/")[1].isdigit()
+                "/" in item
+                and item[2:].split("/")[0].isdigit()
+                and item[2:].split("/")[1].isdigit()
             ):
                 start_time, end_time = data.pop(0)[2:].split("/")
-            elif data[0][2:8].isdigit():
+            elif item[2:8].isdigit():
                 start_time = data.pop(0)[2:6]
             # TL120600
             if (
                 data
-                and len(data[0]) > 7
+                and length > 7
                 and data[0].startswith("TL")
                 and data[0][2:8].isdigit()
             ):
                 end_time = data.pop(0)[2:6]
+        elif report_type == "BECMG" and length == 5:
+            # 1200/
+            if item[-1] == "/" and item[:4].isdigit():
+                start_time = data.pop(0)[:4]
+            # /1200
+            elif item[0] == "/" and item[1:].isdigit():
+                end_time = data.pop(0)[1:]
     if report_type == "BECMG":
         transition, start_time, end_time = start_time, end_time, None
     return data, report_type, start_time, end_time, transition
@@ -403,6 +406,17 @@ def fix_report_header(report: str) -> str:
     return " ".join(fixed_headers + headers + split_report[header_length:])
 
 
+def _is_possible_start_end_time_slash(item: str) -> bool:
+    """Return True if item is a possible period start or end with missing element"""
+    return len(item) == 5 and (
+        # 1200/
+        (item[-1] == "/" and item[:4].isdigit())
+        or
+        # /1200
+        (item[0] == "/" and item[1:].isdigit())
+    )
+
+
 def parse(
     station: str, report: str, issued: Optional[date] = None
 ) -> Tuple[Optional[TafData], Optional[Units], Optional[Sanitization]]:
@@ -519,8 +533,16 @@ def parse_line(
 ) -> TafLineData:
     """Parser for the International TAF forcast variant"""
     # pylint: disable=too-many-locals
-    data = core.dedupe(line.split())
+    data: list[str] = core.dedupe(line.split())
+    # Grab original time piece under certain conditions to preserve a useful slash
+    old_time = (
+        data[1]
+        if len(data) > 1 and _is_possible_start_end_time_slash(data[1])
+        else None
+    )
     data = clean_taf_list(data, sans)
+    if old_time and len(data) > 1 and data[1] == old_time.strip("/"):
+        data[1] = old_time
     sanitized = " ".join(data)
     data, report_type, start_time, end_time, transition = get_type_and_times(data)
     data, wind_shear = get_wind_shear(data)

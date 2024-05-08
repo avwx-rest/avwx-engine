@@ -649,7 +649,7 @@ def sanitize(report: str) -> str:
             data[i] = item[:-1]
         # Split attached movement direction Ex: NE05KT
         if (
-            len(item) > 4
+            len(item) >= 4
             and (item.endswith("KT") or item.endswith("KMH"))
             and item[: _find_first_digit(item)] in CARDINALS
         ):

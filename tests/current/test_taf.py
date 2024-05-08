@@ -223,6 +223,20 @@ def test_find_missing_taf_times():
 
 
 @pytest.mark.parametrize(
+    "report",
+    (
+        "SYCJ 071100Z 0712/0812 12003KT 9999 BECMG 0711/ 12003KT 1000 TEMPO 0717/0720 12003KT 5000",
+    ),
+)
+def test_missing_end_times(report: str):
+    """Find missing times from a report string"""
+    data, _, _ = taf.parse(report[:4], report)
+    for line in data.forecast:
+        assert isinstance(line.start_time, structs.Timestamp)
+        assert isinstance(line.end_time, structs.Timestamp)
+
+
+@pytest.mark.parametrize(
     "wx,temp_max,temp_min",
     (
         (["1"], None, None),
