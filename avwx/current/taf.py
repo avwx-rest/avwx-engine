@@ -180,6 +180,13 @@ def get_alt_ice_turb(
     return data, altimeter_number, icing, turbulence
 
 
+def is_normal_time(item: str) -> bool:
+    """Return if the item looks like a valid TAF (1200/1400) time range."""
+    return (
+        len(item) == 9 and item[4] == "/" and item[:4].isdigit() and item[5:].isdigit()
+    )
+
+
 def starts_new_line(item: str) -> bool:
     """Returns True if the given element should start a new report line"""
     if item in TAF_NEWLINE:
@@ -192,8 +199,12 @@ def split_taf(txt: str) -> List[str]:
     lines = []
     split = txt.split()
     last_index = 0
-    for i, item in enumerate(split):
-        if starts_new_line(item) and i != 0 and not split[i - 1].startswith("PROB"):
+    e_splits = enumerate(split)
+    next(e_splits)
+    for i, item in e_splits:
+        if (starts_new_line(item) and not split[i - 1].startswith("PROB")) or (
+            is_normal_time(item) and not starts_new_line(split[i - 1])
+        ):
             lines.append(" ".join(split[last_index:i]))
             last_index = i
     lines.append(" ".join(split[last_index:]))
@@ -219,7 +230,7 @@ def get_type_and_times(
     if data:
         item, length = data[0], len(data[0])
         # 1200/1306
-        if length == 9 and item[4] == "/" and item[:4].isdigit() and item[5:].isdigit():
+        if is_normal_time(item):
             start_time, end_time = data.pop(0).split("/")
 
         # 1200 1306

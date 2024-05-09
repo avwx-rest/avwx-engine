@@ -152,6 +152,10 @@ def test_doesnt_start_new_line(item: str):
         ("KJFK test TEMPO test TEMPO test", 3),
         ("KJFK test PROB30 test TEMPO test", 3),
         ("KJFK test PROB30 TEMPO test TEMPO test", 3),
+        (
+            "KJFK test 2612/2712 test PROB40 2612/2618 test 2618/2706 test 2706/2709 test 2709/2712 test",
+            6,
+        ),
     ),
 )
 def test_split_taf(report: str, num: int):

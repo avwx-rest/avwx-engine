@@ -1,48 +1,56 @@
 {
-    "created": "2023-10-17",
+    "created": "2024-05-08",
     "data": {
         "alts": null,
         "end_time": {
-            "dt": "2023-10-18T12:00:00+00:00",
-            "repr": "1812"
+            "dt": "2024-05-10T06:00:00+00:00",
+            "repr": "1006"
         },
         "forecast": [
             {
                 "altimeter": null,
-                "clouds": [],
+                "clouds": [
+                    {
+                        "base": 45,
+                        "modifier": null,
+                        "repr": "FEW045",
+                        "top": null,
+                        "type": "FEW"
+                    }
+                ],
                 "end_time": {
-                    "dt": "2023-10-18T10:00:00+00:00",
-                    "repr": "1810"
+                    "dt": "2024-05-10T06:00:00+00:00",
+                    "repr": "1006"
                 },
                 "flight_rules": "VFR",
                 "icing": [],
                 "other": [],
                 "probability": null,
-                "raw": "1706/1812 09012KT CAVOK",
-                "sanitized": "1706/1812 09012KT CAVOK",
+                "raw": "0900/1006 20006KT 9999 FEW045",
+                "sanitized": "0900/1006 20006KT 9999 FEW045",
                 "start_time": {
-                    "dt": "2023-10-17T06:00:00+00:00",
-                    "repr": "1706"
+                    "dt": "2024-05-09T00:00:00+00:00",
+                    "repr": "0900"
                 },
                 "transition_start": null,
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
-                    "repr": "CAVOK",
-                    "spoken": "ceiling and visibility ok",
+                    "repr": "9999",
+                    "spoken": "nine nine nine nine",
                     "value": 9999
                 },
                 "wind_direction": {
-                    "repr": "090",
-                    "spoken": "zero nine zero",
-                    "value": 90
+                    "repr": "200",
+                    "spoken": "two zero zero",
+                    "value": 200
                 },
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
-                    "repr": "12",
-                    "spoken": "one two",
-                    "value": 12
+                    "repr": "06",
+                    "spoken": "six",
+                    "value": 6
                 },
                 "wind_variable_direction": [],
                 "wx_codes": []
@@ -51,100 +59,44 @@
                 "altimeter": null,
                 "clouds": [],
                 "end_time": {
-                    "dt": "2023-10-17T18:00:00+00:00",
-                    "repr": "1718"
-                },
-                "flight_rules": "VFR",
-                "icing": [],
-                "other": [],
-                "probability": null,
-                "raw": "TEMPO 1709/1718 09016G26KT",
-                "sanitized": "TEMPO 1709/1718 09016G26KT",
-                "start_time": {
-                    "dt": "2023-10-17T09:00:00+00:00",
-                    "repr": "1709"
-                },
-                "transition_start": null,
-                "turbulence": [],
-                "type": "TEMPO",
-                "visibility": null,
-                "wind_direction": {
-                    "repr": "090",
-                    "spoken": "zero nine zero",
-                    "value": 90
-                },
-                "wind_gust": {
-                    "repr": "26",
-                    "spoken": "two six",
-                    "value": 26
-                },
-                "wind_shear": null,
-                "wind_speed": {
-                    "repr": "16",
-                    "spoken": "one six",
-                    "value": 16
-                },
-                "wind_variable_direction": [],
-                "wx_codes": []
-            },
-            {
-                "altimeter": null,
-                "clouds": [],
-                "end_time": {
-                    "dt": "2023-10-18T10:00:00+00:00",
-                    "repr": "1810"
+                    "dt": "2024-05-09T07:00:00+00:00",
+                    "repr": "0907"
                 },
                 "flight_rules": "VFR",
                 "icing": [],
                 "other": [],
                 "probability": {
-                    "repr": "40",
-                    "spoken": "four zero",
-                    "value": 40
+                    "repr": "30",
+                    "spoken": "three zero",
+                    "value": 30
                 },
-                "raw": "PROB40 TEMPO 1718/1810 10015G25KT",
-                "sanitized": "PROB40 TEMPO 1718/1810 10015G25KT",
+                "raw": "PROB30 0903/0907 9000",
+                "sanitized": "PROB30 0903/0907 9000",
                 "start_time": {
-                    "dt": "2023-10-17T18:00:00+00:00",
-                    "repr": "1718"
+                    "dt": "2024-05-09T03:00:00+00:00",
+                    "repr": "0903"
                 },
                 "transition_start": null,
                 "turbulence": [],
-                "type": "TEMPO",
-                "visibility": null,
-                "wind_direction": {
-                    "repr": "100",
-                    "spoken": "one zero zero",
-                    "value": 100
+                "type": "FROM",
+                "visibility": {
+                    "repr": "9000",
+                    "spoken": "nine thousand",
+                    "value": 9000
                 },
-                "wind_gust": {
-                    "repr": "25",
-                    "spoken": "two five",
-                    "value": 25
-                },
+                "wind_direction": null,
+                "wind_gust": null,
                 "wind_shear": null,
-                "wind_speed": {
-                    "repr": "15",
-                    "spoken": "one five",
-                    "value": 15
-                },
+                "wind_speed": null,
                 "wind_variable_direction": [],
                 "wx_codes": []
             },
             {
                 "altimeter": null,
-                "clouds": [
-                    {
-                        "base": 14,
-                        "modifier": null,
-                        "repr": "BKN014",
-                        "top": null,
-                        "type": "BKN"
-                    }
-                ],
+                "clouds": [],
                 "end_time": {
-                    "dt": "2023-10-18T12:00:00+00:00",
-                    "repr": "1812"
+                    "dt": "2024-05-10T06:00:00+00:00",
+                    "repr": "1006"
                 },
                 "flight_rules": "MVFR",
                 "icing": [],
@@ -154,95 +106,47 @@
                     "spoken": "three zero",
                     "value": 30
                 },
-                "raw": "PROB30 TEMPO 1809/1812 8000 -RA BKN014",
-                "sanitized": "PROB30 TEMPO 1809/1812 8000 -RA BKN014",
+                "raw": "PROB30 1003/1006 6000",
+                "sanitized": "PROB30 1003/1006 6000",
                 "start_time": {
-                    "dt": "2023-10-18T09:00:00+00:00",
-                    "repr": "1809"
+                    "dt": "2024-05-10T03:00:00+00:00",
+                    "repr": "1003"
                 },
                 "transition_start": null,
                 "turbulence": [],
-                "type": "TEMPO",
+                "type": "FROM",
                 "visibility": {
-                    "repr": "8000",
-                    "spoken": "eight thousand",
-                    "value": 8000
+                    "repr": "6000",
+                    "spoken": "six thousand",
+                    "value": 6000
                 },
                 "wind_direction": null,
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": null,
                 "wind_variable_direction": [],
-                "wx_codes": [
-                    {
-                        "repr": "-RA",
-                        "value": "Light Rain"
-                    }
-                ]
-            },
-            {
-                "altimeter": null,
-                "clouds": [],
-                "end_time": {
-                    "dt": "2023-10-18T12:00:00+00:00",
-                    "repr": "1812"
-                },
-                "flight_rules": "VFR",
-                "icing": [],
-                "other": [],
-                "probability": null,
-                "raw": "BECMG 1810/1812 12018G28KT",
-                "sanitized": "BECMG 1810/1812 12018G28KT",
-                "start_time": {
-                    "dt": "2023-10-18T12:00:00+00:00",
-                    "repr": "1812"
-                },
-                "transition_start": {
-                    "dt": "2023-10-18T10:00:00+00:00",
-                    "repr": "1810"
-                },
-                "turbulence": [],
-                "type": "BECMG",
-                "visibility": null,
-                "wind_direction": {
-                    "repr": "120",
-                    "spoken": "one two zero",
-                    "value": 120
-                },
-                "wind_gust": {
-                    "repr": "28",
-                    "spoken": "two eight",
-                    "value": 28
-                },
-                "wind_shear": null,
-                "wind_speed": {
-                    "repr": "18",
-                    "spoken": "one eight",
-                    "value": 18
-                },
-                "wind_variable_direction": [],
                 "wx_codes": []
             }
         ],
         "max_temp": null,
         "min_temp": null,
-        "raw": "EGLL 170454Z 1706/1812 09012KT CAVOK TEMPO 1709/1718 09016G26KT PROB40 TEMPO 1718/1810 10015G25KT PROB30 TEMPO 1809/1812 8000 -RA BKN014 BECMG 1810/1812 12018G28KT",
+        "raw": "EGLL 082257Z 0900/1006 20006KT 9999 FEW045 PROB30 0903/0907 9000 PROB30 1003/1006 6000",
         "remarks": "",
         "remarks_info": null,
-        "sanitized": "EGLL 170454Z 1706/1812 09012KT CAVOK TEMPO 1709/1718 09016G26KT PROB40 TEMPO 1718/1810 10015G25KT PROB30 TEMPO 1809/1812 8000 -RA BKN014 BECMG 1810/1812 12018G28KT",
+        "sanitized": "EGLL 082257Z 0900/1006 20006KT 9999 FEW045 PROB30 0903/0907 9000 PROB30 1003/1006 6000",
         "start_time": {
-            "dt": "2023-10-17T06:00:00+00:00",
-            "repr": "1706"
+            "dt": "2024-05-09T00:00:00+00:00",
+            "repr": "0900"
         },
         "station": "EGLL",
         "temps": null,
         "time": {
-            "dt": "2023-10-17T04:54:00+00:00",
-            "repr": "170454Z"
+            "dt": "2024-05-08T22:57:00+00:00",
+            "repr": "082257Z"
         }
     },
     "icao": "EGLL",
-    "speech": "Starting on October 17th - From 6 to 10 zulu, Winds zero nine zero at 12 knots. Visibility one zero kilometers. Sky clear. From 9 to 18 zulu, temporary Winds zero nine zero at 16 knots gusting to 26 knots. Sky clear. From 18 to 10 zulu, there's a 40% chance for temporary Winds one zero zero at 15 knots gusting to 25 knots. Sky clear. From 9 to 12 zulu, there's a 30% chance for temporary Visibility eight kilometers. Light Rain. Broken layer at 1400ft. At 12 zulu becoming Winds one two zero at 18 knots gusting to 28 knots. Sky clear",
+    "speech": "Starting on May 9th - From midnight to 6 zulu, Winds two zero zero at 6 knots. Visibility one zero kilometers. Few clouds at 4500ft. From 3 to 7 zulu, there's a 30% chance for Visibility nine kilometers. Sky clear. From 3 to 6 zulu, there's a 30% chance for Visibility six kilometers. Sky clear",
     "station": {
         "city": "London",
         "country": "GB",
@@ -285,21 +189,19 @@
         "wiki": "https://en.wikipedia.org/wiki/Heathrow_Airport"
     },
     "summary": [
-        "Winds E-090 at 12kt, Vis 10km, Sky clear",
-        "Winds E-090 at 16kt gusting to 26kt, Sky clear",
-        "Winds E-100 at 15kt gusting to 25kt, Sky clear",
-        "Vis 8km, Light Rain, Broken layer at 1400ft",
-        "Winds ESE-120 at 18kt gusting to 28kt"
+        "Winds SSW-200 at 6kt, Vis 10km, Few clouds at 4500ft",
+        "Vis 9km, Sky clear",
+        "Vis 6km, Sky clear"
     ],
     "translations": {
         "forecast": [
             {
                 "altimeter": "",
-                "clouds": "Sky clear",
+                "clouds": "Few clouds at 4500ft - Reported AGL",
                 "icing": "",
                 "turbulence": "",
                 "visibility": "10km (6.2sm)",
-                "wind": "E-090 at 12kt",
+                "wind": "SSW-200 at 6kt",
                 "wind_shear": "",
                 "wx_codes": ""
             },
@@ -308,38 +210,18 @@
                 "clouds": "Sky clear",
                 "icing": "",
                 "turbulence": "",
-                "visibility": "",
-                "wind": "E-090 at 16kt gusting to 26kt",
-                "wind_shear": "",
-                "wx_codes": ""
-            },
-            {
-                "altimeter": "",
-                "clouds": "Sky clear",
-                "icing": "",
-                "turbulence": "",
-                "visibility": "",
-                "wind": "E-100 at 15kt gusting to 25kt",
-                "wind_shear": "",
-                "wx_codes": ""
-            },
-            {
-                "altimeter": "",
-                "clouds": "Broken layer at 1400ft - Reported AGL",
-                "icing": "",
-                "turbulence": "",
-                "visibility": "8km (5sm)",
+                "visibility": "9km (5.6sm)",
                 "wind": "",
                 "wind_shear": "",
-                "wx_codes": "Light Rain"
+                "wx_codes": ""
             },
             {
                 "altimeter": "",
-                "clouds": "",
+                "clouds": "Sky clear",
                 "icing": "",
                 "turbulence": "",
-                "visibility": "",
-                "wind": "ESE-120 at 18kt gusting to 28kt",
+                "visibility": "6km (3.7sm)",
+                "wind": "",
                 "wind_shear": "",
                 "wx_codes": ""
             }
