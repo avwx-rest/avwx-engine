@@ -22,7 +22,7 @@ jobs:
           version=$(poetry version --short)
           echo "version=$version" >> "$GITHUB_OUTPUT"
       - name: Commit changes
-        uses: EndBug/add-and-commit@v7
+        uses: EndBug/add-and-commit@v9
         with:
           add: 'pyproject.toml'
           message: 'Release ${{ steps.updated_version.outputs.version }}'
