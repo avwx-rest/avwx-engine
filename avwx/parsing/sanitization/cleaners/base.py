@@ -22,6 +22,14 @@ class SingleItem(Cleaner):
         raise NotImplementedError()
 
 
+class DoubleItem(Cleaner):
+    """Cleaner that looks at two neighboring items"""
+
+    def can_handle(self, first: str, second: str) -> bool:
+        """Return True if neighboring pairs need to be cleaned"""
+        raise NotImplementedError()
+
+
 class RemoveItem(SingleItem):
     """Sanitization should remove item if handled"""
 
@@ -33,6 +41,14 @@ class CleanItem(SingleItem):
 
     def clean(self, item: str) -> str:
         """Cleans the raw string"""
+        raise NotImplementedError()
+
+
+class CleanPair(DoubleItem):
+    """Sanitization should clean both paired items"""
+
+    def clean(self, first: str, second: str) -> tuple[str, str]:
+        """Clean both raw strings"""
         raise NotImplementedError()
 
 
@@ -53,5 +69,11 @@ class CombineItems(Cleaner):
 
 
 CleanerListType = List[
-    Union[Type[CleanItem], Type[RemoveItem], Type[SplitItem], Type[CombineItems]]
+    Union[
+        Type[CleanItem],
+        Type[CleanPair],
+        Type[RemoveItem],
+        Type[SplitItem],
+        Type[CombineItems],
+    ]
 ]

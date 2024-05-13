@@ -10,6 +10,7 @@ from avwx.parsing.sanitization.base import CleanItem
 
 VIS_PERMUTATIONS = ["".join(p) for p in permutations("P6SM")]
 VIS_PERMUTATIONS.remove("6MPS")
+VIS_PERMUTATIONS += ["6+SM"]
 
 
 class VisibilityGreaterThan(CleanItem):

@@ -9,6 +9,7 @@ from avwx.structs import Sanitization
 from .cleaners.base import (
     CleanerListType,
     CleanItem,
+    CleanPair,
     RemoveItem,
     SplitItem,
     CombineItems,
@@ -67,6 +68,16 @@ def sanitize_list_with(
                         wxdata[i] = item[:index]
                         sans.extra_spaces_needed = True
                         if cleaner.should_break:
+                            break
+                elif isinstance(cleaner, CleanPair):
+                    if i and cleaner.can_handle(wxdata[i - 1], item):
+                        clean_first, clean_second = cleaner.clean(wxdata[i - 1], item)
+                        if wxdata[i - 1] != clean_first:
+                            sans.log(wxdata[i - 1], clean_first)
+                            wxdata[i - 1] = clean_first
+                        if item != clean_second:
+                            sans.log(item, clean_second)
+                            wxdata[i] = clean_second
                             break
                 elif cleaner.can_handle(item):
                     if isinstance(cleaner, RemoveItem):

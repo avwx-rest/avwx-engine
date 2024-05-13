@@ -17,6 +17,7 @@ from avwx.parsing.sanitization.cleaners import wind as cleaners
         ("20017SQ28KT", "20017G28KT"),
         ("VRB10G19MPSM", "VRB10G19MPS"),
         ("33010G20KTKT", "33010G20KT"),
+        ("VRB16G36KTKT", "VRB16G36KT"),
         ("WBB010", "VRB010"),
     ),
 )
