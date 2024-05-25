@@ -6,12 +6,11 @@ observations are valid for one hour after the report was issued or until the
 next report is issued.
 """
 
-# pylint: disable=invalid-overridden-method
-
 # stdlib
+from __future__ import annotations
+
 from contextlib import suppress
 from datetime import date, datetime, timedelta, timezone
-from typing import List, Tuple, Optional
 
 # module
 from avwx.current.base import Report, get_wx_codes
@@ -35,8 +34,7 @@ from avwx.structs import (
 
 
 class Metar(Report):
-    """
-    The Metar class offers an object-oriented approach to managing METAR data
+    """The Metar class offers an object-oriented approach to managing METAR data
     for a single station.
 
     Below is typical usage for fetching and pulling METAR data for KJFK.
@@ -80,11 +78,11 @@ class Metar(Report):
     ```
     """
 
-    data: Optional[MetarData] = None
-    translations: Optional[MetarTrans] = None
+    data: MetarData | None = None
+    translations: MetarTrans | None = None
 
     async def _pull_from_default(self) -> None:
-        """Checks for a more recent report from NOAA. Only sync"""
+        """Check for a more recent report from NOAA."""
         service = NOAA(self.__class__.__name__.lower())
         if self.code is None:
             return
@@ -93,18 +91,13 @@ class Metar(Report):
             data, units, sans = parse(self.code, report, self.issued)
             if not data or data.time is None or data.time.dt is None:
                 return
-            if (
-                not self.data
-                or self.data.time is None
-                or self.data.time.dt is None
-                or data.time.dt > self.data.time.dt
-            ):
+            if not self.data or self.data.time is None or self.data.time.dt is None or data.time.dt > self.data.time.dt:
                 self.data, self.units, self.sanitization = data, units, sans
                 self.source = service.root
 
     @property
     def _should_check_default(self) -> bool:
-        """Returns True if pulled from regional source and potentially out of date"""
+        """Return True if pulled from regional source and potentially out of date."""
         if isinstance(self.service, NOAA) or self.source is None:
             return False
 
@@ -114,7 +107,7 @@ class Metar(Report):
         return time_since > timedelta(minutes=90)
 
     def _calculate_altitudes(self) -> None:
-        """Adds the pressure and density altitudes to data if all fields are available"""
+        """Add the pressure and density altitudes to data if all fields are available."""
         if self.data is None or self.station is None or self.units is None:
             return
         # Select decimal temperature if available
@@ -127,19 +120,13 @@ class Metar(Report):
         elev = self.station.elevation_ft
         if elev is None:
             return
-        self.data.pressure_altitude = core.pressure_altitude(
-            alt.value, elev, self.units.altimeter
-        )
-        self.data.density_altitude = core.density_altitude(
-            alt.value, temp.value, elev, self.units
-        )
+        self.data.pressure_altitude = core.pressure_altitude(alt.value, elev, self.units.altimeter)
+        self.data.density_altitude = core.density_altitude(alt.value, temp.value, elev, self.units)
 
     async def _post_update(self) -> None:
         if self.code is None or self.raw is None:
             return
-        self.data, self.units, self.sanitization = parse(
-            self.code, self.raw, self.issued
-        )
+        self.data, self.units, self.sanitization = parse(self.code, self.raw, self.issued)
         if self._should_check_default:
             await self._pull_from_default()
         if self.data is None or self.units is None:
@@ -150,9 +137,7 @@ class Metar(Report):
     def _post_parse(self) -> None:
         if self.code is None or self.raw is None:
             return
-        self.data, self.units, self.sanitization = parse(
-            self.code, self.raw, self.issued
-        )
+        self.data, self.units, self.sanitization = parse(self.code, self.raw, self.issued)
         if self.data is None or self.units is None:
             return
         self._calculate_altitudes()
@@ -160,19 +145,19 @@ class Metar(Report):
 
     @staticmethod
     def sanitize(report: str) -> str:
-        """Sanitizes a METAR string"""
+        """Sanitize a METAR string."""
         return sanitize(report)[0]
 
     @property
-    def summary(self) -> Optional[str]:
-        """Condensed report summary created from translations"""
+    def summary(self) -> str | None:
+        """Condensed report summary created from translations."""
         if not self.translations:
             self.update()
         return None if self.translations is None else summary.metar(self.translations)
 
     @property
-    def speech(self) -> Optional[str]:
-        """Report summary designed to be read by a text-to-speech program"""
+    def speech(self) -> str | None:
+        """Report summary designed to be read by a text-to-speech program."""
         if not self.data:
             self.update()
         if self.data is None or self.units is None:
@@ -180,8 +165,8 @@ class Metar(Report):
         return speech.metar(self.data, self.units)
 
 
-def get_remarks(txt: str) -> Tuple[List[str], str]:
-    """Returns the report split into components and the remarks string
+def get_remarks(txt: str) -> tuple[list[str], str]:
+    """Return the report split into components and the remarks string.
 
     Remarks can include items like RMK and on, NOSIG and on, and BECMG and on
     """
@@ -217,7 +202,7 @@ _RVR_CODES = {
 }
 
 
-def _parse_rvr_number(value: str) -> Optional[Number]:
+def _parse_rvr_number(value: str) -> Number | None:
     if not value:
         return None
     raw, prefix = value, None
@@ -232,7 +217,7 @@ def _parse_rvr_number(value: str) -> Optional[Number]:
 
 
 def parse_runway_visibility(value: str) -> RunwayVisibility:
-    """Parse a runway visibility range string"""
+    """Parse a runway visibility range string."""
     raw, trend = value, None
     # TODO: update to check and convert units post visibility parse
     value = value.replace("FT", "")
@@ -255,8 +240,8 @@ def parse_runway_visibility(value: str) -> RunwayVisibility:
     )
 
 
-def get_runway_visibility(data: List[str]) -> Tuple[List[str], List[RunwayVisibility]]:
-    """Returns the report list and the remove runway visibility list"""
+def get_runway_visibility(data: list[str]) -> tuple[list[str], list[RunwayVisibility]]:
+    """Return the report list and the remove runway visibility list."""
     runway_vis = [
         parse_runway_visibility(data.pop(i))
         for i, item in reversed(list(enumerate(data)))
@@ -266,8 +251,8 @@ def get_runway_visibility(data: List[str]) -> Tuple[List[str], List[RunwayVisibi
     return data, runway_vis
 
 
-def parse_altimeter(value: str) -> Optional[Number]:
-    """Parse an altimeter string into a Number"""
+def parse_altimeter(value: str) -> Number | None:
+    """Parse an altimeter string into a Number."""
     if not value or len(value) < 4:
         return None
     # QNH3003INS
@@ -289,14 +274,12 @@ def parse_altimeter(value: str) -> Optional[Number]:
     return core.make_number(number, value, number, literal=True)
 
 
-def get_altimeter(
-    data: List[str], units: Units, version: str = "NA"
-) -> Tuple[List[str], Optional[Number]]:
-    """Returns the report list and the removed altimeter item
+def get_altimeter(data: list[str], units: Units, version: str = "NA") -> tuple[list[str], Number | None]:
+    """Return the report list and the removed altimeter item.
 
     Version is 'NA' (North American / default) or 'IN' (International)
     """
-    values: List[Number] = []
+    values: list[Number] = []
     for _ in range(2):
         if not data:
             break
@@ -315,17 +298,17 @@ def get_altimeter(
 
 
 def get_temp_and_dew(
-    data: List[str],
-) -> Tuple[List[str], Optional[Number], Optional[Number]]:
-    """Returns the report list and removed temperature and dewpoint strings"""
+    data: list[str],
+) -> tuple[list[str], Number | None, Number | None]:
+    """Return the report list and removed temperature and dewpoint strings."""
     for i, item in reversed(list(enumerate(data))):
         if "/" in item:
             # ///07
             if item[0] == "/":
-                item = "/" + item.lstrip("/")
+                item = "/" + item.lstrip("/")  # noqa: PLW2901
             # 07///
             elif item[-1] == "/":
-                item = item.rstrip("/") + "/"
+                item = item.rstrip("/") + "/"  # noqa: PLW2901
             tempdew = item.split("/")
             if len(tempdew) != 2:
                 continue
@@ -344,12 +327,12 @@ def get_temp_and_dew(
 
 
 def get_relative_humidity(
-    temperature: Optional[Number],
-    dewpoint: Optional[Number],
-    remarks_info: Optional[RemarksData],
+    temperature: Number | None,
+    dewpoint: Number | None,
+    remarks_info: RemarksData | None,
     units: Units,
-) -> Optional[float]:
-    """Calculates relative humidity from preferred temperature and dewpoint"""
+) -> float | None:
+    """Calculate relative humidity from preferred temperature and dewpoint."""
     if remarks_info is not None:
         temp = remarks_info.temperature_decimal or temperature
         dew = remarks_info.dewpoint_decimal or dewpoint
@@ -363,8 +346,8 @@ def get_relative_humidity(
     return core.relative_humidity(temp.value, dew.value, units.temperature)
 
 
-def sanitize(report: str) -> Tuple[str, str, List[str], Sanitization]:
-    """Returns a sanitized report, remarks, and elements ready for parsing"""
+def sanitize(report: str) -> tuple[str, str, list[str], Sanitization]:
+    """Return a sanitized report, remarks, and elements ready for parsing."""
     sans = Sanitization()
     clean = clean_metar_string(report, sans)
     data, remark_str = get_remarks(clean)
@@ -379,10 +362,10 @@ def sanitize(report: str) -> Tuple[str, str, List[str], Sanitization]:
 def parse(
     station: str,
     report: str,
-    issued: Optional[date] = None,
-    use_na: Optional[bool] = None,
-) -> Tuple[Optional[MetarData], Optional[Units], Optional[Sanitization]]:
-    """Returns MetarData and Units dataclasses with parsed data and their associated units"""
+    issued: date | None = None,
+    use_na: bool | None = None,
+) -> tuple[MetarData | None, Units | None, Sanitization | None]:
+    """Return MetarData and Units dataclasses with parsed data and their associated units."""
     valid_station(station)
     if not report:
         return None, None, None
@@ -392,11 +375,8 @@ def parse(
     return parser(report, issued)
 
 
-def parse_na(
-    report: str, issued: Optional[date] = None
-) -> Tuple[MetarData, Units, Sanitization]:
-    """Parser for the North American METAR variant"""
-    # pylint: disable=too-many-locals
+def parse_na(report: str, issued: date | None = None) -> tuple[MetarData, Units, Sanitization]:
+    """Parser for the North American METAR variant."""
     units = Units.north_american()
     sanitized, remarks_str, data, sans = sanitize(report)
     data, station, time = core.get_station_and_time(data)
@@ -441,11 +421,8 @@ def parse_na(
     return struct, units, sans
 
 
-def parse_in(
-    report: str, issued: Optional[date] = None
-) -> Tuple[MetarData, Units, Sanitization]:
-    """Parser for the International METAR variant"""
-    # pylint: disable=too-many-locals
+def parse_in(report: str, issued: date | None = None) -> tuple[MetarData, Units, Sanitization]:
+    """Parser for the International METAR variant."""
     units = Units.international()
     sanitized, remarks_str, data, sans = sanitize(report)
     data, station, time = core.get_station_and_time(data)

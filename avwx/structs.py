@@ -1,19 +1,23 @@
-"""
-Contains dataclasses to hold report data
-"""
-
-# pylint: disable=missing-class-docstring,missing-function-docstring,too-many-instance-attributes
+"""Contains dataclasses to hold report data."""
 
 # stdlib
+from __future__ import annotations
+
 from dataclasses import dataclass, field
-from datetime import datetime
-from typing import Dict, List, Optional, Tuple, Type, TypeVar, Union
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 # module
+from avwx.exceptions import MissingExtraModule
 from avwx.load_utils import LazyLoad
 from avwx.static.core import IN_UNITS, NA_UNITS
 
-
+try:
+    from typing import Self
+except ImportError:
+    from typing_extensions import Self
 try:
     from shapely.geometry import Point, Polygon  # type: ignore
 except ModuleNotFoundError:
@@ -28,8 +32,8 @@ class Aircraft:
     type: str
 
     @classmethod
-    def from_icao(cls, code: str) -> "Aircraft":
-        """Load an Aircraft from an ICAO aircraft code"""
+    def from_icao(cls, code: str) -> Self:
+        """Load an Aircraft from an ICAO aircraft code."""
         try:
             return cls(code=code, type=AIRCRAFT[code])
         except KeyError as key_error:
@@ -47,20 +51,20 @@ class Units:
     wind_speed: str
 
     @classmethod
-    def international(cls) -> "Units":
-        """Create default internation units"""
+    def international(cls) -> Self:
+        """Create default internation units."""
         return cls(**IN_UNITS)
 
     @classmethod
-    def north_american(cls) -> "Units":
-        """Create default North American units"""
+    def north_american(cls) -> Self:
+        """Create default North American units."""
         return cls(**NA_UNITS)
 
 
 @dataclass
 class Number:
     repr: str
-    value: Union[int, float, None]
+    value: int | float | None
     spoken: str
 
 
@@ -73,12 +77,8 @@ class Fraction(Number):
 
 @dataclass
 class Timestamp:
-    # pylint: disable=invalid-name
     repr: str
-    dt: Optional[datetime]
-
-
-CodeType = TypeVar("CodeType", bound="Code")  # pylint: disable=invalid-name
+    dt: datetime | None
 
 
 @dataclass
@@ -88,32 +88,35 @@ class Code:
 
     @classmethod
     def from_dict(
-        cls: Type[CodeType],
-        key: Optional[str],
-        codes: Dict[str, str],
-        default: Optional[str] = None,
+        cls,
+        key: str | None,
+        codes: dict[str, str],
+        *,
+        default: str | None = None,
         error: bool = True,
-    ) -> Optional[CodeType]:
-        """Load a code from a known key and value dict"""
-        value: Optional[str]
+    ) -> Self | None:
+        """Load a code from a known key and value dict."""
+        value: str | None
         if not key:
             return None
         try:
             value = codes[key]
         except KeyError as exc:
             if error:
-                raise KeyError(f"No code found for {key}") from exc
+                msg = f"No code found for {key}"
+                raise KeyError(msg) from exc
             value = default
         return cls(key, value or "Unknown")
 
     @classmethod
     def from_list(
-        cls: Type[CodeType],
-        keys: Optional[str],
-        codes: Dict[str, str],
+        cls,
+        keys: str | None,
+        codes: dict[str, str],
+        *,
         exclusive: bool = False,
-    ) -> List[CodeType]:
-        """Load a list of codes from string characters"""
+    ) -> list[Self]:
+        """Load a list of codes from string characters."""
         if not keys:
             return []
         out = []
@@ -129,21 +132,22 @@ class Code:
 class Coord:
     lat: float
     lon: float
-    repr: Optional[str] = None
+    repr: str | None = None
 
     @property
-    def pair(self) -> Tuple[float, float]:
+    def pair(self) -> tuple[float, float]:
         return self.lat, self.lon
 
     @property
     def point(self) -> Point:
         if Point is None:
-            raise ModuleNotFoundError("Install avwx-engine[shape] to use this feature")
+            extra = "shape"
+            raise MissingExtraModule(extra)
         return Point(self.lat, self.lon)
 
     @staticmethod
-    def to_dms(value: float) -> Tuple[int, int, int]:
-        """Convert a coordinate decimal value to degree, minute, second"""
+    def to_dms(value: float) -> tuple[int, int, int]:
+        """Convert a coordinate decimal value to degree, minute, second."""
         minute, second = divmod(abs(value) * 3600, 60)
         degree, minute = divmod(minute, 60)
         if value < 0:
@@ -154,27 +158,27 @@ class Coord:
 @dataclass
 class Cloud:
     repr: str
-    type: Optional[str] = None
-    base: Optional[int] = None
-    top: Optional[int] = None
-    modifier: Optional[str] = None
+    type: str | None = None
+    base: int | None = None
+    top: int | None = None
+    modifier: str | None = None
 
 
 @dataclass
 class RunwayVisibility:
     repr: str
     runway: str
-    visibility: Optional[Number]
-    variable_visibility: List[Number]
-    trend: Optional[Code]
+    visibility: Number | None
+    variable_visibility: list[Number]
+    trend: Code | None
 
 
 @dataclass
 class Location:
     repr: str
-    station: Optional[str]
-    direction: Optional[Number]
-    distance: Optional[Number]
+    station: str | None
+    direction: Number | None
+    distance: Number | None
 
 
 @dataclass
@@ -186,85 +190,85 @@ class PressureTendency:
 
 @dataclass
 class FiveDigitCodes:
-    maximum_temperature_6: Optional[Number] = None  # 1
-    minimum_temperature_6: Optional[Number] = None  # 2
-    pressure_tendency: Optional[PressureTendency] = None  # 5
-    precip_36_hours: Optional[Number] = None  # 6
-    precip_24_hours: Optional[Number] = None  # 7
-    sunshine_minutes: Optional[Number] = None  # 9
+    maximum_temperature_6: Number | None = None  # 1
+    minimum_temperature_6: Number | None = None  # 2
+    pressure_tendency: PressureTendency | None = None  # 5
+    precip_36_hours: Number | None = None  # 6
+    precip_24_hours: Number | None = None  # 7
+    sunshine_minutes: Number | None = None  # 9
 
 
 @dataclass
 class RemarksData(FiveDigitCodes):
-    codes: List[Code] = field(default_factory=[])  # type: ignore
-    dewpoint_decimal: Optional[Number] = None
-    maximum_temperature_24: Optional[Number] = None
-    minimum_temperature_24: Optional[Number] = None
-    precip_hourly: Optional[Number] = None
-    sea_level_pressure: Optional[Number] = None
-    snow_depth: Optional[Number] = None
-    temperature_decimal: Optional[Number] = None
+    codes: list[Code] = field(default_factory=list)
+    dewpoint_decimal: Number | None = None
+    maximum_temperature_24: Number | None = None
+    minimum_temperature_24: Number | None = None
+    precip_hourly: Number | None = None
+    sea_level_pressure: Number | None = None
+    snow_depth: Number | None = None
+    temperature_decimal: Number | None = None
 
 
 @dataclass
 class ReportData:
     raw: str
     sanitized: str
-    station: Optional[str]
-    time: Optional[Timestamp]
-    remarks: Optional[str]
+    station: str | None
+    time: Timestamp | None
+    remarks: str | None
 
 
 @dataclass
 class SharedData:
-    altimeter: Optional[Number]
-    clouds: List[Cloud]
+    altimeter: Number | None
+    clouds: list[Cloud]
     flight_rules: str
-    other: List[str]
-    visibility: Optional[Number]
-    wind_direction: Optional[Number]
-    wind_gust: Optional[Number]
-    wind_speed: Optional[Number]
-    wx_codes: List[Code]
+    other: list[str]
+    visibility: Number | None
+    wind_direction: Number | None
+    wind_gust: Number | None
+    wind_speed: Number | None
+    wx_codes: list[Code]
 
 
 @dataclass
 class MetarData(ReportData, SharedData):
-    dewpoint: Optional[Number]
-    relative_humidity: Optional[float]
-    remarks_info: Optional[RemarksData]
-    runway_visibility: List[RunwayVisibility]
-    temperature: Optional[Number]
-    wind_variable_direction: List[Number]
-    density_altitude: Optional[int] = None
-    pressure_altitude: Optional[int] = None
+    dewpoint: Number | None
+    relative_humidity: float | None
+    remarks_info: RemarksData | None
+    runway_visibility: list[RunwayVisibility]
+    temperature: Number | None
+    wind_variable_direction: list[Number]
+    density_altitude: int | None = None
+    pressure_altitude: int | None = None
 
 
 @dataclass
 class TafLineData(SharedData):
-    end_time: Optional[Timestamp]
-    icing: List[str]
-    probability: Optional[Number]
+    end_time: Timestamp | None
+    icing: list[str]
+    probability: Number | None
     raw: str
     sanitized: str
-    start_time: Optional[Timestamp]
-    transition_start: Optional[Timestamp]
-    turbulence: List[str]
+    start_time: Timestamp | None
+    transition_start: Timestamp | None
+    turbulence: list[str]
     type: str
-    wind_shear: Optional[str]
-    wind_variable_direction: Optional[List[Number]]
+    wind_shear: str | None
+    wind_variable_direction: list[Number] | None
 
 
 @dataclass
 class TafData(ReportData):
-    forecast: List[TafLineData]
-    start_time: Optional[Timestamp]
-    end_time: Optional[Timestamp]
-    max_temp: Optional[str] = None
-    min_temp: Optional[str] = None
-    alts: Optional[List[str]] = None
-    temps: Optional[List[str]] = None
-    remarks_info: Optional[RemarksData] = None
+    forecast: list[TafLineData]
+    start_time: Timestamp | None
+    end_time: Timestamp | None
+    max_temp: str | None = None
+    min_temp: str | None = None
+    alts: list[str] | None = None
+    temps: list[str] | None = None
+    remarks_info: RemarksData | None = None
 
 
 @dataclass
@@ -293,7 +297,7 @@ class TafLineTrans(ReportTrans):
 
 @dataclass
 class TafTrans:
-    forecast: List[TafLineTrans]
+    forecast: list[TafLineTrans]
     max_temp: str
     min_temp: str
     remarks: dict
@@ -302,29 +306,28 @@ class TafTrans:
 @dataclass
 class Turbulence:
     severity: str
-    floor: Optional[Number] = None
-    ceiling: Optional[Number] = None
+    floor: Number | None = None
+    ceiling: Number | None = None
 
 
 @dataclass
 class Icing(Turbulence):
-    type: Optional[str] = None
+    type: str | None = None
 
 
 @dataclass
 class PirepData(ReportData):
-    # pylint: disable=invalid-name
-    aircraft: Union[Aircraft, str, None] = None
-    altitude: Union[Number, str, None] = None
-    clouds: Optional[List[Cloud]] = None
-    flight_visibility: Optional[Number] = None
-    icing: Optional[Icing] = None
-    location: Optional[Location] = None
-    other: Optional[List[str]] = None
-    temperature: Optional[Number] = None
-    turbulence: Optional[Turbulence] = None
-    type: Optional[str] = None
-    wx_codes: Optional[List[Code]] = None
+    aircraft: Aircraft | str | None = None
+    altitude: Number | str | None = None
+    clouds: list[Cloud] | None = None
+    flight_visibility: Number | None = None
+    icing: Icing | None = None
+    location: Location | None = None
+    other: list[str] | None = None
+    temperature: Number | None = None
+    turbulence: Turbulence | None = None
+    type: str | None = None
+    wx_codes: list[Code] | None = None
 
 
 @dataclass
@@ -343,73 +346,77 @@ class Bulletin:
 @dataclass
 class Movement:
     repr: str
-    direction: Optional[Number]
-    speed: Optional[Number]
+    direction: Number | None
+    speed: Number | None
+
+
+MIN_POLY_SIZE = 2
 
 
 @dataclass
 class AirSigObservation:
-    type: Optional[Code]
-    start_time: Optional[Timestamp]
-    end_time: Optional[Timestamp]
-    position: Optional[Coord]
-    floor: Optional[Number]
-    ceiling: Optional[Number]
-    coords: List[Coord]
-    bounds: List[str]
-    movement: Optional[Movement]
-    intensity: Optional[Code]
-    other: List[str]
+    type: Code | None
+    start_time: Timestamp | None
+    end_time: Timestamp | None
+    position: Coord | None
+    floor: Number | None
+    ceiling: Number | None
+    coords: list[Coord]
+    bounds: list[str]
+    movement: Movement | None
+    intensity: Code | None
+    other: list[str]
 
     @property
-    def poly(self) -> Optional[Polygon]:
+    def poly(self) -> Polygon | None:
         if Polygon is None:
-            raise ModuleNotFoundError("Install avwx-engine[shape] to use this feature")
-        return Polygon([c.pair for c in self.coords]) if len(self.coords) > 2 else None
+            extra = "shape"
+            raise MissingExtraModule(extra)
+        return Polygon([c.pair for c in self.coords]) if len(self.coords) > MIN_POLY_SIZE else None
 
 
 @dataclass
 class AirSigmetData(ReportData):
     bulletin: Bulletin
     issuer: str
-    correction: Optional[str]
+    correction: str | None
     area: str
     type: str
-    start_time: Optional[Timestamp]
-    end_time: Optional[Timestamp]
+    start_time: Timestamp | None
+    end_time: Timestamp | None
     body: str
     region: str
-    observation: Optional[AirSigObservation]
-    forecast: Optional[AirSigObservation]
+    observation: AirSigObservation | None
+    forecast: AirSigObservation | None
 
 
 @dataclass
 class Qualifiers:
     repr: str
     fir: str
-    subject: Optional[Code]
-    condition: Optional[Code]
-    traffic: Optional[Code]
-    purpose: List[Code]
-    scope: List[Code]
-    lower: Optional[Number]
-    upper: Optional[Number]
-    coord: Optional[Coord]
-    radius: Optional[Number]
+    subject: Code | None
+    condition: Code | None
+    traffic: Code | None
+    purpose: list[Code]
+    scope: list[Code]
+    lower: Number | None
+    upper: Number | None
+    coord: Coord | None
+    radius: Number | None
 
 
 @dataclass
 class NotamData(ReportData):
-    number: Optional[str]
-    replaces: Optional[str]
-    type: Optional[Code]
-    qualifiers: Optional[Qualifiers]
-    start_time: Union[Timestamp, Code, None]
-    end_time: Union[Timestamp, Code, None]
-    schedule: Optional[str]
+    number: str | None
+    replaces: str | None
+    type: Code | None
+    qualifiers: Qualifiers | None
+    start_time: Timestamp | Code | None
+    end_time: Timestamp | Code | None
+    schedule: str | None
     body: str
-    lower: Optional[Number]
-    upper: Optional[Number]
+    lower: Number | None
+    upper: Number | None
 
 
 @dataclass
@@ -418,47 +425,47 @@ class GfsPeriod:
     temperature: Number
     dewpoint: Number
     cloud: Code
-    temperature_minmax: Optional[Number] = None
-    precip_chance_12: Optional[Number] = None
-    precip_amount_12: Optional[Code] = None
-    thunderstorm_12: Optional[Number] = None
-    severe_storm_12: Optional[Number] = None
-    freezing_precip: Optional[Number] = None
-    precip_type: Optional[Code] = None
-    snow: Optional[Number] = None
+    temperature_minmax: Number | None = None
+    precip_chance_12: Number | None = None
+    precip_amount_12: Code | None = None
+    thunderstorm_12: Number | None = None
+    severe_storm_12: Number | None = None
+    freezing_precip: Number | None = None
+    precip_type: Code | None = None
+    snow: Number | None = None
 
 
 @dataclass
 class MavPeriod(GfsPeriod):
-    wind_direction: Optional[Number] = None
-    wind_speed: Optional[Number] = None
-    precip_chance_6: Optional[Number] = None
-    precip_amount_6: Optional[Code] = None
-    thunderstorm_6: Optional[Number] = None
-    severe_storm_6: Optional[Number] = None
-    ceiling: Optional[Code] = None
-    visibility: Optional[Code] = None
-    vis_obstruction: Optional[Code] = None
+    wind_direction: Number | None = None
+    wind_speed: Number | None = None
+    precip_chance_6: Number | None = None
+    precip_amount_6: Code | None = None
+    thunderstorm_6: Number | None = None
+    severe_storm_6: Number | None = None
+    ceiling: Code | None = None
+    visibility: Code | None = None
+    vis_obstruction: Code | None = None
 
 
 @dataclass
 class MexPeriod(GfsPeriod):
-    precip_chance_24: Optional[Number] = None
-    precip_amount_24: Optional[Code] = None
-    thunderstorm_24: Optional[Number] = None
-    severe_storm_24: Optional[Number] = None
-    rain_snow_mix: Optional[Number] = None
-    snow_amount_24: Optional[Code] = None
+    precip_chance_24: Number | None = None
+    precip_amount_24: Code | None = None
+    thunderstorm_24: Number | None = None
+    severe_storm_24: Number | None = None
+    rain_snow_mix: Number | None = None
+    snow_amount_24: Code | None = None
 
 
 @dataclass
 class MavData(ReportData):
-    forecast: List[MavPeriod]
+    forecast: list[MavPeriod]
 
 
 @dataclass
 class MexData(ReportData):
-    forecast: List[MexPeriod]
+    forecast: list[MexPeriod]
 
 
 @dataclass
@@ -471,97 +478,97 @@ class NbmUnits(Units):
 @dataclass
 class NbmPeriod:
     time: Timestamp
-    temperature: Optional[Number] = None
-    dewpoint: Optional[Number] = None
-    sky_cover: Optional[Number] = None
-    wind_direction: Optional[Number] = None
-    wind_speed: Optional[Number] = None
-    wind_gust: Optional[Number] = None
-    snow_level: Optional[Number] = None
-    precip_duration: Optional[Number] = None
-    freezing_precip: Optional[Number] = None
-    snow: Optional[Number] = None
-    sleet: Optional[Number] = None
-    rain: Optional[Number] = None
-    solar_radiation: Optional[Number] = None
-    wave_height: Optional[Number] = None
+    temperature: Number | None = None
+    dewpoint: Number | None = None
+    sky_cover: Number | None = None
+    wind_direction: Number | None = None
+    wind_speed: Number | None = None
+    wind_gust: Number | None = None
+    snow_level: Number | None = None
+    precip_duration: Number | None = None
+    freezing_precip: Number | None = None
+    snow: Number | None = None
+    sleet: Number | None = None
+    rain: Number | None = None
+    solar_radiation: Number | None = None
+    wave_height: Number | None = None
 
 
 @dataclass
 class NbhsShared(NbmPeriod):
-    ceiling: Optional[Number] = None
-    visibility: Optional[Number] = None
-    cloud_base: Optional[Number] = None
-    mixing_height: Optional[Number] = None
-    transport_wind_direction: Optional[Number] = None
-    transport_wind_speed: Optional[Number] = None
-    haines: Optional[List[Number]] = None
+    ceiling: Number | None = None
+    visibility: Number | None = None
+    cloud_base: Number | None = None
+    mixing_height: Number | None = None
+    transport_wind_direction: Number | None = None
+    transport_wind_speed: Number | None = None
+    haines: list[Number] | None = None
 
 
 @dataclass
 class NbhPeriod(NbhsShared):
-    precip_chance_1: Optional[Number] = None
-    precip_chance_6: Optional[Number] = None
-    precip_amount_1: Optional[Number] = None
-    thunderstorm_1: Optional[Number] = None
-    snow_amount_1: Optional[Number] = None
-    icing_amount_1: Optional[Number] = None
+    precip_chance_1: Number | None = None
+    precip_chance_6: Number | None = None
+    precip_amount_1: Number | None = None
+    thunderstorm_1: Number | None = None
+    snow_amount_1: Number | None = None
+    icing_amount_1: Number | None = None
 
 
 @dataclass
 class NbsPeriod(NbhsShared):
-    temperature_minmax: Optional[Number] = None
-    precip_chance_6: Optional[Number] = None
-    precip_chance_12: Optional[Number] = None
-    precip_amount_6: Optional[Number] = None
-    precip_amount_12: Optional[Number] = None
-    precip_duration: Optional[Number] = None
-    thunderstorm_3: Optional[Number] = None
-    thunderstorm_6: Optional[Number] = None
-    thunderstorm_12: Optional[Number] = None
-    snow_amount_6: Optional[Number] = None
-    icing_amount_6: Optional[Number] = None
+    temperature_minmax: Number | None = None
+    precip_chance_6: Number | None = None
+    precip_chance_12: Number | None = None
+    precip_amount_6: Number | None = None
+    precip_amount_12: Number | None = None
+    precip_duration: Number | None = None
+    thunderstorm_3: Number | None = None
+    thunderstorm_6: Number | None = None
+    thunderstorm_12: Number | None = None
+    snow_amount_6: Number | None = None
+    icing_amount_6: Number | None = None
 
 
 @dataclass
 class NbePeriod(NbmPeriod):
-    temperature_minmax: Optional[Number] = None
-    precip_chance_12: Optional[Number] = None
-    precip_amount_12: Optional[Number] = None
-    precip_amount_24: Optional[Number] = None
-    thunderstorm_12: Optional[Number] = None
-    snow_amount_12: Optional[Number] = None
-    snow_amount_24: Optional[Number] = None
-    icing_amount_12: Optional[Number] = None
+    temperature_minmax: Number | None = None
+    precip_chance_12: Number | None = None
+    precip_amount_12: Number | None = None
+    precip_amount_24: Number | None = None
+    thunderstorm_12: Number | None = None
+    snow_amount_12: Number | None = None
+    snow_amount_24: Number | None = None
+    icing_amount_12: Number | None = None
 
 
 @dataclass
 class NbxPeriod(NbmPeriod):
-    precip_chance_12: Optional[Number] = None
-    precip_amount_12: Optional[Number] = None
-    precip_amount_24: Optional[Number] = None
-    snow_amount_12: Optional[Number] = None
-    icing_amount_12: Optional[Number] = None
+    precip_chance_12: Number | None = None
+    precip_amount_12: Number | None = None
+    precip_amount_24: Number | None = None
+    snow_amount_12: Number | None = None
+    icing_amount_12: Number | None = None
 
 
 @dataclass
 class NbhData(ReportData):
-    forecast: List[NbhPeriod]
+    forecast: list[NbhPeriod]
 
 
 @dataclass
 class NbsData(ReportData):
-    forecast: List[NbsPeriod]
+    forecast: list[NbsPeriod]
 
 
 @dataclass
 class NbeData(ReportData):
-    forecast: List[NbePeriod]
+    forecast: list[NbePeriod]
 
 
 @dataclass
 class NbxData(ReportData):
-    forecast: List[NbxPeriod]
+    forecast: list[NbxPeriod]
 
 
 # @dataclass
@@ -603,8 +610,10 @@ class NbxData(ReportData):
 
 @dataclass
 class Sanitization:
-    removed: List[str] = field(default_factory=list)
-    replaced: Dict[str, str] = field(default_factory=dict)
+    """Tracks changes made during the sanitization process."""
+
+    removed: list[str] = field(default_factory=list)
+    replaced: dict[str, str] = field(default_factory=dict)
     duplicates_found: bool = False
     extra_spaces_found: bool = False
     extra_spaces_needed: bool = False
@@ -619,8 +628,8 @@ class Sanitization:
             or self.extra_spaces_needed
         )
 
-    def log(self, item: str, replacement: Optional[str] = None) -> None:
-        """Log a changed item. Calling without a replacement assumes removal"""
+    def log(self, item: str, replacement: str | None = None) -> None:
+        """Log a changed item. Calling without a replacement assumes removal."""
         item = item.strip()
         if not item:
             return
@@ -633,8 +642,8 @@ class Sanitization:
         elif item != replacement:
             self.replaced[item] = replacement
 
-    def log_list(self, before: List[str], after: List[str]) -> None:
-        """Log list differences. Assumes that list length and order haven't changed"""
+    def log_list(self, before: list[str], after: list[str]) -> None:
+        """Log list differences. Assumes that list length and order haven't changed."""
         for item, replacement in zip(before, after):
             if item != replacement:
                 self.log(item, replacement)

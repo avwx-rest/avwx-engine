@@ -1,17 +1,18 @@
-[tool.poetry]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
 name = "avwx-engine"
 version = "1.8.28"
 description = "Aviation weather report parsing library"
-authors = ["Michael duPont <michael@dupont.dev>"]
-license = "MIT"
 readme = "README.md"
-
-documentation = "https://engine.avwx.rest"
-homepage = "https://engine.avwx.rest"
-repository = "https://github.com/avwx-rest/avwx-engine"
-
+requires-python = ">=3.9"
+license = "MIT"
 keywords = ["aviation", "weather", "metar"]
-
+authors = [
+    { name = "Michael duPont", email = "michael@dupont.dev" },
+]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
@@ -26,65 +27,64 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed",
 ]
-
-packages = [
-    { include = "avwx" }
+dependencies = [
+    "geopy>=2.4",
+    "httpx>=0.26",
+    "python-dateutil>=2.8",
+    "xmltodict>=0.13",
 ]
 
+[project.urls]
+Documentation = "https://engine.avwx.rest"
+Homepage = "https://engine.avwx.rest"
+Issues = "https://github.com/avwx-rest/avwx-engine/issues"
+Source = "https://github.com/avwx-rest/avwx-engine"
+
+[tool.hatch.build.targets.wheel]
+packages = ["avwx"]
+[tool.hatch.build.targets.sdist]
 include = [
-    "avwx/data/files/aircraft.json",
-    "avwx/data/files/navaids.json",
-    "avwx/data/files/stations.json",
+    "avwx/data/files/*.json",
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.9,<3.13"
-geopy = ">=2.4"
-httpx = ">=0.26"
-python-dateutil = ">=2.8"
-xmltodict = ">=0.13"
+[project.optional-dependencies]
+fuzz = [
+    "rapidfuzz>=3.6",
+]
+scipy = [
+    "numpy>=1.26",
+    "scipy>=1.10",
+]
+shape = [
+    "shapely>=2.0",
+]
+all = [
+    "avwx-engine[fuzz,scipy,shape]",
+]
 
-typing_extensions = { version = ">=4.5", python = "<3.10"}
+# docs = """python -m pdoc ./avwx \
+#     !avwx.flight_path !avwx.current.airep \
+#     --favicon https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/favicon.ico \
+#     --logo https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/avwx-logo-color-200.png \
+#     --logo-link https://info.avwx.rest \
+# """
 
-numpy = { version = ">=1.26", optional = true }
-rapidfuzz = { version = ">=3.6", optional = true }
-scipy = { version = ">=1.10", optional = true }
-shapely = { version = ">=2.0", optional = true }
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+  "pytest-asyncio",
+  "pytest-github-actions-annotate-failures",
+  "time-machine",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/pyorl_example tests}"
 
-[tool.poetry.extras]
-all = ["numpy", "rapidfuzz", "scipy", "shapely"]
-fuzz = ["rapidfuzz"]
-scipy = ["numpy", "scipy"]
-shape = ["shapely"]
-
-[tool.poetry.dev-dependencies]
-mypy = "*"
-pdoc = "*"
-poethepoet = "*"
-pre-commit = "*"
-pyroma = "*"
-pytest = "*"
-pytest-asyncio = "*"
-pytest-cov = "*"
-pytest-github-actions-annotate-failures = "*"
-ruff = "*"
-time-machine = "*"
-
-[build-system]
-requires = ["poetry-core>=1.9.0"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.poe.tasks]
-test = "pytest"
-type = "mypy avwx/"
-lint = "ruff check avwx/"
-clean = "ruff format avwx/"
-docs = """python -m pdoc ./avwx \
-    !avwx.flight_path !avwx.current.airep \
-    --favicon https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/favicon.ico \
-    --logo https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/avwx-logo-color-200.png \
-    --logo-link https://info.avwx.rest \
-"""
+[tool.hatch.envs.hatch-test]
+extra-dependencies = [
+    "pytest-asyncio",
+    "pytest-github-actions-annotate-failures",
+    "time-machine",
+]
 
 [tool.pytest.ini_options]
 addopts = """\
@@ -95,18 +95,22 @@ addopts = """\
 """
 
 [tool.coverage.run]
+source_pkgs = ["avwx", "tests"]
+branch = true
+parallel = true
 omit = [
     "*airep.py",
     "*glossary.py",
     "avwx/data/*",
-    "tests/*",
+    # "tests/*",
 ]
 
 [tool.coverage.report]
 fail_under = 89  # increase over time
 exclude_lines = [
-    'if TYPE_CHECKING:',
-    'pragma: no cover'
+    "no cov",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
 ]
 
 [tool.mypy]
@@ -121,12 +125,14 @@ check_untyped_defs = true
 show_error_codes = true
 
 [tool.ruff]
-lint.extend-select = [
-    "UP",
-    # "D",
-]
+# lint.extend-select = [
+#     "UP",
+#     # "D",
+# ]
 lint.ignore = [
     "D105",
     "D203",
     "D213",
+    "PLR2004", # Magic variable. Consider slowly re-enabling
+    "N818",
 ]

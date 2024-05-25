@@ -18,12 +18,13 @@ each as a SIGMET or AIRMET for filtering purposes.
 """
 
 # stdlib
+from __future__ import annotations
+
 import asyncio as aio
 import re
 from contextlib import suppress
 from datetime import date, datetime, timezone
 from itertools import chain
-from typing import List, Optional, Tuple
 
 # library
 from geopy.distance import distance as geo_distance  # type: ignore
@@ -31,20 +32,21 @@ from geopy.distance import distance as geo_distance  # type: ignore
 # module
 from avwx import exceptions
 from avwx.base import AVWXBase
+from avwx.exceptions import MissingExtraModule
 from avwx.flight_path import to_coordinates
 from avwx.load_utils import LazyLoad
 from avwx.parsing import core
 from avwx.service.bulk import NOAA_Bulk, NOAA_Intl, Service
-from avwx.static.core import CARDINAL_DEGREES, CARDINALS
 from avwx.static.airsigmet import BULLETIN_TYPES, INTENSITY, WEATHER_TYPES
+from avwx.static.core import CARDINAL_DEGREES, CARDINALS
 from avwx.structs import (
     AirSigmetData,
+    AirSigObservation,
     Bulletin,
     Code,
     Coord,
     Movement,
     Number,
-    AirSigObservation,
     Timestamp,
     Units,
 )
@@ -52,7 +54,7 @@ from avwx.structs import (
 try:
     from shapely.geometry import LineString  # type: ignore
 except ModuleNotFoundError:
-    LineString = None  # pylint: disable=invalid-name
+    LineString = None
 
 
 class AirSigmet(AVWXBase):
@@ -80,7 +82,7 @@ class AirSigmet(AVWXBase):
     ```
     """
 
-    data: Optional[AirSigmetData] = None
+    data: AirSigmetData | None = None
 
     def _post_parse(self) -> None:
         if self.raw:
@@ -94,7 +96,8 @@ class AirSigmet(AVWXBase):
     def intersects(self, path: LineString) -> bool:
         """Returns True if the report area intersects a flight path"""
         if LineString is None:
-            raise ModuleNotFoundError("Install avwx-engine[shape] to use this feature")
+            extra = "shape"
+            raise MissingExtraModule(extra)
         if not self.data:
             return False
         for data in (self.data.observation, self.data.forecast):
@@ -142,31 +145,27 @@ class AirSigManager:
     ```
     """
 
-    _services: List[Service]
-    _raw: List[Tuple[str, Optional[str]]]
-    last_updated: Optional[datetime] = None
-    raw: List[str]
-    reports: Optional[List[AirSigmet]] = None
+    _services: list[Service]
+    _raw: list[tuple[str, str | None]]
+    last_updated: datetime | None = None
+    raw: list[str]
+    reports: list[AirSigmet] | None = None
 
     def __init__(self):  # type: ignore
         self._services = [NOAA_Bulk("airsigmet"), NOAA_Intl("airsigmet")]
         self._raw, self.raw = [], []
 
-    async def _update(
-        self, index: int, timeout: int
-    ) -> List[Tuple[str, Optional[str]]]:
+    async def _update(self, index: int, timeout: int) -> list[tuple[str, str | None]]:
         source = self._services[index].root
         reports = await self._services[index].async_fetch(timeout=timeout)  # type: ignore
-        raw: List[Tuple[str, Optional[str]]] = [
-            (report, source) for report in reports if report
-        ]
+        raw: list[tuple[str, str | None]] = [(report, source) for report in reports if report]
         return raw
 
-    def update(self, timeout: int = 10, disable_post: bool = False) -> bool:
+    def update(self, timeout: int = 10, *, disable_post: bool = False) -> bool:
         """Updates fetched reports and returns whether they've changed"""
-        return aio.run(self.async_update(timeout, disable_post))
+        return aio.run(self.async_update(timeout, disable_post=disable_post))
 
-    async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
+    async def async_update(self, timeout: int = 10, *, disable_post: bool = False) -> bool:
         """Updates fetched reports and returns whether they've changed"""
         coros = [self._update(i, timeout) for i in range(len(self._services))]
         data = await aio.gather(*coros)
@@ -184,21 +183,22 @@ class AirSigManager:
                     if obj := AirSigmet.from_report(report):
                         obj.source = source
                         parsed.append(obj)
-                except Exception as exc:  # pylint: disable=broad-except
+                except Exception as exc:  # noqa: BLE001
                     exceptions.exception_intercept(exc, raw={"report": report})
             self.reports = parsed
         return True
 
-    def along(self, coords: List[Coord]) -> List[AirSigmet]:
+    def along(self, coords: list[Coord]) -> list[AirSigmet]:
         """Returns available reports the intersect a flight path"""
         if LineString is None:
-            raise ModuleNotFoundError("Install avwx-engine[shape] to use this feature")
+            extra = "shape"
+            raise MissingExtraModule(extra)
         if self.reports is None:
             return []
         path = LineString([c.pair for c in coords])
         return [r for r in self.reports if r.intersects(path)]
 
-    def contains(self, coord: Coord) -> List[AirSigmet]:
+    def contains(self, coord: Coord) -> list[AirSigmet]:
         """Returns available reports that contain a coordinate"""
         if self.reports is None:
             return []
@@ -210,14 +210,10 @@ _COORD_PATTERN = re.compile(r"\b[NS]\d{4} [EW]\d{5}\b( -)?")
 
 # FROM 60NW ISN-INL-TVC-GIJ-UIN-FSD-BIL-60NW ISN
 # FROM 70SSW ISN TO 20NNW FAR TO 70E DLH TO 40SE EAU TO 80SE RAP TO 40NNW BFF TO 70SSW
-_NAVAID_PATTERN = re.compile(
-    r"\b(\d{1,3}[NESW]{1,3} [A-z]{3}-?\b)|((-|(TO )|(FROM ))[A-z]{3}\b)"
-)
+_NAVAID_PATTERN = re.compile(r"\b(\d{1,3}[NESW]{1,3} [A-z]{3}-?\b)|((-|(TO )|(FROM ))[A-z]{3}\b)")
 
 # N OF N2050 AND S OF N2900
-_LATTERAL_PATTERN = re.compile(
-    r"\b([NS] OF [NS]\d{2,4})|([EW] OF [EW]\d{3,5})( AND)?\b"
-)
+_LATTERAL_PATTERN = re.compile(r"\b([NS] OF [NS]\d{2,4})|([EW] OF [EW]\d{3,5})( AND)?\b")
 
 NAVAIDS = LazyLoad("navaids")
 
@@ -230,7 +226,7 @@ _FLAGS = {
 }
 
 
-def _parse_prep(report: str) -> List[str]:
+def _parse_prep(report: str) -> list[str]:
     """Prepares sanitized string by replacing elements with flags"""
     report = report.rstrip(".")
     for key, val in _FLAGS.items():
@@ -238,7 +234,7 @@ def _parse_prep(report: str) -> List[str]:
     return report.split()
 
 
-def _clean_flags(data: List[str]) -> List[str]:
+def _clean_flags(data: list[str]) -> list[str]:
     return [i for i in data if i[0] != "<"]
 
 
@@ -254,15 +250,15 @@ def _bulletin(value: str) -> Bulletin:
     )
 
 
-def _header(data: List[str]) -> Tuple[List[str], Bulletin, str, str, Optional[str]]:
+def _header(data: list[str]) -> tuple[list[str], Bulletin, str, str, str | None]:
     bulletin = _bulletin(data[0])
     correction, end = (data[3], 4) if len(data[3]) == 3 else (None, 3)
     return data[end:], bulletin, data[1], data[2], correction
 
 
 def _spacetime(
-    data: List[str],
-) -> Tuple[List[str], str, str, Optional[str], str, Optional[str]]:
+    data: list[str],
+) -> tuple[list[str], str, str, str | None, str, str | None]:
     area = data.pop(0)
     # Skip airmet type + time repeat
     if data[0] == "WA" and data[1].isdigit():
@@ -290,14 +286,14 @@ def _spacetime(
     return data, area, report_type, start_time, end_time, station
 
 
-def _first_index(data: List[str], *targets: str) -> int:
+def _first_index(data: list[str], *targets: str) -> int:
     for target in targets:
         with suppress(ValueError):
             return data.index(target)
     return -1
 
 
-def _region(data: List[str]) -> Tuple[List[str], str]:
+def _region(data: list[str]) -> tuple[list[str], str]:
     # FIR/CTA region name
     # Or non-standard name using lookahead Ex: FL CSTL WTRS FROM 100SSW
     name_end = _first_index(data, "FIR", "CTA") + 1 or _first_index(data, "FROM")
@@ -312,9 +308,7 @@ def _region(data: List[str]) -> Tuple[List[str], str]:
     return data[name_end:], name
 
 
-def _time(
-    data: List[str], issued: Optional[date] = None
-) -> Tuple[List[str], Optional[Timestamp], Optional[Timestamp]]:
+def _time(data: list[str], issued: date | None = None) -> tuple[list[str], Timestamp | None, Timestamp | None]:
     """Extracts the start and/or end time based on a couple starting elements"""
     index = _first_index(data, "AT", "FCST", "UNTIL", "VALID", "OUTLOOK", "OTLK")
     if index == -1:
@@ -323,16 +317,10 @@ def _time(
     start, end, observed = None, None, None
     if "-" in data[index]:
         start_item, end_item = data.pop(index).split("-")
-        start = core.make_timestamp(
-            start_item, time_only=len(start_item) < 6, target_date=issued
-        )
-        end = core.make_timestamp(
-            end_item, time_only=len(end_item) < 6, target_date=issued
-        )
+        start = core.make_timestamp(start_item, time_only=len(start_item) < 6, target_date=issued)
+        end = core.make_timestamp(end_item, time_only=len(end_item) < 6, target_date=issued)
     elif len(data[index]) >= 4 and data[index][:4].isdigit():
-        observed = core.make_timestamp(
-            data.pop(index), time_only=True, target_date=issued
-        )
+        observed = core.make_timestamp(data.pop(index), time_only=True, target_date=issued)
         if index > 0 and data[index - 1] == "OBS":
             data.pop(index - 1)
     for remv in ("FCST", "OUTLOOK", "OTLK", "VALID"):
@@ -355,7 +343,7 @@ def _coord_value(value: str) -> float:
     return float(num)
 
 
-def _position(data: List[str]) -> Tuple[List[str], Optional[Coord]]:
+def _position(data: list[str]) -> tuple[list[str], Coord | None]:
     try:
         index = data.index("PSN")
     except ValueError:
@@ -367,9 +355,7 @@ def _position(data: List[str]) -> Tuple[List[str], Optional[Coord]]:
     return data, Coord(lat=lat, lon=lon, repr=raw)
 
 
-def _movement(
-    data: List[str], units: Units
-) -> Tuple[List[str], Units, Optional[Movement]]:
+def _movement(data: list[str], units: Units) -> tuple[list[str], Units, Movement | None]:
     with suppress(ValueError):
         data.remove("STNR")
         speed = core.make_number("STNR")
@@ -392,9 +378,7 @@ def _movement(
         data[index] = data[index][3:]
     # MOV E 45KMH
     else:
-        direction = core.make_number(
-            direction_str.replace("/", ""), literal=True, special=CARDINAL_DEGREES
-        )
+        direction = core.make_number(direction_str.replace("/", ""), literal=True, special=CARDINAL_DEGREES)
     speed = None
     with suppress(IndexError):
         kt_unit, kmh_unit = data[index].endswith("KT"), data[index].endswith("KMH")
@@ -409,7 +393,7 @@ def _movement(
     return data, units, Movement(repr=raw.strip(), direction=direction, speed=speed)
 
 
-def _info_from_match(match: re.Match, start: int) -> Tuple[str, int]:
+def _info_from_match(match: re.Match, start: int) -> tuple[str, int]:
     """Returns the matching text and starting location if none yet available"""
     if start == -1:
         start = match.start()
@@ -421,20 +405,17 @@ def _pre_break(report: str) -> str:
     return report[:break_index] if break_index != -1 else report
 
 
-def _bounds_from_latterals(report: str, start: int) -> Tuple[str, List[str], int]:
+def _bounds_from_latterals(report: str, start: int) -> tuple[str, list[str], int]:
     """Extract coordinate latterals from report Ex: N OF N2050"""
     bounds = []
     for match in _LATTERAL_PATTERN.finditer(_pre_break(report)):
         group, start = _info_from_match(match, start)
-        # post 3.8 bounds.append(group.removesuffix(" AND"))
-        if group.endswith(" AND"):
-            group = group[:-4]
-        bounds.append(group)
+        bounds.append(group.removesuffix(" AND"))
         report = report.replace(group, " ")
     return report, bounds, start
 
 
-def _coords_from_text(report: str, start: int) -> Tuple[str, List[Coord], int]:
+def _coords_from_text(report: str, start: int) -> tuple[str, list[Coord], int]:
     """Extract raw coordinate values from report Ex: N4409 E01506"""
     coords = []
     for match in _COORD_PATTERN.finditer(_pre_break(report)):
@@ -447,17 +428,13 @@ def _coords_from_text(report: str, start: int) -> Tuple[str, List[Coord], int]:
     return report, coords, start
 
 
-def _coords_from_navaids(report: str, start: int) -> Tuple[str, List[Coord], int]:
+def _coords_from_navaids(report: str, start: int) -> tuple[str, list[Coord], int]:
     """Extract navaid referenced coordinates from report Ex: 30SSW BNA"""
-    # pylint: disable=too-many-locals
     coords, navs = [], []
     for match in _NAVAID_PATTERN.finditer(_pre_break(report)):
         group, start = _info_from_match(match, start)
         report = report.replace(group, " ")
-        group = group.strip("-")  # post 3.8 .removeprefix("FROM ").removeprefix("TO ")
-        for end in ("FROM", "TO"):
-            if group.startswith(f"{end} "):
-                group = group[(len(end) + 1) :]
+        group = group.strip("-").removeprefix("FROM ").removeprefix("TO ")
         navs.append((group, *group.split()))
     locs = to_coordinates([n[2 if len(n) == 3 else 1] for n in navs])
     for i, nav in enumerate(navs):
@@ -470,9 +447,7 @@ def _coords_from_navaids(report: str, start: int) -> Tuple[str, List[Coord], int
                 int(vector[:num_index]),
                 CARDINAL_DEGREES[vector[num_index:]],
             )
-            loc = geo_distance(nautical=distance).destination(
-                locs[i].pair, bearing=bearing
-            )
+            loc = geo_distance(nautical=distance).destination(locs[i].pair, bearing=bearing)
             coord = Coord(lat=loc.latitude, lon=loc.longitude, repr=value)
         else:
             coord = locs[i]
@@ -481,7 +456,7 @@ def _coords_from_navaids(report: str, start: int) -> Tuple[str, List[Coord], int
     return report, coords, start
 
 
-def _bounds(data: List[str]) -> Tuple[List[str], List[Coord], List[str]]:
+def _bounds(data: list[str]) -> tuple[list[str], list[Coord], list[str]]:
     """Extract coordinate bounds by coord, navaid, and latterals"""
     report, start = " ".join(data), -1
     report, bounds, start = _bounds_from_latterals(report, start)
@@ -497,9 +472,7 @@ def _bounds(data: List[str]) -> Tuple[List[str], List[Coord], List[str]]:
     return data, coords, bounds
 
 
-def _altitudes(
-    data: List[str], units: Units
-) -> Tuple[List[str], Units, Optional[Number], Optional[Number]]:
+def _altitudes(data: list[str], units: Units) -> tuple[list[str], Units, Number | None, Number | None]:
     """Extract the floor and ceiling altitudes"""
     floor, ceiling = None, None
     for i, item in enumerate(data):
@@ -533,12 +506,8 @@ def _altitudes(
             if "/" in item:
                 floor_val, ceiling_val = item.split("/")
                 floor, units = core.make_altitude(floor_val, units)
-                if (floor_val == "SFC" or floor_val[:2] == "FL") and ceiling_val[
-                    :2
-                ] != "FL":
-                    ceiling, units = core.make_altitude(
-                        ceiling_val, units, force_fl=True
-                    )
+                if (floor_val == "SFC" or floor_val[:2] == "FL") and ceiling_val[:2] != "FL":
+                    ceiling, units = core.make_altitude(ceiling_val, units, force_fl=True)
                 else:
                     ceiling, units = core.make_altitude(ceiling_val, units)
             else:
@@ -548,7 +517,7 @@ def _altitudes(
     return data, units, floor, ceiling
 
 
-def _weather_type(data: List[str]) -> Tuple[List[str], Optional[Code]]:
+def _weather_type(data: list[str]) -> tuple[list[str], Code | None]:
     weather = None
     report = " ".join(data)
     for key, val in WEATHER_TYPES.items():
@@ -559,7 +528,7 @@ def _weather_type(data: List[str]) -> Tuple[List[str], Optional[Code]]:
     return data, weather
 
 
-def _intensity(data: List[str]) -> Tuple[List[str], Optional[Code]]:
+def _intensity(data: list[str]) -> tuple[list[str], Code | None]:
     if not data:
         return data, None
     try:
@@ -570,9 +539,7 @@ def _intensity(data: List[str]) -> Tuple[List[str], Optional[Code]]:
         return data, None
 
 
-def _sigmet_observation(
-    data: List[str], units: Units, issued: Optional[date] = None
-) -> Tuple[AirSigObservation, Units]:
+def _sigmet_observation(data: list[str], units: Units, issued: date | None = None) -> tuple[AirSigObservation, Units]:
     data, start_time, end_time = _time(data, issued)
     data, position = _position(data)
     data, coords, bounds = _bounds(data)
@@ -597,8 +564,8 @@ def _sigmet_observation(
 
 
 def _observations(
-    data: List[str], units: Units, issued: Optional[date] = None
-) -> Tuple[Units, Optional[AirSigObservation], Optional[AirSigObservation]]:
+    data: list[str], units: Units, issued: date | None = None
+) -> tuple[Units, AirSigObservation | None, AirSigObservation | None]:
     observation, forecast, forecast_index = None, None, -1
     forecast_index = _first_index(data, "FCST", "OUTLOOK", "OTLK")
     if forecast_index == -1:
@@ -648,11 +615,7 @@ def sanitize(report: str) -> str:
         ):
             data[i] = item[:-1]
         # Split attached movement direction Ex: NE05KT
-        if (
-            len(item) >= 4
-            and (item.endswith("KT") or item.endswith("KMH"))
-            and item[: _find_first_digit(item)] in CARDINALS
-        ):
+        if len(item) >= 4 and item.endswith(("KT", "KMH")) and item[: _find_first_digit(item)] in CARDINALS:
             index = _find_first_digit(item)
             direction = item[:index]
             data.insert(i + 1, item[index:])
@@ -660,9 +623,8 @@ def sanitize(report: str) -> str:
     return " ".join(data)
 
 
-def parse(report: str, issued: Optional[date] = None) -> Tuple[AirSigmetData, Units]:
+def parse(report: str, issued: date | None = None) -> tuple[AirSigmetData, Units]:
     """Parse AIRMET / SIGMET report string"""
-    # pylint: disable=too-many-locals
     units = Units.international()
     sanitized = sanitize(report)
     data, bulletin, issuer, time, correction = _header(_parse_prep(sanitized))

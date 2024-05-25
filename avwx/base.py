@@ -1,22 +1,24 @@
-"""
-Report parent classes
-"""
+"""Report parent classes."""
 
 # stdlib
+from __future__ import annotations
+
 import asyncio as aio
 from abc import ABCMeta, abstractmethod
 from contextlib import suppress
 from datetime import date, datetime, timezone
-from typing import List, Optional, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Self
 
 # module
 from avwx.exceptions import BadStation
-from avwx.service import Service
 from avwx.station import Station
-from avwx.structs import ReportData, Units
+
+if TYPE_CHECKING:
+    from avwx.service import Service
+    from avwx.structs import ReportData, Units
 
 
-def find_station(report: str) -> Optional[Station]:
+def find_station(report: str) -> Station | None:
     """Returns the first Station found in a report string"""
     for item in report.split():
         with suppress(BadStation):
@@ -24,36 +26,32 @@ def find_station(report: str) -> Optional[Station]:
     return None
 
 
-T = TypeVar("T", bound="AVWXBase")  # pylint: disable=invalid-name
-MT = TypeVar("MT", bound="ManagedReport")  # pylint: disable=invalid-name
-
-
 class AVWXBase(metaclass=ABCMeta):
-    """Abstract base class for AVWX report types"""
+    """Abstract base class for AVWX report types."""
 
     #: UTC datetime object when the report was last updated
-    last_updated: Optional[datetime] = None
+    last_updated: datetime | None = None
 
     #: UTC date object when the report was issued
-    issued: Optional[date] = None
+    issued: date | None = None
 
     #: Root URL used to retrieve the current report
-    source: Optional[str] = None
+    source: str | None = None
 
     #: The original report string
-    raw: Optional[str] = None
+    raw: str | None = None
 
     #: ReportData dataclass of parsed data values and units
-    data: Optional[ReportData] = None
+    data: ReportData | None = None
 
     #: Units inferred from the station location and report contents
-    units: Optional[Units] = None
+    units: Units | None = None
 
     def __repr__(self) -> str:
         return f"<avwx.{self.__class__.__name__}>"
 
     def _set_meta(self) -> None:
-        """Update timestamps after parsing"""
+        """Update timestamps after parsing."""
         self.last_updated = datetime.now(tz=timezone.utc)
         with suppress(AttributeError):
             self.issued = self.data.time.dt.date()  # type: ignore
@@ -63,19 +61,17 @@ class AVWXBase(metaclass=ABCMeta):
         pass
 
     @classmethod
-    def from_report(
-        cls: Type[T], report: str, issued: Optional[date] = None
-    ) -> Optional[T]:
-        """Returns an updated report object based on an existing report"""
+    def from_report(cls, report: str, issued: date | None = None) -> Self | None:
+        """Return an updated report object based on an existing report."""
         report = report.strip()
         obj = cls()
         obj.parse(report, issued=issued)
         return obj
 
-    def parse(self, report: str, issued: Optional[date] = None) -> bool:
-        """Updates report data by parsing a given report
+    def parse(self, report: str, issued: date | None = None) -> bool:
+        """Update report data by parsing a given report.
 
-        Can accept a report issue date if not a recent report string
+        Can accept a report issue date if not a recent report string.
         """
         self.source = None
         if not report or report == self.raw:
@@ -88,21 +84,21 @@ class AVWXBase(metaclass=ABCMeta):
 
     @staticmethod
     def sanitize(report: str) -> str:
-        """Sanitizes the report string
+        """Sanitize the report string.
 
-        This has not been overridden and returns the raw report
+        This has not been overridden and returns the raw report.
         """
         return report
 
 
 class ManagedReport(AVWXBase, metaclass=ABCMeta):
-    """Abstract base class for reports types associated with a single station"""
+    """Abstract base class for reports types associated with a single station."""
 
     #: 4-character station code the report was initialized with
-    code: Optional[str] = None
+    code: str | None = None
 
     #: Provide basic station info if given at init
-    station: Optional[Station] = None
+    station: Station | None = None
 
     #: Service object used to fetch the report string
     service: Service
@@ -120,10 +116,8 @@ class ManagedReport(AVWXBase, metaclass=ABCMeta):
         pass
 
     @classmethod
-    def from_report(
-        cls: Type[MT], report: str, issued: Optional[date] = None
-    ) -> Optional[MT]:
-        """Returns an updated report object based on an existing report"""
+    def from_report(cls, report: str, issued: date | None = None) -> Self | None:
+        """Return an updated report object based on an existing report."""
         report = report.strip()
         station = find_station(report)
         if not station:
@@ -132,9 +126,7 @@ class ManagedReport(AVWXBase, metaclass=ABCMeta):
         obj.parse(report, issued=issued)
         return obj
 
-    async def _update(
-        self, report: Union[str, List[str]], issued: Optional[date], disable_post: bool
-    ) -> bool:
+    async def _update(self, report: str | list[str], issued: date | None, *, disable_post: bool) -> bool:
         if not report or report == self.raw:
             return False
         self.raw = report  # type: ignore
@@ -144,20 +136,20 @@ class ManagedReport(AVWXBase, metaclass=ABCMeta):
         self._set_meta()
         return True
 
-    def update(self, timeout: int = 10, disable_post: bool = False) -> bool:
-        """Updates report data by fetching and parsing the report
+    def update(self, timeout: int = 10, *, disable_post: bool = False) -> bool:
+        """Update. report data by fetching and parsing the report.
 
-        Returns True if a new report is available, else False
+        Returns True if a new report is available, else False.
         """
         report = self.service.fetch(self.code, timeout=timeout)  # type: ignore
         self.source = self.service.root
-        return aio.run(self._update(report, None, disable_post))
+        return aio.run(self._update(report, None, disable_post=disable_post))
 
-    async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
-        """Async updates report data by fetching and parsing the report
+    async def async_update(self, timeout: int = 10, *, disable_post: bool = False) -> bool:
+        """Async update report data by fetching and parsing the report.
 
-        Returns True if a new report is available, else False
+        Returns True if a new report is available, else False.
         """
         report = await self.service.async_fetch(self.code, timeout=timeout)  # type: ignore
         self.source = self.service.root
-        return await self._update(report, None, disable_post)
+        return await self._update(report, None, disable_post=disable_post)

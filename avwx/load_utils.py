@@ -1,25 +1,23 @@
-"""
-Data load utilities
-"""
+"""Data load utilities."""
 
-# pylint: disable=missing-function-docstring
+from __future__ import annotations
 
 import json
-from collections.abc import ItemsView, ValuesView
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterable, Optional
+from typing import TYPE_CHECKING, Any, Callable
+
+if TYPE_CHECKING:
+    from collections.abc import ItemsView, Iterator, ValuesView
 
 
 class LazyLoad:
-    """Lazy load a dictionary from the JSON data cache"""
+    """Lazy load a dictionary from the JSON data cache."""
 
     source: Path
-    _data: Optional[Dict[str, Any]] = None
+    _data: dict[str, Any] | None = None
 
     def __init__(self, filename: str):
-        self.source = Path(__file__).parent.joinpath(
-            "data", "files", f"{filename}.json"
-        )
+        self.source = Path(__file__).parent.joinpath("data", "files", f"{filename}.json")
 
     def _load(self) -> None:
         with self.source.open(encoding="utf8") as fin:
@@ -30,7 +28,7 @@ class LazyLoad:
             self._load()
 
     @property
-    def data(self) -> Dict[str, Any]:
+    def data(self) -> dict[str, Any]:
         return self._data or {}
 
     def __getitem__(self, key: str) -> Any:
@@ -45,7 +43,7 @@ class LazyLoad:
         self._check()
         return len(self.data)
 
-    def __iter__(self) -> Iterable[str]:
+    def __iter__(self) -> Iterator[str]:
         self._check()
         yield from self.data
 
@@ -60,12 +58,10 @@ class LazyLoad:
 
 # LazyCalc lets us avoid the global keyword
 class LazyCalc:
-    """Delay data calculation until needed"""
-
-    # pylint: disable=too-few-public-methods,missing-function-docstring
+    """Delay data calculation until needed."""
 
     _func: Callable
-    _value: Optional[Any] = None
+    _value: Any | None = None
 
     def __init__(self, func: Callable):
         self._func = func

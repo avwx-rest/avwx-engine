@@ -1,16 +1,13 @@
-"""
-.. include:: ../docs/launch.md
-"""
+""".. include:: ../docs/launch.md"""
 
-from .current.airsigmet import AirSigmet, AirSigManager
-from .current.metar import Metar
-from .current.notam import Notams
-from .current.pirep import Pireps
-from .current.taf import Taf
-from .forecast.gfs import Mav, Mex
-from .forecast.nbm import Nbe, Nbh, Nbs, Nbx
-from .station import Station
-
+from avwx.current.airsigmet import AirSigManager, AirSigmet
+from avwx.current.metar import Metar
+from avwx.current.notam import Notams
+from avwx.current.pirep import Pireps
+from avwx.current.taf import Taf
+from avwx.forecast.gfs import Mav, Mex
+from avwx.forecast.nbm import Nbe, Nbh, Nbs, Nbx
+from avwx.station import Station
 
 __all__ = (
     "AirSigManager",

@@ -22,19 +22,18 @@ served up to 10 days after the end date, so it's up to the developer to include
 or filter these reports.
 """
 
-# pylint: disable=invalid-name
-
 # stdlib
+from __future__ import annotations
+
 import re
 from contextlib import suppress
 from datetime import datetime, timezone
-from typing import List, Optional, Union
 
 # library
 from dateutil.tz import gettz
-from avwx import exceptions
 
 # module
+from avwx import exceptions
 from avwx.current.base import Reports
 from avwx.parsing import core
 from avwx.service import FAA_NOTAM
@@ -55,7 +54,6 @@ from avwx.structs import (
     Number,
     Qualifiers,
     Timestamp,
-    Tuple,
     Units,
 )
 
@@ -136,10 +134,10 @@ class Notams(Reports):
     ```
     '''
 
-    data: Optional[List[NotamData]] = None  # type: ignore
+    data: list[NotamData] | None = None  # type: ignore
     radius: int = 10
 
-    def __init__(self, code: Optional[str] = None, coord: Optional[Coord] = None):
+    def __init__(self, code: str | None = None, coord: Coord | None = None):
         super().__init__(code, coord)
         self.service = FAA_NOTAM("notam")
 
@@ -152,31 +150,31 @@ class Notams(Reports):
             return
         for report in self.raw:
             if "||" in report:
-                issue_text, report = report.split("||")
-                issued_value = datetime.strptime(issue_text, r"%m/%d/%Y %H%M")
+                issue_text, report = report.split("||")  # noqa: PLW2901
+                issued_value = datetime.strptime(issue_text, r"%m/%d/%Y %H%M").replace(tzinfo=timezone.utc)
                 issued = Timestamp(issue_text, issued_value)
             else:
                 issued = None
             try:
                 data, units = parse(report, issued=issued)
                 self.data.append(data)
-            except Exception as exc:  # pylint: disable=broad-except
+            except Exception as exc:  # noqa: BLE001
                 exceptions.exception_intercept(exc, raw=report)  # type: ignore
         if units:
             self.units = units
 
     @staticmethod
     def sanitize(report: str) -> str:
-        """Sanitizes a NOTAM string"""
+        """Sanitize a NOTAM string."""
         return sanitize(report)
 
-    async def async_update(self, timeout: int = 10, disable_post: bool = False) -> bool:
-        """Async updates report data by fetching and parsing the report"""
+    async def async_update(self, timeout: int = 10, *, disable_post: bool = False) -> bool:
+        """Async updates report data by fetching and parsing the report."""
         reports = await self.service.async_fetch(  # type: ignore
             icao=self.code, coord=self.coord, radius=self.radius, timeout=timeout
         )
         self.source = self.service.root
-        return await self._update(reports, None, disable_post)
+        return await self._update(reports, None, disable_post=disable_post)
 
 
 ALL_KEYS_PATTERN = re.compile(r"\b[A-GQ]\) ")
@@ -192,8 +190,8 @@ KEY_PATTERNS = {
 }
 
 
-def _rear_coord(value: str) -> Optional[Coord]:
-    """Convert coord strings with direction characters at the end: 5126N00036W"""
+def _rear_coord(value: str) -> Coord | None:
+    """Convert coord strings with direction characters at the end: 5126N00036W."""
     if len(value) != 11:
         return None
     try:
@@ -209,9 +207,9 @@ def _rear_coord(value: str) -> Optional[Coord]:
 
 
 def _split_location(
-    location: Optional[str],
-) -> Tuple[Optional[Coord], Optional[Number]]:
-    """Identify coordinate and radius from location element"""
+    location: str | None,
+) -> tuple[Coord | None, Number | None]:
+    """Identify coordinate and radius from location element."""
     if not location:
         return None, None
     coord, radius = None, None
@@ -223,8 +221,8 @@ def _split_location(
     return coord, radius
 
 
-def _header(value: str) -> Tuple[str, Optional[Code], Optional[str]]:
-    """Parse pre-tag headers"""
+def _header(value: str) -> tuple[str, Code | None, str | None]:
+    """Parse pre-tag headers."""
     header = value.strip().split()
     replaces = None
     if len(header) == 3:
@@ -236,20 +234,20 @@ def _header(value: str) -> Tuple[str, Optional[Code], Optional[str]]:
 
 
 def _find_q_codes(
-    codes: List[str],
-) -> Tuple[
-    Optional[Code],
-    List[Code],
-    List[Code],
-    Optional[str],
-    Optional[str],
-    Optional[str],
+    codes: list[str],
+) -> tuple[
+    Code | None,
+    list[Code],
+    list[Code],
+    str | None,
+    str | None,
+    str | None,
 ]:
-    """Identify traffic, purpose, and scope codes"""
+    """Identify traffic, purpose, and scope codes."""
     # The 'K' code can be both purpose and scope, but they have the same value
     traffic, lower, upper, location = None, None, None, None
-    purpose: List[Code] = []
-    scope: List[Code] = []
+    purpose: list[Code] = []
+    scope: list[Code] = []
     for code in codes:
         if not code:
             continue
@@ -277,8 +275,7 @@ def _find_q_codes(
 
 
 def _qualifiers(value: str, units: Units) -> Qualifiers:
-    """Parse the NOTAM Q) line into components"""
-    # pylint: disable=too-many-locals
+    """Parse the NOTAM Q) line into components."""
     fir, q_code, *codes = (i.strip() for i in re.split("/| ", value.strip()))
     traffic, purpose, scope, lower, upper, location = _find_q_codes(codes)
     subject, condition = None, None
@@ -305,11 +302,11 @@ def _qualifiers(value: str, units: Units) -> Qualifiers:
     )
 
 
-def _tz_offset_for(name: Optional[str]) -> Optional[timezone]:
-    """Generates a timezone from tz string name"""
+def _tz_offset_for(name: str | None) -> timezone | None:
+    """Generate a timezone from tz string name."""
     if not name:
         return None
-    if tz := gettz(name):
+    if tz := gettz(name):  # noqa: SIM102
         if offset := tz.utcoffset(datetime.now(timezone.utc)):
             return timezone(offset)
     return None
@@ -317,10 +314,10 @@ def _tz_offset_for(name: Optional[str]) -> Optional[timezone]:
 
 def make_year_timestamp(
     value: str,
-    repr: str,  # pylint: disable=redefined-builtin
-    tzname: Optional[str] = None,
-) -> Union[Timestamp, Code, None]:
-    """Convert NOTAM timestamp which includes year and month"""
+    repr: str,  # noqa: A002
+    tzname: str | None = None,
+) -> Timestamp | Code | None:
+    """Convert NOTAM timestamp which includes year and month."""
     values = value.strip().split()
     if not values:
         return None
@@ -328,39 +325,34 @@ def make_year_timestamp(
     if code := CODES.get(value):
         return Code(value, code)
     tz = _tz_offset_for(tzname) or timezone.utc
-    raw = datetime.strptime(value[:10], r"%y%m%d%H%M")
+    raw = datetime.strptime(value[:10], r"%y%m%d%H%M")  # noqa: DTZ007
     date = datetime(raw.year, raw.month, raw.day, raw.hour, raw.minute, tzinfo=tz)
     return Timestamp(repr, date)
 
 
-def parse_linked_times(
-    start: str, end: str
-) -> Tuple[Union[Timestamp, Code, None], Union[Timestamp, Code, None]]:
-    """Parse start and end times sharing any found timezone"""
+def parse_linked_times(start: str, end: str) -> tuple[Timestamp | Code | None, Timestamp | Code | None]:
+    """Parse start and end times sharing any found timezone."""
     start, end = start.strip(), end.strip()
     start_raw, end_raw, tzname = start, end, None
     if len(start) > 10:
         start, tzname = start[:-3], start[-3:]
     if len(end) > 10:
         end, tzname = end[:-3], end[-3:]
-    return make_year_timestamp(start, start_raw, tzname), make_year_timestamp(
-        end, end_raw, tzname
-    )
+    return make_year_timestamp(start, start_raw, tzname), make_year_timestamp(end, end_raw, tzname)
 
 
-def make_altitude(value: Optional[str], units: Units) -> Optional[Number]:
-    """Parse NOTAM altitudes"""
+def make_altitude(value: str | None, units: Units) -> Number | None:
+    """Parse NOTAM altitudes."""
     if not value:
         return None
-    if trimmed := value.split()[0].strip(" ."):
+    if trimmed := value.split()[0].strip(" ."):  # noqa: SIM102
         if trimmed in SPECIAL_NUMBERS or trimmed[0].isdigit():
             return core.make_altitude(trimmed, units, repr=value)[0]
     return None
 
 
-def parse(report: str, issued: Optional[Timestamp] = None) -> Tuple[NotamData, Units]:
-    """Parse NOTAM report string"""
-    # pylint: disable=too-many-locals
+def parse(report: str, issued: Timestamp | None = None) -> tuple[NotamData, Units]:
+    """Parse NOTAM report string."""
     units = Units.international()
     sanitized = sanitize(report)
     qualifiers, station, start_time, end_time = None, None, None, None
@@ -419,5 +411,5 @@ def parse(report: str, issued: Optional[Timestamp] = None) -> Tuple[NotamData, U
 
 
 def sanitize(report: str) -> str:
-    """Retuns a sanitized report ready for parsing"""
+    """Retun a sanitized report ready for parsing."""
     return report.replace("\r", "").strip()

@@ -6,9 +6,10 @@ are valid for six hours or until the next report is issued
 """
 
 # stdlib
+from __future__ import annotations
+
 from contextlib import suppress
-from datetime import date
-from typing import List, Tuple, Optional
+from typing import TYPE_CHECKING
 
 # module
 from avwx.current.base import Report, get_wx_codes
@@ -17,7 +18,7 @@ from avwx.parsing.remarks import parse as parse_remarks
 from avwx.parsing.sanitization.taf import clean_taf_list, clean_taf_string
 from avwx.parsing.translate.taf import translate_taf
 from avwx.static.core import FLIGHT_RULES
-from avwx.static.taf import TAF_RMK, TAF_NEWLINE, TAF_NEWLINE_STARTSWITH
+from avwx.static.taf import TAF_NEWLINE, TAF_NEWLINE_STARTSWITH, TAF_RMK
 from avwx.station import uses_na_format, valid_station
 from avwx.structs import (
     Cloud,
@@ -29,6 +30,9 @@ from avwx.structs import (
     Timestamp,
     Units,
 )
+
+if TYPE_CHECKING:
+    from datetime import date
 
 
 class Taf(Report):
@@ -74,15 +78,13 @@ class Taf(Report):
     ```
     """
 
-    data: Optional[TafData] = None
-    translations: Optional[TafTrans] = None  # type: ignore
+    data: TafData | None = None
+    translations: TafTrans | None = None  # type: ignore
 
     async def _post_update(self) -> None:
         if self.code is None or self.raw is None:
             return
-        self.data, self.units, self.sanitization = parse(
-            self.code, self.raw, self.issued
-        )
+        self.data, self.units, self.sanitization = parse(self.code, self.raw, self.issued)
         if self.data is None or self.units is None:
             return
         self.translations = translate_taf(self.data, self.units)
@@ -90,16 +92,14 @@ class Taf(Report):
     def _post_parse(self) -> None:
         if self.code is None or self.raw is None:
             return
-        self.data, self.units, self.sanitization = parse(
-            self.code, self.raw, self.issued
-        )
+        self.data, self.units, self.sanitization = parse(self.code, self.raw, self.issued)
         if self.data is None or self.units is None:
             return
         self.translations = translate_taf(self.data, self.units)
 
     @property
-    def summary(self) -> List[str]:
-        """Condensed summary for each forecast created from translations"""
+    def summary(self) -> list[str]:
+        """Condensed summary for each forecast created from translations."""
         if not self.translations:
             self.update()
         if self.translations is None or self.translations.forecast is None:
@@ -107,8 +107,8 @@ class Taf(Report):
         return [summary.taf(trans) for trans in self.translations.forecast]
 
     @property
-    def speech(self) -> Optional[str]:
-        """Report summary designed to be read by a text-to-speech program"""
+    def speech(self) -> str | None:
+        """Report summary designed to be read by a text-to-speech program."""
         if not self.data:
             self.update()
         if self.data is None or self.units is None:
@@ -136,7 +136,7 @@ LINE_FIXES = {
 
 
 def sanitize_line(txt: str, sans: Sanitization) -> str:
-    """Fixes common mistakes with 'new line' signifiers so that they can be recognized"""
+    """Fix common mistakes with 'new line' signifiers so that they can be recognized."""
     for key, fix in LINE_FIXES.items():
         if key in txt:
             txt = txt.replace(key, fix)
@@ -150,8 +150,8 @@ def sanitize_line(txt: str, sans: Sanitization) -> str:
     return txt
 
 
-def get_taf_remarks(txt: str) -> Tuple[str, str]:
-    """Returns report and remarks separated if found"""
+def get_taf_remarks(txt: str) -> tuple[str, str]:
+    """Return report and remarks separated if found."""
     remarks_start = core.find_first_in_list(txt, TAF_RMK)
     if remarks_start == -1:
         return txt, ""
@@ -161,9 +161,9 @@ def get_taf_remarks(txt: str) -> Tuple[str, str]:
 
 
 def get_alt_ice_turb(
-    data: List[str],
-) -> Tuple[List[str], Optional[Number], List[str], List[str]]:
-    """Returns the report list and removed: Altimeter string, Icing list, Turbulence list"""
+    data: list[str],
+) -> tuple[list[str], Number | None, list[str], list[str]]:
+    """Return the report list and removed: Altimeter string, Icing list, Turbulence list."""
     altimeter_number = None
     icing, turbulence = [], []
     for i, item in reversed(list(enumerate(data))):
@@ -182,9 +182,7 @@ def get_alt_ice_turb(
 
 def is_normal_time(item: str) -> bool:
     """Return if the item looks like a valid TAF (1200/1400) time range."""
-    return (
-        len(item) == 9 and item[4] == "/" and item[:4].isdigit() and item[5:].isdigit()
-    )
+    return len(item) == 9 and item[4] == "/" and item[:4].isdigit() and item[5:].isdigit()
 
 
 def starts_new_line(item: str) -> bool:
@@ -194,8 +192,8 @@ def starts_new_line(item: str) -> bool:
     return any(item.startswith(start) for start in TAF_NEWLINE_STARTSWITH)
 
 
-def split_taf(txt: str) -> List[str]:
-    """Splits a TAF report into each distinct time period"""
+def split_taf(txt: str) -> list[str]:
+    """Split a TAF report into each distinct time period."""
     lines = []
     split = txt.split()
     last_index = 0
@@ -213,20 +211,13 @@ def split_taf(txt: str) -> List[str]:
 
 # TAF line report type and start/end times
 def get_type_and_times(
-    data: List[str],
-) -> Tuple[List[str], str, Optional[str], Optional[str], Optional[str]]:
-    """Returns the report list and removed:
-
-    Report type string, start time string, end time string
-    """
+    data: list[str],
+) -> tuple[list[str], str, str | None, str | None, str | None]:
+    """Extract the report type string, start time string, and end time string."""
     report_type, start_time, end_time, transition = "FROM", None, None, None
-    if data:
-        # TEMPO, BECMG, INTER
-        if data[0] in TAF_NEWLINE:
-            report_type = data.pop(0)
-        # PROB[30,40]
-        elif len(data[0]) == 6 and data[0].startswith("PROB"):
-            report_type = data.pop(0)
+    # TEMPO, BECMG, INTER
+    if data and data[0] in TAF_NEWLINE or len(data[0]) == 6 and data[0].startswith("PROB"):
+        report_type = data.pop(0)
     if data:
         item, length = data[0], len(data[0])
         # 1200/1306
@@ -234,13 +225,7 @@ def get_type_and_times(
             start_time, end_time = data.pop(0).split("/")
 
         # 1200 1306
-        elif (
-            len(data) == 8
-            and length == 4
-            and len(data[1]) == 4
-            and item.isdigit()
-            and data[1].isdigit()
-        ):
+        elif len(data) == 8 and length == 4 and len(data[1]) == 4 and item.isdigit() and data[1].isdigit():
             start_time = data.pop(0)
             end_time = data.pop(0)
 
@@ -250,21 +235,12 @@ def get_type_and_times(
         # FM120000
         elif length > 7 and item.startswith("FM"):
             report_type = "FROM"
-            if (
-                "/" in item
-                and item[2:].split("/")[0].isdigit()
-                and item[2:].split("/")[1].isdigit()
-            ):
+            if "/" in item and item[2:].split("/")[0].isdigit() and item[2:].split("/")[1].isdigit():
                 start_time, end_time = data.pop(0)[2:].split("/")
             elif item[2:8].isdigit():
                 start_time = data.pop(0)[2:6]
             # TL120600
-            if (
-                data
-                and length > 7
-                and data[0].startswith("TL")
-                and data[0][2:8].isdigit()
-            ):
+            if data and length > 7 and data[0].startswith("TL") and data[0][2:8].isdigit():
                 end_time = data.pop(0)[2:6]
         elif report_type == "BECMG" and length == 5:
             # 1200/
@@ -279,28 +255,25 @@ def get_type_and_times(
 
 
 def _is_tempo_or_prob(line: TafLineData) -> bool:
-    """Returns True if report type is TEMPO or non-null probability"""
+    """Return True if report type is TEMPO or non-null probability."""
     return line.type == "TEMPO" or line.probability is not None
 
 
-def _get_next_time(lines: List[TafLineData], target: str) -> Optional[Timestamp]:
+def _get_next_time(lines: list[TafLineData], target: str) -> Timestamp | None:
     """Returns the next normal time target value or empty"""
     for line in lines:
         if _is_tempo_or_prob(line):
             continue
-        if target == "start_time":
-            time = line.transition_start or getattr(line, target)
-        else:
-            time = getattr(line, target)
+        time = line.transition_start or getattr(line, target) if target == "start_time" else getattr(line, target)
         if time:
-            return time
+            return time  # type: ignore
     return None
 
 
 def find_missing_taf_times(
-    lines: List[TafLineData], start: Optional[Timestamp], end: Optional[Timestamp]
-) -> List[TafLineData]:
-    """Fix any missing time issues (except for error/empty lines)"""
+    lines: list[TafLineData], start: Timestamp | None, end: Timestamp | None
+) -> list[TafLineData]:
+    """Fix any missing time issues except for error/empty lines."""
     if not lines:
         return lines
     # Assign start time
@@ -313,11 +286,9 @@ def find_missing_taf_times(
         last_fm_line = i
         # Search remaining lines to fill empty end or previous for empty start
         for target, other, direc in (("start", "end", -1), ("end", "start", 1)):
-            target += "_time"
+            target += "_time"  # noqa: PLW2901
             if not getattr(line, target):
-                setattr(
-                    line, target, _get_next_time(lines[i::direc][1:], f"{other}_time")
-                )
+                setattr(line, target, _get_next_time(lines[i::direc][1:], f"{other}_time"))
     # Special case for final forcast
     if last_fm_line:
         lines[last_fm_line].end_time = end
@@ -327,8 +298,8 @@ def find_missing_taf_times(
     return lines
 
 
-def get_wind_shear(data: List[str]) -> Tuple[List[str], Optional[str]]:
-    """Returns the report list and the remove wind shear"""
+def get_wind_shear(data: list[str]) -> tuple[list[str], str | None]:
+    """Return the report list and the remove wind shear."""
     shear = None
     for i, item in reversed(list(enumerate(data))):
         if len(item) > 6 and item.startswith("WS") and item[5] == "/":
@@ -337,9 +308,9 @@ def get_wind_shear(data: List[str]) -> Tuple[List[str], Optional[str]]:
 
 
 def get_temp_min_and_max(
-    data: List[str],
-) -> Tuple[List[str], Optional[str], Optional[str]]:
-    """Pull out Max temp at time and Min temp at time items from wx list"""
+    data: list[str],
+) -> tuple[list[str], str | None, str | None]:
+    """Pull out Max temp at time and Min temp at time items from wx list."""
     temp_max, temp_min = "", ""
     for i, item in reversed(list(enumerate(data))):
         if len(item) > 6 and item[0] == "T" and "/" in item:
@@ -364,10 +335,10 @@ def get_temp_min_and_max(
     return data, temp_max or None, temp_min or None
 
 
-def get_oceania_temp_and_alt(data: List[str]) -> Tuple[List[str], List[str], List[str]]:
-    """Get Temperature and Altimeter lists for Oceania TAFs"""
-    tlist: List[str] = []
-    qlist: List[str] = []
+def get_oceania_temp_and_alt(data: list[str]) -> tuple[list[str], list[str], list[str]]:
+    """Get Temperature and Altimeter lists for Oceania TAFs."""
+    tlist: list[str] = []
+    qlist: list[str] = []
     if "T" in data:
         data, tlist = core.get_digit_list(data, data.index("T"))
     if "Q" in data:
@@ -375,8 +346,8 @@ def get_oceania_temp_and_alt(data: List[str]) -> Tuple[List[str], List[str], Lis
     return data, tlist, qlist
 
 
-def get_taf_flight_rules(lines: List[TafLineData]) -> List[TafLineData]:
-    """Get flight rules by looking for missing data in prior reports"""
+def get_taf_flight_rules(lines: list[TafLineData]) -> list[TafLineData]:
+    """Get flight rules by looking for missing data in prior reports."""
     for i, line in enumerate(lines):
         temp_vis, temp_cloud, is_clear = line.visibility, line.clouds, False
         for report in reversed(lines[: i + 1]):
@@ -384,9 +355,7 @@ def get_taf_flight_rules(lines: List[TafLineData]) -> List[TafLineData]:
                 if not temp_vis:
                     temp_vis = report.visibility
                 # SKC or CLR should force no clouds instead of looking back
-                if "SKC" in report.other or "CLR" in report.other:
-                    is_clear = True
-                elif temp_vis and temp_vis.repr == "CAVOK":
+                if "SKC" in report.other or "CLR" in report.other or temp_vis and temp_vis.repr == "CAVOK":
                     is_clear = True
                 elif temp_cloud == []:
                     temp_cloud = report.clouds
@@ -394,14 +363,12 @@ def get_taf_flight_rules(lines: List[TafLineData]) -> List[TafLineData]:
                     break
         if is_clear:
             temp_cloud = []
-        line.flight_rules = FLIGHT_RULES[
-            core.get_flight_rules(temp_vis, core.get_ceiling(temp_cloud))
-        ]
+        line.flight_rules = FLIGHT_RULES[core.get_flight_rules(temp_vis, core.get_ceiling(temp_cloud))]
     return lines
 
 
 def fix_report_header(report: str) -> str:
-    """Corrects the header order for key elements"""
+    """Correct the header order for key elements."""
     split_report = report.split()
 
     # Limit scope to only the first few elements. Remarks may include similar tokens
@@ -418,7 +385,7 @@ def fix_report_header(report: str) -> str:
 
 
 def _is_possible_start_end_time_slash(item: str) -> bool:
-    """Return True if item is a possible period start or end with missing element"""
+    """Return True if item is a possible period start or end with missing element."""
     return len(item) == 5 and (
         # 1200/
         (item[-1] == "/" and item[:4].isdigit())
@@ -429,18 +396,17 @@ def _is_possible_start_end_time_slash(item: str) -> bool:
 
 
 def parse(
-    station: str, report: str, issued: Optional[date] = None
-) -> Tuple[Optional[TafData], Optional[Units], Optional[Sanitization]]:
-    """Returns TafData and Units dataclasses with parsed data and their associated units"""
-    # pylint: disable=too-many-locals
+    station: str, report: str, issued: date | None = None
+) -> tuple[TafData | None, Units | None, Sanitization | None]:
+    """Return TafData and Units dataclasses with parsed data and their associated units."""
     if not report:
         return None, None, None
     valid_station(station)
     report = fix_report_header(report)
     while len(report) > 3 and report[:4] in ("TAF ", "AMD ", "COR "):
         report = report[4:]
-    start_time: Optional[Timestamp] = None
-    end_time: Optional[Timestamp] = None
+    start_time: Timestamp | None = None
+    end_time: Timestamp | None = None
     sans = Sanitization()
     sanitized = clean_taf_string(report, sans)
     _, new_station, time = core.get_station_and_time(sanitized[:20].split())
@@ -456,8 +422,8 @@ def parse(
     lines = split_taf(sanitized)
     parsed_lines = parse_lines(lines, units, sans, issued)
     # Perform additional info extract and corrections
-    max_temp: Optional[str] = None
-    min_temp: Optional[str] = None
+    max_temp: str | None = None
+    min_temp: str | None = None
     if parsed_lines:
         (
             parsed_lines[-1].other,
@@ -476,8 +442,8 @@ def parse(
         parsed_lines = find_missing_taf_times(parsed_lines, start_time, end_time)
         parsed_lines = get_taf_flight_rules(parsed_lines)
     # Extract Oceania-specific data
-    alts: Optional[List[str]] = None
-    temps: Optional[List[str]] = None
+    alts: list[str] | None = None
+    temps: list[str] | None = None
     if station[0] == "A":
         (
             parsed_lines[-1].other,
@@ -506,11 +472,9 @@ def parse(
     return struct, units, sans
 
 
-def parse_lines(
-    lines: List[str], units: Units, sans: Sanitization, issued: Optional[date] = None
-) -> List[TafLineData]:
-    """Returns a list of parsed line dictionaries"""
-    parsed_lines: List[TafLineData] = []
+def parse_lines(lines: list[str], units: Units, sans: Sanitization, issued: date | None = None) -> list[TafLineData]:
+    """Return a list of parsed line dictionaries."""
+    parsed_lines: list[TafLineData] = []
     prob = ""
     while lines:
         raw_line = lines[0].strip()
@@ -527,9 +491,7 @@ def parse_lines(
                 line = line[6:].strip()
         if line:
             parsed_line = parse_line(line, units, sans, issued)
-            parsed_line.probability = (
-                None if " " in prob else core.make_number(prob[4:])
-            )
+            parsed_line.probability = None if " " in prob else core.make_number(prob[4:])
             parsed_line.raw = raw_line
             if prob:
                 parsed_line.sanitized = f"{prob} {parsed_line.sanitized}"
@@ -539,18 +501,11 @@ def parse_lines(
     return parsed_lines
 
 
-def parse_line(
-    line: str, units: Units, sans: Sanitization, issued: Optional[date] = None
-) -> TafLineData:
-    """Parser for the International TAF forcast variant"""
-    # pylint: disable=too-many-locals
+def parse_line(line: str, units: Units, sans: Sanitization, issued: date | None = None) -> TafLineData:
+    """Parser for the International TAF forcast variant."""
     data: list[str] = core.dedupe(line.split())
     # Grab original time piece under certain conditions to preserve a useful slash
-    old_time = (
-        data[1]
-        if len(data) > 1 and _is_possible_start_end_time_slash(data[1])
-        else None
-    )
+    old_time = data[1] if len(data) > 1 and _is_possible_start_end_time_slash(data[1]) else None
     data = clean_taf_list(data, sans)
     if old_time and len(data) > 1 and data[1] == old_time.strip("/"):
         data[1] = old_time
@@ -566,7 +521,7 @@ def parse_line(
     ) = core.get_wind(data, units)
     if "CAVOK" in data:
         visibility = core.make_number("CAVOK")
-        clouds: List[Cloud] = []
+        clouds: list[Cloud] = []
         data.pop(data.index("CAVOK"))
     else:
         data, visibility = core.get_visibility(data, units)

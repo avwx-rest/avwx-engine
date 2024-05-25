@@ -1,9 +1,6 @@
-"""
-Methods to resolve flight paths in coordinates
-"""
+"""Methods to resolve flight paths in coordinates."""
 
-# stdlib
-from typing import List, Optional, Union
+from __future__ import annotations
 
 # library
 from geopy.distance import great_circle  # type: ignore
@@ -15,17 +12,18 @@ from avwx.station import Station
 from avwx.structs import Coord
 
 NAVAIDS = LazyLoad("navaids")
-QCoord = Union[Coord, List[Coord]]
+QCoord = Coord | list[Coord]
 
 
 def _distance(near: Coord, far: Coord) -> float:
     circle = great_circle(near.pair, far.pair).nm
     if not isinstance(circle, float):
-        raise ValueError("Could not evaluate great circle distance")
+        msg = "Could not evaluate great circle distance"
+        raise TypeError(msg)
     return circle
 
 
-def _closest(coord: QCoord, coords: List[Coord]) -> Coord:
+def _closest(coord: QCoord, coords: list[Coord]) -> Coord:
     if isinstance(coord, Coord):
         distances = [(_distance(coord, c), c) for c in coords]
     else:
@@ -35,16 +33,17 @@ def _closest(coord: QCoord, coords: List[Coord]) -> Coord:
 
 
 def _best_coord(
-    previous: Optional[QCoord],
+    previous: QCoord | None,
     current: QCoord,
-    up_next: Optional[QCoord],
+    up_next: QCoord | None,
 ) -> Coord:
-    """Determine the best coordinate based on surroundings
-    At least one of these should be a list
+    """Determine the best coordinate based on surroundings.
+    At least one of these should be a list.
     """
     if previous is None and up_next is None:
         if isinstance(current, list):
-            raise ValueError("Unable to determine best coordinate")
+            msg = "Unable to determine best coordinate"
+            raise TypeError(msg)
         return current
     # NOTE: add handling to determine best midpoint
     if up_next is None:
@@ -54,9 +53,7 @@ def _best_coord(
     return _closest(up_next, current)  # type: ignore
 
 
-def _to_coordinates(
-    values: List[Union[Coord, str]], last_value: Optional[QCoord] = None
-) -> List[Coord]:
+def _to_coordinates(values: list[Coord | str], last_value: QCoord | None = None) -> list[Coord]:
     if not values:
         return []
     coord = values[0]
@@ -80,12 +77,12 @@ def _to_coordinates(
                     new_coords = _to_coordinates(values[1:], coords)
                     new_coord = new_coords[0] if new_coords else None
                     coord = _best_coord(last_value, coords, new_coord)
-                    return [coord] + new_coords
-    return [coord] + _to_coordinates(values[1:], coord)
+                    return [coord, *new_coords]
+    return [coord, *_to_coordinates(values[1:], coord)]
 
 
-def to_coordinates(values: List[Union[Coord, str]]) -> List[Coord]:
-    """Convert any known idents found in a flight path into coordinates
+def to_coordinates(values: list[Coord | str]) -> list[Coord]:
+    """Convert any known idents found in a flight path into coordinates.
 
     Prefers Coord > ICAO > Navaid > IATA / GPS
     """
@@ -96,7 +93,7 @@ def to_coordinates(values: List[Union[Coord, str]]) -> List[Coord]:
         if not value:
             continue
         if isinstance(value, str):
-            value = value.strip()
+            value = value.strip()  # noqa: PLW2901
             if not value:
                 continue
         cleaned.append(value)

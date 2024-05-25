@@ -56,7 +56,7 @@ True
 
 You can learn more by reading the [project documentation](https://engine.avwx.rest)
 
-**Note**: This library requires Python 3.8 or above
+**Note**: This library requires Python 3.9 or above
 
 ## Development
 
@@ -71,7 +71,7 @@ cd avwx-engine
 
 * Requirements:
   * [Poetry](https://python-poetry.org/)
-  * Python 3.8+
+  * Python 3.9+
 * Create a virtual environment and install the dependencies
 
 ```sh
