@@ -36,7 +36,7 @@ from dateutil.tz import gettz
 from avwx import exceptions
 from avwx.current.base import Reports
 from avwx.parsing import core
-from avwx.service import FAA_NOTAM
+from avwx.service import FaaNotam
 from avwx.static.core import SPECIAL_NUMBERS
 from avwx.static.notam import (
     CODES,
@@ -139,7 +139,7 @@ class Notams(Reports):
 
     def __init__(self, code: str | None = None, coord: Coord | None = None):
         super().__init__(code, coord)
-        self.service = FAA_NOTAM("notam")
+        self.service = FaaNotam("notam")
 
     async def _post_update(self) -> None:
         self._post_parse()

@@ -1,10 +1,5 @@
-"""
-Cleaners for elements that should be removed
-"""
+"""Cleaners for elements that should be removed."""
 
-# pylint: disable=too-few-public-methods
-
-from typing import Set, Type
 from avwx.parsing.sanitization.base import RemoveItem
 
 _SHARED = {
@@ -41,8 +36,8 @@ _TAF = {
 }
 
 
-def remove_items_in(filter_out: Set[str]) -> Type[RemoveItem]:
-    """Generate a RemoveItem cleaner to filter a given set of strings"""
+def remove_items_in(filter_out: set[str]) -> type[RemoveItem]:
+    """Generate a RemoveItem cleaner to filter a given set of strings."""
 
     class RemoveInList(RemoveItem):
         """Cleaner to remove items in a list"""
@@ -58,7 +53,7 @@ RemoveFromTaf = remove_items_in(_TAF)
 
 
 class RemoveTafAmend(RemoveItem):
-    """Remove amend signifier from start of report ('CCA', 'CCB',etc)"""
+    """Remove amend signifier from start of report ('CCA', 'CCB', etc)."""
 
     def can_handle(self, item: str) -> bool:
         return len(item) == 3 and item.startswith("CC") and item[2].isalpha()

@@ -17,7 +17,7 @@ from avwx import exceptions
 from avwx.current.base import Reports, get_wx_codes
 from avwx.parsing import core
 from avwx.parsing.sanitization.pirep import clean_pirep_string
-from avwx.service.scrape import NOAA_ScrapeList
+from avwx.service.scrape import NoaaScrapeList
 from avwx.static.core import CARDINALS, CLOUD_LIST
 from avwx.structs import (
     Aircraft,
@@ -69,7 +69,7 @@ class Pireps(Reports):
 
     def __init__(self, code: str | None = None, coord: Coord | None = None):
         super().__init__(code, coord)
-        self.service = NOAA_ScrapeList("pirep")
+        self.service = NoaaScrapeList("pirep")
 
     @staticmethod
     def _report_filter(reports: list[str]) -> list[str]:

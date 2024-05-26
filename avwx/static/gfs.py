@@ -1,6 +1,4 @@
-"""
-GFX service static values
-"""
+"""GFX service static values."""
 
 #:
 UNITS = {

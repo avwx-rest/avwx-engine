@@ -1,8 +1,4 @@
-"""
-Cleaners for elements not found in other files
-"""
-
-# pylint: disable=too-few-public-methods
+"""Cleaners for elements not found in other files."""
 
 from textwrap import wrap
 
@@ -12,14 +8,14 @@ from avwx.static.core import WX_TRANSLATIONS
 
 
 class OnlySlashes(RemoveItem):
-    """Remove elements containing only '/'"""
+    """Remove elements containing only '/'."""
 
     def can_handle(self, item: str) -> bool:
         return is_unknown(item)
 
 
 class TrimWxCode(CleanItem):
-    """Remove RE from wx codes: REVCTS -> VCTS"""
+    """Remove RE from wx codes: REVCTS -> VCTS."""
 
     def can_handle(self, item: str) -> bool:
         if not item.startswith("RE") or item == "RE":

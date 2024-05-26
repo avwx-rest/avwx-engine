@@ -1,40 +1,36 @@
-"""
-TAF data translation handlers
-"""
+"""TAF data translation handlers."""
 
 # stdlib
-from typing import List, Optional
+from __future__ import annotations
 
 # module
 import avwx.parsing.translate.base as _trans
 from avwx.parsing import core
-
 from avwx.parsing.translate import remarks
 from avwx.static.taf import ICING_CONDITIONS, TURBULENCE_CONDITIONS
 from avwx.structs import TafData, TafLineTrans, TafTrans, Units
 
 
 def wind_shear(
-    shear: Optional[str],
+    shear: str | None,
     unit_alt: str = "ft",
     unit_wind: str = "kt",
+    *,
     spoken: bool = False,
 ) -> str:
-    """Translate wind shear into a readable string
+    """Translate wind shear into a readable string.
 
     Ex: Wind shear 2000ft from 140 at 30kt
     """
     if not shear or "WS" not in shear or "/" not in shear:
         return ""
     altitude, wind = shear[2:].rstrip(unit_wind.upper()).split("/")
-    wdir = core.spoken_number(wind[:3], True) if spoken else wind[:3]
-    return (
-        f"Wind shear {int(altitude)*100}{unit_alt} from {wdir} at {wind[3:]}{unit_wind}"
-    )
+    wdir = core.spoken_number(wind[:3], literal=True) if spoken else wind[:3]
+    return f"Wind shear {int(altitude)*100}{unit_alt} from {wdir} at {wind[3:]}{unit_wind}"
 
 
-def turb_ice(values: List[str], unit: str = "ft") -> str:
-    """Translate the list of turbulence or icing into a readable sentence
+def turb_ice(values: list[str], unit: str = "ft") -> str:
+    """Translate the list of turbulence or icing into a readable sentence.
 
     Ex: Occasional moderate turbulence in clouds from 3000ft to 14000ft
     """
@@ -65,8 +61,8 @@ def turb_ice(values: List[str], unit: str = "ft") -> str:
     )
 
 
-def min_max_temp(temp: Optional[str], unit: str = "C") -> str:
-    """Format the Min and Max temp elements into a readable string
+def min_max_temp(temp: str | None, unit: str = "C") -> str:
+    """Format the Min and Max temp elements into a readable string.
 
     Ex: Maximum temperature of 23°C (73°F) at 18-15:00Z
     """
@@ -86,8 +82,8 @@ def min_max_temp(temp: Optional[str], unit: str = "C") -> str:
 
 
 def translate_taf(wxdata: TafData, units: Units) -> TafTrans:
-    """Returns translations for a TafData object"""
-    forecast: List[TafLineTrans] = []
+    """Return translations for a TafData object."""
+    forecast: list[TafLineTrans] = []
     for line in wxdata.forecast:
         shared = _trans.current_shared(line, units)
         # Remove false 'Sky Clear' if line type is 'BECMG'

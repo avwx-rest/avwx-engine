@@ -1,30 +1,28 @@
-"""
-Forecast report shared resources
-"""
-
-# pylint: disable=too-many-arguments
+"""Forecast report shared resources."""
 
 # stdlib
+from __future__ import annotations
+
 from datetime import datetime, timedelta, timezone
-from typing import Callable, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Callable
 
 # module
 from avwx.base import ManagedReport
 from avwx.parsing import core
-from avwx.service import Service
 from avwx.structs import Code, Number, ReportData, Timestamp
 
+if TYPE_CHECKING:
+    from avwx.service import Service
 
-def _trim_lines(lines: List[str], target: int) -> List[str]:
-    """Trim all lines to match the trimmed length of the target line"""
+
+def _trim_lines(lines: list[str], target: int) -> list[str]:
+    """Trim all lines to match the trimmed length of the target line."""
     length = len(lines[target].strip())
     return [line[:length] for line in lines]
 
 
-def _split_line(
-    line: str, size: int = 3, prefix: int = 4, strip: str = " |"
-) -> List[str]:
-    """Evenly split a string while stripping elements"""
+def _split_line(line: str, size: int = 3, prefix: int = 4, strip: str = " |") -> list[str]:
+    """Evenly split a string while stripping elements."""
     line = line[prefix:]
     ret = []
     while len(line) >= size:
@@ -36,16 +34,16 @@ def _split_line(
 
 
 def _timestamp(line: str) -> Timestamp:
-    """Returns the report timestamp from the first line"""
+    """Return the report timestamp from the first line."""
     start = line.find("GUIDANCE") + 11
     text = line[start : start + 16].strip()
-    timestamp = datetime.strptime(text, r"%m/%d/%Y  %H%M")
+    timestamp = datetime.strptime(text, r"%m/%d/%Y  %H%M").replace(tzinfo=timezone.utc)
     return Timestamp(text, timestamp.replace(tzinfo=timezone.utc))
 
 
-def _find_time_periods(line: List[str], timestamp: Optional[datetime]) -> List[dict]:
-    """Find and create the empty time periods"""
-    periods: List[Optional[Timestamp]] = []
+def _find_time_periods(line: list[str], timestamp: datetime | None) -> list[dict]:
+    """Find and create the empty time periods."""
+    periods: list[Timestamp | None] = []
     if timestamp is None:
         periods = [None] * len(line)
     else:
@@ -62,8 +60,8 @@ def _find_time_periods(line: List[str], timestamp: Optional[datetime]) -> List[d
     return [{"time": time} for time in periods]
 
 
-def _init_parse(report: str) -> Tuple[ReportData, List[str]]:
-    """Returns the meta data and lines from a report string"""
+def _init_parse(report: str) -> tuple[ReportData, list[str]]:
+    """Return the meta data and lines from a report string."""
     report = report.strip()
     lines = report.split("\n")
     struct = ReportData(
@@ -81,15 +79,16 @@ def _numbers(
     size: int = 3,
     prefix: str = "",
     postfix: str = "",
-    decimal: Optional[int] = None,
+    *,
+    decimal: int | None = None,
     literal: bool = False,
-    special: Optional[dict] = None,
-) -> List[Optional[Number]]:
-    """Parse line into Number objects
+    special: dict | None = None,
+) -> list[Number | None]:
+    """Parse line into Number objects.
 
-    Prefix, postfix, and decimal location are applied to value, not repr
+    Prefix, postfix, and decimal location are applied to value, not repr.
 
-    Decimal is applied after prefix and postfix
+    Decimal is applied after prefix and postfix.
     """
     ret = []
     for item in _split_line(line, size=size):
@@ -104,36 +103,36 @@ def _numbers(
     return ret
 
 
-def _decimal_10(line: str, size: int = 3) -> List[Optional[Number]]:
-    """Parse line into Number objects with 10ths decimal location"""
+def _decimal_10(line: str, size: int = 3) -> list[Number | None]:
+    """Parse line into Number objects with 10ths decimal location."""
     return _numbers(line, size, decimal=-1)
 
 
-def _decimal_100(line: str, size: int = 3) -> List[Optional[Number]]:
-    """Parse line into Number objects with 100ths decimal location"""
+def _decimal_100(line: str, size: int = 3) -> list[Number | None]:
+    """Parse line into Number objects with 100ths decimal location."""
     return _numbers(line, size, decimal=-2)
 
 
-def _number_10(line: str, size: int = 3) -> List[Optional[Number]]:
-    """Parse line into Number objects in tens"""
+def _number_10(line: str, size: int = 3) -> list[Number | None]:
+    """Parse line into Number objects in tens."""
     return _numbers(line, size, postfix="0")
 
 
-def _number_100(line: str, size: int = 3) -> List[Optional[Number]]:
-    """Parse line into Number objects in hundreds"""
+def _number_100(line: str, size: int = 3) -> list[Number | None]:
+    """Parse line into Number objects in hundreds."""
     return _numbers(line, size, postfix="00")
 
 
-def _direction(line: str, size: int = 3) -> List[Optional[Number]]:
-    """Parse line into Number objects in hundreds"""
+def _direction(line: str, size: int = 3) -> list[Number | None]:
+    """Parse line into Number objects in hundreds."""
     return _numbers(line, size, postfix="0", literal=True)
 
 
 def _code(mapping: dict) -> Callable:
-    """Generates a conditional code mapping function"""
+    """Generate a conditional code mapping function."""
 
-    def func(line: str, size: int = 3) -> List[Union[Code, str, None]]:
-        ret: List[Union[Code, str, None]] = []
+    def func(line: str, size: int = 3) -> list[Code | str | None]:
+        ret: list[Code | str | None] = []
         for key in _split_line(line, size=size):
             try:
                 ret.append(Code(key, mapping[key]))
@@ -145,21 +144,19 @@ def _code(mapping: dict) -> Callable:
 
 
 def _parse_lines(
-    periods: List[dict],
-    lines: List[str],
-    handlers: Union[dict, Callable],
+    periods: list[dict],
+    lines: list[str],
+    handlers: dict | Callable,
     size: int = 3,
 ) -> None:
-    """Add data to time periods by parsing each line (element type)
+    """Add data to time periods by parsing each line (element type).
 
-    Adds data in place
+    Adds data in place.
     """
     for line in lines:
         try:
             key = line[:3]
-            *keys, handler = (
-                handlers[key] if isinstance(handlers, dict) else handlers(key)
-            )
+            *keys, handler = handlers[key] if isinstance(handlers, dict) else handlers(key)
         except (IndexError, KeyError):
             continue
         values = handler(line, size=size)
@@ -178,7 +175,7 @@ def _parse_lines(
 
 
 class Forecast(ManagedReport):
-    """Forecast base class"""
+    """Forecast base class."""
 
     # pylint: disable=abstract-method
 

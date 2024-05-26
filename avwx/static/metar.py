@@ -1,6 +1,4 @@
-"""
-METAR static values
-"""
+"""METAR static values."""
 
 METAR_RMK = [
     " BLU",

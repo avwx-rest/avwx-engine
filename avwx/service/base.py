@@ -1,20 +1,18 @@
-"""
-All service classes are based on the base Service class. Implementation is mostly left to the other high-level subclasses.
-"""
-
-# pylint: disable=too-few-public-methods,unsubscriptable-object
+"""All service classes are based on the base Service class. Implementation is mostly left to the other high-level subclasses."""
 
 # stdlib
+from __future__ import annotations
+
 from socket import gaierror
-from typing import Any, Optional, Tuple
+from typing import Any, ClassVar
+
+import httpcore
 
 # library
 import httpx
-import httpcore
 
 # module
 from avwx.exceptions import SourceError
-
 
 _TIMEOUT_ERRORS = (
     httpx.ConnectTimeout,
@@ -34,22 +32,21 @@ _NETWORK_ERRORS = (
 
 
 class Service:
-    """Base Service class for fetching reports"""
+    """Base Service class for fetching reports."""
 
     report_type: str
-    _url: str = ""
-    _valid_types: Tuple[str, ...] = tuple()
+    _url: ClassVar[str] = ""
+    _valid_types: ClassVar[tuple[str, ...]] = ()
 
     def __init__(self, report_type: str):
         if self._valid_types and report_type not in self._valid_types:
-            raise ValueError(
-                f"'{report_type}' is not a valid report type for {self.__class__.__name__}. Expected {self._valid_types}"
-            )
+            msg = f"'{report_type}' is not a valid report type for {self.__class__.__name__}. Expected {self._valid_types}"
+            raise ValueError(msg)
         self.report_type = report_type
 
     @property
-    def root(self) -> Optional[str]:
-        """Returns the service's root URL"""
+    def root(self) -> str | None:
+        """Return the service's root URL."""
         if self._url is None:
             return None
         url = self._url[self._url.find("//") + 2 :]
@@ -57,15 +54,15 @@ class Service:
 
 
 class CallsHTTP:
-    """Service mixin supporting HTTP requests"""
+    """Service mixin supporting HTTP requests."""
 
-    method: str = "GET"
+    method: ClassVar[str] = "GET"
 
-    async def _call(  # pylint: disable=too-many-arguments
+    async def _call(
         self,
         url: str,
-        params: Optional[dict] = None,
-        headers: Optional[dict] = None,
+        params: dict | None = None,
+        headers: dict | None = None,
         data: Any = None,
         timeout: int = 10,
         retries: int = 3,
@@ -78,26 +75,25 @@ class CallsHTTP:
             ) as client:
                 for _ in range(retries):
                     if self.method.lower() == "post":
-                        resp = await client.post(
-                            url, params=params, headers=headers, data=data
-                        )
+                        resp = await client.post(url, params=params, headers=headers, data=data)
                     else:
                         resp = await client.get(url, params=params, headers=headers)
                     if resp.status_code == 200:
                         break
                     # Skip retries if remote server error
                     if resp.status_code >= 500:
-                        raise SourceError(f"{name} server returned {resp.status_code}")
+                        msg = f"{name} server returned {resp.status_code}"
+                        raise SourceError(msg)
                 else:
-                    raise SourceError(f"{name} server returned {resp.status_code}")
+                    msg = f"{name} server returned {resp.status_code}"
+                    raise SourceError(msg)
         except _TIMEOUT_ERRORS as timeout_error:
-            raise TimeoutError(f"Timeout from {name} server") from timeout_error
+            msg = f"Timeout from {name} server"
+            raise TimeoutError(msg) from timeout_error
         except _CONNECTION_ERRORS as connect_error:
-            raise ConnectionError(
-                f"Unable to connect to {name} server"
-            ) from connect_error
+            msg = f"Unable to connect to {name} server"
+            raise ConnectionError(msg) from connect_error
         except _NETWORK_ERRORS as network_error:
-            raise ConnectionError(
-                f"Unable to read data from {name} server"
-            ) from network_error
+            msg = f"Unable to read data from {name} server"
+            raise ConnectionError(msg) from network_error
         return str(resp.text)

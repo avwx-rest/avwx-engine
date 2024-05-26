@@ -30,9 +30,7 @@ from avwx.data.build_stations import main as update_stations
 
 def update_all() -> bool:
     """Update all local data. Requires a reimport to guarentee update"""
-    return not any(
-        func() for func in (update_aircraft, update_navaids, update_stations)
-    )
+    return not any(func() for func in (update_aircraft, update_navaids, update_stations))
 
 
 __all__ = ["update_all", "update_aircraft", "update_navaids", "update_stations"]

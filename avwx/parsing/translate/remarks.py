@@ -1,19 +1,20 @@
-"""
-Remarks data translation handlers
-"""
+"""Remarks data translation handlers."""
 
-# stdlib
-from typing import Dict, Optional
-from avwx.structs import Number, PressureTendency, RemarksData
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from avwx.structs import Number, PressureTendency, RemarksData
 
 
 def temp_minmax(label: str, code: Number) -> str:
-    """Translates a minimum or maximum temperature value"""
+    """Translate a minimum or maximum temperature value."""
     return f"6-hour {label} temperature {code.value}°C"
 
 
 def pressure_tendency(pressure: PressureTendency, unit: str = "mb") -> str:
-    """Translates a pressure outlook value
+    """Translate a pressure outlook value.
 
     Ex: "50123" -> 12.3 mb: Increasing, then decreasing
     """
@@ -22,27 +23,27 @@ def pressure_tendency(pressure: PressureTendency, unit: str = "mb") -> str:
 
 
 def precip(label: str, code: Number, unit: str = "in") -> str:
-    """Translates a labelled precipitation value"""
+    """Translate a labelled precipitation value."""
     return f"Precipitation in the last {label}: {code.value} {unit}"
 
 
 def sunshine_duration(code: Number, unit: str = "minutes") -> str:
-    """Translates a sunlight duration value"""
+    """Translate a sunlight duration value."""
     return f"Duration of sunlight: {code.value} {unit}"
 
 
 def snow_depth(code: Number, unit: str = "in") -> str:
-    """Translates a snow accumulation value"""
+    """Translate a snow accumulation value."""
     return f"Snow accumulation: {code.value} {unit}"
 
 
 def sea_level_pressure(code: Number) -> str:
-    """Translates a sea level pressure value"""
+    """Translate a sea level pressure value."""
     return f"Sea level pressure: {code.value} hPa"
 
 
-def remarks_data(data: RemarksData) -> Dict[str, str]:
-    """Extract translations from parsed remarks data"""
+def remarks_data(data: RemarksData) -> dict[str, str]:
+    """Extract translations from parsed remarks data."""
     ret = {}
     if data.temperature_decimal and data.dewpoint_decimal:
         temp, dew = data.temperature_decimal, data.dewpoint_decimal
@@ -75,12 +76,12 @@ def remarks_data(data: RemarksData) -> Dict[str, str]:
     return ret
 
 
-def translate(raw: Optional[str], data: Optional[RemarksData]) -> Dict[str, str]:
-    """Translates elements in the remarks string"""
+def translate(raw: str | None, data: RemarksData | None) -> dict[str, str]:
+    """Translate elements in the remarks string."""
     if not (raw and data):
         return {}
     # Add static codes
     ret = {code.repr: code.value for code in data.codes}
     # Add features from the parsed remarks data
-    ret.update(remarks_data(data))
+    ret |= remarks_data(data)
     return ret

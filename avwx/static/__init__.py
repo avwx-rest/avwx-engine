@@ -1,3 +1,1 @@
-"""
-Contains static objects for internal and external use
-"""
+"""Contains static objects for internal and external use."""

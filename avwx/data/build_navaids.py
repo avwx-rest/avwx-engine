@@ -1,10 +1,8 @@
-"""
-Build navaid coordinate map
-"""
+"""Build navaid coordinate map."""
 
 import json
 from pathlib import Path
-from typing import Dict, Set, Tuple
+
 import httpx
 
 # redirect https://ourairports.com/data/navaids.csv
@@ -13,11 +11,11 @@ OUTPUT_PATH = Path(__file__).parent / "files" / "navaids.json"
 
 
 def main() -> None:
-    """Builds the navaid coordinate map"""
+    """Build the navaid coordinate map."""
     text = httpx.get(URL).text
     lines = text.strip().split("\n")
     lines.pop(0)
-    data: Dict[str, Set[Tuple[float, float]]] = {}
+    data: dict[str, set[tuple[float, float]]] = {}
     for line_str in lines:
         line = line_str.split(",")
         try:

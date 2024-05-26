@@ -1,8 +1,4 @@
-"""
-Cleaners for wind elements
-"""
-
-# pylint: disable=too-few-public-methods
+"""Cleaners for wind elements."""
 
 from avwx.parsing.core import is_unknown
 from avwx.parsing.sanitization.base import CleanItem, RemoveItem
@@ -40,7 +36,7 @@ WIND_VRB = ("WBB",)
 
 
 def sanitize_wind(text: str) -> str:
-    """Fix rare wind issues that may be too broad otherwise"""
+    """Fix rare wind issues that may be too broad otherwise."""
     for rep in WIND_REMV:
         text = text.replace(rep, "")
     for key, rep in WIND_REPL.items():
@@ -67,7 +63,7 @@ def sanitize_wind(text: str) -> str:
 
 
 class EmptyWind(RemoveItem):
-    """Remove empty wind /////KT"""
+    """Remove empty wind /////KT."""
 
     def can_handle(self, item: str) -> bool:
         return item.endswith("KT") and is_unknown(item[:-2])
@@ -75,7 +71,7 @@ class EmptyWind(RemoveItem):
 
 # TODO: Generalize to find anywhere in wind. Maybe add to other wind sans?
 class MisplaceWindKT(CleanItem):
-    """Fix misplaced KT 22022KTG40"""
+    """Fix misplaced KT 22022KTG40."""
 
     def can_handle(self, item: str) -> bool:
         return len(item) == 10 and "KTG" in item and item[:5].isdigit()
@@ -85,7 +81,9 @@ class MisplaceWindKT(CleanItem):
 
 
 class DoubleGust(CleanItem):
-    """Fix gust double G Ex: 360G17G32KT"""
+    """Fix gust double G.
+    Ex: 360G17G32KT
+    """
 
     def can_handle(self, item: str) -> bool:
         return len(item) > 10 and item.endswith("KT") and item[3] == "G"
@@ -95,7 +93,7 @@ class DoubleGust(CleanItem):
 
 
 class WindLeadingMistype(CleanItem):
-    """Fix leading character mistypes in wind"""
+    """Fix leading character mistypes in wind."""
 
     def can_handle(self, item: str) -> bool:
         return (
@@ -113,7 +111,9 @@ class WindLeadingMistype(CleanItem):
 
 
 class NonGGust(CleanItem):
-    """Fix non-G gust Ex: 14010-15KT"""
+    """Fix non-G gust.
+    Ex: 14010-15KT
+    """
 
     def can_handle(self, item: str) -> bool:
         return len(item) == 10 and item.endswith("KT") and item[5] != "G"
@@ -123,16 +123,12 @@ class NonGGust(CleanItem):
 
 
 class RemoveVrbLeadingDigits(CleanItem):
-    """Fix leading digits on VRB wind Ex: 2VRB02KT"""
+    """Fix leading digits on VRB wind.
+    Ex: 2VRB02KT
+    """
 
     def can_handle(self, item: str) -> bool:
-        return (
-            len(item) > 7
-            and item.endswith("KT")
-            and "VRB" in item
-            and item[0].isdigit()
-            and "Z" not in item
-        )
+        return len(item) > 7 and item.endswith("KT") and "VRB" in item and item[0].isdigit() and "Z" not in item
 
     def clean(self, item: str) -> str:
         while item[0].isdigit():

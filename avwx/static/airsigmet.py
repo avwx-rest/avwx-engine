@@ -1,6 +1,4 @@
-"""
-AIRMET / SIGMET static vales
-"""
+"""AIRMET / SIGMET static vales."""
 
 AIRMET_KEY = "airmet"
 

@@ -34,8 +34,10 @@ Reports are in 12-hour increments and published near the top of every hour.
 # pylint: disable=too-many-arguments
 
 # stdlib
+from __future__ import annotations
+
 from contextlib import suppress
-from typing import Callable, Dict, List, Optional, Tuple, Union
+from typing import Callable
 
 try:
     from typing import TypeAlias
@@ -44,28 +46,24 @@ except ImportError:
 
 # module
 from avwx import structs
-from avwx.service.files import NOAA_NBM
-from avwx.static.gfs import UNITS
-from .base import (
+from avwx.forecast.base import (
     Forecast,
     _decimal_10,
     _decimal_100,
     _direction,
     _find_time_periods,
     _init_parse,
-    _numbers,
     _number_100,
+    _numbers,
     _parse_lines,
     _split_line,
     _trim_lines,
 )
+from avwx.service.files import NoaaNbm
+from avwx.static.gfs import UNITS
 
-DataT: TypeAlias = type[
-    Union[structs.NbhData, structs.NbsData, structs.NbeData, structs.NbxData]
-]
-PeriodT: TypeAlias = type[
-    Union[structs.NbhPeriod, structs.NbsPeriod, structs.NbePeriod, structs.NbxPeriod]
-]
+DataT: TypeAlias = type[structs.NbhData | structs.NbsData | structs.NbeData | structs.NbxData]
+PeriodT: TypeAlias = type[structs.NbhPeriod | structs.NbsPeriod | structs.NbePeriod | structs.NbxPeriod]
 
 _UNITS = {
     **UNITS,
@@ -83,17 +81,17 @@ _CEILING = {
 _WIND = {"NG": (0, "zero")}
 
 
-def _ceiling(line: str, size: int = 3) -> List[Optional[structs.Number]]:
-    """Parse line into Number objects handling ceiling special units"""
+def _ceiling(line: str, size: int = 3) -> list[structs.Number | None]:
+    """Parse line into Number objects handling ceiling special units."""
     return _numbers(line, size, postfix="00", special=_CEILING)
 
 
-def _wind(line: str, size: int = 3) -> List[Optional[structs.Number]]:
-    """Parse line into Number objects handling wind special units"""
+def _wind(line: str, size: int = 3) -> list[structs.Number | None]:
+    """Parse line into Number objects handling wind special units."""
     return _numbers(line, size, special=_WIND)
 
 
-_HANDLERS: Dict[str, Tuple[str, Callable]] = {
+_HANDLERS: dict[str, tuple[str, Callable]] = {
     "X/N": ("temperature_minmax", _numbers),
     "TMP": ("temperature", _numbers),
     "DPT": ("dewpoint", _numbers),
@@ -111,7 +109,7 @@ _HANDLERS: Dict[str, Tuple[str, Callable]] = {
     "SWH": ("wave_height", _numbers),
 }
 
-_HOUR_HANDLERS: Dict[str, Tuple[str, Callable]] = {
+_HOUR_HANDLERS: dict[str, tuple[str, Callable]] = {
     "P": ("precip_chance", _numbers),
     "Q": ("precip_amount", _decimal_100),
     "T": ("thunderstorm", _numbers),
@@ -119,7 +117,7 @@ _HOUR_HANDLERS: Dict[str, Tuple[str, Callable]] = {
     "I": ("icing_amount", _decimal_100),
 }
 
-_NBHS_HANDLERS: Dict[str, Tuple[str, Callable]] = {
+_NBHS_HANDLERS: dict[str, tuple[str, Callable]] = {
     "CIG": ("ceiling", _ceiling),
     "VIS": ("visibility", _decimal_10),
     "LCB": ("cloud_base", _number_100),
@@ -133,17 +131,17 @@ _NBHS_HANDLERS: Dict[str, Tuple[str, Callable]] = {
 def _parse_factory(
     data_class: DataT,
     period_class: PeriodT,
-    handlers: Dict[str, Tuple[str, Callable]],
+    handlers: dict[str, tuple[str, Callable]],
     hours: int = 2,
     size: int = 3,
     prefix: int = 4,
 ) -> Callable:
-    """Creates handler function for static and computed keys"""
+    """Create handler function for static and computed keys."""
 
     handlers = {**_HANDLERS, **handlers}
 
-    def handle(key: str) -> Tuple:
-        """Returns response key(s) and value handler for a line key"""
+    def handle(key: str) -> tuple[str, Callable]:
+        """Return response key(s) and value handler for a line key."""
         with suppress(KeyError):
             return handlers[key]
         if not key[1:].isdigit():
@@ -151,8 +149,8 @@ def _parse_factory(
         root, handler = _HOUR_HANDLERS[key[0]]
         return f"{root}_{key[1:].lstrip('0')}", handler
 
-    def parse(report: str) -> Optional[structs.ReportData]:
-        """Parser for NBM reports"""
+    def parse(report: str) -> structs.ReportData | None:
+        """Parser for NBM reports."""
         if not report:
             return None
         data, lines = _init_parse(report)
@@ -208,7 +206,7 @@ parse_nbx: Callable[[str], structs.NbxData] = _parse_factory(
 
 class _Nbm(Forecast):
     units = structs.NbmUnits(**_UNITS)
-    _service_class = NOAA_NBM  # type: ignore
+    _service_class = NoaaNbm  # type: ignore
     _parser: staticmethod
 
     async def _post_update(self) -> None:

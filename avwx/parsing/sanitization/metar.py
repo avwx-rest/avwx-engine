@@ -1,30 +1,29 @@
-"""
-METAR sanitization support
-"""
+"""METAR sanitization support."""
 
 # module
-from .cleaners.base import CleanerListType
-from .cleaners.cleaners import OnlySlashes, TrimWxCode
-from .cleaners.joined import (
+from avwx.parsing.sanitization.base import sanitize_list_with, sanitize_string_with
+from avwx.parsing.sanitization.cleaners.base import CleanerListType
+from avwx.parsing.sanitization.cleaners.cleaners import OnlySlashes, TrimWxCode
+from avwx.parsing.sanitization.cleaners.joined import (
     JoinedCloud,
+    JoinedRunwayVisibility,
     JoinedTimestamp,
     JoinedWind,
-    JoinedRunwayVisibility,
 )
-from .cleaners.remove import RemoveFromMetar
-from .cleaners.replace import CURRENT, ReplaceItem
-from .cleaners.separated import (
+from avwx.parsing.sanitization.cleaners.remove import RemoveFromMetar
+from avwx.parsing.sanitization.cleaners.replace import CURRENT, ReplaceItem
+from avwx.parsing.sanitization.cleaners.separated import (
+    SeparatedAltimeterLetter,
+    SeparatedCloudAltitude,
+    SeparatedCloudQualifier,
     SeparatedDistance,
     SeparatedFirstTemperature,
-    SeparatedCloudAltitude,
     SeparatedSecondTemperature,
-    SeparatedAltimeterLetter,
     SeparatedTemperatureTrailingDigit,
     SeparatedWindUnit,
-    SeparatedCloudQualifier,
 )
-from .cleaners.visibility import RunwayVisibilityUnit, VisibilityGreaterThan
-from .cleaners.wind import (
+from avwx.parsing.sanitization.cleaners.visibility import RunwayVisibilityUnit, VisibilityGreaterThan
+from avwx.parsing.sanitization.cleaners.wind import (
     DoubleGust,
     EmptyWind,
     MisplaceWindKT,
@@ -32,8 +31,6 @@ from .cleaners.wind import (
     RemoveVrbLeadingDigits,
     WindLeadingMistype,
 )
-from .base import sanitize_list_with, sanitize_string_with
-
 
 METAR_REPL = {
     **CURRENT,

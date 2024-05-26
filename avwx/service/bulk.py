@@ -8,18 +8,16 @@ The `fetch` and `async_fetch` methods are identical except they return
 `List[str]` instead.
 """
 
-# pylint: disable=invalid-name
-
 # stdlib
 import asyncio as aio
 from contextlib import suppress
-from typing import List
+from typing import ClassVar
 
 from avwx.service.base import CallsHTTP, Service
 
 
-class NOAA_Bulk(Service, CallsHTTP):
-    """Subclass for extracting current reports from NOAA CSV files
+class NoaaBulk(Service, CallsHTTP):
+    """Subclass for extracting current reports from NOAA CSV files.
 
     This class accepts `"metar"`, `"taf"`, `"aircraftreport"`, and
     `"airsigmet"` as valid report types.
@@ -27,8 +25,8 @@ class NOAA_Bulk(Service, CallsHTTP):
 
     _url = "https://aviationweather.gov/data/cache/{}s.cache.csv"
     _valid_types = ("metar", "taf", "aircraftreport", "airsigmet")
-    _rtype_map = {"airep": "aircraftreport", "pirep": "aircraftreport"}
-    _targets = {"aircraftreport": -2}  # else 0
+    _rtype_map: ClassVar[dict[str, str]] = {"airep": "aircraftreport", "pirep": "aircraftreport"}
+    _targets: ClassVar[dict[str, int]] = {"aircraftreport": -2}  # else 0
 
     def __init__(self, report_type: str):
         super().__init__(self._rtype_map.get(report_type, report_type))
@@ -40,55 +38,52 @@ class NOAA_Bulk(Service, CallsHTTP):
             report = report.replace(remove, " ")
         return " ".join(report.split())
 
-    def _extract(self, raw: str) -> List[str]:
+    def _extract(self, raw: str) -> list[str]:
         reports = []
         index = self._targets.get(self.report_type, 0)
         for line in raw.split("\n")[6:]:
             with suppress(IndexError):
-                report = self._clean_report(line.split(",")[index])
-                if report:
+                if report := self._clean_report(line.split(",")[index]):
                     reports.append(report)
         return reports
 
-    def fetch(self, timeout: int = 10) -> List[str]:
-        """Bulk fetch report strings from the service"""
+    def fetch(self, timeout: int = 10) -> list[str]:
+        """Bulk fetch report strings from the service."""
         return aio.run(self.async_fetch(timeout))
 
-    async def async_fetch(self, timeout: int = 10) -> List[str]:
-        """Asynchronously bulk fetch report strings from the service"""
+    async def async_fetch(self, timeout: int = 10) -> list[str]:
+        """Asynchronously bulk fetch report strings from the service."""
         url = self._url.format(self.report_type)
         text = await self._call(url, timeout=timeout)
         return self._extract(text)
 
 
-class NOAA_Intl(Service, CallsHTTP):
+class NoaaIntl(Service, CallsHTTP):
     """Scrapes international reports from NOAA. Designed to
-    accompany `NOAA_Bulk` for AIRMET / SIGMET fetch.
+    accompany `NoaaBulk` for AIRMET / SIGMET fetch.
 
     Currently, this class only accepts `"airsigmet"` as a valid report type.
     """
 
     _url = "https://www.aviationweather.gov/api/data/{}"
     _valid_types = ("airsigmet",)
-    _url_map = {"airsigmet": "isigmet"}
+    _url_map: ClassVar[dict[str, str]] = {"airsigmet": "isigmet"}
 
     @staticmethod
     def _clean_report(report: str) -> str:
         lines = report.split()
         return " ".join([line for line in lines if not line.startswith("Hazard:")])
 
-    def _extract(self, raw: str) -> List[str]:
-        reports = []
-        for line in raw.split("----------------------"):
-            reports.append(self._clean_report(line.strip().strip('"')))
-        return reports
+    def _extract(self, raw: str) -> list[str]:
+        split = "----------------------"
+        return [self._clean_report(line.strip().strip('"')) for line in raw.split(split)]
 
-    def fetch(self, timeout: int = 10) -> List[str]:
-        """Bulk fetch report strings from the service"""
+    def fetch(self, timeout: int = 10) -> list[str]:
+        """Bulk fetch report strings from the service."""
         return aio.run(self.async_fetch(timeout))
 
-    async def async_fetch(self, timeout: int = 10) -> List[str]:
-        """Asynchronously bulk fetch report strings from the service"""
+    async def async_fetch(self, timeout: int = 10) -> list[str]:
+        """Asynchronously bulk fetch report strings from the service."""
         url = self._url.format(self._url_map[self.report_type])
         text = await self._call(url, timeout=timeout)
         return self._extract(text)

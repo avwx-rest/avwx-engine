@@ -1,24 +1,25 @@
+"""Contains functions for converting translations into a speech string.
+Currently only supports METAR.
 """
-Contains functions for converting translations into a speech string
-Currently only supports METAR
-"""
-
-# pylint: disable=redefined-builtin
 
 # stdlib
+from __future__ import annotations
+
 import re
-from typing import List, Optional
+from typing import TYPE_CHECKING
 
 # module
 import avwx.parsing.translate.base as translate_base
 import avwx.parsing.translate.taf as translate_taf
 from avwx.parsing import core
 from avwx.static.core import SPOKEN_UNITS
-from avwx.structs import Code, MetarData, Number, TafData, TafLineData, Timestamp, Units
+
+if TYPE_CHECKING:
+    from avwx.structs import Code, MetarData, Number, TafData, TafLineData, Timestamp, Units
 
 
-def ordinal(n: int) -> Optional[str]:  # pylint: disable=invalid-name
-    """Converts an int to it spoken ordinal representation"""
+def ordinal(n: int) -> str | None:
+    """Convert an int to it spoken ordinal representation."""
     if n < 0:
         return None
     return str(n) + "tsnrhtdd"[(n / 10 % 10 != 1) * (n % 10 < 4) * n % 10 :: 4]
@@ -27,28 +28,25 @@ def ordinal(n: int) -> Optional[str]:  # pylint: disable=invalid-name
 def _format_plural_unit(value: str, unit: str) -> str:
     spoken = SPOKEN_UNITS.get(unit, unit)
     value = re.sub(r"(?<=\b1)" + unit, f" {spoken}", value)  # 1 knot
-    value = re.sub(r"(?<=\d)+" + unit, f" {spoken}s", value)  # 2 knots
-    return value
+    return re.sub(r"(?<=\d)+" + unit, f" {spoken}s", value)  # 2 knots
 
 
 def wind(
     direction: Number,
     speed: Number,
-    gust: Optional[Number],
-    vardir: Optional[List[Number]] = None,
+    gust: Number | None,
+    vardir: list[Number] | None = None,
     unit: str = "kt",
 ) -> str:
-    """Format wind details into a spoken word string"""
-    val = translate_base.wind(
-        direction, speed, gust, vardir, unit, cardinals=False, spoken=True
-    )
+    """Format wind details into a spoken word string."""
+    val = translate_base.wind(direction, speed, gust, vardir, unit, cardinals=False, spoken=True)
     if val and unit in SPOKEN_UNITS:
         val = _format_plural_unit(val, unit)
     return "Winds " + (val or "unknown")
 
 
 def temperature(header: str, temp: Number, unit: str = "C") -> str:
-    """Format temperature details into a spoken word string"""
+    """Format temperature details into a spoken word string."""
     if not temp or temp.value is None:
         return f"{header} unknown"
     unit = SPOKEN_UNITS.get(unit, unit)
@@ -57,7 +55,7 @@ def temperature(header: str, temp: Number, unit: str = "C") -> str:
 
 
 def visibility(vis: Number, unit: str = "m") -> str:
-    """Format visibility details into a spoken word string"""
+    """Format visibility details into a spoken word string."""
     if not vis:
         return "Visibility unknown"
     if vis.value is None or "/" in vis.repr:
@@ -81,37 +79,35 @@ def visibility(vis: Number, unit: str = "m") -> str:
 
 
 def altimeter(alt: Number, unit: str = "inHg") -> str:
-    """Format altimeter details into a spoken word string"""
+    """Format altimeter details into a spoken word string."""
     ret = "Altimeter "
     if not alt:
         ret += "unknown"
     elif unit == "inHg":
-        ret += core.spoken_number(str(alt.value).ljust(5, "0"), True)
+        ret += core.spoken_number(str(alt.value).ljust(5, "0"), literal=True)
     elif unit == "hPa":
-        ret += core.spoken_number(str(alt.value).zfill(4), True)
+        ret += core.spoken_number(str(alt.value).zfill(4), literal=True)
     return ret
 
 
-def wx_codes(codes: List[Code]) -> str:
-    """
-    Format wx codes into a spoken word string
-    """
+def wx_codes(codes: list[Code]) -> str:
+    """Format wx codes into a spoken word string."""
     ret = []
     for code in codes:
         item = code.value
         if item.startswith("Vicinity"):
-            item = item.lstrip("Vicinity ") + " in the Vicinity"
+            item = item.removeprefix("Vicinity ") + " in the Vicinity"
         ret.append(item)
     return ". ".join(ret)
 
 
 def type_and_times(
-    type: str,
-    start: Optional[Timestamp],
-    end: Optional[Timestamp],
-    probability: Optional[Number] = None,
+    type: str,  # noqa: A002
+    start: Timestamp | None,
+    end: Timestamp | None,
+    probability: Number | None = None,
 ) -> str:
-    """Format line type and times into the beginning of a spoken line string"""
+    """Format line type and times into the beginning of a spoken line string."""
     if not type:
         return ""
     start_time = start.dt.hour if start and start.dt else "an unknown start time"
@@ -129,7 +125,7 @@ def type_and_times(
 
 
 def wind_shear(shear: str, unit_alt: str = "ft", unit_wind: str = "kt") -> str:
-    """Format wind shear string into a spoken word string"""
+    """Format wind shear string into a spoken word string."""
     value = translate_taf.wind_shear(shear, unit_alt, unit_wind, spoken=True)
     if not value:
         return "Wind shear unknown"
@@ -140,7 +136,7 @@ def wind_shear(shear: str, unit_alt: str = "ft", unit_wind: str = "kt") -> str:
 
 
 def metar(data: MetarData, units: Units) -> str:
-    """Convert MetarData into a string for text-to-speech"""
+    """Convert MetarData into a string for text-to-speech."""
     speech = []
     if data.wind_direction and data.wind_speed:
         speech.append(
@@ -154,11 +150,7 @@ def metar(data: MetarData, units: Units) -> str:
         )
     if data.visibility:
         speech.append(visibility(data.visibility, units.visibility))
-    speech.append(
-        translate_base.clouds(data.clouds, units.altitude).replace(
-            " - Reported AGL", ""
-        )
-    )
+    speech.append(translate_base.clouds(data.clouds, units.altitude).replace(" - Reported AGL", ""))
     if data.wx_codes:
         speech.append(wx_codes(data.wx_codes))
     if data.temperature:
@@ -171,7 +163,7 @@ def metar(data: MetarData, units: Units) -> str:
 
 
 def taf_line(line: TafLineData, units: Units) -> str:
-    """Convert TafLineData into a string for text-to-speech"""
+    """Convert TafLineData into a string for text-to-speech."""
     speech = []
     start = type_and_times(line.type, line.start_time, line.end_time, line.probability)
     if line.wind_direction and line.wind_speed:
@@ -192,11 +184,7 @@ def taf_line(line: TafLineData, units: Units) -> str:
         speech.append(altimeter(line.altimeter, units.altimeter))
     if line.wx_codes:
         speech.append(wx_codes(line.wx_codes))
-    speech.append(
-        translate_base.clouds(line.clouds, units.altitude).replace(
-            " - Reported AGL", ""
-        )
-    )
+    speech.append(translate_base.clouds(line.clouds, units.altitude).replace(" - Reported AGL", ""))
     if line.turbulence:
         speech.append(translate_taf.turb_ice(line.turbulence, units.altitude))
     if line.icing:
@@ -205,7 +193,7 @@ def taf_line(line: TafLineData, units: Units) -> str:
 
 
 def taf(data: TafData, units: Units) -> str:
-    """Convert TafData into a string for text-to-speech"""
+    """Convert TafData into a string for text-to-speech."""
     try:
         month = data.start_time.dt.strftime(r"%B")  # type: ignore
         day = ordinal(data.start_time.dt.day) or "Unknown"  # type: ignore

@@ -1,17 +1,20 @@
-"""
-Station text-based search
-"""
+"""Station text-based search."""
 
 # stdlib
+from __future__ import annotations
+
 from contextlib import suppress
 from functools import lru_cache
-from typing import Iterable, List, Optional, Tuple
+from typing import TYPE_CHECKING
 
 # module
+from avwx.exceptions import MissingExtraModule
 from avwx.load_utils import LazyCalc
 from avwx.station.meta import STATIONS
 from avwx.station.station import Station, station_filter
 
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 # Catch import error only if user attemps a text search
 with suppress(ModuleNotFoundError):
@@ -29,7 +32,7 @@ TYPE_ORDER = [
 ]
 
 
-def _format_search(airport: dict, keys: Iterable[str]) -> Optional[str]:
+def _format_search(airport: dict, keys: Iterable[str]) -> str | None:
     values = [airport.get(k) for k in keys]
     code = values[0] or values[2]
     if not code:
@@ -38,7 +41,7 @@ def _format_search(airport: dict, keys: Iterable[str]) -> Optional[str]:
     return " - ".join(k for k in values if k)
 
 
-def _build_corpus() -> List[str]:
+def _build_corpus() -> list[str]:
     keys = ("icao", "iata", "gps", "local", "city", "state", "name")
     return [text for s in STATIONS.values() if (text := _format_search(s, keys))]
 
@@ -46,7 +49,7 @@ def _build_corpus() -> List[str]:
 _CORPUS = LazyCalc(_build_corpus)
 
 
-def _sort_key(result: Tuple[Station, int]) -> Tuple[int, ...]:
+def _sort_key(result: tuple[Station, int]) -> tuple[int, ...]:
     station, score = result
     try:
         type_order = TYPE_ORDER.index(station.type)
@@ -59,12 +62,13 @@ def _sort_key(result: Tuple[Station, int]) -> Tuple[int, ...]:
 def search(
     text: str,
     limit: int = 10,
+    *,
     is_airport: bool = False,
     sends_reports: bool = True,
-) -> List[Station]:
-    """Text search for stations against codes, name, city, and state
+) -> list[Station]:
+    """Text search for stations against codes, name, city, and state.
 
-    Results may be shorter than limit value
+    Results may be shorter than limit value.
     """
     try:
         results = process.extract(
@@ -75,10 +79,9 @@ def search(
             processor=utils.default_process,
         )
     except NameError as name_error:
-        raise ModuleNotFoundError(
-            'rapidfuzz must be installed to use text search. Run "pip install avwx-engine[fuzz]" to enable this'
-        ) from name_error
+        extra = "fuzz"
+        raise MissingExtraModule(extra) from name_error
     results = [(Station.from_code(k[:4]), s) for k, s, _ in results]
     results.sort(key=_sort_key, reverse=True)
-    results = [s for s, _ in results if station_filter(s, is_airport, sends_reports)]
+    results = [s for s, _ in results if station_filter(s, is_airport=is_airport, reporting=sends_reports)]
     return results[:limit] if len(results) > limit else results

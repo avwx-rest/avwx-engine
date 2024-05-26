@@ -7,9 +7,9 @@ point the service will check for a newer file. You can also have direct access
 to all downloaded reports.
 """
 
-# pylint: disable=invalid-name,arguments-differ
-
 # stdlib
+from __future__ import annotations
+
 import asyncio as aio
 import atexit
 import datetime as dt
@@ -18,7 +18,7 @@ import warnings
 from contextlib import suppress
 from pathlib import Path
 from socket import gaierror
-from typing import Dict, Iterator, List, Optional, TextIO, Tuple
+from typing import TYPE_CHECKING, ClassVar, TextIO
 
 # library
 import httpx
@@ -27,8 +27,10 @@ import httpx
 from avwx.service.base import Service
 from avwx.station import valid_station
 
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
-_TEMP_DIR = tempfile.TemporaryDirectory()  # pylint: disable=consider-using-with
+_TEMP_DIR = tempfile.TemporaryDirectory()
 _TEMP = Path(_TEMP_DIR.name)
 
 
@@ -37,12 +39,12 @@ _HTTPX_EXCEPTIONS = (httpx.ConnectTimeout, httpx.ReadTimeout, httpx.RemoteProtoc
 
 @atexit.register
 def _cleanup() -> None:
-    """Deletes temporary files and directory at Python exit"""
+    """Deletes temporary files and directory at Python exit."""
     _TEMP_DIR.cleanup()
 
 
 class FileService(Service):
-    """Service class for fetching reports via managed source files"""
+    """Service class for fetching reports via managed source files."""
 
     update_interval: dt.timedelta = dt.timedelta(minutes=10)
     _updating: bool = False
@@ -52,15 +54,15 @@ class FileService(Service):
         return f"{self.__class__.__name__}.{self.report_type}"
 
     @property
-    def _file(self) -> Optional[Path]:
-        """Path object of the managed data file"""
+    def _file(self) -> Path | None:
+        """Path object of the managed data file."""
         for path in _TEMP.glob(f"{self._file_stem}*"):
             return path
         return None
 
     @property
-    def last_updated(self) -> Optional[dt.datetime]:
-        """When the file was last updated"""
+    def last_updated(self) -> dt.datetime | None:
+        """When the file was last updated."""
         file = self._file
         if file is None:
             return None
@@ -72,7 +74,7 @@ class FileService(Service):
 
     @property
     def is_outdated(self) -> bool:
-        """If the file should be updated based on the update interval"""
+        """If the file should be updated based on the update interval."""
         last = self.last_updated
         if last is None:
             return True
@@ -89,19 +91,19 @@ class FileService(Service):
             await aio.sleep(0.01)
 
     @property
-    def all(self) -> List[str]:
-        """All report strings available after updating"""
-        raise NotImplementedError()
+    def all(self) -> list[str]:
+        """All report strings available after updating."""
+        raise NotImplementedError
 
     @property
     def _urls(self) -> Iterator[str]:
-        raise NotImplementedError()
+        raise NotImplementedError
 
-    def _extract(self, station: str, source: TextIO) -> Optional[str]:
-        raise NotImplementedError()
+    def _extract(self, station: str, source: TextIO) -> str | None:
+        raise NotImplementedError
 
     async def _update_file(self, timeout: int) -> bool:
-        """Finds and saves the most recent file"""
+        """Find and save the most recent file."""
         # Find the most recent file
         async with httpx.AsyncClient(timeout=timeout) as client:
             for url in self._urls:
@@ -121,10 +123,10 @@ class FileService(Service):
             new_file.write(resp.content)
         return True
 
-    async def update(self, wait: bool = False, timeout: int = 10) -> bool:
-        """Update the stored file and returns success
+    async def update(self, *, wait: bool = False, timeout: int = 10) -> bool:
+        """Update the stored file and returns success.
 
-        If wait, this will block if the file is already being updated
+        If wait, this will block if the file is already being updated.
         """
         # Guard for other async calls
         if self._updating:
@@ -144,45 +146,42 @@ class FileService(Service):
         self._updating = False
         return True
 
-    def fetch(
-        self, station: str, wait: bool = True, timeout: int = 10, force: bool = False
-    ) -> Optional[str]:
-        """Fetch a report string from the source file
+    def fetch(self, station: str, *, wait: bool = True, timeout: int = 10, force: bool = False) -> str | None:
+        """Fetch a report string from the source file.
 
-        If wait, this will block if the file is already being updated
+        If wait, this will block if the file is already being updated.
 
-        Can force the service to fetch a new file
+        Can force the service to fetch a new file.
         """
-        return aio.run(self.async_fetch(station, wait, timeout, force))
+        return aio.run(self.async_fetch(station, wait=wait, timeout=timeout, force=force))
 
     async def async_fetch(
-        self, station: str, wait: bool = True, timeout: int = 10, force: bool = False
-    ) -> Optional[str]:
-        """Asynchronously fetch a report string from the source file
+        self, station: str, *, wait: bool = True, timeout: int = 10, force: bool = False
+    ) -> str | None:
+        """Asynchronously fetch a report string from the source file.
 
-        If wait, this will block if the file is already being updated
+        If wait, this will block if the file is already being updated.
 
-        Can force the service to fetch a new file
+        Can force the service to fetch a new file.
         """
         valid_station(station)
         if wait and self._updating:
             await self._wait_until_updated()
-        if (force or self.is_outdated) and not await self.update(wait, timeout):
+        if (force or self.is_outdated) and not await self.update(wait=wait, timeout=timeout):
             return None
         file = self._file
         if file is None:
             return None
         with file.open() as fin:
-            report = self._extract(station, fin)
-        return report
+            return self._extract(station, fin)
 
 
-class NOAA_Forecast(FileService):
-    """Subclass for extracting reports from NOAA FTP files"""
+class NoaaForecast(FileService):
+    """Subclass for extracting reports from NOAA FTP files."""
 
     @property
-    def all(self) -> List[str]:
-        """All report strings available after updating"""
+    def all(self) -> list[str]:
+        """All report strings available after updating."""
         if self._file is None:
             return []
         with self._file.open() as fin:
@@ -198,11 +197,11 @@ class NOAA_Forecast(FileService):
                 report = ""
         return reports
 
-    def _index_target(self, station: str) -> Tuple[str, str]:
-        raise NotImplementedError()
+    def _index_target(self, station: str) -> tuple[str, str]:
+        raise NotImplementedError
 
-    def _extract(self, station: str, source: TextIO) -> Optional[str]:
-        """Returns report pulled from the saved file"""
+    def _extract(self, station: str, source: TextIO) -> str | None:
+        """Return report pulled from the saved file."""
         start, end = self._index_target(station)
         txt = source.read()
         txt = txt[txt.find(start) :]
@@ -210,22 +209,22 @@ class NOAA_Forecast(FileService):
         lines = []
         for line in txt.split("\n"):
             if "CLIMO" not in line:
-                line = line.strip()
+                line = line.strip()  # noqa: PLW2901
             if not line:
                 break
             lines.append(line)
         return "\n".join(lines) or None
 
 
-class NOAA_NBM(NOAA_Forecast):
-    """Requests forecast data from NOAA NBM FTP servers"""
+class NoaaNbm(NoaaForecast):
+    """Request forecast data from NOAA NBM FTP servers."""
 
     _url = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/blend/prod/blend.{}/{}/text/blend_{}tx.t{}z"
     _valid_types = ("nbh", "nbs", "nbe", "nbx")
 
     @property
     def _urls(self) -> Iterator[str]:
-        """Iterates through hourly updates no older than two days"""
+        """Iterate through hourly updates no older than two days."""
         date = dt.datetime.now(tz=dt.timezone.utc)
         cutoff = date - dt.timedelta(days=1)
         while date > cutoff:
@@ -234,24 +233,25 @@ class NOAA_NBM(NOAA_Forecast):
             yield self._url.format(timestamp, hour, self.report_type, hour)
             date -= dt.timedelta(hours=1)
 
-    def _index_target(self, station: str) -> Tuple[str, str]:
+    def _index_target(self, station: str) -> tuple[str, str]:
         return f"{station}   ", f"{self.report_type.upper()} GUIDANCE"
 
 
-class NOAA_GFS(NOAA_Forecast):
-    """Requests forecast data from NOAA GFS FTP servers"""
+class NoaaGfs(NoaaForecast):
+    """Request forecast data from NOAA GFS FTP servers."""
 
     _url = "https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfsmos.{}/mdl_gfs{}.t{}z"
     _valid_types = ("mav", "mex")
 
-    _cycles: Dict[str, Tuple[int, ...]] = {"mav": (0, 6, 12, 18), "mex": (0, 12)}
+    _cycles: ClassVar[dict[str, tuple[int, ...]]] = {"mav": (0, 6, 12, 18), "mex": (0, 12)}
 
     @property
     def _urls(self) -> Iterator[str]:
-        """Iterates through update cycles no older than two days"""
+        """Iterate through update cycles no older than two days."""
         warnings.warn(
             "GFS fetch has been deprecated due to NOAA retiring the format. Migrate to NBM for similar data",
             DeprecationWarning,
+            stacklevel=2,
         )
         now = dt.datetime.now(tz=dt.timezone.utc)
         date = dt.datetime.now(tz=dt.timezone.utc)
@@ -266,7 +266,7 @@ class NOAA_GFS(NOAA_Forecast):
                 yield self._url.format(timestamp, self.report_type, hour)
             date -= dt.timedelta(hours=1)
 
-    def _index_target(self, station: str) -> Tuple[str, str]:
+    def _index_target(self, station: str) -> tuple[str, str]:
         return f"{station}   GFS", f"{self.report_type.upper()} GUIDANCE"
 
 

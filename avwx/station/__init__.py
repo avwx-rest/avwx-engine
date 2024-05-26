@@ -1,5 +1,4 @@
-"""
-This module contains station/airport dataclasses and search functions.
+"""This module contains station/airport dataclasses and search functions.
 
 For the purposes of AVWX, a station is any physical location that has an ICAO
 or GPS identification code. These are usually airports, but smaller locations
@@ -13,10 +12,9 @@ not associated with airports like weather buouys.
 - [avwx.Station](./station/station.html#Station)
 """
 
-from .meta import __LAST_UPDATED__, station_list, uses_na_format, valid_station
-from .station import Station, nearest
-from .search import search
-
+from avwx.station.meta import __LAST_UPDATED__, station_list, uses_na_format, valid_station
+from avwx.station.search import search
+from avwx.station.station import Station, nearest
 
 __all__ = (
     "__LAST_UPDATED__",

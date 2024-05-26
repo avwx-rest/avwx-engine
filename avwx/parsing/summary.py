@@ -1,13 +1,11 @@
-"""
-Contains functions for combining translations into a summary string
-"""
+"""Contains functions for combining translations into a summary string."""
 
 # module
 from avwx.structs import MetarTrans, TafLineTrans
 
 
 def metar(trans: MetarTrans) -> str:
-    """Condense the translation strings into a single report summary string"""
+    """Condense the translation strings into a single report summary string."""
     summary = []
     if trans.wind:
         summary.append(f"Winds {trans.wind}")
@@ -27,7 +25,7 @@ def metar(trans: MetarTrans) -> str:
 
 
 def taf(trans: TafLineTrans) -> str:
-    """Condense the translation strings into a single forecast summary string"""
+    """Condense the translation strings into a single forecast summary string."""
     summary = []
     if trans.wind:
         summary.append(f"Winds {trans.wind}")

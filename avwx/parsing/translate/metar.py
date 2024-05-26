@@ -1,6 +1,4 @@
-"""
-METAR data translation handlers
-"""
+"""METAR data translation handlers."""
 
 import avwx.parsing.translate.base as _trans
 from avwx.parsing.translate import remarks
@@ -8,7 +6,7 @@ from avwx.structs import MetarData, MetarTrans, Units
 
 
 def translate_metar(wxdata: MetarData, units: Units) -> MetarTrans:
-    """Returns translations for a MetarData object"""
+    """Return translations for a MetarData object."""
     shared = _trans.current_shared(wxdata, units)
     return MetarTrans(
         altimeter=shared.altimeter,

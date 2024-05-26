@@ -1,5 +1,4 @@
-"""
-Core static values for internal and external use
+"""Core static values for internal and external use.
 
 METAR and TAF reports come in two variants depending on the station's
 location: North American & International. This affects both element

@@ -1,18 +1,17 @@
-"""
-Contains functions for translating report data
-"""
+"""Functions for translating report data."""
 
 # stdlib
+from __future__ import annotations
+
 from contextlib import suppress
-from typing import List, Optional, Union
 
 # module
 from avwx.static.core import CLOUD_TRANSLATIONS
 from avwx.structs import Cloud, Code, Number, ReportTrans, SharedData, Units
 
 
-def get_cardinal_direction(direction: Union[int, float]) -> str:
-    """Returns the cardinal direction (NSEW) for a degree direction
+def get_cardinal_direction(direction: float) -> str:
+    """Return the cardinal direction (NSEW) for a degree direction.
 
     Wind Direction - Cheat Sheet:
 
@@ -24,7 +23,6 @@ def get_cardinal_direction(direction: Union[int, float]) -> str:
 
     (270) -- 281/282 -- 303/304 -- (315) -- 326/327 -- 348/349 -- (360)
     """
-    # pylint: disable=too-many-branches
     ret = ""
     if not isinstance(direction, int):
         direction = int(direction)
@@ -70,18 +68,19 @@ def get_cardinal_direction(direction: Union[int, float]) -> str:
 WIND_DIR_REPR = {"000": "Calm", "VRB": "Variable"}
 
 
-def wind(  # pylint: disable=too-many-arguments
-    direction: Optional[Number],
-    speed: Optional[Number],
-    gust: Optional[Number],
-    vardir: Optional[List[Number]] = None,
+def wind(
+    direction: Number | None,
+    speed: Number | None,
+    gust: Number | None,
+    vardir: list[Number] | None = None,
     unit: str = "kt",
+    *,
     cardinals: bool = True,
     spoken: bool = False,
 ) -> str:
-    """Format wind elements into a readable sentence
+    """Format wind elements into a readable sentence.
 
-    Returns the translation string
+    Returns the translation string.
 
     Ex: NNE-020 (variable 010 to 040) at 14kt gusting to 20kt
     """
@@ -118,8 +117,8 @@ VIS_REPR = {
 }
 
 
-def visibility(vis: Optional[Number], unit: str = "m") -> str:
-    """Formats a visibility element into a string with both km and sm values
+def visibility(vis: Number | None, unit: str = "m") -> str:
+    """Format a visibility element into a string with both km and sm values.
 
     Ex: 8km ( 5sm )
     """
@@ -145,10 +144,10 @@ def visibility(vis: Optional[Number], unit: str = "m") -> str:
     return f"{value}{unit} ({converted})"
 
 
-def temperature(temp: Optional[Number], unit: str = "C") -> str:
-    """Formats a temperature element into a string with both C and F values
+def temperature(temp: Number | None, unit: str = "C") -> str:
+    """Format a temperature element into a string with both C and F values.
 
-    Used for both Temp and Dew
+    Used for both Temp and Dew.
 
     Ex: 34°C (93°F)
     """
@@ -166,8 +165,8 @@ def temperature(temp: Optional[Number], unit: str = "C") -> str:
     return f"{temp.value}°{unit} ({converted})"
 
 
-def altimeter(alt: Optional[Number], unit: str = "hPa") -> str:
-    """Formats the altimeter element into a string with hPa and inHg values
+def altimeter(alt: Number | None, unit: str = "hPa") -> str:
+    """Format the altimeter element into a string with hPa and inHg values.
 
     Ex: 30.11 inHg (10.20 hPa)
     """
@@ -186,10 +185,10 @@ def altimeter(alt: Optional[Number], unit: str = "hPa") -> str:
     return f"{value} {unit} ({converted})"
 
 
-def clouds(values: Optional[List[Cloud]], unit: str = "ft") -> str:
-    """Format cloud list into a readable sentence
+def clouds(values: list[Cloud] | None, unit: str = "ft") -> str:
+    """Format cloud list into a readable sentence.
 
-    Returns the translation string
+    Returns the translation string.
 
     Ex: Broken layer at 2200ft (Cumulonimbus), Overcast layer at 3600ft - Reported AGL
     """
@@ -206,16 +205,16 @@ def clouds(values: Optional[List[Cloud]], unit: str = "ft") -> str:
     return ", ".join(ret) + " - Reported AGL" if ret else "Sky clear"
 
 
-def wx_codes(codes: List[Code]) -> str:
-    """Join WX code values
+def wx_codes(codes: list[Code]) -> str:
+    """Join WX code values,
 
-    Returns the translation string
+    Returns the translation string,
     """
     return ", ".join(code.value for code in codes)
 
 
 def current_shared(wxdata: SharedData, units: Units) -> ReportTrans:
-    """Translate Visibility, Altimeter, Clouds, and Other"""
+    """Translate Visibility, Altimeter, Clouds, and Other,"""
     return ReportTrans(
         visibility=visibility(wxdata.visibility, units.visibility),
         altimeter=altimeter(wxdata.altimeter, units.altimeter),

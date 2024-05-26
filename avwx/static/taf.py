@@ -1,6 +1,4 @@
-"""
-TAF static values
-"""
+"""TAF static values."""
 
 TURBULENCE_CONDITIONS = {
     "0": "None",

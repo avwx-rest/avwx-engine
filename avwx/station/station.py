@@ -1,36 +1,34 @@
-"""
-Station handling and coordinate search
-"""
-
-# pylint: disable=invalid-name,too-many-arguments,too-many-instance-attributes
+"""Station handling and coordinate search."""
 
 # stdlib
+from __future__ import annotations
+
 from contextlib import suppress
 from copy import copy
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import Any, Dict, List, Optional, Tuple, Type, TypeVar, Union
+from typing import Any, Self
 
 # library
 import httpx
-from geopy.distance import great_circle, Distance  # type: ignore
+from geopy.distance import Distance, great_circle  # type: ignore
 
 # module
-from avwx.exceptions import BadStation
+from avwx.exceptions import BadStation, MissingExtraModule
 from avwx.load_utils import LazyCalc
 from avwx.station.meta import STATIONS
 from avwx.structs import Coord
 
 
 def _get_ip_location() -> Coord:
-    """Returns the current location according to ipinfo.io"""
+    """Return the current location according to ipinfo.io."""
     lat, lon = httpx.get("https://ipinfo.io/loc").text.strip().split(",")
     return Coord(float(lat), float(lon))
 
 
 @dataclass
 class Runway:
-    """Represents a runway at an airport"""
+    """Represent a runway at an airport."""
 
     length_ft: int
     width_ft: int
@@ -42,7 +40,6 @@ class Runway:
     bearing2: float
 
 
-T = TypeVar("T", bound="Station")
 _ICAO = LazyCalc(lambda: {v["icao"]: k for k, v in STATIONS.items() if v["icao"]})
 _IATA = LazyCalc(lambda: {v["iata"]: k for k, v in STATIONS.items() if v["iata"]})
 _GPS = LazyCalc(lambda: {v["gps"]: k for k, v in STATIONS.items() if v["gps"]})
@@ -88,40 +85,39 @@ class Station:
 
     # pylint: disable=too-many-instance-attributes
 
-    city: Optional[str]
+    city: str | None
     country: str
-    elevation_ft: Optional[int]
-    elevation_m: Optional[int]
-    gps: Optional[str]
-    iata: Optional[str]
-    icao: Optional[str]
+    elevation_ft: int | None
+    elevation_m: int | None
+    gps: str | None
+    iata: str | None
+    icao: str | None
     latitude: float
-    local: Optional[str]
+    local: str | None
     longitude: float
     name: str
-    note: Optional[str]
+    note: str | None
     reporting: bool
-    runways: List[Runway]
-    state: Optional[str]
+    runways: list[Runway]
+    state: str | None
     type: str
-    website: Optional[str]
-    wiki: Optional[str]
+    website: str | None
+    wiki: str | None
 
     @classmethod
-    def _from_code(cls: Type[T], ident: str) -> T:
+    def _from_code(cls, ident: str) -> Self:
         try:
-            info: Dict[str, Any] = copy(STATIONS[ident])
+            info: dict[str, Any] = copy(STATIONS[ident])
             if info["runways"]:
                 info["runways"] = [Runway(**r) for r in info["runways"]]
             return cls(**info)
         except (KeyError, AttributeError) as not_found:
-            raise BadStation(
-                f"Could not find station with ident {ident}"
-            ) from not_found
+            msg = f"Could not find station with ident {ident}"
+            raise BadStation(msg) from not_found
 
     @classmethod
-    def from_code(cls: Type[T], ident: str) -> T:
-        """Load a Station from ICAO, GPS, or IATA code in that order"""
+    def from_code(cls, ident: str) -> Self:
+        """Load a Station from ICAO, GPS, or IATA code in that order."""
         if ident and isinstance(ident, str):
             if len(ident) == 4:
                 with suppress(BadStation):
@@ -133,66 +129,66 @@ class Station:
                     return cls.from_iata(ident)
             with suppress(BadStation):
                 return cls.from_local(ident)
-        raise BadStation(f"Could not find station with ident {ident}")
+        msg = f"Could not find station with ident {ident}"
+        raise BadStation(msg)
 
     @classmethod
-    def from_icao(cls: Type[T], ident: str) -> T:
-        """Load a Station from an ICAO station ident"""
+    def from_icao(cls, ident: str) -> Self:
+        """Load a Station from an ICAO station ident."""
         try:
             return cls._from_code(_ICAO.value[ident.upper()])
         except (KeyError, AttributeError) as not_found:
-            raise BadStation(
-                f"Could not find station with ICAO ident {ident}"
-            ) from not_found
+            msg = f"Could not find station with ICAO ident {ident}"
+            raise BadStation(msg) from not_found
 
     @classmethod
-    def from_iata(cls: Type[T], ident: str) -> T:
-        """Load a Station from an IATA code"""
+    def from_iata(cls, ident: str) -> Self:
+        """Load a Station from an IATA code."""
         try:
             return cls._from_code(_IATA.value[ident.upper()])
         except (KeyError, AttributeError) as not_found:
-            raise BadStation(
-                f"Could not find station with IATA ident {ident}"
-            ) from not_found
+            msg = f"Could not find station with IATA ident {ident}"
+            raise BadStation(msg) from not_found
 
     @classmethod
-    def from_gps(cls: Type[T], ident: str) -> T:
-        """Load a Station from a GPS code"""
+    def from_gps(cls, ident: str) -> Self:
+        """Load a Station from a GPS code."""
         try:
             return cls._from_code(_GPS.value[ident.upper()])
         except (KeyError, AttributeError) as not_found:
-            raise BadStation(
-                f"Could not find station with GPS ident {ident}"
-            ) from not_found
+            msg = f"Could not find station with GPS ident {ident}"
+            raise BadStation(msg) from not_found
 
     @classmethod
-    def from_local(cls: Type[T], ident: str) -> T:
-        """Load a Station from a local code"""
+    def from_local(cls, ident: str) -> Self:
+        """Load a Station from a local code."""
         try:
             return cls._from_code(_LOCAL.value[ident.upper()])
         except (KeyError, AttributeError) as not_found:
-            raise BadStation(
-                f"Could not find station with local ident {ident}"
-            ) from not_found
+            msg = f"Could not find station with local ident {ident}"
+            raise BadStation(msg) from not_found
 
     @classmethod
     def nearest(
-        cls: Type[T],
-        lat: Optional[float] = None,
-        lon: Optional[float] = None,
+        cls,
+        lat: float | None = None,
+        lon: float | None = None,
+        *,
         is_airport: bool = False,
         sends_reports: bool = True,
         max_coord_distance: float = 10,
-    ) -> Optional[Tuple[T, dict]]:
-        """Load the Station nearest to your location or a lat,lon coordinate pair
+    ) -> tuple[Self, dict] | None:
+        """Load the Station nearest to your location or a lat,lon coordinate pair.
 
-        Returns the Station and distances from source
+        Returns the Station and distances from source.
 
         NOTE: Becomes less accurate toward poles and doesn't cross +/-180
         """
         if not (lat and lon):
             lat, lon = _get_ip_location().pair
-        ret = nearest(lat, lon, 1, is_airport, sends_reports, max_coord_distance)
+        ret = nearest(
+            lat, lon, 1, is_airport=is_airport, sends_reports=sends_reports, max_coord_distance=max_coord_distance
+        )
         if not isinstance(ret, dict):
             return None
         station = ret.pop("station")
@@ -200,16 +196,17 @@ class Station:
 
     @property
     def lookup_code(self) -> str:
-        """Returns the ICAO or GPS code for report fetch"""
+        """The ICAO or GPS code for report fetch."""
         if self.icao:
             return self.icao
         if self.gps:
             return self.gps
-        raise BadStation("Station does not have a valid lookup code")
+        msg = "Station does not have a valid lookup code"
+        raise BadStation(msg)
 
     @property
     def storage_code(self) -> str:
-        """Returns the first unique-ish code from what's available"""
+        """The first unique-ish code from what's available."""
         if self.icao:
             return self.icao
         if self.iata:
@@ -218,29 +215,31 @@ class Station:
             return self.gps
         if self.local:
             return self.local
-        raise BadStation("Station does not have any useable codes")
+        msg = "Station does not have any useable codes"
+        raise BadStation(msg)
 
     @property
     def sends_reports(self) -> bool:
-        """Returns whether or not a Station likely sends weather reports"""
+        """Whether or not a Station likely sends weather reports."""
         return self.reporting is True
 
     @property
     def coord(self) -> Coord:
-        """Returns the station location as a Coord"""
+        """The station location as a Coord."""
         return Coord(lat=self.latitude, lon=self.longitude, repr=self.icao)
 
     def distance(self, lat: float, lon: float) -> Distance:
-        """Returns a geopy Distance using the great circle method"""
+        """Geopy Distance using the great circle method."""
         return great_circle((lat, lon), (self.latitude, self.longitude))
 
     def nearby(
         self,
+        *,
         is_airport: bool = False,
         sends_reports: bool = True,
         max_coord_distance: float = 10,
-    ) -> List[Tuple[T, dict]]:
-        """Returns Stations nearest to current station and their distances
+    ) -> list[tuple[Self, dict]]:
+        """Return Stations nearest to current station and their distances.
 
         NOTE: Becomes less accurate toward poles and doesn't cross +/-180
         """
@@ -248,9 +247,9 @@ class Station:
             self.latitude,
             self.longitude,
             11,
-            is_airport,
-            sends_reports,
-            max_coord_distance,
+            is_airport=is_airport,
+            sends_reports=sends_reports,
+            max_coord_distance=max_coord_distance,
         )
         if isinstance(stations, dict):
             return []
@@ -260,7 +259,7 @@ class Station:
 # Coordinate search and resources
 
 
-def _make_coords() -> List[Tuple]:
+def _make_coords() -> list[tuple[str, float, float]]:
     return [
         (
             s["icao"] or s["gps"] or s["iata"] or s["local"],
@@ -275,33 +274,29 @@ _COORDS = LazyCalc(_make_coords)
 
 
 def _make_coord_tree():  # type: ignore
-    # pylint: disable=import-outside-toplevel
     try:
         from scipy.spatial import KDTree  # type: ignore
 
         return KDTree([c[1:] for c in _COORDS.value])
     except (NameError, ModuleNotFoundError) as name_error:
-        raise ModuleNotFoundError(
-            'scipy must be installed to use coordinate lookup. Run "pip install avwx-engine[scipy]" to enable this feature'
-        ) from name_error
+        extra = "scipy"
+        raise MissingExtraModule(extra) from name_error
 
 
 _COORD_TREE = LazyCalc(_make_coord_tree)
 
 
-def _query_coords(lat: float, lon: float, n: int, d: float) -> List[Tuple[str, float]]:
+def _query_coords(lat: float, lon: float, n: int, d: float) -> list[tuple[str, float]]:
     """Returns <= n number of ident, dist tuples <= d coord distance from lat,lon"""
     dist, index = _COORD_TREE.value.query([lat, lon], n, distance_upper_bound=d)
     if n == 1:
         dist, index = [dist], [index]
     # NOTE: index == len of list means Tree ran out of items
-    return [
-        (_COORDS.value[i][0], d) for i, d in zip(index, dist) if i < len(_COORDS.value)
-    ]
+    return [(_COORDS.value[i][0], d) for i, d in zip(index, dist) if i < len(_COORDS.value)]
 
 
-def station_filter(station: Station, is_airport: bool, reporting: bool) -> bool:
-    """Return True if station matches given criteria"""
+def station_filter(station: Station, *, is_airport: bool, reporting: bool) -> bool:
+    """Return True if station matches given criteria."""
     if is_airport and "airport" not in station.type:
         return False
     return bool(not reporting or station.sends_reports)
@@ -309,12 +304,12 @@ def station_filter(station: Station, is_airport: bool, reporting: bool) -> bool:
 
 @lru_cache(maxsize=128)
 def _query_filter(
-    lat: float, lon: float, n: int, d: float, is_airport: bool, reporting: bool
-) -> List[Tuple[Station, float]]:
-    """Returns <= n number of stations <= d distance from lat,lon matching the query params"""
+    lat: float, lon: float, n: int, d: float, *, is_airport: bool, reporting: bool
+) -> list[tuple[Station, float]]:
+    """Return <= n number of stations <= d distance from lat,lon matching the query params."""
     k = n * 20
     last = 0
-    stations: List[Tuple[Station, float]] = []
+    stations: list[tuple[Station, float]] = []
     while True:
         nodes = _query_coords(lat, lon, k, d)[last:]
         # Ran out of new stations
@@ -324,7 +319,7 @@ def _query_filter(
             if not code:
                 continue
             stn = Station.from_code(code)
-            if station_filter(stn, is_airport, reporting):
+            if station_filter(stn, is_airport=is_airport, reporting=reporting):
                 stations.append((stn, dist))
             # Reached the desired number of stations
             if len(stations) >= n:
@@ -337,21 +332,20 @@ def nearest(
     lat: float,
     lon: float,
     n: int = 1,
+    *,
     is_airport: bool = False,
     sends_reports: bool = True,
     max_coord_distance: float = 10,
-) -> Union[dict, List[dict]]:
-    """Finds the nearest n Stations to a lat,lon coordinate pair
+) -> dict | list[dict]:
+    """Find the nearest n Stations to a lat,lon coordinate pair.
 
-    Returns the Station and coordinate distance from source
+    Returns the Station and coordinate distance from source.
 
-    NOTE: Becomes less accurate toward poles and doesn't cross +/-180
+    NOTE: Becomes less accurate toward poles and doesn't cross +/-180.
     """
     # Default state includes all, no filtering necessary
     if is_airport or sends_reports:
-        stations = _query_filter(
-            lat, lon, n, max_coord_distance, is_airport, sends_reports
-        )
+        stations = _query_filter(lat, lon, n, max_coord_distance, is_airport, sends_reports)
     else:
         data = _query_coords(lat, lon, n, max_coord_distance)
         stations = [(Station.from_code(code), d) for code, d in data]

@@ -1,33 +1,32 @@
-"""
-TAF sanitization support
-"""
+"""TAF sanitization support."""
 
 # module
-from .cleaners.base import CleanerListType
-from .cleaners.cleaners import OnlySlashes, TrimWxCode
-from .cleaners.joined import (
+from avwx.parsing.sanitization.base import sanitize_list_with, sanitize_string_with
+from avwx.parsing.sanitization.cleaners.base import CleanerListType
+from avwx.parsing.sanitization.cleaners.cleaners import OnlySlashes, TrimWxCode
+from avwx.parsing.sanitization.cleaners.joined import (
     JoinedCloud,
+    JoinedMinMaxTemperature,
+    JoinedTafNewLine,
     JoinedTimestamp,
     JoinedWind,
-    JoinedTafNewLine,
-    JoinedMinMaxTemperature,
 )
-from .cleaners.remove import RemoveFromTaf, RemoveTafAmend
-from .cleaners.replace import CURRENT, ReplaceItem
-from .cleaners.separated import (
+from avwx.parsing.sanitization.cleaners.remove import RemoveFromTaf, RemoveTafAmend
+from avwx.parsing.sanitization.cleaners.replace import CURRENT, ReplaceItem
+from avwx.parsing.sanitization.cleaners.separated import (
+    SeparatedAltimeterLetter,
+    SeparatedCloudAltitude,
+    SeparatedCloudQualifier,
     SeparatedDistance,
     SeparatedFirstTemperature,
-    SeparatedCloudAltitude,
+    SeparatedMinMaxTemperaturePrefix,
     SeparatedSecondTemperature,
-    SeparatedAltimeterLetter,
+    SeparatedTafTimePrefix,
     SeparatedTemperatureTrailingDigit,
     SeparatedWindUnit,
-    SeparatedCloudQualifier,
-    SeparatedTafTimePrefix,
-    SeparatedMinMaxTemperaturePrefix,
 )
-from .cleaners.visibility import VisibilityGreaterThan
-from .cleaners.wind import (
+from avwx.parsing.sanitization.cleaners.visibility import VisibilityGreaterThan
+from avwx.parsing.sanitization.cleaners.wind import (
     DoubleGust,
     EmptyWind,
     MisplaceWindKT,
@@ -35,8 +34,6 @@ from .cleaners.wind import (
     RemoveVrbLeadingDigits,
     WindLeadingMistype,
 )
-from .base import sanitize_list_with, sanitize_string_with
-
 
 TAF_REPL = {
     **CURRENT,

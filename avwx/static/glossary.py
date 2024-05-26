@@ -1,5 +1,4 @@
-"""
-AVWX includes a compiled glossary of common report abbreviations that are
+"""AVWX includes a compiled glossary of common report abbreviations that are
 listed separate from any other parsing mechanism. This is provided just
 for you to assist in translating the original reports or any item left in
 the `other` element.

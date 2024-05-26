@@ -1,30 +1,28 @@
-"""
-Core sanitiation functions that accept report-specific elements
-"""
+"""Core sanitiation functions that accept report-specific elements."""
 
-from typing import Callable, Dict, List
+from typing import Callable
 
 from avwx.parsing.core import dedupe, is_variable_wind_direction, is_wind
-from avwx.structs import Sanitization
-from .cleaners.base import (
+from avwx.parsing.sanitization.cleaners.base import (
     CleanerListType,
     CleanItem,
     CleanPair,
+    CombineItems,
     RemoveItem,
     SplitItem,
-    CombineItems,
 )
-from .cleaners.cloud import separate_cloud_layers
-from .cleaners.wind import sanitize_wind
+from avwx.parsing.sanitization.cleaners.cloud import separate_cloud_layers
+from avwx.parsing.sanitization.cleaners.wind import sanitize_wind
+from avwx.structs import Sanitization
 
 
 def sanitize_string_with(
-    replacements: Dict[str, str],
+    replacements: dict[str, str],
 ) -> Callable[[str, Sanitization], str]:
-    """Returns a function to sanitize the report string with a given list of replacements"""
+    """Return a function to sanitize the report string with a given list of replacements."""
 
     def sanitize_report_string(text: str, sans: Sanitization) -> str:
-        """Provides sanitization for operations that work better when the report is a string"""
+        """Provide sanitization for operations that work better when the report is a string."""
         text = text.strip().upper().rstrip("=")
         if len(text) < 4:
             return text
@@ -47,12 +45,12 @@ def sanitize_string_with(
 
 def sanitize_list_with(
     cleaners: CleanerListType,
-) -> Callable[[List[str], Sanitization], List[str]]:
-    """Returns a function to sanitize the report list with a given list of cleaners"""
+) -> Callable[[list[str], Sanitization], list[str]]:
+    """Return a function to sanitize the report list with a given list of cleaners."""
     _cleaners = [o() for o in cleaners]
 
-    def sanitize_report_list(wxdata: List[str], sans: Sanitization) -> List[str]:
-        """Provides sanitization for operations that work better when the report is a list"""
+    def sanitize_report_list(wxdata: list[str], sans: Sanitization) -> list[str]:
+        """Provide sanitization for operations that work better when the report is a list."""
         for i, item in reversed(list(enumerate(wxdata))):
             for cleaner in _cleaners:
                 # TODO: Py3.10 change to match/case on type

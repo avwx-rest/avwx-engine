@@ -1,33 +1,30 @@
-"""
-.. include:: ../../docs/service.md
-"""
+""".. include:: ../../docs/service.md"""
 
-from .base import Service
-from .files import NOAA_GFS, NOAA_NBM
-from .scrape import (
+from avwx.service.base import Service
+from avwx.service.files import NoaaGfs, NoaaNbm
+from avwx.service.scrape import (
+    Amo,
+    Aubom,
+    Avt,
+    FaaNotam,
+    Mac,
+    Nam,
+    Noaa,
+    Olbs,
     get_service,
-    NOAA,
-    AMO,
-    AVT,
-    MAC,
-    AUBOM,
-    OLBS,
-    NAM,
-    FAA_NOTAM,
 )
 
-
 __all__ = (
-    "AMO",
-    "AUBOM",
-    "AVT",
-    "FAA_NOTAM",
+    "Amo",
+    "Aubom",
+    "Avt",
+    "FaaNotam",
     "get_service",
-    "MAC",
-    "NAM",
-    "NOAA_GFS",
-    "NOAA_NBM",
-    "NOAA",
-    "OLBS",
+    "Mac",
+    "Nam",
+    "NoaaGfs",
+    "NoaaNbm",
+    "Noaa",
+    "Olbs",
     "Service",
 )

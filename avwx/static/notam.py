@@ -1,6 +1,4 @@
-"""
-NOTAM static values
-"""
+"""NOTAM static values."""
 
 # Q Codes sourced from FAA apprendix
 # https://www.faa.gov/air_traffic/publications/atpubs/notam_html/appendix_b.html

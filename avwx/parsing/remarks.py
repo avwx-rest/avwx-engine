@@ -1,12 +1,9 @@
-"""
-Contains functions for handling and translating remarks
-"""
-
-# pylint: disable=redefined-builtin
+"""Contains functions for handling and translating remarks."""
 
 # stdlib
+from __future__ import annotations
+
 from contextlib import suppress
-from typing import List, Optional, Tuple
 
 # module
 from avwx.parsing import core
@@ -14,12 +11,11 @@ from avwx.static.core import REMARKS_ELEMENTS, REMARKS_GROUPS, WX_TRANSLATIONS
 from avwx.static.taf import PRESSURE_TENDENCIES
 from avwx.structs import Code, FiveDigitCodes, Number, PressureTendency, RemarksData
 
+Codes = list[str]
 
-Codes = List[str]
 
-
-def decimal_code(code: str, repr: Optional[str] = None) -> Optional[Number]:
-    """Parses a 4-digit decimal temperature representation
+def decimal_code(code: str, repr: str | None = None) -> Number | None:  # noqa: A002
+    """Parse a 4-digit decimal temperature representation.
 
     Ex: 1045 -> -4.5    0237 -> 23.7
     """
@@ -29,8 +25,8 @@ def decimal_code(code: str, repr: Optional[str] = None) -> Optional[Number]:
     return core.make_number(number, repr or code)
 
 
-def temp_dew_decimal(codes: Codes) -> Tuple[Codes, Optional[Number], Optional[Number]]:
-    """Returns the decimal temperature and dewpoint values"""
+def temp_dew_decimal(codes: Codes) -> tuple[Codes, Number | None, Number | None]:
+    """Return the decimal temperature and dewpoint values."""
     temp, dew = None, None
     for i, code in reversed(list(enumerate(codes))):
         if len(code) in {5, 9} and code[0] == "T" and code[1:].isdigit():
@@ -40,8 +36,8 @@ def temp_dew_decimal(codes: Codes) -> Tuple[Codes, Optional[Number], Optional[Nu
     return codes, temp, dew
 
 
-def temp_minmax(codes: Codes) -> Tuple[Codes, Optional[Number], Optional[Number]]:
-    """Returns the 24-hour minimum and maximum temperatures"""
+def temp_minmax(codes: Codes) -> tuple[Codes, Number | None, Number | None]:
+    """Return the 24-hour minimum and maximum temperatures."""
     maximum, minimum = None, None
     for i, code in enumerate(codes):
         if len(code) == 9 and code[0] == "4" and code.isdigit():
@@ -51,8 +47,8 @@ def temp_minmax(codes: Codes) -> Tuple[Codes, Optional[Number], Optional[Number]
     return codes, maximum, minimum
 
 
-def precip_snow(codes: Codes) -> Tuple[Codes, Optional[Number], Optional[Number]]:
-    """Returns the hourly precipitation and snow depth"""
+def precip_snow(codes: Codes) -> tuple[Codes, Number | None, Number | None]:
+    """Return the hourly precipitation and snow depth."""
     precip, snow = None, None
     for i, code in reversed(list(enumerate(codes))):
         if len(code) != 5:
@@ -68,8 +64,8 @@ def precip_snow(codes: Codes) -> Tuple[Codes, Optional[Number], Optional[Number]
     return codes, precip, snow
 
 
-def sea_level_pressure(codes: Codes) -> Tuple[Codes, Optional[Number]]:
-    """Returns the sea level pressure always in hPa"""
+def sea_level_pressure(codes: Codes) -> tuple[Codes, Number | None]:
+    """Return the sea level pressure always in hPa."""
     sea = None
     for i, code in enumerate(codes):
         if len(code) == 6 and code.startswith("SLP") and code[-3:].isdigit():
@@ -81,7 +77,7 @@ def sea_level_pressure(codes: Codes) -> Tuple[Codes, Optional[Number]]:
 
 
 def parse_pressure(code: str) -> PressureTendency:
-    """Parse a 5-digit pressure tendency"""
+    """Parse a 5-digit pressure tendency."""
     return PressureTendency(
         repr=code,
         tendency=PRESSURE_TENDENCIES[code[1]],
@@ -89,13 +85,13 @@ def parse_pressure(code: str) -> PressureTendency:
     )
 
 
-def parse_precipitation(code: str) -> Optional[Number]:
-    """Parse a 5-digit precipitation amount"""
+def parse_precipitation(code: str) -> Number | None:
+    """Parse a 5-digit precipitation amount."""
     return core.make_number(f"{code[1:3]}.{code[3:]}", code)
 
 
-def five_digit_codes(codes: Codes) -> Tuple[Codes, FiveDigitCodes]:
-    """Returns  a 5-digit min/max temperature code"""
+def five_digit_codes(codes: Codes) -> tuple[Codes, FiveDigitCodes]:
+    """Return  a 5-digit min/max temperature code."""
     values = FiveDigitCodes()
     for i, code in reversed(list(enumerate(codes))):
         if len(code) == 5 and code.isdigit():
@@ -118,8 +114,8 @@ def five_digit_codes(codes: Codes) -> Tuple[Codes, FiveDigitCodes]:
     return codes, values
 
 
-def find_codes(rmk: str) -> Tuple[Codes, List[Code]]:
-    """Find a remove known static codes from the starting remarks list"""
+def find_codes(rmk: str) -> tuple[Codes, list[Code]]:
+    """Find a remove known static codes from the starting remarks list."""
     ret = []
     for key, value in REMARKS_GROUPS.items():
         if key in rmk:
@@ -131,12 +127,7 @@ def find_codes(rmk: str) -> Tuple[Codes, List[Code]]:
             ret.append(Code(code, REMARKS_ELEMENTS[code]))
             codes.pop(i)
         # Weather began/ended
-        if (
-            len(code) == 5
-            and code[2] in ("B", "E")
-            and code[3:].isdigit()
-            and code[:2] in WX_TRANSLATIONS
-        ):
+        if len(code) == 5 and code[2] in ("B", "E") and code[3:].isdigit() and code[:2] in WX_TRANSLATIONS:
             state = "began" if code[2] == "B" else "ended"
             value = f"{WX_TRANSLATIONS[code[:2]]} {state} at :{code[3:]}"
             ret.append(Code(code, value))
@@ -145,8 +136,8 @@ def find_codes(rmk: str) -> Tuple[Codes, List[Code]]:
     return codes, ret
 
 
-def parse(rmk: str) -> Optional[RemarksData]:
-    """Finds temperature and dewpoint decimal values from the remarks"""
+def parse(rmk: str) -> RemarksData | None:
+    """Find temperature and dewpoint decimal values from the remarks."""
     if not rmk:
         return None
     codes, parsed_codes = find_codes(rmk)

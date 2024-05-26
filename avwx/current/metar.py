@@ -17,7 +17,7 @@ from avwx.current.base import Report, get_wx_codes
 from avwx.parsing import core, remarks, speech, summary
 from avwx.parsing.sanitization.metar import clean_metar_list, clean_metar_string
 from avwx.parsing.translate.metar import translate_metar
-from avwx.service import NOAA
+from avwx.service import Noaa
 from avwx.static.core import FLIGHT_RULES
 from avwx.static.metar import METAR_RMK
 from avwx.station import uses_na_format, valid_station
@@ -83,7 +83,7 @@ class Metar(Report):
 
     async def _pull_from_default(self) -> None:
         """Check for a more recent report from NOAA."""
-        service = NOAA(self.__class__.__name__.lower())
+        service = Noaa(self.__class__.__name__.lower())
         if self.code is None:
             return
         report = await service.async_fetch(self.code)
@@ -98,7 +98,7 @@ class Metar(Report):
     @property
     def _should_check_default(self) -> bool:
         """Return True if pulled from regional source and potentially out of date."""
-        if isinstance(self.service, NOAA) or self.source is None:
+        if isinstance(self.service, Noaa) or self.source is None:
             return False
 
         if self.data is None or self.data.time is None or self.data.time.dt is None:

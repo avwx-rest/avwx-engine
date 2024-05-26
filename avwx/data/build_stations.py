@@ -1,5 +1,4 @@
-"""
-Builds the main station list
+"""Builds the main station list.
 
 Source file for airports.csv and runways.csv can be downloaded from
 http://ourairports.com/data/
@@ -9,13 +8,15 @@ https://www.aviationweather.gov/docs/metar/stations.txt
 """
 
 # stdlib
+from __future__ import annotations
+
 import csv
 import json
 import logging
 from contextlib import suppress
-from datetime import date
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import TYPE_CHECKING
 
 # library
 import httpx
@@ -23,6 +24,8 @@ import httpx
 # module
 from avwx.data.mappers import FILE_REPLACE, SURFACE_TYPES
 
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 LOG = logging.getLogger("avwx.data.build_stations")
 
@@ -40,7 +43,7 @@ OUTPUT_PATH = _DATA / "stations.json"
 
 DATA_ROOT = "https://davidmegginson.github.io/ourairports-data/"
 REPO_ROOT = "https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/data/"
-_SOURCE: Dict[str, str] = {}
+_SOURCE: dict[str, str] = {}
 _SOURCES = {
     "airports": f"{DATA_ROOT}airports.csv",
     "runways": f"{DATA_ROOT}runways.csv",
@@ -51,9 +54,9 @@ _SOURCES = {
 
 
 # Managed list of official ICAO idents
-ICAO: List[str] = []
+ICAO: list[str] = []
 # Allow-listed AWOS stations not covered by ICAO-GPS codes
-AWOS: List[str] = []
+AWOS: list[str] = []
 
 
 ACCEPTED_STATION_TYPES = [
@@ -68,7 +71,7 @@ ACCEPTED_STATION_TYPES = [
 
 
 def nullify(data: dict) -> dict:
-    """Nullify empty strings in a dict"""
+    """Nullify empty strings in a dict."""
     for key, val in data.items():
         if isinstance(val, str) and not val.strip():
             data[key] = None
@@ -76,26 +79,26 @@ def nullify(data: dict) -> dict:
 
 
 def format_coord(coord: str) -> float:
-    """Convert coord string to float"""
+    """Convert coord string to float."""
     neg = -1 if coord[-1] in ("S", "W") else 1
     return neg * float(coord[:-1].strip().replace(" ", "."))
 
 
 def load_codes() -> None:
-    """Load ident lists"""
+    """Load ident lists."""
     # Global can't assign
     for key, out in (("icaos", ICAO), ("awos", AWOS)):
         for code in json.loads(_SOURCE[key]):
             out.append(code)
 
 
-def validate_icao(code: str) -> Optional[str]:
-    """Validates a given station ident"""
+def validate_icao(code: str) -> str | None:
+    """Validate a given station ident."""
     return None if len(code) != 4 and code not in AWOS else code.upper()
 
 
-def get_icao(station: List[str]) -> Optional[str]:
-    """Finds the ICAO by checking ident and GPS code"""
+def get_icao(station: list[str]) -> str | None:
+    """Find the ICAO by checking ident and GPS code."""
     gps_code = validate_icao(station[12])
     if gps_code and gps_code in ICAO:
         return gps_code
@@ -104,15 +107,15 @@ def get_icao(station: List[str]) -> Optional[str]:
 
 
 def clean_source_files() -> None:
-    """Cleans the source data files before parsing"""
+    """Clean the source data files before parsing."""
     text = _SOURCE["airports"]
     for find, replace in FILE_REPLACE.items():
         text = text.replace(find, replace)
     _SOURCE["airports"] = text
 
 
-def format_station(code: str, station: List[str]) -> dict:
-    """Converts source station list into info dict"""
+def format_station(code: str, station: list[str]) -> dict:
+    """Convert source station list into info dict."""
     try:
         elev_ft = float(station[6])
         elev_m = round(elev_ft * 0.3048)
@@ -142,8 +145,8 @@ def format_station(code: str, station: List[str]) -> dict:
     return nullify(ret)
 
 
-def build_stations() -> Tuple[dict, dict]:
-    """Builds the station dict from source file"""
+def build_stations() -> tuple[dict, dict]:
+    """Build the station dict from source file."""
     stations, code_map = {}, {}
     data = csv.reader(_SOURCE["airports"].splitlines())
     next(data)  # Skip header
@@ -156,18 +159,18 @@ def build_stations() -> Tuple[dict, dict]:
 
 
 def add_missing_stations(stations: dict) -> dict:
-    """Add non-airport stations from NOAA extract"""
-    stations.update(json.loads(_SOURCE["weather_stations"]))
+    """Add non-airport stations from NOAA extract."""
+    stations |= json.loads(_SOURCE["weather_stations"])
     return stations
 
 
-def get_surface_type(surface: str) -> Optional[str]:
-    """Returns the normalize surface type value"""
+def get_surface_type(surface: str) -> str | None:
+    """Return the normalize surface type value."""
     return next((key for key, items in SURFACE_TYPES.items() if surface in items), None)
 
 
 def add_runways(stations: dict, code_map: dict) -> dict:
-    """Add runway information to station if availabale"""
+    """Add runway information to station if availabale."""
     data = csv.reader(_SOURCE["runways"].splitlines())
     next(data)  # Skip header
     for runway in data:
@@ -200,7 +203,7 @@ def add_runways(stations: dict, code_map: dict) -> dict:
 
 
 def add_reporting(stations: dict) -> dict:
-    """Add reporting boolean to station if available"""
+    """Add reporting boolean to station if available."""
     good = load_stations(GOOD_PATH)
     for code in stations:
         stations[code]["reporting"] = code in good
@@ -208,7 +211,7 @@ def add_reporting(stations: dict) -> dict:
 
 
 def check_local_icaos() -> None:
-    """Load local ICAO file if available. Not included in distro"""
+    """Load local ICAO file if available. Not included in distro."""
     icao_path = _FILE_DIR.parent.parent / "data" / "icaos.json"
     if not icao_path.exists():
         return
@@ -216,7 +219,7 @@ def check_local_icaos() -> None:
 
 
 def check_local_awos() -> None:
-    """Load local AWOS file if available. Not included in distro"""
+    """Load local AWOS file if available. Not included in distro."""
     awos_path = _FILE_DIR.parent.parent / "data" / "awos.json"
     if not awos_path.exists():
         return
@@ -224,7 +227,7 @@ def check_local_awos() -> None:
 
 
 def download_source_files() -> bool:
-    """Returns True if source files updated successfully"""
+    """Return True if source files updated successfully."""
     for key, route in _SOURCES.items():
         resp = httpx.get(route)
         if resp.status_code != 200:
@@ -234,20 +237,20 @@ def download_source_files() -> bool:
 
 
 def update_station_info_date() -> None:
-    """Update the package's station meta date"""
+    """Update the package's station meta date."""
     meta_path = _FILE_DIR.parent / "station" / "meta.py"
     meta = meta_path.open().read()
     target = '__LAST_UPDATED__ = "'
     start = meta.find(target) + len(target)
     prefix = meta[:start]
     end = start + 10
-    output = prefix + date.today().strftime(r"%Y-%m-%d") + meta[end:]
+    output = prefix + datetime.now(tz=timezone.utc).date().strftime(r"%Y-%m-%d") + meta[end:]
     with meta_path.open("w") as out:
         out.write(output)
 
 
 def save_station_data(stations: dict) -> None:
-    """Save stations to JSON package data"""
+    """Save stations to JSON package data."""
     json.dump(
         stations,
         OUTPUT_PATH.open("w", encoding="utf8"),
@@ -258,7 +261,7 @@ def save_station_data(stations: dict) -> None:
 
 
 def main() -> int:
-    """Build/update the stations.json main file"""
+    """Build/update the stations.json main file."""
     LOG.info("Fetching")
     if not download_source_files():
         LOG.error("Unable to update source files")

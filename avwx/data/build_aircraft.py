@@ -1,6 +1,4 @@
-"""
-Builds the aircraft code dict
-"""
+"""Builds the aircraft code dict."""
 
 # stdlib
 import json
@@ -10,14 +8,13 @@ from pathlib import Path
 # library
 import httpx
 
-
 URL = "https://en.wikipedia.org/wiki/List_of_ICAO_aircraft_type_designators"
 OUTPUT_PATH = Path(__file__).parent / "files" / "aircraft.json"
 TAG_PATTERN = re.compile(r"<[^>]*>")
 
 
 def main() -> int:
-    """Builds/updates aircraft.json codes"""
+    """Build/update aircraft.json codes."""
     resp = httpx.get(URL)
     if resp.status_code != 200:
         return 1

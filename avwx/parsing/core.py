@@ -1,17 +1,15 @@
-"""
-Contains the core parsing and indent functions of avwx
-"""
-
-# pylint: disable=redefined-builtin
+"""Contains the core parsing and indent functions of avwx."""
 
 # stdlib
-import re
+from __future__ import annotations
+
 import datetime as dt
 import math
+import re
 from calendar import monthrange
 from contextlib import suppress
 from copy import copy
-from typing import Any, Iterable, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any
 
 # library
 from dateutil.relativedelta import relativedelta
@@ -27,13 +25,16 @@ from avwx.static.core import (
 )
 from avwx.structs import Cloud, Fraction, Number, Timestamp, Units
 
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
-def dedupe(items: Iterable[Any], only_neighbors: bool = False) -> List[Any]:
-    """Deduplicate a list while keeping order
 
-    If only_neighbors is True, dedupe will only check neighboring values
+def dedupe(items: Iterable[Any], *, only_neighbors: bool = False) -> list[Any]:
+    """Deduplicate a list while keeping order.
+
+    If only_neighbors is True, dedupe will only check neighboring values.
     """
-    ret: List[Any] = []
+    ret: list[Any] = []
     for item in items:
         if (only_neighbors and ret and ret[-1] != item) or item not in ret:
             ret.append(item)
@@ -41,7 +42,7 @@ def dedupe(items: Iterable[Any], only_neighbors: bool = False) -> List[Any]:
 
 
 def is_unknown(value: str) -> bool:
-    """Returns True if val represents and unknown value"""
+    """Return True if val represents and unknown value."""
     if not isinstance(value, str):
         raise TypeError
     if not value or value.upper() in {"UNKN", "UNK", "UKN"}:
@@ -54,9 +55,9 @@ def is_unknown(value: str) -> bool:
     return False
 
 
-def get_digit_list(data: List[str], from_index: int) -> Tuple[List[str], List[str]]:
-    """Returns a list of items removed from a given list of strings
-    that are all digits from 'from_index' until hitting a non-digit item
+def get_digit_list(data: list[str], from_index: int) -> tuple[list[str], list[str]]:
+    """Return a list of items removed from a given list of strings
+    that are all digits from 'from_index' until hitting a non-digit item.
     """
     ret = []
     data.pop(from_index)
@@ -66,7 +67,7 @@ def get_digit_list(data: List[str], from_index: int) -> Tuple[List[str], List[st
 
 
 def unpack_fraction(num: str) -> str:
-    """Returns unpacked fraction string 5/2 -> 2 1/2"""
+    """Return unpacked fraction string 5/2 -> 2 1/2."""
     numbers = [int(n) for n in num.split("/") if n]
     if len(numbers) != 2 or numbers[0] <= numbers[1]:
         return num
@@ -77,7 +78,7 @@ def unpack_fraction(num: str) -> str:
 
 
 def remove_leading_zeros(num: str) -> str:
-    """Strips zeros while handling -, M, and empty strings"""
+    """Strip zeros while handling -, M, and empty strings."""
     if not num:
         return num
     if num.startswith("M"):
@@ -95,8 +96,8 @@ SPOKEN_POSTFIX = (
 )
 
 
-def spoken_number(num: str, literal: bool = False) -> str:
-    """Returns the spoken version of a number
+def spoken_number(num: str, *, literal: bool = False) -> str:
+    """Return the spoken version of a number.
 
     If literal, no conversion to hundreds/thousands
 
@@ -119,9 +120,13 @@ def spoken_number(num: str, literal: bool = False) -> str:
 
 
 def make_fraction(
-    num: str, repr: Optional[str] = None, literal: bool = False, speak_prefix: str = ""
+    num: str,
+    repr: str | None = None,  # noqa: A002
+    *,
+    literal: bool = False,
+    speak_prefix: str = "",
 ) -> Fraction:
-    """Returns a fraction dataclass for numbers with / in them"""
+    """Return a fraction dataclass for numbers with / in them."""
     num_str, den_str = num.split("/")
     # 2-1/2 but not -2 1/2
     if "-" in num_str and not num_str.startswith("-"):
@@ -135,23 +140,24 @@ def make_fraction(
         numerator = int(num_str)
     value = numerator / denominator
     unpacked = unpack_fraction(num)
-    spoken = speak_prefix + spoken_number(unpacked, literal)
+    spoken = speak_prefix + spoken_number(unpacked, literal=literal)
     return Fraction(repr or num, value, spoken, numerator, denominator, unpacked)
 
 
 def make_number(
-    num: Optional[str],
-    repr: Optional[str] = None,
-    speak: Optional[str] = None,
+    num: str | None,
+    repr: str | None = None,  # noqa: A002
+    speak: str | None = None,
+    *,
     literal: bool = False,
-    special: Optional[dict] = None,
+    special: dict | None = None,
     m_minus: bool = True,
-) -> Union[Number, Fraction, None]:  # sourcery skip: avoid-builtin-shadow
-    """Returns a Number or Fraction dataclass for a number string
+) -> Number | Fraction | None:  # sourcery skip: avoid-builtin-shadow
+    """Return a Number or Fraction dataclass for a number string.
 
-    If literal, spoken string will not convert to hundreds/thousands
+    If literal, spoken string will not convert to hundreds/thousands.
 
-    NOTE: Numerators are assumed to have a single digit. Additional are whole numbers
+    NOTE: Numerators are assumed to have a single digit. Additional are whole numbers.
     """
     # pylint: disable=too-many-branches
     if not num or is_unknown(num):
@@ -168,12 +174,12 @@ def make_number(
     # Check cardinal direction
     if num in CARDINALS:
         if not repr:
-            repr = num
+            repr = num  # noqa: A001
         num = str(CARDINALS[num])
     val_str = num
     # Remove unit suffixes
     if val_str.endswith("SM"):
-        repr = val_str[:]
+        repr = val_str[:]  # noqa: A001
         val_str = val_str[:-2]
     # Remove spurious characters from the end
     num = num.rstrip("M.")
@@ -198,23 +204,23 @@ def make_number(
         val_str, literal = val_str[2:], True
     if val_str.startswith("M"):
         speak_prefix += "less than "
-        repr = repr or val_str
+        repr = repr or val_str  # noqa: A001
         val_str = val_str[1:]
     if val_str.startswith("P"):
         speak_prefix += "greater than "
-        repr = repr or val_str
+        repr = repr or val_str  # noqa: A001
         val_str = val_str[1:]
     # Create Number
     if not val_str:
         return None
-    ret: Union[Number, Fraction, None] = None
+    ret: Number | Fraction | None = None
     # Create Fraction
     if "/" in val_str:
-        ret = make_fraction(val_str, repr, literal, speak_prefix=speak_prefix)
+        ret = make_fraction(val_str, repr, literal=literal, speak_prefix=speak_prefix)
     else:
         # Overwrite float 0 due to "0.0" literal
         value = float(val_str) or 0 if "." in num else int(val_str)
-        spoken = speak_prefix + spoken_number(speak or str(value), literal)
+        spoken = speak_prefix + spoken_number(speak or str(value), literal=literal)
         ret = Number(repr or num, value, spoken)
     # Null the value if "greater than"/"less than"
     if ret and not m_minus and repr and repr.startswith(("M", "P")):
@@ -222,8 +228,8 @@ def make_number(
     return ret
 
 
-def find_first_in_list(txt: str, str_list: List[str]) -> int:
-    """Returns the index of the earliest occurrence of an item from a list in a string
+def find_first_in_list(txt: str, str_list: list[str]) -> int:
+    """Return the index of the earliest occurrence of an item from a list in a string.
 
     Ex: find_first_in_list('foobar', ['bar', 'fin']) -> 3
     """
@@ -235,32 +241,28 @@ def find_first_in_list(txt: str, str_list: List[str]) -> int:
 
 
 def is_timestamp(item: str) -> bool:
-    """Returns True if the item matches the timestamp format"""
+    """Return True if the item matches the timestamp format."""
     return len(item) == 7 and item[-1] == "Z" and item[:-1].isdigit()
 
 
 def is_timerange(item: str) -> bool:
-    """Returns True if the item is a TAF to-from time range"""
-    return (
-        len(item) == 9 and item[4] == "/" and item[:4].isdigit() and item[5:].isdigit()
-    )
+    """Return True if the item is a TAF to-from time range."""
+    return len(item) == 9 and item[4] == "/" and item[:4].isdigit() and item[5:].isdigit()
 
 
 def is_possible_temp(temp: str) -> bool:
-    """Returns True if all characters are digits or 'M' (for minus)"""
+    """Return True if all characters are digits or 'M' for minus."""
     return all((char.isdigit() or char == "M") for char in temp)
 
 
-_Numeric = Union[int, float]
+_Numeric = int | float
 
 
-def relative_humidity(
-    temperature: _Numeric, dewpoint: _Numeric, unit: str = "C"
-) -> float:
-    """Calculates the relative humidity as a 0 to 1 percentage"""
+def relative_humidity(temperature: _Numeric, dewpoint: _Numeric, unit: str = "C") -> float:
+    """Calculate the relative humidity as a 0 to 1 percentage."""
 
-    def saturation(value: Union[int, float]) -> float:
-        """Returns the saturation vapor pressure without the C constant for humidity calc"""
+    def saturation(value: _Numeric) -> float:
+        """Return the saturation vapor pressure without the C constant for humidity calc."""
         return math.exp((17.67 * value) / (243.5 + value))
 
     if unit == "F":
@@ -273,16 +275,14 @@ def relative_humidity(
 
 
 def pressure_altitude(pressure: float, altitude: _Numeric, unit: str = "inHg") -> int:
-    """Calculates the pressure altitude in feet. Converts pressure units"""
+    """Calculate the pressure altitude in feet. Converts pressure units."""
     if unit == "hPa":
         pressure *= 0.02953
     return round((29.92 - pressure) * 1000 + altitude)
 
 
-def density_altitude(
-    pressure: float, temperature: _Numeric, altitude: _Numeric, units: Units
-) -> int:
-    """Calculates the density altitude in feet. Converts pressure and temperature units"""
+def density_altitude(pressure: float, temperature: _Numeric, altitude: _Numeric, units: Units) -> int:
+    """Calculate the density altitude in feet. Converts pressure and temperature units."""
     if units.temperature == "F":
         temperature = (temperature - 32) * 5 / 9
     if units.altimeter == "hPa":
@@ -293,9 +293,9 @@ def density_altitude(
 
 
 def get_station_and_time(
-    data: List[str],
-) -> Tuple[List[str], Optional[str], Optional[str]]:
-    """Returns the report list and removed station ident and time strings"""
+    data: list[str],
+) -> tuple[list[str], str | None, str | None]:
+    """Return the report list and removed station ident and time strings."""
     if not data:
         return data, None, None
     station = data.pop(0)
@@ -310,7 +310,7 @@ def get_station_and_time(
 
 
 def is_wind(text: str) -> bool:
-    """Returns True if the text is likely a normal wind element"""
+    """Return True if the text is likely a normal wind element."""
     # Ignore wind shear
     if text.startswith("WS"):
         return False
@@ -330,14 +330,14 @@ VARIABLE_DIRECTION_PATTERN = re.compile(r"\d{3}V\d{3}")
 
 
 def is_variable_wind_direction(text: str) -> bool:
-    """Returns True if element looks like 350V040"""
+    """Return True if element looks like 350V040."""
     if len(text) < 7:
         return False
     return VARIABLE_DIRECTION_PATTERN.match(text[:7]) is not None
 
 
-def separate_wind(text: str) -> Tuple[str, str, str]:
-    """Extracts the direction, speed, and gust from a wind element"""
+def separate_wind(text: str) -> tuple[str, str, str]:
+    """Extract the direction, speed, and gust from a wind element."""
     direction, speed, gust = "", "", ""
     # Remove gust
     if "G" in text:
@@ -359,20 +359,17 @@ def separate_wind(text: str) -> Tuple[str, str, str]:
 
 
 def get_wind(
-    data: List[str], units: Units
-) -> Tuple[
-    List[str],
-    Optional[Number],
-    Optional[Number],
-    Optional[Number],
-    List[Number],
+    data: list[str], units: Units
+) -> tuple[
+    list[str],
+    Number | None,
+    Number | None,
+    Number | None,
+    list[Number],
 ]:
-    """Returns the report list and removed:
-
-    Direction string, speed string, gust string, variable direction list
-    """
+    """Return the report list, direction string, speed string, gust string, and variable direction list."""
     direction, speed, gust = "", "", ""
-    variable: List[Number] = []
+    variable: list[Number] = []
     # Remove unit and split elements
     if data:
         item = copy(data[0])
@@ -400,8 +397,8 @@ def get_wind(
     return data, direction_value, speed_value, gust_value, variable
 
 
-def get_visibility(data: List[str], units: Units) -> Tuple[List[str], Optional[Number]]:
-    """Returns the report list and removed visibility string"""
+def get_visibility(data: list[str], units: Units) -> tuple[list[str], Number | None]:
+    """Return the report list and removed visibility string."""
     visibility = ""
     if data:
         item = copy(data[0])
@@ -419,11 +416,7 @@ def get_visibility(data: List[str], units: Units) -> Tuple[List[str], Optional[N
         elif len(item) == 4 and item.isdigit():
             visibility = data.pop(0)
             units.visibility = "m"
-        elif (
-            7 >= len(item) >= 5
-            and item[:4].isdigit()
-            and (item[4] in ["M", "N", "S", "E", "W"] or item[4:] == "NDV")
-        ):
+        elif 7 >= len(item) >= 5 and item[:4].isdigit() and (item[4] in ["M", "N", "S", "E", "W"] or item[4:] == "NDV"):
             visibility = data.pop(0)[:4]
             units.visibility = "m"
         elif len(item) == 5 and item[1:].isdigit() and item[0] in ["M", "P", "B"]:
@@ -434,12 +427,7 @@ def get_visibility(data: List[str], units: Units) -> Tuple[List[str], Optional[N
             data.pop(0)
             units.visibility = "m"
         # Vis statute miles but split Ex: 2 1/2SM
-        elif (
-            len(data) > 1
-            and data[1].endswith("SM")
-            and "/" in data[1]
-            and item.isdigit()
-        ):
+        elif len(data) > 1 and data[1].endswith("SM") and "/" in data[1] and item.isdigit():
             vis1 = data.pop(0)  # 2
             vis2 = data.pop(0).replace("SM", "")  # 1/2
             visibility = str(int(vis1) * int(vis2[2]) + int(vis2[0])) + vis2[1:]  # 5/2
@@ -448,7 +436,7 @@ def get_visibility(data: List[str], units: Units) -> Tuple[List[str], Optional[N
 
 
 def sanitize_cloud(cloud: str) -> str:
-    """Fix rare cloud layer issues"""
+    """Fix rare cloud layer issues."""
     if len(cloud) < 4:
         return cloud
     if not cloud[3].isdigit() and cloud[3] not in ("/", "-"):
@@ -461,8 +449,8 @@ def sanitize_cloud(cloud: str) -> str:
     return cloud
 
 
-def _null_or_int(val: Optional[str]) -> Optional[int]:
-    """Nullify unknown elements and convert ints"""
+def _null_or_int(val: str | None) -> int | None:
+    """Nullify unknown elements and convert ints."""
     return None if not isinstance(val, str) or is_unknown(val) else int(val)
 
 
@@ -470,15 +458,14 @@ _TOP_OFFSETS = ("-TOPS", "-TOP")
 
 
 def make_cloud(cloud: str) -> Cloud:
-    """Returns a Cloud dataclass for a cloud string
+    """Return a Cloud dataclass for a cloud string.
 
-    This function assumes the input is potentially valid
+    This function assumes the input is potentially valid.
     """
     raw_cloud = cloud
     cloud_type = ""
-    base: Optional[str] = None
-    top: Optional[str] = None
-    modifier: Optional[str] = None
+    base: str | None = None
+    top: str | None = None
     cloud = sanitize_cloud(cloud).replace("/", "")
     # Separate top
     for target in _TOP_OFFSETS:
@@ -508,16 +495,13 @@ def make_cloud(cloud: str) -> Cloud:
     elif len(cloud) >= 4 and cloud[:4] == "UNKN":
         cloud = cloud[4:]
     # Remainder is considered modifiers
-    if cloud:
-        modifier = cloud
+    modifier = cloud or None
     # Make Cloud
-    return Cloud(
-        raw_cloud, cloud_type or None, _null_or_int(base), _null_or_int(top), modifier
-    )
+    return Cloud(raw_cloud, cloud_type or None, _null_or_int(base), _null_or_int(top), modifier)
 
 
-def get_clouds(data: List[str]) -> Tuple[List[str], list]:
-    """Returns the report list and removed list of split cloud layers"""
+def get_clouds(data: list[str]) -> tuple[list[str], list]:
+    """Return the report list and removed list of split cloud layers."""
     clouds = []
     for i, item in reversed(list(enumerate(data))):
         if item[:3] in CLOUD_LIST or item[:2] == "VV":
@@ -531,16 +515,16 @@ def get_clouds(data: List[str]) -> Tuple[List[str], list]:
     return data, clouds
 
 
-def get_flight_rules(visibility: Optional[Number], ceiling: Optional[Cloud]) -> int:
+def get_flight_rules(visibility: Number | None, ceiling: Cloud | None) -> int:
     # sourcery skip: assign-if-exp, reintroduce-else
-    """Returns int based on current flight rules from parsed METAR data
+    """Return int based on current flight rules from parsed METAR data.
 
     0=VFR, 1=MVFR, 2=IFR, 3=LIFR
 
-    Note: Common practice is to report no higher than IFR if visibility unavailable
+    Note: Common practice is to report no higher than IFR if visibility unavailable.
     """
     # Parse visibility
-    vis: Union[int, float]
+    vis: _Numeric
     if visibility is None:
         vis = 2
     elif visibility.repr == "CAVOK" or visibility.repr.startswith("P6"):
@@ -566,12 +550,12 @@ def get_flight_rules(visibility: Optional[Number], ceiling: Optional[Cloud]) -> 
     return 0  # VFR
 
 
-def get_ceiling(clouds: List[Cloud]) -> Optional[Cloud]:
-    """Returns ceiling layer from Cloud-List or None if none found
+def get_ceiling(clouds: list[Cloud]) -> Cloud | None:
+    """Return ceiling layer from Cloud-List or None if none found.
 
-    Assumes that the clouds are already sorted lowest to highest
+    Assumes that the clouds are already sorted lowest to highest.
 
-    Only 'Broken', 'Overcast', and 'Vertical Visibility' are considered ceilings
+    Only 'Broken', 'Overcast', and 'Vertical Visibility' are considered ceilings.
 
     Prevents errors due to lack of cloud information (eg. '' or 'FEW///')
     """
@@ -579,7 +563,7 @@ def get_ceiling(clouds: List[Cloud]) -> Optional[Cloud]:
 
 
 def is_altitude(value: str) -> bool:
-    """Returns True if the value is a possible altitude"""
+    """Return True if the value is a possible altitude."""
     if len(value) < 5:
         return False
     if value.startswith("SFC/"):
@@ -591,9 +575,13 @@ def is_altitude(value: str) -> bool:
 
 
 def make_altitude(
-    value: str, units: Units, repr: Optional[str] = None, force_fl: bool = False
-) -> Tuple[Optional[Number], Units]:
-    """Convert altitude string into a number"""
+    value: str,
+    units: Units,
+    repr: str | None = None,  # noqa: A002
+    *,
+    force_fl: bool = False,
+) -> tuple[Number | None, Units]:
+    """Convert altitude string into a number."""
     if not value:
         return None, units
     raw = repr or value
@@ -601,8 +589,7 @@ def make_altitude(
         if value.endswith(end):
             force_fl = False
             units.altitude = end.lower()
-            # post 3.8 value = value.removesuffix(end)
-            value = value[: -len(end)]
+            value = value.removesuffix(end)
     # F430
     if value[0] == "F" and value[1:].isdigit():
         value = f"FL{value[1:]}"
@@ -614,16 +601,16 @@ def make_altitude(
 def parse_date(
     date: str,
     hour_threshold: int = 200,
+    *,
     time_only: bool = False,
-    target: Optional[dt.date] = None,
-) -> Optional[dt.datetime]:
-    """Parses a report timestamp in ddhhZ or ddhhmmZ format
+    target: dt.date | None = None,
+) -> dt.datetime | None:
+    """Parse a report timestamp in ddhhZ or ddhhmmZ format.
 
-    If time_only, assumes hhmm format with current or previous day
+    If time_only, assumes hhmm format with current or previous day.
 
-    This function assumes the given timestamp is within the hour threshold from current date
+    This function assumes the given timestamp is within the hour threshold from current date.
     """
-    # pylint: disable=too-many-branches
     # Format date string
     date = date.strip("Z")
     if not date.isdigit():
@@ -640,9 +627,7 @@ def parse_date(
         index_hour = 2
     # Create initial guess
     if target:
-        target = dt.datetime(
-            target.year, target.month, target.day, tzinfo=dt.timezone.utc
-        )
+        target = dt.datetime(target.year, target.month, target.day, tzinfo=dt.timezone.utc)
     else:
         target = dt.datetime.now(tz=dt.timezone.utc)
     day = target.day if time_only else int(date[:2])
@@ -677,11 +662,12 @@ def parse_date(
 
 
 def make_timestamp(
-    timestamp: Optional[str],
+    timestamp: str | None,
+    *,
     time_only: bool = False,
-    target_date: Optional[dt.date] = None,
-) -> Optional[Timestamp]:
-    """Returns a Timestamp dataclass for a report timestamp in ddhhZ or ddhhmmZ format"""
+    target_date: dt.date | None = None,
+) -> Timestamp | None:
+    """Return a Timestamp dataclass for a report timestamp in ddhhZ or ddhhmmZ format."""
     if not timestamp:
         return None
     date_obj = parse_date(timestamp, time_only=time_only, target=target_date)
@@ -689,7 +675,7 @@ def make_timestamp(
 
 
 def is_runway_visibility(item: str) -> bool:
-    """Returns True if the item is a runway visibility range string"""
+    """Return True if the item is a runway visibility range string."""
     return (
         len(item) > 4
         and item[0] == "R"

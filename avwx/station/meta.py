@@ -1,10 +1,9 @@
-"""
-Shared list and metadata
-"""
+"""Shared list and metadata."""
 
 # stdlib
+from __future__ import annotations
+
 from functools import lru_cache
-from typing import List, Optional
 
 # module
 from avwx.exceptions import BadStation
@@ -19,17 +18,13 @@ STATIONS = LazyLoad("stations")
 
 # maxsize = 2 ** number of boolean options
 @lru_cache(maxsize=2)
-def station_list(reporting: bool = True) -> List[str]:
-    """Returns a list of station idents matching the search criteria"""
-    return [
-        code
-        for code, station in STATIONS.items()
-        if not reporting or station["reporting"]
-    ]
+def station_list(*, reporting: bool = True) -> list[str]:
+    """Return a list of station idents matching the search criteria."""
+    return [code for code, station in STATIONS.items() if not reporting or station["reporting"]]
 
 
-def uses_na_format(station: str, default: Optional[bool] = None) -> bool:
-    """Returns True if the station uses the North American format,
+def uses_na_format(station: str, default: bool | None = None) -> bool:
+    """Return True if the station uses the North American format.
 
     False if the International format
     """
@@ -43,15 +38,17 @@ def uses_na_format(station: str, default: Optional[bool] = None) -> bool:
         return False
     if default is not None:
         return default
-    raise BadStation("Station doesn't start with a recognized character set")
+    msg = "Station doesn't start with a recognized character set"
+    raise BadStation(msg)
 
 
 def valid_station(station: str) -> None:
-    """Checks the validity of a station ident
+    """Check the validity of a station ident.
 
-    This function doesn't return anything. It merely raises a BadStation error if needed
+    This function doesn't return anything. It merely raises a BadStation error if needed.
     """
     station = station.strip()
     if len(station) != 4:
-        raise BadStation("Report station ident must be four characters long")
+        msg = "Report station ident must be four characters long"
+        raise BadStation(msg)
     uses_na_format(station)

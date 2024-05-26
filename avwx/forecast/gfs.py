@@ -18,21 +18,11 @@ Rico, and US Virgin Islands. Reports are published at 0000 and 1200 UTC.
 """
 
 # stdlib
-from typing import List, Optional, Tuple
+from __future__ import annotations
 
 # module
 import avwx.static.gfs as static
-from avwx.parsing import core
-from avwx.service import NOAA_GFS
-from avwx.structs import (
-    MavData,
-    MavPeriod,
-    MexData,
-    MexPeriod,
-    Number,
-    Units,
-)
-from .base import (
+from avwx.forecast.base import (
     Forecast,
     _code,
     _direction,
@@ -42,6 +32,16 @@ from .base import (
     _parse_lines,
     _split_line,
     _trim_lines,
+)
+from avwx.parsing import core
+from avwx.service import NoaaGfs
+from avwx.structs import (
+    MavData,
+    MavPeriod,
+    MexData,
+    MexPeriod,
+    Number,
+    Units,
 )
 
 
@@ -97,7 +97,7 @@ class Mav(Forecast):
     '''
 
     report_type = "mav"
-    _service_class = NOAA_GFS  # type: ignore
+    _service_class = NoaaGfs  # type: ignore
 
     async def _post_update(self) -> None:
         if self.raw is None:
@@ -161,7 +161,7 @@ class Mex(Forecast):
     '''
 
     report_type = "mex"
-    _service_class = NOAA_GFS  # type: ignore
+    _service_class = NoaaGfs  # type: ignore
 
     async def _post_update(self) -> None:
         if self.raw is None:
@@ -176,11 +176,11 @@ class Mex(Forecast):
         self.units = Units(**static.UNITS)
 
 
-_ThunderList = List[Optional[Tuple[Optional[Number], Optional[Number]]]]
+_ThunderList = list[tuple[Number | None, Number | None] | None]
 
 
 def _thunder(line: str, size: int = 3) -> _ThunderList:
-    """Parse thunder line into Number tuples"""
+    """Parse thunder line into Number tuples."""
     ret: _ThunderList = []
     previous = None
     for item in _split_line(line, size=size, prefix=5, strip=" /"):
@@ -195,7 +195,6 @@ def _thunder(line: str, size: int = 3) -> _ThunderList:
     return ret
 
 
-# pylint: disable=invalid-name
 _precip_amount = _code(static.PRECIPITATION_AMOUNT)
 
 _HANDLERS = {
@@ -238,8 +237,8 @@ _MEX_HANDLERS = {
 }
 
 
-def parse_mav(report: str) -> Optional[MavData]:
-    """Parser for GFS MAV reports"""
+def parse_mav(report: str) -> MavData | None:
+    """Parser for GFS MAV reports."""
     if not report:
         return None
     data, lines = _init_parse(report)
@@ -258,8 +257,8 @@ def parse_mav(report: str) -> Optional[MavData]:
     )
 
 
-def parse_mex(report: str) -> Optional[MexData]:
-    """Parser for GFS MEX reports"""
+def parse_mex(report: str) -> MexData | None:
+    """Parser for GFS MEX reports."""
     if not report:
         return None
     data, lines = _init_parse(report)

@@ -1,6 +1,4 @@
-"""
-Cleaners for elements that should be replaced
-"""
+"""Cleaners for elements that should be replaced."""
 
 from avwx.parsing.sanitization.base import CleanItem
 
@@ -55,12 +53,7 @@ _CLOUD = {
     "OVERCAST": "OVC",
 }
 
-CURRENT = {
-    **_SHARED,
-    **_WIND,
-    **_VISIBILITY,
-    **_CLOUD,
-}
+CURRENT = _SHARED | _WIND | _VISIBILITY | _CLOUD
 
 
 # These are item replacements after the report has been split
@@ -69,7 +62,7 @@ ITEM_REPL = {"CALM": "00000KT", "A01": "AO1", "A02": "AO2", "PROB3O": "PROB30"}
 
 
 class ReplaceItem(CleanItem):
-    """Replace report elements after splitting"""
+    """Replace report elements after splitting."""
 
     def can_handle(self, item: str) -> bool:
         return item in ITEM_REPL

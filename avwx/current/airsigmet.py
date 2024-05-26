@@ -36,7 +36,7 @@ from avwx.exceptions import MissingExtraModule
 from avwx.flight_path import to_coordinates
 from avwx.load_utils import LazyLoad
 from avwx.parsing import core
-from avwx.service.bulk import NOAA_Bulk, NOAA_Intl, Service
+from avwx.service.bulk import NoaaBulk, NoaaIntl, Service
 from avwx.static.airsigmet import BULLETIN_TYPES, INTENSITY, WEATHER_TYPES
 from avwx.static.core import CARDINAL_DEGREES, CARDINALS
 from avwx.structs import (
@@ -152,7 +152,7 @@ class AirSigManager:
     reports: list[AirSigmet] | None = None
 
     def __init__(self):  # type: ignore
-        self._services = [NOAA_Bulk("airsigmet"), NOAA_Intl("airsigmet")]
+        self._services = [NoaaBulk("airsigmet"), NoaaIntl("airsigmet")]
         self._raw, self.raw = [], []
 
     async def _update(self, index: int, timeout: int) -> list[tuple[str, str | None]]:

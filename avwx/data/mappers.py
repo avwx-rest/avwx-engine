@@ -1,6 +1,6 @@
-"""
-Type mappings
-"""
+"""Type mappings."""
+
+# ruff: noqa: RUF001
 
 # Runway surface type matching with counts (2020-06)
 # Uniques with < 10 occurrences omitted
