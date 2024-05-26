@@ -345,7 +345,7 @@ def nearest(
     """
     # Default state includes all, no filtering necessary
     if is_airport or sends_reports:
-        stations = _query_filter(lat, lon, n, max_coord_distance, is_airport, sends_reports)
+        stations = _query_filter(lat, lon, n, max_coord_distance, is_airport=is_airport, reporting=sends_reports)
     else:
         data = _query_coords(lat, lon, n, max_coord_distance)
         stations = [(Station.from_code(code), d) for code, d in data]

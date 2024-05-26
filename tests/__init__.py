@@ -1,6 +1,4 @@
-"""
-AVWX Test Suite
-"""
+"""AVWX Test Suite."""
 
 # stdlib
 import sys

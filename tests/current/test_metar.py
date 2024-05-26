@@ -1,13 +1,10 @@
-"""
-METAR Report Tests
-"""
-
-# pylint: disable=invalid-name
+"""METAR Report Tests."""
 
 # stdlib
+from __future__ import annotations
+
 from dataclasses import asdict
 from datetime import datetime
-from typing import List, Optional, Tuple
 
 # library
 import pytest
@@ -20,30 +17,30 @@ from avwx.current import metar
 from tests.util import assert_number, get_data
 
 
-def test_repr():
-    """Test type and code in repr string"""
+def test_repr() -> None:
+    """Test type and code in repr string."""
     assert repr(metar.Metar("KMCO")) == "<avwx.Metar code=KMCO>"
 
 
 @pytest.mark.parametrize(
-    "raw,wx,rmk",
-    (
+    ("raw", "wx", "rmk"),
+    [
         ("1 2 3 A2992 RMK Hi", ["1", "2", "3", "A2992"], "RMK Hi"),
         ("1 2 3 A2992 Hi", ["1", "2", "3", "A2992"], "Hi"),
         ("1 2 Q0900 NOSIG", ["1", "2", "Q0900"], "NOSIG"),
         ("1 2 3 BLU+ Hello", ["1", "2", "3"], "BLU+ Hello"),
-    ),
+    ],
 )
-def test_get_remarks(raw: str, wx: List[str], rmk: str):
-    """Remarks get removed first with the remaining components split into a list"""
+def test_get_remarks(raw: str, wx: list[str], rmk: str) -> None:
+    """Remarks get removed first with the remaining components split into a list."""
     test_wx, test_rmk = metar.get_remarks(raw)
     assert wx == test_wx
     assert rmk == test_rmk
 
 
 @pytest.mark.parametrize(
-    "wx,temp,dew",
-    (
+    ("wx", "temp", "dew"),
+    [
         (["1", "2"], (None,), (None,)),
         (["1", "2", "07/05"], ("07", 7), ("05", 5)),
         (["07/05", "1", "2"], ("07", 7), ("05", 5)),
@@ -52,23 +49,23 @@ def test_get_remarks(raw: str, wx: List[str], rmk: str):
         (["10///", "1", "2"], ("10", 10), (None,)),
         (["/////", "1", "2"], (None,), (None,)),
         (["XX/01", "1", "2"], (None,), ("01", 1)),
-    ),
+    ],
 )
-def test_get_temp_and_dew(wx: List[str], temp: tuple, dew: tuple):
-    """Tests temperature and dewpoint extraction"""
+def test_get_temp_and_dew(wx: list[str], temp: tuple, dew: tuple) -> None:
+    """Test temperature and dewpoint extraction."""
     ret_wx, ret_temp, ret_dew = metar.get_temp_and_dew(wx)
     assert ret_wx == ["1", "2"]
     assert_number(ret_temp, *temp)
     assert_number(ret_dew, *dew)
 
 
-def test_not_temp_or_dew():
+def test_not_temp_or_dew() -> None:
     assert metar.get_temp_and_dew(["MX/01"]) == (["MX/01"], None, None)
 
 
 @pytest.mark.parametrize(
-    "temp,dew,rmk,humidity",
-    (
+    ("temp", "dew", "rmk", "humidity"),
+    [
         (None, None, "", None),
         (12, 5, "", 0.62228),
         (12, 5, "RMK T01230054", 0.62732),
@@ -76,27 +73,23 @@ def test_not_temp_or_dew():
         (None, 12, "", None),
         (12, None, "", None),
         (12, None, "RMK T12341345", 0.35408),
-    ),
+    ],
 )
-def test_get_relative_humidity(
-    temp: Optional[int], dew: Optional[int], rmk: str, humidity: Optional[float]
-):
-    """Tests calculating relative humidity from available temperatures"""
+def test_get_relative_humidity(temp: int | None, dew: int | None, rmk: str, humidity: float | None) -> None:
+    """Test calculating relative humidity from available temperatures."""
     units = metar.Units.north_american()
-    if temp is not None:
-        temp = metar.Number("", temp, "")
-    if dew is not None:
-        dew = metar.Number("", dew, "")
+    temp_num = structs.Number("", temp, "") if temp is not None else None
+    dew_num = structs.Number("", dew, "") if dew is not None else None
     remarks_info = metar.remarks.parse(rmk)
-    value = metar.get_relative_humidity(temp, dew, remarks_info, units)
+    value = metar.get_relative_humidity(temp_num, dew_num, remarks_info, units)
     if value is not None:
         value = round(value, 5)
     assert humidity == value
 
 
 @pytest.mark.parametrize(
-    "text,alt",
-    (
+    ("text", "alt"),
+    [
         ("A2992", (29.92, "two nine point nine two")),
         ("2992", (29.92, "two nine point nine two")),
         ("A3000", (30.00, "three zero point zero zero")),
@@ -105,21 +98,21 @@ def test_get_relative_humidity(
         ("Q0998", (998, "zero nine nine eight")),
         ("Q1000/10", (1000, "one zero zero zero")),
         ("QNH3003INS", (30.03, "three zero point zero three")),
-    ),
+    ],
 )
-def test_parse_altimeter(text: str, alt: Tuple[float, str]):
-    """Tests that an atlimiter is correctly parsed into a Number"""
+def test_parse_altimeter(text: str, alt: tuple[float, str]) -> None:
+    """Test that an atlimiter is correctly parsed into a Number."""
     assert_number(metar.parse_altimeter(text), text, *alt)
 
 
-@pytest.mark.parametrize("text", (None, "12/10", "RMK", "ABCDE", "15KM", "10SM"))
-def test_bad_altimeter(text: Optional[str]):
+@pytest.mark.parametrize("text", [None, "12/10", "RMK", "ABCDE", "15KM", "10SM"])
+def test_bad_altimeter(text: str | None) -> None:
     assert metar.parse_altimeter(text) is None
 
 
 @pytest.mark.parametrize(
-    "version,wx,alt,unit",
-    (
+    ("version", "wx", "alt", "unit"),
+    [
         ("NA", ["1"], (None,), "inHg"),
         ("NA", ["1", "A2992"], ("A2992", 29.92, "two nine point nine two"), "inHg"),
         (
@@ -164,10 +157,10 @@ def test_bad_altimeter(text: Optional[str]):
             ("QNH3003INS", 30.03, "three zero point zero three"),
             "inHg",
         ),
-    ),
+    ],
 )
-def test_get_altimeter(version: str, wx: List[str], alt: tuple, unit: str):
-    """Tests that the correct alimeter item gets removed from the end of the wx list"""
+def test_get_altimeter(version: str, wx: list[str], alt: tuple, unit: str) -> None:
+    """Test that the correct alimeter item gets removed from the end of the wx list."""
     units = structs.Units(**getattr(static.core, f"{version}_UNITS"))
     ret, ret_alt = metar.get_altimeter(wx, units, version)
     assert ret == ["1"]
@@ -176,8 +169,8 @@ def test_get_altimeter(version: str, wx: List[str], alt: tuple, unit: str):
 
 
 @pytest.mark.parametrize(
-    "value,runway,vis,var,trend",
-    (
+    ("value", "runway", "vis", "var", "trend"),
+    [
         ("R35L/1000", "35L", ("1000", 1000, "one thousand"), None, None),
         ("R06/M0500", "06", ("M0500", None, "less than five hundred"), None, None),
         ("R33/////", "33", None, None, None),
@@ -219,16 +212,16 @@ def test_get_altimeter(version: str, wx: List[str], alt: tuple, unit: str):
             None,
             structs.Code("N", "no change"),
         ),
-    ),
+    ],
 )
 def test_parse_runway_visibility(
     value: str,
     runway: str,
     vis: tuple,
-    var: Optional[tuple],
-    trend: Optional[structs.Code],
-):
-    """Tests parsing runway visibility range values"""
+    var: tuple | None,
+    trend: structs.Code | None,
+) -> None:
+    """Test parsing runway visibility range values."""
     rvr = metar.parse_runway_visibility(value)
     assert rvr.runway == runway
     if vis is None:
@@ -242,29 +235,27 @@ def test_parse_runway_visibility(
 
 
 @pytest.mark.parametrize(
-    "wx,count",
-    (
+    ("wx", "count"),
+    [
         (["1", "2"], 0),
         (["1", "2", "R10/10"], 1),
         (["1", "2", "R02/05", "R34/04"], 2),
-    ),
+    ],
 )
-def test_get_runway_visibility(wx: List[str], count: int):
-    """Tests extracting runway visibility"""
+def test_get_runway_visibility(wx: list[str], count: int) -> None:
+    """Test extracting runway visibility."""
     items, rvr = metar.get_runway_visibility(wx)
     assert items == ["1", "2"]
     assert len(rvr) == count
 
 
-def test_sanitize():
-    """Tests report sanitization"""
+def test_sanitize() -> None:
+    """Test report sanitization."""
     report = "METAR AUTO KJFK 032151ZVRB08KT FEW034BKN250 ? C A V O K RMK TEST"
     clean = "KJFK 032151Z VRB08KT FEW034 BKN250 CAVOK RMK TEST"
     remarks = "RMK TEST"
     data = ["KJFK", "032151Z", "VRB08KT", "FEW034", "BKN250", "CAVOK"]
-    sans = structs.Sanitization(
-        ["METAR", "AUTO", "?"], {"C A V O K": "CAVOK"}, extra_spaces_needed=True
-    )
+    sans = structs.Sanitization(["METAR", "AUTO", "?"], {"C A V O K": "CAVOK"}, extra_spaces_needed=True)
     ret_clean, ret_remarks, ret_data, ret_sans = metar.sanitize(report)
     assert clean == ret_clean
     assert remarks == ret_remarks
@@ -272,8 +263,8 @@ def test_sanitize():
     assert sans == ret_sans
 
 
-def test_parse():
-    """Tests returned structs from the parse function"""
+def test_parse() -> None:
+    """Test returned structs from the parse function."""
     report = "KJFK 032151Z 16008KT 10SM FEW034 FEW130 BKN250 27/23 A3013 RMK AO2 SLP201"
     data, units, sans = metar.parse(report[:4], report)
     assert isinstance(data, structs.MetarData)
@@ -282,8 +273,8 @@ def test_parse():
     assert data.raw == report
 
 
-def test_parse_awos():
-    """Tests an AWOS weather report. Only used for advisory"""
+def test_parse_awos() -> None:
+    """Test an AWOS weather report. Only used for advisory."""
     report = "3J0 140347Z AUTO 05003KT 07/02 RMK ADVISORY A01  $"
     data, units, sans = metar.parse("KJFK", report, use_na=True)
     assert isinstance(data, structs.MetarData)
@@ -293,9 +284,9 @@ def test_parse_awos():
     assert units.altimeter == "inHg"
 
 
-@pytest.mark.parametrize("ref,icao,issued", get_data(__file__, "metar"))
-def test_metar_ete(ref: dict, icao: str, issued: datetime):
-    """Performs an end-to-end test of all METAR JSON files"""
+@pytest.mark.parametrize(("ref", "icao", "issued"), get_data(__file__, "metar"))
+def test_metar_ete(ref: dict, icao: str, issued: datetime) -> None:
+    """Perform an end-to-end test of all METAR JSON files."""
     station = metar.Metar(icao)
     raw = ref["data"]["raw"]
     assert station.sanitize(raw) == ref["data"]["sanitized"]

@@ -1,14 +1,12 @@
-"""
-Test summary functions
-"""
+"""Test summary functions."""
 
 # module
 from avwx import structs
 from avwx.parsing import summary
 
 
-def test_metar():
-    """Tests that METAR translations are summarized in the proper order"""
+def test_metar() -> None:
+    """Test that METAR translations are summarized in the proper order."""
     trans = structs.MetarTrans(
         altimeter="29.92 inHg (1013 hPa)",
         clouds="Broken layer at 1500ft (Cumulonimbus) - Reported AGL",
@@ -27,8 +25,8 @@ def test_metar():
     assert summary.metar(trans) == text
 
 
-def test_taf():
-    """Tests that TAF line translations are summarized in the proper order"""
+def test_taf() -> None:
+    """Test that TAF line translations are summarized in the proper order."""
     trans = structs.TafLineTrans(
         altimeter="29.92 inHg (1013 hPa)",
         clouds="Broken layer at 1500ft (Cumulonimbus) - Reported AGL",

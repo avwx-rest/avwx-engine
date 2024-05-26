@@ -1,8 +1,6 @@
-"""
-FileService API Tests
-"""
+"""FileService API Tests."""
 
-# pylint: disable=protected-access,missing-class-docstring,unidiomatic-typecheck
+# ruff: noqa: SLF001
 
 # library
 import pytest
@@ -24,40 +22,39 @@ class TestScrapeService(ServiceClassTest):
         "update",
     )
 
-    def test_file_service_not_implemented(self, serv: service.Service):
-        """Tests that the base FileService class throws NotImplemented errors"""
+    def test_file_service_not_implemented(self, serv: service.Service) -> None:
+        """Test that the base FileService class throws NotImplemented errors."""
         if type(serv) != service.files.FileService:
             return
-        # pylint: disable=no-member.pointless-statement
         with pytest.raises(NotImplementedError):
-            serv._extract(None, None)
+            serv._extract(None, None)  # type: ignore
         with pytest.raises(NotImplementedError):
-            serv._urls
+            assert serv._urls
 
     @pytest.mark.asyncio
-    async def test_fetch_bad_station(self, serv: service.Service):
-        """Tests fetch exception handling"""
+    async def test_fetch_bad_station(self, serv: service.Service) -> None:
+        """Test fetch exception handling."""
         for station in ("12K", "MAYT"):
             with pytest.raises(exceptions.BadStation):
-                await serv.async_fetch(station)  # pylint: disable=no-member
+                await serv.async_fetch(station)  # type: ignore
 
     @pytest.mark.asyncio
-    async def test_scrape_service_not_implemented(self, serv: service.Service):
-        """Should raise exception due to empty url"""
+    async def test_scrape_service_not_implemented(self, serv: service.Service) -> None:
+        """Should raise exception due to empty url."""
         if type(serv) == service.scrape.ScrapeService:
             with pytest.raises(NotImplementedError):
-                await serv.async_fetch("KJFK")  # pylint: disable=no-member
+                await serv.async_fetch("KJFK")  # type: ignore
 
 
 @pytest.mark.parametrize("station", ("KJFK", "KMCO", "PHNL"))
 class TestNBM(ServiceFetchTest):
-    service_class = service.NOAA_NBM
+    service_class = service.NoaaNbm
     report_type = "nbs"
 
 
-def test_nbm_all():
-    """Tests extracting all reports from the requested file"""
-    reports = service.NOAA_NBM("nbs").all
+def test_nbm_all() -> None:
+    """Test extracting all reports from the requested file."""
+    reports = service.NoaaNbm("nbs").all
     assert isinstance(reports, list)
     assert len(reports) > 0
 

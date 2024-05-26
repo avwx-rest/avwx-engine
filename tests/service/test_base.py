@@ -1,11 +1,8 @@
-"""
-Service API Tests
-"""
-
-# pylint: disable=missing-class-docstring
+"""Service API Tests."""
 
 # stdlib
-from typing import Any, Tuple
+
+from typing import Any
 
 # library
 import pytest
@@ -19,7 +16,7 @@ BASE_ATTRS = ("_url", "report_type", "_valid_types")
 class BaseServiceTest:
     service_class = service.Service
     report_type: str = "metar"
-    required_attrs: Tuple[str] = tuple()
+    required_attrs: tuple[str, ...] = ()
 
     @pytest.fixture
     def serv(self) -> service.Service:
@@ -27,8 +24,8 @@ class BaseServiceTest:
 
 
 class ServiceClassTest(BaseServiceTest):
-    def test_init(self, serv: service.Service):
-        """Tests that the Service class is initialized properly"""
+    def test_init(self, serv: service.Service) -> None:
+        """Test that the Service class is initialized properly."""
         for attr in BASE_ATTRS + self.required_attrs:
             assert hasattr(serv, attr) is True
         assert serv.report_type == self.report_type
@@ -39,13 +36,13 @@ class ServiceFetchTest(BaseServiceTest):
         assert isinstance(report, str)
         assert station in report
 
-    def test_fetch(self, station: str, serv: service.Service):
-        """Tests that reports are fetched from service"""
-        report = serv.fetch(station)
+    def test_fetch(self, station: str, serv: service.Service) -> None:
+        """Test that reports are fetched from service."""
+        report = serv.fetch(station)  # type: ignore
         self.validate_report(station, report)
 
     @pytest.mark.asyncio
-    async def test_async_fetch(self, station: str, serv: service.Service):
-        """Tests that reports are fetched from async service"""
-        report = await serv.async_fetch(station)
+    async def test_async_fetch(self, station: str, serv: service.Service) -> None:
+        """Test that reports are fetched from async service."""
+        report = await serv.async_fetch(station)  # type: ignore
         self.validate_report(station, report)

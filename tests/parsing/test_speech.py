@@ -1,11 +1,7 @@
-"""
-Tests speech parsing
-"""
-
-# pylint: disable=redefined-builtin
+"""Tests speech parsing."""
 
 # stdlib
-from typing import List, Optional, Tuple
+from __future__ import annotations
 
 # library
 import pytest
@@ -18,8 +14,8 @@ from avwx.parsing import core, speech
 
 
 @pytest.mark.parametrize(
-    "wind,vardir,spoken",
-    (
+    ("wind", "vardir", "spoken"),
+    [
         (("", "", ""), None, "unknown"),
         (
             ("360", "12", "20"),
@@ -33,34 +29,33 @@ from avwx.parsing import core, speech
             ["240", "300"],
             "two seven zero (variable two four zero to three zero zero) at 10 knots",
         ),
-    ),
+    ],
 )
-def test_wind(wind: Tuple[str, str, str], vardir: Optional[List[str]], spoken: str):
-    """Tests converting wind data into a spoken string"""
-    wind = [core.make_number(v, literal=(not i)) for i, v in enumerate(wind)]
-    if vardir:
-        vardir = [core.make_number(i, speak=i, literal=True) for i in vardir]
-    assert speech.wind(*wind, vardir) == f"Winds {spoken}"
+def test_wind(wind: tuple[str, str, str], vardir: list[str] | None, spoken: str) -> None:
+    """Test converting wind data into a spoken string."""
+    wind_nums = [core.make_number(v, literal=(not i)) for i, v in enumerate(wind)]
+    vardir_nums = [core.make_number(i, speak=i, literal=True) for i in vardir] if vardir else None
+    assert speech.wind(*wind_nums, vardir_nums) == f"Winds {spoken}"  # type: ignore
 
 
 @pytest.mark.parametrize(
-    "temp,unit,spoken",
-    (
+    ("temp", "unit", "spoken"),
+    [
         ("", "F", "unknown"),
         ("20", "F", "two zero degrees Fahrenheit"),
         ("M20", "F", "minus two zero degrees Fahrenheit"),
         ("20", "C", "two zero degrees Celsius"),
         ("1", "C", "one degree Celsius"),
-    ),
+    ],
 )
-def test_temperature(temp: str, unit: str, spoken: str):
-    """Tests converting a temperature into a spoken string"""
+def test_temperature(temp: str, unit: str, spoken: str) -> None:
+    """Test converting a temperature into a spoken string."""
     assert speech.temperature("Temp", core.make_number(temp), unit) == f"Temp {spoken}"
 
 
 @pytest.mark.parametrize(
-    "vis,unit,spoken",
-    (
+    ("vis", "unit", "spoken"),
+    [
         ("", "m", "unknown"),
         ("0000", "m", "zero kilometers"),
         ("2000", "m", "two kilometers"),
@@ -70,19 +65,16 @@ def test_temperature(temp: str, unit: str, spoken: str):
         ("3/4", "sm", "three quarters of a mile"),
         ("3/2", "sm", "one and one half miles"),
         ("3", "sm", "three miles"),
-    ),
+    ],
 )
-def test_visibility(vis: str, unit: str, spoken: str):
-    """Tests converting visibility distance into a spoken string"""
-    assert (
-        speech.visibility(core.make_number(vis, m_minus=False), unit)
-        == f"Visibility {spoken}"
-    )
+def test_visibility(vis: str, unit: str, spoken: str) -> None:
+    """Test converting visibility distance into a spoken string."""
+    assert speech.visibility(core.make_number(vis, m_minus=False), unit) == f"Visibility {spoken}"
 
 
 @pytest.mark.parametrize(
-    "alt,unit,spoken",
-    (
+    ("alt", "unit", "spoken"),
+    [
         ("", "hPa", "unknown"),
         ("1020", "hPa", "one zero two zero"),
         ("0999", "hPa", "zero nine nine nine"),
@@ -90,16 +82,16 @@ def test_visibility(vis: str, unit: str, spoken: str):
         ("3000", "inHg", "three zero point zero zero"),
         ("2992", "inHg", "two nine point nine two"),
         ("3005", "inHg", "three zero point zero five"),
-    ),
+    ],
 )
-def test_altimeter(alt: str, unit: str, spoken: str):
-    """Tests converting altimeter reading into a spoken string"""
+def test_altimeter(alt: str, unit: str, spoken: str) -> None:
+    """Test converting altimeter reading into a spoken string."""
     assert speech.altimeter(parse_altimeter(alt), unit) == f"Altimeter {spoken}"
 
 
 @pytest.mark.parametrize(
-    "codes,spoken",
-    (
+    ("codes", "spoken"),
+    [
         ([], ""),
         (
             ["+RATS", "VCFC"],
@@ -109,16 +101,16 @@ def test_altimeter(alt: str, unit: str, spoken: str):
             ["-GR", "FZFG", "BCBLSN"],
             "Light Hail. Freezing Fog. Patchy Blowing Snow",
         ),
-    ),
+    ],
 )
-def test_wx_codes(codes: List[str], spoken: str):
-    """Tests converting WX codes into a spoken string"""
-    codes = get_wx_codes(codes)[1]
-    assert speech.wx_codes(codes) == spoken
+def test_wx_codes(codes: list[str], spoken: str) -> None:
+    """Test converting WX codes into a spoken string."""
+    wx_codes = get_wx_codes(codes)[1]
+    assert speech.wx_codes(wx_codes) == spoken
 
 
-def test_metar():  # sourcery skip: dict-assign-update-to-union
-    """Tests converting METAR data into into a single spoken string"""
+def test_metar() -> None:
+    """Test converting METAR data into into a single spoken string."""
     units = structs.Units.north_american()
     empty_fields = (
         "raw",
@@ -146,9 +138,8 @@ def test_metar():  # sourcery skip: dict-assign-update-to-union
             core.make_number("020", speak="020"),
         ],
         "wx_codes": get_wx_codes(["+RA"])[1],
-    }
-    data.update({k: None for k in empty_fields})
-    data = structs.MetarData(**data)
+    } | {k: None for k in empty_fields}
+    metar_data = structs.MetarData(**data)  # type: ignore
     spoken = (
         "Winds three six zero (variable three four zero to zero two zero) "
         "at 12 knots gusting to 20 knots. Visibility three miles. "
@@ -156,14 +147,14 @@ def test_metar():  # sourcery skip: dict-assign-update-to-union
         "Temperature three degrees Celsius. Dew point minus one degree Celsius. "
         "Altimeter two nine point nine two"
     )
-    ret = speech.metar(data, units)
+    ret = speech.metar(metar_data, units)
     assert isinstance(ret, str)
     assert ret == spoken
 
 
 @pytest.mark.parametrize(
-    "type,start,end,prob,spoken",
-    (
+    ("type", "start", "end", "prob", "spoken"),
+    [
         (None, None, None, None, ""),
         ("FROM", "2808", "2815", None, "From 8 to 15 zulu,"),
         ("FROM", "2822", "2903", None, "From 22 to 3 zulu,"),
@@ -184,39 +175,38 @@ def test_metar():  # sourcery skip: dict-assign-update-to-union
         ),
         ("INTER", "2423", "2500", None, "From 23 to midnight zulu, intermittent"),
         ("TEMPO", "0102", "0103", None, "From 2 to 3 zulu, temporary"),
-    ),
+    ],
 )
 def test_type_and_times(
-    type: Optional[str],
-    start: Optional[str],
-    end: Optional[str],
-    prob: Optional[str],
+    type: str | None,  # noqa: A002
+    start: str | None,
+    end: str | None,
+    prob: str | None,
     spoken: str,
-):
-    """Tests line start from type, time, and probability values"""
+) -> None:
+    """Test line start from type, time, and probability values."""
     start_ts, end_ts = core.make_timestamp(start), core.make_timestamp(end)
-    if prob is not None:
-        prob = core.make_number(prob)
-    ret = speech.type_and_times(type, start_ts, end_ts, prob)
+    prob_num = core.make_number(prob) if prob is not None else None
+    ret = speech.type_and_times(type, start_ts, end_ts, prob_num)
     assert isinstance(ret, str)
     assert ret == spoken
 
 
 @pytest.mark.parametrize(
-    "shear,spoken",
-    (
+    ("shear", "spoken"),
+    [
         ("", "Wind shear unknown"),
         ("WS020/07040KT", "Wind shear 2000ft from zero seven zero at 40 knots"),
         ("WS100/20020KT", "Wind shear 10000ft from two zero zero at 20 knots"),
-    ),
+    ],
 )
-def test_wind_shear(shear: str, spoken: str):
-    """Tests converting wind shear code into a spoken string"""
+def test_wind_shear(shear: str, spoken: str) -> None:
+    """Test converting wind shear code into a spoken string."""
     assert speech.wind_shear(shear) == spoken
 
 
-def test_taf_line():  # sourcery skip: dict-assign-update-to-union
-    """Tests converting TAF line data into into a single spoken string"""
+def test_taf_line() -> None:
+    """Test converting TAF line data into into a single spoken string."""
     units = structs.Units.north_american()
     empty_fields = ("flight_rules", "probability", "raw", "sanitized")
     line = {
@@ -236,9 +226,8 @@ def test_taf_line():  # sourcery skip: dict-assign-update-to-union
         "wind_speed": core.make_number("12"),
         "wx_codes": get_wx_codes(["+RA"])[1],
         "wind_variable_direction": [core.make_number("320"), core.make_number("370")],
-    }
-    line.update({k: None for k in empty_fields})
-    line = structs.TafLineData(**line)
+    } | {k: None for k in empty_fields}
+    line_data = structs.TafLineData(**line)  # type: ignore
     spoken = (
         "From 2 to 6 zulu, Winds three six zero (variable three two zero to three seven zero) at 12 knots gusting to 20 knots. "
         "Wind shear 2000ft from zero seven zero at 40 knots. Visibility three miles. "
@@ -247,18 +236,17 @@ def test_taf_line():  # sourcery skip: dict-assign-update-to-union
         "Occasional moderate turbulence in clouds from 5500ft to 8500ft. "
         "Light icing from 10000ft to 15000ft"
     )
-    ret = speech.taf_line(line, units)
+    ret = speech.taf_line(line_data, units)
     assert isinstance(ret, str)
     assert ret == spoken
 
 
-def test_taf():
-    """Tests converting a TafData report into a single spoken string"""
+def test_taf() -> None:
+    """Test converting a TafData report into a single spoken string."""
     units = structs.Units.north_american()
-    # pylint: disable=no-member
-    empty_line = {k: None for k in structs.TafLineData.__dataclass_fields__.keys()}
+    empty_line = {k: None for k in structs.TafLineData.__dataclass_fields__}
     forecast = [
-        structs.TafLineData(**{**empty_line, **line})
+        structs.TafLineData(**{**empty_line, **line})  # type: ignore
         for line in (
             {
                 "type": "FROM",
@@ -279,8 +267,8 @@ def test_taf():
         )
     ]
     taf = structs.TafData(
-        raw=None,
-        sanitized=None,
+        raw="",
+        sanitized="",
         remarks=None,
         station=None,
         time=None,
@@ -289,6 +277,8 @@ def test_taf():
         end_time=core.make_timestamp("0414Z"),
     )
     ret = speech.taf(taf, units)
+    assert taf.start_time is not None
+    assert taf.start_time.dt is not None
     spoken = (
         f"Starting on {taf.start_time.dt.strftime('%B')} 4th - From 10 to 14 zulu, "
         "Winds three six zero at 12 knots gusting to 20 knots. Visibility three miles. "

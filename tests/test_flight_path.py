@@ -1,9 +1,6 @@
-"""
-Flight path tests
-"""
+"""Flight path tests."""
 
-# stdlib
-from typing import List, Tuple, Union
+from __future__ import annotations
 
 # library
 import pytest
@@ -12,7 +9,12 @@ import pytest
 from avwx import flight_path
 from avwx.structs import Coord
 
-FLIGHT_PATHS = (
+FloatCoordT = tuple[float, float, str]
+FloatPathT = FloatCoordT | str
+CoordPathT = Coord | str
+TestCaseT = tuple[list[FloatPathT], list[FloatCoordT]]
+
+FLIGHT_PATHS: list[TestCaseT] = [
     (
         [(12.34, -12.34, "12.34,-12.34"), (-43.21, 43.21, "-43.21,43.21")],
         [(12.34, -12.34, "12.34,-12.34"), (-43.21, 43.21, "-43.21,43.21")],
@@ -59,25 +61,24 @@ FLIGHT_PATHS = (
             (28.43, -81.31, "KMCO"),
         ],
     ),
-)
+]
 
 
-COORD = Tuple[float, float, str]
-COORD_SRC = List[Union[COORD, str]]
-
-
-def _to_coord(coords: COORD_SRC) -> List[Union[Coord, str]]:
-    for i, item in enumerate(coords):
+def _to_coord(paths: list[FloatPathT]) -> list[CoordPathT]:
+    coords: list[CoordPathT] = []
+    for item in paths:
         if isinstance(item, tuple):
-            coords[i] = Coord(lat=item[0], lon=item[1], repr=item[2])
+            coords.append(Coord(lat=item[0], lon=item[1], repr=item[2]))
+        else:
+            coords.append(item)
     return coords
 
 
-@pytest.mark.parametrize("source,target", FLIGHT_PATHS)
-def test_to_coordinates(source: List[str], target: COORD_SRC):
-    """Test coord routing from coords, stations, and navaids"""
-    source = _to_coord(source)
-    coords = flight_path.to_coordinates(source)
+@pytest.mark.parametrize(("source", "target"), FLIGHT_PATHS)
+def test_to_coordinates(source: list[FloatPathT], target: list[FloatPathT]) -> None:
+    """Test coord routing from coords, stations, and navaids."""
+    coord_path = _to_coord(source)
+    coords = flight_path.to_coordinates(coord_path)
     # Round to prevent minor coord changes from breaking tests
-    coords = [(round(c.lat, 2), round(c.lon, 2), c.repr) for c in coords]
-    assert coords == target
+    float_path: list[FloatPathT] = [(round(c.lat, 2), round(c.lon, 2), c.repr or "") for c in coords]
+    assert float_path == target

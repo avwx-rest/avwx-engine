@@ -1,6 +1,4 @@
-"""
-Current Report Base Tests
-"""
+"""Current Report Base Tests."""
 
 # library
 import pytest
@@ -11,24 +9,24 @@ from avwx.structs import Code
 
 
 @pytest.mark.parametrize(
-    "code,value",
-    (
+    ("code", "value"),
+    [
         ("+RATS", "Heavy Rain Thunderstorm"),
         ("VCFC", "Vicinity Funnel Cloud"),
         ("-GR", "Light Hail"),
         ("FZFG", "Freezing Fog"),
         ("BCBLSN", "Patchy Blowing Snow"),
-    ),
+    ],
 )
-def test_wxcode(code: str, value: str):
-    """Tests expanding weather codes or ignoring them"""
+def test_wxcode(code: str, value: str) -> None:
+    """Test expanding weather codes or ignoring them."""
     obj = Code(code, value)
     assert current.base.wx_code(code) == obj
 
 
 @pytest.mark.parametrize(
-    "code,value",
-    (("", ""), ("R03/03002V03", "R03/03002V03"), ("CB", "CB"), ("0800SE", "0800SE")),
+    ("code", "value"),
+    [("", ""), ("R03/03002V03", "R03/03002V03"), ("CB", "CB"), ("0800SE", "0800SE")],
 )
-def test_unknown_code(code: str, value: str):
+def test_unknown_code(code: str, value: str) -> None:
     assert current.base.wx_code(code) == value

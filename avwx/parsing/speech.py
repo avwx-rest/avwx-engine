@@ -45,7 +45,7 @@ def wind(
     return "Winds " + (val or "unknown")
 
 
-def temperature(header: str, temp: Number, unit: str = "C") -> str:
+def temperature(header: str, temp: Number | None, unit: str = "C") -> str:
     """Format temperature details into a spoken word string."""
     if not temp or temp.value is None:
         return f"{header} unknown"
@@ -54,7 +54,7 @@ def temperature(header: str, temp: Number, unit: str = "C") -> str:
     return " ".join((header, temp.spoken, f"degree{use_s}", unit))
 
 
-def visibility(vis: Number, unit: str = "m") -> str:
+def visibility(vis: Number | None, unit: str = "m") -> str:
     """Format visibility details into a spoken word string."""
     if not vis:
         return "Visibility unknown"
@@ -78,7 +78,7 @@ def visibility(vis: Number, unit: str = "m") -> str:
     return ret
 
 
-def altimeter(alt: Number, unit: str = "inHg") -> str:
+def altimeter(alt: Number | None, unit: str = "inHg") -> str:
     """Format altimeter details into a spoken word string."""
     ret = "Altimeter "
     if not alt:
@@ -102,7 +102,7 @@ def wx_codes(codes: list[Code]) -> str:
 
 
 def type_and_times(
-    type: str,  # noqa: A002
+    type: str | None,  # noqa: A002
     start: Timestamp | None,
     end: Timestamp | None,
     probability: Number | None = None,

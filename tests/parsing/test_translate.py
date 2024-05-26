@@ -1,11 +1,7 @@
-"""
-Test translation functions
-"""
-
-# pytest: disable=redefined-builtin
+"""Test translation functions."""
 
 # stdlib
-from typing import Dict, List, Optional, Tuple
+from __future__ import annotations
 
 # library
 import pytest
@@ -17,8 +13,8 @@ from avwx.parsing import core, remarks, translate
 
 
 @pytest.mark.parametrize(
-    "vis,unit,translation",
-    (
+    ("vis", "unit", "translation"),
+    [
         ("", "m", ""),
         ("0000", "m", "0km (0sm)"),
         ("2000", "m", "2km (1.2sm)"),
@@ -28,19 +24,16 @@ from avwx.parsing import core, remarks, translate
         ("3/4", "sm", "0.75sm (1.2km)"),
         ("3/2", "sm", "1.5sm (2.4km)"),
         ("3", "sm", "3sm (4.8km)"),
-    ),
+    ],
 )
-def test_visibility(vis: str, unit: str, translation: str):
-    """Tests visibility translation and conversion"""
-    assert (
-        translate.base.visibility(core.make_number(vis, m_minus=False), unit)
-        == translation
-    )
+def test_visibility(vis: str, unit: str, translation: str) -> None:
+    """Test visibility translation and conversion."""
+    assert translate.base.visibility(core.make_number(vis, m_minus=False), unit) == translation
 
 
 @pytest.mark.parametrize(
-    "alt,repr,unit,translation",
-    (
+    ("alt", "repr", "unit", "translation"),
+    [
         ("", "", "hPa", ""),
         ("1020", "1020", "hPa", "1020 hPa (30.12 inHg)"),
         ("0999", "0999", "hPa", "999 hPa (29.50 inHg)"),
@@ -48,51 +41,51 @@ def test_visibility(vis: str, unit: str, translation: str):
         ("30.00", "3000", "inHg", "30.00 inHg (1016 hPa)"),
         ("29.92", "2992", "inHg", "29.92 inHg (1013 hPa)"),
         ("30.05", "3005", "inHg", "30.05 inHg (1018 hPa)"),
-    ),
+    ],
 )
-def test_altimeter(alt: str, repr: str, unit: str, translation: str):
-    """Tests altimeter translation and conversion"""
+def test_altimeter(alt: str, repr: str, unit: str, translation: str) -> None:  # noqa: A002
+    """Test altimeter translation and conversion."""
     assert translate.base.altimeter(core.make_number(alt, repr), unit) == translation
 
 
 @pytest.mark.parametrize(
-    "clouds,translation",
-    (
+    ("clouds", "translation"),
+    [
         (["BKN", "FEW020"], "Few clouds at 2000ft"),
         (
             ["OVC030", "SCT100"],
             "Overcast layer at 3000ft, Scattered clouds at 10000ft",
         ),
         (["BKN015CB"], "Broken layer at 1500ft (Cumulonimbus)"),
-    ),
+    ],
 )
-def test_clouds(clouds: List[str], translation: str):
-    """Tests translating each cloud into a single string"""
-    clouds = [core.make_cloud(cloud) for cloud in clouds]
-    assert translate.base.clouds(clouds) == f"{translation} - Reported AGL"
+def test_clouds(clouds: list[str], translation: str) -> None:
+    """Test translating each cloud into a single string."""
+    cloud_objs = [core.make_cloud(cloud) for cloud in clouds]
+    assert translate.base.clouds(cloud_objs) == f"{translation} - Reported AGL"
 
 
-def test_no_clouds():
+def test_no_clouds() -> None:
     assert translate.base.clouds(None) == ""
     assert translate.base.clouds([]) == "Sky clear"
 
 
 @pytest.mark.parametrize(
-    "codes,translation",
-    (
+    ("codes", "translation"),
+    [
         ([], ""),
         (["VCFC", "+RA"], "Vicinity Funnel Cloud, Heavy Rain"),
         (["-SN"], "Light Snow"),
-    ),
+    ],
 )
-def test_wx_codes(codes: List[str], translation: str):
-    """Tests translating a list of weather codes into a single string"""
-    codes = get_wx_codes(codes)[1]
-    assert translate.base.wx_codes(codes) == translation
+def test_wx_codes(codes: list[str], translation: str) -> None:
+    """Test translating a list of weather codes into a single string."""
+    code_objs = get_wx_codes(codes)[1]
+    assert translate.base.wx_codes(code_objs) == translation
 
 
-def test_shared():
-    """Tests availability of shared values between the METAR and TAF translations"""
+def test_shared() -> None:
+    """Test availability of shared values between the METAR and TAF translations."""
     units = structs.Units.north_american()
     data = structs.SharedData(
         altimeter=core.make_number("29.92"),
@@ -114,17 +107,13 @@ def test_shared():
 # Test METAR translations
 
 
-def test_cardinal_direction():
-    """Tests that a direction int returns the correct cardinal direction string"""
+def test_cardinal_direction() -> None:
+    """Test that a direction int returns the correct cardinal direction string."""
     # 12 - 360+
     keys = (12, 34, 57, 79)
     for i, cardinal in enumerate(static.core.CARDINAL_DEGREES.keys()):
         lower = keys[i % 4] + 90 * (i // 4)
-        upper = (
-            keys[0] + 90 * ((i // 4) + 1) - 1
-            if i % 4 == 3
-            else keys[(i % 4) + 1] + 90 * (i // 4) - 1
-        )
+        upper = keys[0] + 90 * ((i // 4) + 1) - 1 if i % 4 == 3 else keys[(i % 4) + 1] + 90 * (i // 4) - 1
         for direction in range(lower, upper + 1):
             assert translate.base.get_cardinal_direction(direction) == cardinal
     # -10 - 11
@@ -133,8 +122,8 @@ def test_cardinal_direction():
 
 
 @pytest.mark.parametrize(
-    "wind,vardir,translation",
-    (
+    ("wind", "vardir", "translation"),
+    [
         (("", "", ""), None, ""),
         (
             ("360", "12", "20"),
@@ -144,35 +133,32 @@ def test_cardinal_direction():
         (("000", "00", ""), None, "Calm"),
         (("VRB", "5", "12"), None, "Variable at 5kt gusting to 12kt"),
         (("270", "10", ""), ["240", "300"], "W-270 (variable 240 to 300) at 10kt"),
-    ),
+    ],
 )
-def test_wind(
-    wind: Tuple[str, str, str], vardir: Optional[List[str]], translation: str
-):
-    """Tests that wind values are translating into a single string"""
-    wind = [core.make_number(i) for i in wind]
-    if vardir:
-        vardir = [core.make_number(i) for i in vardir]
-    assert translate.base.wind(*wind, vardir) == translation
+def test_wind(wind: tuple[str, str, str], vardir: list[str] | None, translation: str) -> None:
+    """Test that wind values are translating into a single string."""
+    wind_nums = [core.make_number(i) for i in wind]
+    vardir_nums = [core.make_number(i) for i in vardir] if vardir else None
+    assert translate.base.wind(*wind_nums, vardir_nums) == translation  # type: ignore
 
 
 @pytest.mark.parametrize(
-    "temp,unit,translation",
-    (
+    ("temp", "unit", "translation"),
+    [
         ("20", "F", "20°F (-7°C)"),
         ("M20", "F", "-20°F (-29°C)"),
         ("20", "C", "20°C (68°F)"),
         ("M20", "C", "-20°C (-4°F)"),
         ("", "F", ""),
-    ),
+    ],
 )
-def test_temperature(temp: str, unit: str, translation: str):
-    """Tests temperature translation and conversion"""
+def test_temperature(temp: str, unit: str, translation: str) -> None:
+    """Test temperature translation and conversion."""
     assert translate.base.temperature(core.make_number(temp), unit) == translation
 
 
-def test_metar():  # sourcery skip: dict-assign-update-to-union
-    """Tests end-to-end METAR translation"""
+def test_metar() -> None:
+    """Test end-to-end METAR translation."""
     units = structs.Units.north_american()
     empty_fields = (
         "raw",
@@ -200,9 +186,8 @@ def test_metar():  # sourcery skip: dict-assign-update-to-union
             core.make_number("020"),
         ],
         "wx_codes": get_wx_codes(["+RA"])[1],
-    }
-    data.update({k: "" for k in empty_fields})
-    data = structs.MetarData(**data)
+    } | {k: "" for k in empty_fields}
+    metar_data = structs.MetarData(**data)  # type: ignore
     trans = structs.MetarTrans(
         altimeter="29.92 inHg (1013 hPa)",
         clouds="Broken layer at 1500ft (Cumulonimbus) - Reported AGL",
@@ -213,7 +198,7 @@ def test_metar():  # sourcery skip: dict-assign-update-to-union
         wind="N-360 (variable 340 to 020) at 12kt gusting to 20kt",
         wx_codes="Heavy Rain",
     )
-    translated = translate.metar.translate_metar(data, units)
+    translated = translate.metar.translate_metar(metar_data, units)
     assert isinstance(translated, structs.MetarTrans)
     assert translated == trans
 
@@ -222,21 +207,21 @@ def test_metar():  # sourcery skip: dict-assign-update-to-union
 
 
 @pytest.mark.parametrize(
-    "shear,translation",
-    (
+    ("shear", "translation"),
+    [
         ("", ""),
         ("WS020/07040KT", "Wind shear 2000ft from 070 at 40kt"),
         ("WS100/20020KT", "Wind shear 10000ft from 200 at 20kt"),
-    ),
+    ],
 )
-def test_wind_shear(shear: str, translation: str):
-    """Tests wind shear unpacking and translation"""
+def test_wind_shear(shear: str, translation: str) -> None:
+    """Test wind shear unpacking and translation."""
     assert translate.taf.wind_shear(shear) == translation
 
 
 @pytest.mark.parametrize(
-    "turb_ice,translation",
-    (
+    ("turb_ice", "translation"),
+    [
         ([], ""),
         (
             ["540553"],
@@ -247,29 +232,29 @@ def test_wind_shear(shear: str, translation: str):
             ["610023", "610062"],
             "Light icing from 200ft to 3200ft, Light icing from 600ft to 2600ft",
         ),
-    ),
+    ],
 )
-def test_turb_ice(turb_ice: List[str], translation: str):
-    """Tests turbulence and icing translations"""
+def test_turb_ice(turb_ice: list[str], translation: str) -> None:
+    """Test turbulence and icing translations."""
     assert translate.taf.turb_ice(turb_ice) == translation
 
 
 @pytest.mark.parametrize(
-    "temp,translation",
-    (
+    ("temp", "translation"),
+    [
         ("", ""),
         ("TX20/1518Z", "Maximum temperature of 20°C (68°F) at 15-18:00Z"),
         ("TXM02/04", "Maximum temperature of -2°C (28°F) at 04:00Z"),
         ("TN00/00", "Minimum temperature of 0°C (32°F) at 00:00Z"),
-    ),
+    ],
 )
-def test_min_max_temp(temp: str, translation: str):
-    """Tests temperature time translation and conversion"""
+def test_min_max_temp(temp: str, translation: str) -> None:
+    """Test temperature time translation and conversion."""
     assert translate.taf.min_max_temp(temp) == translation
 
 
-def test_taf():
-    """Tests end-to-end TAF translation"""
+def test_taf() -> None:
+    """Test end-to-end TAF translation."""
     units = structs.Units.north_american()
     empty_line_fields = (
         "raw",
@@ -309,7 +294,7 @@ def test_taf():
         line_data[key] = ""
     for key in empty_fields:
         data[key] = ""
-    data = structs.TafData(forecast=[structs.TafLineData(**line_data)], **data)
+    taf_data = structs.TafData(forecast=[structs.TafLineData(**line_data)], **data)  # type: ignore
     line_trans = structs.TafLineTrans(
         altimeter="29.92 inHg (1013 hPa)",
         clouds="Broken layer at 1500ft (Cumulonimbus) - Reported AGL",
@@ -326,7 +311,7 @@ def test_taf():
         min_temp="Minimum temperature of 0°C (32°F) at 00:00Z",
         remarks={},
     )
-    translated = translate.taf.translate_taf(data, units)
+    translated = translate.taf.translate_taf(taf_data, units)
     assert isinstance(translated, structs.TafTrans)
     for line in translated.forecast:
         assert isinstance(line, structs.TafLineTrans)
@@ -337,8 +322,8 @@ def test_taf():
 
 
 @pytest.mark.parametrize(
-    "rmk,out",
-    (
+    ("rmk", "out"),
+    [
         (
             "RMK AO1 ACFT MSHP SLP137 T02720183 BINOVC",
             {
@@ -369,9 +354,9 @@ def test_taf():
                 "TSB20": "Thunderstorm began at :20",
             },
         ),
-    ),
+    ],
 )
-def test_translate(rmk: str, out: Dict[str, str]):
+def test_translate(rmk: str, out: dict[str, str]) -> None:
     """Tests extracting translations from the remarks string"""
     data = remarks.parse(rmk)
     assert translate.remarks.translate(rmk, data) == out

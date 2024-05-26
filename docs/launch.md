@@ -45,7 +45,7 @@ pull request on [GitHub](https://github.com/avwx-rest/avwx-engine)
 
 # Installation
 
-AVWX is available on PyPI and requires Python 3.8 and above. Note: the package
+AVWX is available on PyPI and requires Python 3.9 and above. Note: the package
 name is ``avwx-engine``, but the import is ``avwx``
 
 ```bash

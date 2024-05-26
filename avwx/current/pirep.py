@@ -157,7 +157,7 @@ def _location(item: str) -> Location | None:
     return Location(item, station, direction_number, distance_number)
 
 
-def _time(item: str, target: date | None = None) -> Timestamp | None:
+def _time(item: str | None, target: date | None = None) -> Timestamp | None:
     """Convert a time element to a Timestamp."""
     return core.make_timestamp(item, time_only=True, target_date=target)
 

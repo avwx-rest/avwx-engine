@@ -1,11 +1,9 @@
-"""
-ScrapeService API Tests
-"""
+"""ScrapeService API Tests."""
 
-# pylint: disable=protected-access,missing-class-docstring,unidiomatic-typecheck
+# ruff: noqa: SLF001
 
 # stdlib
-from typing import Any, Tuple
+from typing import Any
 
 # library
 import pytest
@@ -21,16 +19,14 @@ class TestStationScrape(ServiceClassTest):
     service_class = service.scrape.StationScrape
     required_attrs = ("method", "_strip_whitespace", "_extract")
 
-    def test_service(self, serv: service.scrape.ScrapeService):
-        """Tests for expected values and method implementation"""
-        # pylint: disable=no-member
+    def test_service(self, serv: service.scrape.ScrapeService) -> None:
+        """Test for expected values and method implementation."""
         assert isinstance(serv._url, str)
         assert isinstance(serv.method, str)
         assert serv.method in {"GET", "POST"}
 
-    def test_make_err(self, serv: service.scrape.ScrapeService):
-        """Tests that InvalidRequest exceptions are generated with the right message"""
-        # pylint: disable=no-member
+    def test_make_err(self, serv: service.scrape.ScrapeService) -> None:
+        """Test that InvalidRequest exceptions are generated with the right message."""
         key, msg = "test_key", "testing"
         name = serv.__class__.__name__
         err = serv._make_err(msg, key)
@@ -39,140 +35,140 @@ class TestStationScrape(ServiceClassTest):
         assert err.args == (err_str,)
         assert str(err) == err_str
 
-    def test_fetch_bad_station(self, serv: service.scrape.ScrapeService):
-        """Tests fetch exception handling"""
+    def test_fetch_bad_station(self, serv: service.scrape.ScrapeService) -> None:
+        """Test fetch exception handling."""
         for station in ("12K", "MAYT"):
             with pytest.raises(exceptions.BadStation):
-                serv.fetch(station)  # pylint: disable=no-member
+                serv.fetch(station)  # type: ignore
 
-    def test_not_implemented(self, serv: service.scrape.ScrapeService):
-        """Should raise exception due to empty url"""
+    def test_not_implemented(self, serv: service.scrape.ScrapeService) -> None:
+        """Should raise exception due to empty url."""
         if type(serv) == service.scrape.ScrapeService:
             with pytest.raises(NotImplementedError):
-                serv.fetch("KJFK")  # pylint: disable=no-member
+                serv.fetch("KJFK")  # type: ignore
 
     @pytest.mark.asyncio
-    async def test_async_fetch_bad_station(self, serv: service.scrape.ScrapeService):
-        """Tests fetch exception handling"""
+    async def test_async_fetch_bad_station(self, serv: service.scrape.ScrapeService) -> None:
+        """Test fetch exception handling."""
         for station in ("12K", "MAYT"):
             with pytest.raises(exceptions.BadStation):
-                await serv.async_fetch(station)  # pylint: disable=no-member
+                await serv.async_fetch(station)  # type: ignore
 
     @pytest.mark.asyncio
-    async def test_async_not_implemented(self, serv: service.scrape.ScrapeService):
-        """Should raise exception due to empty url"""
+    async def test_async_not_implemented(self, serv: service.scrape.ScrapeService) -> None:
+        """Should raise exception due to empty url."""
         if type(serv) == service.scrape.ScrapeService:
             with pytest.raises(NotImplementedError):
-                await serv.async_fetch("KJFK")  # pylint: disable=no-member
+                await serv.async_fetch("KJFK")  # type: ignore
 
 
-NOAA_PARAMS = ("station", ("KJFK", "EGLL", "PHNL"))
+NOAA_PARAMS = ("station", ["KJFK", "EGLL", "PHNL"])
 
 
 @pytest.mark.parametrize(*NOAA_PARAMS)
-class TestNOAA(ServiceFetchTest):
-    service_class = service.NOAA
+class TestNoaa(ServiceFetchTest):
+    service_class = service.Noaa
 
 
-class TestNOAAClass(TestStationScrape):
-    service_class = service.NOAA
+class TestNoaaClass(TestStationScrape):
+    service_class = service.Noaa
 
 
 @pytest.mark.parametrize(*NOAA_PARAMS)
-class TestNOAATaf(ServiceFetchTest):
-    service_class = service.NOAA
+class TestNoaaTaf(ServiceFetchTest):
+    service_class = service.Noaa
     report_type = "taf"
 
 
 @pytest.mark.parametrize(*NOAA_PARAMS)
-class TestNOAA_FTP(ServiceFetchTest):
-    service_class = service.scrape.NOAA_FTP
+class TestNoaaFtp(ServiceFetchTest):
+    service_class = service.scrape.NoaaFtp
 
 
-class TestNOAA_FTPClass(TestStationScrape):
-    service_class = service.scrape.NOAA_FTP
-
-
-@pytest.mark.parametrize(*NOAA_PARAMS)
-class TestNOAA_Scrape(ServiceFetchTest):
-    service_class = service.scrape.NOAA_Scrape
-
-
-class TestNOAA_ScrapeClass(TestStationScrape):
-    service_class = service.scrape.NOAA_Scrape
+class TestNoaaFtpClass(TestStationScrape):
+    service_class = service.scrape.NoaaFtp
 
 
 @pytest.mark.parametrize(*NOAA_PARAMS)
-class TestNOAA_ScrapeList(ServiceFetchTest):
-    service_class = service.scrape.NOAA_ScrapeList
+class TestNoaaScrape(ServiceFetchTest):
+    service_class = service.scrape.NoaaScrape
+
+
+class TestNoaaScrapeClass(TestStationScrape):
+    service_class = service.scrape.NoaaScrape
+
+
+@pytest.mark.parametrize(*NOAA_PARAMS)
+class TestNoaaScrapeList(ServiceFetchTest):
+    service_class = service.scrape.NoaaScrapeList
     report_type = "pirep"
 
-    def validate_report(self, station: str, report: Any) -> None:
+    def validate_report(self, station: str, report: Any) -> None:  # noqa: ARG002
         assert isinstance(report, list)
         assert isinstance(report[0], str)
 
 
-class TestNOAA_ScrapeListClass(TestStationScrape):
-    service_class = service.scrape.NOAA_ScrapeList
+class TestNoaaScrapeListClass(TestStationScrape):
+    service_class = service.scrape.NoaaScrapeList  # type: ignore
     report_type = "pirep"
 
 
-# @pytest.mark.parametrize("station", ("RKSI", "RKSS", "RKNY"))
-# class TestAMO(TestStationScrape):
-#     service_class = service.AMO
+# @pytest.mark.parametrize("station", ["RKSI", "RKSS", "RKNY"])
+# class TestAmo(TestStationScrape):
+#     service_class = service.Amo
 #     report_type = "metar"
 
-# class TestAMOClass(TestStationScrape):
-#     service_class = service.AMO
+# class TestAmoClass(TestStationScrape):
+#     service_class = service.Amo
 
 
-@pytest.mark.parametrize("station", ("SKBO",))
-class TestMAC(ServiceFetchTest):
-    service_class = service.MAC
+@pytest.mark.parametrize("station", ["SKBO"])
+class TestMac(ServiceFetchTest):
+    service_class = service.Mac
 
 
-class TestMACClass(TestStationScrape):
-    service_class = service.MAC
+class TestMacClass(TestStationScrape):
+    service_class = service.Mac
 
 
-@pytest.mark.parametrize("station", ("YBBN", "YSSY", "YCNK"))
-class TestAUBOM(ServiceFetchTest):
-    service_class = service.AUBOM
+@pytest.mark.parametrize("station", ["YBBN", "YSSY", "YCNK"])
+class TestAubom(ServiceFetchTest):
+    service_class = service.Aubom
 
 
-class TestAUBOMClass(TestStationScrape):
-    service_class = service.AUBOM
+class TestAubomClass(TestStationScrape):
+    service_class = service.Aubom
 
 
-@pytest.mark.parametrize("station", ("VAPO", "VEGT"))
-class TestOLBS(ServiceFetchTest):
-    service_class = service.OLBS
+@pytest.mark.parametrize("station", ["VAPO", "VEGT"])
+class TestOlbs(ServiceFetchTest):
+    service_class = service.Olbs
 
 
-class TestOLBSClass(TestStationScrape):
-    service_class = service.OLBS
+class TestOlbsClass(TestStationScrape):
+    service_class = service.Olbs
 
 
-@pytest.mark.parametrize("station", ("EHAM", "ENGM", "BIRK"))
-class TestNAM(ServiceFetchTest):
-    service_class = service.NAM
+@pytest.mark.parametrize("station", ["EHAM", "ENGM", "BIRK"])
+class TestNam(ServiceFetchTest):
+    service_class = service.Nam
 
 
-class TestNAMClass(TestStationScrape):
-    service_class = service.NAM
+class TestNamClass(TestStationScrape):
+    service_class = service.Nam
 
 
-# @pytest.mark.parametrize("station", ("ZJQH", "ZYCC", "ZSWZ"))
-# class TestAVT(ServiceFetchTest):
-#     service_class = service.AVT
+# @pytest.mark.parametrize("station", ["ZJQH", "ZYCC", "ZSWZ"])
+# class TestAvt(ServiceFetchTest):
+#     service_class = service.Avt
 
-# class TestAVTClass(TestStationScrape):
-#     service_class = service.AVT
+# class TestAvtClass(TestStationScrape):
+#     service_class = service.Avt
 
 
 @pytest.mark.parametrize(*NOAA_PARAMS)
 class TestNotam(ServiceFetchTest):
-    service_class = service.FAA_NOTAM
+    service_class = service.FaaNotam
     report_type = "notam"
 
     def validate_report(self, station: str, report: Any) -> None:
@@ -182,19 +178,19 @@ class TestNotam(ServiceFetchTest):
 
 
 @pytest.mark.parametrize(
-    "stations,country,serv",
-    (
-        (("KJFK", "PHNL"), "US", service.NOAA),
-        (("EGLL",), "GB", service.NOAA),
-        (("RKSI",), "KR", service.AMO),
-        (("SKBO", "SKPP"), "CO", service.MAC),
-        (("YWOL", "YSSY"), "AU", service.AUBOM),
-        (("VAPO", "VEGT"), "IN", service.OLBS),
-        # (("ZJQH", "ZYCC", "ZSWZ"), "CN", service.AVT),
-    ),
+    ("stations", "country", "serv"),
+    [
+        (("KJFK", "PHNL"), "US", service.Noaa),
+        (("EGLL",), "GB", service.Noaa),
+        (("RKSI",), "KR", service.Amo),
+        (("SKBO", "SKPP"), "CO", service.Mac),
+        (("YWOL", "YSSY"), "AU", service.Aubom),
+        (("VAPO", "VEGT"), "IN", service.Olbs),
+        # (("ZJQH", "ZYCC", "ZSWZ"), "CN", service.Avt),
+    ],
 )
-def test_get_service(stations: Tuple[str], country: str, serv: service.Service):
-    """Tests that the correct service class is returned"""
+def test_get_service(stations: tuple[str], country: str, serv: service.Service) -> None:
+    """Test that the correct service class is returned."""
     for station in stations:
-        fetched = service.get_service(station, country)("metar")
-        assert isinstance(fetched, serv)
+        fetched = service.get_service(station, country)("metar")  # type: ignore
+        assert isinstance(fetched, serv)  # type: ignore

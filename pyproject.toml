@@ -81,7 +81,9 @@ check = "mypy --install-types --non-interactive {args:src/pyorl_example tests}"
 
 [tool.hatch.envs.hatch-test]
 extra-dependencies = [
+    "avwx-engine[all]",
     "pytest-asyncio",
+    "pytest-cov",
     "pytest-github-actions-annotate-failures",
     "time-machine",
 ]

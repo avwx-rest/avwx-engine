@@ -1,43 +1,40 @@
-"""
-Manages good/bad station lists by calling METARs
-"""
+"""Manages good/bad station lists by calling METARs."""
 
-# pylint: disable=broad-except
+# ruff: noqa: INP001,T201,BLE001
 
 # stdlib
-import random
 import asyncio as aio
+import random
 from contextlib import suppress
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 # library
-from kewkew import Kew
+from kewkew import Kew  # type: ignore
 
 # module
 import avwx
-from avwx.service.bulk import NOAA_Bulk
-from avwx.service.scrape import NOAA
-
+from avwx.service.bulk import NoaaBulk
+from avwx.service.scrape import Noaa
 
 PROJECT_ROOT = Path(__file__).parent.parent
 GOOD_PATH = PROJECT_ROOT / "avwx" / "data" / "files" / "good_stations.txt"
 
 
 def load_stations(path: Path) -> set[str]:
-    """Load a station set from a path"""
+    """Load a station set from a path."""
     return set(path.read_text().strip().split("\n"))
 
 
-def save_stations(data: set[str], path: Path):
-    """Save a sation set to a path"""
+def save_stations(data: set[str], path: Path) -> None:
+    """Save a sation set to a path."""
     path.write_text("\n".join(sorted(data)))
 
 
-async def get_noaa_codes() -> {str}:
-    """Create a set of current NOAA codes from bulk access"""
+async def get_noaa_codes() -> set[str]:
+    """Create a set of current NOAA codes from bulk access."""
     codes = set()
-    for report in await NOAA_Bulk("metar").async_fetch():
+    for report in await NoaaBulk("metar").async_fetch():
         items = report.strip(" '\"").split()
         if items[0] == "METAR":
             items.pop(0)
@@ -46,7 +43,7 @@ async def get_noaa_codes() -> {str}:
 
 
 class StationTester(Kew):
-    """Station reporting queue manager"""
+    """Station reporting queue manager."""
 
     good_stations: set[str]
     sleep_chance: float
@@ -57,17 +54,16 @@ class StationTester(Kew):
         self.sleep_chance = 0.0
 
     def should_test(self, code: str) -> bool:
-        """Returns False if an ident is known good or never good"""
+        """Return False if an ident is known good or never good."""
         if code in self.good_stations:
             return False
         return not any(char.isdigit() for char in code)
 
-    async def worker(self, data: object) -> bool:
-        """Worker to check queued idents and update lists"""
-        code = data
+    async def worker(self, code: str) -> bool:
+        """Worker to check queued idents and update lists."""
         try:
             metar = avwx.Metar(code)
-            if isinstance(metar.service, NOAA):  # Skip NOAA if not in bulk pull
+            if isinstance(metar.service, Noaa):  # Skip NOAA if not in bulk pull
                 return True
             if await metar.async_update():
                 self.good_stations.add(code)
@@ -79,13 +75,13 @@ class StationTester(Kew):
             print("\n", code, exc, "\n")
         return True
 
-    async def wait(self):
-        """Waits until the queue is empty"""
+    async def wait(self) -> None:
+        """Wait until the queue is empty."""
         while not self._queue.empty():
             await aio.sleep(0.01)
 
-    async def add_stations(self):
-        """Populate and run ICAO check queue"""
+    async def add_stations(self) -> None:
+        """Populate and run ICAO check queue."""
         stations = []
         for station in avwx.station.meta.STATIONS.values():
             code = station["icao"] or station["gps"]
@@ -97,16 +93,16 @@ class StationTester(Kew):
 
 
 async def main() -> int:
-    """Update ICAO lists with 1 hour sleep cycle"""
+    """Update ICAO lists with 1 hour sleep cycle."""
     tester = StationTester(load_stations(GOOD_PATH).union(await get_noaa_codes()))
     try:
         while True:
-            print("\nStarting", datetime.now())
+            print("\nStarting", datetime.now(tz=UTC))
             await tester.add_stations()
             await tester.wait()
             save_stations(tester.good_stations, GOOD_PATH)
             print(f"Good stations: {len(tester.good_stations)}")
-            print("Sleeping", datetime.now())
+            print("Sleeping", datetime.now(tz=UTC))
             await aio.sleep(60 * 60)
     except KeyboardInterrupt:
         pass

@@ -251,7 +251,7 @@ def get_runway_visibility(data: list[str]) -> tuple[list[str], list[RunwayVisibi
     return data, runway_vis
 
 
-def parse_altimeter(value: str) -> Number | None:
+def parse_altimeter(value: str | None) -> Number | None:
     """Parse an altimeter string into a Number."""
     if not value or len(value) < 4:
         return None
