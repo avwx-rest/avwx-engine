@@ -10,21 +10,22 @@ permissions:
 jobs:
   # Build code and docs then deploy to PyPI
   build-and-publish:
+    name: Upload to PyPI and build docs
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/avwx-engine
+    permissions:
+      id-token: write
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/python-poetry-env
-      - name: Publish to pypi
-        run: |
-          poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
-          poetry publish --build --no-interaction
+      - uses: ./.github/actions/python-hatch-env
+      - name: Build wheel
+        run: hatch build
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
       - name: Build docs
-        run: |
-          poetry run python -m pdoc ./avwx -o docs_b/ \
-          --favicon https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/favicon.ico \
-          --logo https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/avwx-logo-color-200.png \
-          --logo-link https://info.avwx.rest
-          echo "engine.avwx.rest" > docs_b/CNAME
+        run: hatch run docs:build docs_b/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs_b/

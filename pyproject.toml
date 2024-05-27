@@ -14,17 +14,17 @@ authors = [
     { name = "Michael duPont", email = "michael@dupont.dev" },
 ]
 classifiers = [
-  "Development Status :: 5 - Production/Stable",
-  "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
-  "Operating System :: OS Independent",
-  "Programming Language :: Python",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Topic :: Software Development :: Libraries :: Python Modules",
-  "Typing :: Typed",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
 ]
 dependencies = [
     "geopy>=2.4",
@@ -62,22 +62,16 @@ all = [
     "avwx-engine[fuzz,scipy,shape]",
 ]
 
-# docs = """python -m pdoc ./avwx \
-#     !avwx.flight_path !avwx.current.airep \
-#     --favicon https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/favicon.ico \
-#     --logo https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/avwx-logo-color-200.png \
-#     --logo-link https://info.avwx.rest \
-# """
-
 [tool.hatch.envs.types]
 extra-dependencies = [
-  "mypy>=1.0.0",
-  "pytest-asyncio",
-  "pytest-github-actions-annotate-failures",
-  "time-machine",
+    "avwx-engine[all]",
+    "mypy>=1.0.0",
+    "pytest-asyncio",
+    "pytest-github-actions-annotate-failures",
+    "time-machine",
 ]
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/pyorl_example tests}"
+check = "mypy --install-types --non-interactive {args:avwx tests}"
 
 [tool.hatch.envs.hatch-test]
 extra-dependencies = [
@@ -87,6 +81,29 @@ extra-dependencies = [
     "pytest-github-actions-annotate-failures",
     "time-machine",
 ]
+
+[tool.hatch.envs.docs]
+extra-dependencies = [
+    "pdoc",
+]
+
+[tool.hatch.envs.docs.scripts]
+techo = "echo {args:test}"
+serve = """\
+    python -m pdoc ./avwx \
+    !avwx.flight_path !avwx.current.airep \
+    --favicon https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/favicon.ico \
+    --logo https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/avwx-logo-color-200.png \
+    --logo-link https://info.avwx.rest \
+"""
+build = """\
+    python -m pdoc ./avwx -o {args:docs_build/} \
+    !avwx.flight_path !avwx.current.airep \
+    --favicon https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/favicon.ico \
+    --logo https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/avwx-logo-color-200.png \
+    --logo-link https://info.avwx.rest
+    echo "engine.avwx.rest" > docs_b/CNAME
+"""
 
 [tool.pytest.ini_options]
 addopts = """\
@@ -104,7 +121,6 @@ omit = [
     "*airep.py",
     "*glossary.py",
     "avwx/data/*",
-    # "tests/*",
 ]
 
 [tool.coverage.report]
@@ -127,10 +143,6 @@ check_untyped_defs = true
 show_error_codes = true
 
 [tool.ruff]
-# lint.extend-select = [
-#     "UP",
-#     # "D",
-# ]
 lint.ignore = [
     "D105",
     "D203",

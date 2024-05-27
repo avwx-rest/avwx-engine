@@ -152,14 +152,13 @@ def make_number(
     literal: bool = False,
     special: dict | None = None,
     m_minus: bool = True,
-) -> Number | Fraction | None:  # sourcery skip: avoid-builtin-shadow
+) -> Number | Fraction | None:
     """Return a Number or Fraction dataclass for a number string.
 
     If literal, spoken string will not convert to hundreds/thousands.
 
     NOTE: Numerators are assumed to have a single digit. Additional are whole numbers.
     """
-    # pylint: disable=too-many-branches
     if not num or is_unknown(num):
         return None
     # Check special
@@ -516,7 +515,6 @@ def get_clouds(data: list[str]) -> tuple[list[str], list]:
 
 
 def get_flight_rules(visibility: Number | None, ceiling: Cloud | None) -> int:
-    # sourcery skip: assign-if-exp, reintroduce-else
     """Return int based on current flight rules from parsed METAR data.
 
     0=VFR, 1=MVFR, 2=IFR, 3=LIFR

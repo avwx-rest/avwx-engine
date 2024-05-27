@@ -163,7 +163,6 @@ def _parse_lines(
             continue
         values = handler(line, size=size)
         values += [None] * (len(periods) - len(values))
-        # pylint: disable=consider-using-enumerate
         for i in range(len(periods)):
             value = values[i]
             if not value:
@@ -178,8 +177,6 @@ def _parse_lines(
 
 class Forecast(ManagedReport):
     """Forecast base class."""
-
-    # pylint: disable=abstract-method
 
     report_type: str
     _service_class: Service

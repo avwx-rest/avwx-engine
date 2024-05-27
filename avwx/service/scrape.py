@@ -366,7 +366,7 @@ class Nam(StationScrape):
         report = self._simple_extract(raw, starts, "=")
         index = report.rfind(">")
         if index > -1:
-            report = report[index+1:]
+            report = report[index + 1 :]
         return f"{station} {report.strip()}"
 
 

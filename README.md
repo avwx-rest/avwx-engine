@@ -4,8 +4,10 @@
 
 [![PyPI](https://img.shields.io/pypi/v/avwx-engine?style=flat)](https://pypi.python.org/pypi/avwx-engine/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/avwx-engine?style=flat)](https://pypi.python.org/pypi/avwx-engine/)
-[![PyPI - License](https://img.shields.io/pypi/l/avwx-engine?style=flat)](https://pypi.python.org/pypi/avwx-engine/)
 [![GitHub - Test Suite Status](https://github.com/avwx-rest/avwx-engine/actions/workflows/test.yml/badge.svg)](https://github.com/avwx-rest/avwx-engine/actions/workflows/test.yml)
+[![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch)
+[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
@@ -56,7 +58,7 @@ True
 
 You can learn more by reading the [project documentation](https://engine.avwx.rest)
 
-**Note**: This library requires Python 3.9 or above
+**Note**: This library requires Python 3.10 or above
 
 ## Development
 
@@ -70,26 +72,43 @@ cd avwx-engine
 ```
 
 * Requirements:
-  * [Poetry](https://python-poetry.org/)
-  * Python 3.9+
+  * [Hatch](https://hatch.pypa.io/latest/)
+  * Python 3.10+
+
 * Create a virtual environment and install the dependencies
 
 ```sh
-poetry install
+hatch env create
 ```
 
 * Activate the virtual environment
 
 ```sh
-poetry shell
+hatch shell
+```
+
+### Formatting and Code Checks
+
+`hatch` handles all of the formatting and linting for us. The library and test suite are fully typed and formatted. Make sure to run these checks before submitting PRs because the workflows will fail if errors are found.
+
+Typing with `mypy`:
+
+```bash
+hatch run types:check
+```
+
+Code formatting and linting:
+
+```bash
+hatch fmt
 ```
 
 ### Testing
 
-The test suite was built while using the `pytest` library, which is also installed as a dev dependency. The project uses `poethepoet` (dev dependency) to run basic tasks.
+Testing is managed by `hatch` which uses `pytest` and coverage under the hood.
 
 ```bash
-poe test
+hatch test
 ```
 
 The end-to-end test files were generated using `util/build_tests.py` and placed into `tests/{report}/data`. Because Timestamp generation interprets the text based on the current date, Timestamp objects are nullified in the end-to-end tests.
@@ -98,38 +117,14 @@ The end-to-end test files were generated using `util/build_tests.py` and placed 
 
 The documentation is automatically generated from the content of the [docs directory](./docs) and from the docstrings of the public signatures of the source code. The documentation is updated and published to [engine.avwx.rest](https://engine.avwx.rest) automatically as part each release.
 
- You can also preview local changes during development:
+You can also preview local changes during development:
 
 ```sh
-poe docs
+hatch run docs:serve
 ```
 
 ### Releasing
 
 Trigger the [Draft release workflow](https://github.com/avwx-rest/avwx-engine/actions/workflows/draft_release.yml) (press _Run workflow_). This will update the changelog & version and create a GitHub release which is in _Draft_ state.
 
-Find the draft release from the
-[GitHub releases](https://github.com/avwx-rest/avwx-engine/releases) and publish it. When a release is published, it'll trigger [release](https://github.com/avwx-rest/avwx-engine/blob/main/.github/workflows/release.yml) workflow which creates PyPI
- release and deploys updated documentation.
-
-### Pre-commit
-
-Pre-commit hooks run all the auto-formatters, linters, and other quality checks to make sure the changeset is in good shape before a commit/push happens.
-
-You can install the hooks with (runs for each commit):
-
-```sh
-pre-commit install
-```
-
-Or if you want them to run only for each push:
-
-```sh
-pre-commit install -t pre-push
-```
-
-Or if you want e.g. want to run all checks manually for all files:
-
-```sh
-pre-commit run --all-files
-```
+Find the draft release from the [GitHub releases](https://github.com/avwx-rest/avwx-engine/releases) and publish it. When a release is published, it'll trigger [release](https://github.com/avwx-rest/avwx-engine/blob/main/.github/workflows/release.yml) workflow which creates PyPI release and deploys updated documentation.

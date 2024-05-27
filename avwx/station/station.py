@@ -88,8 +88,6 @@ class Station:
     ```
     """
 
-    # pylint: disable=too-many-instance-attributes
-
     city: str | None
     country: str
     elevation_ft: int | None
