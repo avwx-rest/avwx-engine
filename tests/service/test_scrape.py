@@ -30,7 +30,7 @@ class TestStationScrape(ServiceClassTest):
         key, msg = "test_key", "testing"
         name = serv.__class__.__name__
         err = serv._make_err(msg, key)
-        err_str = f"Could not find {key} in {name} response\n{msg}"
+        err_str = f"Could not find {key} in {name} response. {msg}"
         assert isinstance(err, exceptions.InvalidRequest)
         assert err.args == (err_str,)
         assert str(err) == err_str
