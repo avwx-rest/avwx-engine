@@ -18,12 +18,12 @@ jobs:
         run: ./actionlint -color
         shell: bash
 
-  pre-commit:
+  checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/python-poetry-env
-      - run: poetry run pre-commit run --all-files
+      - uses: ./.github/actions/python-hatch-env
+      - run: hatch fmt
 
   test:
     runs-on: ubuntu-latest
@@ -33,7 +33,7 @@ jobs:
         python-version: ["3.9", "3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/python-poetry-env
+      - uses: ./.github/actions/python-hatch-env
         with:
           python-version: ${{ matrix.python-version }}
-      - run: poetry run pytest -v
+      - run: hatch test --python ${{ matrix.python-version }}
