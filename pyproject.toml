@@ -31,6 +31,7 @@ dependencies = [
     "geopy>=2.4",
     "httpx>=0.26",
     "python-dateutil>=2.8",
+    "typing-extensions~=4.12; python_version < '3.11'",
     "xmltodict>=0.13",
 ]
 

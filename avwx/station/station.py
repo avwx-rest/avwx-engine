@@ -7,7 +7,7 @@ from contextlib import suppress
 from copy import copy
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import Any, Self
+from typing import Any
 
 # library
 import httpx
@@ -18,6 +18,11 @@ from avwx.exceptions import BadStation, MissingExtraModule
 from avwx.load_utils import LazyCalc
 from avwx.station.meta import STATIONS
 from avwx.structs import Coord
+
+try:
+    from typing import Self
+except ImportError:
+    from typing_extensions import Self
 
 
 def _get_ip_location() -> Coord:

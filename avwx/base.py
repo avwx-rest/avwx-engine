@@ -7,7 +7,7 @@ import asyncio as aio
 from abc import ABCMeta, abstractmethod
 from contextlib import suppress
 from datetime import date, datetime, timezone
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING
 
 # module
 from avwx.exceptions import BadStation
@@ -16,6 +16,11 @@ from avwx.station import Station
 if TYPE_CHECKING:
     from avwx.service import Service
     from avwx.structs import ReportData, Units
+
+try:
+    from typing import Self
+except ImportError:
+    from typing_extensions import Self
 
 
 def find_station(report: str) -> Station | None:
