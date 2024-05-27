@@ -48,7 +48,7 @@ class ScrapeService(Service, CallsHTTP):
 
     def _make_err(self, body: str, key: str = "report path") -> InvalidRequest:
         """Return an InvalidRequest exception with formatted error message."""
-        msg = f"Could not find {key} in {self.__class__.__name__} response\n{body}"
+        msg = f"Could not find {key} in {self.__class__.__name__} response. {body}"
         return InvalidRequest(msg)
 
     @staticmethod
@@ -362,9 +362,12 @@ class Nam(StationScrape):
 
     def _extract(self, raw: str, station: str) -> str:
         """Extract the reports from HTML response."""
-        starts = [f"<b>{self.report_type.upper()} <", f">{station.upper()}<", "<b> "]
+        starts = [f">{self.report_type.upper()} <", f">{station.upper()}<", "top'>"]
         report = self._simple_extract(raw, starts, "=")
-        return station + report[3:]
+        index = report.rfind(">")
+        if index > -1:
+            report = report[index+1:]
+        return f"{station} {report.strip()}"
 
 
 class Avt(StationScrape):
