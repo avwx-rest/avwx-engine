@@ -229,7 +229,7 @@ def test_parse_runway_visibility(
     else:
         assert_number(rvr.visibility, *vis)
     if var:
-        for original, items in zip(rvr.variable_visibility, var):
+        for original, items in zip(rvr.variable_visibility, var, strict=True):
             assert_number(original, *items)
     assert rvr.trend == trend
 

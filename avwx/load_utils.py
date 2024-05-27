@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from collections.abc import ItemsView, Iterator, ValuesView
+    from collections.abc import Callable, ItemsView, Iterator, ValuesView
 
 
 class LazyLoad:

@@ -351,7 +351,7 @@ def test_coords_from_text(report: str, coords: tuple[tuple], start: int, extra: 
     ret_report, ret_coords, ret_start = airsigmet._coords_from_text(report, -1)
     assert ret_report == extra
     assert ret_start == start
-    for coord, (lat, lon) in zip(ret_coords, coords):
+    for coord, (lat, lon) in zip(ret_coords, coords, strict=True):
         assert coord.lat == lat
         assert coord.lon == lon
 
@@ -378,7 +378,7 @@ def test_coords_from_navaids(report: str, coords: tuple[tuple], start: int, extr
     ret_report, ret_coords, ret_start = airsigmet._coords_from_navaids(report, -1)
     assert ret_report == extra
     assert ret_start == start
-    for coord, (lat, lon) in zip(ret_coords, coords):
+    for coord, (lat, lon) in zip(ret_coords, coords, strict=True):
         assert round(coord.lat, 2) == lat
         assert round(coord.lon, 2) == lon
 
@@ -423,7 +423,7 @@ def test_bounds(wx: str, coords: tuple[tuple], bounds: list[str], extra: str) ->
     ret_wx, ret_coords, ret_bounds = airsigmet._bounds(wx.split())
     assert ret_wx == extra.split()
     assert ret_bounds == bounds
-    for coord, (lat, lon) in zip(ret_coords, coords):
+    for coord, (lat, lon) in zip(ret_coords, coords, strict=True):
         assert round(coord.lat, 2) == lat
         assert round(coord.lon, 2) == lon
 
@@ -525,7 +525,7 @@ def test_parse() -> None:
 def test_contains(lat: int, lon: int, results: tuple) -> None:
     """Test if report contains a coordinate."""
     coord = Coord(lat, lon)
-    for report, result in zip(COORD_REPORTS, results):
+    for report, result in zip(COORD_REPORTS, results, strict=True):
         assert report.contains(coord) == result
 
 
@@ -541,7 +541,7 @@ def test_contains(lat: int, lon: int, results: tuple) -> None:
 def test_intersects(coords: tuple, results: tuple) -> None:
     """Test if report intersects a path."""
     path = LineString(coords)
-    for report, result in zip(COORD_REPORTS, results):
+    for report, result in zip(COORD_REPORTS, results, strict=True):
         assert report.intersects(path) == result
 
 

@@ -23,7 +23,7 @@ def test_ceiling() -> None:
         None,
         ("45", 4500, "four five hundred"),
     ]
-    for number, expected in zip(nbm._ceiling(line), values):
+    for number, expected in zip(nbm._ceiling(line), values, strict=True):
         if expected is None:
             assert number is None
         else:
@@ -39,7 +39,7 @@ def test_wind() -> None:
         None,
         ("45", 45, "four five"),
     ]
-    for number, expected in zip(nbm._wind(line), values):
+    for number, expected in zip(nbm._wind(line), values, strict=True):
         if expected is None:
             assert number is None
         else:

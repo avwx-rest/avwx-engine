@@ -1,6 +1,6 @@
 """Core sanitiation functions that accept report-specific elements."""
 
-from typing import Callable
+from collections.abc import Callable
 
 from avwx.parsing.core import dedupe, is_variable_wind_direction, is_wind
 from avwx.parsing.sanitization.cleaners.base import (

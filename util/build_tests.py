@@ -25,7 +25,7 @@ TESTS_PATH = PROJECT_ROOT / "tests"
 
 
 def _default(o: Any) -> str | None:
-    return o.isoformat() if isinstance(o, (date, datetime)) else None
+    return o.isoformat() if isinstance(o, date | datetime) else None
 
 
 def save(data: dict, path: Path) -> None:

@@ -229,7 +229,7 @@ def test_wx(text: str, wx: list[tuple[str, str]], vis: int | None, remain: list[
     wx_codes, flight_visibility, other = pirep._wx(text)
     assert isinstance(wx_codes, list)
     assert other == remain
-    for item, code in zip(wx, wx_codes):
+    for item, code in zip(wx, wx_codes, strict=True):
         assert Code(item[0], item[1]) == code
     assert_value(flight_visibility, vis)
 
@@ -276,5 +276,5 @@ def test_pirep_ete(ref: dict, icao: str, issued: datetime) -> None:
     assert station.parse(reports, issued=issued) is True
     assert isinstance(station.last_updated, datetime)
     assert station.issued == issued
-    for parsed, report in zip(station.data, ref["reports"]):
+    for parsed, report in zip(station.data, ref["reports"], strict=True):
         assert asdict(parsed) == report["data"]

@@ -348,5 +348,5 @@ def test_notam_e2e(ref: dict, icao: str, unused: Any) -> None:  # noqa: ARG001
     reports = [report["data"]["raw"] for report in ref["reports"]]
     assert station.parse(reports) is True
     assert isinstance(station.last_updated, datetime)
-    for parsed, report in zip(station.data, ref["reports"]):
+    for parsed, report in zip(station.data, ref["reports"], strict=True):
         assert asdict(parsed) == report["data"]

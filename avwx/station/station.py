@@ -297,7 +297,7 @@ def _query_coords(lat: float, lon: float, n: int, d: float) -> list[tuple[str, f
     if n == 1:
         dist, index = [dist], [index]
     # NOTE: index == len of list means Tree ran out of items
-    return [(_COORDS.value[i][0], d) for i, d in zip(index, dist) if i < len(_COORDS.value)]
+    return [(_COORDS.value[i][0], d) for i, d in zip(index, dist, strict=True) if i < len(_COORDS.value)]
 
 
 def station_filter(station: Station, *, is_airport: bool, reporting: bool) -> bool:

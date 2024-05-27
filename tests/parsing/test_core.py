@@ -271,7 +271,7 @@ def test_get_wind(wx: list[str], unit: str, wind: tuple[tuple], varv: list[tuple
     units = structs.Units.north_american()
     wx, *winds, var = core.get_wind(wx, units)
     assert wx == ["1"]
-    for parsed, ref in zip(winds, wind):
+    for parsed, ref in zip(winds, wind, strict=True):
         assert_number(parsed, *ref)
     if varv:
         assert isinstance(varv, list)

@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 # module
 from avwx.base import ManagedReport
@@ -12,6 +12,8 @@ from avwx.parsing import core
 from avwx.structs import Code, Number, ReportData, Timestamp
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from avwx.service import Service
 
 

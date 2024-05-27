@@ -279,7 +279,7 @@ def test_skc_flight_rules() -> None:
     expected_flight_rules = ["MVFR", "MVFR", "VFR", "VFR", "MVFR"]
     data, *_ = taf.parse(report[:4], report)
     assert isinstance(data, structs.TafData)
-    for period, flight_rules in zip(data.forecast, expected_flight_rules):
+    for period, flight_rules in zip(data.forecast, expected_flight_rules, strict=True):
         assert period.flight_rules == flight_rules
 
 

@@ -1,8 +1,0 @@
-[MASTER]
-
-jobs=1
-
-[MESSAGES CONTROL]
-
-# Format managed by black
-disable=format

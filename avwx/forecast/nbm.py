@@ -31,18 +31,19 @@ Reports are in 12-hour increments and published near the top of every hour.
 
 # Reference: https://www.weather.gov/mdl/nbm_textcard_v32
 
-# pylint: disable=too-many-arguments
-
 # stdlib
 from __future__ import annotations
 
 from contextlib import suppress
-from typing import Callable
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 try:
     from typing import TypeAlias
 except ImportError:
-    from typing_extensions import TypeAlias
+    from typing import TypeAlias
 
 # module
 from avwx import structs

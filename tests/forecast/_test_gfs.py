@@ -18,12 +18,12 @@ def test_thunder() -> None:
     """Test that a line is converted into Number tuples."""
     text = "T06     12/16  0/ 5"
     _values = (None, None, (("12", 12), ("16", 16)), None, (("0", 0), ("5", 5)))
-    for codes, values in zip(gfs._thunder(text), _values):
+    for codes, values in zip(gfs._thunder(text), _values, strict=True):
         if values is None:
             assert codes is None
         else:
             assert codes is not None
-            for code, value in zip(codes, values):
+            for code, value in zip(codes, values, strict=True):
                 assert_number(code, *value)
 
 

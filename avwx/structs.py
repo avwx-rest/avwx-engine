@@ -644,6 +644,6 @@ class Sanitization:
 
     def log_list(self, before: list[str], after: list[str]) -> None:
         """Log list differences. Assumes that list length and order haven't changed."""
-        for item, replacement in zip(before, after):
+        for item, replacement in zip(before, after, strict=True):
             if item != replacement:
                 self.log(item, replacement)
