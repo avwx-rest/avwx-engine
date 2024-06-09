@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "avwx-engine"
-version = "1.8.28"
+dynamic = ["version"]
 description = "Aviation weather report parsing library"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -40,6 +40,9 @@ Homepage = "https://engine.avwx.rest"
 Issues = "https://github.com/avwx-rest/avwx-engine/issues"
 Source = "https://github.com/avwx-rest/avwx-engine"
 
+[tool.hatch.version]
+path = "avwx/__about__.py"
+
 [tool.hatch.build.targets.wheel]
 packages = ["avwx"]
 [tool.hatch.build.targets.sdist]
@@ -67,7 +70,6 @@ extra-dependencies = [
     "avwx-engine[all]",
     "mypy>=1.0.0",
     "pytest-asyncio",
-    "pytest-github-actions-annotate-failures",
     "time-machine",
 ]
 [tool.hatch.envs.types.scripts]
