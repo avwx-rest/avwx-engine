@@ -12,9 +12,9 @@ from avwx.structs import Coord
 FloatCoordT = tuple[float, float, str]
 FloatPathT = FloatCoordT | str
 CoordPathT = Coord | str
-TestCaseT = tuple[list[FloatPathT], list[FloatCoordT]]
+FlightCaseT = tuple[list[FloatPathT], list[FloatCoordT]]
 
-FLIGHT_PATHS: list[TestCaseT] = [
+FLIGHT_PATHS: list[FlightCaseT] = [
     (
         [(12.34, -12.34, "12.34,-12.34"), (-43.21, 43.21, "-43.21,43.21")],
         [(12.34, -12.34, "12.34,-12.34"), (-43.21, 43.21, "-43.21,43.21")],
