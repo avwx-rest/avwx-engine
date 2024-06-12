@@ -1,5 +1,7 @@
 """Cleaners for wind elements."""
 
+import re
+
 from avwx.parsing.core import is_unknown
 from avwx.parsing.sanitization.base import CleanItem, RemoveItem
 
@@ -15,7 +17,6 @@ WIND_REPL = {
     "GS": "G",
     "SQ": "G",
     "CT": "KT",
-    "K5": "KT",
     "JT": "KT",
     "SM": "KT",
     "KTKT": "KT",  # Must come before TK
@@ -33,6 +34,8 @@ WIND_REPL = {
 }
 
 WIND_VRB = ("WBB",)
+
+KT_PATTERN = re.compile(r"\b[\w\d]*\d{2}K[^T]\b")
 
 
 def sanitize_wind(text: str) -> str:
@@ -57,6 +60,8 @@ def sanitize_wind(text: str) -> str:
     # Final check for end units. Remainder of string would be fixed at this point if valid
     # For now, it's only checking for K(T) since that is most instances
     # The parser can still handle/expect missing and spearated units
+    if KT_PATTERN.match(text):
+        text = f"{text[:-1]}T"
     if text.endswith("K"):
         text += "T"
     return text
