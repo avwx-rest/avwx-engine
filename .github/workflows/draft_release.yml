@@ -24,7 +24,7 @@ jobs:
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
         with:
-          add: 'pyproject.toml'
+          add: 'avwx/__about__.py'
           message: 'Release ${{ steps.updated_version.outputs.version }}'
       - name: Create tag
         run: |
