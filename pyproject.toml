@@ -86,6 +86,7 @@ extra-dependencies = [
 
 [tool.hatch.envs.docs]
 extra-dependencies = [
+    "avwx-engine[shape]",
     "pdoc",
 ]
 
@@ -99,12 +100,14 @@ serve = """\
     --logo-link https://info.avwx.rest \
 """
 build = """\
-    python -m pdoc ./avwx -o {args:docs_build/} \
+    OUT_DIR={args:docs_build}
+    python -m pdoc ./avwx \
     !avwx.flight_path !avwx.current.airep \
+    --output-directory $OUT_DIR \
     --favicon https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/favicon.ico \
     --logo https://raw.githubusercontent.com/avwx-rest/avwx-engine/main/docs/assets/images/avwx-logo-color-200.png \
     --logo-link https://info.avwx.rest
-    echo "engine.avwx.rest" > docs_b/CNAME
+    echo "engine.avwx.rest" > $OUT_DIR/CNAME
 """
 
 [tool.pytest.ini_options]

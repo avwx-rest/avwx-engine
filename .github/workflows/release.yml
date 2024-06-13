@@ -25,10 +25,10 @@ jobs:
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
       - name: Build docs
-        run: hatch run docs:build docs_b/
+        run: hatch run docs:build docs_build
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: docs_b/
+          path: docs_build/
 
   # Deploy the doc build to GitHub pages
   deploy:
