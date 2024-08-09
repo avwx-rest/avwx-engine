@@ -90,7 +90,7 @@ class StationScrape(ScrapeService):
                 raise self._make_err(msg)
             raw = raw[index:]
         report = raw[: raw.find(end)].strip()
-        return " ".join(dedupe(report.split()))
+        return " ".join(report.split())
 
     async def _fetch(self, station: str, url: str, params: dict, timeout: int) -> str:
         headers = self._make_headers()
