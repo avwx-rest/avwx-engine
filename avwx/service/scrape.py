@@ -80,7 +80,7 @@ class StationScrape(ScrapeService):
         """Extract the report string from the service response."""
         raise NotImplementedError
 
-    def _simple_extract(self, raw: str, starts: str | list[str], end: str) -> str:
+    def _simple_extract(self, raw: str, starts: str | list[str], ends: str | list[str]) -> str:
         """Simple extract by cutting at sequential start and end points."""
         targets = [starts] if isinstance(starts, str) else starts
         for target in targets:
@@ -89,7 +89,10 @@ class StationScrape(ScrapeService):
                 msg = "The station might not exist"
                 raise self._make_err(msg)
             raw = raw[index:]
-        report = raw[: raw.find(end)].strip()
+        if isinstance(ends, str):
+            ends = [ends]
+        for end in ends:
+            report = raw[: raw.find(end)].strip()
         return " ".join(dedupe(report.split()))
 
     async def _fetch(self, station: str, url: str, params: dict, timeout: int) -> str:
@@ -348,7 +351,7 @@ class Olbs(StationScrape):
     def _extract(self, raw: str, station: str) -> str:
         """Extract the reports from HTML response."""
         # start = raw.find(f"{self.report_type.upper()} {station} ")
-        return self._simple_extract(raw, [f">{self.report_type.upper()}</div>", station], "=")
+        return self._simple_extract(raw, [f">{self.report_type.upper()}</div>", station], ["=", "<"])
 
 
 class Nam(StationScrape):

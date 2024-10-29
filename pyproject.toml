@@ -91,7 +91,6 @@ extra-dependencies = [
 ]
 
 [tool.hatch.envs.docs.scripts]
-techo = "echo {args:test}"
 serve = """\
     python -m pdoc ./avwx \
     !avwx.flight_path !avwx.current.airep \
