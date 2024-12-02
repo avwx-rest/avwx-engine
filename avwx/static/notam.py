@@ -203,6 +203,7 @@ SUBJECT = {
     "WJ": "Banner/target towing",
     "WL": "Ascent of free balloon",
     "WM": "Missile, gun or rocket firing",
+    "WO": "Laser activity", # Encountered, non-standard
     "WP": "Parachute jumping exercise, paragliding, or hang gliding",
     "WR": "Radioactive materials or toxic chemicals",
     "WS": "Burning or blowing gas",
