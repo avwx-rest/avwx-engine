@@ -275,6 +275,8 @@ def test_taf() -> None:
         forecast=forecast,
         start_time=core.make_timestamp("0410Z"),
         end_time=core.make_timestamp("0414Z"),
+        is_amended=False,
+        is_correction=False,
     )
     ret = speech.taf(taf, units)
     assert taf.start_time is not None

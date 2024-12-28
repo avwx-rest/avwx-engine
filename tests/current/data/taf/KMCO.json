@@ -194,6 +194,8 @@
         ],
         "max_temp": null,
         "min_temp": null,
+        "is_amended": false,
+        "is_correction": false,
         "raw": "KMCO 090305Z 0903/1006 16006KT P6SM FEW070 FM091400 20011KT P6SM SKC FM092000 24012G18KT P6SM FEW060 FM100300 22008KT P6SM SKC",
         "remarks": "",
         "remarks_info": null,

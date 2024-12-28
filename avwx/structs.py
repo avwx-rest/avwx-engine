@@ -264,6 +264,8 @@ class TafData(ReportData):
     forecast: list[TafLineData]
     start_time: Timestamp | None
     end_time: Timestamp | None
+    is_amended: bool
+    is_correction: bool
     max_temp: str | None = None
     min_temp: str | None = None
     alts: list[str] | None = None

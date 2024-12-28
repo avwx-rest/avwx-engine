@@ -180,6 +180,8 @@
         ],
         "max_temp": null,
         "min_temp": null,
+        "is_amended": false,
+        "is_correction": false,
         "raw": "PHNL 090250Z 0903/1006 06009KT P6SM VCSH SCT025 BKN035 FM090700 VRB05KT P6SM FEW025 SCT040 FM092100 13009KT P6SM FEW025 SCT050",
         "remarks": "",
         "remarks_info": null,

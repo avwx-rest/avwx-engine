@@ -403,7 +403,12 @@ def parse(
         return None, None, None
     valid_station(station)
     report = fix_report_header(report)
+    is_amended, is_correction = False, False
     while len(report) > 3 and report[:4] in ("TAF ", "AMD ", "COR "):
+        if report[:3] == "AMD":
+            is_amended = True
+        elif report[:3] == "COR":
+            is_correction = True
         report = report[4:]
     start_time: Timestamp | None = None
     end_time: Timestamp | None = None
@@ -418,6 +423,8 @@ def parse(
     units = Units.north_american() if uses_na_format(station) else Units.international()
     # Find and remove remarks
     sanitized, remarks = get_taf_remarks(sanitized)
+    if remarks.startswith("AMD"):
+        is_amended = True
     # Split and parse each line
     lines = split_taf(sanitized)
     parsed_lines = parse_lines(lines, units, sans, issued)
@@ -464,6 +471,8 @@ def parse(
         forecast=parsed_lines,
         start_time=start_time,
         end_time=end_time,
+        is_amended=is_amended,
+        is_correction=is_correction,
         max_temp=max_temp,
         min_temp=min_temp,
         alts=alts,

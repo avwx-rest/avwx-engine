@@ -375,6 +375,8 @@
                 ]
             }
         ],
+        "is_amended": false,
+        "is_correction": false,
         "max_temp": null,
         "min_temp": null,
         "raw": "KJFK 090315Z 0903/1006 27007KT P6SM SCT250 FM090330 32010KT P6SM FEW250 FM091200 35010KT P6SM BKN250 FM091500 01008KT P6SM BKN150 FM091800 14008KT P6SM SCT050 BKN080 PROB30 0922/1003 6SM -SHRA SCT015 BKN050 FM100300 07006KT 5SM -SHRA BR BKN010 OVC015",

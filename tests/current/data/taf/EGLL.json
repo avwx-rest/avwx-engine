@@ -128,6 +128,8 @@
                 "wx_codes": []
             }
         ],
+        "is_amended": false,
+        "is_correction": false,
         "max_temp": null,
         "min_temp": null,
         "raw": "EGLL 082257Z 0900/1006 20006KT 9999 FEW045 PROB30 0903/0907 9000 PROB30 1003/1006 6000",

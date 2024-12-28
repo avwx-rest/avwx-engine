@@ -289,7 +289,7 @@ def test_taf() -> None:
         "wind_speed": core.make_number("12"),
         "wx_codes": get_wx_codes(["+RA"])[1],
     }
-    data = {"max_temp": "TX20/1518Z", "min_temp": "TN00/00"}
+    data = {"max_temp": "TX20/1518Z", "min_temp": "TN00/00", "is_amended": False, "is_correction": False}
     for key in empty_line_fields:
         line_data[key] = ""
     for key in empty_fields:

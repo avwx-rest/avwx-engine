@@ -369,6 +369,26 @@ def test_bad_header(report: str, fixed: str) -> None:
     assert taf.fix_report_header(report) == fixed
 
 
+@pytest.mark.parametrize(
+    ("report", "amended", "correction"),
+    [
+        ("TAF CYOW 282059Z 2821/2918 09008KT P6SM BKN220", False, False),
+        ("TAF AMD CYOW 282059Z 2821/2918 09008KT P6SM BKN220", True, False),
+        ("TAF AMD COR CYOW 282059Z 2821/2918 09008KT P6SM BKN220", True, True),
+        ("TAF COR CYOW 282059Z 2821/2918 09008KT P6SM BKN220", False, True),
+        ("TAF COR CYOW 282059Z 2821/2918 09008KT P6SM BKN220 AMD 123456Z", True, True),
+        ("TAF CYOW 282059Z 2821/2918 09008KT P6SM BKN220 AMD 123456Z", True, False),
+    ],
+)
+def test_is_amended_correction(report: str, amended: bool, correction: bool) -> None:  # noqa: FBT001
+    """Should identify if the report is an amendment."""
+    tafobj = taf.Taf.from_report(report)
+    assert tafobj is not None
+    assert tafobj.data is not None
+    assert tafobj.data.is_amended == amended
+    assert tafobj.data.is_correction == correction
+
+
 def test_wind_shear() -> None:
     """Wind shear should be recognized as its own element in addition to wind."""
     report = (

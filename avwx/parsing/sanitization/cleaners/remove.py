@@ -12,7 +12,6 @@ _SHARED = {
 
 _CURRENT = {
     "AUTO",
-    "COR",
     "NSC",
     "NCD",
     "RTD",
@@ -26,6 +25,7 @@ _METAR = {
     "METAR",
     "CLR",
     "SKC",
+    "COR",
 }
 
 _TAF = {
