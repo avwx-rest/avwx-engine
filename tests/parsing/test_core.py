@@ -5,7 +5,7 @@
 # stdlib
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 # library
@@ -463,7 +463,7 @@ def test_make_altitude(text: str, force: bool, value: int, unit: str, speak: str
 
 def test_parse_date() -> None:
     """Test that report timestamp is parsed into a datetime object."""
-    today = datetime.now(tz=timezone.utc)
+    today = datetime.now(tz=UTC)
     rts = today.strftime(r"%d%H%MZ")
     parsed = core.parse_date(rts)
     assert isinstance(parsed, datetime)
@@ -485,10 +485,10 @@ def test_midnight_rollover() -> None:
 @pytest.mark.parametrize(
     ("dt", "fmt", "target"),
     [
-        (datetime.now(tz=timezone.utc), r"%d%HZ", False),
-        (datetime.now(tz=timezone.utc), r"%d%H%MZ", False),
-        (datetime(2010, 2, 2, 2, 2, tzinfo=timezone.utc), r"%d%HZ", True),
-        (datetime(2010, 2, 2, 2, 2, tzinfo=timezone.utc), r"%d%H%MZ", True),
+        (datetime.now(tz=UTC), r"%d%HZ", False),
+        (datetime.now(tz=UTC), r"%d%H%MZ", False),
+        (datetime(2010, 2, 2, 2, 2, tzinfo=UTC), r"%d%HZ", True),
+        (datetime(2010, 2, 2, 2, 2, tzinfo=UTC), r"%d%H%MZ", True),
     ],
 )
 def test_make_timestamp(dt: datetime, fmt: str, target: bool) -> None:

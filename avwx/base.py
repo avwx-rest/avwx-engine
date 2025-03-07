@@ -6,7 +6,7 @@ from __future__ import annotations
 import asyncio as aio
 from abc import ABCMeta, abstractmethod
 from contextlib import suppress
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from typing import TYPE_CHECKING
 
 # module
@@ -57,7 +57,7 @@ class AVWXBase(metaclass=ABCMeta):
 
     def _set_meta(self) -> None:
         """Update timestamps after parsing."""
-        self.last_updated = datetime.now(tz=timezone.utc)
+        self.last_updated = datetime.now(tz=UTC)
         with suppress(AttributeError):
             self.issued = self.data.time.dt.date()  # type: ignore
 

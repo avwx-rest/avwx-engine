@@ -68,7 +68,7 @@ class FileService(Service):
             return None
         try:
             timestamp = int(file.name.split(".")[-2])
-            return dt.datetime.fromtimestamp(timestamp, tz=dt.timezone.utc)
+            return dt.datetime.fromtimestamp(timestamp, tz=dt.UTC)
         except (AttributeError, ValueError):
             return None
 
@@ -78,11 +78,11 @@ class FileService(Service):
         last = self.last_updated
         if last is None:
             return True
-        now = dt.datetime.now(tz=dt.timezone.utc)
+        now = dt.datetime.now(tz=dt.UTC)
         return now > last + self.update_interval
 
     def _new_path(self) -> Path:
-        now = dt.datetime.now(tz=dt.timezone.utc).timestamp()
+        now = dt.datetime.now(tz=dt.UTC).timestamp()
         timestamp = str(now).split(".", maxsplit=1)[0]
         return _TEMP / f"{self._file_stem}.{timestamp}.txt"
 
@@ -225,7 +225,7 @@ class NoaaNbm(NoaaForecast):
     @property
     def _urls(self) -> Iterator[str]:
         """Iterate through hourly updates no older than two days."""
-        date = dt.datetime.now(tz=dt.timezone.utc)
+        date = dt.datetime.now(tz=dt.UTC)
         cutoff = date - dt.timedelta(days=1)
         while date > cutoff:
             timestamp = date.strftime(r"%Y%m%d")
@@ -253,8 +253,8 @@ class NoaaGfs(NoaaForecast):
             DeprecationWarning,
             stacklevel=2,
         )
-        now = dt.datetime.now(tz=dt.timezone.utc)
-        date = dt.datetime.now(tz=dt.timezone.utc)
+        now = dt.datetime.now(tz=dt.UTC)
+        date = dt.datetime.now(tz=dt.UTC)
         cutoff = date - dt.timedelta(days=1)
         while date > cutoff:
             for cycle in reversed(self._cycles[self.report_type]):

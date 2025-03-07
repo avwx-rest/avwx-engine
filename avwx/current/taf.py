@@ -48,7 +48,7 @@ class Taf(Report):
     >>> kjfk.update()
     True
     >>> kjfk.last_updated
-    datetime.datetime(2018, 3, 4, 23, 43, 26, 209644, tzinfo=datetime.timezone.utc)
+    datetime.datetime(2018, 3, 4, 23, 43, 26, 209644, tzinfo=datetime.UTC)
     >>> kjfk.raw
     'KJFK 042030Z 0421/0524 33016G27KT P6SM BKN045 FM051600 36016G22KT P6SM BKN040 FM052100 35013KT P6SM SCT035'
     >>> len(kjfk.data.forecast)

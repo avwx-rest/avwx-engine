@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import re
 from contextlib import suppress
-from datetime import datetime, timezone
+from datetime import UTC, datetime, timezone
 
 # library
 from dateutil.tz import gettz
@@ -77,7 +77,7 @@ class Notams(Reports):
     >>> kjfk.update()
     True
     >>> kjfk.last_updated
-    datetime.datetime(2022, 5, 26, 0, 43, 22, 44753, tzinfo=datetime.timezone.utc)
+    datetime.datetime(2022, 5, 26, 0, 43, 22, 44753, tzinfo=datetime.UTC)
     >>> print(kjfk.data[0].raw)
     01/113 NOTAMN
     Q) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005
@@ -130,7 +130,7 @@ class Notams(Reports):
     >>> kjfk.data[0].type
     Code(repr='NOTAMR', value='Replace')
     >>> kjfk.data[0].start_time
-    Timestamp(repr='2205201527', dt=datetime.datetime(2022, 5, 20, 15, 27, tzinfo=datetime.timezone.utc))
+    Timestamp(repr='2205201527', dt=datetime.datetime(2022, 5, 20, 15, 27, tzinfo=datetime.UTC))
     ```
     '''
 
@@ -151,7 +151,7 @@ class Notams(Reports):
         for report in self.raw:
             if "||" in report:
                 issue_text, report = report.split("||")  # noqa: PLW2901
-                issued_value = datetime.strptime(issue_text, r"%m/%d/%Y %H%M").replace(tzinfo=timezone.utc)
+                issued_value = datetime.strptime(issue_text, r"%m/%d/%Y %H%M").replace(tzinfo=UTC)
                 issued = Timestamp(issue_text, issued_value)
             else:
                 issued = None
@@ -307,7 +307,7 @@ def _tz_offset_for(name: str | None) -> timezone | None:
     if not name:
         return None
     if tz := gettz(name):  # noqa: SIM102
-        if offset := tz.utcoffset(datetime.now(timezone.utc)):
+        if offset := tz.utcoffset(datetime.now(UTC)):
             return timezone(offset)
     return None
 
@@ -324,7 +324,7 @@ def make_year_timestamp(
     value = values[0]
     if code := CODES.get(value):
         return Code(value, code)
-    tz = _tz_offset_for(tzname) or timezone.utc
+    tz = _tz_offset_for(tzname) or UTC
     raw = datetime.strptime(value[:10], r"%y%m%d%H%M")  # noqa: DTZ007
     date = datetime(raw.year, raw.month, raw.day, raw.hour, raw.minute, tzinfo=tz)
     return Timestamp(repr, date)

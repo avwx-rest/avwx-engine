@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import json
 from contextlib import suppress
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -82,7 +82,7 @@ def datetime_parser(data: dict) -> dict:
                 with suppress(ValueError):
                     data[key] = datetime.fromisoformat(val)
             with suppress(ValueError):
-                data[key] = datetime.strptime(val, r"%Y-%m-%d").replace(tzinfo=timezone.utc)
+                data[key] = datetime.strptime(val, r"%Y-%m-%d").replace(tzinfo=UTC)
     return data
 
 

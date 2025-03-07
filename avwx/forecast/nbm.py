@@ -231,7 +231,7 @@ class Nbh(_Nbm):
     >>> kjfk.update()
     True
     >>> kjfk.last_updated
-    datetime.datetime(2020, 7, 26, 20, 37, 42, 352220, tzinfo=datetime.timezone.utc)
+    datetime.datetime(2020, 7, 26, 20, 37, 42, 352220, tzinfo=datetime.UTC)
     >>> print(kjfk.raw)
     """
     KJFK   NBM V3.2 NBH GUIDANCE    7/26/2020  1900 UTC
@@ -293,7 +293,7 @@ class Nbs(_Nbm):
     >>> kjfk.update()
     True
     >>> kjfk.last_updated
-    datetime.datetime(2020, 7, 28, 1, 3, 46, 447635, tzinfo=datetime.timezone.utc)
+    datetime.datetime(2020, 7, 28, 1, 3, 46, 447635, tzinfo=datetime.UTC)
     >>> print(kjfk.raw)
     """
     KJFK    NBM V3.2 NBS GUIDANCE    7/27/2020  2300 UTC
@@ -360,7 +360,7 @@ class Nbe(_Nbm):
     >>> kjfk.update()
     True
     >>> kjfk.last_updated
-    datetime.datetime(2020, 7, 28, 1, 23, 4, 909939, tzinfo=datetime.timezone.utc)
+    datetime.datetime(2020, 7, 28, 1, 23, 4, 909939, tzinfo=datetime.UTC)
     >>> print(kjfk.raw)
     """
     KJFK    NBM V3.2 NBE GUIDANCE    7/28/2020  0000 UTC
@@ -419,7 +419,7 @@ class Nbx(_Nbm):
     >>> kjfk.update()
     True
     >>> kjfk.last_updated
-    datetime.datetime(2023, 10, 17, 4, 0, 0, 909939, tzinfo=datetime.timezone.utc)
+    datetime.datetime(2023, 10, 17, 4, 0, 0, 909939, tzinfo=datetime.UTC)
     >>> print(kjfk.raw)
     """
     086092  NBM V4.1 NBX GUIDANCE   10/17/2023  0300 UTC

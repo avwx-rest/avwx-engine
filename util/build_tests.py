@@ -9,7 +9,7 @@ import json
 import secrets
 import sys
 from dataclasses import asdict
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -131,7 +131,7 @@ def make_airsigmet_tests() -> None:
             key = report.raw[:20]
             if key not in reports:
                 reports[key] = {
-                    "created": datetime.now(tz=timezone.utc).date(),
+                    "created": datetime.now(tz=UTC).date(),
                     "data": round_coordinates(asdict(report.data)),
                 }
                 break
@@ -151,7 +151,7 @@ def main() -> None:
             for icao in ("KJFK", "KMCO", "PHNL", "EGLL"):
                 if data := globals()[f"make_{report_type}_test"](icao):
                     data["icao"] = icao
-                    data["created"] = datetime.now(tz=timezone.utc).date()
+                    data["created"] = datetime.now(tz=UTC).date()
                     path = TESTS_PATH.joinpath(target, "data", report_type, f"{icao}.json")
                     save(data, path)
     make_airsigmet_tests()

@@ -60,7 +60,7 @@ class Mav(Forecast):
     >>> kjfk.update()
     True
     >>> kjfk.last_updated
-    datetime.datetime(2020, 4, 20, 1, 7, 7, 393270, tzinfo=datetime.timezone.utc)
+    datetime.datetime(2020, 4, 20, 1, 7, 7, 393270, tzinfo=datetime.UTC)
     >>> print(kjfk.raw)
     """
     KJFK   GFS MOS GUIDANCE    4/19/2020  1800 UTC
@@ -127,7 +127,7 @@ class Mex(Forecast):
     >>> kjfk.update()
     True
     >>> kjfk.last_updated
-    datetime.datetime(2020, 4, 20, 12, 7, 7, 393270, tzinfo=datetime.timezone.utc)
+    datetime.datetime(2020, 4, 20, 12, 7, 7, 393270, tzinfo=datetime.UTC)
     >>> print(kjfk.raw)
     """
     KJFK   GFSX MOS GUIDANCE   4/20/2020  0000 UTC

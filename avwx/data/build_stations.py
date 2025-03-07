@@ -14,7 +14,7 @@ import csv
 import json
 import logging
 from contextlib import suppress
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -244,7 +244,7 @@ def update_station_info_date() -> None:
     start = meta.find(target) + len(target)
     prefix = meta[:start]
     end = start + 10
-    output = prefix + datetime.now(tz=timezone.utc).date().strftime(r"%Y-%m-%d") + meta[end:]
+    output = prefix + datetime.now(tz=UTC).date().strftime(r"%Y-%m-%d") + meta[end:]
     with meta_path.open("w") as out:
         out.write(output)
 

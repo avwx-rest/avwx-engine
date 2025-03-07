@@ -6,7 +6,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 # library
 import pytest
@@ -111,7 +111,7 @@ def test_timestamp(year: int, month: int, day: int, hour: int, minute: int, line
 )
 def test_find_time_periods(counters: list[tuple[int, int]], line: list[str]) -> None:
     """Test creating datetime objects from a line of hours-since values."""
-    start_time = datetime(2020, 2, 11, 0, 0, tzinfo=timezone.utc)
+    start_time = datetime(2020, 2, 11, 0, 0, tzinfo=UTC)
     times = base._find_time_periods(line, start_time)
     time = start_time + timedelta(hours=int(line[0]))
     assert isinstance(times[0], dict)
@@ -128,8 +128,8 @@ def test_find_time_periods(counters: list[tuple[int, int]], line: list[str]) -> 
 @pytest.mark.parametrize(
     ("report", "time", "line_length"),
     [
-        (MAV_HEAD, datetime(2020, 2, 11, 0, 0, tzinfo=timezone.utc), 3),
-        (NBS_HEAD, datetime(2020, 7, 19, 16, 0, tzinfo=timezone.utc), 4),
+        (MAV_HEAD, datetime(2020, 2, 11, 0, 0, tzinfo=UTC), 3),
+        (NBS_HEAD, datetime(2020, 7, 19, 16, 0, tzinfo=UTC), 4),
     ],
 )
 def test_init_parse(report: str, time: datetime, line_length: int) -> None:
