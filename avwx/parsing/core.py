@@ -624,7 +624,10 @@ def parse_date(
             return None
         index_hour = 2
     # Create initial guess
-    target = dt.datetime(target.year, target.month, target.day, tzinfo=dt.UTC) if target else dt.datetime.now(tz=dt.UTC)
+    if target:
+        target = dt.datetime(target.year, target.month, target.day, tzinfo=dt.timezone.utc)
+    else:
+        target = dt.datetime.now(tz=dt.timezone.utc)
     day = target.day if time_only else int(date[:2])
     hour = int(date[index_hour : index_hour + 2])
     # Handle situation where next month has less days than current month

@@ -23,7 +23,7 @@ from __future__ import annotations
 import asyncio as aio
 import re
 from contextlib import suppress
-from datetime import UTC, date, datetime
+from datetime import date, datetime, timezone
 from itertools import chain
 
 # library
@@ -69,7 +69,7 @@ class AirSigmet(AVWXBase):
     >>> sigmet = AirSigmet.from_report(report)
     True
     >>> sigmet.last_updated
-    datetime.datetime(2022, 3, 27, 6, 29, 33, 300935, tzinfo=datetime.UTC)
+    datetime.datetime(2022, 3, 27, 6, 29, 33, 300935, tzinfo=datetime.timezone.utc)
     >>> sigmet.data.observation.coords
     [Coord(lat=-4.06, lon=-71.03, repr='S0406 W07103'),
     Coord(lat=-3.58, lon=-72.25, repr='S0358 W07225'),
@@ -133,7 +133,7 @@ class AirSigManager:
     >>> manager.update()
     True
     >>> manager.last_updated
-    datetime.datetime(2022, 3, 27, 5, 54, 21, 516741, tzinfo=datetime.UTC)
+    datetime.datetime(2022, 3, 27, 5, 54, 21, 516741, tzinfo=datetime.timezone.utc)
     >>> len(manager.reports)
     113
     >>> len(manager.contains(Coord(lat=33.12, lon=-105)))
@@ -174,7 +174,7 @@ class AirSigManager:
         if raw == self._raw:
             return False
         self._raw, self.raw = raw, reports
-        self.last_updated = datetime.now(tz=UTC)
+        self.last_updated = datetime.now(tz=timezone.utc)
         # Parse reports if not disabled
         if not disable_post:
             parsed = []

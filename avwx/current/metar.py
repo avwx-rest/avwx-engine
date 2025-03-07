@@ -10,7 +10,7 @@ next report is issued.
 from __future__ import annotations
 
 from contextlib import suppress
-from datetime import UTC, date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 
 # module
 from avwx.current.base import Report, get_wx_codes
@@ -68,7 +68,7 @@ class Metar(Report):
     >>> ksfo.station.city
     'San Francisco'
     >>> ksfo.last_updated
-    datetime.datetime(2018, 3, 4, 23, 54, 4, 353757, tzinfo=datetime.UTC)
+    datetime.datetime(2018, 3, 4, 23, 54, 4, 353757, tzinfo=datetime.timezone.utc)
     >>> ksfo.data.flight_rules
     'LIFR'
     >>> ksfo.translations.clouds
@@ -103,7 +103,7 @@ class Metar(Report):
 
         if self.data is None or self.data.time is None or self.data.time.dt is None:
             return True
-        time_since = datetime.now(tz=UTC) - self.data.time.dt
+        time_since = datetime.now(tz=timezone.utc) - self.data.time.dt
         return time_since > timedelta(minutes=90)
 
     def _calculate_altitudes(self) -> None:

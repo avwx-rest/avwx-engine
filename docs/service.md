@@ -73,7 +73,7 @@ class NOAA_NBM(FileService):
     @property
     def _urls(self) -> Iterator[str]:
         """Iterates through hourly updates no older than two days"""
-        date = dt.datetime.now(tz=dt.UTC)
+        date = dt.datetime.now(tz=dt.timezone.utc)
         cutoff = date - dt.timedelta(days=1)
         while date > cutoff:
             timestamp = date.strftime(r"%Y%m%d")
