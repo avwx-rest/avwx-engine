@@ -81,6 +81,15 @@ class TestNoaaTaf(ServiceFetchTest):
 
 
 @pytest.mark.parametrize(*NOAA_PARAMS)
+class TestNoaaApi(ServiceFetchTest):
+    service_class = service.scrape.NoaaApi
+
+
+class TestNoaaApiClass(TestStationScrape):
+    service_class = service.scrape.NoaaApi
+
+
+@pytest.mark.parametrize(*NOAA_PARAMS)
 class TestNoaaFtp(ServiceFetchTest):
     service_class = service.scrape.NoaaFtp
 

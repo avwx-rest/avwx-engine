@@ -122,6 +122,20 @@ class StationScrape(ScrapeService):
 # Multiple sources for NOAA data
 
 
+class NoaaApi(StationScrape):
+    """Request data from NOAA via API."""
+
+    _url = "https://aviationweather.gov/api/data/{}"
+
+    def _make_url(self, station: str) -> tuple[str, dict]:
+        """Return a formatted URL and parameters."""
+        return self._url.format(self.report_type), {"ids": station}
+
+    def _extract(self, raw: str, station: str) -> str:  # noqa: ARG002
+        """Extract the report message from JSON response."""
+        return raw.strip()
+
+
 class NoaaFtp(StationScrape):
     """Request data from NOAA via FTP."""
 
@@ -215,7 +229,7 @@ class NoaaScrapeList(_NoaaScrapeUrl, ScrapeService):
         return await self._fetch(station, url, params, timeout)
 
 
-Noaa = NoaaScrape
+Noaa = NoaaApi
 
 
 # Regional data sources
