@@ -10,6 +10,7 @@ The `fetch` and `async_fetch` methods are identical except they return
 
 # stdlib
 import asyncio as aio
+import gzip
 from contextlib import suppress
 from typing import ClassVar
 
@@ -23,7 +24,7 @@ class NoaaBulk(Service, CallsHTTP):
     `"airsigmet"` as valid report types.
     """
 
-    _url = "https://aviationweather.gov/data/cache/{}s.cache.csv"
+    _url = "https://aviationweather.gov/data/cache/{}s.cache.csv.gz"
     _valid_types = ("metar", "taf", "aircraftreport", "airsigmet")
     _rtype_map: ClassVar[dict[str, str]] = {"airep": "aircraftreport", "pirep": "aircraftreport"}
     _targets: ClassVar[dict[str, int]] = {"aircraftreport": -2}  # else 0
@@ -54,7 +55,7 @@ class NoaaBulk(Service, CallsHTTP):
     async def async_fetch(self, timeout: int = 10) -> list[str]:
         """Asynchronously bulk fetch report strings from the service."""
         url = self._url.format(self.report_type)
-        text = await self._call(url, timeout=timeout)
+        text = await self._call(url, timeout=timeout, formatter=gzip.decompress)
         return self._extract(text)
 
 

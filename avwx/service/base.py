@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from socket import gaierror
-from typing import Any, ClassVar
+from typing import TYPE_CHECKING, Any, ClassVar
 
 import httpcore
 
@@ -29,6 +29,9 @@ _NETWORK_ERRORS = (
     httpcore.NetworkError,
     httpcore.RemoteProtocolError,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class Service:
@@ -66,6 +69,7 @@ class CallsHTTP:
         data: Any = None,
         timeout: int = 10,
         retries: int = 3,
+        formatter: Callable[[bytes], bytes | str] | None = None,
     ) -> str:
         name = self.__class__.__name__
         try:
@@ -96,4 +100,9 @@ class CallsHTTP:
         except _NETWORK_ERRORS as network_error:
             msg = f"Unable to read data from {name} server"
             raise ConnectionError(msg) from network_error
-        return str(resp.text)
+        if formatter:
+            text = formatter(resp.content)
+            if isinstance(text, bytes):
+                text = text.decode()
+            return text
+        return resp.text

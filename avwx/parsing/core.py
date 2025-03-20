@@ -217,6 +217,7 @@ def make_number(
     if "/" in val_str:
         ret = make_fraction(val_str, repr, literal=literal, speak_prefix=speak_prefix)
     else:
+        val_str = val_str.replace(",", "")
         # Overwrite float 0 due to "0.0" literal
         value = float(val_str) or 0 if "." in num else int(val_str)
         spoken = speak_prefix + spoken_number(speak or str(value), literal=literal)

@@ -125,6 +125,8 @@ class StationScrape(ScrapeService):
 class NoaaApi(StationScrape):
     """Request data from NOAA via API."""
 
+    # https://aviationweather.gov/data/api
+
     _url = "https://aviationweather.gov/api/data/{}"
 
     def _make_url(self, station: str) -> tuple[str, dict]:

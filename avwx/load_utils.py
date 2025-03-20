@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, ItemsView, Iterator, ValuesView
+    from collections.abc import Callable, ItemsView, Iterator, KeysView, ValuesView
 
 
 class LazyLoad:
@@ -43,13 +43,17 @@ class LazyLoad:
         self._check()
         return len(self.data)
 
-    def __iter__(self) -> Iterator[str]:
+    def __iter__(self) -> KeysView:
         self._check()
-        yield from self.data
+        return self.data.keys()
 
     def items(self) -> ItemsView:
         self._check()
         return self.data.items()
+
+    def keys(self) -> Iterator[str]:
+        self._check()
+        yield from self.data.keys()
 
     def values(self) -> ValuesView:
         self._check()

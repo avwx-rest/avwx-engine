@@ -27,7 +27,8 @@ from avwx.data.mappers import FILE_REPLACE, SURFACE_TYPES
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-LOG = logging.getLogger("avwx.data.build_stations")
+log = logging.getLogger("avwx.data.build_stations")
+log.setLevel(logging.INFO)
 
 
 def load_stations(path: Path) -> Iterable[str]:
@@ -262,27 +263,35 @@ def save_station_data(stations: dict) -> None:
 
 def main() -> int:
     """Build/update the stations.json main file."""
-    LOG.info("Fetching")
+    log.info("Fetching")
     if not download_source_files():
-        LOG.error("Unable to update source files")
+        log.error("Unable to update source files")
         return 1
     check_local_icaos()
     check_local_awos()
-    LOG.info("Cleaning")
+    log.info("Cleaning")
     clean_source_files()
-    LOG.info("Building")
+    log.info("Building")
     load_codes()
     stations, code_map = build_stations()
     stations = add_missing_stations(stations)
     stations = add_reporting(stations)
     stations = add_runways(stations, code_map)
-    LOG.info("Saving")
+    log.info("Saving")
     save_station_data(stations)
-    LOG.info("Updating station date")
+    log.info("Updating station date")
     update_station_info_date()
-    return 0
+    return len(stations)
 
 
 if __name__ == "__main__":
-    LOG.setLevel("INFO")
-    main()
+    from avwx.station.meta import STATIONS
+
+    ch = logging.StreamHandler()
+    ch.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s"))
+    log.addHandler(ch)
+
+    old_ount = f"Old station count: {len(STATIONS)}"
+    new_count = f"New station count: {main()}"
+    log.info(old_ount)
+    log.info(new_count)
