@@ -546,12 +546,12 @@ class FaaDinsNotam(ScrapeService):
         url: str
         data: dict[str, Any] = {}
         if icao:
-            url = self.url.format("icaoRadius")
+            url = self._url.format("icaoRadius")
             data["actionType"] = "radiusSearch"
             data["geoIcaoLocId"] = icao
             data["geoIcaoRadius"] = radius
         elif coord:
-            url = self.url.format("latLongRadius")
+            url = self._url.format("latLongRadius")
             lat_degree, lat_minute, _ = Coord.to_dms(coord.lat)
             lon_degree, lon_minute, _ = Coord.to_dms(coord.lon)
             data["actionType"] = "latLongSearch"

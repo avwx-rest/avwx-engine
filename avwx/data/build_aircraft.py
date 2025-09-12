@@ -25,13 +25,13 @@ def main() -> int:
     for row in rows:
         cols = row.split("\n")
         name = TAG_PATTERN.sub("", cols[3]).strip()
-        if "deprecated" in name:
+        if not name or "deprecated" in name:
             continue
         code = TAG_PATTERN.sub("", cols[1]).strip()
         if code not in craft:
             craft[code] = name
     old_craft = json.load(OUTPUT_PATH.open(encoding="utf8"))
-    json.dump(old_craft | craft, OUTPUT_PATH.open("w", encoding="utf8"))
+    json.dump(old_craft | craft, OUTPUT_PATH.open("w", encoding="utf8"), sort_keys=True, indent=1)
     return 0
 
 

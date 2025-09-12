@@ -148,7 +148,9 @@ def format_station(code: str, station: list[str]) -> dict:
 
 def build_stations() -> tuple[dict, dict]:
     """Build the station dict from source file."""
-    stations, code_map = {}, {}
+    code_map = {}
+    with OUTPUT_PATH.open(encoding="utf8") as fin:
+        stations = json.load(fin)
     data = csv.reader(_SOURCE["airports"].splitlines())
     next(data)  # Skip header
     for station in data:
@@ -168,6 +170,11 @@ def add_missing_stations(stations: dict) -> dict:
 def get_surface_type(surface: str) -> str | None:
     """Return the normalize surface type value."""
     return next((key for key, items in SURFACE_TYPES.items() if surface in items), None)
+
+
+def has_runways(station: dict) -> bool:
+    """Check if the station has runway information."""
+    return "runways" in station and station["runways"] is not None
 
 
 def add_runways(stations: dict, code_map: dict) -> dict:
@@ -190,13 +197,13 @@ def add_runways(stations: dict, code_map: dict) -> dict:
         }
         code = code_map.get(runway[1], runway[2])
         with suppress(KeyError):
-            if "runways" in stations[code]:
+            if has_runways(stations[code]):
                 stations[code]["runways"].append(out)
             else:
                 stations[code]["runways"] = [out]
     # Sort runways by longest length and add missing nulls
     for code in stations:
-        if "runways" in stations[code]:
+        if has_runways(stations[code]):
             stations[code]["runways"].sort(key=lambda x: x["length_ft"], reverse=True)
         else:
             stations[code]["runways"] = None
@@ -252,13 +259,8 @@ def update_station_info_date() -> None:
 
 def save_station_data(stations: dict) -> None:
     """Save stations to JSON package data."""
-    json.dump(
-        stations,
-        OUTPUT_PATH.open("w", encoding="utf8"),
-        sort_keys=True,
-        indent=1,
-        ensure_ascii=False,
-    )
+    with OUTPUT_PATH.open("w", encoding="utf8") as fout:
+        json.dump(stations, fout, sort_keys=True, indent=1, ensure_ascii=False)
 
 
 def main() -> int:

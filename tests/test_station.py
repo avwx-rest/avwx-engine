@@ -139,7 +139,7 @@ def test_storage_code() -> None:
         ("KJFK", "John F Kennedy International Airport", "New York"),
         ("kjfk", "John F Kennedy International Airport", "New York"),
         ("KLAX", "Los Angeles International Airport", "Los Angeles"),
-        ("PHNL", "Daniel K Inouye International Airport", "Honolulu"),
+        ("PHNL", "Daniel K Inouye International Airport", "Honolulu, Oahu"),
         ("EGLL", "London Heathrow Airport", "London"),
     ],
 )

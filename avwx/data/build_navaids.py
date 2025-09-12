@@ -28,8 +28,10 @@ def main() -> None:
             data[ident].add((lat, lon))
         except KeyError:
             data[ident] = {(lat, lon)}
-    output = {k: list(v) for k, v in data.items()}
-    json.dump(output, OUTPUT_PATH.open("w"), sort_keys=True)
+    with OUTPUT_PATH.open(encoding="utf8") as fin:
+        output = json.load(fin)
+    output |= {k: list(v) for k, v in data.items()}
+    json.dump(output, OUTPUT_PATH.open("w", encoding="utf8"), sort_keys=True, indent=1)
 
 
 if __name__ == "__main__":
