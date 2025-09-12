@@ -10,7 +10,7 @@ from avwx.exceptions import BadStation
 from avwx.load_utils import LazyLoad
 from avwx.static.core import IN_REGIONS, M_IN_REGIONS, M_NA_REGIONS, NA_REGIONS
 
-__LAST_UPDATED__ = "2024-12-02"
+__LAST_UPDATED__ = "2025-09-12"
 
 # Lazy data loading to speed up import times for unused features
 STATIONS = LazyLoad("stations")

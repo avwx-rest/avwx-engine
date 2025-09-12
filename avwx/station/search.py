@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from contextlib import suppress
-from functools import lru_cache
+from functools import cache
 from typing import TYPE_CHECKING
 
 # module
@@ -58,7 +58,7 @@ def _sort_key(result: tuple[Station, int]) -> tuple[int, ...]:
     return (score, 10 - type_order)
 
 
-@lru_cache(maxsize=128)
+@cache
 def search(
     text: str,
     limit: int = 10,

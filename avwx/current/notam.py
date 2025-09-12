@@ -279,8 +279,8 @@ def _qualifiers(value: str, units: Units) -> Qualifiers:
     fir, q_code, *codes = (i.strip() for i in re.split("/| ", value.strip()))
     traffic, purpose, scope, lower, upper, location = _find_q_codes(codes)
     subject, condition = None, None
-    if q_code.startswith("Q"):
-        subject = Code.from_dict(q_code[1:3], SUBJECT)
+    if q_code.startswith("Q") and len(q_code) >= 5:
+        subject = Code(q_code[1:3], "Other") if q_code[1] == "Q" else Code.from_dict(q_code[1:3], SUBJECT)
         condition_code = q_code[3:]
         if condition_code.startswith("XX"):
             condition = Code("XX", (condition_code[2:] or "Unknown").strip())
@@ -345,7 +345,9 @@ def make_altitude(value: str | None, units: Units) -> Number | None:
     """Parse NOTAM altitudes."""
     if not value:
         return None
-    if trimmed := value.split()[0].strip(" ."):  # noqa: SIM102
+    if trimmed := value.split()[0].strip(" ."):
+        if "(" in trimmed:
+            trimmed = trimmed[trimmed.find("(") + 1 :]
         if trimmed in SPECIAL_NUMBERS or trimmed[0].isdigit():
             return core.make_altitude(trimmed, units, repr=value)[0]
     return None

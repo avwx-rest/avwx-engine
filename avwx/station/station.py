@@ -6,7 +6,7 @@ from __future__ import annotations
 from contextlib import suppress
 from copy import copy
 from dataclasses import dataclass
-from functools import lru_cache
+from functools import cache
 from typing import Any
 
 # library
@@ -305,7 +305,7 @@ def station_filter(station: Station, *, is_airport: bool, reporting: bool) -> bo
     return bool(not reporting or station.sends_reports)
 
 
-@lru_cache(maxsize=128)
+@cache
 def _query_filter(
     lat: float, lon: float, n: int, d: float, *, is_airport: bool, reporting: bool
 ) -> list[tuple[Station, float]]:
