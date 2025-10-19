@@ -24,13 +24,14 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Typing :: Typed",
 ]
 dependencies = [
     "geopy>=2.4",
-    "httpx>=0.26",
-    "python-dateutil>=2.8",
+    "httpx>=0.28",
+    "python-dateutil>=2.9",
     "typing-extensions~=4.12; python_version < '3.11'",
     "xmltodict>=0.13",
 ]

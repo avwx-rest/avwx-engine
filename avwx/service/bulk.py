@@ -5,14 +5,14 @@ The sources can be FTP, scraping, or any other method. There is no need
 for specific stations or updating files behind the scenes.
 
 The `fetch` and `async_fetch` methods are identical except they return
-`List[str]` instead.
+`list[str]` instead.
 """
 
-# stdlib
 import asyncio as aio
 import gzip
-from contextlib import suppress
 from typing import ClassVar
+
+from xmltodict import parse as parsexml
 
 from avwx.service.base import CallsHTTP, Service
 
@@ -24,29 +24,17 @@ class NoaaBulk(Service, CallsHTTP):
     `"airsigmet"` as valid report types.
     """
 
-    _url = "https://aviationweather.gov/data/cache/{}s.cache.csv.gz"
+    _url = "https://aviationweather.gov/data/cache/{}s.cache.xml.gz"
     _valid_types = ("metar", "taf", "aircraftreport", "airsigmet")
     _rtype_map: ClassVar[dict[str, str]] = {"airep": "aircraftreport", "pirep": "aircraftreport"}
-    _targets: ClassVar[dict[str, int]] = {"aircraftreport": -2}  # else 0
+    _targets: ClassVar[dict[str, str]] = {"aircraftreport": "AircraftReport"}  # else .upper()
 
     def __init__(self, report_type: str):
         super().__init__(self._rtype_map.get(report_type, report_type))
 
-    @staticmethod
-    def _clean_report(report: str) -> str:
-        report = report.strip(" '\"")
-        for remove in (r"\x07", "\x07"):
-            report = report.replace(remove, " ")
-        return " ".join(report.split())
-
     def _extract(self, raw: str) -> list[str]:
-        reports = []
-        index = self._targets.get(self.report_type, 0)
-        for line in raw.split("\n")[6:]:
-            with suppress(IndexError):
-                if report := self._clean_report(line.split(",")[index]):
-                    reports.append(report)
-        return reports
+        target = self._targets.get(self.report_type, self.report_type.upper())
+        return [t["raw_text"] for t in parsexml(raw)["response"]["data"][target]]
 
     def fetch(self, timeout: int = 10) -> list[str]:
         """Bulk fetch report strings from the service."""

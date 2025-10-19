@@ -8,10 +8,9 @@ from __future__ import annotations
 
 import asyncio as aio
 import json
-import re
 import secrets
 from contextlib import suppress
-from typing import Any, ClassVar, TypeVar
+from typing import TYPE_CHECKING, ClassVar, TypeVar
 
 # library
 from xmltodict import parse as parsexml
@@ -22,7 +21,9 @@ from avwx.exceptions import InvalidRequest
 from avwx.parsing.core import dedupe
 from avwx.service.base import CallsHTTP, Service
 from avwx.station import Station, valid_station
-from avwx.structs import Coord
+
+if TYPE_CHECKING:
+    from avwx.structs import Coord
 
 _T = TypeVar("_T")
 
@@ -128,6 +129,7 @@ class NoaaApi(StationScrape):
     # https://aviationweather.gov/data/api
 
     _url = "https://aviationweather.gov/api/data/{}"
+    _valid_types = ("metar", "taf", "pirep")
 
     def _make_url(self, station: str) -> tuple[str, dict]:
         """Return a formatted URL and parameters."""
@@ -154,41 +156,21 @@ class NoaaFtp(StationScrape):
         return raw[: raw.find('"')]
 
 
-class _NoaaScrapeUrl:
-    """Mixin implementing NOAA scrape service URL."""
+class NoaaApiList(ScrapeService):
+    """Request listed data from NOAA via API."""
 
-    report_type: str
-    _url = "https://aviationweather.gov/cgi-bin/data/{}.php"
-
-    def _make_url(self, station: str, **kwargs: int | str) -> tuple[str, dict]:
-        """Return a formatted URL and parameters."""
-        hours = 7 if self.report_type == "taf" else 2
-        params = {"ids": station, "format": "raw", "hours": hours, **kwargs}
-        return self._url.format(self.report_type), params
-
-
-class NoaaScrape(_NoaaScrapeUrl, StationScrape):
-    """Request data from NOAA via response scraping."""
-
-    def _extract(self, raw: str, station: str) -> str:  # noqa: ARG002
-        """Extract the first report."""
-        report = ""
-        for line in raw.strip().split("\n"):
-            # Break when seeing the second non-indented line (next report)
-            if line and line[0].isalnum() and report:
-                break
-            report += line
-        return report
-
-
-class NoaaScrapeList(_NoaaScrapeUrl, ScrapeService):
-    """Request listed data from NOAA via response scraping."""
-
+    _url = "https://aviationweather.gov/api/data/{}"
     _valid_types = ("pirep",)
+
+    def _make_url(self, station: str, distance: int = 10) -> tuple[str, dict]:
+        """Return a formatted URL and parameters."""
+        params = {"id": station, "distance": distance}
+        return self._url.format(self.report_type), params
 
     def _extract(self, raw: str, station: str) -> list[str]:  # noqa: ARG002
         """Extract the report strings."""
-        return raw.strip().split("\n")
+        raw = raw.strip()
+        return raw.split("\n") if raw else []
 
     async def _fetch(self, station: str, url: str, params: dict, timeout: int) -> list[str]:
         headers = self._make_headers()
@@ -415,208 +397,208 @@ class Avt(StationScrape):
 # Ancilary scrape services
 
 
-_TAG_PATTERN = re.compile(r"<[^>]*>")
+# _TAG_PATTERN = re.compile(r"<[^>]*>")
 
 # Search fields https://notams.aim.faa.gov/NOTAM_Search_User_Guide_V33.pdf
 
 
-class FaaAimNotam(ScrapeService):
-    """Source NOTAMs from official FAA portal.
+# class FaaAimNotam(ScrapeService):
+#     """Source NOTAMs from official FAA portal.
 
-    This service is currently behind a recaptcha and times out.
-    Use FaaDinsNotam instead for FAA NOTAMs.
-    """
+#     This service is currently behind a recaptcha and times out.
+#     Use FaaDinsNotam instead for FAA NOTAMs.
+#     """
 
-    _url = "https://notams.aim.faa.gov/notamSearch/search"
-    method = "POST"
-    _valid_types = ("notam",)
+#     _url = "https://notams.aim.faa.gov/notamSearch/search"
+#     method = "POST"
+#     _valid_types = ("notam",)
 
-    @staticmethod
-    def _make_headers() -> dict:
-        return {"Content-Type": "application/x-www-form-urlencoded"}
+#     @staticmethod
+#     def _make_headers() -> dict:
+#         return {"Content-Type": "application/x-www-form-urlencoded"}
 
-    @staticmethod
-    def _split_coord(prefix: str, value: float) -> dict:
-        """Add coordinate deg/min/sec fields per float value."""
-        degree, minute, second = Coord.to_dms(value)
-        if prefix == "lat":
-            key = "latitude"
-            direction = "N" if degree >= 0 else "S"
-        else:
-            key = "longitude"
-            direction = "E" if degree >= 0 else "W"
-        return {
-            f"{prefix}Degrees": abs(degree),
-            f"{prefix}Minutes": minute,
-            f"{prefix}Seconds": second,
-            f"{key}Direction": direction,
-        }
+#     @staticmethod
+#     def _split_coord(prefix: str, value: float) -> dict:
+#         """Add coordinate deg/min/sec fields per float value."""
+#         degree, minute, second = Coord.to_dms(value)
+#         if prefix == "lat":
+#             key = "latitude"
+#             direction = "N" if degree >= 0 else "S"
+#         else:
+#             key = "longitude"
+#             direction = "E" if degree >= 0 else "W"
+#         return {
+#             f"{prefix}Degrees": abs(degree),
+#             f"{prefix}Minutes": minute,
+#             f"{prefix}Seconds": second,
+#             f"{key}Direction": direction,
+#         }
 
-    def _post_for(
-        self,
-        icao: str | None = None,
-        coord: Coord | None = None,
-        path: list[str] | None = None,
-        radius: int = 10,
-    ) -> dict:
-        """Generate POST payload for search params in location order."""
-        data: dict[str, Any] = {"notamsOnly": False, "radius": radius}
-        if icao:
-            data["searchType"] = 0
-            data["designatorsForLocation"] = icao
-        elif coord:
-            data["searchType"] = 3
-            data["radiusSearchOnDesignator"] = False
-            data |= self._split_coord("lat", coord.lat)
-            data |= self._split_coord("long", coord.lon)
-        elif path:
-            data["searchType"] = 6
-            data["flightPathText"] = " ".join(path)
-            data["flightPathBuffer"] = radius
-            data["flightPathIncludeNavaids"] = True
-            data["flightPathIncludeArtcc"] = False
-            data["flightPathIncludeTfr"] = True
-            data["flightPathIncludeRegulatory"] = False
-            data["flightPathResultsType"] = "All NOTAMs"
-        else:
-            msg = "Not enough info to request NOTAM data"
-            raise InvalidRequest(msg)
-        return data
+#     def _post_for(
+#         self,
+#         icao: str | None = None,
+#         coord: Coord | None = None,
+#         path: list[str] | None = None,
+#         radius: int = 10,
+#     ) -> dict:
+#         """Generate POST payload for search params in location order."""
+#         data: dict[str, Any] = {"notamsOnly": False, "radius": radius}
+#         if icao:
+#             data["searchType"] = 0
+#             data["designatorsForLocation"] = icao
+#         elif coord:
+#             data["searchType"] = 3
+#             data["radiusSearchOnDesignator"] = False
+#             data |= self._split_coord("lat", coord.lat)
+#             data |= self._split_coord("long", coord.lon)
+#         elif path:
+#             data["searchType"] = 6
+#             data["flightPathText"] = " ".join(path)
+#             data["flightPathBuffer"] = radius
+#             data["flightPathIncludeNavaids"] = True
+#             data["flightPathIncludeArtcc"] = False
+#             data["flightPathIncludeTfr"] = True
+#             data["flightPathIncludeRegulatory"] = False
+#             data["flightPathResultsType"] = "All NOTAMs"
+#         else:
+#             msg = "Not enough info to request NOTAM data"
+#             raise InvalidRequest(msg)
+#         return data
 
-    def fetch(
-        self,
-        icao: str | None = None,
-        coord: Coord | None = None,
-        path: list[str] | None = None,
-        radius: int = 10,
-        timeout: int = 10,
-    ) -> list[str]:
-        """Fetch NOTAM list from the service via ICAO, coordinate, or ident path."""
-        return aio.run(self.async_fetch(icao, coord, path, radius, timeout))
+#     def fetch(
+#         self,
+#         icao: str | None = None,
+#         coord: Coord | None = None,
+#         path: list[str] | None = None,
+#         radius: int = 10,
+#         timeout: int = 10,
+#     ) -> list[str]:
+#         """Fetch NOTAM list from the service via ICAO, coordinate, or ident path."""
+#         return aio.run(self.async_fetch(icao, coord, path, radius, timeout))
 
-    async def async_fetch(
-        self,
-        icao: str | None = None,
-        coord: Coord | None = None,
-        path: list[str] | None = None,
-        radius: int = 10,
-        timeout: int = 10,
-    ) -> list[str]:
-        """Async fetch NOTAM list from the service via ICAO, coordinate, or ident path."""
-        headers = self._make_headers()
-        data = self._post_for(icao, coord, path, radius)
-        notams = []
-        while True:
-            text = await self._call(self._url, None, headers, data, timeout)
-            resp: dict = json.loads(text)
-            if resp.get("error"):
-                msg = "Search criteria appears to be invalid"
-                raise self._make_err(msg)
-            for item in resp["notamList"]:
-                if report := item.get("icaoMessage", "").strip():
-                    report = _TAG_PATTERN.sub("", report).strip()
-                    if issued := item.get("issueDate"):
-                        report = f"{issued}||{report}"
-                    notams.append(report)
-            offset = resp["endRecordCount"]
-            if not notams or offset >= resp["totalNotamCount"]:
-                break
-            data["offset"] = offset
-        return notams
-
-
-TAG_PATTERN = re.compile(r"<[^>]*>")
+#     async def async_fetch(
+#         self,
+#         icao: str | None = None,
+#         coord: Coord | None = None,
+#         path: list[str] | None = None,
+#         radius: int = 10,
+#         timeout: int = 10,
+#     ) -> list[str]:
+#         """Async fetch NOTAM list from the service via ICAO, coordinate, or ident path."""
+#         headers = self._make_headers()
+#         data = self._post_for(icao, coord, path, radius)
+#         notams = []
+#         while True:
+#             text = await self._call(self._url, None, headers, data, timeout)
+#             resp: dict = json.loads(text)
+#             if resp.get("error"):
+#                 msg = "Search criteria appears to be invalid"
+#                 raise self._make_err(msg)
+#             for item in resp["notamList"]:
+#                 if report := item.get("icaoMessage", "").strip():
+#                     report = _TAG_PATTERN.sub("", report).strip()
+#                     if issued := item.get("issueDate"):
+#                         report = f"{issued}||{report}"
+#                     notams.append(report)
+#             offset = resp["endRecordCount"]
+#             if not notams or offset >= resp["totalNotamCount"]:
+#                 break
+#             data["offset"] = offset
+#         return notams
 
 
-class FaaDinsNotam(ScrapeService):
-    """Secondary NOTAM source from FAA DINS"""
-
-    _url = "https://www.notams.faa.gov/dinsQueryWeb/{}SearchMapAction.do"
-    method = "POST"
-    _valid_types = ("notam",)
-
-    def _url_post_for(
-        self,
-        icao: str | None = None,
-        coord: Coord | None = None,
-        path: list[str] | None = None,
-        radius: int = 10,
-    ) -> tuple[str, dict]:
-        """Generate URL and POST payload for search params in location order"""
-        url: str
-        data: dict[str, Any] = {}
-        if icao:
-            url = self._url.format("icaoRadius")
-            data["actionType"] = "radiusSearch"
-            data["geoIcaoLocId"] = icao
-            data["geoIcaoRadius"] = radius
-        elif coord:
-            url = self._url.format("latLongRadius")
-            lat_degree, lat_minute, _ = Coord.to_dms(coord.lat)
-            lon_degree, lon_minute, _ = Coord.to_dms(coord.lon)
-            data["actionType"] = "latLongSearch"
-            data["geoLatDegree"] = abs(lat_degree)
-            data["geoLatMinute"] = lat_minute
-            data["geoLatNorthSouth"] = "N" if coord.lat >= 0 else "S"
-            data["geoLongDegree"] = abs(lon_degree)
-            data["geoLongMinute"] = lon_minute
-            data["geoLongEastWest"] = "E" if coord.lon >= 0 else "W"
-            data["geoLatLongRadius"] = radius
-        elif path:
-            if not 1 < len(path) < 6:
-                msg = "Flight path must have between 2 and 5 waypoints"
-                raise InvalidRequest(msg)
-            url = self._url.format("flightPath")
-            data["actionType"] = "flightPathSearch"
-            data["geoFlightPathbuffer"] = radius
-            data["geoFlightPathOptionsCT"] = "C"
-            data["geoFlightPathOptionsAR"] = "A"
-            for i, code in enumerate(path + [None] * (5 - len(path))):
-                data[f"geoFlightPathIcao{i+1}"] = code
-        else:
-            msg = "Not enough info to request NOTAM data"
-            raise InvalidRequest(msg)
-        return url, data
-
-    def fetch(
-        self,
-        icao: str | None = None,
-        coord: Coord | None = None,
-        path: list[str] | None = None,
-        radius: int = 10,
-        timeout: int = 10,
-    ) -> list[str]:
-        """Fetch NOTAM list from the service via ICAO, coordinate, or ident path"""
-        return aio.run(self.async_fetch(icao, coord, path, radius, timeout))
-
-    async def async_fetch(
-        self,
-        icao: str | None = None,
-        coord: Coord | None = None,
-        path: list[str] | None = None,
-        radius: int = 10,
-        timeout: int = 10,
-    ) -> list[str]:
-        """Async fetch NOTAM list from the service via ICAO, coordinate, or ident path"""
-        url, data = self._url_post_for(icao, coord, path, radius)
-        notams = []
-        text = await self._call(url, data=data, timeout=timeout)
-        sections = text.split('<TD nowrap class="textBlack12Bu" width="370" valign="top"><A')
-        sections.pop(0)
-        for section in sections:
-            station_start = section.find('name="')
-            station = section[station_start + 6 : station_start + 10]
-            snippets = section.split('<TD class="textBlack12" valign="top"><PRE>')
-            snippets.pop(0)
-            for snippet in snippets:
-                report = snippet[3 : snippet.find("</PRE>")].strip().upper()
-                report = report.replace("\n", " ").replace("... ", "...")
-                report = TAG_PATTERN.sub("", report).strip()
-                notams.append(f"{station} {report}")
-        return notams
+# TAG_PATTERN = re.compile(r"<[^>]*>")
 
 
-FaaNotam = FaaDinsNotam
+# class FaaDinsNotam(ScrapeService):
+#     """Secondary NOTAM source from FAA DINS"""
+
+#     _url = "https://www.notams.faa.gov/dinsQueryWeb/{}SearchMapAction.do"
+#     method = "POST"
+#     _valid_types = ("notam",)
+
+#     def _url_post_for(
+#         self,
+#         icao: str | None = None,
+#         coord: Coord | None = None,
+#         path: list[str] | None = None,
+#         radius: int = 10,
+#     ) -> tuple[str, dict]:
+#         """Generate URL and POST payload for search params in location order"""
+#         url: str
+#         data: dict[str, Any] = {}
+#         if icao:
+#             url = self._url.format("icaoRadius")
+#             data["actionType"] = "radiusSearch"
+#             data["geoIcaoLocId"] = icao
+#             data["geoIcaoRadius"] = radius
+#         elif coord:
+#             url = self._url.format("latLongRadius")
+#             lat_degree, lat_minute, _ = Coord.to_dms(coord.lat)
+#             lon_degree, lon_minute, _ = Coord.to_dms(coord.lon)
+#             data["actionType"] = "latLongSearch"
+#             data["geoLatDegree"] = abs(lat_degree)
+#             data["geoLatMinute"] = lat_minute
+#             data["geoLatNorthSouth"] = "N" if coord.lat >= 0 else "S"
+#             data["geoLongDegree"] = abs(lon_degree)
+#             data["geoLongMinute"] = lon_minute
+#             data["geoLongEastWest"] = "E" if coord.lon >= 0 else "W"
+#             data["geoLatLongRadius"] = radius
+#         elif path:
+#             if not 1 < len(path) < 6:
+#                 msg = "Flight path must have between 2 and 5 waypoints"
+#                 raise InvalidRequest(msg)
+#             url = self._url.format("flightPath")
+#             data["actionType"] = "flightPathSearch"
+#             data["geoFlightPathbuffer"] = radius
+#             data["geoFlightPathOptionsCT"] = "C"
+#             data["geoFlightPathOptionsAR"] = "A"
+#             for i, code in enumerate(path + [None] * (5 - len(path))):
+#                 data[f"geoFlightPathIcao{i+1}"] = code
+#         else:
+#             msg = "Not enough info to request NOTAM data"
+#             raise InvalidRequest(msg)
+#         return url, data
+
+#     def fetch(
+#         self,
+#         icao: str | None = None,
+#         coord: Coord | None = None,
+#         path: list[str] | None = None,
+#         radius: int = 10,
+#         timeout: int = 10,
+#     ) -> list[str]:
+#         """Fetch NOTAM list from the service via ICAO, coordinate, or ident path"""
+#         return aio.run(self.async_fetch(icao, coord, path, radius, timeout))
+
+#     async def async_fetch(
+#         self,
+#         icao: str | None = None,
+#         coord: Coord | None = None,
+#         path: list[str] | None = None,
+#         radius: int = 10,
+#         timeout: int = 10,
+#     ) -> list[str]:
+#         """Async fetch NOTAM list from the service via ICAO, coordinate, or ident path"""
+#         url, data = self._url_post_for(icao, coord, path, radius)
+#         notams = []
+#         text = await self._call(url, data=data, timeout=timeout)
+#         sections = text.split('<TD nowrap class="textBlack12Bu" width="370" valign="top"><A')
+#         sections.pop(0)
+#         for section in sections:
+#             station_start = section.find('name="')
+#             station = section[station_start + 6 : station_start + 10]
+#             snippets = section.split('<TD class="textBlack12" valign="top"><PRE>')
+#             snippets.pop(0)
+#             for snippet in snippets:
+#                 report = snippet[3 : snippet.find("</PRE>")].strip().upper()
+#                 report = report.replace("\n", " ").replace("... ", "...")
+#                 report = TAG_PATTERN.sub("", report).strip()
+#                 notams.append(f"{station} {report}")
+#         return notams
+
+
+# FaaNotam = FaaDinsNotam
 
 
 PREFERRED = {

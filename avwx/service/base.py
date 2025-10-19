@@ -84,6 +84,8 @@ class CallsHTTP:
                         resp = await client.get(url, params=params, headers=headers)
                     if resp.status_code == 200:
                         break
+                    if resp.status_code == 204:
+                        return ""
                     # Skip retries if remote server error
                     if resp.status_code >= 500:
                         msg = f"{name} server returned {resp.status_code}"

@@ -99,26 +99,18 @@ class TestNoaaFtpClass(TestStationScrape):
 
 
 @pytest.mark.parametrize(*NOAA_PARAMS)
-class TestNoaaScrape(ServiceFetchTest):
-    service_class = service.scrape.NoaaScrape
-
-
-class TestNoaaScrapeClass(TestStationScrape):
-    service_class = service.scrape.NoaaScrape
-
-
-@pytest.mark.parametrize(*NOAA_PARAMS)
-class TestNoaaScrapeList(ServiceFetchTest):
-    service_class = service.scrape.NoaaScrapeList
+class TestNoaaApiList(ServiceFetchTest):
+    service_class = service.scrape.NoaaApiList
     report_type = "pirep"
 
     def validate_report(self, station: str, report: Any) -> None:  # noqa: ARG002
         assert isinstance(report, list)
-        assert isinstance(report[0], str)
+        if report:
+            assert isinstance(report[0], str)
 
 
-class TestNoaaScrapeListClass(TestStationScrape):
-    service_class = service.scrape.NoaaScrapeList  # type: ignore
+class TestNoaaApiListClass(TestStationScrape):
+    service_class = service.scrape.NoaaApiList  # type: ignore
     report_type = "pirep"
 
 
@@ -175,15 +167,15 @@ class TestNamClass(TestStationScrape):
 #     service_class = service.Avt
 
 
-@pytest.mark.parametrize(*NOAA_PARAMS)
-class TestNotam(ServiceFetchTest):
-    service_class = service.FaaNotam
-    report_type = "notam"
+# @pytest.mark.parametrize(*NOAA_PARAMS)
+# class TestNotam(ServiceFetchTest):
+#     service_class = service.FaaNotam
+#     report_type = "notam"
 
-    def validate_report(self, station: str, report: Any) -> None:
-        assert isinstance(report, list)
-        assert isinstance(report[0], str)
-        assert station in report[0]
+#     def validate_report(self, station: str, report: Any) -> None:
+#         assert isinstance(report, list)
+#         assert isinstance(report[0], str)
+#         assert station in report[0]
 
 
 @pytest.mark.parametrize(

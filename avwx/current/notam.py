@@ -36,7 +36,8 @@ from dateutil.tz import gettz
 from avwx import exceptions
 from avwx.current.base import Reports
 from avwx.parsing import core
-from avwx.service import FaaNotam
+
+# from avwx.service import FaaNotam
 from avwx.static.core import SPECIAL_NUMBERS
 from avwx.static.notam import (
     CODES,
@@ -61,12 +62,17 @@ from avwx.structs import (
 # https://www.faa.gov/air_traffic/flight_info/aeronav/notams/media/2021-09-07_ICAO_NOTAM_101_Presentation_for_Airport_Operators.pdf
 
 
+_DEP_MSG = "This method is temporarily deprecated until non-auth source can be found."
+
+
 class Notams(Reports):
     '''
     The Notams class provides two ways of requesting all applicable NOTAMs in
     an area: airport code and coordinate. The service will fetch all reports
-    within 10 nautical miles of the desired center point. You can change the
-    distance by updating the `Notams.radius` member before calling `update()`.
+    within 10 nautical miles of the desired center point.
+
+    *Update methods are temporarily deprecated until non-auth source can be found.*
+    You can change the distance by updating the `Notams.radius` member before calling `update()`.
 
     ```python
     >>> from pprint import pprint
@@ -139,7 +145,7 @@ class Notams(Reports):
 
     def __init__(self, code: str | None = None, coord: Coord | None = None):
         super().__init__(code, coord)
-        self.service = FaaNotam("notam")
+        # self.service = FaaNotam("notam")
 
     async def _post_update(self) -> None:
         self._post_parse()
@@ -168,13 +174,19 @@ class Notams(Reports):
         """Sanitize a NOTAM string."""
         return sanitize(report)
 
+    # @deprecated(_DEP_MSG)
+    def update(self, timeout: int = 10, *, disable_post: bool = False) -> bool:
+        raise NotImplementedError(_DEP_MSG)
+
+    # @deprecated(_DEP_MSG)
     async def async_update(self, timeout: int = 10, *, disable_post: bool = False) -> bool:
         """Async updates report data by fetching and parsing the report."""
-        reports = await self.service.async_fetch(  # type: ignore
-            icao=self.code, coord=self.coord, radius=self.radius, timeout=timeout
-        )
-        self.source = self.service.root
-        return await self._update(reports, None, disable_post=disable_post)
+        raise NotImplementedError(_DEP_MSG)
+        # reports = await self.service.async_fetch(  # type: ignore
+        #     icao=self.code, coord=self.coord, radius=self.radius, timeout=timeout
+        # )
+        # self.source = self.service.root
+        # return await self._update(reports, None, disable_post=disable_post)
 
 
 ALL_KEYS_PATTERN = re.compile(r"\b[A-GQ]\) ")
