@@ -60,7 +60,7 @@ class NoaaIntl(Service, CallsHTTP):
 
     @staticmethod
     def _clean_report(report: str) -> str:
-        lines = report.split()
+        lines = report.splitlines()
         return " ".join([line for line in lines if not line.startswith("Hazard:")])
 
     def _extract(self, raw: str) -> list[str]:
