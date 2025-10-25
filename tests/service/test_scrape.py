@@ -132,13 +132,13 @@ class TestMacClass(TestStationScrape):
     service_class = service.Mac
 
 
-@pytest.mark.parametrize("station", ["YBBN", "YSSY", "YCNK"])
-class TestAubom(ServiceFetchTest):
-    service_class = service.Aubom
+# @pytest.mark.parametrize("station", ["YBBN", "YSSY", "YCNK"])
+# class TestAubom(ServiceFetchTest):
+#     service_class = service.Aubom
 
 
-class TestAubomClass(TestStationScrape):
-    service_class = service.Aubom
+# class TestAubomClass(TestStationScrape):
+#     service_class = service.Aubom
 
 
 @pytest.mark.parametrize("station", ["VAPO", "VEGT"])
@@ -185,7 +185,7 @@ class TestNamClass(TestStationScrape):
         (("EGLL",), "GB", service.Noaa),
         (("RKSI",), "KR", service.Amo),
         (("SKBO", "SKPP"), "CO", service.Mac),
-        (("YWOL", "YSSY"), "AU", service.Aubom),
+        # (("YWOL", "YSSY"), "AU", service.Aubom),
         (("VAPO", "VEGT"), "IN", service.Olbs),
         # (("ZJQH", "ZYCC", "ZSWZ"), "CN", service.Avt),
     ],

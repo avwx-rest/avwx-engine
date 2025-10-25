@@ -606,7 +606,7 @@ PREFERRED = {
     "SK": Mac,
 }
 BY_COUNTRY = {
-    "AU": Aubom,
+    # "AU": Aubom,  # Disabled during FTP migration
     # "CN": Avt,
     "DK": Nam,
     "EE": Nam,
