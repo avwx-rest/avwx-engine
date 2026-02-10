@@ -316,7 +316,7 @@ class Olbs(StationScrape):
     # method = "POST"
 
     # Temp redirect
-    _url = "https://avbrief3.el.r.appspot.com/"
+    _url = "https://avbrief3.el.r.appspot.com/api/report"
 
     def _make_url(self, station: str) -> tuple[str, dict]:
         """Return a formatted URL and empty parameters."""
@@ -327,29 +327,15 @@ class Olbs(StationScrape):
         # Can set icaos to "V*" to return all results
         return {"icaos": station, "type": self.report_type}
 
-    @staticmethod
-    def _make_headers() -> dict:
-        """Return request headers."""
-        return {
-            # "Content-Type": "application/x-www-form-urlencoded",
-            # "Accept": "text/html, */*; q=0.01",
-            # "Accept-Language": "en-us",
-            "Accept-Encoding": "gzip, deflate, br",
-            # "Host": "olbs.amsschennai.gov.in",
-            "User-Agent": secrets.choice(_USER_AGENTS),
-            "Connection": "keep-alive",
-            # "Referer": "https://olbs.amsschennai.gov.in/nsweb/FlightBriefing/",
-            # "X-Requested-With": "XMLHttpRequest",
-            "Accept-Language": "en-US,en;q=0.9",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Referer": "https://avbrief3.el.r.appspot.com/",
-            "Host": "avbrief3.el.r.appspot.com",
-        }
-
-    def _extract(self, raw: str, station: str) -> str:
+    def _extract(self, raw: str, station: str) -> str:  # noqa: ARG002
         """Extract the reports from HTML response."""
-        # start = raw.find(f"{self.report_type.upper()} {station} ")
-        return self._simple_extract(raw, [f">{self.report_type.upper()}</div>", station], ["=", "<"])
+        try:
+            data = json.loads(raw.strip())
+            text: str = data[f"raw{self.report_type.lower()}"]
+        except (TypeError, json.decoder.JSONDecodeError, KeyError, IndexError):
+            return ""
+        else:
+            return text
 
 
 class Nam(StationScrape):
@@ -603,7 +589,7 @@ class Avt(StationScrape):
 
 PREFERRED = {
     "RK": Amo,
-    "SK": Mac,
+    # "SK": Mac,  # Source site is active but not feeding data
 }
 BY_COUNTRY = {
     # "AU": Aubom,  # Disabled during FTP migration

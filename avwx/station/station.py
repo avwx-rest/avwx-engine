@@ -278,7 +278,7 @@ _COORDS = LazyCalc(_make_coords)
 
 def _make_coord_tree():  # type: ignore
     try:
-        from scipy.spatial import KDTree  # type: ignore
+        from scipy.spatial import KDTree
 
         return KDTree([c[1:] for c in _COORDS.value])
     except (NameError, ModuleNotFoundError) as name_error:

@@ -25,6 +25,7 @@ import re
 from contextlib import suppress
 from datetime import date, datetime, timezone
 from itertools import chain
+from typing import TypeAlias
 
 # library
 from geopy.distance import distance as geo_distance  # type: ignore
@@ -52,9 +53,9 @@ from avwx.structs import (
 )
 
 try:
-    from shapely.geometry import LineString  # type: ignore
+    from shapely.geometry import LineString
 except ModuleNotFoundError:
-    LineString = None
+    LineString = TypeAlias()  # type: ignore
 
 
 class AirSigmet(AVWXBase):

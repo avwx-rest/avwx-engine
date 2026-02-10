@@ -266,7 +266,7 @@ def _get_next_time(lines: list[TafLineData], target: str) -> Timestamp | None:
             continue
         time = line.transition_start or getattr(line, target) if target == "start_time" else getattr(line, target)
         if time:
-            return time  # type: ignore
+            return time
     return None
 
 

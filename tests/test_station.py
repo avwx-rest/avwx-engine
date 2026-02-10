@@ -136,10 +136,10 @@ def test_storage_code() -> None:
 @pytest.mark.parametrize(
     ("icao", "name", "city"),
     [
-        ("KJFK", "John F Kennedy International Airport", "New York"),
-        ("kjfk", "John F Kennedy International Airport", "New York"),
+        ("KJFK", "John F. Kennedy International Airport", "New York"),
+        ("kjfk", "John F. Kennedy International Airport", "New York"),
         ("KLAX", "Los Angeles International Airport", "Los Angeles"),
-        ("PHNL", "Daniel K Inouye International Airport", "Honolulu, Oahu"),
+        ("PHNL", "Daniel K. Inouye International Airport", "Honolulu, Oahu"),
         ("EGLL", "London Heathrow Airport", "London"),
     ],
 )
@@ -185,8 +185,8 @@ def test_from_bad_iata(code: Any) -> None:
 @pytest.mark.parametrize(
     ("gps", "icao", "name"),
     [
-        ("KJFK", "KJFK", "John F Kennedy International Airport"),
-        ("kjfk", "KJFK", "John F Kennedy International Airport"),
+        ("KJFK", "KJFK", "John F. Kennedy International Airport"),
+        ("kjfk", "KJFK", "John F. Kennedy International Airport"),
         ("EGLL", "EGLL", "London Heathrow Airport"),
         ("KX07", None, "Lake Wales Municipal Airport"),
     ],
@@ -209,12 +209,12 @@ def test_from_bad_gps(code: Any) -> None:
 @pytest.mark.parametrize(
     ("code", "icao", "name"),
     [
-        ("KJFK", "KJFK", "John F Kennedy International Airport"),
-        ("kjfk", "KJFK", "John F Kennedy International Airport"),
+        ("KJFK", "KJFK", "John F. Kennedy International Airport"),
+        ("kjfk", "KJFK", "John F. Kennedy International Airport"),
         ("EGLL", "EGLL", "London Heathrow Airport"),
         ("LHR", "EGLL", "London Heathrow Airport"),
         ("LAX", "KLAX", "Los Angeles International Airport"),
-        ("HNL", "PHNL", "Daniel K Inouye International Airport"),
+        ("HNL", "PHNL", "Daniel K. Inouye International Airport"),
         ("KX07", None, "Lake Wales Municipal Airport"),
     ],
 )

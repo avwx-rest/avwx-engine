@@ -12,7 +12,7 @@ from pathlib import Path
 
 # library
 import pytest
-from shapely.geometry import LineString  # type: ignore
+from shapely.geometry import LineString
 
 # module
 from avwx import structs

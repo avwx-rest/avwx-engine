@@ -123,9 +123,9 @@ class TestNoaaApiListClass(TestStationScrape):
 #     service_class = service.Amo
 
 
-@pytest.mark.parametrize("station", ["SKBO"])
-class TestMac(ServiceFetchTest):
-    service_class = service.Mac
+# @pytest.mark.parametrize("station", ["SKBO"])
+# class TestMac(ServiceFetchTest):
+#     service_class = service.Mac
 
 
 class TestMacClass(TestStationScrape):
@@ -184,7 +184,7 @@ class TestNamClass(TestStationScrape):
         (("KJFK", "PHNL"), "US", service.Noaa),
         (("EGLL",), "GB", service.Noaa),
         (("RKSI",), "KR", service.Amo),
-        (("SKBO", "SKPP"), "CO", service.Mac),
+        # (("SKBO", "SKPP"), "CO", service.Mac),
         # (("YWOL", "YSSY"), "AU", service.Aubom),
         (("VAPO", "VEGT"), "IN", service.Olbs),
         # (("ZJQH", "ZYCC", "ZSWZ"), "CN", service.Avt),

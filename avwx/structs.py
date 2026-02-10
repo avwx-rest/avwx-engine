@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeAlias
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -19,9 +19,9 @@ try:
 except ImportError:
     from typing_extensions import Self
 try:
-    from shapely.geometry import Point, Polygon  # type: ignore
+    from shapely.geometry import Point, Polygon
 except ModuleNotFoundError:
-    Point, Polygon = None, None
+    Point, Polygon = TypeAlias(), TypeAlias()  # type: ignore
 
 AIRCRAFT = LazyLoad("aircraft")
 
