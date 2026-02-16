@@ -155,5 +155,6 @@ lint.ignore = [
     "D203",
     "D213",
     "PLR2004", # Magic variable. Consider slowly re-enabling
+    "PLC0415", # Imports at top of file
     "N818",
 ]
