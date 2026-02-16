@@ -35,7 +35,7 @@ def test_is_na_format(code: str) -> None:
 
 
 def test_na_format_default() -> None:
-    assert station.uses_na_format("XXXX", True) is True
+    assert station.uses_na_format("XXXX", default=True) is True
 
 
 @pytest.mark.parametrize("code", IN_CODES)

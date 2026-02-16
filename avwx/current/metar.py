@@ -363,6 +363,7 @@ def parse(
     station: str,
     report: str,
     issued: date | None = None,
+    *,
     use_na: bool | None = None,
 ) -> tuple[MetarData | None, Units | None, Sanitization | None]:
     """Return MetarData and Units dataclasses with parsed data and their associated units."""

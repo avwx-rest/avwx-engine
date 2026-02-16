@@ -55,7 +55,7 @@ from avwx.structs import (
 try:
     from shapely.geometry import LineString
 except ModuleNotFoundError:
-    LineString = TypeAlias()  # type: ignore
+    LineString = TypeAlias  # type: ignore
 
 
 class AirSigmet(AVWXBase):

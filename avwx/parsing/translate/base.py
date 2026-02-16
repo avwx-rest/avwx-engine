@@ -156,10 +156,10 @@ def temperature(temp: Number | None, unit: str = "C") -> str:
         return ""
     if unit == "C":
         fahrenheit = temp.value * 1.8 + 32
-        converted = f"{int(round(fahrenheit))}°F"
+        converted = f"{round(fahrenheit)}°F"
     elif unit == "F":
         celsius = (temp.value - 32) / 1.8
-        converted = f"{int(round(celsius))}°C"
+        converted = f"{round(celsius)}°C"
     else:
         return ""
     return f"{temp.value}°{unit} ({converted})"
@@ -179,7 +179,7 @@ def altimeter(alt: Number | None, unit: str = "hPa") -> str:
     elif unit == "inHg":
         value = str(alt.value).ljust(5, "0")
         pascals = alt.value * 33.8638866667
-        converted = f"{int(round(pascals))} hPa"
+        converted = f"{round(pascals)} hPa"
     else:
         return ""
     return f"{value} {unit} ({converted})"

@@ -47,7 +47,10 @@ class FileService(Service):
     """Service class for fetching reports via managed source files."""
 
     update_interval: dt.timedelta = dt.timedelta(minutes=10)
-    _updating: bool = False
+
+    def __init__(self, report_type: str):
+        super().__init__(report_type)
+        self._updating: aio.Lock = aio.Lock()
 
     @property
     def _file_stem(self) -> str:
@@ -87,8 +90,8 @@ class FileService(Service):
         return _TEMP / f"{self._file_stem}.{timestamp}.txt"
 
     async def _wait_until_updated(self) -> None:
-        while not self._updating:
-            await aio.sleep(0.01)
+        async with self._updating:
+            return
 
     @property
     def all(self) -> list[str]:
@@ -129,22 +132,20 @@ class FileService(Service):
         If wait, this will block if the file is already being updated.
         """
         # Guard for other async calls
-        if self._updating:
+        if self._updating.locked():
             if wait:
                 await self._wait_until_updated()
                 return True
             return False
-        self._updating = True
-        # Replace file
-        old_path = self._file
-        if not await self._update_file(timeout):
-            self._updating = False
-            return False
-        if old_path:
-            with suppress(FileNotFoundError):
-                old_path.unlink()
-        self._updating = False
-        return True
+        async with self._updating:
+            # Replace file
+            old_path = self._file
+            if not await self._update_file(timeout):
+                return False
+            if old_path:
+                with suppress(FileNotFoundError):
+                    old_path.unlink()
+            return True
 
     def fetch(self, station: str, *, wait: bool = True, timeout: int = 10, force: bool = False) -> str | None:
         """Fetch a report string from the source file.
@@ -165,7 +166,7 @@ class FileService(Service):
         Can force the service to fetch a new file.
         """
         valid_station(station)
-        if wait and self._updating:
+        if wait and self._updating.locked():
             await self._wait_until_updated()
         if (force or self.is_outdated) and not await self.update(wait=wait, timeout=timeout):
             return None

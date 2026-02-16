@@ -21,7 +21,7 @@ except ImportError:
 try:
     from shapely.geometry import Point, Polygon
 except ModuleNotFoundError:
-    Point, Polygon = TypeAlias(), TypeAlias()  # type: ignore
+    Point, Polygon = TypeAlias, TypeAlias  # type: ignore
 
 AIRCRAFT = LazyLoad("aircraft")
 

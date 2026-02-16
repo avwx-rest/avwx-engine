@@ -1,8 +1,5 @@
 """Bulk Service Tests."""
 
-# library
-import pytest
-
 # module
 from avwx.service import bulk
 
@@ -25,7 +22,6 @@ class BulkServiceTest(ServiceClassTest):
         assert isinstance(reports, list)
         assert bool(reports)
 
-    @pytest.mark.asyncio
     async def test_async_fetch(self) -> None:
         """Test that reports are fetched from async service."""
         for report_type in self.report_types:

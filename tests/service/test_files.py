@@ -12,7 +12,7 @@ from avwx import exceptions, service
 from .test_base import ServiceClassTest, ServiceFetchTest
 
 
-class TestScrapeService(ServiceClassTest):
+class TestFileService(ServiceClassTest):
     service_class = service.files.FileService
     required_attrs = (
         "update_interval",
@@ -24,42 +24,42 @@ class TestScrapeService(ServiceClassTest):
 
     def test_file_service_not_implemented(self, serv: service.Service) -> None:
         """Test that the base FileService class throws NotImplemented errors."""
-        if type(serv) != service.files.FileService:
+        if not isinstance(serv, service.files.FileService):
             return
         with pytest.raises(NotImplementedError):
             serv._extract(None, None)  # type: ignore
         with pytest.raises(NotImplementedError):
             assert serv._urls
 
-    @pytest.mark.asyncio
     async def test_fetch_bad_station(self, serv: service.Service) -> None:
         """Test fetch exception handling."""
         for station in ("12K", "MAYT"):
             with pytest.raises(exceptions.BadStation):
                 await serv.async_fetch(station)  # type: ignore
 
-    @pytest.mark.asyncio
     async def test_scrape_service_not_implemented(self, serv: service.Service) -> None:
         """Should raise exception due to empty url."""
-        if type(serv) == service.scrape.ScrapeService:
+        if not isinstance(serv, service.scrape.ScrapeService):
             with pytest.raises(NotImplementedError):
                 await serv.async_fetch("KJFK")  # type: ignore
 
 
-@pytest.mark.parametrize("station", ("KJFK", "KMCO", "PHNL"))
+@pytest.mark.parametrize("station", ["KJFK", "KMCO", "PHNL"])
 class TestNBM(ServiceFetchTest):
     service_class = service.NoaaNbm
     report_type = "nbs"
 
 
-def test_nbm_all() -> None:
+async def test_nbm_all() -> None:
     """Test extracting all reports from the requested file."""
-    reports = service.NoaaNbm("nbs").all
+    srv = service.NoaaNbm("nbs")
+    assert await srv.update() is True
+    reports = srv.all
     assert isinstance(reports, list)
     assert len(reports) > 0
 
 
-# @pytest.mark.parametrize("station", ("KJFK", "KLAX", "PHNL"))
+# @pytest.mark.parametrize("station", ["KJFK", "KLAX", "PHNL"])
 # class TestGFS(ServiceFetchTest):
 #     service_class = service.NOAA_GFS
 #     report_type = "mav"

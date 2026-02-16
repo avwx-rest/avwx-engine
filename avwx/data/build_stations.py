@@ -202,19 +202,19 @@ def add_runways(stations: dict, code_map: dict) -> dict:
             else:
                 stations[code]["runways"] = [out]
     # Sort runways by longest length and add missing nulls
-    for code in stations:
-        if has_runways(stations[code]):
-            stations[code]["runways"].sort(key=lambda x: x["length_ft"], reverse=True)
+    for station in stations.values():
+        if has_runways(station):
+            station["runways"].sort(key=lambda x: x["length_ft"], reverse=True)
         else:
-            stations[code]["runways"] = None
+            station["runways"] = None
     return stations
 
 
 def add_reporting(stations: dict) -> dict:
     """Add reporting boolean to station if available."""
     good = load_stations(GOOD_PATH)
-    for code in stations:
-        stations[code]["reporting"] = code in good
+    for code, station in stations.items():
+        station["reporting"] = code in good
     return stations
 
 

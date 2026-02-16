@@ -41,7 +41,6 @@ class ServiceFetchTest(BaseServiceTest):
         report = serv.fetch(station)  # type: ignore
         self.validate_report(station, report)
 
-    @pytest.mark.asyncio
     async def test_async_fetch(self, station: str, serv: service.Service) -> None:
         """Test that reports are fetched from async service."""
         report = await serv.async_fetch(station)  # type: ignore

@@ -43,23 +43,21 @@ class TestStationScrape(ServiceClassTest):
 
     def test_not_implemented(self, serv: service.scrape.ScrapeService) -> None:
         """Should raise exception due to empty url."""
-        if type(serv) == service.scrape.ScrapeService:
+        if not isinstance(serv, service.scrape.ScrapeService):
             with pytest.raises(NotImplementedError):
-                serv.fetch("KJFK")  # type: ignore
+                serv.fetch("KJFK")
 
-    @pytest.mark.asyncio
     async def test_async_fetch_bad_station(self, serv: service.scrape.ScrapeService) -> None:
         """Test fetch exception handling."""
         for station in ("12K", "MAYT"):
             with pytest.raises(exceptions.BadStation):
                 await serv.async_fetch(station)  # type: ignore
 
-    @pytest.mark.asyncio
     async def test_async_not_implemented(self, serv: service.scrape.ScrapeService) -> None:
         """Should raise exception due to empty url."""
-        if type(serv) == service.scrape.ScrapeService:
+        if not isinstance(serv, service.scrape.ScrapeService):
             with pytest.raises(NotImplementedError):
-                await serv.async_fetch("KJFK")  # type: ignore
+                await serv.async_fetch("KJFK")
 
 
 NOAA_PARAMS = ("station", ["KJFK", "EGLL", "PHNL"])

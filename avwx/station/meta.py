@@ -10,7 +10,7 @@ from avwx.exceptions import BadStation
 from avwx.load_utils import LazyLoad
 from avwx.static.core import IN_REGIONS, M_IN_REGIONS, M_NA_REGIONS, NA_REGIONS
 
-__LAST_UPDATED__ = "2026-02-10"
+__LAST_UPDATED__ = "2026-02-16"
 
 # Lazy data loading to speed up import times for unused features
 STATIONS = LazyLoad("stations")
@@ -23,7 +23,7 @@ def station_list(*, reporting: bool = True) -> list[str]:
     return [code for code, station in STATIONS.items() if not reporting or station["reporting"]]
 
 
-def uses_na_format(station: str, default: bool | None = None) -> bool:
+def uses_na_format(station: str, *, default: bool | None = None) -> bool:
     """Return True if the station uses the North American format.
 
     False if the International format

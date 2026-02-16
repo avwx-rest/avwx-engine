@@ -77,8 +77,7 @@ class StationTester(Kew):
 
     async def wait(self) -> None:
         """Wait until the queue is empty."""
-        while not self._queue.empty():
-            await aio.sleep(0.01)
+        await self._queue.join()
 
     async def add_stations(self) -> None:
         """Populate and run ICAO check queue."""

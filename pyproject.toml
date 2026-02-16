@@ -118,6 +118,7 @@ addopts = """\
     --cov-report term-missing \
     --no-cov-on-fail \
 """
+asyncio_mode = "auto"
 
 [tool.coverage.run]
 source_pkgs = ["avwx", "tests"]
