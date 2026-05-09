@@ -7,7 +7,7 @@ name = "avwx-engine"
 dynamic = ["version"]
 description = "Aviation weather report parsing library"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = "MIT"
 keywords = ["aviation", "weather", "metar"]
 authors = [
@@ -20,8 +20,6 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
@@ -31,8 +29,9 @@ classifiers = [
 dependencies = [
     "geopy>=2.4",
     "httpx>=0.28",
+    "pint>=0.24",
+    "pydantic>=2.0",
     "python-dateutil>=2.9",
-    "typing-extensions~=4.12; python_version < '3.11'",
     "xmltodict>=0.13",
 ]
 
@@ -56,7 +55,8 @@ include = [
 fuzz = [
     "rapidfuzz>=3.6",
 ]
-scipy = [
+geo = [
+    "geopy>=2.4",
     "numpy>=1.26",
     "scipy>=1.10",
 ]
@@ -64,13 +64,14 @@ shape = [
     "shapely>=2.0",
 ]
 all = [
-    "avwx-engine[fuzz,scipy,shape]",
+    "avwx-engine[fuzz,geo,shape]",
 ]
 
 [tool.hatch.envs.types]
 extra-dependencies = [
     "avwx-engine[all]",
     "mypy>=1.0.0",
+    "pydantic>=2.0",
     "pytest-asyncio>=0.23.7",
     "time-machine",
 ]
@@ -80,6 +81,7 @@ check = "mypy --install-types --non-interactive {args:avwx tests}"
 [tool.hatch.envs.hatch-test]
 extra-dependencies = [
     "avwx-engine[all]",
+    "pydantic>=2.0",
     "pytest-asyncio>=0.23.7",
     "pytest-cov",
     "pytest-github-actions-annotate-failures",
@@ -148,6 +150,10 @@ warn_redundant_casts = true
 warn_return_any = true
 check_untyped_defs = true
 show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = ["pint.*"]
+ignore_missing_imports = true
 
 [tool.ruff]
 lint.ignore = [

@@ -9,41 +9,25 @@ import pytest
 from avwx.forecast import nbm
 
 # tests
-from tests.util import assert_number, get_data
+from tests.util import assert_measurement, get_data
 
 from .test_base import ForecastBase
 
 
 def test_ceiling() -> None:
-    """Test that a line is converted into ceiling-specific Numbers."""
+    """Test that a line is converted into ceiling-specific Measurements."""
     line = "CIG  12888    45"
-    values = [
-        ("12", 1200, "one two hundred"),
-        ("888", None, "unlimited"),
-        None,
-        ("45", 4500, "four five hundred"),
-    ]
+    values = [1200, None, None, 4500]
     for number, expected in zip(nbm._ceiling(line), values, strict=True):
-        if expected is None:
-            assert number is None
-        else:
-            assert_number(number, *expected)
+        assert_measurement(number, expected)
 
 
 def test_wind() -> None:
-    """Test that a line is converted into wind-specific Numbers."""
+    """Test that a line is converted into wind-specific Measurements."""
     line = "GST  12 NG    45"
-    values = [
-        ("12", 12, "one two"),
-        ("NG", 0, "zero"),
-        None,
-        ("45", 45, "four five"),
-    ]
+    values = [12, 0, None, 45]
     for number, expected in zip(nbm._wind(line), values, strict=True):
-        if expected is None:
-            assert number is None
-        else:
-            assert_number(number, *expected)
+        assert_measurement(number, expected)
 
 
 @pytest.mark.parametrize(("ref", "icao", "issued"), get_data(__file__, "nbh"))

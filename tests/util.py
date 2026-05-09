@@ -11,26 +11,25 @@ from typing import TYPE_CHECKING, Any
 
 # module
 from avwx import structs
+from avwx.units import Measurement
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
 
-def assert_number(
-    num: structs.Number | None,
-    repr: str,  # noqa: A002
-    value: Any | None = None,
-    spoken: str | None = None,
+def assert_measurement(
+    num: Measurement | None,
+    magnitude: float | None,
+    unit: str | None = None,
 ) -> None:
-    """Test string conversion into a Number dataclass."""
-    if not repr:
+    """Test a Measurement object has the expected magnitude and unit."""
+    if magnitude is None:
         assert num is None
     else:
-        assert isinstance(num, structs.Number)
-        assert num.repr == repr
-        assert num.value == value
-        if spoken:
-            assert num.spoken == spoken
+        assert isinstance(num, Measurement)
+        assert num.magnitude == magnitude
+        if unit is not None:
+            assert num.unit == unit
 
 
 def assert_timestamp(ts: structs.Timestamp | None, repr: str, value: datetime) -> None:  # noqa: A002
@@ -55,13 +54,13 @@ def assert_code(code: structs.Code | None, repr: Any, value: Any) -> None:  # no
         assert code.value == value
 
 
-def assert_value(src: structs.Number | None, value: float | None) -> None:
-    """Test a number's value matches the expected value while handling nulls."""
+def assert_value(src: Measurement | None, value: float | None) -> None:
+    """Test a measurement's magnitude matches the expected value while handling nulls."""
     if value is None:
         assert src is None
     else:
         assert src is not None
-        assert src.value == value
+        assert src.magnitude == value
 
 
 def get_data(filepath: str, report_type: str) -> Iterator[tuple[dict, str, datetime]]:

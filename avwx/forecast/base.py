@@ -1,15 +1,13 @@
 """Forecast report shared resources."""
 
-# stdlib
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 from typing import TYPE_CHECKING
 
-# module
 from avwx.base import ManagedReport
-from avwx.parsing import core
-from avwx.structs import Code, Number, ReportData, Timestamp
+from avwx.structs import Code, ReportData, Timestamp
+from avwx.units import Measurement
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -40,7 +38,7 @@ def _timestamp(line: str) -> Timestamp:
     start = line.find("GUIDANCE") + 11
     text = line[start : start + 16].strip()
     timestamp = datetime.strptime(text, r"%m/%d/%Y  %H%M").replace(tzinfo=timezone.utc)
-    return Timestamp(text, timestamp.replace(tzinfo=timezone.utc))
+    return Timestamp(repr=text, dt=timestamp.replace(tzinfo=timezone.utc))
 
 
 def _find_time_periods(line: list[str], timestamp: datetime | None) -> list[dict]:
@@ -58,7 +56,7 @@ def _find_time_periods(line: list[str], timestamp: datetime | None) -> list[dict
             if difference < 0:
                 difference += 24
             timestamp += timedelta(hours=difference)
-            periods.append(Timestamp(hourstr, timestamp))
+            periods.append(Timestamp(repr=hourstr, dt=timestamp))
     return [{"time": time} for time in periods]
 
 
@@ -76,68 +74,73 @@ def _init_parse(report: str) -> tuple[ReportData, list[str]]:
     return struct, lines
 
 
-def _numbers(
-    line: str,
-    size: int = 3,
+def _measurements(
+    unit: str,
     prefix: str = "",
     postfix: str = "",
-    *,
     decimal: int | None = None,
-    literal: bool = False,
-    special: dict | None = None,
-) -> list[Number | None]:
-    """Parse line into Number objects.
+    special: dict[str, Measurement | None] | None = None,
+) -> Callable[[str, int], list[Measurement | None]]:
+    """Return a line parser that emits Measurement objects in *unit*."""
 
-    Prefix, postfix, and decimal location are applied to value, not repr.
-
-    Decimal is applied after prefix and postfix.
-    """
-    ret = []
-    for item in _split_line(line, size=size):
-        value = None
-        if item:
+    def parser(line: str, size: int = 3) -> list[Measurement | None]:
+        ret: list[Measurement | None] = []
+        for item in _split_line(line, size=size):
+            if not item:
+                ret.append(None)
+                continue
+            if special and item in special:
+                ret.append(special[item])
+                continue
             value = prefix + item + postfix
             if decimal is not None:
                 if abs(decimal) > len(value):
                     value = value.zfill(abs(decimal))
                 value = f"{value[:decimal]}.{value[decimal:]}"
-        ret.append(core.make_number(value, repr=item, literal=literal, special=special))
-    return ret
+            try:
+                ret.append(Measurement(float(value), unit))
+            except ValueError:
+                ret.append(None)
+        return ret
+
+    return parser
 
 
-def _decimal_10(line: str, size: int = 3) -> list[Number | None]:
-    """Parse line into Number objects with 10ths decimal location."""
-    return _numbers(line, size, decimal=-1)
+def _probabilities(
+    prefix: str = "",
+    postfix: str = "",
+    decimal: int | None = None,
+) -> Callable[[str, int], list[float | None]]:
+    """Return a line parser that emits float probabilities (0-100)."""
+
+    def parser(line: str, size: int = 3) -> list[float | None]:
+        ret: list[float | None] = []
+        for item in _split_line(line, size=size):
+            if not item:
+                ret.append(None)
+                continue
+            value = prefix + item + postfix
+            if decimal is not None:
+                if abs(decimal) > len(value):
+                    value = value.zfill(abs(decimal))
+                value = f"{value[:decimal]}.{value[decimal:]}"
+            try:
+                ret.append(float(value))
+            except ValueError:
+                ret.append(None)
+        return ret
+
+    return parser
 
 
-def _decimal_100(line: str, size: int = 3) -> list[Number | None]:
-    """Parse line into Number objects with 100ths decimal location."""
-    return _numbers(line, size, decimal=-2)
-
-
-def _number_10(line: str, size: int = 3) -> list[Number | None]:
-    """Parse line into Number objects in tens."""
-    return _numbers(line, size, postfix="0")
-
-
-def _number_100(line: str, size: int = 3) -> list[Number | None]:
-    """Parse line into Number objects in hundreds."""
-    return _numbers(line, size, postfix="00")
-
-
-def _direction(line: str, size: int = 3) -> list[Number | None]:
-    """Parse line into Number objects in hundreds."""
-    return _numbers(line, size, postfix="0", literal=True)
-
-
-def _code(mapping: dict) -> Callable:
+def _code(mapping: dict) -> Callable[[str, int], list[Code | str | None]]:
     """Generate a conditional code mapping function."""
 
     def func(line: str, size: int = 3) -> list[Code | str | None]:
         ret: list[Code | str | None] = []
         for key in _split_line(line, size=size):
             try:
-                ret.append(Code(key, mapping[key]))
+                ret.append(Code(repr=key, value=str(mapping[key])))
             except KeyError:
                 ret.append(key or None)
         return ret
@@ -165,12 +168,12 @@ def _parse_lines(
         values += [None] * (len(periods) - len(values))
         for i in range(len(periods)):
             value = values[i]
-            if not value:
+            if value is None:
                 continue
             if isinstance(value, tuple):
-                for j, key in enumerate(keys):
-                    if value[j]:
-                        periods[i][key] = value[j]
+                for j, k in enumerate(keys):
+                    if value[j] is not None:
+                        periods[i][k] = value[j]
             else:
                 periods[i][keys[0]] = value
 

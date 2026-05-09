@@ -14,17 +14,24 @@ from avwx.parsing import remarks
 from tests.util import assert_value
 
 
-@pytest.mark.parametrize(("code", "temp"), [("1045", -4.5), ("0237", 23.7), ("0987", 98.7)])
-def test_decimal_code(code: str, temp: float | None) -> None:
-    """Test that a 4-digit number gets decoded into a temperature number."""
-    num = remarks.decimal_code(code)
-    assert isinstance(num, structs.Number)
-    assert num.value == temp
+@pytest.mark.parametrize(
+    ("codes_in", "temp"),
+    [
+        (["T10450000"], -4.5),
+        (["T02370000"], 23.7),
+        (["T09870000"], 98.7),
+    ],
+)
+def test_decimal_code(codes_in: list[str], temp: float | None) -> None:
+    """Test that a decimal temperature code is parsed correctly via temp_dew_decimal."""
+    _, parsed_temp, _ = remarks.temp_dew_decimal(list(codes_in))
+    assert_value(parsed_temp, temp)
 
 
 def test_bad_decimal_code() -> None:
-    """Test empty code value."""
-    assert remarks.decimal_code("") is None
+    """Test empty codes produce None temperature."""
+    _, parsed_temp, _ = remarks.temp_dew_decimal([])
+    assert parsed_temp is None
 
 
 @pytest.mark.parametrize(
@@ -104,9 +111,13 @@ def test_no_sea_level_pressure() -> None:
     ],
 )
 def test_parse_pressure(code: str, value: float, text: str) -> None:
-    """Test parsing a 5-digit code to PressureTendency."""
-    pressure = remarks.parse_pressure(code)
-    assert pressure == structs.PressureTendency(code, text, value)
+    """Test parsing a 5-digit code to PressureTendency via five_digit_codes."""
+    _, fivedigits = remarks.five_digit_codes([code])
+    pressure = fivedigits.pressure_tendency
+    assert pressure is not None
+    expected = structs.PressureTendency(repr=code, tendency=text, change=pressure.change)
+    assert pressure == expected
+    assert_value(pressure.change, value)
 
 
 @pytest.mark.parametrize(
@@ -118,8 +129,10 @@ def test_parse_pressure(code: str, value: float, text: str) -> None:
     ],
 )
 def test_parse_precipitation(code: str, value: float) -> None:
-    """Test parsing a 5-digit precipitation amount code."""
-    assert_value(remarks.parse_precipitation(code), value)
+    """Test parsing a 5-digit precipitation amount code via five_digit_codes."""
+    _, fivedigits = remarks.five_digit_codes([code])
+    result = fivedigits.precip_36_hours or fivedigits.precip_24_hours
+    assert_value(result, value)
 
 
 def test_parse() -> None:
@@ -131,11 +144,13 @@ def test_parse() -> None:
     # 5-digit codes
     assert_value(data.maximum_temperature_6, 12.3)
     assert_value(data.minimum_temperature_6, -23.4)
-    pressure = structs.PressureTendency("51234", "Increasing, then steady", 23.4)
-    assert data.pressure_tendency == pressure
+    assert data.pressure_tendency is not None
+    assert data.pressure_tendency.repr == "51234"
+    assert data.pressure_tendency.tendency == "Increasing, then steady"
+    assert_value(data.pressure_tendency.change, 23.4)
     assert_value(data.precip_36_hours, 12.34)
     assert_value(data.precip_24_hours, 43.21)
-    assert_value(data.sunshine_minutes, 321)
+    assert data.sunshine_minutes == 321
     # Other parsed data
     assert_value(data.temperature_decimal, 12.3)
     assert_value(data.dewpoint_decimal, -23.4)
@@ -146,9 +161,9 @@ def test_parse() -> None:
     assert_value(data.sea_level_pressure, 999.8)
     # Static codes
     static_codes = [
-        structs.Code("$", "ASOS requires maintenance"),
-        structs.Code("ACFT MSHP", "Aircraft mishap"),
-        structs.Code("AO2", "Automated with precipitation sensor"),
-        structs.Code("TSB20", "Thunderstorm began at :20"),
+        structs.Code(repr="$", value="ASOS requires maintenance"),
+        structs.Code(repr="ACFT MSHP", value="Aircraft mishap"),
+        structs.Code(repr="AO2", value="Automated with precipitation sensor"),
+        structs.Code(repr="TSB20", value="Thunderstorm began at :20"),
     ]
     assert data.codes == static_codes

@@ -208,6 +208,8 @@ SPOKEN_UNITS = {
     "km": "kilometer",
     "C": "Celsius",
     "F": "Fahrenheit",
+    "degC": "Celsius",
+    "degF": "Fahrenheit",
     "kt": "knot",
 }
 """Units required to be translated in order to be spoken properly"""

@@ -1,6 +1,5 @@
-"""Contains the core parsing and indent functions of avwx."""
+"""Core parsing and utility functions."""
 
-# stdlib
 from __future__ import annotations
 
 import datetime as dt
@@ -11,10 +10,8 @@ from contextlib import suppress
 from copy import copy
 from typing import TYPE_CHECKING, Any
 
-# library
 from dateutil.relativedelta import relativedelta
 
-# module
 from avwx.static.core import (
     CARDINALS,
     CLOUD_LIST,
@@ -23,16 +20,22 @@ from avwx.static.core import (
     SPECIAL_NUMBERS,
     WIND_UNITS,
 )
-from avwx.structs import Cloud, Fraction, Number, Timestamp, Units
+from avwx.structs import Cloud, Timestamp
+from avwx.units import Measurement
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
 
+# ---------------------------------------------------------------------------
+# General utilities
+# ---------------------------------------------------------------------------
+
+
 def dedupe(items: Iterable[Any], *, only_neighbors: bool = False) -> list[Any]:
     """Deduplicate a list while keeping order.
 
-    If only_neighbors is True, dedupe will only check neighboring values.
+    If *only_neighbors* is True only neighbouring duplicates are removed.
     """
     ret: list[Any] = []
     for item in items:
@@ -42,7 +45,7 @@ def dedupe(items: Iterable[Any], *, only_neighbors: bool = False) -> list[Any]:
 
 
 def is_unknown(value: str) -> bool:
-    """Return True if val represents and unknown value."""
+    """Return True if *value* represents an unknown / missing value."""
     if not isinstance(value, str):
         raise TypeError
     if not value or value.upper() in {"UNKN", "UNK", "UKN"}:
@@ -56,9 +59,7 @@ def is_unknown(value: str) -> bool:
 
 
 def get_digit_list(data: list[str], from_index: int) -> tuple[list[str], list[str]]:
-    """Return a list of items removed from a given list of strings
-    that are all digits from 'from_index' until hitting a non-digit item.
-    """
+    """Remove and return consecutive digit-only items starting at *from_index*."""
     ret = []
     data.pop(from_index)
     while len(data) > from_index and data[from_index].isdigit():
@@ -66,8 +67,13 @@ def get_digit_list(data: list[str], from_index: int) -> tuple[list[str], list[st
     return data, ret
 
 
+# ---------------------------------------------------------------------------
+# Spoken-number helpers  (kept for speech / translation layers)
+# ---------------------------------------------------------------------------
+
+
 def unpack_fraction(num: str) -> str:
-    """Return unpacked fraction string 5/2 -> 2 1/2."""
+    """Return an unpacked fraction string: ``5/2`` → ``2 1/2``."""
     numbers = [int(n) for n in num.split("/") if n]
     if len(numbers) != 2 or numbers[0] <= numbers[1]:
         return num
@@ -78,7 +84,7 @@ def unpack_fraction(num: str) -> str:
 
 
 def remove_leading_zeros(num: str) -> str:
-    """Strip zeros while handling -, M, and empty strings."""
+    """Strip leading zeros, handling ``-``, ``M``, and empty strings."""
     if not num:
         return num
     if num.startswith("M"):
@@ -90,20 +96,19 @@ def remove_leading_zeros(num: str) -> str:
     return "0" if ret in ("", "M", "-") else ret
 
 
-SPOKEN_POSTFIX = (
+_SPOKEN_POSTFIX = (
     (" zero zero zero", " thousand"),
     (" zero zero", " hundred"),
 )
 
 
 def spoken_number(num: str, *, literal: bool = False) -> str:
-    """Return the spoken version of a number.
+    """Return the spoken representation of a number string.
 
-    If literal, no conversion to hundreds/thousands
+    Examples::
 
-    Ex: 1.2 -> one point two
-        1 1/2 -> one and one half
-        25000 -> two five thousand
+        spoken_number("1.2")   -> "one point two"
+        spoken_number("25000") -> "two five thousand"
     """
     ret = []
     for part in num.split():
@@ -112,126 +117,30 @@ def spoken_number(num: str, *, literal: bool = False) -> str:
         else:
             val = " ".join(NUMBER_REPL[char] for char in part if char in NUMBER_REPL)
             if not literal:
-                for target, replacement in SPOKEN_POSTFIX:
+                for target, replacement in _SPOKEN_POSTFIX:
                     if val.endswith(target):
                         val = val[: -len(target)] + replacement
             ret.append(val)
     return " and ".join(ret)
 
 
-def make_fraction(
-    num: str,
-    repr: str | None = None,  # noqa: A002
-    *,
-    literal: bool = False,
-    speak_prefix: str = "",
-) -> Fraction:
-    """Return a fraction dataclass for numbers with / in them."""
-    num_str, den_str = num.split("/")
-    # 2-1/2 but not -2 1/2
-    if "-" in num_str and not num_str.startswith("-"):
-        num_str = num_str.replace("-", " ")
-    denominator = int(den_str)
-    # Multiply multi-digit numerator
-    if len(num_str) > 1:
-        numerator = int(num_str[:-1]) * denominator + int(num_str[-1])
-        num = f"{numerator}/{denominator}"
-    else:
-        numerator = int(num_str)
-    value = numerator / denominator
-    unpacked = unpack_fraction(num)
-    spoken = speak_prefix + spoken_number(unpacked, literal=literal)
-    return Fraction(repr or num, value, spoken, numerator, denominator, unpacked)
+def spoken_measurement(m: Measurement, *, literal: bool = False) -> str:
+    """Return the spoken representation of a Measurement's magnitude."""
+    mag = m.magnitude
+    if mag == int(mag):
+        return spoken_number(str(int(mag)), literal=literal)
+    return spoken_number(str(mag), literal=literal)
 
 
-def make_number(
-    num: str | None,
-    repr: str | None = None,  # noqa: A002
-    speak: str | None = None,
-    *,
-    literal: bool = False,
-    special: dict | None = None,
-    m_minus: bool = True,
-) -> Number | Fraction | None:
-    """Return a Number or Fraction dataclass for a number string.
-
-    If literal, spoken string will not convert to hundreds/thousands.
-
-    NOTE: Numerators are assumed to have a single digit. Additional are whole numbers.
-    """
-    if not num or is_unknown(num):
-        return None
-    # Check special
-    with suppress(KeyError):
-        item = (special or {}).get(num) or SPECIAL_NUMBERS[num]
-        if isinstance(item, tuple):
-            value, spoken = item
-        else:
-            value = item
-            spoken = spoken_number(str(value), literal=literal)
-        return Number(repr or num, value, spoken)
-    # Check cardinal direction
-    if num in CARDINALS:
-        if not repr:
-            repr = num  # noqa: A001
-        num = str(CARDINALS[num])
-    val_str = num
-    # Remove unit suffixes
-    if val_str.endswith("SM"):
-        repr = val_str[:]  # noqa: A001
-        val_str = val_str[:-2]
-    # Remove spurious characters from the end
-    num = num.rstrip("M.")
-    num = num.replace("O", "0")
-    num = num.replace("+", "")
-    num = num.replace(",", "")
-    # Handle Minus values with errors like 0M04
-    if m_minus and "M" in num:
-        val_str = num.replace("MM", "-").replace("M", "-")
-        while val_str[0] != "-":
-            val_str = val_str[1:]
-    # Check value prefixes
-    speak_prefix = ""
-    if val_str.startswith("ABV "):
-        speak_prefix += "above "
-        val_str = val_str[4:]
-    if val_str.startswith("BLW "):
-        speak_prefix += "below "
-        val_str = val_str[4:]
-    if val_str.startswith("FL"):
-        speak_prefix += "flight level "
-        val_str, literal = val_str[2:], True
-    if val_str.startswith("M"):
-        speak_prefix += "less than "
-        repr = repr or val_str  # noqa: A001
-        val_str = val_str[1:]
-    if val_str.startswith("P"):
-        speak_prefix += "greater than "
-        repr = repr or val_str  # noqa: A001
-        val_str = val_str[1:]
-    # Create Number
-    if not val_str:
-        return None
-    ret: Number | Fraction | None = None
-    # Create Fraction
-    if "/" in val_str:
-        ret = make_fraction(val_str, repr, literal=literal, speak_prefix=speak_prefix)
-    else:
-        val_str = val_str.replace(",", "")
-        # Overwrite float 0 due to "0.0" literal
-        value = float(val_str) or 0 if "." in num else int(val_str)
-        spoken = speak_prefix + spoken_number(speak or str(value), literal=literal)
-        ret = Number(repr or num, value, spoken)
-    # Null the value if "greater than"/"less than"
-    if ret and not m_minus and repr and repr.startswith(("M", "P")):
-        ret.value = None
-    return ret
+# ---------------------------------------------------------------------------
+# Token helpers used across parsers
+# ---------------------------------------------------------------------------
 
 
 def find_first_in_list(txt: str, str_list: list[str]) -> int:
-    """Return the index of the earliest occurrence of an item from a list in a string.
+    """Return the index of the earliest occurrence of any item from *str_list* in *txt*.
 
-    Ex: find_first_in_list('foobar', ['bar', 'fin']) -> 3
+    Returns -1 if nothing found.
     """
     start = len(txt) + 1
     for item in str_list:
@@ -241,86 +150,189 @@ def find_first_in_list(txt: str, str_list: list[str]) -> int:
 
 
 def is_timestamp(item: str) -> bool:
-    """Return True if the item matches the timestamp format."""
     return len(item) == 7 and item[-1] == "Z" and item[:-1].isdigit()
 
 
 def is_timerange(item: str) -> bool:
-    """Return True if the item is a TAF to-from time range."""
     return len(item) == 9 and item[4] == "/" and item[:4].isdigit() and item[5:].isdigit()
 
 
 def is_possible_temp(temp: str) -> bool:
-    """Return True if all characters are digits or 'M' for minus."""
     return all((char.isdigit() or char == "M") for char in temp)
 
+
+# ---------------------------------------------------------------------------
+# Measurement construction
+# ---------------------------------------------------------------------------
+
+
+def _preprocess_num(num: str) -> tuple[str, str, str]:
+    """Return (val_str, repr_override, speak_prefix) after stripping prefixes."""
+    val_str = num
+    repr_override = ""
+    speak_prefix = ""
+
+    # Remove unit suffixes
+    if val_str.endswith("SM"):
+        repr_override = val_str
+        val_str = val_str[:-2]
+
+    # Cleanup
+    num_clean = num.rstrip("M.").replace("O", "0").replace("+", "").replace(",", "")
+
+    # Handle "M" for minus
+    if "M" in num_clean and not num_clean.startswith("-"):
+        val_str = num_clean.replace("MM", "-").replace("M", "-")
+        while val_str and val_str[0] != "-":
+            val_str = val_str[1:]
+
+    if val_str.startswith("ABV "):
+        speak_prefix += "above "
+        val_str = val_str[4:]
+    if val_str.startswith("BLW "):
+        speak_prefix += "below "
+        val_str = val_str[4:]
+    if val_str.startswith("FL"):
+        speak_prefix += "flight level "
+        val_str = val_str[2:]
+    if val_str.startswith("M"):
+        speak_prefix += "less than "
+        repr_override = repr_override or val_str
+        val_str = val_str[1:]
+    if val_str.startswith("P"):
+        speak_prefix += "greater than "
+        repr_override = repr_override or val_str
+        val_str = val_str[1:]
+
+    return val_str, repr_override, speak_prefix
+
+
+def make_measurement(
+    num: str | None,
+    unit: str,
+    repr_override: str | None = None,  # noqa: A002
+) -> tuple[Measurement | None, str | None]:
+    """Parse *num* into a ``(Measurement, repr_str)`` pair.
+
+    Returns ``(None, None)`` for unknown or empty input.
+    The *repr_str* is the raw token suitable for storing in a ``*Repr`` model.
+    """
+    if not num or is_unknown(num):
+        return None, None
+
+    raw_repr = repr_override or num
+
+    # Cardinal direction
+    if num in CARDINALS:
+        raw_repr = raw_repr or num
+        num = str(CARDINALS[num])
+
+    val_str = num.rstrip("M.").replace("O", "0").replace("+", "").replace(",", "")
+
+    # Handle M-prefix minus sign
+    if "M" in val_str and not val_str.startswith("-"):
+        val_str = val_str.replace("MM", "-").replace("M", "-")
+        while val_str and val_str[0] != "-":
+            val_str = val_str[1:]
+
+    # Strip special prefixes (M = less-than, P = greater-than)
+    magnitude: float | None = None
+    for prefix in ("M", "P"):
+        if val_str.startswith(prefix):
+            val_str = val_str[1:]
+            break
+
+    with suppress(KeyError):
+        item = SPECIAL_NUMBERS[num]
+        magnitude = item[0] if isinstance(item, tuple) else float(item)
+
+    if magnitude is None:
+        if not val_str:
+            return None, None
+        with suppress(ValueError):
+            magnitude = float(val_str) if "." in val_str else float(int(val_str))
+
+    if magnitude is None:
+        return None, None
+
+    return Measurement(magnitude, unit), raw_repr
+
+
+# ---------------------------------------------------------------------------
+# Atmospheric calculations
+# ---------------------------------------------------------------------------
 
 _Numeric = int | float
 
 
-def relative_humidity(temperature: _Numeric, dewpoint: _Numeric, unit: str = "C") -> float:
-    """Calculate the relative humidity as a 0 to 1 percentage."""
+def relative_humidity(temperature: _Numeric, dewpoint: _Numeric, unit: str = "degC") -> float:
+    """Return relative humidity (0–1) from temperature and dewpoint."""
 
     def saturation(value: _Numeric) -> float:
-        """Return the saturation vapor pressure without the C constant for humidity calc."""
         return math.exp((17.67 * value) / (243.5 + value))
 
-    if unit == "F":
+    if unit in ("degF", "F"):
         dewpoint = (dewpoint - 32) * 5 / 9
         temperature = (temperature - 32) * 5 / 9
     return saturation(dewpoint) / saturation(temperature)
 
 
-# https://aviation.stackexchange.com/questions/47971/how-do-i-calculate-density-altitude-by-hand
+def pressure_altitude(pressure: Measurement, altitude: _Numeric) -> Measurement:
+    """Return pressure altitude as a :class:`~avwx.units.Measurement` in feet."""
+    p_inhg = float(pressure.to("inHg").magnitude)
+    result = round((29.92 - p_inhg) * 1000 + altitude)
+    return Measurement(result, "ft")
 
 
-def pressure_altitude(pressure: float, altitude: _Numeric, unit: str = "inHg") -> int:
-    """Calculate the pressure altitude in feet. Converts pressure units."""
-    if unit == "hPa":
-        pressure *= 0.02953
-    return round((29.92 - pressure) * 1000 + altitude)
-
-
-def density_altitude(pressure: float, temperature: _Numeric, altitude: _Numeric, units: Units) -> int:
-    """Calculate the density altitude in feet. Converts pressure and temperature units."""
-    if units.temperature == "F":
-        temperature = (temperature - 32) * 5 / 9
-    if units.altimeter == "hPa":
-        pressure *= 0.02953
+def density_altitude(
+    pressure: Measurement,
+    temperature: Measurement,
+    altitude: _Numeric,
+) -> Measurement:
+    """Return density altitude as a :class:`~avwx.units.Measurement` in feet."""
+    temp_c = float(temperature.to("degC").magnitude)
     pressure_alt = pressure_altitude(pressure, altitude)
     standard = 15 - (2 * altitude / 1000)
-    return round(((temperature - standard) * 120) + pressure_alt)
+    result = round(((temp_c - standard) * 120) + pressure_alt.magnitude)
+    return Measurement(result, "ft")
+
+
+# ---------------------------------------------------------------------------
+# Station / time extraction
+# ---------------------------------------------------------------------------
 
 
 def get_station_and_time(
     data: list[str],
 ) -> tuple[list[str], str | None, str | None]:
-    """Return the report list and removed station ident and time strings."""
+    """Return ``(remaining_tokens, station, time_str)``."""
     if not data:
         return data, None, None
     station = data.pop(0)
     if not data:
         return data, station, None
-    q_time, r_time = data[0], None
-    if data and q_time.endswith("Z") and q_time[:-1].isdigit():
+    q_time = data[0]
+    r_time: str | None = None
+    if q_time.endswith("Z") and q_time[:-1].isdigit():
         r_time = data.pop(0)
-    elif data and len(q_time) == 6 and q_time.isdigit():
+    elif len(q_time) == 6 and q_time.isdigit():
         r_time = f"{data.pop(0)}Z"
     return data, station, r_time
 
 
+# ---------------------------------------------------------------------------
+# Wind
+# ---------------------------------------------------------------------------
+
+
 def is_wind(text: str) -> bool:
-    """Return True if the text is likely a normal wind element."""
-    # Ignore wind shear
     if text.startswith("WS"):
         return False
-    # 09010KT, 09010G15KT
     if len(text) > 4:
         for ending in WIND_UNITS:
             unit_index = text.find(ending)
             if text.endswith(ending) and text[unit_index - 2 : unit_index].isdigit():
                 return True
-    # 09010  09010G15 VRB10
     if len(text) != 5 and (len(text) < 8 or "G" not in text or "/" in text):
         return False
     return text[:5].isdigit() or (text.startswith("VRB") and text[3:5].isdigit())
@@ -330,26 +342,21 @@ VARIABLE_DIRECTION_PATTERN = re.compile(r"\d{3}V\d{3}")
 
 
 def is_variable_wind_direction(text: str) -> bool:
-    """Return True if element looks like 350V040."""
     if len(text) < 7:
         return False
     return VARIABLE_DIRECTION_PATTERN.match(text[:7]) is not None
 
 
 def separate_wind(text: str) -> tuple[str, str, str]:
-    """Extract the direction, speed, and gust from a wind element."""
     direction, speed, gust = "", "", ""
-    # Remove gust
     if "G" in text:
         g_index = text.find("G")
         start, end = g_index + 1, g_index + 3
-        # 16006GP99KT ie gust greater than
         if "GP" in text:
             end += 1
         gust = text[start:end]
         text = text[:g_index] + text[end:]
     if text:
-        # 10G18KT
         if len(text) == 2:
             speed = text
         else:
@@ -359,187 +366,278 @@ def separate_wind(text: str) -> tuple[str, str, str]:
 
 
 def get_wind(
-    data: list[str], units: Units
+    data: list[str],
 ) -> tuple[
     list[str],
-    Number | None,
-    Number | None,
-    Number | None,
-    list[Number],
+    Measurement | None,  # direction (degrees)
+    Measurement | None,  # speed
+    Measurement | None,  # gust
+    list[Measurement],   # variable directions
+    str,                 # wind unit string (for repr / speech)
+    str | None,          # raw wind token
+    str | None,          # raw variable-direction token
 ]:
-    """Return the report list, direction string, speed string, gust string, and variable direction list."""
-    direction, speed, gust = "", "", ""
-    variable: list[Number] = []
-    # Remove unit and split elements
+    """Extract wind elements and return typed Measurements plus raw tokens."""
+    direction_str, speed_str, gust_str = "", "", ""
+    wind_unit = "kt"
+    raw_wind: str | None = None
+    raw_vardir: str | None = None
+    variable: list[Measurement] = []
+
     if data:
         item = copy(data[0])
         if is_wind(item):
+            raw_wind = item
             for key, unit in WIND_UNITS.items():
                 if item.endswith(key):
-                    units.wind_speed = unit
+                    wind_unit = unit
                     item = item.replace(key, "")
                     break
-            direction, speed, gust = separate_wind(item)
+            direction_str, speed_str, gust_str = separate_wind(item)
             data.pop(0)
-    # Separated Gust
+
+    # Separated gust token
     if data and 1 < len(data[0]) < 4 and data[0][0] == "G" and data[0][1:].isdigit():
-        gust = data.pop(0)[1:]
-    # Variable Wind Direction
+        gust_str = data.pop(0)[1:]
+
+    # Variable wind direction
     if data and is_variable_wind_direction(data[0]):
-        for item in data.pop(0).split("V"):
-            value = make_number(item, speak=item, literal=True)
-            if value is not None:
-                variable.append(value)
-    # Convert to Number
-    direction_value = make_number(direction, speak=direction, literal=True)
-    speed_value = make_number(speed.strip("BV"), m_minus=False)
-    gust_value = make_number(gust, m_minus=False)
-    return data, direction_value, speed_value, gust_value, variable
+        raw_vardir = data[0]
+        for part in data.pop(0).split("V"):
+            m, _ = make_measurement(part, "degree")
+            if m is not None:
+                variable.append(m)
+
+    direction: Measurement | None = None
+    if direction_str and direction_str != "VRB" and direction_str != "000":
+        direction, _ = make_measurement(direction_str, "degree")
+    elif direction_str in ("VRB", "000"):
+        # Keep None for direction; special values handled by speech/translate
+        pass
+
+    speed: Measurement | None = None
+    if speed_str:
+        raw_speed = speed_str.strip("BV")
+        speed, _ = make_measurement(raw_speed, wind_unit)
+
+    gust: Measurement | None = None
+    if gust_str:
+        gust, _ = make_measurement(gust_str, wind_unit)
+
+    return data, direction, speed, gust, variable, wind_unit, raw_wind, raw_vardir
 
 
-def get_visibility(data: list[str], units: Units) -> tuple[list[str], Number | None]:
-    """Return the report list and removed visibility string."""
-    visibility = ""
-    if data:
-        item = copy(data[0])
-        # Vis reported in statue miles
-        if item.endswith("SM"):  # 10SM
-            if item[:-2].isdigit():
-                visibility = str(int(item[:-2]))
-            elif "/" in item:
-                visibility = item[: item.find("SM")]  # 1/2SM
+def wind_dir_repr(raw_wind: str | None) -> str | None:
+    """Extract the 3-character direction repr from a raw wind token.
+
+    Returns "VRB", "000", or the numeric direction string.
+    """
+    if not raw_wind:
+        return None
+    for key in WIND_UNITS:
+        clean = raw_wind.replace(key, "")
+        if clean:
+            return clean[:3]
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Visibility
+# ---------------------------------------------------------------------------
+
+
+def get_visibility(
+    data: list[str],
+) -> tuple[list[str], Measurement | None, str | None, str]:
+    """Extract visibility element and return ``(data, measurement, raw_repr, unit)``."""
+    visibility: Measurement | None = None
+    raw: str | None = None
+    unit = "sm"
+
+    if not data:
+        return data, None, None, unit
+
+    item = copy(data[0])
+
+    if item.endswith("SM"):
+        raw = item
+        unit = "sm"
+        if item[:-2].isdigit():
+            vis_val = float(int(item[:-2]))
+        elif "/" in item:
+            frac = item[: item.find("SM")]
+            parts = frac.split("/")
+            if len(parts) == 2 and parts[0].isdigit() and parts[1].isdigit():
+                vis_val = int(parts[0]) / int(parts[1])
             else:
-                visibility = item[:-2]
-            data.pop(0)
-            units.visibility = "sm"
-        # Vis reported in meters
-        elif len(item) == 4 and item.isdigit():
-            visibility = data.pop(0)
-            units.visibility = "m"
-        elif 7 >= len(item) >= 5 and item[:4].isdigit() and (item[4] in ["M", "N", "S", "E", "W"] or item[4:] == "NDV"):
-            visibility = data.pop(0)[:4]
-            units.visibility = "m"
-        elif len(item) == 5 and item[1:].isdigit() and item[0] in ["M", "P", "B"]:
-            visibility = data.pop(0)[1:]
-            units.visibility = "m"
-        elif item.endswith("KM"):
-            visibility = f"{item[:-2]}000"
-            data.pop(0)
-            units.visibility = "m"
-        # Vis statute miles but split Ex: 2 1/2SM
-        elif len(data) > 1 and data[1].endswith("SM") and "/" in data[1] and item.isdigit():
-            vis1 = data.pop(0)  # 2
-            vis2 = data.pop(0).replace("SM", "")  # 1/2
-            visibility = str(int(vis1) * int(vis2[2]) + int(vis2[0])) + vis2[1:]  # 5/2
-            units.visibility = "sm"
-    return data, make_number(visibility, m_minus=False)
+                vis_val = float(frac.replace("/", "."))
+        else:
+            try:
+                vis_val = float(item[:-2])
+            except ValueError:
+                return data, None, None, unit
+        data.pop(0)
+        visibility = Measurement(vis_val, unit)
+
+    elif len(item) == 4 and item.isdigit():
+        raw = item
+        unit = "m"
+        data.pop(0)
+        visibility = Measurement(int(item), unit)
+
+    elif 7 >= len(item) >= 5 and item[:4].isdigit() and (
+        item[4] in {"M", "N", "S", "E", "W"} or item[4:] == "NDV"
+    ):
+        raw = item
+        unit = "m"
+        data.pop(0)
+        visibility = Measurement(int(item[:4]), unit)
+
+    elif len(item) == 5 and item[1:].isdigit() and item[0] in {"M", "P", "B"}:
+        raw = item
+        unit = "m"
+        data.pop(0)
+        visibility = Measurement(int(item[1:]), unit)
+
+    elif item.endswith("KM"):
+        raw = item
+        unit = "m"
+        data.pop(0)
+        visibility = Measurement(int(item[:-2]) * 1000, unit)
+
+    elif len(data) > 1 and data[1].endswith("SM") and "/" in data[1] and item.isdigit():
+        # Split fraction: "2" "1/2SM" → 5/2 sm
+        raw = f"{item} {data[1]}"
+        unit = "sm"
+        vis1 = int(data.pop(0))
+        vis2 = data.pop(0).replace("SM", "")
+        num, den = int(vis2[0]), int(vis2[2])
+        vis_val = vis1 + num / den
+        visibility = Measurement(vis_val, unit)
+
+    # Special CAVOK: no visibility parsed, handled at caller
+    return data, visibility, raw, unit
+
+
+# ---------------------------------------------------------------------------
+# Cloud parsing
+# ---------------------------------------------------------------------------
+
+
+def _null_or_int(val: str | None) -> int | None:
+    return None if not isinstance(val, str) or is_unknown(val) else int(val)
 
 
 def sanitize_cloud(cloud: str) -> str:
-    """Fix rare cloud layer issues."""
     if len(cloud) < 4:
         return cloud
     if not cloud[3].isdigit() and cloud[3] not in ("/", "-"):
-        # Bad "O": FEWO03 -> FEW003
         if cloud[3] == "O":
             cloud = f"{cloud[:3]}0{cloud[4:]}"
-        # Move modifiers to end: BKNC015 -> BKN015C
         elif cloud[3] != "U" and cloud[:4] not in {"BASE", "UNKN"}:
             cloud = cloud[:3] + cloud[4:] + cloud[3]
     return cloud
 
 
-def _null_or_int(val: str | None) -> int | None:
-    """Nullify unknown elements and convert ints."""
-    return None if not isinstance(val, str) or is_unknown(val) else int(val)
-
-
 _TOP_OFFSETS = ("-TOPS", "-TOP")
 
 
-def make_cloud(cloud: str) -> Cloud:
-    """Return a Cloud dataclass for a cloud string.
-
-    This function assumes the input is potentially valid.
-    """
+def make_cloud(cloud: str) -> tuple[Cloud, str]:
+    """Return ``(Cloud, raw_repr)`` for a cloud token."""
     raw_cloud = cloud
     cloud_type = ""
-    base: str | None = None
-    top: str | None = None
+    base_str: str | None = None
+    top_str: str | None = None
+
     cloud = sanitize_cloud(cloud).replace("/", "")
-    # Separate top
+
     for target in _TOP_OFFSETS:
         topi = cloud.find(target)
         if topi > -1:
-            top, cloud = cloud[topi + len(target) :], cloud[:topi]
+            top_str, cloud = cloud[topi + len(target) :], cloud[:topi]
             break
-    # Separate type
-    ## BASE027
+
     if cloud.startswith("BASES"):
         cloud = cloud[5:]
     elif cloud.startswith("BASE"):
         cloud = cloud[4:]
-    ## VV003
     elif cloud.startswith("VV"):
         cloud_type, cloud = cloud[:2], cloud[2:]
-    ## FEW010
     elif len(cloud) >= 3 and cloud[:3] in CLOUD_LIST:
         cloud_type, cloud = cloud[:3], cloud[3:]
-    ## BKN-OVC065
+
     if len(cloud) > 4 and cloud[0] == "-" and cloud[1:4] in CLOUD_LIST:
         cloud_type += cloud[:4]
         cloud = cloud[4:]
-    # Separate base
+
     if len(cloud) >= 3 and cloud[:3].isdigit():
-        base, cloud = cloud[:3], cloud[3:]
+        base_str, cloud = cloud[:3], cloud[3:]
     elif len(cloud) >= 4 and cloud[:4] == "UNKN":
         cloud = cloud[4:]
-    # Remainder is considered modifiers
+
     modifier = cloud or None
-    # Make Cloud
-    return Cloud(raw_cloud, cloud_type or None, _null_or_int(base), _null_or_int(top), modifier)
+
+    base_int = _null_or_int(base_str)
+    top_int = _null_or_int(top_str)
+
+    base = Measurement(base_int * 100, "ft") if base_int is not None else None
+    top = Measurement(top_int * 100, "ft") if top_int is not None else None
+
+    return (
+        Cloud(type=cloud_type or None, base=base, top=top, modifier=modifier),
+        raw_cloud,
+    )
 
 
-def get_clouds(data: list[str]) -> tuple[list[str], list]:
-    """Return the report list and removed list of split cloud layers."""
-    clouds = []
+def get_clouds(data: list[str]) -> tuple[list[str], list[Cloud], list[str]]:
+    """Return ``(remaining_data, clouds, raw_cloud_tokens)``."""
+    clouds: list[Cloud] = []
+    raws: list[str] = []
     for i, item in reversed(list(enumerate(data))):
         if item[:3] in CLOUD_LIST or item[:2] == "VV":
-            cloud = data.pop(i)
-            clouds.append(make_cloud(cloud))
-    # Attempt cloud sort. Fails if None values are present
+            cloud_token = data.pop(i)
+            cloud, raw = make_cloud(cloud_token)
+            clouds.append(cloud)
+            raws.append(raw)
     try:
-        clouds.sort(key=lambda cloud: (cloud.base, cloud.type))
-    except TypeError:
-        clouds.reverse()  # Restores original report order
-    return data, clouds
+        paired = sorted(zip(clouds, raws), key=lambda p: (p[0].base.magnitude if p[0].base else 0, p[0].type))
+        clouds, raws = [p[0] for p in paired], [p[1] for p in paired]
+    except (TypeError, AttributeError):
+        clouds.reverse()
+        raws.reverse()
+    return data, clouds, raws
 
 
-def get_flight_rules(visibility: Number | None, ceiling: Cloud | None) -> int:
-    """Return int based on current flight rules from parsed METAR data.
+# ---------------------------------------------------------------------------
+# Flight rules
+# ---------------------------------------------------------------------------
 
-    0=VFR, 1=MVFR, 2=IFR, 3=LIFR
 
-    Note: Common practice is to report no higher than IFR if visibility unavailable.
-    """
-    # Parse visibility
-    vis: _Numeric
+def get_flight_rules(
+    visibility: Measurement | None,
+    vis_repr: str | None,
+    ceiling: Cloud | None,
+) -> int:
+    """Return flight rules index: 0=VFR, 1=MVFR, 2=IFR, 3=LIFR."""
+    vis: float
     if visibility is None:
-        vis = 2
-    elif visibility.repr == "CAVOK" or visibility.repr.startswith("P6"):
-        vis = 10
-    elif visibility.repr.startswith("M"):
-        vis = 0
-    elif visibility.value is None:
-        vis = 2
-    # Convert meters to miles
-    elif len(visibility.repr) == 4:
-        vis = (visibility.value or 0) * 0.000621371
+        vis = 2.0
+    elif vis_repr in {"CAVOK"} or (vis_repr or "").startswith("P6"):
+        vis = 10.0
+    elif (vis_repr or "").startswith("M"):
+        vis = 0.0
     else:
-        vis = visibility.value or 0
-    # Parse ceiling
-    cld = (ceiling.base if ceiling else 99) or 99
-    # Determine flight rules
+        mag = visibility.magnitude
+        # Normalise to statute miles for the threshold comparison
+        try:
+            vis = float(visibility.to("sm").magnitude)
+        except Exception:  # noqa: BLE001
+            vis = mag * 0.000621371 if "m" in visibility.unit and "sm" not in visibility.unit else mag
+
+    cld = 99.0
+    if ceiling and ceiling.base:
+        cld = ceiling.base.magnitude / 100.0  # convert ft back to hundreds for thresholds
+
     if (vis <= 5) or (cld <= 30):
         if (vis < 3) or (cld < 10):
             if (vis < 1) or (cld < 5):
@@ -550,19 +648,19 @@ def get_flight_rules(visibility: Number | None, ceiling: Cloud | None) -> int:
 
 
 def get_ceiling(clouds: list[Cloud]) -> Cloud | None:
-    """Return ceiling layer from Cloud-List or None if none found.
+    """Return the ceiling layer or None.
 
-    Assumes that the clouds are already sorted lowest to highest.
-
-    Only 'Broken', 'Overcast', and 'Vertical Visibility' are considered ceilings.
-
-    Prevents errors due to lack of cloud information (eg. '' or 'FEW///')
+    Only BKN, OVC, and VV layers qualify as ceilings.
     """
     return next((c for c in clouds if c.base and c.type in {"OVC", "BKN", "VV"}), None)
 
 
+# ---------------------------------------------------------------------------
+# Altitude
+# ---------------------------------------------------------------------------
+
+
 def is_altitude(value: str) -> bool:
-    """Return True if the value is a possible altitude."""
     if len(value) < 5:
         return False
     if value.startswith("SFC/"):
@@ -575,26 +673,30 @@ def is_altitude(value: str) -> bool:
 
 def make_altitude(
     value: str,
-    units: Units,
-    repr: str | None = None,  # noqa: A002
+    unit: str = "ft",
+    repr_override: str | None = None,  # noqa: A002
     *,
     force_fl: bool = False,
-) -> tuple[Number | None, Units]:
-    """Convert altitude string into a number."""
+) -> tuple[Measurement | None, str]:
+    """Parse an altitude string into a ``(Measurement, unit)`` pair."""
     if not value:
-        return None, units
-    raw = repr or value
+        return None, unit
     for end in ("FT", "M"):
         if value.endswith(end):
             force_fl = False
-            units.altitude = end.lower()
+            unit = end.lower()
             value = value.removesuffix(end)
-    # F430
-    if value[0] == "F" and value[1:].isdigit():
+    if value and value[0] == "F" and value[1:].isdigit():
         value = f"FL{value[1:]}"
-    if force_fl and value[:2] != "FL":
+    if force_fl and not value.startswith("FL"):
         value = f"FL{value}"
-    return make_number(value, repr=raw), units
+    m, _ = make_measurement(value, unit, repr_override)
+    return m, unit
+
+
+# ---------------------------------------------------------------------------
+# Date / time parsing
+# ---------------------------------------------------------------------------
 
 
 def parse_date(
@@ -604,13 +706,7 @@ def parse_date(
     time_only: bool = False,
     target: dt.date | None = None,
 ) -> dt.datetime | None:
-    """Parse a report timestamp in ddhhZ or ddhhmmZ format.
-
-    If time_only, assumes hhmm format with current or previous day.
-
-    This function assumes the given timestamp is within the hour threshold from current date.
-    """
-    # Format date string
+    """Parse a report timestamp in ddhhZ or ddhhmmZ format."""
     date = date.strip("Z")
     if not date.isdigit():
         return None
@@ -624,21 +720,22 @@ def parse_date(
         if len(date) != 6:
             return None
         index_hour = 2
-    # Create initial guess
+
     if target:
-        target = dt.datetime(target.year, target.month, target.day, tzinfo=dt.timezone.utc)
+        target_dt = dt.datetime(target.year, target.month, target.day, tzinfo=dt.timezone.utc)
     else:
-        target = dt.datetime.now(tz=dt.timezone.utc)
-    day = target.day if time_only else int(date[:2])
+        target_dt = dt.datetime.now(tz=dt.timezone.utc)
+
+    day = target_dt.day if time_only else int(date[:2])
     hour = int(date[index_hour : index_hour + 2])
-    # Handle situation where next month has less days than current month
-    # Shifted value makes sure that a month shift doesn't happen twice
+
     shifted = False
-    if day > monthrange(target.year, target.month)[1]:
-        target += relativedelta(months=-1)
+    if day > monthrange(target_dt.year, target_dt.month)[1]:
+        target_dt += relativedelta(months=-1)
         shifted = True
+
     try:
-        guess = target.replace(
+        guess = target_dt.replace(
             day=day,
             hour=hour % 24,
             minute=int(date[index_hour + 2 : index_hour + 4]) % 60,
@@ -647,16 +744,17 @@ def parse_date(
         )
     except ValueError:
         return None
-    # Handle overflow hour
+
     if hour > 23:
         guess += dt.timedelta(days=1)
-    # Handle changing months if not already shifted
+
     if not shifted:
-        hourdiff = (guess - target) / dt.timedelta(minutes=1) / 60
+        hourdiff = (guess - target_dt) / dt.timedelta(minutes=1) / 60
         if hourdiff > hour_threshold:
             guess += relativedelta(months=-1)
         elif hourdiff < -hour_threshold:
             guess += relativedelta(months=+1)
+
     return guess
 
 
@@ -666,19 +764,23 @@ def make_timestamp(
     time_only: bool = False,
     target_date: dt.date | None = None,
 ) -> Timestamp | None:
-    """Return a Timestamp dataclass for a report timestamp in ddhhZ or ddhhmmZ format."""
+    """Return a :class:`~avwx.structs.Timestamp` from a ddhhZ / ddhhmmZ string."""
     if not timestamp:
         return None
     date_obj = parse_date(timestamp, time_only=time_only, target=target_date)
-    return Timestamp(timestamp, date_obj)
+    return Timestamp(repr=timestamp, dt=date_obj)
+
+
+# ---------------------------------------------------------------------------
+# Runway visibility detection
+# ---------------------------------------------------------------------------
 
 
 def is_runway_visibility(item: str) -> bool:
-    """Return True if the item is a runway visibility range string."""
     return (
         len(item) > 4
         and item[0] == "R"
         and (item[3] == "/" or item[4] == "/")
         and item[1:3].isdigit()
-        and "CLRD" not in item  # R28/CLRD70 Runway State
+        and "CLRD" not in item
     )

@@ -52,11 +52,10 @@ from avwx.structs import (
     Code,
     Coord,
     NotamData,
-    Number,
     Qualifiers,
     Timestamp,
-    Units,
 )
+from avwx.units import Measurement
 
 # https://www.navcanada.ca/en/briefing-on-the-transition-to-icao-notam-format.pdf
 # https://www.faa.gov/air_traffic/flight_info/aeronav/notams/media/2021-09-07_ICAO_NOTAM_101_Presentation_for_Airport_Operators.pdf
@@ -151,7 +150,7 @@ class Notams(Reports):
         self._post_parse()
 
     def _post_parse(self) -> None:
-        self.data, units = [], None
+        self.data = []
         if self.raw is None:
             return
         for report in self.raw:
@@ -162,12 +161,10 @@ class Notams(Reports):
             else:
                 issued = None
             try:
-                data, units = parse(report, issued=issued)
+                data = parse(report, issued=issued)
                 self.data.append(data)
             except Exception as exc:  # noqa: BLE001
                 exceptions.exception_intercept(exc, raw=report)  # type: ignore
-        if units:
-            self.units = units
 
     @staticmethod
     def sanitize(report: str) -> str:
@@ -220,13 +217,13 @@ def _rear_coord(value: str) -> Coord | None:
 
 def _split_location(
     location: str | None,
-) -> tuple[Coord | None, Number | None]:
+) -> tuple[Coord | None, Measurement | None]:
     """Identify coordinate and radius from location element."""
     if not location:
         return None, None
     coord, radius = None, None
     if len(location) == 14 and location[-3:].isdigit():
-        radius = core.make_number(location[-3:])
+        radius = Measurement(int(location[-3:]), "nmi")
         location = location[:-3]
     if len(location) == 11 and location[-1] in {"E", "W"}:
         coord = _rear_coord(location)
@@ -286,7 +283,7 @@ def _find_q_codes(
     return traffic, purpose, scope, lower, upper, location
 
 
-def _qualifiers(value: str, units: Units) -> Qualifiers:
+def _qualifiers(value: str) -> Qualifiers:
     """Parse the NOTAM Q) line into components."""
     fir, q_code, *codes = (i.strip() for i in re.split("/| ", value.strip()))
     traffic, purpose, scope, lower, upper, location = _find_q_codes(codes)
@@ -307,8 +304,8 @@ def _qualifiers(value: str, units: Units) -> Qualifiers:
         traffic=traffic,
         purpose=purpose,
         scope=scope,
-        lower=make_altitude(lower, units),
-        upper=make_altitude(upper, units),
+        lower=make_altitude(lower),
+        upper=make_altitude(upper),
         coord=coord,
         radius=radius,
     )
@@ -353,7 +350,7 @@ def parse_linked_times(start: str, end: str) -> tuple[Timestamp | Code | None, T
     return make_year_timestamp(start, start_raw, tzname), make_year_timestamp(end, end_raw, tzname)
 
 
-def make_altitude(value: str | None, units: Units) -> Number | None:
+def make_altitude(value: str | None) -> Measurement | None:
     """Parse NOTAM altitudes."""
     if not value:
         return None
@@ -361,13 +358,12 @@ def make_altitude(value: str | None, units: Units) -> Number | None:
         if "(" in trimmed:
             trimmed = trimmed[trimmed.find("(") + 1 :]
         if trimmed in SPECIAL_NUMBERS or trimmed[0].isdigit():
-            return core.make_altitude(trimmed, units, repr=value)[0]
+            return core.make_altitude(trimmed, repr_override=value)[0]
     return None
 
 
-def parse(report: str, issued: Timestamp | None = None) -> tuple[NotamData, Units]:
+def parse(report: str, issued: Timestamp | None = None) -> NotamData:
     """Parse NOTAM report string."""
-    units = Units.international()
     sanitized = sanitize(report)
     qualifiers, station, start_time, end_time = None, None, None, None
     body, number, replaces, report_type = "", None, None, None
@@ -386,7 +382,7 @@ def parse(report: str, issued: Timestamp | None = None) -> tuple[NotamData, Unit
             match = None
         item = (text[: match.start()] if match else text).strip()
         if tag == "Q":
-            qualifiers = _qualifiers(item, units)
+            qualifiers = _qualifiers(item)
         elif tag == "A":
             station = item
         elif tag == "B":
@@ -398,29 +394,26 @@ def parse(report: str, issued: Timestamp | None = None) -> tuple[NotamData, Unit
         elif tag == "E":
             body = item
         elif tag == "F":
-            lower = make_altitude(item, units)
+            lower = make_altitude(item)
         elif tag == "G":
-            upper = make_altitude(item, units)
+            upper = make_altitude(item)
     start_time, end_time = parse_linked_times(start_text, end_text)
-    return (
-        NotamData(
-            raw=report,
-            sanitized=sanitized,
-            station=station,
-            time=issued,
-            remarks=None,
-            number=number,
-            replaces=replaces,
-            type=report_type,
-            qualifiers=qualifiers,
-            start_time=start_time,
-            end_time=end_time,
-            schedule=schedule,
-            body=body,
-            lower=lower,
-            upper=upper,
-        ),
-        units,
+    return NotamData(
+        raw=report,
+        sanitized=sanitized,
+        station=station,
+        time=issued,
+        remarks=None,
+        number=number,
+        replaces=replaces,
+        type=report_type,
+        qualifiers=qualifiers,
+        start_time=start_time,
+        end_time=end_time,
+        schedule=schedule,
+        body=body,
+        lower=lower,
+        upper=upper,
     )
 
 

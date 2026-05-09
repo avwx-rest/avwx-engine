@@ -1,88 +1,69 @@
-"""Contains dataclasses to hold report data."""
+"""Pydantic models for all report data types.
 
-# stdlib
+Design principles
+-----------------
+* Physical measurements (:class:`~avwx.units.Measurement`) carry their own
+  unit so callers never need a side-channel ``Units`` object.
+* Every main report type exposes a *data* model (typed values) and a *repr*
+  model (raw string tokens from the original report).
+* All models are ``frozen=True`` — report data is immutable after parsing.
+* :class:`FlightRules` is a :class:`~enum.StrEnum` so it integrates cleanly
+  with FastAPI/FastMCP schema generation.
+"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, TypeAlias
+from datetime import datetime
+from enum import StrEnum
+from typing import TYPE_CHECKING, Any, TypeAlias
 
-if TYPE_CHECKING:
-    from datetime import datetime
+from pydantic import BaseModel, ConfigDict
 
-# module
 from avwx.exceptions import MissingExtraModule
 from avwx.load_utils import LazyLoad
-from avwx.static.core import IN_UNITS, NA_UNITS
+from avwx.units import Measurement
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+if TYPE_CHECKING:
+    pass
+
 try:
     from shapely.geometry import Point, Polygon
 except ModuleNotFoundError:
-    Point, Polygon = TypeAlias, TypeAlias  # type: ignore
+    Point, Polygon = TypeAlias, TypeAlias  # type: ignore[assignment,misc]
 
 AIRCRAFT = LazyLoad("aircraft")
 
 
-@dataclass
-class Aircraft:
-    code: str
-    type: str
+# ---------------------------------------------------------------------------
+# Shared config
+# ---------------------------------------------------------------------------
 
-    @classmethod
-    def from_icao(cls, code: str) -> Self:
-        """Load an Aircraft from an ICAO aircraft code."""
-        try:
-            return cls(code=code, type=AIRCRAFT[code])
-        except KeyError as key_error:
-            msg = f"{code} is not a known aircraft code"
-            raise ValueError(msg) from key_error
+_FROZEN: ConfigDict = ConfigDict(frozen=True)
 
 
-@dataclass
-class Units:
-    accumulation: str
-    altimeter: str
-    altitude: str
-    temperature: str
-    visibility: str
-    wind_speed: str
-
-    @classmethod
-    def international(cls) -> Self:
-        """Create default internation units."""
-        return cls(**IN_UNITS)
-
-    @classmethod
-    def north_american(cls) -> Self:
-        """Create default North American units."""
-        return cls(**NA_UNITS)
+# ---------------------------------------------------------------------------
+# Enumerations
+# ---------------------------------------------------------------------------
 
 
-@dataclass
-class Number:
-    repr: str
-    value: int | float | None
-    spoken: str
+class FlightRules(StrEnum):
+    VFR = "VFR"
+    MVFR = "MVFR"
+    IFR = "IFR"
+    LIFR = "LIFR"
 
 
-@dataclass
-class Fraction(Number):
-    numerator: int
-    denominator: int
-    normalized: str
+# ---------------------------------------------------------------------------
+# Primitive value types (non-physical)
+# ---------------------------------------------------------------------------
 
 
-@dataclass
-class Timestamp:
-    repr: str
-    dt: datetime | None
+class Code(BaseModel):
+    """A raw token paired with its human-readable translation."""
 
+    model_config = _FROZEN
 
-@dataclass
-class Code:
     repr: str
     value: str
 
@@ -94,9 +75,8 @@ class Code:
         *,
         default: str | None = None,
         error: bool = True,
-    ) -> Self | None:
-        """Load a code from a known key and value dict."""
-        value: str | None
+    ) -> "Code | None":
+        """Load a code from a known key/value mapping."""
         if not key:
             return None
         try:
@@ -106,7 +86,7 @@ class Code:
                 msg = f"No code found for {key}"
                 raise KeyError(msg) from exc
             value = default
-        return cls(key, value or "Unknown")
+        return cls(repr=key, value=value or "Unknown")
 
     @classmethod
     def from_list(
@@ -115,21 +95,67 @@ class Code:
         codes: dict[str, str],
         *,
         exclusive: bool = False,
-    ) -> list[Self]:
-        """Load a list of codes from string characters."""
+    ) -> list["Code"]:
+        """Load a list of codes from individual characters of *keys*."""
         if not keys:
             return []
-        out = []
+        out: list[Code] = []
         for key in keys.strip():
             if value := codes.get(key):
-                out.append(cls(key, value))
+                out.append(cls(repr=key, value=value))
             elif exclusive:
                 return []
         return out
 
 
-@dataclass
-class Coord:
+class Timestamp(BaseModel):
+    """A report timestamp with its raw string and parsed datetime."""
+
+    model_config = _FROZEN
+
+    repr: str
+    dt: datetime | None
+
+
+class ReportData(BaseModel):
+    """Minimal report data shared by all report types."""
+
+    model_config = _FROZEN
+
+    raw: str
+    sanitized: str
+    station: str | None
+    time: Timestamp | None
+    remarks: str | None
+
+
+class Aircraft(BaseModel):
+    """ICAO aircraft type."""
+
+    model_config = _FROZEN
+
+    code: str
+    type: str
+
+    @classmethod
+    def from_icao(cls, code: str) -> "Aircraft":
+        try:
+            return cls(code=code, type=AIRCRAFT[code])
+        except KeyError as exc:
+            msg = f"{code} is not a known aircraft code"
+            raise ValueError(msg) from exc
+
+
+# ---------------------------------------------------------------------------
+# Coordinate / geographic types
+# ---------------------------------------------------------------------------
+
+
+class Coord(BaseModel):
+    """Geographic coordinate pair, optionally with a raw string repr."""
+
+    model_config = _FROZEN
+
     lat: float
     lon: float
     repr: str | None = None
@@ -139,15 +165,14 @@ class Coord:
         return self.lat, self.lon
 
     @property
-    def point(self) -> Point:
+    def point(self) -> Any:  # Polygon type is optional
         if Point is None:
-            extra = "shape"
-            raise MissingExtraModule(extra)
+            raise MissingExtraModule("shape")
         return Point(self.lat, self.lon)
 
     @staticmethod
     def to_dms(value: float) -> tuple[int, int, int]:
-        """Convert a coordinate decimal value to degree, minute, second."""
+        """Convert a decimal coordinate value to (degree, minute, second)."""
         minute, second = divmod(abs(value) * 3600, 60)
         degree, minute = divmod(minute, 60)
         if value < 0:
@@ -155,100 +180,189 @@ class Coord:
         return int(degree), int(minute), int(second)
 
 
-@dataclass
-class Cloud:
-    repr: str
+# ---------------------------------------------------------------------------
+# Cloud
+# ---------------------------------------------------------------------------
+
+
+class Cloud(BaseModel):
+    """A parsed cloud layer with typed altitude measurements."""
+
+    model_config = _FROZEN
+
     type: str | None = None
-    base: int | None = None
-    top: int | None = None
+    base: Measurement | None = None  # feet AGL
+    top: Measurement | None = None   # feet AGL
     modifier: str | None = None
 
 
-@dataclass
-class RunwayVisibility:
-    repr: str
+# ---------------------------------------------------------------------------
+# Runway visibility
+# ---------------------------------------------------------------------------
+
+
+class RunwayVisibility(BaseModel):
+    model_config = _FROZEN
+
     runway: str
-    visibility: Number | None
-    variable_visibility: list[Number]
+    visibility: Measurement | None
+    variable_visibility: list[Measurement]
     trend: Code | None
 
 
-@dataclass
-class Location:
+# ---------------------------------------------------------------------------
+# Location (PIREP)
+# ---------------------------------------------------------------------------
+
+
+class Location(BaseModel):
+    model_config = _FROZEN
+
     repr: str
     station: str | None
-    direction: Number | None
-    distance: Number | None
+    direction: Measurement | None  # degrees
+    distance: Measurement | None   # nautical miles
 
 
-@dataclass
-class PressureTendency:
+# ---------------------------------------------------------------------------
+# Turbulence / Icing (PIREP)
+# ---------------------------------------------------------------------------
+
+
+class Turbulence(BaseModel):
+    model_config = _FROZEN
+
+    severity: str
+    floor: Measurement | None = None
+    ceiling: Measurement | None = None
+
+
+class Icing(Turbulence):
+    type: str | None = None
+
+
+# ---------------------------------------------------------------------------
+# Pressure tendency (remarks)
+# ---------------------------------------------------------------------------
+
+
+class PressureTendency(BaseModel):
+    model_config = _FROZEN
+
     repr: str
     tendency: str
-    change: float
+    change: Measurement  # pressure change amount
 
 
-@dataclass
-class FiveDigitCodes:
-    maximum_temperature_6: Number | None = None  # 1
-    minimum_temperature_6: Number | None = None  # 2
-    pressure_tendency: PressureTendency | None = None  # 5
-    precip_36_hours: Number | None = None  # 6
-    precip_24_hours: Number | None = None  # 7
-    sunshine_minutes: Number | None = None  # 9
+# ---------------------------------------------------------------------------
+# Remarks
+# ---------------------------------------------------------------------------
 
 
-@dataclass
+class FiveDigitCodes(BaseModel):
+    model_config = _FROZEN
+
+    maximum_temperature_6: Measurement | None = None
+    minimum_temperature_6: Measurement | None = None
+    pressure_tendency: PressureTendency | None = None
+    precip_36_hours: Measurement | None = None
+    precip_24_hours: Measurement | None = None
+    sunshine_minutes: float | None = None
+    severe_storm_12: Measurement | None = None
+
+
 class RemarksData(FiveDigitCodes):
-    codes: list[Code] = field(default_factory=list)
-    dewpoint_decimal: Number | None = None
-    maximum_temperature_24: Number | None = None
-    minimum_temperature_24: Number | None = None
-    precip_hourly: Number | None = None
-    sea_level_pressure: Number | None = None
-    snow_depth: Number | None = None
-    temperature_decimal: Number | None = None
+    codes: list[Code] = []
+    dewpoint_decimal: Measurement | None = None
+    maximum_temperature_24: Measurement | None = None
+    minimum_temperature_24: Measurement | None = None
+    precip_hourly: Measurement | None = None
+    sea_level_pressure: Measurement | None = None
+    snow_depth: Measurement | None = None
+    temperature_decimal: Measurement | None = None
 
 
-@dataclass
-class ReportData:
-    raw: str
+# ---------------------------------------------------------------------------
+# Shared METAR/TAF data fields
+# ---------------------------------------------------------------------------
+
+
+class SharedData(BaseModel):
+    """Fields common to METAR and individual TAF forecast lines."""
+
+    model_config = _FROZEN
+
+    altimeter: Measurement | None
+    clouds: list[Cloud]
+    flight_rules: FlightRules
+    other: list[str]
+    visibility: Measurement | None
+    wind_direction: Measurement | None  # degrees
+    wind_gust: Measurement | None
+    wind_speed: Measurement | None
+    wx_codes: list[Code]
+
+
+class SharedRepr(BaseModel):
+    """Raw string tokens for fields common to METAR and TAF lines."""
+
+    model_config = _FROZEN
+
+    altimeter: str | None
+    clouds: list[str]
+    other: list[str]
+    visibility: str | None
+    wind_direction: str | None
+    wind_gust: str | None
+    wind_speed: str | None
+    wx_codes: list[str]
+
+
+# ---------------------------------------------------------------------------
+# METAR
+# ---------------------------------------------------------------------------
+
+
+class MetarData(SharedData):
+    """Fully-typed METAR data.  All physical values are :class:`~avwx.units.Measurement`."""
+
     sanitized: str
     station: str | None
     time: Timestamp | None
     remarks: str | None
-
-
-@dataclass
-class SharedData:
-    altimeter: Number | None
-    clouds: list[Cloud]
-    flight_rules: str
-    other: list[str]
-    visibility: Number | None
-    wind_direction: Number | None
-    wind_gust: Number | None
-    wind_speed: Number | None
-    wx_codes: list[Code]
-
-
-@dataclass
-class MetarData(ReportData, SharedData):
-    dewpoint: Number | None
+    dewpoint: Measurement | None
     relative_humidity: float | None
     remarks_info: RemarksData | None
     runway_visibility: list[RunwayVisibility]
-    temperature: Number | None
-    wind_variable_direction: list[Number]
-    density_altitude: int | None = None
-    pressure_altitude: int | None = None
+    temperature: Measurement | None
+    wind_variable_direction: list[Measurement]
+    density_altitude: Measurement | None = None
+    pressure_altitude: Measurement | None = None
 
 
-@dataclass
+class MetarRepr(SharedRepr):
+    """Raw token strings parallel to :class:`MetarData` — one per parsed field."""
+
+    raw: str
+    sanitized: str
+    station: str | None
+    time: str | None
+    remarks: str | None
+    dewpoint: str | None
+    runway_visibility: list[str]
+    temperature: str | None
+    wind_variable_direction: list[str]
+
+
+# ---------------------------------------------------------------------------
+# TAF
+# ---------------------------------------------------------------------------
+
+
 class TafLineData(SharedData):
     end_time: Timestamp | None
     icing: list[str]
-    probability: Number | None
+    probability: float | None
     raw: str
     sanitized: str
     start_time: Timestamp | None
@@ -256,11 +370,30 @@ class TafLineData(SharedData):
     turbulence: list[str]
     type: str
     wind_shear: str | None
-    wind_variable_direction: list[Number] | None
+    wind_variable_direction: list[Measurement] | None
 
 
-@dataclass
-class TafData(ReportData):
+class TafLineRepr(SharedRepr):
+    end_time: str | None
+    icing: list[str]
+    probability: str | None
+    raw: str
+    sanitized: str
+    start_time: str | None
+    turbulence: list[str]
+    type: str
+    wind_shear: str | None
+    wind_variable_direction: list[str] | None
+
+
+class TafData(BaseModel):
+    model_config = _FROZEN
+
+    raw: str
+    sanitized: str
+    station: str | None
+    time: Timestamp | None
+    remarks: str | None
     forecast: list[TafLineData]
     start_time: Timestamp | None
     end_time: Timestamp | None
@@ -273,23 +406,38 @@ class TafData(ReportData):
     remarks_info: RemarksData | None = None
 
 
-@dataclass
-class ReportTrans:
+class TafRepr(BaseModel):
+    model_config = _FROZEN
+
+    raw: str
+    sanitized: str
+    station: str | None
+    time: str | None
+    remarks: str | None
+    forecast: list[TafLineRepr]
+
+
+# ---------------------------------------------------------------------------
+# Translation output structs  (kept as frozen Pydantic models)
+# ---------------------------------------------------------------------------
+
+
+class ReportTrans(BaseModel):
+    model_config = _FROZEN
+
     altimeter: str
     clouds: str
     wx_codes: str
     visibility: str
 
 
-@dataclass
 class MetarTrans(ReportTrans):
     dewpoint: str
-    remarks: dict
+    remarks: dict[str, str]
     temperature: str
     wind: str
 
 
-@dataclass
 class TafLineTrans(ReportTrans):
     icing: str
     turbulence: str
@@ -297,72 +445,85 @@ class TafLineTrans(ReportTrans):
     wind_shear: str
 
 
-@dataclass
-class TafTrans:
+class TafTrans(BaseModel):
+    model_config = _FROZEN
+
     forecast: list[TafLineTrans]
     max_temp: str
     min_temp: str
-    remarks: dict
+    remarks: dict[str, str]
 
 
-@dataclass
-class Turbulence:
-    severity: str
-    floor: Number | None = None
-    ceiling: Number | None = None
+# ---------------------------------------------------------------------------
+# PIREP
+# ---------------------------------------------------------------------------
 
 
-@dataclass
-class Icing(Turbulence):
-    type: str | None = None
+class PirepData(BaseModel):
+    model_config = _FROZEN
 
-
-@dataclass
-class PirepData(ReportData):
+    raw: str
+    sanitized: str
+    station: str | None
+    time: Timestamp | None
+    remarks: str | None
     aircraft: Aircraft | str | None = None
-    altitude: Number | str | None = None
+    altitude: Measurement | str | None = None
     clouds: list[Cloud] | None = None
-    flight_visibility: Number | None = None
+    flight_visibility: Measurement | None = None
     icing: Icing | None = None
     location: Location | None = None
     other: list[str] | None = None
-    temperature: Number | None = None
+    temperature: Measurement | None = None
     turbulence: Turbulence | None = None
     type: str | None = None
     wx_codes: list[Code] | None = None
 
 
-@dataclass
-class AirepData(ReportData):
-    pass
+class AirepData(BaseModel):
+    model_config = _FROZEN
+
+    raw: str
+    sanitized: str
+    station: str | None
+    time: Timestamp | None
+    remarks: str | None
 
 
-@dataclass
-class Bulletin:
+# ---------------------------------------------------------------------------
+# AIRMET / SIGMET
+# ---------------------------------------------------------------------------
+
+
+class Bulletin(BaseModel):
+    model_config = _FROZEN
+
     repr: str
     type: Code
     country: str
     number: int
 
 
-@dataclass
-class Movement:
+class Movement(BaseModel):
+    model_config = _FROZEN
+
     repr: str
-    direction: Number | None
-    speed: Number | None
+    direction: Measurement | None
+    speed: Measurement | None
 
 
 MIN_POLY_SIZE = 2
 
 
-@dataclass
-class AirSigObservation:
+class AirSigObservation(BaseModel):
+    model_config = _FROZEN
+
     type: Code | None
     start_time: Timestamp | None
     end_time: Timestamp | None
     position: Coord | None
-    floor: Number | None
-    ceiling: Number | None
+    floor: Measurement | None
+    ceiling: Measurement | None
     coords: list[Coord]
     bounds: list[str]
     movement: Movement | None
@@ -370,15 +531,20 @@ class AirSigObservation:
     other: list[str]
 
     @property
-    def poly(self) -> Polygon | None:
+    def poly(self) -> Any:
         if Polygon is None:
-            extra = "shape"
-            raise MissingExtraModule(extra)
+            raise MissingExtraModule("shape")
         return Polygon([c.pair for c in self.coords]) if len(self.coords) > MIN_POLY_SIZE else None
 
 
-@dataclass
-class AirSigmetData(ReportData):
+class AirSigmetData(BaseModel):
+    model_config = _FROZEN
+
+    raw: str
+    sanitized: str
+    station: str | None
+    time: Timestamp | None
+    remarks: str | None
     bulletin: Bulletin
     issuer: str
     correction: str | None
@@ -392,8 +558,14 @@ class AirSigmetData(ReportData):
     forecast: AirSigObservation | None
 
 
-@dataclass
-class Qualifiers:
+# ---------------------------------------------------------------------------
+# NOTAM
+# ---------------------------------------------------------------------------
+
+
+class Qualifiers(BaseModel):
+    model_config = _FROZEN
+
     repr: str
     fir: str
     subject: Code | None
@@ -401,14 +573,20 @@ class Qualifiers:
     traffic: Code | None
     purpose: list[Code]
     scope: list[Code]
-    lower: Number | None
-    upper: Number | None
+    lower: Measurement | None
+    upper: Measurement | None
     coord: Coord | None
-    radius: Number | None
+    radius: Measurement | None
 
 
-@dataclass
-class NotamData(ReportData):
+class NotamData(BaseModel):
+    model_config = _FROZEN
+
+    raw: str
+    sanitized: str
+    station: str | None
+    time: Timestamp | None
+    remarks: str | None
     number: str | None
     replaces: str | None
     type: Code | None
@@ -417,197 +595,199 @@ class NotamData(ReportData):
     end_time: Timestamp | Code | None
     schedule: str | None
     body: str
-    lower: Number | None
-    upper: Number | None
+    lower: Measurement | None
+    upper: Measurement | None
 
 
-@dataclass
-class GfsPeriod:
+# ---------------------------------------------------------------------------
+# GFS forecasts
+# ---------------------------------------------------------------------------
+
+
+class GfsPeriod(BaseModel):
+    model_config = _FROZEN
+
     time: Timestamp
-    temperature: Number
-    dewpoint: Number
+    temperature: Measurement
+    dewpoint: Measurement
     cloud: Code
-    temperature_minmax: Number | None = None
-    precip_chance_12: Number | None = None
+    temperature_minmax: Measurement | None = None
+    precip_chance_12: float | None = None
     precip_amount_12: Code | None = None
-    thunderstorm_12: Number | None = None
-    severe_storm_12: Number | None = None
-    freezing_precip: Number | None = None
+    thunderstorm_12: float | None = None
+    severe_storm_12: float | None = None
+    freezing_precip: float | None = None
     precip_type: Code | None = None
-    snow: Number | None = None
+    snow: float | None = None
 
 
-@dataclass
 class MavPeriod(GfsPeriod):
-    wind_direction: Number | None = None
-    wind_speed: Number | None = None
-    precip_chance_6: Number | None = None
+    wind_direction: Measurement | None = None
+    wind_speed: Measurement | None = None
+    precip_chance_6: float | None = None
     precip_amount_6: Code | None = None
-    thunderstorm_6: Number | None = None
-    severe_storm_6: Number | None = None
+    thunderstorm_6: float | None = None
+    severe_storm_6: float | None = None
     ceiling: Code | None = None
     visibility: Code | None = None
     vis_obstruction: Code | None = None
 
 
-@dataclass
 class MexPeriod(GfsPeriod):
-    precip_chance_24: Number | None = None
+    precip_chance_24: float | None = None
     precip_amount_24: Code | None = None
-    thunderstorm_24: Number | None = None
-    severe_storm_24: Number | None = None
-    rain_snow_mix: Number | None = None
+    thunderstorm_24: float | None = None
+    severe_storm_24: float | None = None
+    rain_snow_mix: float | None = None
     snow_amount_24: Code | None = None
 
 
-@dataclass
-class MavData(ReportData):
+class MavData(BaseModel):
+    model_config = _FROZEN
+
+    raw: str
+    sanitized: str
+    station: str | None
+    time: Timestamp | None
+    remarks: str | None
     forecast: list[MavPeriod]
 
 
-@dataclass
-class MexData(ReportData):
+class MexData(BaseModel):
+    model_config = _FROZEN
+
+    raw: str
+    sanitized: str
+    station: str | None
+    time: Timestamp | None
+    remarks: str | None
     forecast: list[MexPeriod]
 
 
-@dataclass
-class NbmUnits(Units):
-    duration: str
-    solar_radiation: str
-    wave_height: str
+# ---------------------------------------------------------------------------
+# NBM forecasts
+# ---------------------------------------------------------------------------
 
 
-@dataclass
-class NbmPeriod:
+class NbmPeriod(BaseModel):
+    model_config = _FROZEN
+
     time: Timestamp
-    temperature: Number | None = None
-    dewpoint: Number | None = None
-    sky_cover: Number | None = None
-    wind_direction: Number | None = None
-    wind_speed: Number | None = None
-    wind_gust: Number | None = None
-    snow_level: Number | None = None
-    precip_duration: Number | None = None
-    freezing_precip: Number | None = None
-    snow: Number | None = None
-    sleet: Number | None = None
-    rain: Number | None = None
-    solar_radiation: Number | None = None
-    wave_height: Number | None = None
+    temperature: Measurement | None = None
+    dewpoint: Measurement | None = None
+    sky_cover: float | None = None
+    wind_direction: Measurement | None = None
+    wind_speed: Measurement | None = None
+    wind_gust: Measurement | None = None
+    snow_level: Measurement | None = None
+    precip_duration: float | None = None
+    freezing_precip: float | None = None
+    snow: float | None = None
+    sleet: float | None = None
+    rain: float | None = None
+    solar_radiation: float | None = None
+    wave_height: Measurement | None = None
 
 
-@dataclass
 class NbhsShared(NbmPeriod):
-    ceiling: Number | None = None
-    visibility: Number | None = None
-    cloud_base: Number | None = None
-    mixing_height: Number | None = None
-    transport_wind_direction: Number | None = None
-    transport_wind_speed: Number | None = None
-    haines: list[Number] | None = None
+    ceiling: Measurement | None = None
+    visibility: Measurement | None = None
+    cloud_base: Measurement | None = None
+    mixing_height: Measurement | None = None
+    transport_wind_direction: Measurement | None = None
+    transport_wind_speed: Measurement | None = None
+    haines: float | None = None
 
 
-@dataclass
 class NbhPeriod(NbhsShared):
-    precip_chance_1: Number | None = None
-    precip_chance_6: Number | None = None
-    precip_amount_1: Number | None = None
-    thunderstorm_1: Number | None = None
-    snow_amount_1: Number | None = None
-    icing_amount_1: Number | None = None
+    precip_chance_1: float | None = None
+    precip_chance_6: float | None = None
+    precip_amount_1: Measurement | None = None
+    thunderstorm_1: float | None = None
+    snow_amount_1: Measurement | None = None
+    icing_amount_1: Measurement | None = None
 
 
-@dataclass
 class NbsPeriod(NbhsShared):
-    temperature_minmax: Number | None = None
-    precip_chance_6: Number | None = None
-    precip_chance_12: Number | None = None
-    precip_amount_6: Number | None = None
-    precip_amount_12: Number | None = None
-    precip_duration: Number | None = None
-    thunderstorm_3: Number | None = None
-    thunderstorm_6: Number | None = None
-    thunderstorm_12: Number | None = None
-    snow_amount_6: Number | None = None
-    icing_amount_6: Number | None = None
+    temperature_minmax: Measurement | None = None
+    precip_chance_6: float | None = None
+    precip_chance_12: float | None = None
+    precip_amount_6: Measurement | None = None
+    precip_amount_12: Measurement | None = None
+    precip_duration: float | None = None
+    thunderstorm_3: float | None = None
+    thunderstorm_6: float | None = None
+    thunderstorm_12: float | None = None
+    snow_amount_6: Measurement | None = None
+    icing_amount_6: Measurement | None = None
 
 
-@dataclass
 class NbePeriod(NbmPeriod):
-    temperature_minmax: Number | None = None
-    precip_chance_12: Number | None = None
-    precip_amount_12: Number | None = None
-    precip_amount_24: Number | None = None
-    thunderstorm_12: Number | None = None
-    snow_amount_12: Number | None = None
-    snow_amount_24: Number | None = None
-    icing_amount_12: Number | None = None
+    temperature_minmax: Measurement | None = None
+    precip_chance_12: float | None = None
+    precip_amount_12: Measurement | None = None
+    precip_amount_24: Measurement | None = None
+    thunderstorm_12: float | None = None
+    snow_amount_12: Measurement | None = None
+    snow_amount_24: Measurement | None = None
+    icing_amount_12: Measurement | None = None
 
 
-@dataclass
 class NbxPeriod(NbmPeriod):
-    precip_chance_12: Number | None = None
-    precip_amount_12: Number | None = None
-    precip_amount_24: Number | None = None
-    snow_amount_12: Number | None = None
-    icing_amount_12: Number | None = None
+    precip_chance_12: float | None = None
+    precip_amount_12: Measurement | None = None
+    precip_amount_24: Measurement | None = None
+    snow_amount_12: Measurement | None = None
+    icing_amount_12: Measurement | None = None
 
 
-@dataclass
-class NbhData(ReportData):
+class NbhData(BaseModel):
+    model_config = _FROZEN
+
+    raw: str
+    sanitized: str
+    station: str | None
+    time: Timestamp | None
+    remarks: str | None
     forecast: list[NbhPeriod]
 
 
-@dataclass
-class NbsData(ReportData):
+class NbsData(BaseModel):
+    model_config = _FROZEN
+
+    raw: str
+    sanitized: str
+    station: str | None
+    time: Timestamp | None
+    remarks: str | None
     forecast: list[NbsPeriod]
 
 
-@dataclass
-class NbeData(ReportData):
+class NbeData(BaseModel):
+    model_config = _FROZEN
+
+    raw: str
+    sanitized: str
+    station: str | None
+    time: Timestamp | None
+    remarks: str | None
     forecast: list[NbePeriod]
 
 
-@dataclass
-class NbxData(ReportData):
+class NbxData(BaseModel):
+    model_config = _FROZEN
+
+    raw: str
+    sanitized: str
+    station: str | None
+    time: Timestamp | None
+    remarks: str | None
     forecast: list[NbxPeriod]
 
 
-# @dataclass
-# class GfsPeriodTrans:
-#     temperature: str
-#     dewpoint: str
-#     cloud: str
-#     precip_chance_12: str
-#     precip_amount_12: str
-#     thunderstorm_12: str
-#     severe_storm_12: str
-#     freezing_precip: str
-#     precip_type: str
-#     snow: str
-
-
-# @dataclass
-# class MavPeriodTrans(GfsPeriodTrans):
-#     wind_direction: str
-#     wind_speed: str
-#     precip_chance_6: str
-#     precip_amount_6: str
-#     thunderstorm_6: str
-#     severe_storm_6: str
-#     ceiling: str
-#     visibility: str
-#     vis_obstruction: str
-
-
-# @dataclass
-# class MexPeriodTrans(GfsPeriodTrans):
-#     precip_chance_24: str
-#     precip_amount_24: str
-#     thunderstorm_24: str
-#     severe_storm_24: str
-#     rain_snow_mix: str
-#     snow_amount_24: str
+# ---------------------------------------------------------------------------
+# Sanitization log  (mutable — used only during parsing)
+# ---------------------------------------------------------------------------
 
 
 @dataclass
@@ -631,7 +811,7 @@ class Sanitization:
         )
 
     def log(self, item: str, replacement: str | None = None) -> None:
-        """Log a changed item. Calling without a replacement assumes removal."""
+        """Log a changed item.  Calling without a replacement assumes removal."""
         item = item.strip()
         if not item:
             return
@@ -645,7 +825,7 @@ class Sanitization:
             self.replaced[item] = replacement
 
     def log_list(self, before: list[str], after: list[str]) -> None:
-        """Log list differences. Assumes that list length and order haven't changed."""
+        """Log list differences (assumes length and order are unchanged)."""
         for item, replacement in zip(before, after, strict=True):
             if item != replacement:
                 self.log(item, replacement)

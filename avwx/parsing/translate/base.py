@@ -1,13 +1,15 @@
 """Functions for translating report data."""
 
-# stdlib
 from __future__ import annotations
 
-from contextlib import suppress
-
-# module
 from avwx.static.core import CLOUD_TRANSLATIONS
-from avwx.structs import Cloud, Code, Number, ReportTrans, SharedData, Units
+from avwx.structs import Cloud, Code, ReportTrans, SharedData, SharedRepr
+from avwx.units import Measurement
+
+
+def _fmt(value: float) -> str:
+    """Format a float as int when it has no fractional part."""
+    return str(int(value)) if value == int(value) else str(value)
 
 
 def get_cardinal_direction(direction: float) -> str:
@@ -65,51 +67,41 @@ def get_cardinal_direction(direction: float) -> str:
     return ret
 
 
-WIND_DIR_REPR = {"000": "Calm", "VRB": "Variable"}
+_WIND_DIR_REPR = {"000": "Calm", "VRB": "Variable"}
 
 
 def wind(
-    direction: Number | None,
-    speed: Number | None,
-    gust: Number | None,
-    vardir: list[Number] | None = None,
-    unit: str = "kt",
+    direction: Measurement | None,
+    speed: Measurement | None,
+    gust: Measurement | None,
+    vardir: list[Measurement] | None = None,
+    direction_repr: str | None = None,
     *,
     cardinals: bool = True,
-    spoken: bool = False,
 ) -> str:
     """Format wind elements into a readable sentence.
-
-    Returns the translation string.
 
     Ex: NNE-020 (variable 010 to 040) at 14kt gusting to 20kt
     """
     ret = ""
-    target = "spoken" if spoken else "repr"
-    # Wind direction
-    if direction:
-        if direction.repr in WIND_DIR_REPR:
-            ret += WIND_DIR_REPR[direction.repr]
-        elif direction.value is None:
-            ret += direction.repr
-        else:
-            if cardinals:
-                ret += f"{get_cardinal_direction(direction.value)}-"
-            ret += getattr(direction, target)
-    # Variable direction
-    if vardir and isinstance(vardir, list):
-        vardir = [getattr(var, target) for var in vardir]
-        ret += f" (variable {vardir[0]} to {vardir[1]})"
-    # Speed
-    if speed and speed.value:
-        ret += f" at {speed.value}{unit}"
-    # Gust
-    if gust and gust.value:
-        ret += f" gusting to {gust.value}{unit}"
+    is_calm = direction_repr == "000"
+    if direction_repr and direction_repr in _WIND_DIR_REPR:
+        ret += _WIND_DIR_REPR[direction_repr]
+    elif direction is not None:
+        if cardinals:
+            ret += f"{get_cardinal_direction(direction.magnitude)}-"
+        ret += direction_repr or str(int(direction.magnitude))
+    if vardir and len(vardir) >= 2:
+        dirs = [str(int(v.magnitude)).zfill(3) for v in vardir]
+        ret += f" (variable {dirs[0]} to {dirs[1]})"
+    if speed and not is_calm:
+        ret += f" at {_fmt(speed.magnitude)}{speed.unit}"
+    if gust and not is_calm:
+        ret += f" gusting to {_fmt(gust.magnitude)}{gust.unit}"
     return ret
 
 
-VIS_REPR = {
+_VIS_REPR = {
     "P6": "Greater than 6sm ( >10km )",
     "M1/2": "Less than .5sm ( <0.8km )",
     "M1/4": "Less than .25sm ( <0.4km )",
@@ -117,78 +109,73 @@ VIS_REPR = {
 }
 
 
-def visibility(vis: Number | None, unit: str = "m") -> str:
+def visibility(vis: Measurement | None, vis_repr: str | None = None) -> str:
     """Format a visibility element into a string with both km and sm values.
 
     Ex: 8km ( 5sm )
     """
-    if not (vis and unit in {"m", "sm"}):
+    if not vis:
         return ""
-    with suppress(KeyError):
-        return VIS_REPR[vis.repr]
-    if vis.value is None:
-        return ""
-    if unit == "m":
-        meters = vis.value
-        miles = meters * 0.000621371
-        converted = str(round(miles, 1)).replace(".0", "") + "sm"
-        value = str(round(meters / 1000, 1)).replace(".0", "")
-        unit = "km"
-    elif unit == "sm":
-        miles = vis.value or 0
-        kilometers = miles / 0.621371
+    if vis_repr and vis_repr in _VIS_REPR:
+        return _VIS_REPR[vis_repr]
+    unit = vis.unit
+    value = vis.magnitude
+    if unit == "sm":
+        kilometers = value / 0.621371
         converted = str(round(kilometers, 1)).replace(".0", "") + "km"
-        value = str(miles).replace(".0", "")
+        value_str = str(value).replace(".0", "")
+        return f"{value_str}sm ({converted})"
+    # meters (or km — normalise to km for display)
+    if unit == "km":
+        meters = value * 1000
     else:
-        return ""
-    return f"{value}{unit} ({converted})"
+        meters = value
+    miles = meters * 0.000621371
+    converted = str(round(miles, 1)).replace(".0", "") + "sm"
+    value_str = str(round(meters / 1000, 1)).replace(".0", "")
+    return f"{value_str}km ({converted})"
 
 
-def temperature(temp: Number | None, unit: str = "C") -> str:
+def temperature(temp: Measurement | None) -> str:
     """Format a temperature element into a string with both C and F values.
-
-    Used for both Temp and Dew.
 
     Ex: 34°C (93°F)
     """
-    unit = unit.upper()
-    if not (temp and temp.value is not None and unit in {"C", "F"}):
+    if temp is None:
         return ""
-    if unit == "C":
-        fahrenheit = temp.value * 1.8 + 32
-        converted = f"{round(fahrenheit)}°F"
-    elif unit == "F":
-        celsius = (temp.value - 32) / 1.8
-        converted = f"{round(celsius)}°C"
-    else:
-        return ""
-    return f"{temp.value}°{unit} ({converted})"
+    value = temp.magnitude
+    unit = temp.unit
+    if unit == "degC":
+        fahrenheit = round(value * 1.8 + 32)
+        return f"{_fmt(value)}°C ({fahrenheit}°F)"
+    if unit == "degF":
+        celsius = round((value - 32) / 1.8)
+        return f"{_fmt(value)}°F ({celsius}°C)"
+    return ""
 
 
-def altimeter(alt: Number | None, unit: str = "hPa") -> str:
+def altimeter(alt: Measurement | None) -> str:
     """Format the altimeter element into a string with hPa and inHg values.
 
-    Ex: 30.11 inHg (10.20 hPa)
+    Ex: 30.11 inHg (1020 hPa)
     """
-    if not (alt and alt.value is not None and unit in {"hPa", "inHg"}):
+    if alt is None:
         return ""
+    value = alt.magnitude
+    unit = alt.unit
     if unit == "hPa":
-        value = str(alt.value)
-        inches = round(alt.value / 33.8638866667, 2)
+        inches = round(value / 33.8638866667, 2)
         converted = str(inches).ljust(5, "0") + " inHg"
-    elif unit == "inHg":
-        value = str(alt.value).ljust(5, "0")
-        pascals = alt.value * 33.8638866667
-        converted = f"{round(pascals)} hPa"
-    else:
-        return ""
-    return f"{value} {unit} ({converted})"
+        return f"{_fmt(value)} {unit} ({converted})"
+    if unit == "inHg":
+        pascals = round(value * 33.8638866667)
+        value_str = str(value).ljust(5, "0")
+        return f"{value_str} {unit} ({pascals} hPa)"
+    return ""
 
 
-def clouds(values: list[Cloud] | None, unit: str = "ft") -> str:
+def clouds(values: list[Cloud] | None) -> str:
     """Format cloud list into a readable sentence.
-
-    Returns the translation string.
 
     Ex: Broken layer at 2200ft (Cumulonimbus), Overcast layer at 3600ft - Reported AGL
     """
@@ -198,26 +185,23 @@ def clouds(values: list[Cloud] | None, unit: str = "ft") -> str:
     for cloud in values:
         if cloud.base is None:
             continue
-        cloud_str = CLOUD_TRANSLATIONS[cloud.type]
+        cloud_str = CLOUD_TRANSLATIONS.get(cloud.type, CLOUD_TRANSLATIONS[None])
         if cloud.modifier and cloud.modifier in CLOUD_TRANSLATIONS:
             cloud_str += f" ({CLOUD_TRANSLATIONS[cloud.modifier]})"
-        ret.append(cloud_str.format(cloud.base * 100, unit))
+        ret.append(cloud_str.format(int(cloud.base.magnitude), cloud.base.unit))
     return ", ".join(ret) + " - Reported AGL" if ret else "Sky clear"
 
 
 def wx_codes(codes: list[Code]) -> str:
-    """Join WX code values,
-
-    Returns the translation string,
-    """
+    """Join WX code values."""
     return ", ".join(code.value for code in codes)
 
 
-def current_shared(wxdata: SharedData, units: Units) -> ReportTrans:
-    """Translate Visibility, Altimeter, Clouds, and Other,"""
+def current_shared(data: SharedData, repr: SharedRepr) -> ReportTrans:
+    """Translate Visibility, Altimeter, Clouds, and Other."""
     return ReportTrans(
-        visibility=visibility(wxdata.visibility, units.visibility),
-        altimeter=altimeter(wxdata.altimeter, units.altimeter),
-        clouds=clouds(wxdata.clouds, units.altitude),
-        wx_codes=wx_codes(wxdata.wx_codes),
+        visibility=visibility(data.visibility, repr.visibility),
+        altimeter=altimeter(data.altimeter),
+        clouds=clouds(data.clouds),
+        wx_codes=wx_codes(data.wx_codes),
     )

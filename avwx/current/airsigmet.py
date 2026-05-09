@@ -34,7 +34,7 @@ from geopy.distance import distance as geo_distance  # type: ignore
 from avwx import exceptions
 from avwx.base import AVWXBase
 from avwx.exceptions import MissingExtraModule
-from avwx.flight_path import to_coordinates
+from avwx.geo.flight_path import to_coordinates
 from avwx.load_utils import LazyLoad
 from avwx.parsing import core
 from avwx.service.bulk import NoaaBulk, NoaaIntl, Service
@@ -47,10 +47,9 @@ from avwx.structs import (
     Code,
     Coord,
     Movement,
-    Number,
     Timestamp,
-    Units,
 )
+from avwx.units import Measurement
 
 try:
     from shapely.geometry import LineString
@@ -87,7 +86,7 @@ class AirSigmet(AVWXBase):
 
     def _post_parse(self) -> None:
         if self.raw:
-            self.data, self.units = parse(self.raw, self.issued)
+            self.data = parse(self.raw, self.issued)
 
     @staticmethod
     def sanitize(report: str) -> str:
@@ -356,42 +355,44 @@ def _position(data: list[str]) -> tuple[list[str], Coord | None]:
     return data, Coord(lat=lat, lon=lon, repr=raw)
 
 
-def _movement(data: list[str], units: Units) -> tuple[list[str], Units, Movement | None]:
+def _movement(data: list[str]) -> tuple[list[str], Movement | None]:
     with suppress(ValueError):
         data.remove("STNR")
-        speed = core.make_number("STNR")
-        return data, units, Movement(repr="STNR", direction=None, speed=speed)
+        return data, Movement(repr="STNR", direction=None, speed=None)
     try:
         index = data.index("MOV")
     except ValueError:
-        return data, units, None
+        return data, None
     raw = data.pop(index)
     direction_str = data.pop(index)
-    # MOV CNL
     if direction_str == "CNL":
-        return data, units, None
+        return data, None
     raw += f" {direction_str} "
-    # MOV FROM 23040KT
+    direction: Measurement | None = None
     if direction_str == "FROM":
         value = data[index][:3]
         raw += value
-        direction = core.make_number(value)
+        dir_m, _ = core.make_measurement(value, "degree")
+        direction = dir_m
         data[index] = data[index][3:]
-    # MOV E 45KMH
     else:
-        direction = core.make_number(direction_str.replace("/", ""), literal=True, special=CARDINAL_DEGREES)
-    speed = None
+        deg = CARDINAL_DEGREES.get(direction_str.replace("/", ""))
+        if deg is not None:
+            direction = Measurement(float(deg), "degree")
+    speed: Measurement | None = None
     with suppress(IndexError):
-        kt_unit, kmh_unit = data[index].endswith("KT"), data[index].endswith("KMH")
+        kt_unit = data[index].endswith("KT")
+        kmh_unit = data[index].endswith("KMH")
         if kt_unit or kmh_unit:
-            units.wind_speed = "kmh" if kmh_unit else "kt"
+            wind_unit = "km/h" if kmh_unit else "kt"
             speed_str = data.pop(index)
             raw += speed_str
-            # Remove bottom speed Ex: MOV W 05-10KT
             if "-" in speed_str:
                 speed_str = speed_str[speed_str.find("-") + 1 :]
-            speed = core.make_number(speed_str[: -3 if kmh_unit else -2])
-    return data, units, Movement(repr=raw.strip(), direction=direction, speed=speed)
+            speed_val = speed_str[: -3 if kmh_unit else -2]
+            speed_m, _ = core.make_measurement(speed_val, wind_unit)
+            speed = speed_m
+    return data, Movement(repr=raw.strip(), direction=direction, speed=speed)
 
 
 def _info_from_match(match: re.Match, start: int) -> tuple[str, int]:
@@ -473,49 +474,44 @@ def _bounds(data: list[str]) -> tuple[list[str], list[Coord], list[str]]:
     return data, coords, bounds
 
 
-def _altitudes(data: list[str], units: Units) -> tuple[list[str], Units, Number | None, Number | None]:
-    """Extract the floor and ceiling altitudes"""
-    floor, ceiling = None, None
+def _altitudes(data: list[str]) -> tuple[list[str], Measurement | None, Measurement | None]:
+    """Extract the floor and ceiling altitudes."""
+    floor: Measurement | None = None
+    ceiling: Measurement | None = None
     for i, item in enumerate(data):
-        # BTN FL180 AND FL330
-        if item == "BTN" and len(data) > i + 2 and data[i + 2] == "AND":
-            floor, units = core.make_altitude(data[i + 1], units)
-            ceiling, units = core.make_altitude(data[i + 3], units)
+        if item == "BTN" and len(data) > i + 3 and data[i + 2] == "AND":
+            floor, _ = core.make_altitude(data[i + 1])
+            ceiling, _ = core.make_altitude(data[i + 3])
             data = data[:i] + data[i + 4 :]
             break
-        # TOPS ABV FL450
         if item in ("TOP", "TOPS", "BLW"):
-            if data[i + 1] == "ABV":
-                ceiling = core.make_number(f"ABV {data[i + 2]}")
+            if len(data) > i + 2 and data[i + 1] == "ABV":
+                ceiling, _ = core.make_altitude(data[i + 2])
                 data = data[:i] + data[i + 3 :]
                 break
-            if data[i + 1] == "BLW":
-                ceiling = core.make_number(f"BLW {data[i + 2]}")
+            if len(data) > i + 2 and data[i + 1] == "BLW":
+                ceiling, _ = core.make_altitude(data[i + 2])
                 data = data[:i] + data[i + 3 :]
                 break
-            # TOPS TO FL310
-            if data[i + 1] == "TO":
+            if len(data) > i + 1 and data[i + 1] == "TO":
                 data.pop(i)
-            ceiling, units = core.make_altitude(data[i + 1], units)
-            data = data[:i] + data[i + 2 :]
-            # CIG BLW 010
-            if data[i - 1] == "CIG":
-                data.pop(i - 1)
+            if len(data) > i + 1:
+                ceiling, _ = core.make_altitude(data[i + 1])
+                data = data[:i] + data[i + 2 :]
+                if i > 0 and data[i - 1] == "CIG":
+                    data.pop(i - 1)
             break
-        # FL060/300 SFC/FL160
         if core.is_altitude(item):
             if "/" in item:
                 floor_val, ceiling_val = item.split("/")
-                floor, units = core.make_altitude(floor_val, units)
-                if (floor_val == "SFC" or floor_val[:2] == "FL") and ceiling_val[:2] != "FL":
-                    ceiling, units = core.make_altitude(ceiling_val, units, force_fl=True)
-                else:
-                    ceiling, units = core.make_altitude(ceiling_val, units)
+                floor, _ = core.make_altitude(floor_val)
+                force_fl = (floor_val == "SFC" or floor_val[:2] == "FL") and ceiling_val[:2] != "FL"
+                ceiling, _ = core.make_altitude(ceiling_val, force_fl=force_fl)
             else:
-                ceiling, units = core.make_altitude(item, units)
+                ceiling, _ = core.make_altitude(item)
             data.pop(i)
             break
-    return data, units, floor, ceiling
+    return data, floor, ceiling
 
 
 def _weather_type(data: list[str]) -> tuple[list[str], Code | None]:
@@ -540,15 +536,15 @@ def _intensity(data: list[str]) -> tuple[list[str], Code | None]:
         return data, None
 
 
-def _sigmet_observation(data: list[str], units: Units, issued: date | None = None) -> tuple[AirSigObservation, Units]:
+def _sigmet_observation(data: list[str], issued: date | None = None) -> AirSigObservation:
     data, start_time, end_time = _time(data, issued)
     data, position = _position(data)
     data, coords, bounds = _bounds(data)
-    data, units, movement = _movement(data, units)
+    data, movement = _movement(data)
     data, intensity = _intensity(data)
-    data, units, floor, ceiling = _altitudes(data, units)
+    data, floor, ceiling = _altitudes(data)
     data, weather = _weather_type(data)
-    struct = AirSigObservation(
+    return AirSigObservation(
         type=weather,
         start_time=start_time,
         end_time=end_time,
@@ -561,23 +557,21 @@ def _sigmet_observation(data: list[str], units: Units, issued: date | None = Non
         intensity=intensity,
         other=_clean_flags(data),
     )
-    return struct, units
 
 
 def _observations(
-    data: list[str], units: Units, issued: date | None = None
-) -> tuple[Units, AirSigObservation | None, AirSigObservation | None]:
-    observation, forecast, forecast_index = None, None, -1
+    data: list[str], issued: date | None = None
+) -> tuple[AirSigObservation | None, AirSigObservation | None]:
+    observation, forecast = None, None
     forecast_index = _first_index(data, "FCST", "OUTLOOK", "OTLK")
     if forecast_index == -1:
-        observation, units = _sigmet_observation(data, units, issued)
-    # 6 is arbitrary. Will likely change or be more precise later
+        observation = _sigmet_observation(data, issued)
     elif forecast_index < 6:
-        forecast, units = _sigmet_observation(data, units, issued)
+        forecast = _sigmet_observation(data, issued)
     else:
-        observation, units = _sigmet_observation(data[:forecast_index], units, issued)
-        forecast, units = _sigmet_observation(data[forecast_index:], units, issued)
-    return units, observation, forecast
+        observation = _sigmet_observation(data[:forecast_index], issued)
+        forecast = _sigmet_observation(data[forecast_index:], issued)
+    return observation, forecast
 
 
 _REPLACE = {
@@ -624,9 +618,8 @@ def sanitize(report: str) -> str:
     return " ".join(data)
 
 
-def parse(report: str, issued: date | None = None) -> tuple[AirSigmetData, Units]:
+def parse(report: str, issued: date | None = None) -> AirSigmetData:
     """Parse AIRMET / SIGMET report string"""
-    units = Units.international()
     sanitized = sanitize(report)
     data, bulletin, issuer, time, correction = _header(_parse_prep(sanitized))
     data, area, report_type, start_time, end_time, station = _spacetime(data)
@@ -636,8 +629,8 @@ def parse(report: str, issued: date | None = None) -> tuple[AirSigmetData, Units
         with suppress(ValueError):
             data = data[data.index("<elip>") + 1 :]
     data, region = _region(data)
-    units, observation, forecast = _observations(data, units, issued)
-    struct = AirSigmetData(
+    observation, forecast = _observations(data, issued)
+    return AirSigmetData(
         raw=report,
         sanitized=sanitized,
         station=station,
@@ -655,4 +648,3 @@ def parse(report: str, issued: date | None = None) -> tuple[AirSigmetData, Units
         observation=observation,
         forecast=forecast,
     )
-    return struct, units

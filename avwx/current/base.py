@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 from avwx.base import ManagedReport
 from avwx.service import get_service
 from avwx.static.core import WX_TRANSLATIONS
-from avwx.structs import Code, Coord, ReportData, ReportTrans, Sanitization, Units
+from avwx.structs import Code, Coord, ReportData, ReportTrans, Sanitization
 
 if TYPE_CHECKING:
     from datetime import date
@@ -42,7 +42,7 @@ def wx_code(code: str) -> Code | str:
             ret += code[:2]
         code = code[2:]
     # Return Code if any part was able to be translated
-    return Code(code_copy, ret.strip()) if is_code else code_copy
+    return Code(repr=code_copy, value=ret.strip()) if is_code else code_copy
 
 
 def get_wx_codes(codes: list[str]) -> tuple[list[str], list[Code]]:
@@ -80,7 +80,6 @@ class Reports(ManagedReport):
     coord: Coord | None = None
     raw: list[str] | None = None  # type: ignore
     data: list[ReportData] | None = None  # type: ignore
-    units: Units = Units.north_american()
     sanitization: list[Sanitization] | None = None
 
     def __init__(self, code: str | None = None, coord: Coord | None = None):

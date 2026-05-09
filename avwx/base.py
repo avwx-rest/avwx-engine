@@ -15,12 +15,9 @@ from avwx.station import Station
 
 if TYPE_CHECKING:
     from avwx.service import Service
-    from avwx.structs import ReportData, Units
+    from avwx.structs import ReportData
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Self
 
 
 def find_station(report: str) -> Station | None:
@@ -48,9 +45,6 @@ class AVWXBase(metaclass=ABCMeta):
 
     #: ReportData dataclass of parsed data values and units
     data: ReportData | None = None
-
-    #: Units inferred from the station location and report contents
-    units: Units | None = None
 
     def __repr__(self) -> str:
         return f"<avwx.{self.__class__.__name__}>"
