@@ -22,7 +22,7 @@ from avwx.structs import Coord
 try:
     from typing import Self
 except ImportError:
-    from typing_extensions import Self
+    from typing import Self
 
 
 def _get_ip_location() -> Coord:

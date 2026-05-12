@@ -5,7 +5,7 @@
 # stdlib
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 # library
@@ -216,7 +216,7 @@ def test_qualifiers(qualifier: structs.Qualifiers) -> None:
             "2110121506",
             "2110121506",
             None,
-            datetime(2021, 10, 12, 15, 6, tzinfo=timezone.utc),
+            datetime(2021, 10, 12, 15, 6, tzinfo=UTC),
         ),
         (
             "2205241452EST",
@@ -261,8 +261,8 @@ def test_bad_year_timestamp() -> None:
         (
             "2203231000",
             "2303231300",
-            datetime(2022, 3, 23, 10, 0, tzinfo=timezone.utc),
-            datetime(2023, 3, 23, 13, 0, tzinfo=timezone.utc),
+            datetime(2022, 3, 23, 10, 0, tzinfo=UTC),
+            datetime(2023, 3, 23, 13, 0, tzinfo=UTC),
         ),
         (
             "2107221958EST",
@@ -274,7 +274,7 @@ def test_bad_year_timestamp() -> None:
             "",
             "2107221958",
             None,
-            datetime(2021, 7, 22, 19, 58, tzinfo=timezone.utc),
+            datetime(2021, 7, 22, 19, 58, tzinfo=UTC),
         ),
         (
             "2303070658",

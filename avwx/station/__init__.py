@@ -17,11 +17,11 @@ from avwx.station.search import search
 from avwx.station.station import Station, nearest
 
 __all__ = (
+    "__LAST_UPDATED__",
     "Station",
-    "station_list",
     "nearest",
     "search",
+    "station_list",
     "uses_na_format",
     "valid_station",
-    "__LAST_UPDATED__",
 )

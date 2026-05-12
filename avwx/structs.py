@@ -16,16 +16,13 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import StrEnum
-from typing import TYPE_CHECKING, Any, TypeAlias
+from typing import Any, TypeAlias
 
 from pydantic import BaseModel, ConfigDict
 
 from avwx.exceptions import MissingExtraModule
 from avwx.load_utils import LazyLoad
 from avwx.units import Measurement
-
-if TYPE_CHECKING:
-    pass
 
 try:
     from shapely.geometry import Point, Polygon
@@ -75,7 +72,7 @@ class Code(BaseModel):
         *,
         default: str | None = None,
         error: bool = True,
-    ) -> "Code | None":
+    ) -> Code | None:
         """Load a code from a known key/value mapping."""
         if not key:
             return None
@@ -95,7 +92,7 @@ class Code(BaseModel):
         codes: dict[str, str],
         *,
         exclusive: bool = False,
-    ) -> list["Code"]:
+    ) -> list[Code]:
         """Load a list of codes from individual characters of *keys*."""
         if not keys:
             return []
@@ -138,7 +135,7 @@ class Aircraft(BaseModel):
     type: str
 
     @classmethod
-    def from_icao(cls, code: str) -> "Aircraft":
+    def from_icao(cls, code: str) -> Aircraft:
         try:
             return cls(code=code, type=AIRCRAFT[code])
         except KeyError as exc:

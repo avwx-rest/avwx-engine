@@ -33,7 +33,7 @@ def update_all() -> bool:
     return not any(func() for func in (update_aircraft, update_navaids, update_stations))
 
 
-__all__ = ["update_all", "update_aircraft", "update_navaids", "update_stations"]
+__all__ = ["update_aircraft", "update_all", "update_navaids", "update_stations"]
 
 
 if __name__ == "__main__":

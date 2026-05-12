@@ -75,7 +75,7 @@ def min_max_temp(temp: str | None) -> str:
 def translate_taf(data: TafData, repr: TafRepr) -> TafTrans:
     """Return translations for a TafData object."""
     forecast: list[TafLineTrans] = []
-    for line, line_repr in zip(data.forecast, repr.forecast):
+    for line, line_repr in zip(data.forecast, repr.forecast, strict=False):
         shared = _trans.current_shared(line, line_repr)
         # Remove false 'Sky Clear' if line type is 'BECMG'
         cloud_str = shared.clouds

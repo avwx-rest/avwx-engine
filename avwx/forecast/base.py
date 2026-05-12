@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING
 
 from avwx.base import ManagedReport
@@ -37,8 +37,8 @@ def _timestamp(line: str) -> Timestamp:
     """Return the report timestamp from the first line."""
     start = line.find("GUIDANCE") + 11
     text = line[start : start + 16].strip()
-    timestamp = datetime.strptime(text, r"%m/%d/%Y  %H%M").replace(tzinfo=timezone.utc)
-    return Timestamp(repr=text, dt=timestamp.replace(tzinfo=timezone.utc))
+    timestamp = datetime.strptime(text, r"%m/%d/%Y  %H%M").replace(tzinfo=UTC)
+    return Timestamp(repr=text, dt=timestamp.replace(tzinfo=UTC))
 
 
 def _find_time_periods(line: list[str], timestamp: datetime | None) -> list[dict]:

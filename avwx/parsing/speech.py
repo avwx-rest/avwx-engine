@@ -52,11 +52,11 @@ def wind(
         ret += f" (variable {dirs[0]} to {dirs[1]})"
     # Speed and gust use numeric values (e.g. "12kt"), then _format_plural_unit converts to "12 knots"
     if speed and not is_calm:
-        from avwx.parsing.translate.base import _fmt  # noqa: PLC0415
+        from avwx.parsing.translate.base import _fmt
 
         ret += f" at {_fmt(speed.magnitude)}{unit}"
     if gust and not is_calm:
-        from avwx.parsing.translate.base import _fmt  # noqa: PLC0415
+        from avwx.parsing.translate.base import _fmt
 
         ret += f" gusting to {_fmt(gust.magnitude)}{unit}"
     if ret and unit in SPOKEN_UNITS:
@@ -255,5 +255,5 @@ def taf(data: TafData, repr: TafRepr) -> str:
     except AttributeError:
         ret = ""
     return ret + ". ".join(
-        [taf_line(line, line_repr) for line, line_repr in zip(data.forecast, repr.forecast)]
+        [taf_line(line, line_repr) for line, line_repr in zip(data.forecast, repr.forecast, strict=False)]
     )

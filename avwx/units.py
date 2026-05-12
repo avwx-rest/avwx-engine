@@ -33,7 +33,7 @@ _ureg.define("kt = knot")  # knots (avoids collision with kilo-tonne)
 _ureg.define("inHg = inch_Hg")  # inches of mercury
 
 
-def _parse_unit(value: float | int, unit: str) -> pint.Quantity:
+def _parse_unit(value: float, unit: str) -> pint.Quantity:
     return _ureg.Quantity(value, unit)
 
 
@@ -95,7 +95,7 @@ class Measurement:
 
     __slots__ = ("_q", "_unit_str")
 
-    def __init__(self, magnitude: float | int, unit: str) -> None:
+    def __init__(self, magnitude: float, unit: str) -> None:
         self._q: pint.Quantity = _parse_unit(magnitude, unit)
         self._unit_str: str = unit
 
@@ -119,7 +119,7 @@ class Measurement:
     # Conversion
     # ------------------------------------------------------------------
 
-    def to(self, unit: str | StrEnum) -> "Measurement":
+    def to(self, unit: str | StrEnum) -> Measurement:
         """Return a new Measurement converted to *unit*."""
         target = str(unit)
         converted = self._q.to(target)
@@ -150,8 +150,8 @@ class Measurement:
     @classmethod
     def __get_pydantic_core_schema__(
         cls,
-        source: type,  # noqa: ARG003
-        handler: GetCoreSchemaHandler,  # noqa: ARG003
+        source: type,
+        handler: GetCoreSchemaHandler,
     ) -> core_schema.CoreSchema:
         return core_schema.no_info_plain_validator_function(
             cls._validate,
@@ -163,7 +163,7 @@ class Measurement:
         )
 
     @classmethod
-    def _validate(cls, v: Any) -> "Measurement":
+    def _validate(cls, v: Any) -> Measurement:
         if isinstance(v, cls):
             return v
         if isinstance(v, dict):
@@ -174,5 +174,5 @@ class Measurement:
         raise ValueError(msg)
 
     @staticmethod
-    def _serialize(v: "Measurement") -> dict[str, Any]:
+    def _serialize(v: Measurement) -> dict[str, Any]:
         return {"magnitude": v.magnitude, "unit": v.unit}

@@ -15,7 +15,7 @@ from avwx import structs
 from avwx.current import pirep
 from avwx.structs import Code
 from avwx.units import Measurement
-from tests.util import assert_measurement, assert_value, get_data
+from tests.util import assert_value, get_data
 
 
 @pytest.mark.parametrize(

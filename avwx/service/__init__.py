@@ -15,7 +15,6 @@ from avwx.service.scrape import (
 )
 
 __all__ = (
-    "get_service",
     "Amo",
     "Aubom",
     "Avt",
@@ -26,5 +25,6 @@ __all__ = (
     "NoaaNbm",
     "Olbs",
     "Service",
+    "get_service",
     # "FaaNotam",
 )
