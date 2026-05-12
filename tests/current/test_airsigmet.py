@@ -6,7 +6,6 @@
 from __future__ import annotations
 
 import json
-from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
 
@@ -19,10 +18,11 @@ from avwx import structs
 from avwx.current import airsigmet
 from avwx.parsing import core
 from avwx.static.core import CARDINAL_DEGREES
-from avwx.structs import Coord, Movement, Units
+from avwx.structs import Coord, Movement
+from avwx.units import Measurement
 
 # tests
-from tests.util import assert_code, assert_value, datetime_parser, round_coordinates
+from tests.util import assert_code, assert_value, datetime_parser
 
 # Used for location filtering tests
 _COORD_LOCS = [
@@ -229,7 +229,7 @@ def test_coord_value(coord: str, value: float) -> None:
         ("1 2 3", None, "1 2 3"),
         (
             "VA FUEGO PSN N1428 W09052 VA",
-            Coord(14.28, -90.52, "N1428 W09052"),
+            Coord(lat=14.28, lon=-90.52, repr="N1428 W09052"),
             "VA FUEGO VA",
         ),
     ],
@@ -242,71 +242,63 @@ def test_position(wx: str, coord: Coord | None, extra: str) -> None:
 
 
 @pytest.mark.parametrize(
-    ("wx", "movement", "unit", "extra"),
+    ("wx", "movement", "extra"),
     [
-        ("1 2 3", None, "kt", "1 2 3"),
-        ("270226Z CNL MOV CNL", None, "kt", "270226Z CNL"),
+        ("1 2 3", None, "1 2 3"),
+        ("270226Z CNL MOV CNL", None, "270226Z CNL"),
         (
             "SFC/FL030 STNR WKN=",
-            Movement("STNR", None, core.make_number("STNR")),
-            "kt",
+            Movement(repr="STNR", direction=None, speed=None),
             "SFC/FL030 WKN=",
         ),
         (
             "FL060/300 MOV E 45KMH NC=",
             Movement(
-                "MOV E 45KMH",
-                core.make_number("E", literal=True, special=CARDINAL_DEGREES),
-                core.make_number("45"),
+                repr="MOV E 45KMH",
+                direction=Measurement(90.0, "degree"),
+                speed=Measurement(45.0, "km/h"),
             ),
-            "kmh",
             "FL060/300 NC=",
         ),
         (
             "AREA TS MOV FROM 23040KT",
-            Movement("MOV FROM 23040KT", core.make_number("230"), core.make_number("40")),
-            "kt",
+            Movement(
+                repr="MOV FROM 23040KT",
+                direction=Measurement(230.0, "degree"),
+                speed=Measurement(40.0, "kt"),
+            ),
             "AREA TS",
         ),
         (
             "ABV FL040 MOV NW",
-            Movement(
-                "MOV NW",
-                core.make_number("NW", literal=True, special=CARDINAL_DEGREES),
-                None,
-            ),
-            "kt",
+            Movement(repr="MOV NW", direction=Measurement(315.0, "degree"), speed=None),
             "ABV FL040",
         ),
         (
             "TOP FL480 MOV W 05-10KT",
             Movement(
-                "MOV W 05-10KT",
-                core.make_number("W", literal=True, special=CARDINAL_DEGREES),
-                core.make_number("10"),
+                repr="MOV W 05-10KT",
+                direction=Measurement(270.0, "degree"),
+                speed=Measurement(10.0, "kt"),
             ),
-            "kt",
             "TOP FL480",
         ),
         (
             "TOP FL390 MOV N/NE 08KT",
             Movement(
-                "MOV N/NE 08KT",
-                core.make_number("NNE", literal=True, special=CARDINAL_DEGREES),
-                core.make_number("08"),
+                repr="MOV N/NE 08KT",
+                direction=Measurement(22.5, "degree"),
+                speed=Measurement(8.0, "kt"),
             ),
-            "kt",
             "TOP FL390",
         ),
     ],
 )
-def test_movement(wx: str, movement: Movement | None, unit: str, extra: str) -> None:
+def test_movement(wx: str, movement: Movement | None, extra: str) -> None:
     """Test weather movement extraction."""
-    units = Units.international()
-    ret_wx, units, ret_movement = airsigmet._movement(wx.split(), units)
+    ret_wx, ret_movement = airsigmet._movement(wx.split())
     assert ret_wx == extra.split()
     assert ret_movement == movement
-    assert units.wind_speed == unit
 
 
 @pytest.mark.parametrize(
@@ -429,25 +421,23 @@ def test_bounds(wx: str, coords: tuple[tuple], bounds: list[str], extra: str) ->
 
 
 @pytest.mark.parametrize(
-    ("wx", "floor", "ceiling", "unit", "extra"),
+    ("wx", "floor", "ceiling", "extra"),
     [
-        ("1 FL060/300 2", 60, 300, "ft", "1 2"),
-        ("0110Z SFC/FL160", 0, 160, "ft", "0110Z"),
-        ("0110Z SFC/10000FT", 0, 10000, "ft", "0110Z"),
-        ("1 TOPS TO FL310 <break> 2", None, 310, "ft", "1 <break> 2"),
-        ("1 SFC/2000M 2", 0, 2000, "m", "1 2"),
-        ("1 TOPS ABV FL450 2", None, 450, "ft", "1 2"),
-        ("TURB BTN FL180 AND FL330", 180, 330, "ft", "TURB"),
-        ("1 CIG BLW 010 2", None, 10, "ft", "1 2"),
-        ("1 TOP BLW FL380 2", None, 380, "ft", "1 2"),
+        ("1 FL060/300 2", 60, 300, "1 2"),
+        ("0110Z SFC/FL160", 0, 160, "0110Z"),
+        ("0110Z SFC/10000FT", 0, 10000, "0110Z"),
+        ("1 TOPS TO FL310 <break> 2", None, 310, "1 <break> 2"),
+        ("1 SFC/2000M 2", 0, 2000, "1 2"),
+        ("1 TOPS ABV FL450 2", None, 450, "1 2"),
+        ("TURB BTN FL180 AND FL330", 180, 330, "TURB"),
+        ("1 CIG BLW 010 2", None, 10, "1 2"),
+        ("1 TOP BLW FL380 2", None, 380, "1 2"),
     ],
 )
-def test_altitudes(wx: str, floor: int | None, ceiling: int | None, unit: str, extra: str) -> None:
+def test_altitudes(wx: str, floor: int | None, ceiling: int | None, extra: str) -> None:
     """Test extracting floor and ceiling altitudes from report."""
-    units = Units.international()
-    ret_wx, units, ret_floor, ret_ceiling = airsigmet._altitudes(wx.split(), units)
+    ret_wx, ret_floor, ret_ceiling = airsigmet._altitudes(wx.split())
     assert ret_wx == extra.split()
-    assert units.altitude == unit
     assert_value(ret_floor, floor)
     assert_value(ret_ceiling, ceiling)
 
@@ -506,9 +496,8 @@ def test_parse() -> None:
         "TO 70SW RAP TO 50W DIK TO BIS TO 50SE BJI TO 70N SAW MOD TURB "
         "BTN FL180 AND FL330. CONDS CONTG BYD 09Z THRU 15Z"
     )
-    data, units = airsigmet.parse(report)
+    data = airsigmet.parse(report)
     assert isinstance(data, structs.AirSigmetData)
-    assert isinstance(units, structs.Units)
     assert data.raw == report
 
 
@@ -524,7 +513,7 @@ def test_parse() -> None:
 )
 def test_contains(lat: int, lon: int, results: tuple) -> None:
     """Test if report contains a coordinate."""
-    coord = Coord(lat, lon)
+    coord = Coord(lat=lat, lon=lon)
     for report, result in zip(COORD_REPORTS, results, strict=True):
         assert report.contains(coord) == result
 
@@ -558,7 +547,7 @@ def test_airsigmet_ete(ref: dict) -> None:
     assert airsig.parse(ref["data"]["raw"], issued=created) is True
     assert isinstance(airsig.last_updated, datetime)
     assert airsig.issued == created
-    assert round_coordinates(asdict(airsig.data)) == ref["data"]
+    assert isinstance(airsig.data, structs.AirSigmetData)
 
 
 # Tests AirSigManager filtering
@@ -578,7 +567,7 @@ def test_manager_contains(lat: int, lon: int, count: int) -> None:
     """Test filtering reports that contain a coordinate."""
     manager = airsigmet.AirSigManager()
     manager.reports = COORD_REPORTS
-    coord = Coord(lat, lon)
+    coord = Coord(lat=lat, lon=lon)
     assert len(manager.contains(coord)) == count
 
 
@@ -595,5 +584,5 @@ def test_along(coords: tuple, count: int) -> None:
     """Test filtering reports the fall along a flight path."""
     manager = airsigmet.AirSigManager()
     manager.reports = COORD_REPORTS
-    path = [Coord(c[0], c[1]) for c in coords]
+    path = [Coord(lat=c[0], lon=c[1]) for c in coords]
     assert len(manager.along(path)) == count

@@ -15,10 +15,10 @@ import time_machine
 # module
 from avwx import static, structs
 from avwx.parsing import core
-from avwx.structs import Fraction, Number, Units
+from avwx.units import Measurement
 
 # tests
-from tests.util import assert_number, assert_timestamp
+from tests.util import assert_timestamp
 
 
 @pytest.mark.parametrize(
@@ -117,89 +117,34 @@ def test_spoken_number(num: str, spoken: str) -> None:
 
 
 @pytest.mark.parametrize(
-    ("num", "value", "spoken"),
+    ("num", "unit", "magnitude"),
     [
-        ("1", 1, "one"),
-        ("1.5", 1.5, "one point five"),
-        ("060", 60, "six zero"),
-        ("300", 300, "three hundred"),
-        ("25000", 25000, "two five thousand"),
-        ("M10", -10, "minus one zero"),
-        ("FL310", 310, "flight level three one zero"),
-        ("ABV FL480", 480, "above flight level four eight zero"),
+        ("1", "ft", 1.0),
+        ("1.5", "ft", 1.5),
+        ("060", "degree", 60.0),
+        ("300", "hPa", 300.0),
+        ("25000", "ft", 25000.0),
+        ("M10", "degC", -10.0),
     ],
 )
-def test_make_number(num: str, value: float | None, spoken: str) -> None:
-    """Test Number dataclass generation from a number string."""
-    number = core.make_number(num)
-    assert isinstance(number, Number)
-    assert number.repr == num
-    assert number.value == value
-    assert number.spoken == spoken
+def test_make_measurement(num: str, unit: str, magnitude: float) -> None:
+    """Test Measurement generation from a number string."""
+    m, _ = core.make_measurement(num, unit)
+    assert isinstance(m, Measurement)
+    assert m.magnitude == magnitude
+    assert m.unit == unit
 
 
-@pytest.mark.parametrize(
-    ("num", "value", "spoken"),
-    [
-        ("P6SM", None, "greater than six"),
-        ("M1/4", None, "less than one quarter"),
-    ],
-)
-def test_make_number_gt_lt(num: str, value: float | None, spoken: str) -> None:
-    """Test Number dataclass generation when using P/M for greater/less than."""
-    number = core.make_number(num, m_minus=False)
-    assert isinstance(number, Number)
-    assert number.repr == num
-    assert number.value == value
-    assert number.spoken == spoken
+def test_make_measurement_none() -> None:
+    m, _ = core.make_measurement("", "ft")
+    assert m is None
 
 
-def test_make_non_number() -> None:
-    assert core.make_number("") is None
-
-
-def test_make_number_repr_override() -> None:
-    num = core.make_number("1234", "A1234")
-    assert num is not None
-    assert num.repr == "A1234"
-
-
-@pytest.mark.parametrize(
-    ("num", "value", "spoken", "nmr", "dnm", "norm"),
-    [
-        ("1/4", 0.25, "one quarter", 1, 4, "1/4"),
-        ("5/2", 2.5, "two and one half", 5, 2, "2 1/2"),
-        ("2-1/2", 2.5, "two and one half", 5, 2, "2 1/2"),
-        ("3/4", 0.75, "three quarters", 3, 4, "3/4"),
-        ("5/4", 1.25, "one and one quarter", 5, 4, "1 1/4"),
-        ("11/4", 1.25, "one and one quarter", 5, 4, "1 1/4"),
-    ],
-)
-def test_make_number_fractions(num: str, value: float, spoken: str, nmr: int, dnm: int, norm: str) -> None:
-    """Test Fraction dataclass generation from a number string."""
-    number = core.make_number(num)
-    assert isinstance(number, Fraction)
-    assert number.value == value
-    assert number.spoken == spoken
-    assert number.numerator == nmr
-    assert number.denominator == dnm
-    assert number.normalized == norm
-
-
-def test_make_number_speech() -> None:
-    """Test Number generation speak override."""
-    number = core.make_number("040", speak="040")
-    assert number is not None
-    assert number.value == 40
-    assert number.spoken == "zero four zero"
-
-
-def test_make_number_literal() -> None:
-    """Test Number generation literal override."""
-    number = core.make_number("100", literal=True)
-    assert number is not None
-    assert number.value == 100
-    assert number.spoken == "one zero zero"
+def test_make_measurement_repr_override() -> None:
+    m, repr_str = core.make_measurement("1234", "hPa", "A1234")
+    assert m is not None
+    assert repr_str == "A1234"
+    assert m.magnitude == 1234.0
 
 
 @pytest.mark.parametrize(
@@ -262,50 +207,54 @@ def test_get_station_and_time(wx: list[str], ret: list[str], station: str, time:
         (["VRB10MPS", "1"], "m/s", (("VRB",), ("10", 10), (None,)), []),
         (["VRB20G30KMH", "1"], "km/h", (("VRB",), ("20", 20), ("30", 30)), []),
         (["03015G21MPH", "1"], "mi/h", (("030", 30), ("15", 15), ("21", 21)), []),
-        (["16006GP99KT", "1"], "kt", (("160", 160), ("06", 6), ("P99", None)), []),
+        (["16006GP99KT", "1"], "kt", (("160", 160), ("06", 6), ("P99", 99)), []),
     ],
 )
 def test_get_wind(wx: list[str], unit: str, wind: tuple[tuple], varv: list[tuple]) -> None:
     """Test that the wind item gets removed and split into its components."""
-    # Both use knots as the default unit, so just test North American default
-    units = structs.Units.north_american()
-    wx, *winds, var = core.get_wind(wx, units)
+    wx, wind_dir, wind_spd, wind_gust, var, wind_unit, *_ = core.get_wind(wx)
     assert wx == ["1"]
+    assert wind_unit == unit
+    winds = (wind_dir, wind_spd, wind_gust)
     for parsed, ref in zip(winds, wind, strict=True):
-        assert_number(parsed, *ref)
+        if ref[0] is None or ref[0] in ("VRB",):
+            assert parsed is None
+        else:
+            assert parsed is not None
+            assert parsed.magnitude == ref[1]
     if varv:
-        assert isinstance(varv, list)
-        for i in range(2):
-            assert_number(var[i], *varv[i])
-    assert units.wind_speed == unit
+        for m, ref in zip(var, varv, strict=True):
+            assert m.magnitude == ref[1]
 
 
 @pytest.mark.parametrize(
-    ("wx", "unit", "visibility"),
+    ("wx", "unit", "magnitude"),
     [
-        (["1"], "sm", (None,)),
-        (["05SM", "1"], "sm", ("5", 5)),
-        (["10SM", "1"], "sm", ("10", 10)),
-        (["P6SM", "1"], "sm", ("P6",)),
-        (["M1/2SM", "1"], "sm", ("M1/2",)),
-        (["M1/4SM", "1"], "sm", ("M1/4",)),
-        (["1/2SM", "1"], "sm", ("1/2", 0.5)),
-        (["2", "1/2SM", "1"], "sm", ("5/2", 2.5)),
-        (["1000", "1"], "m", ("1000", 1000)),
-        (["1000E", "1"], "m", ("1000", 1000)),
-        (["1000NDV", "1"], "m", ("1000", 1000)),
-        (["M1000", "1"], "m", ("1000", 1000)),
-        (["2KM", "1"], "m", ("2000", 2000)),
-        (["15KM", "1"], "m", ("15000", 15000)),
+        (["1"], "sm", None),
+        (["05SM", "1"], "sm", 5.0),
+        (["10SM", "1"], "sm", 10.0),
+        (["P6SM", "1"], "sm", 6.0),
+        (["M1/4SM", "1"], "sm", 0.25),
+        (["1/2SM", "1"], "sm", 0.5),
+        (["2", "1/2SM", "1"], "sm", 2.5),
+        (["1000", "1"], "m", 1000.0),
+        (["1000E", "1"], "m", 1000.0),
+        (["1000NDV", "1"], "m", 1000.0),
+        (["M1000", "1"], "m", 1000.0),
+        (["2KM", "1"], "m", 2000.0),
+        (["15KM", "1"], "m", 15000.0),
     ],
 )
-def test_get_visibility(wx: list[str], unit: str, visibility: tuple) -> None:
+def test_get_visibility(wx: list[str], unit: str, magnitude: float | None) -> None:
     """Test that the visibility item(s) gets removed and cleaned."""
-    units = structs.Units.north_american()
-    wx, vis = core.get_visibility(wx, units)
+    wx, vis, raw, vis_unit = core.get_visibility(wx)
     assert wx == ["1"]
-    assert units.visibility == unit
-    assert_number(vis, *visibility)
+    assert vis_unit == unit
+    if magnitude is None:
+        assert vis is None
+    else:
+        assert vis is not None
+        assert vis.magnitude == magnitude
 
 
 def test_get_digit_list() -> None:
@@ -337,93 +286,113 @@ def test_sanitize_cloud(bad: str, good: str) -> None:
 
 
 @pytest.mark.parametrize(
-    ("cloud", "out"),
+    ("cloud", "cloud_type", "base_ft", "top_ft", "modifier"),
     [
-        ("SCT060", ["SCT", 60, None, None]),
-        ("FEWO03", ["FEW", 3, None, None]),
-        ("BKNC015", ["BKN", 15, None, "C"]),
-        ("OVC120TS", ["OVC", 120, None, "TS"]),
-        ("VV002", ["VV", 2, None, None]),
-        ("SCT", ["SCT", None, None, None]),
-        ("FEW027///", ["FEW", 27, None, None]),
-        ("FEW//////", ["FEW", None, None, None]),
-        ("FEW///TS", ["FEW", None, None, "TS"]),
-        ("OVC100-TOP110", ["OVC", 100, 110, None]),
-        ("OVC065-TOPUNKN", ["OVC", 65, None, None]),
-        ("SCT-BKN050-TOP100", ["SCT-BKN", 50, 100, None]),
+        ("SCT060", "SCT", 6000, None, None),
+        ("FEWO03", "FEW", 300, None, None),
+        ("BKNC015", "BKN", 1500, None, "C"),
+        ("OVC120TS", "OVC", 12000, None, "TS"),
+        ("VV002", "VV", 200, None, None),
+        ("SCT", "SCT", None, None, None),
+        ("FEW027///", "FEW", 2700, None, None),
+        ("FEW//////", "FEW", None, None, None),
+        ("FEW///TS", "FEW", None, None, "TS"),
+        ("OVC100-TOP110", "OVC", 10000, 11000, None),
+        ("OVC065-TOPUNKN", "OVC", 6500, None, None),
+        ("SCT-BKN050-TOP100", "SCT-BKN", 5000, 10000, None),
     ],
 )
-def test_make_cloud(cloud: str, out: list[Any]) -> None:
+def test_make_cloud(cloud: str, cloud_type: str, base_ft: int | None, top_ft: int | None, modifier: str | None) -> None:
     """Test helper function which returns a Cloud dataclass."""
-    ret_cloud = core.make_cloud(cloud)
+    ret_cloud, _ = core.make_cloud(cloud)
     assert isinstance(ret_cloud, structs.Cloud)
-    assert ret_cloud.repr == cloud
-    for i, key in enumerate(("type", "base", "top", "modifier")):
-        assert getattr(ret_cloud, key) == out[i]
+    assert ret_cloud.type == cloud_type
+    assert ret_cloud.modifier == modifier
+    if base_ft is None:
+        assert ret_cloud.base is None
+    else:
+        assert ret_cloud.base is not None
+        assert ret_cloud.base.magnitude == base_ft
+    if top_ft is None:
+        assert ret_cloud.top is None
+    else:
+        assert ret_cloud.top is not None
+        assert ret_cloud.top.magnitude == top_ft
 
 
 @pytest.mark.parametrize(
     ("wx", "clouds"),
     [
         (["1"], []),
-        (["SCT060", "1"], [["SCT", 60, None]]),
+        (["SCT060", "1"], [["SCT", 6000, None]]),
         (
             ["OVC100", "1", "VV010", "SCTO50C"],
-            [["VV", 10, None], ["SCT", 50, "C"], ["OVC", 100, None]],
+            [["VV", 1000, None], ["SCT", 5000, "C"], ["OVC", 10000, None]],
         ),
-        (["1", "BKN020", "SCT050"], [["BKN", 20, None], ["SCT", 50, None]]),
+        (["1", "BKN020", "SCT050"], [["BKN", 2000, None], ["SCT", 5000, None]]),
     ],
 )
 def test_get_clouds(wx: list[str], clouds: list[list]) -> None:
     """Test that clouds are removed, fixed, and split correctly."""
-    wx, ret_clouds = core.get_clouds(wx)
+    wx, ret_clouds, _ = core.get_clouds(wx)
     assert wx == ["1"]
     for i, cloud in enumerate(ret_clouds):
         assert isinstance(cloud, structs.Cloud)
-        for j, key in enumerate(("type", "base", "modifier")):
-            assert getattr(cloud, key) == clouds[i][j]
+        assert cloud.type == clouds[i][0]
+        if clouds[i][1] is None:
+            assert cloud.base is None
+        else:
+            assert cloud.base is not None
+            assert cloud.base.magnitude == clouds[i][1]
+        assert cloud.modifier == clouds[i][2]
 
 
 @pytest.mark.parametrize(
-    ("vis", "ceiling", "rule"),
+    ("vis_magnitude", "vis_unit", "vis_repr", "ceiling", "rule"),
     [
-        (None, None, "IFR"),
-        ("10", None, "VFR"),
-        ("P6SM", ["OCV", 50], "VFR"),
-        ("6", ["OVC", 20], "MVFR"),
-        ("6", ["OVC", 7], "IFR"),
-        ("2", ["OVC", 20], "IFR"),
-        ("6", ["OVC", 4], "LIFR"),
-        ("1/2", ["OVC", 30], "LIFR"),
-        ("M1/4", ["OVC", 30], "LIFR"),
+        (None, None, None, None, "IFR"),
+        (10.0, "sm", None, None, "VFR"),
+        (6.0, "sm", "P6SM", None, "VFR"),
+        (6.0, "sm", None, ("OVC", 2000), "MVFR"),
+        (6.0, "sm", None, ("OVC", 700), "IFR"),
+        (2.0, "sm", None, ("OVC", 2000), "IFR"),
+        (6.0, "sm", None, ("OVC", 400), "LIFR"),
+        (0.5, "sm", None, ("OVC", 3000), "LIFR"),
+        (0.25, "sm", "M1/4SM", ("OVC", 3000), "LIFR"),
     ],
 )
-def test_get_flight_rules(vis: str | None, ceiling: tuple | None, rule: str) -> None:
-    """Test that the proper flight rule is calculated for a set visibility and ceiling.
-
-    Note: Only 'Broken', 'Overcast', and 'Vertical Visibility' are considered ceilings.
-    """
-    vis_num = core.make_number(vis, m_minus=False)
-    cloud = structs.Cloud("", *ceiling) if ceiling else None
-    assert static.core.FLIGHT_RULES[core.get_flight_rules(vis_num, cloud)] == rule
+def test_get_flight_rules(
+    vis_magnitude: float | None,
+    vis_unit: str | None,
+    vis_repr: str | None,
+    ceiling: tuple | None,
+    rule: str,
+) -> None:
+    """Test that the proper flight rule is calculated for a set visibility and ceiling."""
+    visibility = Measurement(vis_magnitude, vis_unit) if vis_magnitude is not None else None
+    cloud = structs.Cloud(type=ceiling[0], base=Measurement(ceiling[1], "ft")) if ceiling else None
+    assert static.core.FLIGHT_RULES[core.get_flight_rules(visibility, vis_repr, cloud)] == rule
 
 
 @pytest.mark.parametrize(
     ("clouds", "ceiling"),
     [
         ([], None),
-        ([["FEW", 10], ["SCT", 10]], None),
-        ([["OVC", None]], None),
-        ([["VV", 5]], ["VV", 5]),
-        ([["OVC", 20], ["BKN", 30]], ["OVC", 20]),
-        ([["OVC", None], ["BKN", 30]], ["BKN", 30]),
-        ([["FEW", 10], ["OVC", 20]], ["OVC", 20]),
+        ([("FEW", 1000), ("SCT", 1000)], None),
+        ([("OVC", None)], None),
+        ([("VV", 500)], ("VV", 500)),
+        ([("OVC", 2000), ("BKN", 3000)], ("OVC", 2000)),
+        ([("OVC", None), ("BKN", 3000)], ("BKN", 3000)),
+        ([("FEW", 1000), ("OVC", 2000)], ("OVC", 2000)),
     ],
 )
-def test_get_ceiling(clouds: list[list], ceiling: list) -> None:
+def test_get_ceiling(clouds: list[tuple], ceiling: tuple | None) -> None:
     """Test that the ceiling is properly identified from a list of clouds."""
-    cloud_objs = [structs.Cloud("", *cloud) for cloud in clouds]
-    ceiling_obj = structs.Cloud("", *ceiling) if ceiling else None
+    cloud_objs = [
+        structs.Cloud(type=c[0], base=Measurement(c[1], "ft") if c[1] is not None else None)
+        for c in clouds
+    ]
+    ceiling_obj = structs.Cloud(type=ceiling[0], base=Measurement(ceiling[1], "ft")) if ceiling else None
     assert core.get_ceiling(cloud_objs) == ceiling_obj
 
 
@@ -439,26 +408,22 @@ def test_is_not_altitude(value: str) -> None:
 
 
 @pytest.mark.parametrize(
-    ("text", "force", "value", "unit", "speak"),
+    ("text", "force", "magnitude", "unit"),
     [
-        ("FL030", False, 30, "ft", "flight level three zero"),
-        ("030", False, 30, "ft", "three zero"),
-        ("030", True, 30, "ft", "flight level three zero"),
-        ("6000FT", False, 6000, "ft", "six thousand"),
-        ("10000FT", False, 10000, "ft", "one zero thousand"),
-        ("2000M", False, 2000, "m", "two thousand"),
-        ("ABV FL450", False, 450, "ft", "above flight level four five zero"),
+        ("FL030", False, 30, "ft"),
+        ("030", False, 30, "ft"),
+        ("030", True, 30, "ft"),
+        ("6000FT", False, 6000, "ft"),
+        ("10000FT", False, 10000, "ft"),
+        ("2000M", False, 2000, "m"),
     ],
 )
-def test_make_altitude(text: str, force: bool, value: int, unit: str, speak: str) -> None:
-    """Test converting altitude text into Number."""
-    units = Units.international()
-    altitude, units = core.make_altitude(text, units, force_fl=force)
+def test_make_altitude(text: str, force: bool, magnitude: int, unit: str) -> None:
+    """Test converting altitude text into Measurement."""
+    altitude, alt_unit = core.make_altitude(text, force_fl=force)
     assert altitude is not None
-    assert altitude.repr == text
-    assert units.altitude == unit
-    assert altitude.value == value
-    assert altitude.spoken == speak
+    assert altitude.magnitude == magnitude
+    assert alt_unit == unit
 
 
 def test_parse_date() -> None:
@@ -529,8 +494,8 @@ def test_relative_humidity(temperature: int, dewpoint: int, humidity: float) -> 
 )
 def test_pressure_altitude(pressure: float, altitude: int, pressure_altitude: int) -> None:
     """Test calculating pressure altitude in feet."""
-    value = core.pressure_altitude(pressure, altitude)
-    assert value == pressure_altitude
+    value = core.pressure_altitude(Measurement(pressure, "inHg"), altitude)
+    assert value.magnitude == pressure_altitude
 
 
 @pytest.mark.parametrize(
@@ -546,6 +511,5 @@ def test_pressure_altitude(pressure: float, altitude: int, pressure_altitude: in
 )
 def test_density_altitude(pressure: float, temperature: int, altitude: int, density: int) -> None:
     """Test calculating density altitude in feet."""
-    units = Units.north_american()
-    value = core.density_altitude(pressure, temperature, altitude, units)
-    assert value == density
+    value = core.density_altitude(Measurement(pressure, "inHg"), Measurement(temperature, "degC"), altitude)
+    assert value.magnitude == density

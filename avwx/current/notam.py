@@ -212,7 +212,7 @@ def _rear_coord(value: str) -> Coord | None:
         lat *= -1
     if value[10] == "W":
         lon *= -1
-    return Coord(lat, lon, value)
+    return Coord(lat=lat, lon=lon, repr=value)
 
 
 def _split_location(
@@ -289,10 +289,10 @@ def _qualifiers(value: str) -> Qualifiers:
     traffic, purpose, scope, lower, upper, location = _find_q_codes(codes)
     subject, condition = None, None
     if q_code.startswith("Q") and len(q_code) >= 5:
-        subject = Code(q_code[1:3], "Other") if q_code[1] == "Q" else Code.from_dict(q_code[1:3], SUBJECT)
+        subject = Code(repr=q_code[1:3], value="Other") if q_code[1] == "Q" else Code.from_dict(q_code[1:3], SUBJECT)
         condition_code = q_code[3:]
         if condition_code.startswith("XX"):
-            condition = Code("XX", (condition_code[2:] or "Unknown").strip())
+            condition = Code(repr="XX", value=(condition_code[2:] or "Unknown").strip())
         else:
             condition = Code.from_dict(condition_code, CONDITION, error=False)
     coord, radius = _split_location(location)
@@ -332,11 +332,11 @@ def make_year_timestamp(
         return None
     value = values[0]
     if code := CODES.get(value):
-        return Code(value, code)
+        return Code(repr=value, value=code)
     tz = _tz_offset_for(tzname) or timezone.utc
     raw = datetime.strptime(value[:10], r"%y%m%d%H%M")  # noqa: DTZ007
     date = datetime(raw.year, raw.month, raw.day, raw.hour, raw.minute, tzinfo=tz)
-    return Timestamp(repr, date)
+    return Timestamp(repr=repr, dt=date)
 
 
 def parse_linked_times(start: str, end: str) -> tuple[Timestamp | Code | None, Timestamp | Code | None]:

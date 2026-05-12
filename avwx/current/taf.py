@@ -207,6 +207,8 @@ def _get_next_time(lines: list[TafLineData], target: str) -> Timestamp | None:
     for line in lines:
         if _is_tempo_or_prob(line):
             continue
+        if target == "start_time" and line.type == "BECMG" and line.transition_start:
+            return line.transition_start
         time = getattr(line, target, None)
         if time:
             return time  # type: ignore[return-value]

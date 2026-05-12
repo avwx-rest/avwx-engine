@@ -20,7 +20,7 @@ from avwx.structs import Code
 )
 def test_wxcode(code: str, value: str) -> None:
     """Test expanding weather codes or ignoring them."""
-    obj = Code(code, value)
+    obj = Code(repr=code, value=value)
     assert current.base.wx_code(code) == obj
 
 

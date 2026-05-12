@@ -462,18 +462,23 @@ def get_visibility(
     if item.endswith("SM"):
         raw = item
         unit = "sm"
-        if item[:-2].isdigit():
-            vis_val = float(int(item[:-2]))
-        elif "/" in item:
-            frac = item[: item.find("SM")]
-            parts = frac.split("/")
+        body = item[:-2]
+        prefix = body[0] if body and body[0] in ("M", "P") else ""
+        body = body[1:] if prefix else body
+        if body.isdigit():
+            vis_val = float(int(body))
+        elif "/" in body:
+            parts = body.split("/")
             if len(parts) == 2 and parts[0].isdigit() and parts[1].isdigit():
                 vis_val = int(parts[0]) / int(parts[1])
             else:
-                vis_val = float(frac.replace("/", "."))
+                try:
+                    vis_val = float(body.replace("/", "."))
+                except ValueError:
+                    return data, None, None, unit
         else:
             try:
-                vis_val = float(item[:-2])
+                vis_val = float(body)
             except ValueError:
                 return data, None, None, unit
         data.pop(0)
@@ -686,10 +691,10 @@ def make_altitude(
             force_fl = False
             unit = end.lower()
             value = value.removesuffix(end)
-    if value and value[0] == "F" and value[1:].isdigit():
-        value = f"FL{value[1:]}"
-    if force_fl and not value.startswith("FL"):
-        value = f"FL{value}"
+    if value.startswith("FL") and value[2:].isdigit():
+        value = value[2:]  # strip FL prefix: "FL060" → "060"
+    elif value and value[0] == "F" and value[1:].isdigit():
+        value = value[1:]  # strip F prefix: "F060" → "060"
     m, _ = make_measurement(value, unit, repr_override)
     return m, unit
 

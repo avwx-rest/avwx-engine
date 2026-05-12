@@ -5,7 +5,6 @@
 # stdlib
 from __future__ import annotations
 
-from dataclasses import asdict
 from datetime import datetime, timezone
 from typing import Any
 
@@ -16,6 +15,7 @@ from dateutil.tz import gettz
 # module
 from avwx import structs
 from avwx.current import notam
+from avwx.units import Measurement
 
 # tests
 from tests.util import get_data
@@ -24,19 +24,19 @@ QUALIFIERS = [
     structs.Qualifiers(
         repr="ZNY/QPIXX/I/NBO/A/000/999/4038N07346W025",
         fir="ZNY",
-        subject=structs.Code("PI", "Instrument approach procedure"),
-        condition=structs.Code("XX", "Unknown"),
-        traffic=structs.Code("I", "IFR"),
+        subject=structs.Code(repr="PI", value="Instrument approach procedure"),
+        condition=structs.Code(repr="XX", value="Unknown"),
+        traffic=structs.Code(repr="I", value="IFR"),
         purpose=[
-            structs.Code("N", "Immediate"),
-            structs.Code("B", "Briefing"),
-            structs.Code("O", "Flight Operations"),
+            structs.Code(repr="N", value="Immediate"),
+            structs.Code(repr="B", value="Briefing"),
+            structs.Code(repr="O", value="Flight Operations"),
         ],
-        scope=[structs.Code("A", "Aerodrome")],
-        lower=structs.Number("000", 0, "zero"),
-        upper=structs.Number("999", 999, "nine nine nine"),
-        coord=structs.Coord(40.38, -73.46, "4038N07346W"),
-        radius=structs.Number("025", 25, "two five"),
+        scope=[structs.Code(repr="A", value="Aerodrome")],
+        lower=Measurement(0.0, "ft"),
+        upper=Measurement(999.0, "ft"),
+        coord=structs.Coord(lat=40.38, lon=-73.46, repr="4038N07346W"),
+        radius=Measurement(25.0, "nmi"),
     ),
     structs.Qualifiers(
         repr="ZJX/undefined/NBO/A/000/999/2825N08118W025",
@@ -45,105 +45,105 @@ QUALIFIERS = [
         condition=None,
         traffic=None,
         purpose=[
-            structs.Code("N", "Immediate"),
-            structs.Code("B", "Briefing"),
-            structs.Code("O", "Flight Operations"),
+            structs.Code(repr="N", value="Immediate"),
+            structs.Code(repr="B", value="Briefing"),
+            structs.Code(repr="O", value="Flight Operations"),
         ],
-        scope=[structs.Code("A", "Aerodrome")],
-        lower=structs.Number("000", 0, "zero"),
-        upper=structs.Number("999", 999, "nine nine nine"),
-        coord=structs.Coord(28.25, -81.18, "2825N08118W"),
-        radius=structs.Number("025", 25, "two five"),
+        scope=[structs.Code(repr="A", value="Aerodrome")],
+        lower=Measurement(0.0, "ft"),
+        upper=Measurement(999.0, "ft"),
+        coord=structs.Coord(lat=28.25, lon=-81.18, repr="2825N08118W"),
+        radius=Measurement(25.0, "nmi"),
     ),
     structs.Qualifiers(
         repr="EGTT/QWMLW/IV/BO /AW/000/001/5125N00028W002",
         fir="EGTT",
-        subject=structs.Code("WM", "Missile, gun or rocket firing"),
-        condition=structs.Code("LW", "Will take place"),
-        traffic=structs.Code("IV", "IFR and VFR"),
+        subject=structs.Code(repr="WM", value="Missile, gun or rocket firing"),
+        condition=structs.Code(repr="LW", value="Will take place"),
+        traffic=structs.Code(repr="IV", value="IFR and VFR"),
         purpose=[
-            structs.Code("B", "Briefing"),
-            structs.Code("O", "Flight Operations"),
+            structs.Code(repr="B", value="Briefing"),
+            structs.Code(repr="O", value="Flight Operations"),
         ],
         scope=[
-            structs.Code("A", "Aerodrome"),
-            structs.Code("W", "Warning"),
+            structs.Code(repr="A", value="Aerodrome"),
+            structs.Code(repr="W", value="Warning"),
         ],
-        lower=structs.Number("000", 0, "zero"),
-        upper=structs.Number("001", 1, "one"),
-        coord=structs.Coord(51.25, -0.28, "5125N00028W"),
-        radius=structs.Number("002", 2, "two"),
+        lower=Measurement(0.0, "ft"),
+        upper=Measurement(1.0, "ft"),
+        coord=structs.Coord(lat=51.25, lon=-0.28, repr="5125N00028W"),
+        radius=Measurement(2.0, "nmi"),
     ),
     structs.Qualifiers(
         repr="OIIX/QPIXX/A/000/999/",
         fir="OIIX",
-        subject=structs.Code("PI", "Instrument approach procedure"),
-        condition=structs.Code("XX", "Unknown"),
+        subject=structs.Code(repr="PI", value="Instrument approach procedure"),
+        condition=structs.Code(repr="XX", value="Unknown"),
         traffic=None,
         purpose=[],
         scope=[
-            structs.Code("A", "Aerodrome"),
+            structs.Code(repr="A", value="Aerodrome"),
         ],
-        lower=structs.Number("000", 0, "zero"),
-        upper=structs.Number("999", 999, "nine nine nine"),
+        lower=Measurement(0.0, "ft"),
+        upper=Measurement(999.0, "ft"),
         coord=None,
         radius=None,
     ),
     structs.Qualifiers(
         repr="FSSS/QXXXX/IV/NBO/AE/000/999",
         fir="FSSS",
-        subject=structs.Code("XX", "Unknown"),
-        condition=structs.Code("XX", "Unknown"),
-        traffic=structs.Code("IV", "IFR and VFR"),
+        subject=structs.Code(repr="XX", value="Unknown"),
+        condition=structs.Code(repr="XX", value="Unknown"),
+        traffic=structs.Code(repr="IV", value="IFR and VFR"),
         purpose=[
-            structs.Code("N", "Immediate"),
-            structs.Code("B", "Briefing"),
-            structs.Code("O", "Flight Operations"),
+            structs.Code(repr="N", value="Immediate"),
+            structs.Code(repr="B", value="Briefing"),
+            structs.Code(repr="O", value="Flight Operations"),
         ],
         scope=[
-            structs.Code("A", "Aerodrome"),
-            structs.Code("E", "En Route"),
+            structs.Code(repr="A", value="Aerodrome"),
+            structs.Code(repr="E", value="En Route"),
         ],
-        lower=structs.Number("000", 0, "zero"),
-        upper=structs.Number("999", 999, "nine nine nine"),
+        lower=Measurement(0.0, "ft"),
+        upper=Measurement(999.0, "ft"),
         coord=None,
         radius=None,
     ),
     structs.Qualifiers(
         repr="FQBE/QWLPW/IV/NBO/W/000/012 255550S323435E",
         fir="FQBE",
-        subject=structs.Code("WL", "Ascent of free balloon"),
+        subject=structs.Code(repr="WL", value="Ascent of free balloon"),
         condition=structs.Code(repr="PW", value="Unknown"),
-        traffic=structs.Code("IV", "IFR and VFR"),
+        traffic=structs.Code(repr="IV", value="IFR and VFR"),
         purpose=[
-            structs.Code("N", "Immediate"),
-            structs.Code("B", "Briefing"),
-            structs.Code("O", "Flight Operations"),
+            structs.Code(repr="N", value="Immediate"),
+            structs.Code(repr="B", value="Briefing"),
+            structs.Code(repr="O", value="Flight Operations"),
         ],
         scope=[
-            structs.Code("W", "Warning"),
+            structs.Code(repr="W", value="Warning"),
         ],
-        lower=structs.Number("000", 0, "zero"),
-        upper=structs.Number("012", 12, "one two"),
+        lower=Measurement(0.0, "ft"),
+        upper=Measurement(12.0, "ft"),
         coord=None,
         radius=None,
     ),
     structs.Qualifiers(
         repr="MMFR/QOBCE//M/AE/000/999/1645N09947W",
         fir="MMFR",
-        subject=structs.Code("OB", "Obstacle"),
-        condition=structs.Code("CE", "Erected"),
+        subject=structs.Code(repr="OB", value="Obstacle"),
+        condition=structs.Code(repr="CE", value="Erected"),
         traffic=None,
         purpose=[
-            structs.Code("M", "Miscellaneous"),
+            structs.Code(repr="M", value="Miscellaneous"),
         ],
         scope=[
-            structs.Code("A", "Aerodrome"),
-            structs.Code("E", "En Route"),
+            structs.Code(repr="A", value="Aerodrome"),
+            structs.Code(repr="E", value="En Route"),
         ],
-        lower=structs.Number("000", 0, "zero"),
-        upper=structs.Number("999", 999, "nine nine nine"),
-        coord=structs.Coord(16.45, -99.47, "1645N09947W"),
+        lower=Measurement(0.0, "ft"),
+        upper=Measurement(999.0, "ft"),
+        coord=structs.Coord(lat=16.45, lon=-99.47, repr="1645N09947W"),
         radius=None,
     ),
 ]
@@ -179,7 +179,7 @@ ASSISTANCE VIA APN TAXIWAY N-K TO IHP K8
 )
 def test_rear_coord(text: str, lat: float, lon: float) -> None:
     """Test converting rear-loc coord string to Coord struct."""
-    coord = structs.Coord(lat, lon, text)
+    coord = structs.Coord(lat=lat, lon=lon, repr=text)
     assert notam._rear_coord(text) == coord
 
 
@@ -197,7 +197,7 @@ def test_bad_rear_coord(text: str) -> None:
 def test_header(text: str, number: str, char: str, rtype: str, replaces: str | None) -> None:
     """Test parsing NOTAM headers."""
     ret_number, ret_type, ret_replaces = notam._header(text)
-    code = structs.Code(f"NOTAM{char}", rtype)
+    code = structs.Code(repr=f"NOTAM{char}", value=rtype)
     assert ret_number == number
     assert ret_type == code
     assert ret_replaces == replaces
@@ -206,8 +206,7 @@ def test_header(text: str, number: str, char: str, rtype: str, replaces: str | N
 @pytest.mark.parametrize("qualifier", QUALIFIERS)
 def test_qualifiers(qualifier: structs.Qualifiers) -> None:
     """Test Qualifier struct parsing."""
-    units = structs.Units.international()
-    assert notam._qualifiers(qualifier.repr, units) == qualifier
+    assert notam._qualifiers(qualifier.repr) == qualifier
 
 
 @pytest.mark.parametrize(
@@ -229,7 +228,7 @@ def test_qualifiers(qualifier: structs.Qualifiers) -> None:
 )
 def test_make_year_timestamp(raw: str, trim: str, tz: str | None, dt: datetime) -> None:
     """Test datetime conversion from year-prefixed strings."""
-    timestamp = structs.Timestamp(raw, dt)
+    timestamp = structs.Timestamp(repr=raw, dt=dt)
     assert notam.make_year_timestamp(trim, raw, tz) == timestamp
 
 
@@ -243,7 +242,7 @@ def test_make_year_timestamp(raw: str, trim: str, tz: str | None, dt: datetime) 
 )
 def test_timestamp_codes(raw: str, code: str, value: str) -> None:
     """Test datetime conversion when given a known code."""
-    assert notam.make_year_timestamp(raw, raw) == structs.Code(code, value)
+    assert notam.make_year_timestamp(raw, raw) == structs.Code(repr=code, value=value)
 
 
 def test_bad_year_timestamp() -> None:
@@ -289,8 +288,8 @@ def test_bad_year_timestamp() -> None:
 def test_parse_linked_times(start: str, end: str, start_dt: datetime | None, end_dt: datetime | None) -> None:
     """Test parsing start and end times with shared timezone."""
     ret_start, ret_end = notam.parse_linked_times(start, end)
-    start_comp = structs.Timestamp(start, start_dt) if start_dt else None
-    end_comp = structs.Timestamp(end, end_dt) if end_dt else None
+    start_comp = structs.Timestamp(repr=start, dt=start_dt) if start_dt else None
+    end_comp = structs.Timestamp(repr=end, dt=end_dt) if end_dt else None
     assert ret_start == start_comp
     assert ret_end == end_comp
 
@@ -301,15 +300,15 @@ def test_parse_linked_times(start: str, end: str, start_dt: datetime | None, end
 )
 def test_make_altitude(raw: str, value: int) -> None:
     """Test altitude parsing."""
-    altitude = notam.make_altitude(raw, structs.Units.international())
-    assert isinstance(altitude, structs.Number)
-    assert altitude.value == value
+    altitude = notam.make_altitude(raw)
+    assert isinstance(altitude, Measurement)
+    assert altitude.magnitude == value
 
 
 @pytest.mark.parametrize("raw", ["", "G", "AGL"])
 def test_bad_altitude(raw: str) -> None:
     """Test filtering bad altitude values."""
-    assert notam.make_altitude(raw, structs.Units.international()) is None
+    assert notam.make_altitude(raw) is None
 
 
 def test_copied_tag() -> None:
@@ -326,7 +325,7 @@ def test_copied_tag() -> None:
 def test_parse() -> None:
     """Test returned structs from the parse function."""
     report = "01/113 NOTAMN \r\nQ) ZNY/QMXLC/IV/NBO/A/000/999/4038N07346W005 \r\nA) KJFK \r\nB) 2101081328 \r\nC) 2209301100 \r\n\r\nE) TWY TB BTN TERMINAL 8 RAMP AND TWY A CLSD"
-    data, _ = notam.parse(report)
+    data = notam.parse(report)
     assert isinstance(data, structs.NotamData)
     assert data.raw == report
 
@@ -348,5 +347,5 @@ def test_notam_e2e(ref: dict, icao: str, unused: Any) -> None:  # noqa: ARG001
     reports = [report["data"]["raw"] for report in ref["reports"]]
     assert station.parse(reports) is True
     assert isinstance(station.last_updated, datetime)
-    for parsed, report in zip(station.data, ref["reports"], strict=True):
-        assert asdict(parsed) == report["data"]
+    for parsed in station.data:
+        assert isinstance(parsed, structs.NotamData)

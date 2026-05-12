@@ -113,8 +113,11 @@ def _location(item: str) -> Location | None:
                 station = items[2]
         else:
             station = items[1][-3:]
-            if items[1][:-3].isdigit():
-                direction = Measurement(int(items[1][:-3]), "degree")
+            prefix = items[1][:-3]
+            if prefix.isdigit():
+                direction = Measurement(int(prefix), "degree")
+            elif prefix in CARDINALS:
+                direction = Measurement(CARDINALS[prefix], "degree")
             distance = Measurement(int(items[0]), "nmi")
     elif len(items) >= 2 and items[1].isdigit():
         station = items[0]
@@ -130,7 +133,7 @@ def _time(item: str | None, target: date | None = None) -> Timestamp | None:
 
 def _altitude(item: str) -> Measurement | str | None:
     if item.isdigit():
-        return Measurement(int(item) * 100, "ft")
+        return Measurement(int(item), "ft")
     return item or None
 
 
@@ -145,7 +148,7 @@ def _non_digit_cloud(cloud: str) -> tuple[str | None, str]:
     if cloud.endswith("FT"):
         cloud = cloud[:-2]
         if cloud.isdigit():
-            return None, cloud
+            return None, str(int(cloud) // 100)
     if "-" not in cloud:
         return cloud[:3], cloud[3:]
     parts = cloud.split("-")
@@ -198,7 +201,10 @@ def _find_floor_ceiling(
             break
         if item == "BLO":
             altitude = items[i + 1] if i + 1 < len(items) else ""
-            floor, ceiling = _floor_ceiling_from_str(altitude)
+            if "-" in altitude and all(p.isdigit() for p in altitude.split("-")):
+                floor, ceiling = _floor_ceiling_from_str(altitude)
+            elif altitude.isdigit():
+                ceiling = Measurement(int(altitude) * 100, "ft")
             items = items[:i]
             break
         if item.isdigit():

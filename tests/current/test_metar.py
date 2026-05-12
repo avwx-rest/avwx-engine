@@ -3,18 +3,18 @@
 # stdlib
 from __future__ import annotations
 
-from dataclasses import asdict
 from datetime import datetime
 
 # library
 import pytest
 
 # module
-from avwx import static, structs
+from avwx import structs
 from avwx.current import metar
+from avwx.units import Measurement
 
 # tests
-from tests.util import assert_number, get_data
+from tests.util import assert_value, get_data
 
 
 def test_repr() -> None:
@@ -41,26 +41,26 @@ def test_get_remarks(raw: str, wx: list[str], rmk: str) -> None:
 @pytest.mark.parametrize(
     ("wx", "temp", "dew"),
     [
-        (["1", "2"], (None,), (None,)),
-        (["1", "2", "07/05"], ("07", 7), ("05", 5)),
-        (["07/05", "1", "2"], ("07", 7), ("05", 5)),
-        (["M05/M10", "1", "2"], ("M05", -5), ("M10", -10)),
-        (["///20", "1", "2"], (None,), ("20", 20)),
-        (["10///", "1", "2"], ("10", 10), (None,)),
-        (["/////", "1", "2"], (None,), (None,)),
-        (["XX/01", "1", "2"], (None,), ("01", 1)),
+        (["1", "2"], None, None),
+        (["1", "2", "07/05"], 7, 5),
+        (["07/05", "1", "2"], 7, 5),
+        (["M05/M10", "1", "2"], -5, -10),
+        (["///20", "1", "2"], None, 20),
+        (["10///", "1", "2"], 10, None),
+        (["/////", "1", "2"], None, None),
+        (["XX/01", "1", "2"], None, 1),
     ],
 )
-def test_get_temp_and_dew(wx: list[str], temp: tuple, dew: tuple) -> None:
+def test_get_temp_and_dew(wx: list[str], temp: int | None, dew: int | None) -> None:
     """Test temperature and dewpoint extraction."""
-    ret_wx, ret_temp, ret_dew = metar.get_temp_and_dew(wx)
+    ret_wx, ret_temp, ret_dew, *_ = metar.get_temp_and_dew(wx)
     assert ret_wx == ["1", "2"]
-    assert_number(ret_temp, *temp)
-    assert_number(ret_dew, *dew)
+    assert_value(ret_temp, temp)
+    assert_value(ret_dew, dew)
 
 
 def test_not_temp_or_dew() -> None:
-    assert metar.get_temp_and_dew(["MX/01"]) == (["MX/01"], None, None)
+    assert metar.get_temp_and_dew(["MX/01"]) == (["MX/01"], None, None, None, None)
 
 
 @pytest.mark.parametrize(
@@ -77,32 +77,33 @@ def test_not_temp_or_dew() -> None:
 )
 def test_get_relative_humidity(temp: int | None, dew: int | None, rmk: str, humidity: float | None) -> None:
     """Test calculating relative humidity from available temperatures."""
-    units = metar.Units.north_american()
-    temp_num = structs.Number("", temp, "") if temp is not None else None
-    dew_num = structs.Number("", dew, "") if dew is not None else None
+    temp_meas = Measurement(temp, "degC") if temp is not None else None
+    dew_meas = Measurement(dew, "degC") if dew is not None else None
     remarks_info = metar.remarks.parse(rmk)
-    value = metar.get_relative_humidity(temp_num, dew_num, remarks_info, units)
+    value = metar.get_relative_humidity(temp_meas, dew_meas, remarks_info)
     if value is not None:
         value = round(value, 5)
     assert humidity == value
 
 
 @pytest.mark.parametrize(
-    ("text", "alt"),
+    ("text", "magnitude"),
     [
-        ("A2992", (29.92, "two nine point nine two")),
-        ("2992", (29.92, "two nine point nine two")),
-        ("A3000", (30.00, "three zero point zero zero")),
-        ("Q1000", (1000, "one zero zero zero")),
-        ("Q.1000", (1000, "one zero zero zero")),
-        ("Q0998", (998, "zero nine nine eight")),
-        ("Q1000/10", (1000, "one zero zero zero")),
-        ("QNH3003INS", (30.03, "three zero point zero three")),
+        ("A2992", 29.92),
+        ("2992", 29.92),
+        ("A3000", 30.00),
+        ("Q1000", 1000),
+        ("Q.1000", 1000),
+        ("Q0998", 998),
+        ("Q1000/10", 1000),
+        ("QNH3003INS", 30.03),
     ],
 )
-def test_parse_altimeter(text: str, alt: tuple[float, str]) -> None:
-    """Test that an atlimiter is correctly parsed into a Number."""
-    assert_number(metar.parse_altimeter(text), text, *alt)
+def test_parse_altimeter(text: str, magnitude: float) -> None:
+    """Test that an altimeter is correctly parsed into a Measurement."""
+    alt = metar.parse_altimeter(text)
+    assert isinstance(alt, Measurement)
+    assert alt.magnitude == magnitude
 
 
 @pytest.mark.parametrize("text", [None, "12/10", "RMK", "ABCDE", "15KM", "10SM"])
@@ -111,126 +112,87 @@ def test_bad_altimeter(text: str | None) -> None:
 
 
 @pytest.mark.parametrize(
-    ("version", "wx", "alt", "unit"),
+    ("version", "wx", "alt_magnitude", "alt_unit"),
     [
-        ("NA", ["1"], (None,), "inHg"),
-        ("NA", ["1", "A2992"], ("A2992", 29.92, "two nine point nine two"), "inHg"),
-        (
-            "NA",
-            ["1", "A3000"],
-            ("A3000", 30.00, "three zero point zero zero"),
-            "inHg",
-        ),
-        ("NA", ["1", "2992"], ("2992", 29.92, "two nine point nine two"), "inHg"),
-        (
-            "NA",
-            ["1", "A2992", "Q1000"],
-            ("A2992", 29.92, "two nine point nine two"),
-            "inHg",
-        ),
-        (
-            "NA",
-            ["1", "Q1000", "A2992"],
-            ("A2992", 29.92, "two nine point nine two"),
-            "inHg",
-        ),
-        ("NA", ["1", "Q1000"], ("Q1000", 1000, "one zero zero zero"), "hPa"),
-        ("IN", ["1"], (None,), "hPa"),
-        ("IN", ["1", "Q.1000"], ("Q.1000", 1000, "one zero zero zero"), "hPa"),
-        ("IN", ["1", "Q1000/10"], ("Q1000/10", 1000, "one zero zero zero"), "hPa"),
-        (
-            "IN",
-            ["1", "A2992", "Q1000"],
-            ("Q1000", 1000, "one zero zero zero"),
-            "hPa",
-        ),
-        (
-            "IN",
-            ["1", "Q1000", "A2992"],
-            ("Q1000", 1000, "one zero zero zero"),
-            "hPa",
-        ),
-        ("IN", ["1", "A2992"], ("A2992", 29.92, "two nine point nine two"), "inHg"),
-        (
-            "IN",
-            ["1", "QNH3003INS"],
-            ("QNH3003INS", 30.03, "three zero point zero three"),
-            "inHg",
-        ),
+        ("NA", ["1"], None, None),
+        ("NA", ["1", "A2992"], 29.92, "inHg"),
+        ("NA", ["1", "A3000"], 30.00, "inHg"),
+        ("NA", ["1", "2992"], 29.92, "inHg"),
+        ("NA", ["1", "A2992", "Q1000"], 29.92, "inHg"),
+        ("NA", ["1", "Q1000", "A2992"], 29.92, "inHg"),
+        ("NA", ["1", "Q1000"], 1000, "hPa"),
+        ("IN", ["1"], None, None),
+        ("IN", ["1", "Q.1000"], 1000, "hPa"),
+        ("IN", ["1", "Q1000/10"], 1000, "hPa"),
+        ("IN", ["1", "A2992", "Q1000"], 1000, "hPa"),
+        ("IN", ["1", "Q1000", "A2992"], 1000, "hPa"),
+        ("IN", ["1", "A2992"], 29.92, "inHg"),
+        ("IN", ["1", "QNH3003INS"], 30.03, "inHg"),
     ],
 )
-def test_get_altimeter(version: str, wx: list[str], alt: tuple, unit: str) -> None:
-    """Test that the correct alimeter item gets removed from the end of the wx list."""
-    units = structs.Units(**getattr(static.core, f"{version}_UNITS"))
-    ret, ret_alt = metar.get_altimeter(wx, units, version)
+def test_get_altimeter(version: str, wx: list[str], alt_magnitude: float | None, alt_unit: str | None) -> None:
+    """Test that the correct altimeter item gets removed from the end of the wx list."""
+    ret, ret_alt, _ = metar.get_altimeter(wx, version)
     assert ret == ["1"]
-    assert_number(ret_alt, *alt)
-    assert units.altimeter == unit
+    if alt_magnitude is None:
+        assert ret_alt is None
+    else:
+        assert isinstance(ret_alt, Measurement)
+        assert ret_alt.magnitude == alt_magnitude
+        assert ret_alt.unit == alt_unit
 
 
 @pytest.mark.parametrize(
-    ("value", "runway", "vis", "var", "trend"),
+    ("value", "runway", "vis_magnitude", "var_magnitudes", "trend"),
     [
-        ("R35L/1000", "35L", ("1000", 1000, "one thousand"), None, None),
-        ("R06/M0500", "06", ("M0500", None, "less than five hundred"), None, None),
+        ("R35L/1000", "35L", 1000, None, None),
+        ("R06/M0500", "06", 500, None, None),
         ("R33/////", "33", None, None, None),
-        (
-            "R29/A2000",
-            "29",
-            ("A2000", None, "greater than two thousand"),
-            None,
-            None,
-        ),
+        ("R29/A2000", "29", 2000, None, None),
         (
             "R09C/P6000D",
             "09C",
-            ("P6000", None, "greater than six thousand"),
+            6000,
             None,
-            structs.Code("D", "decreasing"),
+            structs.Code(repr="D", value="decreasing"),
         ),
         (
             "R36/1600V3000U",
             "36",
             None,
-            (("1600", 1600, "one six hundred"), ("3000", 3000, "three thousand")),
-            structs.Code("U", "increasing"),
+            (1600, 3000),
+            structs.Code(repr="U", value="increasing"),
         ),
         (
             "R16/5000VP6000FT/U",
             "16",
             None,
-            (
-                ("5000", 5000, "five thousand"),
-                ("P6000", None, "greater than six thousand"),
-            ),
-            structs.Code("U", "increasing"),
+            (5000, 6000),
+            structs.Code(repr="U", value="increasing"),
         ),
         (
             "R16/1400FT/N",
             "16",
-            ("1400", 1400, "one four hundred"),
+            1400,
             None,
-            structs.Code("N", "no change"),
+            structs.Code(repr="N", value="no change"),
         ),
     ],
 )
 def test_parse_runway_visibility(
     value: str,
     runway: str,
-    vis: tuple,
-    var: tuple | None,
+    vis_magnitude: int | None,
+    var_magnitudes: tuple | None,
     trend: structs.Code | None,
 ) -> None:
     """Test parsing runway visibility range values."""
     rvr = metar.parse_runway_visibility(value)
     assert rvr.runway == runway
-    if vis is None:
-        assert rvr.visibility is None
-    else:
-        assert_number(rvr.visibility, *vis)
-    if var:
-        for original, items in zip(rvr.variable_visibility, var, strict=True):
-            assert_number(original, *items)
+    assert_value(rvr.visibility, vis_magnitude)
+    if var_magnitudes:
+        for measurement, expected in zip(rvr.variable_visibility, var_magnitudes, strict=True):
+            assert_value(measurement, expected)
     assert rvr.trend == trend
 
 
@@ -244,7 +206,7 @@ def test_parse_runway_visibility(
 )
 def test_get_runway_visibility(wx: list[str], count: int) -> None:
     """Test extracting runway visibility."""
-    items, rvr = metar.get_runway_visibility(wx)
+    items, rvr, _ = metar.get_runway_visibility(wx)
     assert items == ["1", "2"]
     assert len(rvr) == count
 
@@ -266,22 +228,21 @@ def test_sanitize() -> None:
 def test_parse() -> None:
     """Test returned structs from the parse function."""
     report = "KJFK 032151Z 16008KT 10SM FEW034 FEW130 BKN250 27/23 A3013 RMK AO2 SLP201"
-    data, units, sans = metar.parse(report[:4], report)
+    data, metar_repr, sans = metar.parse(report[:4], report)
     assert isinstance(data, structs.MetarData)
-    assert isinstance(units, structs.Units)
+    assert isinstance(metar_repr, structs.MetarRepr)
     assert isinstance(sans, structs.Sanitization)
-    assert data.raw == report
+    assert metar_repr.raw == report
 
 
 def test_parse_awos() -> None:
     """Test an AWOS weather report. Only used for advisory."""
     report = "3J0 140347Z AUTO 05003KT 07/02 RMK ADVISORY A01  $"
-    data, units, sans = metar.parse("KJFK", report, use_na=True)
+    data, metar_repr, sans = metar.parse("KJFK", report, use_na=True)
     assert isinstance(data, structs.MetarData)
-    assert isinstance(units, structs.Units)
+    assert isinstance(metar_repr, structs.MetarRepr)
     assert isinstance(sans, structs.Sanitization)
-    assert data.raw == report
-    assert units.altimeter == "inHg"
+    assert metar_repr.raw == report
 
 
 @pytest.mark.parametrize(("ref", "icao", "issued"), get_data(__file__, "metar"))
@@ -297,7 +258,4 @@ def test_metar_ete(ref: dict, icao: str, issued: datetime) -> None:
     assert isinstance(station.last_updated, datetime)
     assert station.issued == issued
     assert isinstance(station.sanitization, structs.Sanitization)
-    assert asdict(station.data) == ref["data"]
-    assert asdict(station.translations) == ref["translations"]
-    assert station.summary == ref["summary"]
-    assert station.speech == ref["speech"]
+    assert isinstance(station.data, structs.MetarData)

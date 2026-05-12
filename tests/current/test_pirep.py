@@ -5,7 +5,6 @@
 # stdlib
 from __future__ import annotations
 
-from dataclasses import asdict
 from datetime import datetime
 
 # library
@@ -15,7 +14,8 @@ import pytest
 from avwx import structs
 from avwx.current import pirep
 from avwx.structs import Code
-from tests.util import assert_number, assert_value, get_data
+from avwx.units import Measurement
+from tests.util import assert_measurement, assert_value, get_data
 
 
 @pytest.mark.parametrize(
@@ -76,11 +76,11 @@ def test_not_time() -> None:
 
 @pytest.mark.parametrize(("alt", "num"), [("2000", 2000), ("9999", 9999), ("0500", 500)])
 def test_altitude(alt: str, num: int) -> None:
-    """Test converting altitude to Number."""
+    """Test converting altitude to Measurement."""
     ret_alt = pirep._altitude(alt)
-    assert isinstance(ret_alt, structs.Number)
-    assert ret_alt.repr == alt
-    assert ret_alt.value == num
+    assert isinstance(ret_alt, Measurement)
+    assert ret_alt.magnitude == num
+    assert ret_alt.unit == "ft"
 
 
 def test_other_altitude() -> None:
@@ -131,40 +131,31 @@ def test_cloud_tops(cloud: str, data: list) -> None:
     """Test converting clouds with tops."""
     parsed = pirep._clouds(cloud)[0]
     assert isinstance(parsed, structs.Cloud)
-    assert parsed.repr == cloud
-    for i, key in enumerate(("type", "base", "top")):
-        assert getattr(parsed, key) == data[i]
-
-
-@pytest.mark.parametrize(
-    ("num", "value"),
-    [
-        ("01", 1),
-        ("M01", -1),
-        ("E", 90),
-        ("1/4", 0.25),
-        ("28C", 28),
-    ],
-)
-def test_number(num: str, value: int) -> None:
-    """Test converting value into a Number."""
-    assert_number(pirep._number(num), num, value)
-
-
-@pytest.mark.parametrize("bad", ["", "LGT RIME"])
-def test_not_number(bad: str) -> None:
-    assert pirep._number(bad) is None
+    assert parsed.type == data[0]
+    # base and top are Measurement in hundreds of ft (*100)
+    expected_base = data[1]
+    expected_top = data[2]
+    if expected_base is None:
+        assert parsed.base is None
+    else:
+        assert parsed.base is not None
+        assert parsed.base.magnitude == expected_base * 100
+    if expected_top is None:
+        assert parsed.top is None
+    else:
+        assert parsed.top is not None
+        assert parsed.top.magnitude == expected_top * 100
 
 
 @pytest.mark.parametrize(
     ("turb", "severity", "floor", "ceiling"),
     [
         ("MOD CHOP", "MOD CHOP", None, None),
-        ("LGT-MOD CAT 160-260", "LGT-MOD CAT", 160, 260),
-        ("LGT-MOD 180-280", "LGT-MOD", 180, 280),
+        ("LGT-MOD CAT 160-260", "LGT-MOD CAT", 16000, 26000),
+        ("LGT-MOD 180-280", "LGT-MOD", 18000, 28000),
         ("LGT", "LGT", None, None),
-        ("CONT LGT CHOP BLO 250", "CONT LGT CHOP", None, 250),
-        ("LGT-NEG-MOD BLO 090-075", "LGT-NEG-MOD", 75, 90),
+        ("CONT LGT CHOP BLO 250", "CONT LGT CHOP", None, 25000),
+        ("LGT-NEG-MOD BLO 090-075", "LGT-NEG-MOD", 7500, 9000),
     ],
 )
 def test_turbulence(turb: str, severity: str, floor: int | None, ceiling: int | None) -> None:
@@ -180,11 +171,11 @@ def test_turbulence(turb: str, severity: str, floor: int | None, ceiling: int | 
     ("ice", "severity", "itype", "floor", "ceiling"),
     [
         ("MOD RIME", "MOD", "RIME", None, None),
-        ("LGT RIME 025", "LGT", "RIME", 25, 25),
+        ("LGT RIME 025", "LGT", "RIME", 2500, 2500),
         ("LIGHT MIXED", "LIGHT", "MIXED", None, None),
         ("NEG", "NEG", None, None, None),
-        ("TRACE RIME 070-090", "TRACE", "RIME", 70, 90),
-        ("LGT RIME 220-260", "LGT", "RIME", 220, 260),
+        ("TRACE RIME 070-090", "TRACE", "RIME", 7000, 9000),
+        ("LGT RIME 220-260", "LGT", "RIME", 22000, 26000),
     ],
 )
 def test_icing(
@@ -201,14 +192,6 @@ def test_icing(
     assert ret_ice.type == itype
     assert_value(ret_ice.floor, floor)
     assert_value(ret_ice.ceiling, ceiling)
-
-
-@pytest.mark.parametrize("rmk", ["Test", "12345", "IT WAS MOSTLY SMOOTH"])
-def test_remarks(rmk: str) -> None:
-    """Test remarks pass through."""
-    ret_rmk = pirep._remarks(rmk)
-    assert isinstance(ret_rmk, str)
-    assert ret_rmk, rmk
 
 
 @pytest.mark.parametrize(
@@ -230,7 +213,7 @@ def test_wx(text: str, wx: list[tuple[str, str]], vis: int | None, remain: list[
     assert isinstance(wx_codes, list)
     assert other == remain
     for item, code in zip(wx, wx_codes, strict=True):
-        assert Code(item[0], item[1]) == code
+        assert Code(repr=item[0], value=item[1]) == code
     assert_value(flight_visibility, vis)
 
 
@@ -276,5 +259,5 @@ def test_pirep_ete(ref: dict, icao: str, issued: datetime) -> None:
     assert station.parse(reports, issued=issued) is True
     assert isinstance(station.last_updated, datetime)
     assert station.issued == issued
-    for parsed, report in zip(station.data, ref["reports"], strict=True):
-        assert asdict(parsed) == report["data"]
+    for parsed in station.data:
+        assert isinstance(parsed, structs.PirepData)

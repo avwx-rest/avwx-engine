@@ -452,8 +452,7 @@ def _coords_from_navaids(report: str, start: int) -> tuple[str, list[Coord], int
             loc = geo_distance(nautical=distance).destination(locs[i].pair, bearing=bearing)
             coord = Coord(lat=loc.latitude, lon=loc.longitude, repr=value)
         else:
-            coord = locs[i]
-            coord.repr = value
+            coord = locs[i].model_copy(update={"repr": value})
         coords.append(coord)
     return report, coords, start
 

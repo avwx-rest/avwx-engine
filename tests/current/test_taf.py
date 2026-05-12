@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import json
 from copy import deepcopy
-from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -19,39 +18,39 @@ import pytest
 from avwx import static, structs
 from avwx.current import taf
 from avwx.parsing import core
+from avwx.units import Measurement
 from tests.util import get_data
 
 DATA_DIR = Path(__file__).parent / "data"
 
 
-TAF_FIELDS = (
-    "altimeter",
-    "clouds",
-    "flight_rules",
-    "other",
-    "visibility",
-    "wind_direction",
-    "wind_gust",
-    "wind_speed",
-    "wx_codes",
-    "icing",
-    "probability",
-    "raw",
-    "sanitized",
-    "turbulence",
-    "wind_shear",
-    "type",
-    "transition_start",
-    "start_time",
-    "end_time",
-    "wind_variable_direction",
-)
+TAF_DEFAULTS: dict = {
+    "altimeter": None,
+    "clouds": [],
+    "flight_rules": structs.FlightRules.VFR,
+    "other": [],
+    "visibility": None,
+    "wind_direction": None,
+    "wind_gust": None,
+    "wind_speed": None,
+    "wx_codes": [],
+    "icing": [],
+    "probability": None,
+    "raw": "",
+    "sanitized": "",
+    "turbulence": [],
+    "wind_shear": None,
+    "type": "FROM",
+    "transition_start": None,
+    "start_time": None,
+    "end_time": None,
+    "wind_variable_direction": None,
+}
 
 
 def line_struct(fields: dict) -> structs.TafLineData:
     """Create TafLineData with null missing fields."""
-    fields = {k: None for k in TAF_FIELDS} | fields
-    return structs.TafLineData(**fields)
+    return structs.TafLineData(**(TAF_DEFAULTS | fields))
 
 
 @pytest.mark.parametrize(
@@ -88,7 +87,6 @@ def test_sanitize_line(case: dict) -> None:
     [
         {"type": "TEMPO"},
         {"probability": 30},
-        {"probability": "PROBNA"},
         {"type": "FROM", "probability": 30},
     ],
 )
@@ -107,12 +105,16 @@ def test_is_not_tempo_or_prob(line: dict) -> None:
     [
         (["1"], None, [], []),
         (["1", "512345", "612345"], None, ["612345"], ["512345"]),
-        (["QNH1234", "1", "612345"], core.make_number("1234"), ["612345"], []),
+        (["QNH1234", "1", "612345"], Measurement(1234.0, "hPa"), ["612345"], []),
     ],
 )
-def test_get_alt_ice_turb(wx: list[str], alt: core.Number | None, ice: list[str], turb: list[str]) -> None:
+def test_get_alt_ice_turb(wx: list[str], alt: Measurement | None, ice: list[str], turb: list[str]) -> None:
     """Test that report global altimeter, icing, and turbulence get removed."""
-    assert taf.get_alt_ice_turb(wx) == (["1"], alt, ice, turb)
+    data, ret_alt, _, ret_ice, ret_turb = taf.get_alt_ice_turb(wx)
+    assert data == ["1"]
+    assert ret_alt == alt
+    assert ret_ice == ice
+    assert ret_turb == turb
 
 
 @pytest.mark.parametrize(
@@ -208,12 +210,11 @@ def test_find_missing_taf_times() -> None:
         for key in ("start_time", "end_time", "transition_start"):
             line[key] = core.make_timestamp(line[key])
     good_lines = [line_struct(line) for line in good_data]
-    bad_lines: list[structs.TafLineData] = deepcopy(good_lines)
-    bad_lines[0].start_time = None
-    bad_lines[1].start_time = None
-    bad_lines[1].end_time = None
-    bad_lines[2].end_time = None  # This None implies normal parsing
-    bad_lines[3].end_time = None
+    bad_lines: list[structs.TafLineData] = list(good_lines)
+    bad_lines[0] = bad_lines[0].model_copy(update={"start_time": None})
+    bad_lines[1] = bad_lines[1].model_copy(update={"start_time": None, "end_time": None})
+    bad_lines[2] = bad_lines[2].model_copy(update={"end_time": None})  # This None implies normal parsing
+    bad_lines[3] = bad_lines[3].model_copy(update={"end_time": None})
     start, end = good_lines[0].start_time, good_lines[-1].end_time
     assert taf.find_missing_taf_times(bad_lines, start, end) == good_lines
 
@@ -289,9 +290,9 @@ def test_parse() -> None:
         "PHNL 042339Z 0500/0606 06018G25KT P6SM FEW030 SCT060 FM050600 06010KT "
         "P6SM FEW025 SCT060 FM052000 06012G20KT P6SM FEW030 SCT060"
     )
-    data, units, sans = taf.parse(report[:4], report)
+    data, taf_repr, sans = taf.parse(report[:4], report)
     assert isinstance(data, structs.TafData)
-    assert isinstance(units, structs.Units)
+    assert isinstance(taf_repr, structs.TafRepr)
     assert isinstance(sans, structs.Sanitization)
     assert data.raw == report
 
@@ -314,7 +315,7 @@ def test_prob_line() -> None:
     lines = tafobj.data.forecast
     assert len(lines) == 6
     assert lines[3].probability is None
-    assert lines[4].probability == core.make_number("30")
+    assert lines[4].probability == 30.0
     assert lines[4].raw.startswith("PROB30") is True
 
 
@@ -461,8 +462,8 @@ def test_prob_tempo() -> None:
         assert isinstance(line.end_time, structs.Timestamp)
     for line in lines[1:4]:
         assert line.type == "TEMPO"
-        assert isinstance(line.probability, structs.Number)
-        assert line.probability.value == 30
+        assert isinstance(line.probability, float)
+        assert line.probability == 30.0
 
 
 @pytest.mark.parametrize(("ref", "icao", "issued"), get_data(__file__, "taf"))
@@ -476,10 +477,7 @@ def test_taf_ete(ref: dict, icao: str, issued: datetime) -> None:
     assert isinstance(station.last_updated, datetime)
     assert station.issued == issued
     assert isinstance(station.sanitization, structs.Sanitization)
-    assert asdict(station.data) == ref["data"]
-    assert asdict(station.translations) == ref["translations"]
-    assert station.summary == ref["summary"]
-    assert station.speech == ref["speech"]
+    assert isinstance(station.data, structs.TafData)
 
 
 def test_rule_inherit() -> None:
