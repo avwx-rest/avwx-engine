@@ -17,7 +17,6 @@ from shapely.geometry import LineString
 from avwx import structs
 from avwx.current import airsigmet
 from avwx.parsing import core
-from avwx.static.core import CARDINAL_DEGREES
 from avwx.structs import Coord, Movement
 from avwx.units import Measurement
 

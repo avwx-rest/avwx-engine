@@ -16,8 +16,9 @@ from avwx.parsing.sanitization.taf import clean_taf_list, clean_taf_string
 from avwx.parsing.translate.taf import translate_taf
 from avwx.static.core import FLIGHT_RULES
 from avwx.static.taf import TAF_NEWLINE, TAF_NEWLINE_STARTSWITH, TAF_RMK
-from avwx.station import uses_na_format, valid_station
+from avwx.station import valid_station
 from avwx.structs import (
+    Cloud,
     FlightRules,
     Sanitization,
     TafData,
@@ -211,7 +212,7 @@ def _get_next_time(lines: list[TafLineData], target: str) -> Timestamp | None:
             return line.transition_start
         time = getattr(line, target, None)
         if time:
-            return time  # type: ignore[return-value]
+            return time  # type: ignore[no-any-return]
     return None
 
 
@@ -359,12 +360,11 @@ def parse(
     sanitized = sanitized.replace(station, "")
     if time:
         sanitized = sanitized.replace(time, "").strip()
-    use_na = uses_na_format(station)
     sanitized, rmk = get_taf_remarks(sanitized)
     if rmk.startswith("AMD"):
         is_amended = True
     lines = split_taf(sanitized)
-    parsed_lines, parsed_reprs = parse_lines(lines, use_na, sans, issued)
+    parsed_lines, parsed_reprs = parse_lines(lines, sans, issued)
     max_temp: str | None = None
     min_temp: str | None = None
     start_time: Timestamp | None = None
@@ -421,7 +421,6 @@ def parse(
 
 def parse_lines(
     lines: list[str],
-    use_na: bool,
     sans: Sanitization,
     issued: date | None = None,
 ) -> tuple[list[TafLineData], list[TafLineRepr]]:
@@ -439,15 +438,13 @@ def parse_lines(
                 prob = line[:6]
                 line = line[6:].strip()
         if line:
-            parsed_line, parsed_repr = parse_line(line, use_na, sans, issued)
+            parsed_line, parsed_repr = parse_line(line, sans, issued)
             prob_value: float | None = None
             prob_repr: str | None = None
             if prob and " " not in prob:
                 prob_repr = prob
-                try:
+                with suppress(ValueError):
                     prob_value = float(prob[4:])
-                except ValueError:
-                    pass
             sanitized = f"{prob} {parsed_line.sanitized}".strip() if prob else parsed_line.sanitized
             parsed_line = parsed_line.model_copy(
                 update={"probability": prob_value, "raw": raw_line, "sanitized": sanitized}
@@ -464,7 +461,6 @@ def parse_lines(
 
 def parse_line(
     line: str,
-    use_na: bool,
     sans: Sanitization,
     issued: date | None = None,
 ) -> tuple[TafLineData, TafLineRepr]:
@@ -476,11 +472,11 @@ def parse_line(
     sanitized = " ".join(data)
     data, report_type, start_time, end_time, transition = get_type_and_times(data)
     data, wind_shear = get_wind_shear(data)
-    data, wind_dir, wind_spd, wind_gust, wind_var, wind_unit, raw_wind, raw_vardir = core.get_wind(data)
+    data, wind_dir, wind_spd, wind_gust, wind_var, _wind_unit, raw_wind, raw_vardir = core.get_wind(data)
 
     visibility: Measurement | None = None
     raw_vis: str | None = None
-    clouds = []
+    clouds: list[Cloud] = []
     raw_clouds: list[str] = []
 
     if "CAVOK" in data:

@@ -1,12 +1,11 @@
 """Core Tests."""
 
-# ruff: noqa: FBT001,SLF001
+# ruff: noqa: FBT001
 
 # stdlib
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from typing import Any
+from datetime import UTC, datetime
 
 # library
 import pytest
@@ -247,7 +246,7 @@ def test_get_wind(wx: list[str], unit: str, wind: tuple[tuple], varv: list[tuple
 )
 def test_get_visibility(wx: list[str], unit: str, magnitude: float | None) -> None:
     """Test that the visibility item(s) gets removed and cleaned."""
-    wx, vis, raw, vis_unit = core.get_visibility(wx)
+    wx, vis, _raw, vis_unit = core.get_visibility(wx)
     assert wx == ["1"]
     assert vis_unit == unit
     if magnitude is None:
@@ -369,7 +368,7 @@ def test_get_flight_rules(
     rule: str,
 ) -> None:
     """Test that the proper flight rule is calculated for a set visibility and ceiling."""
-    visibility = Measurement(vis_magnitude, vis_unit) if vis_magnitude is not None else None
+    visibility = Measurement(vis_magnitude, vis_unit) if vis_magnitude is not None and vis_unit is not None else None
     cloud = structs.Cloud(type=ceiling[0], base=Measurement(ceiling[1], "ft")) if ceiling else None
     assert static.core.FLIGHT_RULES[core.get_flight_rules(visibility, vis_repr, cloud)] == rule
 
@@ -408,19 +407,18 @@ def test_is_not_altitude(value: str) -> None:
 
 
 @pytest.mark.parametrize(
-    ("text", "force", "magnitude", "unit"),
+    ("text", "magnitude", "unit"),
     [
-        ("FL030", False, 30, "ft"),
-        ("030", False, 30, "ft"),
-        ("030", True, 30, "ft"),
-        ("6000FT", False, 6000, "ft"),
-        ("10000FT", False, 10000, "ft"),
-        ("2000M", False, 2000, "m"),
+        ("FL030", 30, "ft"),
+        ("030", 30, "ft"),
+        ("6000FT", 6000, "ft"),
+        ("10000FT", 10000, "ft"),
+        ("2000M", 2000, "m"),
     ],
 )
-def test_make_altitude(text: str, force: bool, magnitude: int, unit: str) -> None:
+def test_make_altitude(text: str, magnitude: int, unit: str) -> None:
     """Test converting altitude text into Measurement."""
-    altitude, alt_unit = core.make_altitude(text, force_fl=force)
+    altitude, alt_unit = core.make_altitude(text)
     assert altitude is not None
     assert altitude.magnitude == magnitude
     assert alt_unit == unit
@@ -428,7 +426,7 @@ def test_make_altitude(text: str, force: bool, magnitude: int, unit: str) -> Non
 
 def test_parse_date() -> None:
     """Test that report timestamp is parsed into a datetime object."""
-    today = datetime.now(tz=timezone.utc)
+    today = datetime.now(tz=UTC)
     rts = today.strftime(r"%d%H%MZ")
     parsed = core.parse_date(rts)
     assert isinstance(parsed, datetime)
@@ -450,10 +448,10 @@ def test_midnight_rollover() -> None:
 @pytest.mark.parametrize(
     ("dt", "fmt", "target"),
     [
-        (datetime.now(tz=timezone.utc), r"%d%HZ", False),
-        (datetime.now(tz=timezone.utc), r"%d%H%MZ", False),
-        (datetime(2010, 2, 2, 2, 2, tzinfo=timezone.utc), r"%d%HZ", True),
-        (datetime(2010, 2, 2, 2, 2, tzinfo=timezone.utc), r"%d%H%MZ", True),
+        (datetime.now(tz=UTC), r"%d%HZ", False),
+        (datetime.now(tz=UTC), r"%d%H%MZ", False),
+        (datetime(2010, 2, 2, 2, 2, tzinfo=UTC), r"%d%HZ", True),
+        (datetime(2010, 2, 2, 2, 2, tzinfo=UTC), r"%d%H%MZ", True),
     ],
 )
 def test_make_timestamp(dt: datetime, fmt: str, target: bool) -> None:

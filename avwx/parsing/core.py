@@ -210,7 +210,7 @@ def _preprocess_num(num: str) -> tuple[str, str, str]:
 def make_measurement(
     num: str | None,
     unit: str,
-    repr_override: str | None = None,  # noqa: A002
+    repr_override: str | None = None,
 ) -> tuple[Measurement | None, str | None]:
     """Parse *num* into a ``(Measurement, repr_str)`` pair.
 
@@ -266,7 +266,7 @@ _Numeric = int | float
 
 
 def relative_humidity(temperature: _Numeric, dewpoint: _Numeric, unit: str = "degC") -> float:
-    """Return relative humidity (0–1) from temperature and dewpoint."""
+    """Return relative humidity (0-1) from temperature and dewpoint."""
 
     def saturation(value: _Numeric) -> float:
         return math.exp((17.67 * value) / (243.5 + value))
@@ -409,7 +409,7 @@ def get_wind(
                 variable.append(m)
 
     direction: Measurement | None = None
-    if direction_str and direction_str != "VRB" and direction_str != "000":
+    if direction_str and direction_str not in {"VRB", "000"}:
         direction, _ = make_measurement(direction_str, "degree")
     elif direction_str in ("VRB", "000"):
         # Keep None for direction; special values handled by speech/translate
@@ -605,7 +605,7 @@ def get_clouds(data: list[str]) -> tuple[list[str], list[Cloud], list[str]]:
             clouds.append(cloud)
             raws.append(raw)
     try:
-        paired = sorted(zip(clouds, raws), key=lambda p: (p[0].base.magnitude if p[0].base else 0, p[0].type))
+        paired = sorted(zip(clouds, raws, strict=False), key=lambda p: (p[0].base.magnitude if p[0].base else 0, p[0].type))
         clouds, raws = [p[0] for p in paired], [p[1] for p in paired]
     except (TypeError, AttributeError):
         clouds.reverse()
@@ -679,16 +679,13 @@ def is_altitude(value: str) -> bool:
 def make_altitude(
     value: str,
     unit: str = "ft",
-    repr_override: str | None = None,  # noqa: A002
-    *,
-    force_fl: bool = False,
+    repr_override: str | None = None,
 ) -> tuple[Measurement | None, str]:
     """Parse an altitude string into a ``(Measurement, unit)`` pair."""
     if not value:
         return None, unit
     for end in ("FT", "M"):
         if value.endswith(end):
-            force_fl = False
             unit = end.lower()
             value = value.removesuffix(end)
     if value.startswith("FL") and value[2:].isdigit():
@@ -727,9 +724,9 @@ def parse_date(
         index_hour = 2
 
     if target:
-        target_dt = dt.datetime(target.year, target.month, target.day, tzinfo=dt.timezone.utc)
+        target_dt = dt.datetime(target.year, target.month, target.day, tzinfo=dt.UTC)
     else:
-        target_dt = dt.datetime.now(tz=dt.timezone.utc)
+        target_dt = dt.datetime.now(tz=dt.UTC)
 
     day = target_dt.day if time_only else int(date[:2])
     hour = int(date[index_hour : index_hour + 2])

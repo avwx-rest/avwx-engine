@@ -10,7 +10,7 @@ next report is issued.
 from __future__ import annotations
 
 from contextlib import suppress
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta
 
 from avwx.current.base import Report, get_wx_codes
 from avwx.parsing import core, remarks, speech, summary
@@ -21,6 +21,7 @@ from avwx.static.core import FLIGHT_RULES
 from avwx.static.metar import METAR_RMK
 from avwx.station import uses_na_format, valid_station
 from avwx.structs import (
+    Cloud,
     Code,
     FlightRules,
     MetarData,
@@ -81,7 +82,7 @@ class Metar(Report):
             return False
         if self.data is None or self.data.time is None or self.data.time.dt is None:
             return True
-        return datetime.now(tz=timezone.utc) - self.data.time.dt > timedelta(minutes=90)
+        return datetime.now(tz=UTC) - self.data.time.dt > timedelta(minutes=90)
 
     def _calculate_altitudes(self) -> None:
         """Derive pressure altitude and density altitude when all inputs are available."""
@@ -390,7 +391,7 @@ def _parse_na(
     data, station, time_str = core.get_station_and_time(data)
     data, runway_vis, raw_rvr = get_runway_visibility(data)
     data, clouds, raw_clouds = core.get_clouds(data)
-    data, wind_dir, wind_spd, wind_gust, wind_var, wind_unit, raw_wind, raw_vardir = core.get_wind(data)
+    data, wind_dir, wind_spd, wind_gust, wind_var, _wind_unit, raw_wind, raw_vardir = core.get_wind(data)
     data, altimeter, raw_alt = get_altimeter(data, "NA")
     data, visibility, raw_vis, _vis_unit = core.get_visibility(data)
     data, temperature, dewpoint, raw_temp, raw_dew = get_temp_and_dew(data)
@@ -453,17 +454,19 @@ def _parse_in(
 
     cavok = "CAVOK" in data
     if cavok:
-        clouds = []
+        clouds: list[Cloud] = []
         raw_clouds: list[str] = []
     else:
         data, clouds, raw_clouds = core.get_clouds(data)
 
-    data, wind_dir, wind_spd, wind_gust, wind_var, wind_unit, raw_wind, raw_vardir = core.get_wind(data)
+    data, wind_dir, wind_spd, wind_gust, wind_var, _wind_unit, raw_wind, raw_vardir = core.get_wind(data)
     data, altimeter, raw_alt = get_altimeter(data, "IN")
 
+    visibility: Measurement | None = None
+    raw_vis: str | None = None
     if cavok:
         visibility = Measurement(9999, "m")
-        raw_vis: str | None = "CAVOK"
+        raw_vis = "CAVOK"
         data = [t for t in data if t != "CAVOK"]
     else:
         data, visibility, raw_vis, _vis_unit = core.get_visibility(data)
@@ -476,7 +479,7 @@ def _parse_in(
 
     raw_wind_dir: str | None = None
     if raw_wind:
-        from avwx.static.core import WIND_UNITS  # noqa: PLC0415
+        from avwx.static.core import WIND_UNITS
         for key in WIND_UNITS:
             raw_wind_clean = raw_wind.replace(key, "")
             if raw_wind_clean:

@@ -23,7 +23,7 @@ from __future__ import annotations
 import asyncio as aio
 import re
 from contextlib import suppress
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from itertools import chain
 from typing import TypeAlias
 
@@ -174,7 +174,7 @@ class AirSigManager:
         if raw == self._raw:
             return False
         self._raw, self.raw = raw, reports
-        self.last_updated = datetime.now(tz=timezone.utc)
+        self.last_updated = datetime.now(tz=UTC)
         # Parse reports if not disabled
         if not disable_post:
             parsed = []
@@ -504,8 +504,7 @@ def _altitudes(data: list[str]) -> tuple[list[str], Measurement | None, Measurem
             if "/" in item:
                 floor_val, ceiling_val = item.split("/")
                 floor, _ = core.make_altitude(floor_val)
-                force_fl = (floor_val == "SFC" or floor_val[:2] == "FL") and ceiling_val[:2] != "FL"
-                ceiling, _ = core.make_altitude(ceiling_val, force_fl=force_fl)
+                ceiling, _ = core.make_altitude(ceiling_val)
             else:
                 ceiling, _ = core.make_altitude(item)
             data.pop(i)
