@@ -370,6 +370,14 @@ def _movement(data: list[str], units: Units) -> tuple[list[str], Units, Movement
     # MOV CNL
     if direction_str == "CNL":
         return data, units, None
+    # MOV SLOW ESE / MOV SLOW "SLOW" is a speed qualifier, not a direction
+    if direction_str == "SLOW":
+        raw += f" {direction_str}"
+        if index < len(data):
+            direction_str = data.pop(index)
+            raw += f" {direction_str}"
+        direction = core.make_number(direction_str.replace("/", ""), literal=True, special=CARDINAL_DEGREES)
+        return data, units, Movement(repr=raw.strip(), direction=direction, speed=None)
     raw += f" {direction_str} "
     # MOV FROM 23040KT
     if direction_str == "FROM":

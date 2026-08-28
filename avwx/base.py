@@ -23,9 +23,15 @@ except ImportError:
     from typing_extensions import Self
 
 
+# Report header words that are never station codes
+_REPORT_HEADERS = {"METAR", "SPECI", "TAF", "COR", "AMD", "RTD"}
+
+
 def find_station(report: str) -> Station | None:
     """Returns the first Station found in a report string"""
     for item in report.split():
+        if item.upper() in _REPORT_HEADERS:
+            continue
         with suppress(BadStation):
             return Station.from_code(item.upper())
     return None
