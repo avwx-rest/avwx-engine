@@ -23,6 +23,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -62,6 +63,7 @@
                         "value": "IFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -103,6 +105,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -142,6 +145,7 @@
                         "value": "IFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -180,6 +184,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -243,6 +248,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -274,6 +280,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -318,6 +325,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -357,6 +365,7 @@
                         "value": "IFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -398,6 +407,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -433,6 +443,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -477,6 +488,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -508,6 +520,7 @@
                         "value": "VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -552,6 +565,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -583,6 +597,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -627,6 +642,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -658,6 +674,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -702,6 +719,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -741,6 +759,7 @@
                         "value": "IFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -782,6 +801,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -821,6 +841,7 @@
                         "value": "IFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -862,6 +883,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -893,6 +915,7 @@
                         "value": "VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -937,6 +960,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -968,6 +992,7 @@
                         "value": "VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1012,6 +1037,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1043,6 +1069,7 @@
                         "value": "VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1087,6 +1114,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1118,6 +1146,7 @@
                         "value": "VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1162,6 +1191,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1197,6 +1227,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "004",
                         "spoken": "four",
                         "value": 4
@@ -1241,6 +1272,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1272,6 +1304,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1316,6 +1349,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1347,6 +1381,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1391,6 +1426,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1430,6 +1466,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1474,6 +1511,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1509,6 +1547,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1553,6 +1592,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1592,6 +1632,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1636,6 +1677,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1675,6 +1717,7 @@
                         "value": "IFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1716,6 +1759,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1755,6 +1799,7 @@
                         "value": "IFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1796,6 +1841,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1835,6 +1881,7 @@
                         "value": "IFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1876,6 +1923,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1915,6 +1963,7 @@
                         "value": "IFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1956,6 +2005,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1995,6 +2045,7 @@
                         "value": "IFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2036,6 +2087,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2075,6 +2127,7 @@
                         "value": "IFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2116,6 +2169,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2155,6 +2209,7 @@
                         "value": "IFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2196,6 +2251,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2235,6 +2291,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2279,6 +2336,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2318,6 +2376,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2362,6 +2421,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2401,6 +2461,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2445,6 +2506,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2484,6 +2546,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2528,6 +2591,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2567,6 +2631,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2611,6 +2676,7 @@
                     },
                     "fir": "KZJX",
                     "lower": {
+                        "flight_level": false,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2642,6 +2708,7 @@
                         "value": "IFR and VFR"
                     },
                     "upper": {
+                        "flight_level": false,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999

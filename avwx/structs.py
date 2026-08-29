@@ -76,6 +76,17 @@ class Fraction(Number):
 
 
 @dataclass
+class Altitude(Number):
+    """A vertical limit that knows whether it is a flight level.
+
+    ``value`` is in hundreds of feet when ``flight_level`` is set, and in
+    ``Units.altitude`` otherwise.
+    """
+
+    flight_level: bool = False
+
+
+@dataclass
 class Timestamp:
     repr: str
     dt: datetime | None
@@ -401,8 +412,8 @@ class Qualifiers:
     traffic: Code | None
     purpose: list[Code]
     scope: list[Code]
-    lower: Number | None
-    upper: Number | None
+    lower: Altitude | None
+    upper: Altitude | None
     coord: Coord | None
     radius: Number | None
 
@@ -417,8 +428,8 @@ class NotamData(ReportData):
     end_time: Timestamp | Code | None
     schedule: str | None
     body: str
-    lower: Number | None
-    upper: Number | None
+    lower: Altitude | None
+    upper: Altitude | None
 
 
 @dataclass

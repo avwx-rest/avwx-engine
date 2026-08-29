@@ -49,6 +49,7 @@ from avwx.static.notam import (
     TRAFFIC_TYPE,
 )
 from avwx.structs import (
+    Altitude,
     Code,
     Coord,
     NotamData,
@@ -190,6 +191,9 @@ class Notams(Reports):
 
 
 ALL_KEYS_PATTERN = re.compile(r"\b[A-GQ]\) ")
+MISSING_KEY_SPACE_PATTERN = re.compile(r"(^|\s)([A-GQ])\)(?=\S)")
+# "FL150" and the shorthand "F150" both name a flight level
+FLIGHT_LEVEL_PATTERN = re.compile(r"^FL?\d+$")
 KEY_PATTERNS = {
     "Q": re.compile(r"\b[A-G]\) "),
     "A": re.compile(r"\b[B-G]\) "),
@@ -353,16 +357,36 @@ def parse_linked_times(start: str, end: str) -> tuple[Timestamp | Code | None, T
     return make_year_timestamp(start, start_raw, tzname), make_year_timestamp(end, end_raw, tzname)
 
 
-def make_altitude(value: str | None, units: Units) -> Number | None:
-    """Parse NOTAM altitudes."""
+def make_altitude(value: str | None, units: Units) -> Altitude | None:
+    """Parse NOTAM altitudes.
+
+    A value is only a flight level when it says so, ie "FL150" or "F150" in a G) line.
+
+    ICAO Annex 15 defines the Q) line limits as flight levels, but they are not treated
+    as such here. Producers fill them with the F) and G) values rounded up to the next
+    hundred feet against those items' own datum, which is AMSL far more often than it is
+    a pressure altitude, and the spec's own "000"/"999" default means the subject carries
+    no height information at all rather than FL000 to FL999.
+    """
     if not value:
         return None
-    if trimmed := value.split()[0].strip(" ."):
-        if "(" in trimmed:
-            trimmed = trimmed[trimmed.find("(") + 1 :]
-        if trimmed in SPECIAL_NUMBERS or trimmed[0].isdigit():
-            return core.make_altitude(trimmed, units, repr=value)[0]
-    return None
+    trimmed = value.split()[0].strip(" .")
+    if not trimmed:
+        return None
+    if "(" in trimmed:
+        trimmed = trimmed[trimmed.find("(") + 1 :]
+    is_flight_level = FLIGHT_LEVEL_PATTERN.match(trimmed) is not None
+    if not (is_flight_level or trimmed in SPECIAL_NUMBERS or trimmed[0].isdigit()):
+        return None
+    number = core.make_altitude(trimmed, units, repr=value)[0]
+    if number is None:
+        return None
+    return Altitude(
+        repr=number.repr,
+        value=number.value,
+        spoken=number.spoken,
+        flight_level=is_flight_level,
+    )
 
 
 def parse(report: str, issued: Timestamp | None = None) -> tuple[NotamData, Units]:
@@ -426,4 +450,8 @@ def parse(report: str, issued: Timestamp | None = None) -> tuple[NotamData, Unit
 
 def sanitize(report: str) -> str:
     """Retun a sanitized report ready for parsing."""
-    return report.replace("\r", "").strip()
+    report = report.replace("\r", "").strip()
+    # Some sources omit the space after a key, ie "E)TWY CLSD" instead of "E) TWY CLSD",
+    # which the key patterns above require. Only repair a key that starts a line or
+    # follows whitespace so keys quoted inside body text are left alone.
+    return MISSING_KEY_SPACE_PATTERN.sub(r"\1\2) ", report)

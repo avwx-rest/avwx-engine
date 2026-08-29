@@ -33,8 +33,8 @@ QUALIFIERS = [
             structs.Code("O", "Flight Operations"),
         ],
         scope=[structs.Code("A", "Aerodrome")],
-        lower=structs.Number("000", 0, "zero"),
-        upper=structs.Number("999", 999, "nine nine nine"),
+        lower=structs.Altitude("000", 0, "zero"),
+        upper=structs.Altitude("999", 999, "nine nine nine"),
         coord=structs.Coord(40.38, -73.46, "4038N07346W"),
         radius=structs.Number("025", 25, "two five"),
     ),
@@ -50,8 +50,8 @@ QUALIFIERS = [
             structs.Code("O", "Flight Operations"),
         ],
         scope=[structs.Code("A", "Aerodrome")],
-        lower=structs.Number("000", 0, "zero"),
-        upper=structs.Number("999", 999, "nine nine nine"),
+        lower=structs.Altitude("000", 0, "zero"),
+        upper=structs.Altitude("999", 999, "nine nine nine"),
         coord=structs.Coord(28.25, -81.18, "2825N08118W"),
         radius=structs.Number("025", 25, "two five"),
     ),
@@ -69,8 +69,8 @@ QUALIFIERS = [
             structs.Code("A", "Aerodrome"),
             structs.Code("W", "Warning"),
         ],
-        lower=structs.Number("000", 0, "zero"),
-        upper=structs.Number("001", 1, "one"),
+        lower=structs.Altitude("000", 0, "zero"),
+        upper=structs.Altitude("001", 1, "one"),
         coord=structs.Coord(51.25, -0.28, "5125N00028W"),
         radius=structs.Number("002", 2, "two"),
     ),
@@ -84,8 +84,8 @@ QUALIFIERS = [
         scope=[
             structs.Code("A", "Aerodrome"),
         ],
-        lower=structs.Number("000", 0, "zero"),
-        upper=structs.Number("999", 999, "nine nine nine"),
+        lower=structs.Altitude("000", 0, "zero"),
+        upper=structs.Altitude("999", 999, "nine nine nine"),
         coord=None,
         radius=None,
     ),
@@ -104,8 +104,8 @@ QUALIFIERS = [
             structs.Code("A", "Aerodrome"),
             structs.Code("E", "En Route"),
         ],
-        lower=structs.Number("000", 0, "zero"),
-        upper=structs.Number("999", 999, "nine nine nine"),
+        lower=structs.Altitude("000", 0, "zero"),
+        upper=structs.Altitude("999", 999, "nine nine nine"),
         coord=None,
         radius=None,
     ),
@@ -123,8 +123,8 @@ QUALIFIERS = [
         scope=[
             structs.Code("W", "Warning"),
         ],
-        lower=structs.Number("000", 0, "zero"),
-        upper=structs.Number("012", 12, "one two"),
+        lower=structs.Altitude("000", 0, "zero"),
+        upper=structs.Altitude("012", 12, "one two"),
         coord=None,
         radius=None,
     ),
@@ -141,8 +141,8 @@ QUALIFIERS = [
             structs.Code("A", "Aerodrome"),
             structs.Code("E", "En Route"),
         ],
-        lower=structs.Number("000", 0, "zero"),
-        upper=structs.Number("999", 999, "nine nine nine"),
+        lower=structs.Altitude("000", 0, "zero"),
+        upper=structs.Altitude("999", 999, "nine nine nine"),
         coord=structs.Coord(16.45, -99.47, "1645N09947W"),
         radius=None,
     ),
@@ -296,17 +296,29 @@ def test_parse_linked_times(start: str, end: str, start_dt: datetime | None, end
 
 
 @pytest.mark.parametrize(
-    ("raw", "value"),
-    [("000", 0), ("999", 999), ("9500FT.", 9500)],
+    ("raw", "value", "flight_level"),
+    [
+        ("000", 0, False),
+        ("999", 999, False),
+        ("9500FT.", 9500, False),
+        # Flight levels, however they are written
+        ("FL150", 150, True),
+        ("F430", 430, True),
+        # Strict altitudes are not flight levels
+        ("SFC", 0, False),
+        ("UNL", 999, False),
+        ("7000FT AMSL", 7000, False),
+    ],
 )
-def test_make_altitude(raw: str, value: int) -> None:
+def test_make_altitude(raw: str, value: int, flight_level: bool) -> None:
     """Test altitude parsing."""
     altitude = notam.make_altitude(raw, structs.Units.international())
-    assert isinstance(altitude, structs.Number)
+    assert isinstance(altitude, structs.Altitude)
     assert altitude.value == value
+    assert altitude.flight_level is flight_level
 
 
-@pytest.mark.parametrize("raw", ["", "G", "AGL"])
+@pytest.mark.parametrize("raw", ["", "G", "AGL", "TWY CLSD"])
 def test_bad_altitude(raw: str) -> None:
     """Test filtering bad altitude values."""
     assert notam.make_altitude(raw, structs.Units.international()) is None
@@ -333,11 +345,74 @@ def test_parse() -> None:
 
 @pytest.mark.parametrize(
     ("line", "fixed"),
-    [("01/113 NOTAMN \r\nQ) 1234", "01/113 NOTAMN \nQ) 1234")],
+    [
+        ("01/113 NOTAMN \r\nQ) 1234", "01/113 NOTAMN \nQ) 1234"),
+        # Keys given without a following space are repaired
+        ("F0910/26 NOTAMN\nQ)RJJJ", "F0910/26 NOTAMN\nQ) RJJJ"),
+        ("A)RJFF B)2609011400 C)2609272130", "A) RJFF B) 2609011400 C) 2609272130"),
+        ("E)TWY A CLSD", "E) TWY A CLSD"),
+        # Already spaced keys are left as they are
+        ("E) TWY A CLSD", "E) TWY A CLSD"),
+        # A key quoted mid-word or mid-token is not a key and is left alone
+        ("E) RWY 09/27(B)CLSD", "E) RWY 09/27(B)CLSD"),
+        ("E) SEE ITEMB)NOTE", "E) SEE ITEMB)NOTE"),
+    ],
 )
 def test_sanitize(line: str, fixed: str) -> None:
     """Test report sanitization."""
     assert notam.sanitize(line) == fixed
+
+
+def test_parse_flight_level_limits() -> None:
+    """A G) line naming a flight level is parsed rather than dropped."""
+    report = (
+        "P4594/26 NOTAMN\nQ) UHMM/QRTCA/IV/BO/W/000/150/5629N16049E042\n"
+        "A) UHMM B) 2608272300 C) 2608280800\nE) AIRSPACE CLSD WI AREA\nF) SFC  G) FL150"
+    )
+    data, _ = notam.parse(report)
+
+    assert data.lower == structs.Altitude("SFC", 0, "surface", flight_level=False)
+    assert data.upper == structs.Altitude("FL150", 150, "flight level one five zero", flight_level=True)
+    # The Q) line carries the same limit rounded to hundreds of feet, but is not
+    # treated as a flight level. See make_altitude.
+    assert data.qualifiers is not None
+    assert data.qualifiers.upper == structs.Altitude("150", 150, "one five zero")
+
+
+def test_parse_keys_without_trailing_space() -> None:
+    """Some sources omit the space after a key, ie "E)TWY CLSD".
+
+    Taken from a live FNS-NDS message. The same report with spaced keys must parse
+    identically.
+    """
+    report = (
+        "F0910/26 NOTAMN\nQ)RJJJ/QMXLC/IV/M/A/000/999/3335N13027E005\n"
+        "A)RJFF B)2609011400 C)2609272130\nD)01-14 19-23 26-27 1400/2130\n"
+        "E)TWY A(FM K1 TO E8),ACFT STAND TXL K1 THRU K7,Y CLSD DUE TO MAINT"
+    )
+    data, _ = notam.parse(report)
+
+    assert data.station == "RJFF"
+    assert data.number == "F0910/26"
+    assert data.schedule == "01-14 19-23 26-27 1400/2130"
+    assert data.body == "TWY A(FM K1 TO E8),ACFT STAND TXL K1 THRU K7,Y CLSD DUE TO MAINT"
+    assert data.qualifiers is not None
+    assert data.qualifiers.fir == "RJJJ"
+    assert data.qualifiers.subject == structs.Code("MX", "Taxiway")
+    assert data.qualifiers.condition == structs.Code("LC", "Closed")
+    assert data.start_time is not None
+    assert data.start_time.dt == datetime(2026, 9, 1, 14, 0, tzinfo=timezone.utc)
+    assert data.end_time is not None
+    assert data.end_time.dt == datetime(2026, 9, 27, 21, 30, tzinfo=timezone.utc)
+
+    spaced_report = (
+        "F0910/26 NOTAMN\nQ) RJJJ/QMXLC/IV/M/A/000/999/3335N13027E005\n"
+        "A) RJFF B) 2609011400 C) 2609272130\nD) 01-14 19-23 26-27 1400/2130\n"
+        "E) TWY A(FM K1 TO E8),ACFT STAND TXL K1 THRU K7,Y CLSD DUE TO MAINT"
+    )
+    spaced, _ = notam.parse(spaced_report)
+    ignored = {"raw": None, "sanitized": None}
+    assert asdict(spaced) | ignored == asdict(data) | ignored
 
 
 @pytest.mark.parametrize(("ref", "icao", "unused"), get_data(__file__, "notam"))
