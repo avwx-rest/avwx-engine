@@ -68,8 +68,8 @@ all = [
 ]
 
 [tool.hatch.envs.types]
+features = ["all"]
 extra-dependencies = [
-    "avwx-engine[all]",
     "mypy>=1.0.0",
     "pytest-asyncio>=0.23.7",
     "time-machine",
@@ -78,8 +78,8 @@ extra-dependencies = [
 check = "mypy --install-types --non-interactive {args:avwx tests}"
 
 [tool.hatch.envs.hatch-test]
+features = ["all"]
 extra-dependencies = [
-    "avwx-engine[all]",
     "pytest-asyncio>=0.23.7",
     "pytest-cov",
     "pytest-github-actions-annotate-failures",
@@ -87,8 +87,8 @@ extra-dependencies = [
 ]
 
 [tool.hatch.envs.docs]
+features = ["shape"]
 extra-dependencies = [
-    "avwx-engine[shape]",
     "pdoc",
 ]
 
