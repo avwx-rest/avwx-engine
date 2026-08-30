@@ -57,8 +57,8 @@ fuzz = [
     "rapidfuzz>=3.14",
 ]
 scipy = [
-    "numpy>=2.5",
-    "scipy>=1.18",
+    "numpy>=2.0",
+    "scipy>=1.15",
 ]
 shape = [
     "shapely>=2.1",
