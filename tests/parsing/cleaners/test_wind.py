@@ -25,7 +25,7 @@ def test_sanitize_wind(wind: str, fixed: str) -> None:
     assert cleaners.sanitize_wind(wind) == fixed
 
 
-@pytest.mark.parametrize("item", (f"{'/'*i}KT" for i in range(1, 8)))
+@pytest.mark.parametrize("item", [f"{'/' * i}KT" for i in range(1, 8)])
 def test_empty_wind(item: str) -> None:
     assert cleaners.EmptyWind().can_handle(item) is True
 

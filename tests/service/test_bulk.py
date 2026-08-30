@@ -48,3 +48,10 @@ class TestIntlBulk(BulkServiceTest):
 
     service_class = bulk.NoaaIntl
     report_types = ("airsigmet",)
+
+
+class TestOlbsBulk(BulkServiceTest):
+    """Test bulk downloads from the Indian OLBS Flight Briefing page."""
+
+    service_class = bulk.OlbsBulk
+    report_types = ("metar",)

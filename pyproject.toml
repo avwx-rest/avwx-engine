@@ -29,11 +29,11 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "geopy>=2.4",
+    "geopy>=2.5",
     "httpx>=0.28",
     "python-dateutil>=2.9",
-    "typing-extensions~=4.12; python_version < '3.11'",
-    "xmltodict>=0.13",
+    "typing-extensions~=4.16; python_version < '3.11'",
+    "xmltodict>=1.0.4",
 ]
 
 [project.urls]
@@ -54,14 +54,14 @@ include = [
 
 [project.optional-dependencies]
 fuzz = [
-    "rapidfuzz>=3.6",
+    "rapidfuzz>=3.14",
 ]
 scipy = [
-    "numpy>=1.26",
-    "scipy>=1.10",
+    "numpy>=2.5",
+    "scipy>=1.18",
 ]
 shape = [
-    "shapely>=2.0",
+    "shapely>=2.1",
 ]
 all = [
     "avwx-engine[fuzz,scipy,shape]",

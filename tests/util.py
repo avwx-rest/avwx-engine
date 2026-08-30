@@ -7,13 +7,10 @@ import json
 from contextlib import suppress
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 # module
 from avwx import structs
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
 
 
 def assert_number(
@@ -64,14 +61,16 @@ def assert_value(src: structs.Number | None, value: float | None) -> None:
         assert src.value == value
 
 
-def get_data(filepath: str, report_type: str) -> Iterator[tuple[dict, str, datetime]]:
-    """Return a glob iterable of JSON files."""
+def get_data(filepath: str, report_type: str) -> list[tuple[dict, str, datetime]]:
+    """Return a list of parsed JSON test data files."""
     path = Path(filepath).parent.joinpath("data", report_type)
+    results = []
     for result in path.glob("*.json"):
         data = json.load(result.open(), object_hook=datetime_parser)
         icao = data.pop("icao")
         created = data.pop("created").date()
-        yield data, icao, created
+        results.append((data, icao, created))
+    return results
 
 
 def datetime_parser(data: dict) -> dict:

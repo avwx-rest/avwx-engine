@@ -312,30 +312,30 @@ class Aubom(StationScrape):
 class Olbs(StationScrape):
     """Request data from India OLBS flight briefing."""
 
-    # _url = "https://olbs.amsschennai.gov.in/nsweb/FlightBriefing/showopmetquery.php"
-    # method = "POST"
+    _url = "https://olbs.amsschennai.gov.in/nsweb/FlightBriefing/showopmetquery.php"
+    method = "POST"
 
-    # Temp redirect
-    _url = "https://avbrief3.el.r.appspot.com/api/report"
-
-    def _make_url(self, station: str) -> tuple[str, dict]:
+    def _make_url(self, station: str) -> tuple[str, dict]:  # noqa: ARG002
         """Return a formatted URL and empty parameters."""
-        return self._url, {"icao": station}
+        return self._url, {}
 
     def _post_data(self, station: str) -> dict:
         """Return the POST form."""
-        # Can set icaos to "V*" to return all results
+        # Can set icaos to a space-separated list to query multiple stations
         return {"icaos": station, "type": self.report_type}
 
     def _extract(self, raw: str, station: str) -> str:  # noqa: ARG002
-        """Extract the reports from HTML response."""
-        try:
-            data = json.loads(raw.strip())
-            text: str = data[f"raw{self.report_type.lower()}"]
-        except (TypeError, json.decoder.JSONDecodeError, KeyError, IndexError):
-            return ""
-        else:
-            return text
+        """Extract the report from the query response."""
+        prefix = self.report_type.upper()
+        target = "<b>Long TAF:</b><br>" if self.report_type == "taf" else f"<b>{prefix}:</b><br>"
+        index = raw.find(target)
+        if index == -1:
+            raise self._make_err(raw)
+        report = raw[index + len(target) :]
+        if not report.startswith(f"{prefix} "):
+            msg = "The station might not exist"
+            raise self._make_err(msg)
+        return report[: report.find("=")]
 
 
 class Nam(StationScrape):

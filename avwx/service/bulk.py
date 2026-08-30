@@ -10,11 +10,14 @@ The `fetch` and `async_fetch` methods are identical except they return
 
 import asyncio as aio
 import gzip
+import re
 from typing import ClassVar
 
 from xmltodict import parse as parsexml
 
 from avwx.service.base import CallsHTTP, Service
+
+_OLBS_REPORT_PATTERN = re.compile(r'class="singleresult"[^>]*>(.*?)<span class="singleresultopts"', re.DOTALL)
 
 
 class NoaaBulk(Service, CallsHTTP):
@@ -75,4 +78,34 @@ class NoaaIntl(Service, CallsHTTP):
         """Asynchronously bulk fetch report strings from the service."""
         url = self._url.format(self._url_map[self.report_type])
         text = await self._call(url, timeout=timeout)
+        return self._extract(text)
+
+
+class OlbsBulk(Service, CallsHTTP):
+    """Scrapes current METARs from the Indian OLBS Flight Briefing page.
+
+    This class only accepts `"metar"` as a valid report type. There is no
+    known TAF equivalent for this service.
+    """
+
+    _url = "https://olbs.amsschennai.gov.in/nsweb/FlightBriefing/showmetars.php"
+    _valid_types = ("metar",)
+
+    @staticmethod
+    def _clean_report(report: str) -> str:
+        report = " ".join(report.replace("&nbsp;", " ").split())
+        if report.startswith("METAR "):
+            report = report[len("METAR ") :]
+        return report.rstrip("=")
+
+    def _extract(self, raw: str) -> list[str]:
+        return [self._clean_report(match) for match in _OLBS_REPORT_PATTERN.findall(raw)]
+
+    def fetch(self, timeout: int = 10) -> list[str]:
+        """Bulk fetch report strings from the service."""
+        return aio.run(self.async_fetch(timeout))
+
+    async def async_fetch(self, timeout: int = 10) -> list[str]:
+        """Asynchronously bulk fetch report strings from the service."""
+        text = await self._call(self._url, timeout=timeout)
         return self._extract(text)
