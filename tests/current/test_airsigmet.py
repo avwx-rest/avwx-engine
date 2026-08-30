@@ -367,7 +367,7 @@ def test_coords_from_text(report: str, coords: tuple[tuple], start: int, extra: 
         ),
         (
             "FROM 100SSW TLH-80W PIE-160WSW SRQ",
-            ((28.85, -85.08), (27.9, -84.19), (26.35, -85.3)),
+            ((28.86, -85.08), (27.9, -84.19), (26.35, -85.3)),
             5,
             "FROM    ",
         ),
@@ -412,7 +412,7 @@ def test_coords_from_navaids(report: str, coords: tuple[tuple], start: int, extr
         ),
         (
             "FROM 100SSW TLH-80W PIE-160WSW SRQ",
-            ((28.85, -85.08), (27.9, -84.19), (26.35, -85.3)),
+            ((28.86, -85.08), (27.9, -84.19), (26.35, -85.3)),
             [],
             "",
         ),
