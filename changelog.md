@@ -2,6 +2,11 @@
 
 Parsing and sanitization improvements are always ongoing and non-breaking
 
+## Unreleased
+
+- Added `precise` flag (bool, defaults to `True`) to the `Number` dataclass. Numbers that only specify a bound (e.g. `P6000`, `M1/4`, RVR `A2000`) now keep the bound itself in `value` instead of `None` and are marked `precise=False`. Addresses #64.
+- Rendering paths (speech, translations, flight rules) keep their previous output by respecting the `precise` flag.
+
 ## 1.8.20
 
 - Updated wind sanitization to ensure Station ID is protected.

@@ -36,11 +36,13 @@
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
+                    "precise": false,
                     "repr": "P6",
                     "spoken": "greater than six",
-                    "value": null
+                    "value": 6
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "270",
                     "spoken": "two seven zero",
                     "value": 270
@@ -48,6 +50,7 @@
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
+                    "precise": true,
                     "repr": "07",
                     "spoken": "seven",
                     "value": 7
@@ -84,11 +87,13 @@
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
+                    "precise": false,
                     "repr": "P6",
                     "spoken": "greater than six",
-                    "value": null
+                    "value": 6
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "320",
                     "spoken": "three two zero",
                     "value": 320
@@ -96,6 +101,7 @@
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
+                    "precise": true,
                     "repr": "10",
                     "spoken": "one zero",
                     "value": 10
@@ -132,11 +138,13 @@
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
+                    "precise": false,
                     "repr": "P6",
                     "spoken": "greater than six",
-                    "value": null
+                    "value": 6
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "350",
                     "spoken": "three five zero",
                     "value": 350
@@ -144,6 +152,7 @@
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
+                    "precise": true,
                     "repr": "10",
                     "spoken": "one zero",
                     "value": 10
@@ -180,11 +189,13 @@
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
+                    "precise": false,
                     "repr": "P6",
                     "spoken": "greater than six",
-                    "value": null
+                    "value": 6
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "010",
                     "spoken": "zero one zero",
                     "value": 10
@@ -192,6 +203,7 @@
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
+                    "precise": true,
                     "repr": "08",
                     "spoken": "eight",
                     "value": 8
@@ -235,11 +247,13 @@
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
+                    "precise": false,
                     "repr": "P6",
                     "spoken": "greater than six",
-                    "value": null
+                    "value": 6
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "140",
                     "spoken": "one four zero",
                     "value": 140
@@ -247,6 +261,7 @@
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
+                    "precise": true,
                     "repr": "08",
                     "spoken": "eight",
                     "value": 8
@@ -280,6 +295,7 @@
                 "icing": [],
                 "other": [],
                 "probability": {
+                    "precise": true,
                     "repr": "30",
                     "spoken": "three zero",
                     "value": 30
@@ -294,6 +310,7 @@
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
+                    "precise": true,
                     "repr": "6",
                     "spoken": "six",
                     "value": 6
@@ -346,11 +363,13 @@
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
+                    "precise": true,
                     "repr": "5",
                     "spoken": "five",
                     "value": 5
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "070",
                     "spoken": "zero seven zero",
                     "value": 70
@@ -358,6 +377,7 @@
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
+                    "precise": true,
                     "repr": "06",
                     "spoken": "six",
                     "value": 6

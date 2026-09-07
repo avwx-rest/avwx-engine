@@ -12,6 +12,7 @@
                     "value": "few"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "65",
                     "spoken": "six five",
                     "value": 65
@@ -26,6 +27,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "78",
                     "spoken": "seven eight",
                     "value": 78
@@ -45,11 +47,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "06",
                     "spoken": "six zero",
                     "value": 60
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "09",
                     "spoken": "nine",
                     "value": 9
@@ -65,6 +69,7 @@
                     "value": "broken"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "66",
                     "spoken": "six six",
                     "value": 66
@@ -79,6 +84,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "76",
                     "spoken": "seven six",
                     "value": 76
@@ -98,11 +104,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "05",
                     "spoken": "five zero",
                     "value": 50
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "09",
                     "spoken": "nine",
                     "value": 9
@@ -118,6 +126,7 @@
                     "value": "broken"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "67",
                     "spoken": "six seven",
                     "value": 67
@@ -130,6 +139,7 @@
                 },
                 "precip_chance_12": null,
                 "precip_chance_6": {
+                    "precise": true,
                     "repr": "13",
                     "spoken": "one three",
                     "value": 13
@@ -139,6 +149,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "75",
                     "spoken": "seven five",
                     "value": 75
@@ -158,11 +169,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "06",
                     "spoken": "six zero",
                     "value": 60
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "06",
                     "spoken": "six",
                     "value": 6
@@ -178,6 +191,7 @@
                     "value": "overcast"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "67",
                     "spoken": "six seven",
                     "value": 67
@@ -192,6 +206,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "73",
                     "spoken": "seven three",
                     "value": 73
@@ -211,11 +226,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "04",
                     "spoken": "four zero",
                     "value": 40
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "04",
                     "spoken": "four",
                     "value": 4
@@ -231,6 +248,7 @@
                     "value": "overcast"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "68",
                     "spoken": "six eight",
                     "value": 68
@@ -245,11 +263,13 @@
                     "value": "0.01 to 0.09 inches"
                 },
                 "precip_chance_12": {
+                    "precise": true,
                     "repr": "25",
                     "spoken": "two five",
                     "value": 25
                 },
                 "precip_chance_6": {
+                    "precise": true,
                     "repr": "18",
                     "spoken": "one eight",
                     "value": 18
@@ -259,6 +279,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "76",
                     "spoken": "seven six",
                     "value": 76
@@ -278,11 +299,13 @@
                     "value": "3 - 5 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "04",
                     "spoken": "four zero",
                     "value": 40
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "06",
                     "spoken": "six",
                     "value": 6
@@ -298,6 +321,7 @@
                     "value": "overcast"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "68",
                     "spoken": "six eight",
                     "value": 68
@@ -312,6 +336,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "80",
                     "spoken": "eight zero",
                     "value": 80
@@ -331,11 +356,13 @@
                     "value": "3 - 5 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "06",
                     "spoken": "six zero",
                     "value": 60
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "11",
                     "spoken": "one one",
                     "value": 11
@@ -351,6 +378,7 @@
                     "value": "overcast"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "67",
                     "spoken": "six seven",
                     "value": 67
@@ -363,6 +391,7 @@
                 },
                 "precip_chance_12": null,
                 "precip_chance_6": {
+                    "precise": true,
                     "repr": "20",
                     "spoken": "two zero",
                     "value": 20
@@ -372,6 +401,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "82",
                     "spoken": "eight two",
                     "value": 82
@@ -391,11 +421,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "06",
                     "spoken": "six zero",
                     "value": 60
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "13",
                     "spoken": "one three",
                     "value": 13
@@ -411,6 +443,7 @@
                     "value": "broken"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "67",
                     "spoken": "six seven",
                     "value": 67
@@ -425,6 +458,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "80",
                     "spoken": "eight zero",
                     "value": 80
@@ -444,11 +478,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "06",
                     "spoken": "six zero",
                     "value": 60
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "13",
                     "spoken": "one three",
                     "value": 13
@@ -464,6 +500,7 @@
                     "value": "overcast"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "66",
                     "spoken": "six six",
                     "value": 66
@@ -478,11 +515,13 @@
                     "value": "no precipitation"
                 },
                 "precip_chance_12": {
+                    "precise": true,
                     "repr": "25",
                     "spoken": "two five",
                     "value": 25
                 },
                 "precip_chance_6": {
+                    "precise": true,
                     "repr": "11",
                     "spoken": "one one",
                     "value": 11
@@ -492,6 +531,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "76",
                     "spoken": "seven six",
                     "value": 76
@@ -511,11 +551,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "06",
                     "spoken": "six zero",
                     "value": 60
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "08",
                     "spoken": "eight",
                     "value": 8
@@ -531,6 +573,7 @@
                     "value": "overcast"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "66",
                     "spoken": "six six",
                     "value": 66
@@ -545,6 +588,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "75",
                     "spoken": "seven five",
                     "value": 75
@@ -564,11 +608,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "05",
                     "spoken": "five zero",
                     "value": 50
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "08",
                     "spoken": "eight",
                     "value": 8
@@ -584,6 +630,7 @@
                     "value": "broken"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "66",
                     "spoken": "six six",
                     "value": 66
@@ -596,6 +643,7 @@
                 },
                 "precip_chance_12": null,
                 "precip_chance_6": {
+                    "precise": true,
                     "repr": "9",
                     "spoken": "nine",
                     "value": 9
@@ -605,6 +653,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "74",
                     "spoken": "seven four",
                     "value": 74
@@ -624,11 +673,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "05",
                     "spoken": "five zero",
                     "value": 50
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "06",
                     "spoken": "six",
                     "value": 6
@@ -644,6 +695,7 @@
                     "value": "scattered"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "65",
                     "spoken": "six five",
                     "value": 65
@@ -658,6 +710,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "73",
                     "spoken": "seven three",
                     "value": 73
@@ -677,11 +730,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "04",
                     "spoken": "four zero",
                     "value": 40
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "06",
                     "spoken": "six",
                     "value": 6
@@ -697,6 +752,7 @@
                     "value": "scattered"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "64",
                     "spoken": "six four",
                     "value": 64
@@ -711,11 +767,13 @@
                     "value": "no precipitation"
                 },
                 "precip_chance_12": {
+                    "precise": true,
                     "repr": "18",
                     "spoken": "one eight",
                     "value": 18
                 },
                 "precip_chance_6": {
+                    "precise": true,
                     "repr": "8",
                     "spoken": "eight",
                     "value": 8
@@ -725,6 +783,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "77",
                     "spoken": "seven seven",
                     "value": 77
@@ -744,11 +803,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "05",
                     "spoken": "five zero",
                     "value": 50
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "09",
                     "spoken": "nine",
                     "value": 9
@@ -764,6 +825,7 @@
                     "value": "scattered"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "64",
                     "spoken": "six four",
                     "value": 64
@@ -778,6 +840,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "81",
                     "spoken": "eight one",
                     "value": 81
@@ -797,11 +860,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "05",
                     "spoken": "five zero",
                     "value": 50
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "13",
                     "spoken": "one three",
                     "value": 13
@@ -817,6 +882,7 @@
                     "value": "scattered"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "64",
                     "spoken": "six four",
                     "value": 64
@@ -829,6 +895,7 @@
                 },
                 "precip_chance_12": null,
                 "precip_chance_6": {
+                    "precise": true,
                     "repr": "6",
                     "spoken": "six",
                     "value": 6
@@ -838,6 +905,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "83",
                     "spoken": "eight three",
                     "value": 83
@@ -857,11 +925,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "05",
                     "spoken": "five zero",
                     "value": 50
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "14",
                     "spoken": "one four",
                     "value": 14
@@ -877,6 +947,7 @@
                     "value": "scattered"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "64",
                     "spoken": "six four",
                     "value": 64
@@ -891,6 +962,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "80",
                     "spoken": "eight zero",
                     "value": 80
@@ -910,11 +982,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "05",
                     "spoken": "five zero",
                     "value": 50
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "15",
                     "spoken": "one five",
                     "value": 15
@@ -930,6 +1004,7 @@
                     "value": "scattered"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "65",
                     "spoken": "six five",
                     "value": 65
@@ -944,11 +1019,13 @@
                     "value": "no precipitation"
                 },
                 "precip_chance_12": {
+                    "precise": true,
                     "repr": "14",
                     "spoken": "one four",
                     "value": 14
                 },
                 "precip_chance_6": {
+                    "precise": true,
                     "repr": "7",
                     "spoken": "seven",
                     "value": 7
@@ -958,6 +1035,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "76",
                     "spoken": "seven six",
                     "value": 76
@@ -977,11 +1055,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "05",
                     "spoken": "five zero",
                     "value": 50
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "11",
                     "spoken": "one one",
                     "value": 11
@@ -997,6 +1077,7 @@
                     "value": "few"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "65",
                     "spoken": "six five",
                     "value": 65
@@ -1011,6 +1092,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "75",
                     "spoken": "seven five",
                     "value": 75
@@ -1030,11 +1112,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "05",
                     "spoken": "five zero",
                     "value": 50
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "10",
                     "spoken": "one zero",
                     "value": 10
@@ -1050,6 +1134,7 @@
                     "value": "scattered"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "65",
                     "spoken": "six five",
                     "value": 65
@@ -1062,6 +1147,7 @@
                 },
                 "precip_chance_12": null,
                 "precip_chance_6": {
+                    "precise": true,
                     "repr": "7",
                     "spoken": "seven",
                     "value": 7
@@ -1071,6 +1157,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "74",
                     "spoken": "seven four",
                     "value": 74
@@ -1090,11 +1177,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "05",
                     "spoken": "five zero",
                     "value": 50
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "07",
                     "spoken": "seven",
                     "value": 7
@@ -1110,6 +1199,7 @@
                     "value": "scattered"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "65",
                     "spoken": "six five",
                     "value": 65
@@ -1124,11 +1214,13 @@
                     "value": "no precipitation"
                 },
                 "precip_chance_12": {
+                    "precise": true,
                     "repr": "16",
                     "spoken": "one six",
                     "value": 16
                 },
                 "precip_chance_6": {
+                    "precise": true,
                     "repr": "6",
                     "spoken": "six",
                     "value": 6
@@ -1138,6 +1230,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "77",
                     "spoken": "seven seven",
                     "value": 77
@@ -1157,11 +1250,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "04",
                     "spoken": "four zero",
                     "value": 40
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "08",
                     "spoken": "eight",
                     "value": 8
@@ -1177,6 +1272,7 @@
                     "value": "scattered"
                 },
                 "dewpoint": {
+                    "precise": true,
                     "repr": "65",
                     "spoken": "six five",
                     "value": 65
@@ -1189,6 +1285,7 @@
                 },
                 "precip_chance_12": null,
                 "precip_chance_6": {
+                    "precise": true,
                     "repr": "8",
                     "spoken": "eight",
                     "value": 8
@@ -1198,6 +1295,7 @@
                 "severe_storm_6": null,
                 "snow": null,
                 "temperature": {
+                    "precise": true,
                     "repr": "83",
                     "spoken": "eight three",
                     "value": 83
@@ -1217,11 +1315,13 @@
                     "value": "> 6 miles"
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "05",
                     "spoken": "five zero",
                     "value": 50
                 },
                 "wind_speed": {
+                    "precise": true,
                     "repr": "14",
                     "spoken": "one four",
                     "value": 14

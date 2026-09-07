@@ -9,6 +9,7 @@
                     "type": "Boeing 737-800"
                 },
                 "altitude": {
+                    "precise": true,
                     "repr": "380",
                     "spoken": "three eight zero",
                     "value": 380
@@ -18,11 +19,13 @@
                 "icing": null,
                 "location": {
                     "direction": {
+                        "precise": true,
                         "repr": "132",
                         "spoken": "one three two",
                         "value": 132
                     },
                     "distance": {
+                        "precise": true,
                         "repr": "050",
                         "spoken": "five zero",
                         "value": 50
@@ -42,6 +45,7 @@
                 },
                 "turbulence": {
                     "ceiling": {
+                        "precise": true,
                         "repr": "380",
                         "spoken": "three eight zero",
                         "value": 380
@@ -60,6 +64,7 @@
                     "type": "Boeing 737-700 / Boeing 737-700ER"
                 },
                 "altitude": {
+                    "precise": true,
                     "repr": "380",
                     "spoken": "three eight zero",
                     "value": 380
@@ -119,11 +124,13 @@
                 "icing": null,
                 "location": {
                     "direction": {
+                        "precise": true,
                         "repr": "230",
                         "spoken": "two three zero",
                         "value": 230
                     },
                     "distance": {
+                        "precise": true,
                         "repr": "015",
                         "spoken": "one five",
                         "value": 15
@@ -173,6 +180,7 @@
                     "type": "Boeing 757-200"
                 },
                 "altitude": {
+                    "precise": true,
                     "repr": "032",
                     "spoken": "three two",
                     "value": 32
@@ -256,6 +264,7 @@
                     "type": "Boeing 777-300ER"
                 },
                 "altitude": {
+                    "precise": true,
                     "repr": "330",
                     "spoken": "three three zero",
                     "value": 330
@@ -331,6 +340,7 @@
                     "type": "Airbus A330-300"
                 },
                 "altitude": {
+                    "precise": true,
                     "repr": "390",
                     "spoken": "three nine zero",
                     "value": 390
@@ -366,6 +376,7 @@
                     "type": "Boeing 737-700 / Boeing 737-700ER"
                 },
                 "altitude": {
+                    "precise": true,
                     "repr": "370",
                     "spoken": "three seven zero",
                     "value": 370
@@ -375,11 +386,13 @@
                 "icing": null,
                 "location": {
                     "direction": {
+                        "precise": true,
                         "repr": "315",
                         "spoken": "three one five",
                         "value": 315
                     },
                     "distance": {
+                        "precise": true,
                         "repr": "040",
                         "spoken": "four zero",
                         "value": 40
@@ -413,6 +426,7 @@
                     "type": "Embraer 175 (long wing)"
                 },
                 "altitude": {
+                    "precise": true,
                     "repr": "250",
                     "spoken": "two five zero",
                     "value": 250
@@ -427,11 +441,13 @@
                 },
                 "location": {
                     "direction": {
+                        "precise": true,
                         "repr": "240",
                         "spoken": "two four zero",
                         "value": 240
                     },
                     "distance": {
+                        "precise": true,
                         "repr": "025",
                         "spoken": "two five",
                         "value": 25
@@ -445,6 +461,7 @@
                 "sanitized": "PDT UA /OV PDT240025/TM 0519/FL250/TP E75L/TA M31/IC LGT RIME/RM ZSE",
                 "station": "PDT",
                 "temperature": {
+                    "precise": true,
                     "repr": "M31",
                     "spoken": "minus three one",
                     "value": -31
@@ -485,6 +502,7 @@
                     "type": "Boeing 777-300ER"
                 },
                 "altitude": {
+                    "precise": true,
                     "repr": "310",
                     "spoken": "three one zero",
                     "value": 310
@@ -547,11 +565,13 @@
                 "icing": null,
                 "location": {
                     "direction": {
+                        "precise": true,
                         "repr": "180",
                         "spoken": "one eight zero",
                         "value": 180
                     },
                     "distance": {
+                        "precise": true,
                         "repr": "017",
                         "spoken": "one seven",
                         "value": 17
@@ -581,6 +601,7 @@
                     "type": "Boeing 737-700 / Boeing 737-700ER"
                 },
                 "altitude": {
+                    "precise": true,
                     "repr": "360",
                     "spoken": "three six zero",
                     "value": 360
@@ -590,11 +611,13 @@
                 "icing": null,
                 "location": {
                     "direction": {
+                        "precise": true,
                         "repr": "180",
                         "spoken": "one eight zero",
                         "value": 180
                     },
                     "distance": {
+                        "precise": true,
                         "repr": "015",
                         "spoken": "one five",
                         "value": 15

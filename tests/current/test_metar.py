@@ -172,19 +172,19 @@ def test_get_altimeter(version: str, wx: list[str], alt: tuple, unit: str) -> No
     ("value", "runway", "vis", "var", "trend"),
     [
         ("R35L/1000", "35L", ("1000", 1000, "one thousand"), None, None),
-        ("R06/M0500", "06", ("M0500", None, "less than five hundred"), None, None),
+        ("R06/M0500", "06", ("M0500", 500, "less than five hundred"), None, None),
         ("R33/////", "33", None, None, None),
         (
             "R29/A2000",
             "29",
-            ("A2000", None, "greater than two thousand"),
+            ("A2000", 2000, "greater than two thousand"),
             None,
             None,
         ),
         (
             "R09C/P6000D",
             "09C",
-            ("P6000", None, "greater than six thousand"),
+            ("P6000", 6000, "greater than six thousand"),
             None,
             structs.Code("D", "decreasing"),
         ),
@@ -201,7 +201,7 @@ def test_get_altimeter(version: str, wx: list[str], alt: tuple, unit: str) -> No
             None,
             (
                 ("5000", 5000, "five thousand"),
-                ("P6000", None, "greater than six thousand"),
+                ("P6000", 6000, "greater than six thousand"),
             ),
             structs.Code("U", "increasing"),
         ),

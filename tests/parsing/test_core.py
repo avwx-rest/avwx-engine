@@ -136,13 +136,14 @@ def test_make_number(num: str, value: float | None, spoken: str) -> None:
     assert number.repr == num
     assert number.value == value
     assert number.spoken == spoken
+    assert number.precise is True
 
 
 @pytest.mark.parametrize(
     ("num", "value", "spoken"),
     [
-        ("P6SM", None, "greater than six"),
-        ("M1/4", None, "less than one quarter"),
+        ("P6SM", 6, "greater than six"),
+        ("M1/4", 0.25, "less than one quarter"),
     ],
 )
 def test_make_number_gt_lt(num: str, value: float | None, spoken: str) -> None:
@@ -152,6 +153,7 @@ def test_make_number_gt_lt(num: str, value: float | None, spoken: str) -> None:
     assert number.repr == num
     assert number.value == value
     assert number.spoken == spoken
+    assert number.precise is False
 
 
 def test_make_non_number() -> None:
@@ -262,7 +264,7 @@ def test_get_station_and_time(wx: list[str], ret: list[str], station: str, time:
         (["VRB10MPS", "1"], "m/s", (("VRB",), ("10", 10), (None,)), []),
         (["VRB20G30KMH", "1"], "km/h", (("VRB",), ("20", 20), ("30", 30)), []),
         (["03015G21MPH", "1"], "mi/h", (("030", 30), ("15", 15), ("21", 21)), []),
-        (["16006GP99KT", "1"], "kt", (("160", 160), ("06", 6), ("P99", None)), []),
+        (["16006GP99KT", "1"], "kt", (("160", 160), ("06", 6), ("P99", 99)), []),
     ],
 )
 def test_get_wind(wx: list[str], unit: str, wind: tuple[tuple], varv: list[tuple]) -> None:
@@ -286,9 +288,9 @@ def test_get_wind(wx: list[str], unit: str, wind: tuple[tuple], varv: list[tuple
         (["1"], "sm", (None,)),
         (["05SM", "1"], "sm", ("5", 5)),
         (["10SM", "1"], "sm", ("10", 10)),
-        (["P6SM", "1"], "sm", ("P6",)),
-        (["M1/2SM", "1"], "sm", ("M1/2",)),
-        (["M1/4SM", "1"], "sm", ("M1/4",)),
+        (["P6SM", "1"], "sm", ("P6", 6)),
+        (["M1/2SM", "1"], "sm", ("M1/2", 0.5)),
+        (["M1/4SM", "1"], "sm", ("M1/4", 0.25)),
         (["1/2SM", "1"], "sm", ("1/2", 0.5)),
         (["2", "1/2SM", "1"], "sm", ("5/2", 2.5)),
         (["1000", "1"], "m", ("1000", 1000)),
