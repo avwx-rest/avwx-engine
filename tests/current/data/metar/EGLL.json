@@ -2,6 +2,7 @@
     "created": "2023-10-17",
     "data": {
         "altimeter": {
+            "precise": true,
             "repr": "Q1016",
             "spoken": "one zero one six",
             "value": 1016
@@ -9,6 +10,7 @@
         "clouds": [],
         "density_altitude": -579,
         "dewpoint": {
+            "precise": true,
             "repr": "05",
             "spoken": "five",
             "value": 5
@@ -39,6 +41,7 @@
         "sanitized": "EGLL 170550Z 09011KT 9999 10/05 Q1016 NOSIG EGLL 170520Z AUTO 09011KT 9999 NCD 10/05 Q1016 NOSIG EGLL 170450Z AUTO 09011KT 9999 NCD 11/05 Q1016 EGLL 170420Z AUTO 09011KT 9999 NCD 11/05 Q1016",
         "station": "EGLL",
         "temperature": {
+            "precise": true,
             "repr": "10",
             "spoken": "one zero",
             "value": 10
@@ -48,17 +51,20 @@
             "repr": "170550Z"
         },
         "visibility": {
+            "precise": true,
             "repr": "9999",
             "spoken": "nine nine nine nine",
             "value": 9999
         },
         "wind_direction": {
+            "precise": true,
             "repr": "090",
             "spoken": "zero nine zero",
             "value": 90
         },
         "wind_gust": null,
         "wind_speed": {
+            "precise": true,
             "repr": "11",
             "spoken": "one one",
             "value": 11

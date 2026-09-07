@@ -101,10 +101,10 @@ def wind(
         vardir = [getattr(var, target) for var in vardir]
         ret += f" (variable {vardir[0]} to {vardir[1]})"
     # Speed
-    if speed and speed.value:
+    if speed and speed.value and speed.precise:
         ret += f" at {speed.value}{unit}"
     # Gust
-    if gust and gust.value:
+    if gust and gust.value and gust.precise:
         ret += f" gusting to {gust.value}{unit}"
     return ret
 
@@ -126,7 +126,7 @@ def visibility(vis: Number | None, unit: str = "m") -> str:
         return ""
     with suppress(KeyError):
         return VIS_REPR[vis.repr]
-    if vis.value is None:
+    if vis.value is None or not vis.precise:
         return ""
     if unit == "m":
         meters = vis.value

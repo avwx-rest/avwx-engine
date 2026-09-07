@@ -2,6 +2,7 @@
     "created": "2023-10-17",
     "data": {
         "altimeter": {
+            "precise": true,
             "repr": "A3000",
             "spoken": "three zero point zero zero",
             "value": 30.0
@@ -31,6 +32,7 @@
         ],
         "density_altitude": 1268,
         "dewpoint": {
+            "precise": true,
             "repr": "21",
             "spoken": "two one",
             "value": 21
@@ -53,18 +55,21 @@
                 }
             ],
             "dewpoint_decimal": {
+                "precise": true,
                 "repr": "0206",
                 "spoken": "two zero point six",
                 "value": 20.6
             },
             "maximum_temperature_24": null,
             "maximum_temperature_6": {
+                "precise": true,
                 "repr": "10317",
                 "spoken": "three one point seven",
                 "value": 31.7
             },
             "minimum_temperature_24": null,
             "minimum_temperature_6": {
+                "precise": true,
                 "repr": "20256",
                 "spoken": "two five point six",
                 "value": 25.6
@@ -78,6 +83,7 @@
                 "tendency": "Decreasing or steady, then increasing"
             },
             "sea_level_pressure": {
+                "precise": true,
                 "repr": "SLP159",
                 "spoken": "one zero one five point nine",
                 "value": 1015.9
@@ -85,6 +91,7 @@
             "snow_depth": null,
             "sunshine_minutes": null,
             "temperature_decimal": {
+                "precise": true,
                 "repr": "0261",
                 "spoken": "two six point one",
                 "value": 26.1
@@ -94,6 +101,7 @@
         "sanitized": "PHNL 170553Z 01003KT 10SM FEW025 FEW035 FEW050 26/21 A3000 RMK AO2 SLP159 T02560206 10317 20256 53020 PHNL 170453Z 04006KT 10SM FEW025 FEW035 FEW050 26/21 A2998 RMK AO2 SLP152 T02610206",
         "station": "PHNL",
         "temperature": {
+            "precise": true,
             "repr": "26",
             "spoken": "two six",
             "value": 26
@@ -103,17 +111,20 @@
             "repr": "170553Z"
         },
         "visibility": {
+            "precise": true,
             "repr": "10",
             "spoken": "one zero",
             "value": 10
         },
         "wind_direction": {
+            "precise": true,
             "repr": "010",
             "spoken": "zero one zero",
             "value": 10
         },
         "wind_gust": null,
         "wind_speed": {
+            "precise": true,
             "repr": "03",
             "spoken": "three",
             "value": 3

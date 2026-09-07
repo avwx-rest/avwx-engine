@@ -2,6 +2,7 @@
     "created": "2023-10-17",
     "data": {
         "altimeter": {
+            "precise": true,
             "repr": "A2999",
             "spoken": "two nine point nine nine",
             "value": 29.99
@@ -9,6 +10,7 @@
         "clouds": [],
         "density_altitude": 49,
         "dewpoint": {
+            "precise": true,
             "repr": "09",
             "spoken": "nine",
             "value": 9
@@ -31,26 +33,31 @@
                 }
             ],
             "dewpoint_decimal": {
+                "precise": true,
                 "repr": "0094",
                 "spoken": "nine point four",
                 "value": 9.4
             },
             "maximum_temperature_24": {
+                "precise": true,
                 "repr": "0222",
                 "spoken": "two two point two",
                 "value": 22.2
             },
             "maximum_temperature_6": {
+                "precise": true,
                 "repr": "10183",
                 "spoken": "one eight point three",
                 "value": 18.3
             },
             "minimum_temperature_24": {
+                "precise": true,
                 "repr": "0150",
                 "spoken": "one five point zero",
                 "value": 15.0
             },
             "minimum_temperature_6": {
+                "precise": true,
                 "repr": "20150",
                 "spoken": "one five point zero",
                 "value": 15.0
@@ -64,6 +71,7 @@
                 "tendency": "Increasing, then steady"
             },
             "sea_level_pressure": {
+                "precise": true,
                 "repr": "SLP153",
                 "spoken": "one zero one five point three",
                 "value": 1015.3
@@ -71,6 +79,7 @@
             "snow_depth": null,
             "sunshine_minutes": null,
             "temperature_decimal": {
+                "precise": true,
                 "repr": "0150",
                 "spoken": "one five point zero",
                 "value": 15.0
@@ -80,6 +89,7 @@
         "sanitized": "KMCO 170553Z 31007KT 10SM 15/09 A2999 RMK AO2 SLP153 T01500094 10183 20150 51010 KMCO 170453Z 29005KT 10SM FEW050 15/09 A2998 RMK AO2 SLP150 T01500094 402220150",
         "station": "KMCO",
         "temperature": {
+            "precise": true,
             "repr": "15",
             "spoken": "one five",
             "value": 15
@@ -89,17 +99,20 @@
             "repr": "170553Z"
         },
         "visibility": {
+            "precise": true,
             "repr": "10",
             "spoken": "one zero",
             "value": 10
         },
         "wind_direction": {
+            "precise": true,
             "repr": "310",
             "spoken": "three one zero",
             "value": 310
         },
         "wind_gust": null,
         "wind_speed": {
+            "precise": true,
             "repr": "07",
             "spoken": "seven",
             "value": 7

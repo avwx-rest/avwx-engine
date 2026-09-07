@@ -222,9 +222,9 @@ def make_number(
         value = float(val_str) or 0 if "." in num else int(val_str)
         spoken = speak_prefix + spoken_number(speak or str(value), literal=literal)
         ret = Number(repr or num, value, spoken)
-    # Null the value if "greater than"/"less than"
+    # Mark the value as imprecise if "greater than"/"less than"
     if ret and not m_minus and repr and repr.startswith(("M", "P")):
-        ret.value = None
+        ret.precise = False
     return ret
 
 
@@ -530,7 +530,7 @@ def get_flight_rules(visibility: Number | None, ceiling: Cloud | None) -> int:
         vis = 10
     elif visibility.repr.startswith("M"):
         vis = 0
-    elif visibility.value is None:
+    elif visibility.value is None or not visibility.precise:
         vis = 2
     # Convert meters to miles
     elif len(visibility.repr) == 4:

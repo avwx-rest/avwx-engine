@@ -23,6 +23,7 @@
             "observation": {
                 "bounds": [],
                 "ceiling": {
+                    "precise": true,
                     "repr": "FL520",
                     "spoken": "flight level five two zero",
                     "value": 520
@@ -67,12 +68,14 @@
                 },
                 "movement": {
                     "direction": {
+                        "precise": true,
                         "repr": "ENE",
                         "spoken": "six seven point five",
                         "value": 67.5
                     },
                     "repr": "MOV ENE 5KT",
                     "speed": {
+                        "precise": true,
                         "repr": "5",
                         "spoken": "five",
                         "value": 5
@@ -339,6 +342,7 @@
             "observation": {
                 "bounds": [],
                 "ceiling": {
+                    "precise": true,
                     "repr": "FL520",
                     "spoken": "flight level five two zero",
                     "value": 520
@@ -378,12 +382,14 @@
                 },
                 "movement": {
                     "direction": {
+                        "precise": true,
                         "repr": "WSW",
                         "spoken": "two four seven point five",
                         "value": 247.5
                     },
                     "repr": "MOV WSW 5KT",
                     "speed": {
+                        "precise": true,
                         "repr": "5",
                         "spoken": "five",
                         "value": 5
@@ -435,6 +441,7 @@
             "forecast": {
                 "bounds": [],
                 "ceiling": {
+                    "precise": true,
                     "repr": "100",
                     "spoken": "one hundred",
                     "value": 100
@@ -705,6 +712,7 @@
             "observation": {
                 "bounds": [],
                 "ceiling": {
+                    "precise": true,
                     "repr": "FL290",
                     "spoken": "flight level two nine zero",
                     "value": 290
@@ -741,12 +749,14 @@
                 "intensity": null,
                 "movement": {
                     "direction": {
+                        "precise": true,
                         "repr": "260",
                         "spoken": "two six zero",
                         "value": 260
                     },
                     "repr": "MOV FROM 26020KT",
                     "speed": {
+                        "precise": true,
                         "repr": "20",
                         "spoken": "two zero",
                         "value": 20
@@ -795,6 +805,7 @@
             "forecast": {
                 "bounds": [],
                 "ceiling": {
+                    "precise": true,
                     "repr": "FL080",
                     "spoken": "flight level eight zero",
                     "value": 80
@@ -828,6 +839,7 @@
                 ],
                 "end_time": null,
                 "floor": {
+                    "precise": true,
                     "repr": "SFC",
                     "spoken": "surface",
                     "value": 0
@@ -884,6 +896,7 @@
             "observation": {
                 "bounds": [],
                 "ceiling": {
+                    "precise": true,
                     "repr": "FL520",
                     "spoken": "flight level five two zero",
                     "value": 520
@@ -897,12 +910,14 @@
                 },
                 "movement": {
                     "direction": {
+                        "precise": true,
                         "repr": "NNW",
                         "spoken": "three three seven point five",
                         "value": 337.5
                     },
                     "repr": "MOV NNW 05KT",
                     "speed": {
+                        "precise": true,
                         "repr": "05",
                         "spoken": "five",
                         "value": 5
@@ -971,6 +986,7 @@
             "observation": {
                 "bounds": [],
                 "ceiling": {
+                    "precise": true,
                     "repr": "FL300",
                     "spoken": "flight level three zero zero",
                     "value": 300
@@ -1087,6 +1103,7 @@
             "forecast": {
                 "bounds": [],
                 "ceiling": {
+                    "precise": true,
                     "repr": "340",
                     "spoken": "flight level three four zero",
                     "value": 340
@@ -1155,6 +1172,7 @@
                 ],
                 "end_time": null,
                 "floor": {
+                    "precise": true,
                     "repr": "FL270",
                     "spoken": "flight level two seven zero",
                     "value": 270
