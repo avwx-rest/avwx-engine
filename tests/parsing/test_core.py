@@ -158,6 +158,51 @@ def test_make_non_number() -> None:
     assert core.make_number("") is None
 
 
+@pytest.mark.parametrize(
+    ("num", "value"),
+    [
+        # Letter O typed for a zero, which make_number cleans up
+        ("1O", 10),
+        ("1OOO", 1000),
+        ("P6OOO", 6000),
+        # Trailing characters the cleanup strips
+        ("10.", 10),
+        ("10+", 10),
+        ("1,000", 1000),
+    ],
+)
+def test_make_number_cleans_spurious_characters(num: str, value: float) -> None:
+    """Test that the cleanup applied to the number string reaches the parsed value.
+
+    Regression: the value was parsed from a copy taken before the cleanup ran, so
+    only the m_minus branch, which reassigned that copy, ever saw the cleaned
+    string. "M1O" resolved to -10 while "1O" raised ValueError out of int().
+    """
+    number = core.make_number(num)
+    assert isinstance(number, Number)
+    assert number.value == value
+    # repr reflects the cleaned string here, matching the existing "1,000" behaviour.
+    # Callers that need the raw text pass it explicitly, as the METAR parser does.
+    assert "O" not in number.repr
+
+
+@pytest.mark.parametrize(
+    ("positive", "negative"),
+    [
+        ("1O", "M1O"),
+        ("10+", "M10+"),
+        ("10.", "M10."),
+    ],
+)
+def test_make_number_cleanup_is_sign_independent(positive: str, negative: str) -> None:
+    """Test that a leading M changes only the sign, not whether cleanup happens."""
+    plain = core.make_number(positive)
+    minus = core.make_number(negative)
+    assert isinstance(plain, Number)
+    assert isinstance(minus, Number)
+    assert plain.value == -minus.value
+
+
 def test_make_number_repr_override() -> None:
     num = core.make_number("1234", "A1234")
     assert num is not None
