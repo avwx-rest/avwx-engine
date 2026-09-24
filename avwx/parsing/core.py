@@ -185,6 +185,11 @@ def make_number(
     num = num.replace("O", "0")
     num = num.replace("+", "")
     num = num.replace(",", "")
+    # The value is parsed from val_str, which was snapshotted above, so the
+    # cleanup has to reach it too. Previously it only did when the m_minus
+    # branch below happened to reassign val_str from num, which meant "M1O"
+    # parsed as -10 while "1O" raised ValueError out of int().
+    val_str = val_str.rstrip("M.").replace("O", "0").replace("+", "").replace(",", "")
     # Handle Minus values with errors like 0M04
     if m_minus and "M" in num:
         val_str = num.replace("MM", "-").replace("M", "-")
