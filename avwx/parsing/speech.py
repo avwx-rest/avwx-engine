@@ -22,7 +22,7 @@ def ordinal(n: int) -> str | None:
     """Convert an int to it spoken ordinal representation."""
     if n < 0:
         return None
-    return str(n) + "tsnrhtdd"[(n / 10 % 10 != 1) * (n % 10 < 4) * n % 10 :: 4]
+    return str(n) + "tsnrhtdd"[(n // 10 % 10 != 1) * (n % 10 < 4) * n % 10 :: 4]
 
 
 def _format_plural_unit(value: str, unit: str) -> str:
