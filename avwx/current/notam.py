@@ -197,6 +197,8 @@ ALL_KEYS_PATTERN = re.compile(_KEY_START + r"[A-GQ]\) ")
 MISSING_KEY_SPACE_PATTERN = re.compile(r"(^|\s)([A-GQ])\)(?=\S)")
 Q_CODE_SUBJECT_PATTERN = re.compile(r"(\bQ\)\s*[A-Z]{3,4}\s*/\s*Q)([A-Z]{2})")
 REVERSED_FLIGHT_LEVEL_PATTERN = re.compile("(" + _KEY_START + r"[FG]\)\s*)(\d+)FL\b")
+# The start of an ICAO NOTAM, ie "A3230/26 NOTAMN", at the start of a line or after "("
+NOTAM_START_PATTERN = re.compile(r"(\(\s*|^)(?=[A-Z]\d{4}/\d{2}\s+NOTAM[NRC]\b)", re.MULTILINE)
 # "FL150" and the shorthand "F150" both name a flight level
 FLIGHT_LEVEL_PATTERN = re.compile(r"^FL?\d+$")
 KEY_PATTERNS = {
@@ -460,9 +462,32 @@ def parse(report: str, issued: Timestamp | None = None) -> tuple[NotamData, Unit
     )
 
 
+def _unwrap(report: str) -> str:
+    """Return the NOTAM without an enclosing AFTN message.
+
+    Relayed NOTAMs can arrive as the whole AFTN message, ie a heading like
+    "ORIGINAL NOTAM" or "RQR LTAA A1750/26" followed by the NOTAM in parentheses.
+    This anchors on the NOTAM's own number and type rather than on any heading.
+    """
+    if report.startswith("!"):
+        return report
+    match = NOTAM_START_PATTERN.search(report)
+    if match is None or (match.start() == 0 and not match.group(1)):
+        return report
+    body = report[match.end() :].strip()
+    # The closing parenthesis can be missing, so only drop a trailing one left unmatched
+    # once item keys like "Q)" are set aside
+    if match.group(1) and body.endswith(")"):
+        text = ALL_KEYS_PATTERN.sub("", MISSING_KEY_SPACE_PATTERN.sub(r"\1\2) ", body))
+        if text.count("(") < text.count(")"):
+            body = body[:-1].rstrip()
+    return body
+
+
 def sanitize(report: str) -> str:
     """Retun a sanitized report ready for parsing."""
-    report = report.replace("\r", "").strip()
+    # Relayed NOTAMs can use CRLF or bare CR line endings
+    report = _unwrap(report.replace("\r\n", "\n").replace("\r", "\n").strip())
     # Some sources omit the space after a key, ie "E)TWY CLSD" instead of "E) TWY CLSD",
     # which the key patterns above require. Only repair a key that starts a line or
     # follows whitespace so keys quoted inside body text are left alone.

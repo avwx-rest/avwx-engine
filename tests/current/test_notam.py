@@ -411,11 +411,42 @@ def test_parse() -> None:
         ("F) 050FL G) 120FL", "F) FL050 G) FL120"),
         # Only in a limit item, not in body text
         ("E) TOP 120FL (F) 120FL", "E) TOP 120FL (F) 120FL"),
+        # Bare CR line endings become newlines
+        ("A0223/26 NOTAMN\r Q) AYPM", "A0223/26 NOTAMN\n Q) AYPM"),
+        # An AFTN message wrapper is removed, along with the NOTAM's enclosing parentheses
+        ("ORIGINAL NOTAM\r\n(A3230/26 NOTAMN\r\nE) DROP ZONE)", "A3230/26 NOTAMN\nE) DROP ZONE"),
+        ("RQR LTAA A1750/26\n(A1750/26 NOTAMN\nE) SEE REF(B).)", "A1750/26 NOTAMN\nE) SEE REF(B)."),
+        (
+            "240740 AYPMYNYX\r NOTAM REPLACED BY A0225/26\r ORIGINAL NOTAM\r (A0223/26 NOTAMN\r E) WIP)",
+            "A0223/26 NOTAMN\n E) WIP",
+        ),
+        ("VALIDATION ERROR: no match\n----------\nB0643/26 NOTAMN \r\nE) PERMITTED.", "B0643/26 NOTAMN \nE) PERMITTED."),
+        # A closing parenthesis that belongs to the text is kept when the wrapper's is missing
+        ("ORIGINAL NOTAM   (M3883/24 NOTAMN  E) OBST (148 FT)", "M3883/24 NOTAMN  E) OBST (148 FT)"),
+        # Unwrapped NOTAMs, including ones quoting another NOTAM, are left alone
+        ("A0001/26 NOTAMN\nE) SEE\n(A0002/26 NOTAMN)", "A0001/26 NOTAMN\nE) SEE\n(A0002/26 NOTAMN)"),
+        ("!DCA 09/123 DCA SEE\n(A0002/26 NOTAMN)", "!DCA 09/123 DCA SEE\n(A0002/26 NOTAMN)"),
     ],
 )
 def test_sanitize(line: str, fixed: str) -> None:
     """Test report sanitization."""
     assert notam.sanitize(line) == fixed
+
+
+def test_parse_aftn_wrapper() -> None:
+    """A NOTAM wrapped in an AFTN message is parsed, and the raw report kept as given."""
+    report = (
+        "ORIGINAL NOTAM\r\n(A3230/26 NOTAMN\r\nQ)FAJA/QRACA/IV/NBO/AW/000/160/2546S02719E005\r\n"
+        "A)FAXX B)2609160400 C)2612141600\r\nE)TEMPO DROP ZONE ESTABLISHED.\r\nF)SFC G)16000FT AMSL)"
+    )
+    data, _ = notam.parse(report)
+    assert data.raw == report
+    assert data.sanitized.startswith("A3230/26 NOTAMN\n")
+    assert data.number == "A3230/26"
+    assert data.station == "FAXX"
+    assert data.body == "TEMPO DROP ZONE ESTABLISHED."
+    assert data.upper is not None
+    assert data.upper.repr == "16000FT AMSL"
 
 
 @pytest.mark.parametrize(("wrong", "right"), TRANSPOSED_SUBJECT.items())
