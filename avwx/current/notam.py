@@ -196,6 +196,7 @@ _KEY_START = r"(?:^|(?<=\s))"
 ALL_KEYS_PATTERN = re.compile(_KEY_START + r"[A-GQ]\) ")
 MISSING_KEY_SPACE_PATTERN = re.compile(r"(^|\s)([A-GQ])\)(?=\S)")
 Q_CODE_SUBJECT_PATTERN = re.compile(r"(\bQ\)\s*[A-Z]{3,4}\s*/\s*Q)([A-Z]{2})")
+REVERSED_FLIGHT_LEVEL_PATTERN = re.compile("(" + _KEY_START + r"[FG]\)\s*)(\d+)FL\b")
 # "FL150" and the shorthand "F150" both name a flight level
 FLIGHT_LEVEL_PATTERN = re.compile(r"^FL?\d+$")
 KEY_PATTERNS = {
@@ -467,6 +468,8 @@ def sanitize(report: str) -> str:
     # follows whitespace so keys quoted inside body text are left alone.
     report = MISSING_KEY_SPACE_PATTERN.sub(r"\1\2) ", report)
     # Some originators swap the Q-code subject letters, ie QXMLC for QMXLC
-    return Q_CODE_SUBJECT_PATTERN.sub(
+    report = Q_CODE_SUBJECT_PATTERN.sub(
         lambda m: m.group(1) + TRANSPOSED_SUBJECT.get(m.group(2), m.group(2)), report, count=1
     )
+    # Some originators give a flight level limit number first, ie "G) 120FL" for "G) FL120"
+    return REVERSED_FLIGHT_LEVEL_PATTERN.sub(r"\1FL\2", report)

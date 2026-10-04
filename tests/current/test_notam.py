@@ -406,6 +406,11 @@ def test_parse() -> None:
         # Other subjects, including unknown ones, are left alone
         ("Q) ZJX/QMLAT/IV/NBO/A/000/999", "Q) ZJX/QMLAT/IV/NBO/A/000/999"),
         ("Q) RJJJ/QMXLC/IV/NBO/A/000/999", "Q) RJJJ/QMXLC/IV/NBO/A/000/999"),
+        # A flight level limit given number first is reordered
+        ("F) GND G)120FL", "F) GND G) FL120"),
+        ("F) 050FL G) 120FL", "F) FL050 G) FL120"),
+        # Only in a limit item, not in body text
+        ("E) TOP 120FL (F) 120FL", "E) TOP 120FL (F) 120FL"),
     ],
 )
 def test_sanitize(line: str, fixed: str) -> None:
@@ -504,6 +509,18 @@ def test_parse_flight_level_limits() -> None:
     # treated as a flight level. See make_altitude.
     assert data.qualifiers is not None
     assert data.qualifiers.upper == structs.Altitude("150", 150, "one five zero")
+
+
+def test_parse_reversed_flight_level() -> None:
+    """A G) line giving the flight level number first is parsed."""
+    report = (
+        "A1087/26 NOTAMN\nQ)SUEO/QRACA/IV/NBO/W /000/999/3450S05504W001\nA)SULS \nSUEO \n"
+        "B)2609221200  C)2610021600\nE)\nMIL PJE WILL TAKE PLACE  RADIUS 01NM CENTER \nF)GND \n G)120FL"
+    )
+    data, _ = notam.parse(report)
+    assert data.lower == structs.Altitude("GND", 0, "ground", flight_level=False)
+    assert data.upper == structs.Altitude("FL120", 120, "flight level one two zero", flight_level=True)
+    assert data.raw == report
 
 
 def test_parse_keys_without_trailing_space() -> None:
