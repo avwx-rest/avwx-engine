@@ -42,6 +42,7 @@ from avwx.static.core import SPECIAL_NUMBERS
 from avwx.static.notam import (
     CODES,
     CONDITION,
+    MISTYPED_SUBJECT,
     PURPOSE,
     REPORT_TYPE,
     SCOPE,
@@ -196,6 +197,7 @@ _KEY_START = r"(?:^|(?<=\s))"
 ALL_KEYS_PATTERN = re.compile(_KEY_START + r"[A-GQ]\) ")
 MISSING_KEY_SPACE_PATTERN = re.compile(r"(^|\s)([A-GQ])\)(?=\S)")
 Q_CODE_SUBJECT_PATTERN = re.compile(r"(\bQ\)\s*[A-Z]{3,4}\s*/\s*Q)([A-Z]{2})")
+SUBJECT_CORRECTIONS = TRANSPOSED_SUBJECT | MISTYPED_SUBJECT
 REVERSED_FLIGHT_LEVEL_PATTERN = re.compile("(" + _KEY_START + r"[FG]\)\s*)(\d+)FL\b")
 # The start of an ICAO NOTAM, ie "A3230/26 NOTAMN", at the start of a line or after "("
 NOTAM_START_PATTERN = re.compile(r"(\(\s*|^)(?=[A-Z]\d{4}/\d{2}\s+NOTAM[NRC]\b)", re.MULTILINE)
@@ -492,9 +494,9 @@ def sanitize(report: str) -> str:
     # which the key patterns above require. Only repair a key that starts a line or
     # follows whitespace so keys quoted inside body text are left alone.
     report = MISSING_KEY_SPACE_PATTERN.sub(r"\1\2) ", report)
-    # Some originators swap the Q-code subject letters, ie QXMLC for QMXLC
+    # Some originators swap or mistype the Q-code subject letters, ie QXMLC for QMXLC
     report = Q_CODE_SUBJECT_PATTERN.sub(
-        lambda m: m.group(1) + TRANSPOSED_SUBJECT.get(m.group(2), m.group(2)), report, count=1
+        lambda m: m.group(1) + SUBJECT_CORRECTIONS.get(m.group(2), m.group(2)), report, count=1
     )
     # Some originators give a flight level limit number first, ie "G) 120FL" for "G) FL120"
     return REVERSED_FLIGHT_LEVEL_PATTERN.sub(r"\1FL\2", report)

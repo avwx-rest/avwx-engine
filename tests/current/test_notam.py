@@ -16,7 +16,7 @@ from dateutil.tz import gettz
 # module
 from avwx import structs
 from avwx.current import notam
-from avwx.static.notam import SUBJECT, TRANSPOSED_SUBJECT
+from avwx.static.notam import MISTYPED_SUBJECT, SUBJECT, TRANSPOSED_SUBJECT
 
 # tests
 from tests.util import get_data
@@ -216,6 +216,9 @@ def test_qualifiers(qualifier: structs.Qualifiers) -> None:
     [
         ("KFDC/QCHXX////000/999/", structs.Code("CH", "Chart")),
         ("EGTT/QPPCH/I/NBO/A/000/999/5129N00028W005", structs.Code("PP", "Obstacle clearance height")),
+        ("KZDC/QOCBS////000/999/3851N07702W005", structs.Code("OC", "Obstacle")),
+        ("ZAB/QRNAV/IV/NBO/A/000/999/3251N10606W005", structs.Code("RN", "Area navigation")),
+        ("RJJJ/QWXXX/IV/NBO/A/000/999/3544N13920E005", structs.Code("WX", "Warning (other)")),
     ],
 )
 def test_qualifiers_subject(text: str, subject: structs.Code) -> None:
@@ -403,6 +406,8 @@ def test_parse() -> None:
         ("Q) ZLA/QXMLC/IV/NBO/A/000/999", "Q) ZLA/QMXLC/IV/NBO/A/000/999"),
         ("Q) ZLA/QHMLX/IV/NBO/A/000/999", "Q) ZLA/QMHLX/IV/NBO/A/000/999"),
         ("Q)RJJJ/QLOXX/IV/NBO/A/000/999", "Q) RJJJ/QOLXX/IV/NBO/A/000/999"),
+        # As are known mistyped ones
+        ("Q) RKRR/QOSAS/IV/NBO/A/000/999", "Q) RKRR/QOLAS/IV/NBO/A/000/999"),
         # Other subjects, including unknown ones, are left alone
         ("Q) ZJX/QMLAT/IV/NBO/A/000/999", "Q) ZJX/QMLAT/IV/NBO/A/000/999"),
         ("Q) RJJJ/QMXLC/IV/NBO/A/000/999", "Q) RJJJ/QMXLC/IV/NBO/A/000/999"),
@@ -457,6 +462,13 @@ def test_transposed_subject_table(wrong: str, right: str) -> None:
     assert wrong == right[::-1]
 
 
+@pytest.mark.parametrize(("wrong", "right"), MISTYPED_SUBJECT.items())
+def test_mistyped_subject_table(wrong: str, right: str) -> None:
+    """Only unknown subjects are corrected, and only to known ones."""
+    assert wrong not in SUBJECT
+    assert right in SUBJECT
+
+
 @pytest.mark.parametrize(
     ("report", "subject"),
     [
@@ -481,10 +493,17 @@ def test_transposed_subject_table(wrong: str, right: str) -> None:
             ),
             structs.Code("OL", "Obstacle lights"),
         ),
+        (
+            (
+                "M0761/26 NOTAMN \nQ) RKRR/QOSAS/IV/NBO/A/000/999/3554N12636E005 \nA) RKJK \n"
+                "B) 2608171248 \nC) 2610292359 \nE) AERODROME BARRIER SHELTER 3 EAST OBSTRUCTION LIGHT OUT OF SERVICE"
+            ),
+            structs.Code("OL", "Obstacle lights"),
+        ),
     ],
 )
 def test_parse_transposed_subject(report: str, subject: structs.Code) -> None:
-    """A transposed Q-code subject is corrected, and the raw report kept as given."""
+    """A transposed or mistyped Q-code subject is corrected, and the raw report kept as given."""
     data, _ = notam.parse(report)
     assert data.qualifiers is not None
     assert data.qualifiers.subject == subject

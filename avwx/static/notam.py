@@ -153,6 +153,7 @@ SUBJECT = {
     "NX": "Direction finding station",
     "OA": "Aeronautical information service",
     "OB": "Obstacle",
+    "OC": "Obstacle",  # Encountered, non-standard
     "OE": "Aircraft entry requirements",
     "OL": "Obstacle lights",
     "OR": "Rescue coordination centre",
@@ -179,6 +180,7 @@ SUBJECT = {
     "RC": "Radio communication facility",
     "RD": "Danger area",
     "RM": "Military operating area",
+    "RN": "Area navigation",  # Encountered, non-standard
     "RO": "Overflying",
     "RP": "Prohibited area",
     "RR": "Restricted area",
@@ -216,6 +218,7 @@ SUBJECT = {
     "WU": "Unmanned aircraft",
     "WV": "Formation flight",
     "WW": "Significant volcanic activity",
+    "WX": "Warning (other)",  # Encountered, non-standard
     "WY": "Aerial survey",
     "WZ": "Model flying",
     "XX": "Unknown",
@@ -310,6 +313,13 @@ TRANSPOSED_SUBJECT = {
     "HM": "MH",
     "LO": "OL",
     "XM": "MX",
+}
+
+# Q-code subjects encountered with a mistyped letter, ie QOSAS for QOLAS.
+# Only add one when the NOTAM text confirms the intended subject
+
+MISTYPED_SUBJECT = {
+    "OS": "OL",
 }
 
 # Other codes sourced from Nav Canada transition docs
