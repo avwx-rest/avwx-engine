@@ -191,19 +191,21 @@ class Notams(Reports):
         # return await self._update(reports, None, disable_post=disable_post)
 
 
-ALL_KEYS_PATTERN = re.compile(r"\b[A-GQ]\) ")
+# A key starts the report or follows whitespace, so "AR112H(E) " in body text is not a key
+_KEY_START = r"(?:^|(?<=\s))"
+ALL_KEYS_PATTERN = re.compile(_KEY_START + r"[A-GQ]\) ")
 MISSING_KEY_SPACE_PATTERN = re.compile(r"(^|\s)([A-GQ])\)(?=\S)")
 Q_CODE_SUBJECT_PATTERN = re.compile(r"(\bQ\)\s*[A-Z]{3,4}\s*/\s*Q)([A-Z]{2})")
 # "FL150" and the shorthand "F150" both name a flight level
 FLIGHT_LEVEL_PATTERN = re.compile(r"^FL?\d+$")
 KEY_PATTERNS = {
-    "Q": re.compile(r"\b[A-G]\) "),
-    "A": re.compile(r"\b[B-G]\) "),
-    "B": re.compile(r"\b[C-G]\) "),
-    "C": re.compile(r"\b[D-G]\) "),
-    "D": re.compile(r"\b[E-G]\) "),
-    "E": re.compile(r"\b[FG]\) "),
-    "F": re.compile(r"\bG\) "),
+    "Q": re.compile(_KEY_START + r"[A-G]\) "),
+    "A": re.compile(_KEY_START + r"[B-G]\) "),
+    "B": re.compile(_KEY_START + r"[C-G]\) "),
+    "C": re.compile(_KEY_START + r"[D-G]\) "),
+    "D": re.compile(_KEY_START + r"[E-G]\) "),
+    "E": re.compile(_KEY_START + r"[FG]\) "),
+    "F": re.compile(_KEY_START + r"G\) "),
     # No "G"
 }
 
@@ -398,7 +400,9 @@ def parse(report: str, issued: Timestamp | None = None) -> tuple[NotamData, Unit
     qualifiers, station, start_time, end_time = None, None, None, None
     body, number, replaces, report_type = "", None, None, None
     schedule, lower, upper, text = None, None, None, sanitized
-    match = ALL_KEYS_PATTERN.search(text)
+    # US domestic NOTAMs ("!DCA 09/123 ...") have no ICAO items, but their text can still
+    # look like one, ie "(35FT N TWY A) 98FT"
+    match = None if text.startswith("!") else ALL_KEYS_PATTERN.search(text)
     # Type and number here
     if match and match.start() > 0:
         number, report_type, replaces = _header(text[: match.start()])

@@ -324,7 +324,7 @@ def test_parse_linked_times(start: str, end: str, start_dt: datetime | None, end
         ("7000FT AMSL", 7000, False),
     ],
 )
-def test_make_altitude(raw: str, value: int, flight_level: bool) -> None:
+def test_make_altitude(raw: str, value: int, flight_level: bool) -> None:  # noqa: FBT001
     """Test altitude parsing."""
     altitude = notam.make_altitude(raw, structs.Units.international())
     assert isinstance(altitude, structs.Altitude)
@@ -424,6 +424,41 @@ def test_parse_transposed_subject(report: str, subject: structs.Code) -> None:
     assert data.qualifiers is not None
     assert data.qualifiers.subject == subject
     assert data.raw == report
+
+
+@pytest.mark.parametrize(
+    "report",
+    [
+        "!SUAC 09/481 ZFW AIRSPACE AR112H(E) ACT FL240-FL260 2609300245-2609300330",
+        (
+            "!ISM 09/037 ISM OBST EXCAVATOR (ASN UNKNOWN) 281750N0812627W (35FT N TWY A) 98FT "
+            "(16FT AGL) FLAGGED, NOT LGTD DLY 1100-2100 2609281100-2610022100"
+        ),
+        (
+            "!ZAK 09/001 ZAK NAV GPS (MAWTS1 GPS 26-01) (INCLUDING WAAS, GBAS,\nAND ADS-B) MAY NOT BE "
+            "AVBL WI A 404NM RADIUS CENTERED AT\n325229N1145314W (BZA28016) FL400-UNL. 2609302100-2609302229"
+        ),
+    ],
+)
+def test_parse_domestic_ignores_item_keys(report: str) -> None:
+    """A US domestic NOTAM is not split on text that looks like an ICAO item key."""
+    data, _ = notam.parse(report)
+    assert data.raw == report
+    assert data.number is None
+    assert data.qualifiers is None
+    assert data.station is None
+    assert data.body == ""
+
+
+def test_parse_item_key_inside_body() -> None:
+    """A letter in parentheses inside an item is not read as the next key."""
+    report = (
+        "A0001/26 NOTAMN\nQ) RJJJ/QRRCA/IV/BO/W/000/260/3500N13900E010\nA) RJJJ\n"
+        "B) 2609300245 C) 2609300330\nE) AIRSPACE AR112H(F) ACT"
+    )
+    data, _ = notam.parse(report)
+    assert data.body == "AIRSPACE AR112H(F) ACT"
+    assert data.lower is None
 
 
 def test_parse_flight_level_limits() -> None:
