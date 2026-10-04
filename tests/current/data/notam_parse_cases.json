@@ -1,0 +1,366 @@
+[
+  {
+    "group": "unknown-q-subject",
+    "id": "Event_TS_1_1790140722150941",
+    "issued": "2026-09-23T05:18:00+00:00",
+    "report": "M1128/26 NOTAMN \nQ) RJJJ/QWXXX/IV/NBO/A/000/999/3544N13920E005 \nA) RJTY \nB) 2609230518 \nC) 2610151450 \nE) USE CAUTION: SUAS OPERATIONS CONDUCTED 2NM SOUTH OF AFLD/354254N1392144E FROM SFC-UNK BETWEEN 0000Z-1450Z DAILY",
+    "expected": {
+      "number": "M1128/26",
+      "subject": [
+        "WX",
+        "Warning (other)"
+      ]
+    }
+  },
+  {
+    "group": "unknown-q-subject",
+    "id": "Event_TS_1_1788354542706433",
+    "issued": "2026-09-02T13:07:00+00:00",
+    "report": "A0217/26 NOTAMN\nQ) KFDC/QCHXX////000/999/\nA) KFDC\nB) 2609021307\nC) PERM\nE) CHART CORRECT U.S. GOVERNMENT IFR AREA CHART A2 - DENVER, EFFECTIVE 03 SEP 2026... ADD RCO INFORMATION AT DENVER VOR/DME (DEN) REPORTING FROM DENVER WITH FREQUENCY 122.4, AT 39 48 45N 104 39 38W.",
+    "expected": {
+      "number": "A0217/26",
+      "subject": [
+        "CH",
+        "Chart"
+      ]
+    }
+  },
+  {
+    "group": "unknown-q-subject",
+    "id": "Event_TS_1_1790600031441989",
+    "issued": "2026-09-28T12:53:00+00:00",
+    "report": "M0603/26 NOTAMN \nQ) ZFW/QHWLX/IV/NBO/A/000/999/3524N09723W005 \nA) KTIK \nB) 2609281253 \nC) 2610282200 \nE) TWY F USE CAUTION MEN AND HEAVY EQUIPMENT OPERATING 165 FT SOUTH OF TWY F WEST OF TWY G DAILY MON-FRI 1200-2200",
+    "raises": "KeyError"
+  },
+  {
+    "group": "unknown-q-subject",
+    "id": "Event_TS_1_1786374210783386",
+    "issued": "2026-08-10T15:03:00+00:00",
+    "report": "M0230/26 NOTAMN \nQ) ZLA/QXMLC/IV/NBO/A/000/999/3635N11540W005 \nA) KINS \nB) 2608101503 \nC) 2610092359 \nE) TWY G CLSD LGTD AND BARRICADED USE CAUTION: MEN & EQUIPMENT WORKING ON TWY GOLF NORTH CLOSED FROM RWY 13/31 TO TWY FOXTROT",
+    "expected": {
+      "number": "M0230/26",
+      "subject": [
+        "MX",
+        "Taxiway"
+      ]
+    }
+  },
+  {
+    "group": "unknown-q-subject",
+    "id": "Event_TS_1_1776712707871485",
+    "issued": "2026-04-20T19:17:00+00:00",
+    "report": "A1430/26 NOTAMN\nQ) KZDC/QOCBS////000/999/3851N07702W005\nA) KDCA\nB) 2604201916\nC) 2710312359\nE) OBST CRANE (ASN 2026-AEA-3578-OE) 385214N0770251W (1.2NM NNW DCA) 98FT (80FT AGL) FLAGGED",
+    "expected": {
+      "number": "A1430/26",
+      "subject": [
+        "OC",
+        "Obstacle"
+      ]
+    }
+  },
+  {
+    "group": "unknown-q-subject",
+    "id": "Event_TS_1_1784705319893987",
+    "issued": "2026-07-22T07:28:00+00:00",
+    "report": "M1406/26 NOTAMN \nQ) RJJJ/QRJJJ/IV/NBO/A/000/999/2621N12746E005 \nA) RODN \nB) 2607220728 \nC) 2610132359 \nE) OBST. CAUTION: CRANE LOCATION ESTIMATED AT 127°45'25.30\"E 26°21'28.63\"N, 127°45'26.09\"E 26°21'30.17\"N, 127°45'28.43\"E 26°21'31.15\"N, 127°45'29.66\"E 26°21'28.54\"N, AND 127°45'27.34\"E 26°21'26.49\"N - LAT/LONG. MAX HEIGHT - 92 FT/29M AGL.",
+    "raises": "KeyError"
+  },
+  {
+    "group": "unknown-q-subject",
+    "id": "Event_TS_1_1786549074490489",
+    "issued": "2026-08-12T15:37:00+00:00",
+    "report": "M0991/26 NOTAMN \nQ) ZJX/QMLAT/IV/NBO/A/000/999/3004N08534W005 \nA) KPAM \nB) 2608121537 \nC) 2610122359 \nE) ALL TAXI LEAD IN LINES OF ANY HANGAR SOUTHWEST OF CENTER AND EAST RAMP ARE TO BE UTILIZED FOR TOW OPS ONLY",
+    "raises": "KeyError"
+  },
+  {
+    "group": "unknown-q-subject",
+    "id": "Event_TS_1_1783633483455064",
+    "issued": "2026-07-09T21:44:00+00:00",
+    "report": "M0711/26 NOTAMN \nQ) ZAB/QRNAV/IV/NBO/A/000/999/3251N10606W005 \nA) KHMN \nB) 2607092144 \nC) 2610070001 \nE) IZZYY ONE (RNAV) SID NA FOR CAT E AIRCRAFT",
+    "expected": {
+      "number": "M0711/26",
+      "subject": [
+        "RN",
+        "Area navigation"
+      ]
+    }
+  },
+  {
+    "group": "unknown-q-subject",
+    "id": "Event_TS_1_1786970942759338",
+    "issued": "2026-08-17T12:48:00+00:00",
+    "report": "M0761/26 NOTAMN \nQ) RKRR/QOSAS/IV/NBO/A/000/999/3554N12636E005 \nA) RKJK \nB) 2608171248 \nC) 2610292359 \nE) AERODROME BARRIER SHELTER 3 EAST OBSTRUCTION LIGHT OUT OF SERVICE",
+    "expected": {
+      "number": "M0761/26",
+      "subject": [
+        "OL",
+        "Obstacle lights"
+      ]
+    }
+  },
+  {
+    "group": "unknown-q-subject",
+    "id": "Event_TS_1_1787161481879379",
+    "issued": "2026-08-19T17:44:00+00:00",
+    "report": "M0230/26 NOTAMN \nQ) ZLA/QHMLX/IV/NBO/A/000/999/3747N11646W005 \nA) KTNX \nB) 2608191744 \nC) 2611132359 \nE) RWY 15 APPROACH END BAK 14 CAUTION POSSIBLE TAILHOOK SKIP WITHIN 200FT EITHER SIDE OF ARRESTING SYSTEM CABLE DUE TO RUBBER BUILDUP",
+    "expected": {
+      "number": "M0230/26",
+      "subject": [
+        "MH",
+        "Runway arresting gear"
+      ]
+    }
+  },
+  {
+    "group": "unknown-q-subject",
+    "id": "Event_TS_1_1790540591863966",
+    "issued": "2026-09-27T20:22:00+00:00",
+    "report": "M1139/26 NOTAMN \nQ) RJJJ/QLOXX/IV/NBO/A/000/999/3544N13920E005 \nA) RJTY \nB) 2609272022 \nC) 2610262021 \nE) NO STADIUM OR OBSTRUCTION LIGHTS ON THE AFSOC RAMP",
+    "expected": {
+      "number": "M1139/26",
+      "subject": [
+        "OL",
+        "Obstacle lights"
+      ]
+    }
+  },
+  {
+    "group": "unknown-q-subject",
+    "id": "Event_TS_1_1790635846672984",
+    "issued": "2026-09-28T22:50:00+00:00",
+    "report": "M0075/26 NOTAMN \nQ) ZHN/QRLOP/IV/NBO/A/000/999/2201N15947W005 \nA) PHBK \nB) 2610051000 \nC) 2610101000 \nE) ZEPHIR AND WINDCUBE WIND-FINDING LIDARS LOCATED AT 22-03-24.5N/159-46-50.2W (9,254 FT NORTH OF RWY 16 THRESHOLD AND 4,310 FT EAST OF CENTERLINE). FLYING WITHIN 500 FT OF THE GROUND LASERS ARE PROHIBITED TO ALL AIRCRAFT.",
+    "raises": "KeyError"
+  },
+  {
+    "group": "tag-inside-parentheses",
+    "id": "Event_TS_1_1790715415626767",
+    "issued": "2026-09-29T20:56:00+00:00",
+    "report": "!SUAC 09/481 ZFW AIRSPACE AR112H(E) ACT FL240-FL260 2609300245-2609300330",
+    "expected": {
+      "number": null,
+      "qualifiers": null,
+      "body": ""
+    }
+  },
+  {
+    "group": "tag-inside-parentheses",
+    "id": "Event_TS_1_1790715458797489",
+    "issued": "2026-09-29T20:56:00+00:00",
+    "report": "!SUAE 09/915 ZME AIRSPACE AR112H(E) ACT FL240-FL260 2609300245-2609300330",
+    "expected": {
+      "number": null,
+      "qualifiers": null,
+      "body": ""
+    }
+  },
+  {
+    "group": "tag-inside-parentheses",
+    "id": "Event_TS_1_1790193857714593",
+    "issued": "2026-09-23T20:03:00+00:00",
+    "report": "!ISM 09/037 ISM OBST EXCAVATOR (ASN UNKNOWN) 281750N0812627W (35FT N TWY A) 98FT (16FT AGL) FLAGGED, NOT LGTD DLY 1100-2100 2609281100-2610022100",
+    "expected": {
+      "number": null,
+      "qualifiers": null,
+      "body": ""
+    }
+  },
+  {
+    "group": "tag-inside-parentheses",
+    "id": "Event_TS_1_1790368723507580",
+    "issued": "2026-09-25T20:38:00+00:00",
+    "report": "!GPS 09/099 ZAN NAV GPS (AFCAK GPS 26-07) (INCLUDING WAAS, GBAS, AND ADS-B) MAY NOT BE AVBL WI A 292NM RADIUS CENTERED AT 644112N1463237W (FAI079038) FL400-UNL,  244NM RADIUS AT FL250, M179NM RADIUS AT 10000FT, 168NM RADIUS AT 4000FT AGL, 114NM RADIUS AT 50FT AGL. 2609301600-2609302000",
+    "expected": {
+      "number": null,
+      "qualifiers": null,
+      "body": ""
+    }
+  },
+  {
+    "group": "tag-inside-parentheses",
+    "id": "Event_TS_1_1790369025172249",
+    "issued": "2026-09-25T20:42:00+00:00",
+    "report": "!ZAK 09/001 ZAK NAV GPS (MAWTS1 GPS 26-01) (INCLUDING WAAS, GBAS,\nAND ADS-B) MAY NOT BE AVBL WI A 404NM RADIUS CENTERED AT\n325229N1145314W (BZA28016) FL400-UNL,\n358NM RADIUS AT FL250,\n314NM RADIUS AT 10000FT,\n233NM RADIUS AT 4000FT AGL,\n233NM RADIUS AT 50FT AGL. 2609302100-2609302229",
+    "expected": {
+      "number": null,
+      "qualifiers": null,
+      "body": ""
+    }
+  },
+  {
+    "group": "tag-inside-parentheses",
+    "id": "Event_TS_1_1790629671003023",
+    "issued": "2026-09-28T21:07:00+00:00",
+    "report": "!DEN 09/789 ZDV AIRSPACE ADS-B, AUTO DEPENDENT SURVEILLANCE REBROADCAST (ADS-R), TFC INFO SER BCST (TIS-B), FLT INFO SER BCST (FIS-B) SER MAY NOT BE AVBL WI AN AREA DEFINED AS 75NM RADIUS OF 354138N1022719W. AP AIRSPACE AFFECTED MAY INCLUDE HRX, TDW, PPA, E42, DHT, CAO, TCC. 4000FT-8000FT.  2609282106-2610142200EST",
+    "expected": {
+      "number": null,
+      "qualifiers": null,
+      "body": ""
+    }
+  },
+  {
+    "group": "impossible-timestamp",
+    "id": "Event_TS_1_1776459423814000",
+    "issued": "2026-04-01T00:00:00+00:00",
+    "report": "A1111/25 NOTAMR A1110/25 Q) ANYN/QKKKK/K/K/K/000/999/0032S16655E000 A) ANYN B) 2604018000 C) 2605018000 EST E) CHECKLIST YEAR=2025 0076 0080 0079",
+    "expected": {
+      "number": "A1111/25",
+      "station": "ANYN",
+      "start": {
+        "repr": "2604018000",
+        "dt": null
+      },
+      "end": {
+        "repr": "2605018000 EST",
+        "dt": null
+      }
+    }
+  },
+  {
+    "group": "impossible-timestamp",
+    "id": "Event_TS_1_1776461651739000",
+    "issued": "2026-03-24T21:35:00+00:00",
+    "report": "M1239/26 NOTAMN Q) DGFC/QKKKK/IV/NBO/A/000/999/4025N00404W999 A) EDXJ B) 2604018000 C) 2605018000 E) CHECKLIST YEAR=2026 0261 0536 0201",
+    "expected": {
+      "number": "M1239/26",
+      "station": "EDXJ",
+      "start": {
+        "repr": "2604018000",
+        "dt": null
+      },
+      "end": {
+        "repr": "2605018000",
+        "dt": null
+      }
+    }
+  },
+  {
+    "group": "impossible-timestamp",
+    "id": "Event_TS_1_1776462078883000",
+    "issued": "2026-04-01T00:00:00+00:00",
+    "report": "A1113/26 NOTAMR A1110/25 Q) VDSV/QKKKK/K/K/K/000/999/0032S16655E000 A) VDSV B) 2604188000 C) 2605188000 EST E) YEAR=2026 0158, 0144, 0175, 0176, 0177, 0200",
+    "expected": {
+      "number": "A1113/26",
+      "station": "VDSV",
+      "start": {
+        "repr": "2604188000",
+        "dt": null
+      },
+      "end": {
+        "repr": "2605188000 EST",
+        "dt": null
+      }
+    }
+  },
+  {
+    "group": "impossible-timestamp",
+    "id": "Event_TS_1_1758776621587873",
+    "issued": "2024-11-30T08:11:00+00:00",
+    "report": "A0278/24 NOTAMN\nQ) VYYF/QNMAS/IV/NBO/AW/000/999/1937N09612E\nA) VYNT B) 2411300830 C) 2502292359 EST\nE) VYNT AD DVOR 113.7MHZ U/S DUE TECR",
+    "expected": {
+      "number": "A0278/24",
+      "station": "VYNT",
+      "start": {
+        "repr": "2411300830"
+      },
+      "end": {
+        "repr": "2502292359 EST",
+        "dt": null
+      }
+    }
+  },
+  {
+    "group": "reversed-flight-level",
+    "id": "Event_TS_1_1783478397528000",
+    "issued": "2026-07-08T02:40:00+00:00",
+    "report": "A1087/26 NOTAMN\nQ)SUEO/QRACA/IV/NBO/W /000/999/3450S05504W001\nA)SULS \nSUEO \nB)2609221200  C)2610021600\nD)SET 22 23 24 BTN 1200/1800 OCT 01 02\n BTN 1200/1600\nE)\nMIL PJE WILL TAKE PLACE  RADIUS 01NM CENTER \n345041S550445W (LAGUNA DEL SAUCE) ACT SUBJ COOR BTN MIL AND ATC\nF)GND \n G)120FL",
+    "expected": {
+      "number": "A1087/26",
+      "lower": "GND",
+      "upper": "FL120"
+    }
+  },
+  {
+    "group": "aftn-wrapper",
+    "id": "Event_TS_1_1787562584009926",
+    "issued": "2026-09-01T04:18:00+00:00",
+    "report": "ORIGINAL NOTAM\r\n(A3230/26 NOTAMN\r\nQ)FAJA/QRACA/IV/NBO/AW/000/160/2546S02719E005\r\nA)FAXX B)2609160400 C)2612141600\r\nD)DLY 0400-1600\r\nE)AIRSPAN EXECUTIVE (254549S 0271921E): TEMPO DROP ZONE ESTABLISHED.\r\nF)SFC G)16000FT AMSL)",
+    "expected": {
+      "number": "A3230/26",
+      "station": "FAXX",
+      "subject": [
+        "RA",
+        "Airspace reservation"
+      ]
+    }
+  },
+  {
+    "group": "aftn-wrapper",
+    "id": "Event_TS_1_1758720468300895",
+    "issued": "2024-06-21T17:12:00+00:00",
+    "report": "ORIGINAL NOTAM\r (M3248/24 NOTAMN\r Q) LIRR/QOBCE/IV/M/E/000/011/3737N01253E005\r A) LIRR\r B) 2406211711 C) PERM\r E) LOW FLYING ZONE BOAT SICILIA OBSTACLES\r (EXCEPT SICILIA NORD AND SICILIA SUD TACTICAL AREAS)\r NEW OBST ERECTED:\r - ANEMOMETRIC POLE  IDENT '45980'\r PSN COORD (WGS-84) 373845N 125213E\r HGT AGL 324FT ELEV AMSL 748FT. NGT SGL PROVIDED\r - ANEMOMETRIC POLE  IDENT '45981'\r PSN COORD (WGS-84) 373650N 125411E\r HGT AGL 324FT ELEV AMSL 649FT. NGT SGL PROVIDED\r REF MILAIP ENR 5.4.6\r ITEM 1 VERTICAL OBSTACLES (HIGHER THAN 180 FT))",
+    "expected": {
+      "number": "M3248/24",
+      "station": "LIRR",
+      "subject": [
+        "OB",
+        "Obstacle"
+      ]
+    }
+  },
+  {
+    "group": "aftn-wrapper",
+    "id": "Event_TS_1_1758720599042354",
+    "issued": "2024-08-01T21:32:00+00:00",
+    "report": "ORIGINAL NOTAM   (M3883/24 NOTAMN  Q)LIMM/QOBCE/IV/M/E/000/050/4645N01152E015  A)LIMM B)2408012127 C)PERM  E) LOW FLYING ZONE BOAT NORD PO OBSTACLES  NEW OBST ERECTED:  - TRASMISSION LINE IDENT '46036'  PSN COORD (WGS-84) 464447N 115154E / 464451N 115159E  HGT AGL 196FT ELEV AMSL 3795FT. NGT SGL NOT PROVIDED  - TRASMISSION LINE IDENT '46037'  PSN COORD (WGS-84) 464451N 115159E / 464453N 115228E  HGT AGL 492FT ELEV AMSL 4215FT. NGT SGL NOT PROVIDED  - TRASMISSION LINE IDENT '46038'  PSN COORD (WGS-84) 464501N 115228E / 464453N 115229E  HGT AGL 196FT ELEV AMSL 3966FT. NGT SGL NOT PROVIDED  - TRASMISSION LINE IDENT '46039'  PSN COORD (WGS-84) 464525N 115224E / 464501N 115228E  HGT AGL 196FT ELEV AMSL 3825FT. NGT SGL NOT PROVIDED  - TRASMISSION LINE IDENT '46040'  PSN COORD (WGS-84) 464430N 115235E / 464353N 115315E  HGT AGL 196FT ELEV AMSL 4314FT. NGT SGL NOT PROVIDED  - TRASMISSION LINE IDENT '46041'  PSN COORD (WGS-84) 464540N 115208E / 464525N 115224E HGT AGL 196FT ELEV AMSL 3533FT. NGT SGL NOT PROVIDED  - TRASMISSION LINE IDENT '46042'  PSN COORD (WGS-84) 464711N 115659E / 464713N 115713E  HGT AGL 196FT ELEV AMSL 3195FT. NGT SGL NOT PROVIDED  - TRASMISSION LINE IDENT '46043'  PSN COORD (WGS-84) 464652N 115429E / 464711N 115659E  HGT AGL 196FT ELEV AMSL 3192FT. NGT SGL NOT PROVIDED  - TRASMISSION LINE IDENT '46044'  PSN COORD (WGS-84) 464341N 115320E / 464353N 115315E  HGT AGL 196FT ELEV AMSL 4314FT. NGT SGL NOT PROVIDED  - TRASMISSION LINE IDENT '46045'  PSN COORD (WGS-84) 464603N 115144E / 464552N 115156E  HGT AGL 328FT ELEV AMSL 3451FT. NGT SGL NOT PROVIDED  - TRASMISSION LINE IDENT '46046'  PSN COORD (WGS-84) 464448N 115229E / 464453N 115229E  HGT AGL 196FT ELEV AMSL 3966FT. NGT SGL NOT PROVIDED  - TRASMISSION LINE IDENT '46047'  PSN COORD (WGS-84) 464448N 115229E / 464431N 115234E  HGT AGL 328FT ELEV AMSL 4045FT. NGT SGL NOT PROVIDED  REF MILAIP ENR 5.4.1  ITEM 2 HORIZONTAL OBSTRUCTIONS (HIGHER THAN 148 FT)",
+    "expected": {
+      "number": "M3883/24",
+      "station": "LIMM",
+      "subject": [
+        "OB",
+        "Obstacle"
+      ]
+    }
+  },
+  {
+    "group": "aftn-wrapper",
+    "id": "Event_TS_1_1782973768961173",
+    "issued": "2026-07-02T06:56:00+00:00",
+    "report": "RQR LTAA A1750/26\n(A1750/26 NOTAMN\nQ) LTXX/QAFXX/IV/NBO/E/000/999/3822N02559E357\nA) LTBB \nB) 2604300930 C) 2612311600\nE) NAVIGATIONAL WARNING TO ALL CONCERNED:\nREF(A) TURKISH WARNING NOTAM A1735/26\nREF(B) TURKISH WARNING NOTAM A5935/25\nREF(C) GREEK NOTAM A1334/26\nREF(D) GREEK WARNING NOTAMS A4490/25 AND A1361/26\nTHE VIEWS EXPRESSED IN TURKISH NAVIGATION WARNING NOTAM IN REF(A) \nAND REF(B) REMAIN UNCHANGED AND TURKISH WARNING NOTAM IN REF(A) AND \nREF(B) ARE VALID AND EFFECTIVE. THE GREEK NOTAM AND GREEK WARNING \nNOTAM IN REF(C) AND REF(D) ARE NULL AND VOID.\nTURKIYE ALSO WOULD LIKE TO EMPHASIZE THAT NO FURTHER EXPLANATION \nWILL BE GIVEN TO ANY OBJECTION RAISED TO TURKISH NAVIGATION WARNING \nIN REF(A) AND REF(B).)",
+    "expected": {
+      "number": "A1750/26",
+      "station": "LTBB",
+      "subject": [
+        "AF",
+        "Flight information region"
+      ]
+    }
+  },
+  {
+    "group": "aftn-wrapper",
+    "id": "Event_TS_1_1771918857041963",
+    "issued": "2026-02-24T07:40:00+00:00",
+    "report": "240740 AYPMYNYX\r NOTAM REPLACED BY A0225/26\r ORIGINAL NOTAM\r (A0223/26 NOTAMN\r Q)AYPM/QMRXX/IV/NBO/A/000/999/\r A)AYIQ B)2602240700 C)2603020600 EST\r E)UNEXPLODED WORLD WAR II ORDNANCE EXPOSED DUE WIP AND SUBJECTED TO\r ENVIRONMENTAL CONDITIONS. LCA APRX 460M BEYOND RWY 14 THR AND ABT\r 100M RIGHT FM EXTENDED CL. CENTERED ON COORD 06 17 51.86S 155 43\r 13.21E. PILOTS TO EXERCISE CTN DURING APCH AND AND DEP ON RWY 14.\r NIL CHANGES TO RWY AVBL, DECLARED DISTANCES OR AD OPS. FURTHUR\r NOTAM WILL BE ISSUED FOR CONDTROLLED DISPOSAL WHEN SCHEDULE\r CONFIRMED.)",
+    "expected": {
+      "number": "A0223/26",
+      "station": "AYIQ",
+      "subject": [
+        "MR",
+        "Runway"
+      ]
+    }
+  },
+  {
+    "group": "aftn-wrapper",
+    "id": "Event_TS_1_1777404796294941",
+    "issued": "2026-04-28T19:32:00+00:00",
+    "report": "VALIDATION ERROR: accountabilities do not match. Original: FAJNYNYX, Derived: FAJSYNYX\n----------\nB0643/26 NOTAMN \r\nQ)FAJA/QFAXX/IV/NBO/A/000/999/2520S02710E005\r\nA)FAPN B)2604281910 C)PERM\r\nE)AD NO LONGER LICENSED, AS IT DOES NOT COMPLY WITH CIVIL AVIATION\r\nREGULATIONS PART 139, SUBPART 2 WHICH ARE TRANSPOSED FM ICAO ANNEX\r\n14. NIL INTL OPS PERMITTED.",
+    "expected": {
+      "number": "B0643/26",
+      "station": "FAPN",
+      "subject": [
+        "FA",
+        "Aerodrome"
+      ]
+    }
+  }
+]

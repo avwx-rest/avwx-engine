@@ -5,8 +5,10 @@
 # stdlib
 from __future__ import annotations
 
+import json
 from dataclasses import asdict
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 # library
@@ -20,6 +22,9 @@ from avwx.static.notam import MISTYPED_SUBJECT, SUBJECT, TRANSPOSED_SUBJECT
 
 # tests
 from tests.util import get_data
+
+# Real NOTAMs that previously failed to parse, from a full FAA NMS snapshot
+PARSE_CASES = json.loads((Path(__file__).parent / "data" / "notam_parse_cases.json").read_text())
 
 QUALIFIERS = [
     structs.Qualifiers(
@@ -425,7 +430,10 @@ def test_parse() -> None:
             "240740 AYPMYNYX\r NOTAM REPLACED BY A0225/26\r ORIGINAL NOTAM\r (A0223/26 NOTAMN\r E) WIP)",
             "A0223/26 NOTAMN\n E) WIP",
         ),
-        ("VALIDATION ERROR: no match\n----------\nB0643/26 NOTAMN \r\nE) PERMITTED.", "B0643/26 NOTAMN \nE) PERMITTED."),
+        (
+            "VALIDATION ERROR: no match\n----------\nB0643/26 NOTAMN \r\nE) PERMITTED.",
+            "B0643/26 NOTAMN \nE) PERMITTED.",
+        ),
         # A closing parenthesis that belongs to the text is kept when the wrapper's is missing
         ("ORIGINAL NOTAM   (M3883/24 NOTAMN  E) OBST (148 FT)", "M3883/24 NOTAMN  E) OBST (148 FT)"),
         # Unwrapped NOTAMs, including ones quoting another NOTAM, are left alone
@@ -607,6 +615,54 @@ def test_parse_keys_without_trailing_space() -> None:
     spaced, _ = notam.parse(spaced_report)
     ignored = {"raw": None, "sanitized": None}
     assert asdict(spaced) | ignored == asdict(data) | ignored
+
+
+def _case_id(case: dict) -> str:
+    return f"{case['group']}:{case['id']}"
+
+
+def _check_time(value: structs.Timestamp | structs.Code | None, expected: dict) -> None:
+    if "code" in expected:
+        assert isinstance(value, structs.Code)
+        assert value.repr == expected["code"]
+        return
+    assert isinstance(value, structs.Timestamp)
+    assert value.repr == expected["repr"]
+    if "dt" in expected:
+        assert value.dt == (datetime.fromisoformat(expected["dt"]) if expected["dt"] else None)
+
+
+@pytest.mark.parametrize("case", [case for case in PARSE_CASES if "raises" not in case], ids=_case_id)
+def test_parse_cases(case: dict) -> None:
+    """Real NOTAMs parse to their expected values, checking only the listed fields."""
+    issued = structs.Timestamp(case["issued"], datetime.fromisoformat(case["issued"]))
+    data, _ = notam.parse(case["report"], issued=issued)
+    expected = case["expected"]
+    assert data.raw == case["report"]
+    assert data.time == issued
+    for key in ("number", "station", "body"):
+        if key in expected:
+            assert getattr(data, key) == expected[key]
+    if "qualifiers" in expected:
+        assert data.qualifiers is None
+    if "subject" in expected:
+        assert data.qualifiers is not None
+        assert data.qualifiers.subject == structs.Code(*expected["subject"])
+    for key in ("start", "end"):
+        if key in expected:
+            _check_time(getattr(data, f"{key}_time"), expected[key])
+    for key in ("lower", "upper"):
+        if key in expected:
+            altitude = getattr(data, key)
+            assert altitude is not None
+            assert altitude.repr == expected[key]
+
+
+@pytest.mark.parametrize("case", [case for case in PARSE_CASES if "raises" in case], ids=_case_id)
+def test_parse_cases_unknown_subject(case: dict) -> None:
+    """Unknown Q-code subjects that are neither labeled nor correctable still raise."""
+    with pytest.raises(KeyError, match="No code found for"):
+        notam.parse(case["report"])
 
 
 @pytest.mark.parametrize(("ref", "icao", "unused"), get_data(__file__, "notam"))
