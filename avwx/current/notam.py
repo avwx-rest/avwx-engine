@@ -345,7 +345,12 @@ def make_year_timestamp(
     if code := CODES.get(value):
         return Code(value, code)
     tz = _tz_offset_for(tzname) or timezone.utc
-    raw = datetime.strptime(value[:10], r"%y%m%d%H%M")  # noqa: DTZ007
+    # Keep the original value when it is not a real time, like the FAA checklist
+    # placeholder hour "2604018000" or an originator's 29 Feb in a non-leap year
+    try:
+        raw = datetime.strptime(value[:10], r"%y%m%d%H%M")  # noqa: DTZ007
+    except ValueError:
+        return Timestamp(repr, None)
     date = datetime(raw.year, raw.month, raw.day, raw.hour, raw.minute, tzinfo=tz)
     return Timestamp(repr, date)
 

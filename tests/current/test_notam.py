@@ -265,6 +265,35 @@ def test_bad_year_timestamp() -> None:
 
 
 @pytest.mark.parametrize(
+    ("raw", "trim", "tz"),
+    [
+        # FAA checklist NOTAMs use hour 80 as a placeholder
+        ("2604018000", "2604018000", None),
+        ("2605018000 EST", "2605018000 ", "EST"),
+        # 29 Feb in a non-leap year
+        ("2502292359", "2502292359", None),
+    ],
+)
+def test_impossible_year_timestamp(raw: str, trim: str, tz: str | None) -> None:
+    """A value that is not a real time keeps its repr without a datetime."""
+    assert notam.make_year_timestamp(trim, raw, tz) == structs.Timestamp(raw, None)
+
+
+def test_parse_impossible_timestamps() -> None:
+    """An impossible B) or C) time does not prevent parsing the rest of the report."""
+    report = (
+        "A1111/25 NOTAMR A1110/25 Q) ANYN/QKKKK/K/K/K/000/999/0032S16655E000 A) ANYN "
+        "B) 2604018000 C) 2605018000 EST E) CHECKLIST YEAR=2025 0076 0080 0079"
+    )
+    data, _ = notam.parse(report)
+    assert data.number == "A1111/25"
+    assert data.station == "ANYN"
+    assert data.start_time == structs.Timestamp("2604018000", None)
+    assert data.end_time == structs.Timestamp("2605018000 EST", None)
+    assert data.body == "CHECKLIST YEAR=2025 0076 0080 0079"
+
+
+@pytest.mark.parametrize(
     ("start", "end", "start_dt", "end_dt"),
     [
         (
