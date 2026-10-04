@@ -30,6 +30,7 @@ SUBJECT = {
     "CE": "En route surveillance radar",
     "CF": "Operating frequncy",
     "CG": "Ground controlled approach system",
+    "CH": "Chart",  # Encountered, non-standard
     "CL": "Selective calling system",
     "CM": "Surface movement radar",
     "CO": "Operations",
@@ -168,6 +169,7 @@ SUBJECT = {
     "PM": "Aerodrome operating minima",
     "PN": "Noise operating restriction",
     "PO": "Obstacle clearance altitude and height",
+    "PP": "Obstacle clearance height",
     "PR": "Radio failure procedure",
     "PT": "Transition altitude or transition level",
     "PU": "Missed approach procedure",
@@ -298,6 +300,16 @@ CONDITION = {
     "LW": "Will take place",
     "LX": "Operating but caution advised due to",
     "XX": "Plain text following",
+}
+
+# Q-code subjects encountered with their letters swapped, ie QXMLC for QMXLC.
+# Only add a pair when the NOTAM text confirms the intended subject: reversing any
+# unknown subject would misread others, like ML (not LM) for taxi lead-in lines
+
+TRANSPOSED_SUBJECT = {
+    "HM": "MH",
+    "LO": "OL",
+    "XM": "MX",
 }
 
 # Other codes sourced from Nav Canada transition docs

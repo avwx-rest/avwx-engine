@@ -16,6 +16,7 @@ from dateutil.tz import gettz
 # module
 from avwx import structs
 from avwx.current import notam
+from avwx.static.notam import SUBJECT, TRANSPOSED_SUBJECT
 
 # tests
 from tests.util import get_data
@@ -211,6 +212,19 @@ def test_qualifiers(qualifier: structs.Qualifiers) -> None:
 
 
 @pytest.mark.parametrize(
+    ("text", "subject"),
+    [
+        ("KFDC/QCHXX////000/999/", structs.Code("CH", "Chart")),
+        ("EGTT/QPPCH/I/NBO/A/000/999/5129N00028W005", structs.Code("PP", "Obstacle clearance height")),
+    ],
+)
+def test_qualifiers_subject(text: str, subject: structs.Code) -> None:
+    """Test Q-code subjects outside the core ICAO table."""
+    qualifiers = notam._qualifiers(text, structs.Units.international())
+    assert qualifiers.subject == subject
+
+
+@pytest.mark.parametrize(
     ("raw", "trim", "tz", "dt"),
     [
         (
@@ -356,11 +370,60 @@ def test_parse() -> None:
         # A key quoted mid-word or mid-token is not a key and is left alone
         ("E) RWY 09/27(B)CLSD", "E) RWY 09/27(B)CLSD"),
         ("E) SEE ITEMB)NOTE", "E) SEE ITEMB)NOTE"),
+        # Known transposed Q-code subjects are swapped back
+        ("Q) ZLA/QXMLC/IV/NBO/A/000/999", "Q) ZLA/QMXLC/IV/NBO/A/000/999"),
+        ("Q) ZLA/QHMLX/IV/NBO/A/000/999", "Q) ZLA/QMHLX/IV/NBO/A/000/999"),
+        ("Q)RJJJ/QLOXX/IV/NBO/A/000/999", "Q) RJJJ/QOLXX/IV/NBO/A/000/999"),
+        # Other subjects, including unknown ones, are left alone
+        ("Q) ZJX/QMLAT/IV/NBO/A/000/999", "Q) ZJX/QMLAT/IV/NBO/A/000/999"),
+        ("Q) RJJJ/QMXLC/IV/NBO/A/000/999", "Q) RJJJ/QMXLC/IV/NBO/A/000/999"),
     ],
 )
 def test_sanitize(line: str, fixed: str) -> None:
     """Test report sanitization."""
     assert notam.sanitize(line) == fixed
+
+
+@pytest.mark.parametrize(("wrong", "right"), TRANSPOSED_SUBJECT.items())
+def test_transposed_subject_table(wrong: str, right: str) -> None:
+    """Only unknown subjects are corrected, and only to known ones."""
+    assert wrong not in SUBJECT
+    assert right in SUBJECT
+    assert wrong == right[::-1]
+
+
+@pytest.mark.parametrize(
+    ("report", "subject"),
+    [
+        (
+            (
+                "M0230/26 NOTAMN \nQ) ZLA/QXMLC/IV/NBO/A/000/999/3635N11540W005 \nA) KINS \n"
+                "B) 2608101503 \nC) 2610092359 \nE) TWY G CLSD LGTD AND BARRICADED"
+            ),
+            structs.Code("MX", "Taxiway"),
+        ),
+        (
+            (
+                "M0230/26 NOTAMN \nQ) ZLA/QHMLX/IV/NBO/A/000/999/3747N11646W005 \nA) KTNX \n"
+                "B) 2608191744 \nC) 2611132359 \nE) RWY 15 APPROACH END BAK 14 CAUTION POSSIBLE TAILHOOK SKIP"
+            ),
+            structs.Code("MH", "Runway arresting gear"),
+        ),
+        (
+            (
+                "M1139/26 NOTAMN \nQ) RJJJ/QLOXX/IV/NBO/A/000/999/3544N13920E005 \nA) RJTY \n"
+                "B) 2609272022 \nC) 2610262021 \nE) NO STADIUM OR OBSTRUCTION LIGHTS ON THE AFSOC RAMP"
+            ),
+            structs.Code("OL", "Obstacle lights"),
+        ),
+    ],
+)
+def test_parse_transposed_subject(report: str, subject: structs.Code) -> None:
+    """A transposed Q-code subject is corrected, and the raw report kept as given."""
+    data, _ = notam.parse(report)
+    assert data.qualifiers is not None
+    assert data.qualifiers.subject == subject
+    assert data.raw == report
 
 
 def test_parse_flight_level_limits() -> None:

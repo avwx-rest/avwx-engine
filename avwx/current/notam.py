@@ -47,6 +47,7 @@ from avwx.static.notam import (
     SCOPE,
     SUBJECT,
     TRAFFIC_TYPE,
+    TRANSPOSED_SUBJECT,
 )
 from avwx.structs import (
     Altitude,
@@ -192,6 +193,7 @@ class Notams(Reports):
 
 ALL_KEYS_PATTERN = re.compile(r"\b[A-GQ]\) ")
 MISSING_KEY_SPACE_PATTERN = re.compile(r"(^|\s)([A-GQ])\)(?=\S)")
+Q_CODE_SUBJECT_PATTERN = re.compile(r"(\bQ\)\s*[A-Z]{3,4}\s*/\s*Q)([A-Z]{2})")
 # "FL150" and the shorthand "F150" both name a flight level
 FLIGHT_LEVEL_PATTERN = re.compile(r"^FL?\d+$")
 KEY_PATTERNS = {
@@ -454,4 +456,8 @@ def sanitize(report: str) -> str:
     # Some sources omit the space after a key, ie "E)TWY CLSD" instead of "E) TWY CLSD",
     # which the key patterns above require. Only repair a key that starts a line or
     # follows whitespace so keys quoted inside body text are left alone.
-    return MISSING_KEY_SPACE_PATTERN.sub(r"\1\2) ", report)
+    report = MISSING_KEY_SPACE_PATTERN.sub(r"\1\2) ", report)
+    # Some originators swap the Q-code subject letters, ie QXMLC for QMXLC
+    return Q_CODE_SUBJECT_PATTERN.sub(
+        lambda m: m.group(1) + TRANSPOSED_SUBJECT.get(m.group(2), m.group(2)), report, count=1
+    )
