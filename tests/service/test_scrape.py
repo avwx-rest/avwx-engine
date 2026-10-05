@@ -157,6 +157,64 @@ class TestNamClass(TestStationScrape):
     service_class = service.Nam
 
 
+class TestReportVariants:
+    """Report headers that sources substitute for the requested type."""
+
+    @pytest.mark.parametrize(
+        ("report_type", "expected"),
+        [
+            ("metar", ["METAR", "SPECI"]),
+            ("taf", ["TAF", "TAF AMD", "TAF COR"]),
+        ],
+    )
+    def test_variants(self, report_type: str, expected: list[str]) -> None:
+        serv = service.Nam(report_type)
+        assert serv._report_variants() == expected
+
+
+class TestNamVariantExtract:
+    """Nam should extract reports issued under a variant header."""
+
+    @staticmethod
+    def _html(header: str, station: str, body: str) -> str:
+        return f"<td>>{header} <b>{station}</b> top'>{station} {body}=</td>"
+
+    @pytest.mark.parametrize("header", ["METAR", "SPECI"])
+    def test_metar_headers(self, header: str) -> None:
+        serv = service.Nam("metar")
+        body = "301050Z 18008KT 9999 FEW035 12/06 Q1013"
+        report = serv._extract(self._html(header, "ENGM", body), "ENGM")
+        assert report.endswith(body)
+
+    @pytest.mark.parametrize("header", ["TAF", "TAF AMD", "TAF COR"])
+    def test_taf_headers(self, header: str) -> None:
+        serv = service.Nam("taf")
+        body = "301100Z 3011/3111 18010KT 9999"
+        report = serv._extract(self._html(header, "ENGM", body), "ENGM")
+        assert report.endswith(body)
+
+    def test_missing_report_still_raises(self) -> None:
+        serv = service.Nam("metar")
+        with pytest.raises(exceptions.InvalidRequest):
+            serv._extract("<html>nothing here</html>", "ENGM")
+
+
+class TestOlbsVariantExtract:
+    """Olbs should accept a SPECI in response to a METAR request."""
+
+    @pytest.mark.parametrize("header", ["METAR", "SPECI"])
+    def test_metar_headers(self, header: str) -> None:
+        serv = service.Olbs("metar")
+        body = "VIDP 301050Z 09006KT 3000 HZ SCT025 32/24 Q1002"
+        report = serv._extract(f"<b>METAR:</b><br>{header} {body}=", "VIDP")
+        assert report == f"{header} {body}"
+
+    def test_unknown_header_still_raises(self) -> None:
+        serv = service.Olbs("metar")
+        with pytest.raises(exceptions.InvalidRequest):
+            serv._extract("<b>METAR:</b><br>XXXXX VIDP 301050Z=", "VIDP")
+
+
 # @pytest.mark.parametrize("station", ["ZJQH", "ZYCC", "ZSWZ"])
 # class TestAvt(ServiceFetchTest):
 #     service_class = service.Avt
