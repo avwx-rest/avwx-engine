@@ -1,5 +1,6 @@
 """Core sanitiation functions that accept report-specific elements."""
 
+import re
 from collections.abc import Callable
 
 from avwx.parsing.core import dedupe, is_variable_wind_direction, is_wind
@@ -41,6 +42,11 @@ def sanitize_string_with(
         return stid + separated
 
     return sanitize_report_string
+
+
+# M1/4SM, 1/2SM, P3/4SM. sanitize_wind strips "/" and reads "SM" as a mistyped
+# "KT", which would turn M1/4SM into the wind M14KT
+FRACTIONAL_VISIBILITY_PATTERN = re.compile(r"[PM]?\d+/\d+SM")
 
 
 def sanitize_list_with(
@@ -94,6 +100,8 @@ def sanitize_list_with(
         for i, item in enumerate(wxdata):
             # Skip Station
             if i == 0:
+                continue
+            if FRACTIONAL_VISIBILITY_PATTERN.fullmatch(item):
                 continue
             if is_variable_wind_direction(item):
                 replaced = item[:7]
