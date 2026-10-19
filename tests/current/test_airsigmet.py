@@ -210,12 +210,16 @@ def test_time(wx: str, start: structs.Timestamp, end: structs.Timestamp | None, 
 @pytest.mark.parametrize(
     ("coord", "value"),
     [
-        ("N1429", 14.29),
-        ("S0250", -2.5),
+        # Degrees and minutes, not decimal degrees: N1429 is 14 degrees 29 minutes.
+        ("N1429", 14 + 29 / 60),
+        ("S0250", -(2 + 50 / 60)),
         ("N2900", 29.0),
-        ("W09053", -90.53),
-        ("E01506", 15.06),
+        ("W09053", -(90 + 53 / 60)),
+        ("E01506", 15 + 6 / 60),
         ("E15000", 150.0),
+        ("S0059", -59 / 60),
+        ("N44", 44.0),
+        ("W120", -120.0),
     ],
 )
 def test_coord_value(coord: str, value: float) -> None:
@@ -229,7 +233,7 @@ def test_coord_value(coord: str, value: float) -> None:
         ("1 2 3", None, "1 2 3"),
         (
             "VA FUEGO PSN N1428 W09052 VA",
-            Coord(14.28, -90.52, "N1428 W09052"),
+            Coord(14 + 28 / 60, -(90 + 52 / 60), "N1428 W09052"),
             "VA FUEGO VA",
         ),
     ],
@@ -334,13 +338,13 @@ def test_bounds_from_latterals(report: str, bounds: list[str], start: int, extra
     [
         (
             "LINE BTN N6916 W06724 - N6825 W06700 - N6753 W06524",
-            ((69.16, -67.24), (68.25, -67.00), (67.53, -65.24)),
+            ((69.27, -67.4), (68.42, -67.0), (67.88, -65.4)),
             9,
             "LINE BTN      ",
         ),
         (
             "WI N4523 E01356 <break> N6753 W06524",
-            ((45.23, 13.56),),
+            ((45.38, 13.93),),
             3,
             "WI   <break> N6753 W06524",
         ),
@@ -352,8 +356,8 @@ def test_coords_from_text(report: str, coords: tuple[tuple], start: int, extra: 
     assert ret_report == extra
     assert ret_start == start
     for coord, (lat, lon) in zip(ret_coords, coords, strict=True):
-        assert coord.lat == lat
-        assert coord.lon == lon
+        assert round(coord.lat, 2) == lat
+        assert round(coord.lon, 2) == lon
 
 
 @pytest.mark.parametrize(
@@ -394,13 +398,13 @@ def test_coords_from_navaids(report: str, coords: tuple[tuple], start: int, extr
         ),
         (
             "LINE BTN N6916 W06724 - N6825 W06700 - N6753 W06524",
-            ((69.16, -67.24), (68.25, -67.00), (67.53, -65.24)),
+            ((69.27, -67.4), (68.42, -67.0), (67.88, -65.4)),
             [],
             "LINE BTN",
         ),
         (
             "OBS WI N4523 E01356 <break> N6753 W06524",
-            ((45.23, 13.56),),
+            ((45.38, 13.93),),
             [],
             "<break> N6753 W06524",
         ),
@@ -413,6 +417,14 @@ def test_coords_from_navaids(report: str, coords: tuple[tuple], start: int, extr
         (
             "FROM 100SSW TLH-80W PIE-160WSW SRQ",
             ((28.86, -85.08), (27.9, -84.19), (26.35, -85.3)),
+            [],
+            "",
+        ),
+        (
+            # A US convective SIGMET whose repeated LEV once resolved to Italy, producing a
+            # polygon MongoDB rejects as self-intersecting.
+            "FROM 60E LEV-110S CEW-150ESE LEV-60ESE LEV-60E LEV",
+            ((29.17, -88.96), (28.99, -86.68), (28.19, -87.49), (28.79, -89.05), (29.17, -88.96)),
             [],
             "",
         ),

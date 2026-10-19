@@ -72,10 +72,10 @@ class AirSigmet(AVWXBase):
     >>> sigmet.last_updated
     datetime.datetime(2022, 3, 27, 6, 29, 33, 300935, tzinfo=datetime.timezone.utc)
     >>> sigmet.data.observation.coords
-    [Coord(lat=-4.06, lon=-71.03, repr='S0406 W07103'),
-    Coord(lat=-3.58, lon=-72.25, repr='S0358 W07225'),
-    Coord(lat=-2.35, lon=-74.32, repr='S0235 W07432'),
-    Coord(lat=-1.14, lon=-75.03, repr='S0114 W07503')]
+    [Coord(lat=-4.1, lon=-71.05, repr='S0406 W07103'),
+    Coord(lat=-3.966666666666667, lon=-72.41666666666667, repr='S0358 W07225'),
+    Coord(lat=-2.5833333333333335, lon=-74.53333333333333, repr='S0235 W07432'),
+    Coord(lat=-1.2333333333333334, lon=-75.05, repr='S0114 W07503')]
     >>> sigmet.data.observation.intensity
     Code(repr='NC', value='No change')
     >>> sigmet.data.observation.ceiling
@@ -336,12 +336,17 @@ def _time(data: list[str], issued: date | None = None) -> tuple[list[str], Times
 
 
 def _coord_value(value: str) -> float:
-    if value[0] in ("N", "S"):
-        index, strip, replace = 3, "N", "S"
-    else:
-        index, strip, replace = 4, "E", "W"
-    num = f"{value[:index]}.{value[index:]}".lstrip(strip).replace(replace, "-")
-    return float(num)
+    """Convert a degrees-and-minutes component to decimal degrees.
+
+    Latitudes are N/S with two degree digits and longitudes E/W with three, each optionally
+    followed by two digits of minutes: N1429 is 14 degrees 29 minutes, or 14.4833.
+    """
+    hemisphere, digits = value[0], value[1:]
+    degree_digits = 2 if hemisphere in ("N", "S") else 3
+    degrees = int(digits[:degree_digits])
+    minutes = int(digits[degree_digits:] or 0)
+    decimal = degrees + minutes / 60
+    return -decimal if hemisphere in ("S", "W") else decimal
 
 
 def _position(data: list[str]) -> tuple[list[str], Coord | None]:

@@ -81,14 +81,78 @@ def _to_coordinates(values: list[Coord | str], last_value: QCoord | None = None)
     return [coord, *_to_coordinates(values[1:], coord)]
 
 
+def _resolve(value: Coord | str) -> QCoord:
+    """A value's coordinate, or every candidate when it names an ambiguous navaid."""
+    if isinstance(value, Coord):
+        return value
+    try:
+        coord = Station.from_icao(value).coord
+    except BadStation:
+        try:
+            candidates = [Coord(lat=c[0], lon=c[1], repr=value) for c in NAVAIDS[value]]
+        except KeyError:
+            coord = Station.from_code(value).coord
+        else:
+            if len(candidates) > 1:
+                return candidates
+            coord = candidates[0]
+    coord.repr = value
+    return coord
+
+
+def _neighboring_anchors(resolved: list[QCoord], index: int) -> list[Coord]:
+    """The nearest unambiguous coordinate on each side of a position in the path."""
+    anchors = []
+    for step in (-1, 1):
+        i = index + step
+        while 0 <= i < len(resolved):
+            if isinstance(resolved[i], Coord):
+                anchors.append(resolved[i])
+                break
+            i += step
+    return anchors  # type: ignore[return-value]
+
+
+def _nearest(options: list[Coord], anchors: list[Coord]) -> Coord:
+    """The option closest to any of the anchors."""
+    return min(options, key=lambda option: min(_distance(option, anchor) for anchor in anchors))
+
+
+def _resolve_by_anchors(resolved: list[QCoord]) -> list[Coord]:
+    """Pick each ambiguous navaid by the unambiguous points around it.
+
+    Every appearance of an ident resolves to the same navaid, chosen as the candidate
+    nearest the unambiguous points surrounding any of its appearances. Comparing ambiguous
+    neighbors to each other instead lets a repeated ident match itself at zero distance on
+    the wrong continent: "LEV CEW LEV LEV" put the last LEVs in Italy, not Louisiana.
+    """
+    candidates: dict[str, list[Coord]] = {}
+    anchors: dict[str, list[Coord]] = {}
+    for index, item in enumerate(resolved):
+        if isinstance(item, list):
+            ident = item[0].repr or ""
+            candidates[ident] = item
+            anchors.setdefault(ident, []).extend(_neighboring_anchors(resolved, index))
+    chosen = {ident: _nearest(options, anchors[ident]) for ident, options in candidates.items()}
+    path = []
+    for item in resolved:
+        if isinstance(item, Coord):
+            path.append(item)
+        else:
+            best = chosen[item[0].repr or ""]
+            path.append(Coord(lat=best.lat, lon=best.lon, repr=best.repr))
+    return path
+
+
 def to_coordinates(values: list[Coord | str]) -> list[Coord]:
     """Convert any known idents found in a flight path into coordinates.
 
-    Prefers Coord > ICAO > Navaid > IATA / GPS
+    Prefers Coord > ICAO > Navaid > IATA / GPS. An ident naming several navaids resolves to
+    the one nearest the unambiguous points around it.
     """
     if not values:
         return []
-    cleaned = []
+    cleaned: list[Coord | str] = []
     for value in values:
         if not value:
             continue
@@ -97,4 +161,10 @@ def to_coordinates(values: list[Coord | str]) -> list[Coord]:
             if not value:
                 continue
         cleaned.append(value)
-    return _to_coordinates(values)
+    resolved = [_resolve(value) for value in cleaned]
+    if not any(isinstance(item, list) for item in resolved):
+        return resolved  # type: ignore[return-value]
+    if any(isinstance(item, Coord) for item in resolved):
+        return _resolve_by_anchors(resolved)
+    # Nothing unambiguous to anchor on: fall back to comparing neighbors with each other.
+    return _to_coordinates(cleaned)
