@@ -211,7 +211,7 @@ _COORD_PATTERN = re.compile(r"\b[NS]\d{4} [EW]\d{5}\b( -)?")
 
 # FROM 60NW ISN-INL-TVC-GIJ-UIN-FSD-BIL-60NW ISN
 # FROM 70SSW ISN TO 20NNW FAR TO 70E DLH TO 40SE EAU TO 80SE RAP TO 40NNW BFF TO 70SSW
-_NAVAID_PATTERN = re.compile(r"\b(\d{1,3}[NESW]{1,3} [A-z]{3}-?\b)|((-|(TO )|(FROM ))[A-z]{3}\b)")
+_NAVAID_PATTERN = re.compile(r"\b(\d{1,3}[NESW]{1,3} [A-z]{3}-?\b)|((-|(?<=-)|(TO )|(FROM ))[A-z]{3}-?\b)")
 
 # N OF N2050 AND S OF N2900
 _LATTERAL_PATTERN = re.compile(r"\b([NS] OF [NS]\d{2,4})|([EW] OF [EW]\d{3,5})( AND)?\b")
@@ -444,12 +444,15 @@ def _coords_from_text(report: str, start: int) -> tuple[str, list[Coord], int]:
 
 def _coords_from_navaids(report: str, start: int) -> tuple[str, list[Coord], int]:
     """Extract navaid referenced coordinates from report Ex: 30SSW BNA"""
-    coords, navs = [], []
+    coords, navs, pieces, last = [], [], [], 0
     for match in _NAVAID_PATTERN.finditer(_pre_break(report)):
         group, start = _info_from_match(match, start)
-        report = report.replace(group, " ")
+        # Only remove the matched span. A global replace also erases repeats elsewhere in the report
+        pieces += [report[last : match.start()], " "]
+        last = match.end()
         group = group.strip("-").removeprefix("FROM ").removeprefix("TO ")
         navs.append((group, *group.split()))
+    report = "".join(pieces) + report[last:]
     locs = to_coordinates([n[2 if len(n) == 3 else 1] for n in navs])
     for i, nav in enumerate(navs):
         value = nav[0]
