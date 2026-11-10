@@ -36,8 +36,12 @@ class NoaaBulk(Service, CallsHTTP):
         super().__init__(self._rtype_map.get(report_type, report_type))
 
     def _extract(self, raw: str) -> list[str]:
+        # NOAA publishes an empty file when no reports are active (common for airsigmet)
+        if not raw.strip():
+            return []
         target = self._targets.get(self.report_type, self.report_type.upper())
-        return [t["raw_text"] for t in parsexml(raw)["response"]["data"][target]]
+        data = parsexml(raw, force_list=(target,))["response"].get("data") or {}
+        return [t["raw_text"] for t in data.get(target, [])]
 
     def fetch(self, timeout: int = 10) -> list[str]:
         """Bulk fetch report strings from the service."""
