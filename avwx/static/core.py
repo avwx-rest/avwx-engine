@@ -108,15 +108,19 @@ CARDINALS = {
     "N": 360,
     "NORTH": 360,
     "NE": 45,
+    "NORTHEAST": 45,
     "E": 90,
     "EAST": 90,
     "SE": 135,
+    "SOUTHEAST": 135,
     "S": 180,
     "SOUTH": 180,
     "SW": 225,
+    "SOUTHWEST": 225,
     "W": 270,
     "WEST": 270,
     "NW": 315,
+    "NORTHWEST": 315,
 }
 """Dictionary of cardinal direction values"""
 
