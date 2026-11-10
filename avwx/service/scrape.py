@@ -57,6 +57,20 @@ class ScrapeService(Service, CallsHTTP):
         """Return request headers."""
         return {}
 
+    def _report_variants(self) -> list[str]:
+        """Return the report headers a source may use for this report type.
+
+        A METAR request can be answered with an off-schedule SPECI, and a TAF
+        request with an amended or corrected forecast. Sources label those with
+        the variant header rather than the requested type.
+        """
+        report_type = self.report_type.upper()
+        if report_type == "METAR":
+            return [report_type, "SPECI"]
+        if report_type == "TAF":
+            return [report_type, "TAF AMD", "TAF COR"]
+        return [report_type]
+
     def _post_data(self, station: str) -> dict:  # noqa: ARG002
         """Return the POST form/data payload."""
         return {}
@@ -332,7 +346,7 @@ class Olbs(StationScrape):
         if index == -1:
             raise self._make_err(raw)
         report = raw[index + len(target) :]
-        if not report.startswith(f"{prefix} "):
+        if not any(report.startswith(f"{variant} ") for variant in self._report_variants()):
             msg = "The station might not exist"
             raise self._make_err(msg)
         return report[: report.find("=")]
@@ -349,7 +363,10 @@ class Nam(StationScrape):
 
     def _extract(self, raw: str, station: str) -> str:
         """Extract the reports from HTML response."""
-        starts = [f">{self.report_type.upper()} <", f">{station.upper()}<", "top'>"]
+        headers = [f">{variant} <" for variant in self._report_variants()]
+        # Fall back to the requested type so a miss reports the same error as before
+        header = next((h for h in headers if h in raw), headers[0])
+        starts = [header, f">{station.upper()}<", "top'>"]
         report = self._simple_extract(raw, starts, "=")
         index = report.rfind(">")
         if index > -1:
