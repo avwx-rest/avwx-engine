@@ -82,3 +82,26 @@ def test_to_coordinates(source: list[FloatPathT], target: list[FloatPathT]) -> N
     # Round to prevent minor coord changes from breaking tests
     float_path: list[FloatPathT] = [(round(c.lat, 2), round(c.lon, 2), c.repr or "") for c in coords]
     assert float_path == target
+
+
+# LEV is both a navaid in Italy and one at Grand Isle, Louisiana; ORL is in Orlando and abroad.
+GRAND_ISLE = (29.18, -90.1)
+
+
+@pytest.mark.parametrize(
+    ("source", "target"),
+    [
+        (["LEV", "CEW", "LEV", "LEV", "LEV"], [GRAND_ISLE, (30.83, -86.68), GRAND_ISLE, GRAND_ISLE, GRAND_ISLE]),
+        (["CEW", "LEV", "LEV"], [(30.83, -86.68), GRAND_ISLE, GRAND_ISLE]),
+        (["ORL", "ORL", "KMCO"], [(28.54, -81.33), (28.54, -81.33), (28.43, -81.31)]),
+    ],
+)
+def test_repeated_ambiguous_navaids(source: list[str], target: list[tuple[float, float]]) -> None:
+    """A repeated ambiguous ident resolves near the unambiguous points, not near itself.
+
+    Comparing an ambiguous ident only with its ambiguous neighbors ties at zero distance,
+    and the tie went to the first candidate: these LEVs used to resolve to Italy.
+    """
+    path = flight_path.to_coordinates(source)  # type: ignore[arg-type]
+    assert [(round(c.lat, 2), round(c.lon, 2)) for c in path] == target
+    assert [c.repr for c in path] == source
