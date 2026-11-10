@@ -440,6 +440,7 @@ def test_bounds(wx: str, coords: tuple[tuple], bounds: list[str], extra: str) ->
         ("TURB BTN FL180 AND FL330", 180, 330, "ft", "TURB"),
         ("1 CIG BLW 010 2", None, 10, "ft", "1 2"),
         ("1 TOP BLW FL380 2", None, 380, "ft", "1 2"),
+        ("1 FL040-060/170 2", 40, 170, "ft", "1 2"),
     ],
 )
 def test_altitudes(wx: str, floor: int | None, ceiling: int | None, unit: str, extra: str) -> None:

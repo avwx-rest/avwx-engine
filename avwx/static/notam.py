@@ -56,6 +56,7 @@ SUBJECT = {
     "FT": "Transmissometer",
     "FU": "Fuel availability",
     "FW": "Wind direction indicator",
+    "FX": "Facilities and services (other)",  # Encountered, non-standard
     "FZ": "Customs/immigration",
     "GA": "GNSS airfield-specific operations",
     "GB": "Optical landing system",

@@ -46,6 +46,8 @@ def test_root(root: str, station: str | None, report_type: str | None) -> None:
         ("15 SW LRP", "LRP", 225, 15),
         ("3 MILES WEST OF MYF", "MYF", 270, 3),
         ("6 MILES EAST KAGC", "KAGC", 90, 6),
+        ("1 SOUTHEAST", None, 135, 1),
+        ("5 NORTHWEST", None, 315, 5),
     ],
 )
 def test_location(loc: str, station: str | None, direction: int | None, distance: int | None) -> None:

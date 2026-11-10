@@ -224,6 +224,10 @@ def test_qualifiers(qualifier: structs.Qualifiers) -> None:
         ("KZDC/QOCBS////000/999/3851N07702W005", structs.Code("OC", "Obstacle")),
         ("ZAB/QRNAV/IV/NBO/A/000/999/3251N10606W005", structs.Code("RN", "Area navigation")),
         ("RJJJ/QWXXX/IV/NBO/A/000/999/3544N13920E005", structs.Code("WX", "Warning (other)")),
+        (
+            "ZLA/QFXXX/IV/NBO/A/000/999/3444N12035W005",
+            structs.Code("FX", "Facilities and services (other)"),
+        ),
     ],
 )
 def test_qualifiers_subject(text: str, subject: structs.Code) -> None:

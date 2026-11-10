@@ -514,6 +514,8 @@ def _altitudes(data: list[str], units: Units) -> tuple[list[str], Units, Number 
         if core.is_altitude(item):
             if "/" in item:
                 floor_val, ceiling_val = item.split("/")
+                # FL040-060/170 gives the floor as a range; keep its lower bound
+                floor_val = floor_val.split("-")[0]
                 floor, units = core.make_altitude(floor_val, units)
                 if (floor_val == "SFC" or floor_val[:2] == "FL") and ceiling_val[:2] != "FL":
                     ceiling, units = core.make_altitude(ceiling_val, units, force_fl=True)
