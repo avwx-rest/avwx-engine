@@ -149,6 +149,11 @@
                         "lat": 32.27,
                         "lon": -107.02,
                         "repr": "30E DMN"
+                    },
+                    {
+                        "lat": 39.44,
+                        "lon": -106.89,
+                        "repr": "DBL"
                     }
                 ],
                 "end_time": null,
@@ -156,7 +161,6 @@
                 "intensity": null,
                 "movement": null,
                 "other": [
-                    "DBL",
                     "WST",
                     "ISSUANCES",
                     "POSS",
@@ -456,6 +460,11 @@
                         "repr": "70SW RAP"
                     },
                     {
+                        "lat": 41.89,
+                        "lon": -103.48,
+                        "repr": "BFF"
+                    },
+                    {
                         "lat": 39.39,
                         "lon": -101.69,
                         "repr": "GLD"
@@ -514,8 +523,8 @@
                     "BOUNDED",
                     "BY",
                     "50NW",
-                    "RAP-",
-                    "BFF-20E",
+                    "RAP-70SW",
+                    "RAP-BFF-20E",
                     "AKO-20E",
                     "CHE-30SE",
                     "SHR-50NW",
@@ -642,6 +651,11 @@
                         "repr": "40NNE SLC"
                     },
                     {
+                        "lat": 39.44,
+                        "lon": -106.89,
+                        "repr": "DBL"
+                    },
+                    {
                         "lat": 32.27,
                         "lon": -107.02,
                         "repr": "30E DMN"
@@ -660,6 +674,11 @@
                         "lat": 32.25,
                         "lon": -113.15,
                         "repr": "80ESE BZA"
+                    },
+                    {
+                        "lat": 38.25,
+                        "lon": -114.39,
+                        "repr": "ILC"
                     },
                     {
                         "lat": 49.07,

@@ -375,6 +375,13 @@ def test_coords_from_text(report: str, coords: tuple[tuple], start: int, extra: 
             5,
             "FROM    ",
         ),
+        # Bare idents following a distance-bearing term
+        (
+            "1 FROM 30E DMN-DBL-80ESE BZA-ILC-30E DMN 1",
+            ((32.27, -107.02), (39.44, -106.89), (32.25, -113.15), (38.25, -114.39), (32.27, -107.02)),
+            7,
+            "1 FROM       1",
+        ),
     ],
 )
 def test_coords_from_navaids(report: str, coords: tuple[tuple], start: int, extra: str) -> None:
