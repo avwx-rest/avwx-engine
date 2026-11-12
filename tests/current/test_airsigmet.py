@@ -460,6 +460,8 @@ def test_bounds(wx: str, coords: tuple[tuple], bounds: list[str], extra: str) ->
         ("1 CIG BLW 010 2", None, 10, "ft", "1 2"),
         ("1 TOP BLW FL380 2", None, 380, "ft", "1 2"),
         ("1 FL040-060/170 2", 40, 170, "ft", "1 2"),
+        # A bulletin ending on a bare TOP= gives no altitude
+        ("EMBD TS OBS TOP", None, None, "ft", "EMBD TS OBS"),
     ],
 )
 def test_altitudes(wx: str, floor: int | None, ceiling: int | None, unit: str, extra: str) -> None:
@@ -617,3 +619,17 @@ def test_along(coords: tuple, count: int) -> None:
     manager.reports = COORD_REPORTS
     path = [Coord(c[0], c[1]) for c in coords]
     assert len(manager.along(path)) == count
+
+
+def test_parse_bare_top() -> None:
+    """A SIGMET ending in a bare TOP= parses instead of raising IndexError."""
+    report = (
+        "WSVS31 VVGL 120120 VVHM SIGMET 1 VALID 120120/120520 VVGL- VVHM HO CHI MINH FIR"
+        " EMBD TS OBS WI N1251 E11401 - N1033 E11358 - N0700 E10801 - N1107 E10712"
+        " - N1522 E10854 - N1251 E11401 TOP="
+    )
+    sigmet = airsigmet.AirSigmet.from_report(report)
+    assert sigmet is not None
+    assert sigmet.data is not None
+    assert sigmet.data.observation is not None
+    assert sigmet.data.observation.ceiling is None

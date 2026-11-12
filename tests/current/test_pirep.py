@@ -224,6 +224,8 @@ def test_remarks(rmk: str) -> None:
             ["4"],
         ),
         ("FV1000 VCFC", [("VCFC", "Vicinity Funnel Cloud")], 1000, []),
+        # A visibility range keeps its lower bound
+        ("FV7-8SM", [], 7, []),
     ],
 )
 def test_wx(text: str, wx: list[tuple[str, str]], vis: int | None, remain: list[str]) -> None:
@@ -280,3 +282,15 @@ def test_pirep_ete(ref: dict, icao: str, issued: datetime) -> None:
     assert station.issued == issued
     for parsed, report in zip(station.data, ref["reports"], strict=True):
         assert asdict(parsed) == report["data"]
+
+
+def test_parse_flight_visibility_range() -> None:
+    """A PIREP reporting flight visibility as a range parses instead of raising."""
+    report = (
+        "KSM UA /OV KSM/TM 0055/FL040/TP C208/SK OVC004-TOP040/WX FV7-8SM/TA M04/TB NEG"
+        "/IC LGT-MOD CLR RIME ICE/RM DURD /ZAN"
+    )
+    data, _ = pirep.parse(report)
+    assert data is not None
+    assert data.flight_visibility is not None
+    assert data.flight_visibility.value == 7

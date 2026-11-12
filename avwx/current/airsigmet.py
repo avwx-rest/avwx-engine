@@ -501,6 +501,10 @@ def _altitudes(data: list[str], units: Units) -> tuple[list[str], Units, Number 
             break
         # TOPS ABV FL450
         if item in ("TOP", "TOPS", "BLW"):
+            # A bulletin can end on a bare TOP= with no altitude after it
+            if i + 1 >= len(data):
+                data = data[:i]
+                break
             if data[i + 1] == "ABV":
                 ceiling = core.make_number(f"ABV {data[i + 2]}")
                 data = data[:i] + data[i + 3 :]
