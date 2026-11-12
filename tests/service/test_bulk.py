@@ -68,7 +68,7 @@ _ITEM = "<AIRSIGMET><raw_text>{}</raw_text></AIRSIGMET>"
 )
 def test_noaa_bulk_extract(raw: str, expected: list[str]) -> None:
     """Test NOAA bulk XML extraction handles empty, single, and multiple results."""
-    assert bulk.NoaaBulk("airsigmet")._extract(raw) == expected
+    assert bulk.NoaaBulk("airsigmet")._extract(raw) == expected  # noqa: SLF001
 
 
 class TestIntlBulk(BulkServiceTest):
