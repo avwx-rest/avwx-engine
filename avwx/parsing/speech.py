@@ -58,7 +58,7 @@ def visibility(vis: Number | None, unit: str = "m") -> str:
     """Format visibility details into a spoken word string."""
     if not vis:
         return "Visibility unknown"
-    if vis.value is None or "/" in vis.repr:
+    if not vis.precise or "/" in vis.repr:
         ret_vis = vis.spoken
     else:
         ret_vis = translate_base.visibility(vis, unit=unit)

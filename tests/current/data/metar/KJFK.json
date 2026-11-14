@@ -2,6 +2,7 @@
     "created": "2023-10-17",
     "data": {
         "altimeter": {
+            "precise": true,
             "repr": "A2979",
             "spoken": "two nine point seven nine",
             "value": 29.79
@@ -24,6 +25,7 @@
         ],
         "density_altitude": -250,
         "dewpoint": {
+            "precise": true,
             "repr": "07",
             "spoken": "seven",
             "value": 7
@@ -46,26 +48,31 @@
                 }
             ],
             "dewpoint_decimal": {
+                "precise": true,
                 "repr": "0072",
                 "spoken": "seven point two",
                 "value": 7.2
             },
             "maximum_temperature_24": {
+                "precise": true,
                 "repr": "0189",
                 "spoken": "one eight point nine",
                 "value": 18.9
             },
             "maximum_temperature_6": {
+                "precise": true,
                 "repr": "10144",
                 "spoken": "one four point four",
                 "value": 14.4
             },
             "minimum_temperature_24": {
+                "precise": true,
                 "repr": "0083",
                 "spoken": "eight point three",
                 "value": 8.3
             },
             "minimum_temperature_6": {
+                "precise": true,
                 "repr": "20106",
                 "spoken": "one zero point six",
                 "value": 10.6
@@ -79,6 +86,7 @@
                 "tendency": "Decreasing or steady, then increasing"
             },
             "sea_level_pressure": {
+                "precise": true,
                 "repr": "SLP086",
                 "spoken": "one zero zero eight point six",
                 "value": 1008.6
@@ -86,6 +94,7 @@
             "snow_depth": null,
             "sunshine_minutes": null,
             "temperature_decimal": {
+                "precise": true,
                 "repr": "0117",
                 "spoken": "one one point seven",
                 "value": 11.7
@@ -95,6 +104,7 @@
         "sanitized": "KJFK 170551Z 36007KT 10SM FEW085 SCT250 11/07 A2979 RMK AO2 SLP086 T01110072 10144 20106 53017 KJFK 170451Z 35007KT 10SM FEW080 SCT250 12/07 A2977 RMK AO2 SLP080 T01170072 401890083",
         "station": "KJFK",
         "temperature": {
+            "precise": true,
             "repr": "11",
             "spoken": "one one",
             "value": 11
@@ -104,17 +114,20 @@
             "repr": "170551Z"
         },
         "visibility": {
+            "precise": true,
             "repr": "10",
             "spoken": "one zero",
             "value": 10
         },
         "wind_direction": {
+            "precise": true,
             "repr": "360",
             "spoken": "three six zero",
             "value": 360
         },
         "wind_gust": null,
         "wind_speed": {
+            "precise": true,
             "repr": "07",
             "spoken": "seven",
             "value": 7

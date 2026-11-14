@@ -43,11 +43,13 @@
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
+                    "precise": false,
                     "repr": "P6",
                     "spoken": "greater than six",
-                    "value": null
+                    "value": 6
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "060",
                     "spoken": "zero six zero",
                     "value": 60
@@ -55,6 +57,7 @@
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
+                    "precise": true,
                     "repr": "09",
                     "spoken": "nine",
                     "value": 9
@@ -103,11 +106,13 @@
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
+                    "precise": false,
                     "repr": "P6",
                     "spoken": "greater than six",
-                    "value": null
+                    "value": 6
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "VRB",
                     "spoken": "variable",
                     "value": null
@@ -115,6 +120,7 @@
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
+                    "precise": true,
                     "repr": "05",
                     "spoken": "five",
                     "value": 5
@@ -158,11 +164,13 @@
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
+                    "precise": false,
                     "repr": "P6",
                     "spoken": "greater than six",
-                    "value": null
+                    "value": 6
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "130",
                     "spoken": "one three zero",
                     "value": 130
@@ -170,6 +178,7 @@
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
+                    "precise": true,
                     "repr": "09",
                     "spoken": "nine",
                     "value": 9
@@ -178,10 +187,10 @@
                 "wx_codes": []
             }
         ],
-        "max_temp": null,
-        "min_temp": null,
         "is_amended": false,
         "is_correction": false,
+        "max_temp": null,
+        "min_temp": null,
         "raw": "PHNL 090250Z 0903/1006 06009KT P6SM VCSH SCT025 BKN035 FM090700 VRB05KT P6SM FEW025 SCT040 FM092100 13009KT P6SM FEW025 SCT050",
         "remarks": "",
         "remarks_info": null,

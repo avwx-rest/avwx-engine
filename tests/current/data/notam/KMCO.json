@@ -24,6 +24,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -43,6 +44,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -64,6 +66,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -106,6 +109,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -125,6 +129,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -146,6 +151,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -185,6 +191,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -196,6 +203,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -249,6 +257,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -260,6 +269,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -281,6 +291,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -326,6 +337,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -345,6 +357,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "025",
                         "spoken": "two five",
                         "value": 25
@@ -366,6 +379,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -408,6 +422,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -423,6 +438,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -444,6 +460,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -489,6 +506,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -500,6 +518,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -521,6 +540,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -566,6 +586,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -577,6 +598,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -598,6 +620,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -643,6 +666,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -654,6 +678,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -675,6 +700,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -720,6 +746,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -739,6 +766,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -760,6 +788,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -802,6 +831,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -821,6 +851,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -842,6 +873,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -884,6 +916,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -895,6 +928,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -916,6 +950,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -961,6 +996,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -972,6 +1008,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -993,6 +1030,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1038,6 +1076,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1049,6 +1088,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -1070,6 +1110,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1115,6 +1156,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1126,6 +1168,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -1147,6 +1190,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1192,6 +1236,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1203,6 +1248,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -1228,6 +1274,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "004",
                         "spoken": "four",
                         "value": 4
@@ -1273,6 +1320,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1284,6 +1332,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -1305,6 +1354,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1350,6 +1400,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1361,6 +1412,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -1382,6 +1434,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1427,6 +1480,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1446,6 +1500,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -1467,6 +1522,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1512,6 +1568,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1527,6 +1584,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -1548,6 +1606,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1593,6 +1652,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1612,6 +1672,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -1633,6 +1694,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1678,6 +1740,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1697,6 +1760,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -1718,6 +1782,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1760,6 +1825,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1779,6 +1845,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -1800,6 +1867,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1842,6 +1910,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1861,6 +1930,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -1882,6 +1952,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -1924,6 +1995,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -1943,6 +2015,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -1964,6 +2037,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2006,6 +2080,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2025,6 +2100,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -2046,6 +2122,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2088,6 +2165,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2107,6 +2185,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -2128,6 +2207,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2170,6 +2250,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2189,6 +2270,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -2210,6 +2292,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2252,6 +2335,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2271,6 +2355,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "025",
                         "spoken": "two five",
                         "value": 25
@@ -2292,6 +2377,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2337,6 +2423,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2356,6 +2443,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -2377,6 +2465,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2422,6 +2511,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2441,6 +2531,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -2462,6 +2553,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2507,6 +2599,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2526,6 +2619,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "025",
                         "spoken": "two five",
                         "value": 25
@@ -2547,6 +2641,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2592,6 +2687,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2611,6 +2707,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "025",
                         "spoken": "two five",
                         "value": 25
@@ -2632,6 +2729,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999
@@ -2677,6 +2775,7 @@
                     "fir": "KZJX",
                     "lower": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "000",
                         "spoken": "zero",
                         "value": 0
@@ -2688,6 +2787,7 @@
                         }
                     ],
                     "radius": {
+                        "precise": true,
                         "repr": "005",
                         "spoken": "five",
                         "value": 5
@@ -2709,6 +2809,7 @@
                     },
                     "upper": {
                         "flight_level": false,
+                        "precise": true,
                         "repr": "999",
                         "spoken": "nine nine nine",
                         "value": 999

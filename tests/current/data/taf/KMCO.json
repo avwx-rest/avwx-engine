@@ -36,11 +36,13 @@
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
+                    "precise": false,
                     "repr": "P6",
                     "spoken": "greater than six",
-                    "value": null
+                    "value": 6
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "160",
                     "spoken": "one six zero",
                     "value": 160
@@ -48,6 +50,7 @@
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
+                    "precise": true,
                     "repr": "06",
                     "spoken": "six",
                     "value": 6
@@ -78,11 +81,13 @@
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
+                    "precise": false,
                     "repr": "P6",
                     "spoken": "greater than six",
-                    "value": null
+                    "value": 6
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "200",
                     "spoken": "two zero zero",
                     "value": 200
@@ -90,6 +95,7 @@
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
+                    "precise": true,
                     "repr": "11",
                     "spoken": "one one",
                     "value": 11
@@ -126,22 +132,26 @@
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
+                    "precise": false,
                     "repr": "P6",
                     "spoken": "greater than six",
-                    "value": null
+                    "value": 6
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "240",
                     "spoken": "two four zero",
                     "value": 240
                 },
                 "wind_gust": {
+                    "precise": true,
                     "repr": "18",
                     "spoken": "one eight",
                     "value": 18
                 },
                 "wind_shear": null,
                 "wind_speed": {
+                    "precise": true,
                     "repr": "12",
                     "spoken": "one two",
                     "value": 12
@@ -172,11 +182,13 @@
                 "turbulence": [],
                 "type": "FROM",
                 "visibility": {
+                    "precise": false,
                     "repr": "P6",
                     "spoken": "greater than six",
-                    "value": null
+                    "value": 6
                 },
                 "wind_direction": {
+                    "precise": true,
                     "repr": "220",
                     "spoken": "two two zero",
                     "value": 220
@@ -184,6 +196,7 @@
                 "wind_gust": null,
                 "wind_shear": null,
                 "wind_speed": {
+                    "precise": true,
                     "repr": "08",
                     "spoken": "eight",
                     "value": 8
@@ -192,10 +205,10 @@
                 "wx_codes": []
             }
         ],
-        "max_temp": null,
-        "min_temp": null,
         "is_amended": false,
         "is_correction": false,
+        "max_temp": null,
+        "min_temp": null,
         "raw": "KMCO 090305Z 0903/1006 16006KT P6SM FEW070 FM091400 20011KT P6SM SKC FM092000 24012G18KT P6SM FEW060 FM100300 22008KT P6SM SKC",
         "remarks": "",
         "remarks_info": null,

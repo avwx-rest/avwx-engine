@@ -63,9 +63,17 @@ class Units:
 
 @dataclass
 class Number:
+    """A number parsed from a report.
+
+    ``value`` can be an approximation when the report only specifies a bound,
+    e.g. ``P6000`` means greater than 6000. In that case ``precise`` is ``False``
+    and ``value`` holds the bound itself.
+    """
+
     repr: str
     value: int | float | None
     spoken: str
+    precise: bool = field(default=True, kw_only=True)
 
 
 @dataclass

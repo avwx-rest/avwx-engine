@@ -212,7 +212,7 @@ def _parse_rvr_number(value: str) -> Number | None:
     number = core.make_number(value, raw)
     if number is not None and prefix is not None:
         number.spoken = f"{prefix} {number.spoken}"
-        number.value = None
+        number.precise = False
     return number
 
 
