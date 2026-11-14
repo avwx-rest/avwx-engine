@@ -294,3 +294,20 @@ def test_parse_flight_visibility_range() -> None:
     assert data is not None
     assert data.flight_visibility is not None
     assert data.flight_visibility.value == 7
+
+
+@pytest.mark.parametrize(
+    "report",
+    [
+        "000 UBUS31 KWBC 140735 PRCUS ERI UA /OV ERI/TM 0726/FL060/TP E145/TA UNKWN/IC LGHT RME/RM ZOB",
+        "000 UBDC90 KWBC 141130 DC 141130 IAD UA /OV MRB320010/TM 1118/FL60/TP C172/TA M02-M06/IC TR-LIGHT RIME",
+        "STL UA /OV 20 SE OF BMI/TM 1705/FLDURD/TP E120/SK BASES OVC 030, TOPS OVC 102/TA 0/IC LIGHT RIME",
+    ],
+)
+def test_parse_unreadable_field(report: str) -> None:
+    """A free-typed field that cannot be read is left empty instead of failing the report."""
+    data, _ = pirep.parse(report)
+    assert data is not None
+    assert data.location is not None
+    assert data.aircraft is not None
+    assert data.icing is not None

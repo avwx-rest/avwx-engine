@@ -349,26 +349,31 @@ def parse(report: str, issued: date | None = None) -> tuple[PirepData | None, Sa
             continue
         tag = item[:2]
         item = item[2:].strip()  # noqa: PLW2901
-        if tag == "TM":
-            time = _time(item, issued)
-        elif tag == "OV":
-            location = _location(item)
-        elif tag == "FL":
-            altitude = _altitude(item)
-        elif tag == "TP":
-            aircraft = _aircraft(item)
-        elif tag == "SK":
-            clouds = _clouds(item)
-        elif tag == "TA":
-            temperature = _number(item)
-        elif tag == "TB":
-            turbulence = _turbulence(item)
-        elif tag == "IC":
-            icing = _icing(item)
-        elif tag == "RM":
-            remarks = _remarks(item)
-        elif tag == "WX":
-            wx_codes, flight_visibility, other = _wx(item)
+        # Pilots free-type these fields (TA UNKWN, TA M02-M06). One unreadable field is
+        # left empty rather than losing the whole report.
+        try:
+            if tag == "TM":
+                time = _time(item, issued)
+            elif tag == "OV":
+                location = _location(item)
+            elif tag == "FL":
+                altitude = _altitude(item)
+            elif tag == "TP":
+                aircraft = _aircraft(item)
+            elif tag == "SK":
+                clouds = _clouds(item)
+            elif tag == "TA":
+                temperature = _number(item)
+            elif tag == "TB":
+                turbulence = _turbulence(item)
+            elif tag == "IC":
+                icing = _icing(item)
+            elif tag == "RM":
+                remarks = _remarks(item)
+            elif tag == "WX":
+                wx_codes, flight_visibility, other = _wx(item)
+        except ValueError:
+            continue
     return (
         PirepData(
             aircraft=aircraft,
