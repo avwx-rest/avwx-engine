@@ -59,3 +59,34 @@ def test_clean_metar_list(case: dict) -> None:
 @pytest.mark.parametrize("case", json.load(TAF_CASES.open()))
 def test_clean_taf_list(case: dict) -> None:
     _test_list_sanitizer(clean_taf_list, case)
+
+
+@pytest.mark.parametrize(
+    "visibility", ["M1/4SM", "M1/2SM", "M1/8SM", "1/4SM", "P1/2SM"]
+)
+@pytest.mark.parametrize(
+    ("cleaner", "report"),
+    [
+        (clean_metar_list, "KJFK 121851Z 27015KT {} FG OVC002 M01/M01 A3001"),
+        (clean_taf_list, "1218/1324 27015KT {} FG OVC002"),
+    ],
+)
+def test_fractional_visibility_is_not_a_wind(
+    cleaner: Callable, report: str, visibility: str
+) -> None:
+    """Fractional statute-mile visibilities are not rewritten as wind (M14KT)."""
+    line = report.format(visibility).split()
+    sans = Sanitization()
+    assert cleaner(list(line), sans) == line
+    assert sans.replaced == {}
+
+
+def test_mistyped_wind_unit_is_still_fixed() -> None:
+    """A wind group with a mistyped SM unit is still read as knots."""
+    sans = Sanitization()
+    assert clean_metar_list(["KJFK", "121851Z", "27015SM", "10SM"], sans) == [
+        "KJFK",
+        "121851Z",
+        "27015KT",
+        "10SM",
+    ]
