@@ -363,6 +363,8 @@ def test_parse_linked_times(start: str, end: str, start_dt: datetime | None, end
         ("SFC", 0, False),
         ("UNL", 999, False),
         ("7000FT AMSL", 7000, False),
+        # A doubled unit
+        ("150FTFT AGL", 150, False),
     ],
 )
 def test_make_altitude(raw: str, value: int, flight_level: bool) -> None:  # noqa: FBT001

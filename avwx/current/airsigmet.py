@@ -361,6 +361,9 @@ def _position(data: list[str]) -> tuple[list[str], Coord | None]:
     return data, Coord(lat=lat, lon=lon, repr=raw)
 
 
+_JOINED_MOVEMENT = re.compile(r"\A([NSEW]{1,3})(\d+(?:KT|KMH))\Z")
+
+
 def _movement(data: list[str], units: Units) -> tuple[list[str], Units, Movement | None]:
     with suppress(ValueError):
         data.remove("STNR")
@@ -372,6 +375,10 @@ def _movement(data: list[str], units: Units) -> tuple[list[str], Units, Movement
         return data, units, None
     raw = data.pop(index)
     direction_str = data.pop(index)
+    # MOV ENE08KT runs the direction into the speed
+    if match := _JOINED_MOVEMENT.match(direction_str):
+        direction_str = match.group(1)
+        data.insert(index, match.group(2))
     # MOV CNL
     if direction_str == "CNL":
         return data, units, None

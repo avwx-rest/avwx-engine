@@ -389,6 +389,9 @@ def make_altitude(value: str | None, units: Units) -> Altitude | None:
         return None
     if "(" in trimmed:
         trimmed = trimmed[trimmed.find("(") + 1 :]
+    # 150FTFT doubles the unit
+    while trimmed.endswith("FTFT"):
+        trimmed = trimmed[:-2]
     is_flight_level = FLIGHT_LEVEL_PATTERN.match(trimmed) is not None
     if not (is_flight_level or trimmed in SPECIAL_NUMBERS or trimmed[0].isdigit()):
         return None

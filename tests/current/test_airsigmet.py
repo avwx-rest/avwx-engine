@@ -302,6 +302,17 @@ def test_position(wx: str, coord: Coord | None, extra: str) -> None:
             "kt",
             "TOP FL390",
         ),
+        (
+            # Direction run into the speed
+            "CB TOP FL450 MOV ENE08KT INTSF=",
+            Movement(
+                "MOV ENE 08KT",
+                core.make_number("ENE", literal=True, special=CARDINAL_DEGREES),
+                core.make_number("08"),
+            ),
+            "kt",
+            "CB TOP FL450 INTSF=",
+        ),
     ],
 )
 def test_movement(wx: str, movement: Movement | None, unit: str, extra: str) -> None:
