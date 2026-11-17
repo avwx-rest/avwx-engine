@@ -239,6 +239,10 @@ def _find_floor_ceiling(
             break
         # CONT LGT CHOP BLO 250
         if item == "BLO":
+            # LGT BLO gives no altitude
+            if i + 1 >= len(items):
+                items = items[:i]
+                break
             altitude = items[i + 1]
             if "-" in altitude:
                 floor, ceiling = _separate_floor_ceiling(altitude)
@@ -372,7 +376,7 @@ def parse(report: str, issued: date | None = None) -> tuple[PirepData | None, Sa
                 remarks = _remarks(item)
             elif tag == "WX":
                 wx_codes, flight_visibility, other = _wx(item)
-        except ValueError:
+        except (ValueError, IndexError):
             continue
     return (
         PirepData(
