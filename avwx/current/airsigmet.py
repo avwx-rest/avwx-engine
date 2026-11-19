@@ -362,6 +362,7 @@ def _position(data: list[str]) -> tuple[list[str], Coord | None]:
 
 
 _JOINED_MOVEMENT = re.compile(r"\A([NSEW]{1,3})(\d+(?:KT|KMH))\Z")
+_SPEED_ONLY = re.compile(r"\A\d+(?:-\d+)?(?:KT|KMH)\Z")
 
 
 def _movement(data: list[str], units: Units) -> tuple[list[str], Units, Movement | None]:
@@ -390,15 +391,21 @@ def _movement(data: list[str], units: Units) -> tuple[list[str], Units, Movement
             raw += f" {direction_str}"
         direction = core.make_number(direction_str.replace("/", ""), literal=True, special=CARDINAL_DEGREES)
         return data, units, Movement(repr=raw.strip(), direction=direction, speed=None)
-    raw += f" {direction_str} "
+    # MOV 15KT gives a speed with no direction
+    if _SPEED_ONLY.match(direction_str):
+        data.insert(index, direction_str)
+        raw += " "
+        direction = None
     # MOV FROM 23040KT
-    if direction_str == "FROM":
+    elif direction_str == "FROM":
+        raw += f" {direction_str} "
         value = data[index][:3]
         raw += value
         direction = core.make_number(value)
         data[index] = data[index][3:]
     # MOV E 45KMH
     else:
+        raw += f" {direction_str} "
         direction = core.make_number(direction_str.replace("/", ""), literal=True, special=CARDINAL_DEGREES)
     speed = None
     with suppress(IndexError):

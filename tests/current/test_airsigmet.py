@@ -313,6 +313,13 @@ def test_position(wx: str, coord: Coord | None, extra: str) -> None:
             "kt",
             "CB TOP FL450 INTSF=",
         ),
+        (
+            # Speed with no direction
+            "TOP ABV FL360 MOV 15KT NC=",
+            Movement("MOV 15KT", None, core.make_number("15")),
+            "kt",
+            "TOP ABV FL360 NC=",
+        ),
     ],
 )
 def test_movement(wx: str, movement: Movement | None, unit: str, extra: str) -> None:
@@ -644,3 +651,18 @@ def test_parse_bare_top() -> None:
     assert sigmet.data is not None
     assert sigmet.data.observation is not None
     assert sigmet.data.observation.ceiling is None
+
+
+def test_parse_movement_without_direction() -> None:
+    """A SIGMET that moves at a speed with no direction still parses."""
+    report = (
+        "WSMA31 FIMP 182115 FIMM SIGMET D03 VALID 182115/190115 FIMP- FIMM MAURITIUS FIR "
+        "EMBD TS OBS AT 2045Z W OF LINE S3230 E05700 - S3300 E05940 - S3540 E06410 - "
+        "S4300 E05700 TOP ABV FL360 MOV 15KT NC="
+    )
+    data, _ = airsigmet.parse(report)
+    assert data.observation is not None
+    assert data.observation.movement is not None
+    assert data.observation.movement.direction is None
+    assert data.observation.movement.speed is not None
+    assert data.observation.movement.speed.value == 15
