@@ -503,6 +503,19 @@ def _bounds(data: list[str]) -> tuple[list[str], list[Coord], list[str]]:
     return data, coords, bounds
 
 
+def _altitude_range(item: str, units: Units) -> tuple[Number | None, Number | None, Units]:
+    """Split a floor/ceiling pair like FL060/300 or SFC/FL160"""
+    floor_val, ceiling_val = item.split("/", 1)
+    # FL040-060/170 gives the floor as a range; keep its lower bound
+    floor_val = floor_val.split("-")[0]
+    floor, units = core.make_altitude(floor_val, units)
+    if (floor_val == "SFC" or floor_val[:2] == "FL") and ceiling_val[:2] != "FL":
+        ceiling, units = core.make_altitude(ceiling_val, units, force_fl=True)
+    else:
+        ceiling, units = core.make_altitude(ceiling_val, units)
+    return floor, ceiling, units
+
+
 def _altitudes(data: list[str], units: Units) -> tuple[list[str], Units, Number | None, Number | None]:
     """Extract the floor and ceiling altitudes"""
     floor, ceiling = None, None
@@ -527,6 +540,11 @@ def _altitudes(data: list[str], units: Units) -> tuple[list[str], Units, Number 
                 ceiling = core.make_number(f"BLW {data[i + 2]}")
                 data = data[:i] + data[i + 3 :]
                 break
+            # TOP FL030/FL100 gives a floor and a ceiling
+            if "/" in data[i + 1] and core.is_altitude(data[i + 1]):
+                floor, ceiling, units = _altitude_range(data[i + 1], units)
+                data = data[:i] + data[i + 2 :]
+                break
             # TOPS TO FL310
             if data[i + 1] == "TO":
                 data.pop(i)
@@ -539,14 +557,7 @@ def _altitudes(data: list[str], units: Units) -> tuple[list[str], Units, Number 
         # FL060/300 SFC/FL160
         if core.is_altitude(item):
             if "/" in item:
-                floor_val, ceiling_val = item.split("/")
-                # FL040-060/170 gives the floor as a range; keep its lower bound
-                floor_val = floor_val.split("-")[0]
-                floor, units = core.make_altitude(floor_val, units)
-                if (floor_val == "SFC" or floor_val[:2] == "FL") and ceiling_val[:2] != "FL":
-                    ceiling, units = core.make_altitude(ceiling_val, units, force_fl=True)
-                else:
-                    ceiling, units = core.make_altitude(ceiling_val, units)
+                floor, ceiling, units = _altitude_range(item, units)
             else:
                 ceiling, units = core.make_altitude(item, units)
             data.pop(i)

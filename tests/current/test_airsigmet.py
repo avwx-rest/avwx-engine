@@ -480,6 +480,9 @@ def test_bounds(wx: str, coords: tuple[tuple], bounds: list[str], extra: str) ->
         ("1 FL040-060/170 2", 40, 170, "ft", "1 2"),
         # A bulletin ending on a bare TOP= gives no altitude
         ("EMBD TS OBS TOP", None, None, "ft", "EMBD TS OBS"),
+        # TOP followed by a floor and a ceiling
+        ("ENTIRE FIR TOP FL030/FL100 MOV", 30, 100, "ft", "ENTIRE FIR MOV"),
+        ("1 TOPS SFC/FL120 2", 0, 120, "ft", "1 2"),
     ],
 )
 def test_altitudes(wx: str, floor: int | None, ceiling: int | None, unit: str, extra: str) -> None:
@@ -666,3 +669,17 @@ def test_parse_movement_without_direction() -> None:
     assert data.observation.movement.direction is None
     assert data.observation.movement.speed is not None
     assert data.observation.movement.speed.value == 15
+
+
+def test_parse_top_with_floor_and_ceiling() -> None:
+    """A SIGMET giving TOP with a floor/ceiling pair still parses."""
+    report = (
+        "WSTR31 UTAA 200254 UTAA SIGMET 1 VALID 200254/200638 UTAA- UTAA ASHGABAT FIR "
+        "SEV TURB OBS AND FCST ENTIRE FIR TOP FL030/FL100 MOV NE 25KT NC="
+    )
+    data, _ = airsigmet.parse(report)
+    assert data.forecast is not None
+    assert data.forecast.floor is not None
+    assert data.forecast.floor.value == 30
+    assert data.forecast.ceiling is not None
+    assert data.forecast.ceiling.value == 100
