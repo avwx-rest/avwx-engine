@@ -383,6 +383,10 @@ def _movement(data: list[str], units: Units) -> tuple[list[str], Units, Movement
     # MOV CNL
     if direction_str == "CNL":
         return data, units, None
+    # MOV NC is followed straight by the intensity, so it gives no movement
+    if direction_str in INTENSITY:
+        data.insert(index, direction_str)
+        return data, units, None
     # MOV SLOW ESE / MOV SLOW "SLOW" is a speed qualifier, not a direction
     if direction_str == "SLOW":
         raw += f" {direction_str}"

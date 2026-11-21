@@ -320,6 +320,13 @@ def test_position(wx: str, coord: Coord | None, extra: str) -> None:
             "kt",
             "TOP ABV FL360 NC=",
         ),
+        (
+            # MOV followed straight by the intensity gives no movement
+            "TOP FL480 MOV NC",
+            None,
+            "kt",
+            "TOP FL480 NC",
+        ),
     ],
 )
 def test_movement(wx: str, movement: Movement | None, unit: str, extra: str) -> None:
@@ -683,3 +690,19 @@ def test_parse_top_with_floor_and_ceiling() -> None:
     assert data.forecast.floor.value == 30
     assert data.forecast.ceiling is not None
     assert data.forecast.ceiling.value == 100
+
+
+def test_parse_movement_followed_by_intensity() -> None:
+    """A SIGMET whose MOV is followed by NC keeps its intensity and no movement."""
+    report = (
+        "WSPR31 SPIM 202136 SPIM SIGMET A13 VALID 202140/210130 SPJC- SPIM LIMA FIR "
+        "EMBD TS OBS AT 2110Z E OF LINE S0905 W07333 - S0343 W07554 - S0125 W07411 "
+        "TOP FL480 MOV NC="
+    )
+    data, _ = airsigmet.parse(report)
+    assert data.observation is not None
+    assert data.observation.movement is None
+    assert data.observation.intensity is not None
+    assert data.observation.intensity.repr == "NC"
+    assert data.observation.ceiling is not None
+    assert data.observation.ceiling.value == 480
