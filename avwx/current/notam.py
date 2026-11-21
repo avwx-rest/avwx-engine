@@ -387,8 +387,12 @@ def make_altitude(value: str | None, units: Units) -> Altitude | None:
     trimmed = value.split()[0].strip(" .")
     if not trimmed:
         return None
+    # 65FT(20M) adds a second unit in brackets; (5000FT) wraps the only one
     if "(" in trimmed:
-        trimmed = trimmed[trimmed.find("(") + 1 :]
+        before, _, inside = trimmed.partition("(")
+        trimmed = (before or inside).rstrip(")")
+        if not trimmed:
+            return None
     # 150FTFT doubles the unit
     while trimmed.endswith("FTFT"):
         trimmed = trimmed[:-2]
