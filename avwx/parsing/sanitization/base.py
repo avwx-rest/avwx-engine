@@ -1,5 +1,6 @@
 """Core sanitiation functions that accept report-specific elements."""
 
+import re
 from collections.abc import Callable
 
 from avwx.parsing.core import dedupe, is_variable_wind_direction, is_wind
@@ -14,6 +15,11 @@ from avwx.parsing.sanitization.cleaners.base import (
 from avwx.parsing.sanitization.cleaners.cloud import separate_cloud_layers
 from avwx.parsing.sanitization.cleaners.wind import sanitize_wind
 from avwx.structs import Sanitization
+
+# M1/4SM, 1/16SM: fractional statute-mile visibility that would otherwise read as wind
+_FRACTION_VISIBILITY = re.compile(r"[MP]?\d{1,2}/\d{1,2}SM")
+# 23///, 04/, ///07: temperature or dewpoint missing, keep the slashes so it still parses
+_PARTIAL_TEMP_DEW = re.compile(r"M?\d{2}/+|/+M?\d{2}")
 
 
 def sanitize_string_with(
@@ -100,6 +106,8 @@ def sanitize_list_with(
                 wxdata[i] = replaced
                 sans.log(item, replaced)
                 continue
+            if _FRACTION_VISIBILITY.fullmatch(item):
+                continue
             possible_wind = sanitize_wind(item)
             if is_wind(possible_wind):
                 if item != possible_wind:
@@ -107,7 +115,7 @@ def sanitize_list_with(
                 wxdata[i] = possible_wind
 
         # Strip extra characters before dedupe
-        stripped = [i.strip("./\\") for i in wxdata]
+        stripped = [i if _PARTIAL_TEMP_DEW.fullmatch(i) else i.strip("./\\") for i in wxdata]
         if wxdata != stripped:
             sans.log_list(wxdata, stripped)
         deduped = dedupe(stripped, only_neighbors=True)

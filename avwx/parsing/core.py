@@ -543,7 +543,8 @@ def get_flight_rules(visibility: Number | None, ceiling: Cloud | None) -> int:
     else:
         vis = visibility.value or 0
     # Parse ceiling
-    cld = (ceiling.base if ceiling else 99) or 99
+    # A base of 0 is a ceiling at the surface, not a missing one
+    cld = ceiling.base if ceiling and ceiling.base is not None else 99
     # Determine flight rules
     if (vis <= 5) or (cld <= 30):
         if (vis < 3) or (cld < 10):
@@ -563,7 +564,7 @@ def get_ceiling(clouds: list[Cloud]) -> Cloud | None:
 
     Prevents errors due to lack of cloud information (eg. '' or 'FEW///')
     """
-    return next((c for c in clouds if c.base and c.type in {"OVC", "BKN", "VV"}), None)
+    return next((c for c in clouds if c.base is not None and c.type in {"OVC", "BKN", "VV"}), None)
 
 
 def is_altitude(value: str) -> bool:
