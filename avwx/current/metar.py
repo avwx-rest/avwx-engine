@@ -283,6 +283,10 @@ def get_altimeter(data: list[str], units: Units, version: str = "NA") -> tuple[l
     for _ in range(2):
         if not data:
             break
+        # A second altimeter needs its A or Q prefix. A bare number here is
+        # more likely visibility left behind by a missing temperature group
+        if values and data[-1][:1].isdigit():
+            break
         value = parse_altimeter(data[-1])
         if value is None:
             break

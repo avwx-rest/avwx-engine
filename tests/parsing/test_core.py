@@ -441,6 +441,9 @@ def test_get_clouds(wx: list[str], clouds: list[list]) -> None:
         ("6", ["OVC", 4], "LIFR"),
         ("1/2", ["OVC", 30], "LIFR"),
         ("M1/4", ["OVC", 30], "LIFR"),
+        # A ceiling at the surface is LIFR, not missing
+        ("2", ["OVC", 0], "LIFR"),
+        ("10", ["VV", 0], "LIFR"),
     ],
 )
 def test_get_flight_rules(vis: str | None, ceiling: tuple | None, rule: str) -> None:
@@ -463,6 +466,9 @@ def test_get_flight_rules(vis: str | None, ceiling: tuple | None, rule: str) -> 
         ([["OVC", 20], ["BKN", 30]], ["OVC", 20]),
         ([["OVC", None], ["BKN", 30]], ["BKN", 30]),
         ([["FEW", 10], ["OVC", 20]], ["OVC", 20]),
+        # A ceiling at the surface still counts
+        ([["OVC", 0]], ["OVC", 0]),
+        ([["VV", 0], ["OVC", 20]], ["VV", 0]),
     ],
 )
 def test_get_ceiling(clouds: list[list], ceiling: list) -> None:

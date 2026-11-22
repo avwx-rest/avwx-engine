@@ -169,6 +169,25 @@ def test_get_altimeter(version: str, wx: list[str], alt: tuple, unit: str) -> No
 
 
 @pytest.mark.parametrize(
+    ("version", "wx", "remain", "alt"),
+    [
+        # A bare number before the altimeter is visibility, not a second altimeter
+        ("IN", ["1", "2000", "Q1013"], ["1", "2000"], "Q1013"),
+        ("NA", ["1", "2000", "A2992"], ["1", "2000"], "A2992"),
+        # A lone bare altimeter is still read
+        ("NA", ["1", "2992"], ["1"], "2992"),
+    ],
+)
+def test_get_altimeter_leaves_bare_number(version: str, wx: list[str], remain: list[str], alt: str) -> None:
+    """Test that a bare number is only read as an altimeter when it is the only one."""
+    units = structs.Units(**getattr(static.core, f"{version}_UNITS"))
+    ret, ret_alt = metar.get_altimeter(wx, units, version)
+    assert ret == remain
+    assert ret_alt is not None
+    assert ret_alt.repr == alt
+
+
+@pytest.mark.parametrize(
     ("value", "runway", "vis", "var", "trend"),
     [
         ("R35L/1000", "35L", ("1000", 1000, "one thousand"), None, None),
@@ -301,3 +320,90 @@ def test_metar_ete(ref: dict, icao: str, issued: datetime) -> None:
     assert asdict(station.translations) == ref["translations"]
     assert station.summary == ref["summary"]
     assert station.speech == ref["speech"]
+
+
+@pytest.mark.parametrize(
+    ("report", "rules", "vis", "temp", "dew", "sanitized"),
+    [
+        # Zero ceiling is LIFR (issue #89)
+        (
+            "KJFK 010000Z AUTO 00000KT 2SM BR OVC000 04/04 A2992",
+            "LIFR",
+            "2",
+            "04",
+            "04",
+            "KJFK 010000Z 00000KT 2SM BR OVC000 04/04 A2992",
+        ),
+        # Missing dewpoint keeps the temperature (issue #89)
+        (
+            "DAAT 151200Z VRB04KT CAVOK 23/// Q1026",
+            "VFR",
+            "CAVOK",
+            "23",
+            None,
+            "DAAT 151200Z VRB04KT CAVOK 23/// Q1026",
+        ),
+        (
+            "KJFK 010000Z AUTO 00000KT 10SM 04/ A2992",
+            "VFR",
+            "10",
+            "04",
+            None,
+            "KJFK 010000Z 00000KT 10SM 04/ A2992",
+        ),
+        (
+            "KJFK 010000Z AUTO 00000KT 10SM ///04 A2992",
+            "VFR",
+            "10",
+            None,
+            "04",
+            "KJFK 010000Z 00000KT 10SM ///04 A2992",
+        ),
+        # M1/4SM and sixteenths stay visibility, not wind (issue #89)
+        (
+            "KFOT 151215Z AUTO 00000KT M1/4SM OVC001 06/06 A3014 RMK AO1",
+            "LIFR",
+            "M1/4",
+            "06",
+            "06",
+            "KFOT 151215Z 00000KT M1/4SM OVC001 06/06 A3014 RMK AO1",
+        ),
+        (
+            "KJFK 010000Z AUTO 00000KT M1/4SM FG 15/10 A2992",
+            "LIFR",
+            "M1/4",
+            "15",
+            "10",
+            "KJFK 010000Z 00000KT M1/4SM FG 15/10 A2992",
+        ),
+        (
+            "KJFK 010000Z AUTO 00000KT 1/16SM FG 15/10 A2992",
+            "LIFR",
+            "1/16",
+            "15",
+            "10",
+            "KJFK 010000Z 00000KT 1/16SM FG 15/10 A2992",
+        ),
+        # Missing temperature group keeps the visibility (issue #89)
+        (
+            "EGLL 010000Z AUTO 00000KT 2000 ///// Q1013",
+            "IFR",
+            "2000",
+            None,
+            None,
+            "EGLL 010000Z 00000KT 2000 Q1013",
+        ),
+    ],
+)
+def test_parse_keeps_values(
+    report: str, rules: str, vis: str, temp: str | None, dew: str | None, sanitized: str
+) -> None:
+    """Test reports that used to lose a ceiling, temperature, or visibility while parsing."""
+    data, _, _ = metar.parse(report[:4], report)
+    assert data is not None
+    assert data.flight_rules == rules
+    assert data.visibility is not None
+    assert data.visibility.repr == vis
+    assert (data.temperature.repr if data.temperature else None) == temp
+    assert (data.dewpoint.repr if data.dewpoint else None) == dew
+    assert data.sanitized == sanitized
