@@ -349,12 +349,25 @@ def _coord_value(value: str) -> float:
     return -decimal if hemisphere in ("S", "W") else decimal
 
 
+# 5639N16122E and N5639E16122 run the latitude and longitude together
+_JOINED_POSITION = re.compile(
+    r"\A(?:(?P<lat>\d{2,4})(?P<ns>[NS])(?P<lon>\d{3,5})(?P<ew>[EW])"
+    r"|(?P<ns2>[NS])(?P<lat2>\d{2,4})(?P<ew2>[EW])(?P<lon2>\d{3,5}))\Z"
+)
+
+
 def _position(data: list[str]) -> tuple[list[str], Coord | None]:
     try:
         index = data.index("PSN")
     except ValueError:
         return data, None
     data.pop(index)
+    if match := _JOINED_POSITION.match(data[index]):
+        raw = data.pop(index)
+        groups = match.groupdict()
+        lat = _coord_value((groups["ns"] or groups["ns2"]) + (groups["lat"] or groups["lat2"]))
+        lon = _coord_value((groups["ew"] or groups["ew2"]) + (groups["lon"] or groups["lon2"]))
+        return data, Coord(lat=lat, lon=lon, repr=raw)
     raw = f"{data[index]} {data[index + 1]}"
     lat = _coord_value(data.pop(index))
     lon = _coord_value(data.pop(index))

@@ -236,6 +236,18 @@ def test_coord_value(coord: str, value: float) -> None:
             Coord(14 + 28 / 60, -(90 + 52 / 60), "N1428 W09052"),
             "VA FUEGO VA",
         ),
+        # Latitude and longitude run together, hemisphere after the digits
+        (
+            "VA CLD PSN 5639N16122E OBS",
+            Coord(56 + 39 / 60, 161 + 22 / 60, "5639N16122E"),
+            "VA CLD OBS",
+        ),
+        # Run together, hemisphere first
+        (
+            "VA CLD PSN N5639E16122 OBS",
+            Coord(56 + 39 / 60, 161 + 22 / 60, "N5639E16122"),
+            "VA CLD OBS",
+        ),
     ],
 )
 def test_position(wx: str, coord: Coord | None, extra: str) -> None:
@@ -706,3 +718,18 @@ def test_parse_movement_followed_by_intensity() -> None:
     assert data.observation.intensity.repr == "NC"
     assert data.observation.ceiling is not None
     assert data.observation.ceiling.value == 480
+
+
+def test_parse_joined_volcano_position() -> None:
+    """A volcanic ash SIGMET giving its position as one joined token still parses."""
+    report = (
+        "WVAK01 PAWU 231534 PAZA SIGMET INDIA 2 VALID 231534/232134 KKCI- ANCHORAGE FIR "
+        "ANCHORAGE OCEANIC FIR VA ERUPTION SHEVELUCH VA CLD PSN 5639N16122E OBS AT 1525Z "
+        "WI N5452 E16734 - N5410 E16901 - N5325 E17125 - N5305 E17111 - N5349 E16840 - "
+        "N5431 E16720 - N5452 E16734. BLW FL180. MOV SE 40KT."
+    )
+    data, _ = airsigmet.parse(report)
+    assert data.observation is not None
+    assert data.observation.position is not None
+    assert round(data.observation.position.lat, 2) == 56.65
+    assert round(data.observation.position.lon, 2) == 161.37
