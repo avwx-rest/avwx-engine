@@ -325,6 +325,17 @@ def test_get_wind(wx: list[str], unit: str, wind: tuple[tuple], varv: list[tuple
     assert units.wind_speed == unit
 
 
+
+def test_get_wind_unreadable() -> None:
+    """Test that a wind element that can't be read is removed and left empty."""
+    units = structs.Units.north_american()
+    wx, direction, speed, gust, var = core.get_wind(["242156[35006KT", "1"], units)
+    assert wx == ["1"]
+    assert direction is None
+    assert speed is None
+    assert gust is None
+    assert var == []
+
 @pytest.mark.parametrize(
     ("wx", "unit", "visibility"),
     [

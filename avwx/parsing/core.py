@@ -396,9 +396,13 @@ def get_wind(
             if value is not None:
                 variable.append(value)
     # Convert to Number
-    direction_value = make_number(direction, speak=direction, literal=True)
-    speed_value = make_number(speed.strip("BV"), m_minus=False)
-    gust_value = make_number(gust, m_minus=False)
+    try:
+        direction_value = make_number(direction, speak=direction, literal=True)
+        speed_value = make_number(speed.strip("BV"), m_minus=False)
+        gust_value = make_number(gust, m_minus=False)
+    except ValueError:
+        # 242156[35006KT runs a garbled time into the wind, so leave the wind empty
+        direction_value = speed_value = gust_value = None
     return data, direction_value, speed_value, gust_value, variable
 
 
