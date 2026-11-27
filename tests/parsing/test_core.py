@@ -326,6 +326,13 @@ def test_get_wind(wx: list[str], unit: str, wind: tuple[tuple], varv: list[tuple
 
 
 
+def test_get_visibility_unreadable() -> None:
+    """Test that a visibility element that can't be read is removed and left empty."""
+    units = structs.Units.north_american()
+    wx, visibility = core.get_visibility(["3200US4JSM", "1"], units)
+    assert wx == ["1"]
+    assert visibility is None
+
 def test_get_wind_unreadable() -> None:
     """Test that a wind element that can't be read is removed and left empty."""
     units = structs.Units.north_american()
