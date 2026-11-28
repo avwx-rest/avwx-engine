@@ -525,11 +525,18 @@ def _altitude_range(item: str, units: Units) -> tuple[Number | None, Number | No
     floor_val, ceiling_val = item.split("/", 1)
     # FL040-060/170 gives the floor as a range; keep its lower bound
     floor_val = floor_val.split("-")[0]
-    floor, units = core.make_altitude(floor_val, units)
-    if (floor_val == "SFC" or floor_val[:2] == "FL") and ceiling_val[:2] != "FL":
-        ceiling, units = core.make_altitude(ceiling_val, units, force_fl=True)
-    else:
-        ceiling, units = core.make_altitude(ceiling_val, units)
+    floor: Number | None
+    ceiling: Number | None
+    try:
+        floor, units = core.make_altitude(floor_val, units)
+    except ValueError:
+        floor = None
+    force_fl = (floor_val == "SFC" or floor_val[:2] == "FL") and ceiling_val[:2] != "FL"
+    try:
+        ceiling, units = core.make_altitude(ceiling_val, units, force_fl=force_fl)
+    except ValueError:
+        # SFC/AL210 is mistyped past reading, so leave the ceiling empty
+        ceiling = None
     return floor, ceiling, units
 
 
@@ -670,6 +677,10 @@ def sanitize(report: str) -> str:
         report = report.replace(key, val)
     data = report.split()
     for i, item in reversed(list(enumerate(data))):
+        # Join a flight level split from its number Ex: SFC/FL 210
+        if item.endswith("/FL") and i + 1 < len(data) and data[i + 1].isdigit():
+            item = item + data.pop(i + 1)  # noqa: PLW2901
+            data[i] = item
         # Remove extra element on altitude Ex: FL450Z skip 1000FT
         if (
             len(item) > 4

@@ -502,6 +502,8 @@ def test_bounds(wx: str, coords: tuple[tuple], bounds: list[str], extra: str) ->
         # TOP followed by a floor and a ceiling
         ("ENTIRE FIR TOP FL030/FL100 MOV", 30, 100, "ft", "ENTIRE FIR MOV"),
         ("1 TOPS SFC/FL120 2", 0, 120, "ft", "1 2"),
+        # A ceiling mistyped past reading is left empty
+        ("W07626 SFC/AL210 MOV NW 10KT", 0, None, "ft", "W07626 MOV NW 10KT"),
     ],
 )
 def test_altitudes(wx: str, floor: int | None, ceiling: int | None, unit: str, extra: str) -> None:
@@ -552,6 +554,7 @@ def test_intensity(wx: str, code: str | None, name: str | None, extra: str) -> N
         ("TOP FL520 MO V NNW 05KT NC", "TOP FL520 MOV NNW 05KT NC"),
         ("FL450 MOV NE05KT INTSF=", "FL450 MOV NE 05KT INTSF"),
         ("TOP FL420 MOV E2KT INTSF=", "TOP FL420 MOV E 2KT INTSF"),
+        ("W07623 SFC/FL 210 MOV SW 5KT=", "W07623 SFC/FL210 MOV SW 5KT"),
     ],
 )
 def test_sanitize(report: str, clean: str) -> None:
