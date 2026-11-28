@@ -3,6 +3,7 @@
 # ruff: noqa: SLF001
 
 # stdlib
+import json
 from typing import Any
 
 # library
@@ -155,6 +156,111 @@ class TestNam(ServiceFetchTest):
 
 class TestNamClass(TestStationScrape):
     service_class = service.Nam
+
+
+@pytest.mark.parametrize("station", ["ENGM", "ENBR", "EGLL"])
+class TestMetNo(ServiceFetchTest):
+    service_class = service.MetNo
+
+
+@pytest.mark.parametrize("station", ["ENGM", "ENBR", "EGLL"])
+class TestMetNoTaf(ServiceFetchTest):
+    service_class = service.MetNo
+    report_type = "taf"
+
+
+class TestMetNoClass(TestStationScrape):
+    service_class = service.MetNo
+
+
+class TestMetNoExtract:
+    """MetNo should return the newest of the day's reports."""
+
+    METARS = (
+        "ENGM 280750Z 08002KT 9999 -SN SCT032 OVC039 M04/M05 Q1037 NOSIG=\n"
+        "ENGM 280820Z VRB01KT 9999 BKN032 M04/M05 Q1037 NOSIG=\n"
+    )
+
+    def test_newest_report(self) -> None:
+        serv = service.MetNo("metar")
+        report = serv._extract(self.METARS, "ENGM")
+        assert report == "ENGM 280820Z VRB01KT 9999 BKN032 M04/M05 Q1037 NOSIG"
+
+    def test_lowercase_station(self) -> None:
+        serv = service.MetNo("metar")
+        assert serv._extract(self.METARS, "engm").startswith("ENGM 280820Z")
+
+    def test_headers_identify_client(self) -> None:
+        assert service.MetNo._make_headers()["User-Agent"].startswith("avwx-engine/")
+
+    @pytest.mark.parametrize("raw", ["", "\n", "EGLL 280820Z 24005KT CAVOK 08/04 Q1022=\n"])
+    def test_missing_station_raises(self, raw: str) -> None:
+        serv = service.MetNo("metar")
+        with pytest.raises(exceptions.InvalidRequest):
+            serv._extract(raw, "ENGM")
+
+
+@pytest.mark.parametrize("station", ["CYYZ", "CYVR", "CYUL"])
+class TestNavCanada(ServiceFetchTest):
+    service_class = service.NavCanada
+
+
+@pytest.mark.parametrize("station", ["CYYZ", "CYVR", "CYUL"])
+class TestNavCanadaTaf(ServiceFetchTest):
+    service_class = service.NavCanada
+    report_type = "taf"
+
+
+class TestNavCanadaClass(TestStationScrape):
+    service_class = service.NavCanada
+
+
+class TestNavCanadaExtract:
+    """NavCanada should return the newest report for the requested station."""
+
+    @staticmethod
+    def _item(report_type: str, location: str, start: str, text: str) -> dict:
+        return {
+            "type": report_type,
+            "pk": "1",
+            "location": location,
+            "startValidity": start,
+            "endValidity": None,
+            "text": text,
+            "hasError": False,
+        }
+
+    def test_newest_metar(self) -> None:
+        serv = service.NavCanada("metar")
+        data = [
+            self._item("metar", "CYOO", "2026-11-25T18:00:00", "METAR CYOO 251800Z AUTO 05007KT 9SM BKN029 03/M07 A3067="),
+            self._item("metar", "CYOO", "2026-11-25T17:00:00", "METAR CYOO 251700Z AUTO 05006KT 9SM BKN030 03/M07 A3066="),
+        ]
+        report = serv._extract(json.dumps({"meta": {}, "data": data}), "CYOO")
+        assert report == "METAR CYOO 251800Z AUTO 05007KT 9SM BKN029 03/M07 A3067"
+
+    def test_taf_keeps_text(self) -> None:
+        serv = service.NavCanada("taf")
+        text = "TAF CYOO 281340Z 2814/2902 25008KT P6SM BKN015 TEMPO\n     2814/2816 SCT015\n    FM281600 25012G22KT P6SM SCT020="
+        data = [self._item("taf", "CYOO", "2026-11-28T14:00:00", text)]
+        report = serv._extract(json.dumps({"data": data}), "cyoo")
+        assert report.startswith("TAF CYOO 281340Z")
+        assert serv._clean_report(report).endswith("FM281600 25012G22KT P6SM SCT020")
+
+    def test_ignores_other_types_and_stations(self) -> None:
+        serv = service.NavCanada("metar")
+        data = [
+            self._item("taf", "CYOO", "2026-11-28T14:00:00", "TAF CYOO 281340Z 2814/2902 25008KT P6SM BKN015="),
+            self._item("metar", "CYYZ", "2026-11-28T14:00:00", "METAR CYYZ 281400Z 25010KT 15SM FEW040 M01/M08 A3010="),
+        ]
+        with pytest.raises(exceptions.InvalidRequest):
+            serv._extract(json.dumps({"data": data}), "CYOO")
+
+    @pytest.mark.parametrize("raw", ["not json", "[]", '{"meta": {}}', '{"data": [1]}'])
+    def test_bad_response_raises(self, raw: str) -> None:
+        serv = service.NavCanada("metar")
+        with pytest.raises(exceptions.InvalidRequest):
+            serv._extract(raw, "CYOO")
 
 
 class TestReportVariants:
