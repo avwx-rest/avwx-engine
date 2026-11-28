@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING, ClassVar, TypeVar
 # library
 from xmltodict import parse as parsexml
 
+from avwx.__about__ import __version__
 from avwx.exceptions import InvalidRequest
 
 # module
@@ -395,6 +396,72 @@ class Avt(StationScrape):
             return ""
         else:
             return text
+
+
+class MetNo(StationScrape):
+    """Request data from MET Norway's Tafmetar API.
+
+    MET Norway is the official source for Norwegian aerodromes, and the API
+    also relays the last 24 hours of reports for about 4,000 airports worldwide.
+    https://api.met.no/weatherapi/tafmetar/1.0/documentation
+    """
+
+    _url = "https://api.met.no/weatherapi/tafmetar/1.0/{}.txt"
+
+    @staticmethod
+    def _make_headers() -> dict:
+        """Return request headers.
+
+        MET Norway's terms of service reject requests without a User-Agent
+        that identifies the client.
+        """
+        return {"User-Agent": f"avwx-engine/{__version__} https://github.com/avwx-rest/avwx-engine"}
+
+    def _make_url(self, station: str) -> tuple[str, dict]:
+        """Return a formatted URL and parameters."""
+        return self._url.format(self.report_type), {"icao": station}
+
+    def _extract(self, raw: str, station: str) -> str:
+        """Extract the newest report from the plain text response.
+
+        The response lists every report from the last 24 hours, one per line,
+        oldest first.
+        """
+        prefix = f"{station.upper()} "
+        reports = [line.strip() for line in raw.splitlines() if line.strip().startswith(prefix)]
+        if not reports:
+            msg = "The station might not exist"
+            raise self._make_err(msg)
+        return reports[-1].rstrip("=").strip()
+
+
+class NavCanada(StationScrape):
+    """Request data from NAV CANADA's flight planning weather API for Canadian stations."""
+
+    _url = "https://plan.navcanada.ca/weather/api/alpha/"
+
+    def _make_url(self, station: str) -> tuple[str, dict]:
+        """Return the URL and parameters."""
+        return self._url, {"site": station, "alpha": self.report_type}
+
+    def _extract(self, raw: str, station: str) -> str:
+        """Extract the newest report from the JSON response."""
+        try:
+            data = json.loads(raw)["data"]
+            items = [
+                item
+                for item in data
+                if item.get("type") == self.report_type and item.get("location") == station.upper() and item.get("text")
+            ]
+        except (TypeError, AttributeError, KeyError, json.decoder.JSONDecodeError) as exc:
+            raise self._make_err(raw) from exc
+        if not items:
+            msg = "The station might not exist"
+            raise self._make_err(msg)
+        # ISO timestamps sort as strings. A stable sort keeps the later of two equal entries last.
+        latest = sorted(items, key=lambda item: item.get("startValidity") or "")[-1]
+        report: str = latest["text"]
+        return report.strip().rstrip("=").strip()
 
 
 # Ancilary scrape services
