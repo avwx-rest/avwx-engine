@@ -349,16 +349,33 @@ def _coord_value(value: str) -> float:
     return -decimal if hemisphere in ("S", "W") else decimal
 
 
+# 5639N16122E and N5639E16122 run the latitude and longitude together
+_JOINED_POSITION = re.compile(
+    r"\A(?:(?P<lat>\d{2,4})(?P<ns>[NS])(?P<lon>\d{3,5})(?P<ew>[EW])"
+    r"|(?P<ns2>[NS])(?P<lat2>\d{2,4})(?P<ew2>[EW])(?P<lon2>\d{3,5}))\Z"
+)
+
+
 def _position(data: list[str]) -> tuple[list[str], Coord | None]:
     try:
         index = data.index("PSN")
     except ValueError:
         return data, None
     data.pop(index)
+    if match := _JOINED_POSITION.match(data[index]):
+        raw = data.pop(index)
+        groups = match.groupdict()
+        lat = _coord_value((groups["ns"] or groups["ns2"]) + (groups["lat"] or groups["lat2"]))
+        lon = _coord_value((groups["ew"] or groups["ew2"]) + (groups["lon"] or groups["lon2"]))
+        return data, Coord(lat=lat, lon=lon, repr=raw)
     raw = f"{data[index]} {data[index + 1]}"
     lat = _coord_value(data.pop(index))
     lon = _coord_value(data.pop(index))
     return data, Coord(lat=lat, lon=lon, repr=raw)
+
+
+_JOINED_MOVEMENT = re.compile(r"\A([NSEW]{1,3})(\d+(?:KT|KMH))\Z")
+_SPEED_ONLY = re.compile(r"\A\d+(?:-\d+)?(?:KT|KMH)\Z")
 
 
 def _movement(data: list[str], units: Units) -> tuple[list[str], Units, Movement | None]:
@@ -372,8 +389,16 @@ def _movement(data: list[str], units: Units) -> tuple[list[str], Units, Movement
         return data, units, None
     raw = data.pop(index)
     direction_str = data.pop(index)
+    # MOV ENE08KT runs the direction into the speed
+    if match := _JOINED_MOVEMENT.match(direction_str):
+        direction_str = match.group(1)
+        data.insert(index, match.group(2))
     # MOV CNL
     if direction_str == "CNL":
+        return data, units, None
+    # MOV NC is followed straight by the intensity, so it gives no movement
+    if direction_str in INTENSITY:
+        data.insert(index, direction_str)
         return data, units, None
     # MOV SLOW ESE / MOV SLOW "SLOW" is a speed qualifier, not a direction
     if direction_str == "SLOW":
@@ -383,15 +408,21 @@ def _movement(data: list[str], units: Units) -> tuple[list[str], Units, Movement
             raw += f" {direction_str}"
         direction = core.make_number(direction_str.replace("/", ""), literal=True, special=CARDINAL_DEGREES)
         return data, units, Movement(repr=raw.strip(), direction=direction, speed=None)
-    raw += f" {direction_str} "
+    # MOV 15KT gives a speed with no direction
+    if _SPEED_ONLY.match(direction_str):
+        data.insert(index, direction_str)
+        raw += " "
+        direction = None
     # MOV FROM 23040KT
-    if direction_str == "FROM":
+    elif direction_str == "FROM":
+        raw += f" {direction_str} "
         value = data[index][:3]
         raw += value
         direction = core.make_number(value)
         data[index] = data[index][3:]
     # MOV E 45KMH
     else:
+        raw += f" {direction_str} "
         direction = core.make_number(direction_str.replace("/", ""), literal=True, special=CARDINAL_DEGREES)
     speed = None
     with suppress(IndexError):
@@ -489,6 +520,26 @@ def _bounds(data: list[str]) -> tuple[list[str], list[Coord], list[str]]:
     return data, coords, bounds
 
 
+def _altitude_range(item: str, units: Units) -> tuple[Number | None, Number | None, Units]:
+    """Split a floor/ceiling pair like FL060/300 or SFC/FL160"""
+    floor_val, ceiling_val = item.split("/", 1)
+    # FL040-060/170 gives the floor as a range; keep its lower bound
+    floor_val = floor_val.split("-")[0]
+    floor: Number | None
+    ceiling: Number | None
+    try:
+        floor, units = core.make_altitude(floor_val, units)
+    except ValueError:
+        floor = None
+    force_fl = (floor_val == "SFC" or floor_val[:2] == "FL") and ceiling_val[:2] != "FL"
+    try:
+        ceiling, units = core.make_altitude(ceiling_val, units, force_fl=force_fl)
+    except ValueError:
+        # SFC/AL210 is mistyped past reading, so leave the ceiling empty
+        ceiling = None
+    return floor, ceiling, units
+
+
 def _altitudes(data: list[str], units: Units) -> tuple[list[str], Units, Number | None, Number | None]:
     """Extract the floor and ceiling altitudes"""
     floor, ceiling = None, None
@@ -501,6 +552,10 @@ def _altitudes(data: list[str], units: Units) -> tuple[list[str], Units, Number 
             break
         # TOPS ABV FL450
         if item in ("TOP", "TOPS", "BLW"):
+            # A bulletin can end on a bare TOP= with no altitude after it
+            if i + 1 >= len(data):
+                data = data[:i]
+                break
             if data[i + 1] == "ABV":
                 ceiling = core.make_number(f"ABV {data[i + 2]}")
                 data = data[:i] + data[i + 3 :]
@@ -508,6 +563,11 @@ def _altitudes(data: list[str], units: Units) -> tuple[list[str], Units, Number 
             if data[i + 1] == "BLW":
                 ceiling = core.make_number(f"BLW {data[i + 2]}")
                 data = data[:i] + data[i + 3 :]
+                break
+            # TOP FL030/FL100 gives a floor and a ceiling
+            if "/" in data[i + 1] and core.is_altitude(data[i + 1]):
+                floor, ceiling, units = _altitude_range(data[i + 1], units)
+                data = data[:i] + data[i + 2 :]
                 break
             # TOPS TO FL310
             if data[i + 1] == "TO":
@@ -521,14 +581,7 @@ def _altitudes(data: list[str], units: Units) -> tuple[list[str], Units, Number 
         # FL060/300 SFC/FL160
         if core.is_altitude(item):
             if "/" in item:
-                floor_val, ceiling_val = item.split("/")
-                # FL040-060/170 gives the floor as a range; keep its lower bound
-                floor_val = floor_val.split("-")[0]
-                floor, units = core.make_altitude(floor_val, units)
-                if (floor_val == "SFC" or floor_val[:2] == "FL") and ceiling_val[:2] != "FL":
-                    ceiling, units = core.make_altitude(ceiling_val, units, force_fl=True)
-                else:
-                    ceiling, units = core.make_altitude(ceiling_val, units)
+                floor, ceiling, units = _altitude_range(item, units)
             else:
                 ceiling, units = core.make_altitude(item, units)
             data.pop(i)
@@ -624,6 +677,10 @@ def sanitize(report: str) -> str:
         report = report.replace(key, val)
     data = report.split()
     for i, item in reversed(list(enumerate(data))):
+        # Join a flight level split from its number Ex: SFC/FL 210
+        if item.endswith("/FL") and i + 1 < len(data) and data[i + 1].isdigit():
+            item = item + data.pop(i + 1)  # noqa: PLW2901
+            data[i] = item
         # Remove extra element on altitude Ex: FL450Z skip 1000FT
         if (
             len(item) > 4

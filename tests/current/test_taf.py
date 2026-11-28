@@ -362,6 +362,8 @@ def test_prob_end() -> None:
         ("1 2 3 4 5 6 7 8", "1 2 3 4 5 6 7 8"),
         ("1 2 TAF 3 4 5 6 7 8 COR 9", "TAF 1 2 3 4 5 6 7 8 COR 9"),
         ("", ""),
+        # AMD written twice, before and after the station
+        ("TAF AMD GMMH AMD 240850Z 2409/2424", "TAF AMD GMMH 240850Z 2409/2424"),
     ],
 )
 def test_bad_header(report: str, fixed: str) -> None:
@@ -496,3 +498,12 @@ def test_rule_inherit() -> None:
     assert tafobj.data is not None
     for i, line in enumerate(tafobj.data.forecast):
         assert line.flight_rules == expected_rules[i]
+
+
+def test_parse_repeated_amd() -> None:
+    """A TAF that repeats AMD after the station still parses its forecast."""
+    report = "TAF AMD GMMH AMD 240850Z 2409/2424 05013KT 3000 BR BKN010 BECMG 2410/2412 6000 NSW NSC"
+    data, *_ = taf.parse("GMMH", report)
+    assert data is not None
+    assert data.is_amended
+    assert len(data.forecast) == 2

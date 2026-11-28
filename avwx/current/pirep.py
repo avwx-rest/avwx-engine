@@ -9,6 +9,7 @@ released as they come in.
 # stdlib
 from __future__ import annotations
 
+import re
 from contextlib import suppress
 from typing import TYPE_CHECKING
 
@@ -238,6 +239,10 @@ def _find_floor_ceiling(
             break
         # CONT LGT CHOP BLO 250
         if item == "BLO":
+            # LGT BLO gives no altitude
+            if i + 1 >= len(items):
+                items = items[:i]
+                break
             altitude = items[i + 1]
             if "-" in altitude:
                 floor, ceiling = _separate_floor_ceiling(altitude)
@@ -280,13 +285,20 @@ def _remarks(item: str) -> str:
     return item
 
 
+_FV_RANGE = re.compile(r"\A(\d+)-\d+(SM)?\Z")
+
+
 def _wx(report: str) -> tuple[list[Code], Number | None, list[str]]:
     """Parse remaining weather elements."""
     other: list[str] = []
     flight_visibility = None
     for item in report.split():
         if len(item) > 2 and item.startswith("FV"):
-            _, flight_visibility = core.get_visibility([item[2:]], _UNITS)
+            value = item[2:]
+            # FV7-8SM reports a range; keep its lower bound
+            if match := _FV_RANGE.match(value):
+                value = match.group(1) + match.group(2)
+            _, flight_visibility = core.get_visibility([value], _UNITS)
         else:
             other.append(item)
     other, wx_codes = get_wx_codes(other)
@@ -341,26 +353,31 @@ def parse(report: str, issued: date | None = None) -> tuple[PirepData | None, Sa
             continue
         tag = item[:2]
         item = item[2:].strip()  # noqa: PLW2901
-        if tag == "TM":
-            time = _time(item, issued)
-        elif tag == "OV":
-            location = _location(item)
-        elif tag == "FL":
-            altitude = _altitude(item)
-        elif tag == "TP":
-            aircraft = _aircraft(item)
-        elif tag == "SK":
-            clouds = _clouds(item)
-        elif tag == "TA":
-            temperature = _number(item)
-        elif tag == "TB":
-            turbulence = _turbulence(item)
-        elif tag == "IC":
-            icing = _icing(item)
-        elif tag == "RM":
-            remarks = _remarks(item)
-        elif tag == "WX":
-            wx_codes, flight_visibility, other = _wx(item)
+        # Pilots free-type these fields (TA UNKWN, TA M02-M06). One unreadable field is
+        # left empty rather than losing the whole report.
+        try:
+            if tag == "TM":
+                time = _time(item, issued)
+            elif tag == "OV":
+                location = _location(item)
+            elif tag == "FL":
+                altitude = _altitude(item)
+            elif tag == "TP":
+                aircraft = _aircraft(item)
+            elif tag == "SK":
+                clouds = _clouds(item)
+            elif tag == "TA":
+                temperature = _number(item)
+            elif tag == "TB":
+                turbulence = _turbulence(item)
+            elif tag == "IC":
+                icing = _icing(item)
+            elif tag == "RM":
+                remarks = _remarks(item)
+            elif tag == "WX":
+                wx_codes, flight_visibility, other = _wx(item)
+        except (ValueError, IndexError):
+            continue
     return (
         PirepData(
             aircraft=aircraft,

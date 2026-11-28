@@ -142,5 +142,14 @@
         "duplicates": false,
         "extra_spaces_found": false,
         "extra_spaces_needed": true
+    },
+    {
+        "report": "MTPP 261200Z COR12008KT 8000 FEW024 29/23 Q1014",
+        "fixed": "MTPP 261200Z 12008KT 8000 FEW024 29/23 Q1014",
+        "removed": [],
+        "replaced": {"COR12008KT": "12008KT"},
+        "duplicates": false,
+        "extra_spaces_found": false,
+        "extra_spaces_needed": false
     }
 ]

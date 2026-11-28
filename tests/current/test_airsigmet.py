@@ -236,6 +236,18 @@ def test_coord_value(coord: str, value: float) -> None:
             Coord(14 + 28 / 60, -(90 + 52 / 60), "N1428 W09052"),
             "VA FUEGO VA",
         ),
+        # Latitude and longitude run together, hemisphere after the digits
+        (
+            "VA CLD PSN 5639N16122E OBS",
+            Coord(56 + 39 / 60, 161 + 22 / 60, "5639N16122E"),
+            "VA CLD OBS",
+        ),
+        # Run together, hemisphere first
+        (
+            "VA CLD PSN N5639E16122 OBS",
+            Coord(56 + 39 / 60, 161 + 22 / 60, "N5639E16122"),
+            "VA CLD OBS",
+        ),
     ],
 )
 def test_position(wx: str, coord: Coord | None, extra: str) -> None:
@@ -301,6 +313,31 @@ def test_position(wx: str, coord: Coord | None, extra: str) -> None:
             ),
             "kt",
             "TOP FL390",
+        ),
+        (
+            # Direction run into the speed
+            "CB TOP FL450 MOV ENE08KT INTSF=",
+            Movement(
+                "MOV ENE 08KT",
+                core.make_number("ENE", literal=True, special=CARDINAL_DEGREES),
+                core.make_number("08"),
+            ),
+            "kt",
+            "CB TOP FL450 INTSF=",
+        ),
+        (
+            # Speed with no direction
+            "TOP ABV FL360 MOV 15KT NC=",
+            Movement("MOV 15KT", None, core.make_number("15")),
+            "kt",
+            "TOP ABV FL360 NC=",
+        ),
+        (
+            # MOV followed straight by the intensity gives no movement
+            "TOP FL480 MOV NC",
+            None,
+            "kt",
+            "TOP FL480 NC",
         ),
     ],
 )
@@ -460,6 +497,13 @@ def test_bounds(wx: str, coords: tuple[tuple], bounds: list[str], extra: str) ->
         ("1 CIG BLW 010 2", None, 10, "ft", "1 2"),
         ("1 TOP BLW FL380 2", None, 380, "ft", "1 2"),
         ("1 FL040-060/170 2", 40, 170, "ft", "1 2"),
+        # A bulletin ending on a bare TOP= gives no altitude
+        ("EMBD TS OBS TOP", None, None, "ft", "EMBD TS OBS"),
+        # TOP followed by a floor and a ceiling
+        ("ENTIRE FIR TOP FL030/FL100 MOV", 30, 100, "ft", "ENTIRE FIR MOV"),
+        ("1 TOPS SFC/FL120 2", 0, 120, "ft", "1 2"),
+        # A ceiling mistyped past reading is left empty
+        ("W07626 SFC/AL210 MOV NW 10KT", 0, None, "ft", "W07626 MOV NW 10KT"),
     ],
 )
 def test_altitudes(wx: str, floor: int | None, ceiling: int | None, unit: str, extra: str) -> None:
@@ -510,6 +554,7 @@ def test_intensity(wx: str, code: str | None, name: str | None, extra: str) -> N
         ("TOP FL520 MO V NNW 05KT NC", "TOP FL520 MOV NNW 05KT NC"),
         ("FL450 MOV NE05KT INTSF=", "FL450 MOV NE 05KT INTSF"),
         ("TOP FL420 MOV E2KT INTSF=", "TOP FL420 MOV E 2KT INTSF"),
+        ("W07623 SFC/FL 210 MOV SW 5KT=", "W07623 SFC/FL210 MOV SW 5KT"),
     ],
 )
 def test_sanitize(report: str, clean: str) -> None:
@@ -617,3 +662,77 @@ def test_along(coords: tuple, count: int) -> None:
     manager.reports = COORD_REPORTS
     path = [Coord(c[0], c[1]) for c in coords]
     assert len(manager.along(path)) == count
+
+
+def test_parse_bare_top() -> None:
+    """A SIGMET ending in a bare TOP= parses instead of raising IndexError."""
+    report = (
+        "WSVS31 VVGL 120120 VVHM SIGMET 1 VALID 120120/120520 VVGL- VVHM HO CHI MINH FIR"
+        " EMBD TS OBS WI N1251 E11401 - N1033 E11358 - N0700 E10801 - N1107 E10712"
+        " - N1522 E10854 - N1251 E11401 TOP="
+    )
+    sigmet = airsigmet.AirSigmet.from_report(report)
+    assert sigmet is not None
+    assert sigmet.data is not None
+    assert sigmet.data.observation is not None
+    assert sigmet.data.observation.ceiling is None
+
+
+def test_parse_movement_without_direction() -> None:
+    """A SIGMET that moves at a speed with no direction still parses."""
+    report = (
+        "WSMA31 FIMP 182115 FIMM SIGMET D03 VALID 182115/190115 FIMP- FIMM MAURITIUS FIR "
+        "EMBD TS OBS AT 2045Z W OF LINE S3230 E05700 - S3300 E05940 - S3540 E06410 - "
+        "S4300 E05700 TOP ABV FL360 MOV 15KT NC="
+    )
+    data, _ = airsigmet.parse(report)
+    assert data.observation is not None
+    assert data.observation.movement is not None
+    assert data.observation.movement.direction is None
+    assert data.observation.movement.speed is not None
+    assert data.observation.movement.speed.value == 15
+
+
+def test_parse_top_with_floor_and_ceiling() -> None:
+    """A SIGMET giving TOP with a floor/ceiling pair still parses."""
+    report = (
+        "WSTR31 UTAA 200254 UTAA SIGMET 1 VALID 200254/200638 UTAA- UTAA ASHGABAT FIR "
+        "SEV TURB OBS AND FCST ENTIRE FIR TOP FL030/FL100 MOV NE 25KT NC="
+    )
+    data, _ = airsigmet.parse(report)
+    assert data.forecast is not None
+    assert data.forecast.floor is not None
+    assert data.forecast.floor.value == 30
+    assert data.forecast.ceiling is not None
+    assert data.forecast.ceiling.value == 100
+
+
+def test_parse_movement_followed_by_intensity() -> None:
+    """A SIGMET whose MOV is followed by NC keeps its intensity and no movement."""
+    report = (
+        "WSPR31 SPIM 202136 SPIM SIGMET A13 VALID 202140/210130 SPJC- SPIM LIMA FIR "
+        "EMBD TS OBS AT 2110Z E OF LINE S0905 W07333 - S0343 W07554 - S0125 W07411 "
+        "TOP FL480 MOV NC="
+    )
+    data, _ = airsigmet.parse(report)
+    assert data.observation is not None
+    assert data.observation.movement is None
+    assert data.observation.intensity is not None
+    assert data.observation.intensity.repr == "NC"
+    assert data.observation.ceiling is not None
+    assert data.observation.ceiling.value == 480
+
+
+def test_parse_joined_volcano_position() -> None:
+    """A volcanic ash SIGMET giving its position as one joined token still parses."""
+    report = (
+        "WVAK01 PAWU 231534 PAZA SIGMET INDIA 2 VALID 231534/232134 KKCI- ANCHORAGE FIR "
+        "ANCHORAGE OCEANIC FIR VA ERUPTION SHEVELUCH VA CLD PSN 5639N16122E OBS AT 1525Z "
+        "WI N5452 E16734 - N5410 E16901 - N5325 E17125 - N5305 E17111 - N5349 E16840 - "
+        "N5431 E16720 - N5452 E16734. BLW FL180. MOV SE 40KT."
+    )
+    data, _ = airsigmet.parse(report)
+    assert data.observation is not None
+    assert data.observation.position is not None
+    assert round(data.observation.position.lat, 2) == 56.65
+    assert round(data.observation.position.lon, 2) == 161.37

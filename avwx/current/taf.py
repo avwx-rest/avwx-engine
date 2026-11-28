@@ -8,7 +8,6 @@ are valid for six hours or until the next report is issued
 # stdlib
 from __future__ import annotations
 
-from contextlib import suppress
 from typing import TYPE_CHECKING
 
 # module
@@ -377,8 +376,9 @@ def fix_report_header(report: str) -> str:
 
     fixed_headers = []
     for target in ("TAF", "AMD", "COR"):
-        with suppress(ValueError):
-            headers.remove(target)
+        if target in headers:
+            # TAF AMD GMMH AMD repeats a flag, so keep one and drop the rest
+            headers = [item for item in headers if item != target]
             fixed_headers.append(target)
 
     return " ".join(fixed_headers + headers + split_report[header_length:])

@@ -209,7 +209,11 @@ def _parse_rvr_number(value: str) -> Number | None:
     with suppress(KeyError):
         prefix = _RVR_CODES[value[0]]
         value = value[1:]
-    number = core.make_number(value, raw)
+    try:
+        number = core.make_number(value, raw)
+    except ValueError:
+        # P6000FTY and P2000D050 are garbled past reading, so leave them empty
+        return None
     if number is not None and prefix is not None:
         number.spoken = f"{prefix} {number.spoken}"
         number.value = None

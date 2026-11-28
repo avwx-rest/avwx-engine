@@ -371,6 +371,9 @@ def parse_linked_times(start: str, end: str) -> tuple[Timestamp | Code | None, T
     return make_year_timestamp(start, start_raw, tzname), make_year_timestamp(end, end_raw, tzname)
 
 
+_TRAILING_PUNCTUATION = re.compile(r"[^A-Z0-9]+\Z")
+
+
 def make_altitude(value: str | None, units: Units) -> Altitude | None:
     """Parse NOTAM altitudes.
 
@@ -387,12 +390,28 @@ def make_altitude(value: str | None, units: Units) -> Altitude | None:
     trimmed = value.split()[0].strip(" .")
     if not trimmed:
         return None
+    # 65FT(20M) adds a second unit in brackets; (5000FT) wraps the only one
     if "(" in trimmed:
-        trimmed = trimmed[trimmed.find("(") + 1 :]
+        before, _, inside = trimmed.partition("(")
+        trimmed = before or inside
+    # 8500FT/2591M adds a second unit after a slash
+    if "/" in trimmed:
+        trimmed = trimmed.partition("/")[0]
+    # 8500FT, or 8500FT) carries trailing punctuation
+    trimmed = _TRAILING_PUNCTUATION.sub("", trimmed)
+    if not trimmed:
+        return None
+    # 150FTFT doubles the unit
+    while trimmed.endswith("FTFT"):
+        trimmed = trimmed[:-2]
     is_flight_level = FLIGHT_LEVEL_PATTERN.match(trimmed) is not None
     if not (is_flight_level or trimmed in SPECIAL_NUMBERS or trimmed[0].isdigit()):
         return None
-    number = core.make_altitude(trimmed, units, repr=value)[0]
+    # Anything still unreadable, like 8500FTMSL, is left empty rather than failing the NOTAM
+    try:
+        number = core.make_altitude(trimmed, units, repr=value)[0]
+    except ValueError:
+        return None
     if number is None:
         return None
     return Altitude(

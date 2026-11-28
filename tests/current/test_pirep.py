@@ -167,6 +167,7 @@ def test_not_number(bad: str) -> None:
         ("LGT", "LGT", None, None),
         ("CONT LGT CHOP BLO 250", "CONT LGT CHOP", None, 250),
         ("LGT-NEG-MOD BLO 090-075", "LGT-NEG-MOD", 75, 90),
+        ("LGT BLO", "LGT", None, None),
     ],
 )
 def test_turbulence(turb: str, severity: str, floor: int | None, ceiling: int | None) -> None:
@@ -187,6 +188,7 @@ def test_turbulence(turb: str, severity: str, floor: int | None, ceiling: int | 
         ("NEG", "NEG", None, None, None),
         ("TRACE RIME 070-090", "TRACE", "RIME", 70, 90),
         ("LGT RIME 220-260", "LGT", "RIME", 220, 260),
+        ("LGT CHOP BLO", "LGT", "CHOP", None, None),
     ],
 )
 def test_icing(
@@ -224,6 +226,8 @@ def test_remarks(rmk: str) -> None:
             ["4"],
         ),
         ("FV1000 VCFC", [("VCFC", "Vicinity Funnel Cloud")], 1000, []),
+        # A visibility range keeps its lower bound
+        ("FV7-8SM", [], 7, []),
     ],
 )
 def test_wx(text: str, wx: list[tuple[str, str]], vis: int | None, remain: list[str]) -> None:
@@ -280,3 +284,48 @@ def test_pirep_ete(ref: dict, icao: str, issued: datetime) -> None:
     assert station.issued == issued
     for parsed, report in zip(station.data, ref["reports"], strict=True):
         assert asdict(parsed) == report["data"]
+
+
+def test_parse_flight_visibility_range() -> None:
+    """A PIREP reporting flight visibility as a range parses instead of raising."""
+    report = (
+        "KSM UA /OV KSM/TM 0055/FL040/TP C208/SK OVC004-TOP040/WX FV7-8SM/TA M04/TB NEG"
+        "/IC LGT-MOD CLR RIME ICE/RM DURD /ZAN"
+    )
+    data, _ = pirep.parse(report)
+    assert data is not None
+    assert data.flight_visibility is not None
+    assert data.flight_visibility.value == 7
+
+
+@pytest.mark.parametrize(
+    "report",
+    [
+        "000 UBUS31 KWBC 140735 PRCUS ERI UA /OV ERI/TM 0726/FL060/TP E145/TA UNKWN/IC LGHT RME/RM ZOB",
+        "000 UBDC90 KWBC 141130 DC 141130 IAD UA /OV MRB320010/TM 1118/FL60/TP C172/TA M02-M06/IC TR-LIGHT RIME",
+        "STL UA /OV 20 SE OF BMI/TM 1705/FLDURD/TP E120/SK BASES OVC 030, TOPS OVC 102/TA 0/IC LIGHT RIME",
+        "BFL UA /OV GMN010007/TM 2038/FL90/TP C182/TA OAT2/IC LGT RIME",
+    ],
+)
+def test_parse_unreadable_field(report: str) -> None:
+    """A free-typed field that cannot be read is left empty instead of failing the report."""
+    data, _ = pirep.parse(report)
+    assert data is not None
+    assert data.location is not None
+    assert data.aircraft is not None
+    assert data.icing is not None
+
+
+@pytest.mark.parametrize(
+    "report",
+    [
+        "000 UBND90 KWBC 170045 ND 170045 GFK UA /OV KGFK/TM 0040/FL011/TP P28A/WV 19025/TB LGT BLO",
+        "000 UBWA90 KWBC 161840 WA 161840 YKM UA /OV YKM290030/TM 1831/FL270/TP E75L/TB MOD 340-320/IC LGT CHOP BLO/RM ZSE",
+    ],
+)
+def test_parse_below_without_altitude(report: str) -> None:
+    """Turbulence or icing reported BLO with no altitude after it keeps its severity."""
+    data, _ = pirep.parse(report)
+    assert data is not None
+    assert data.turbulence is not None
+    assert data.turbulence.severity in ("LGT", "MOD")

@@ -212,6 +212,9 @@ def test_get_altimeter(version: str, wx: list[str], alt: tuple, unit: str) -> No
             None,
             structs.Code("N", "no change"),
         ),
+        # Garbled values are left empty
+        ("R06/P6000FTY", "06", None, None, None),
+        ("R02/P2000D050", "02", None, None, None),
     ],
 )
 def test_parse_runway_visibility(

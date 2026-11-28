@@ -363,6 +363,15 @@ def test_parse_linked_times(start: str, end: str, start_dt: datetime | None, end
         ("SFC", 0, False),
         ("UNL", 999, False),
         ("7000FT AMSL", 7000, False),
+        # A doubled unit
+        ("150FTFT AGL", 150, False),
+        # A second unit in brackets after the first
+        ("65FT(20M) AGL", 65, False),
+        # Trailing punctuation and a second unit after a slash
+        ("8500FT, AMSL", 8500, False),
+        ("8500FT) AMSL", 8500, False),
+        ("8500FT/2591M AMSL", 8500, False),
+        ("8500FT* AMSL", 8500, False),
     ],
 )
 def test_make_altitude(raw: str, value: int, flight_level: bool) -> None:  # noqa: FBT001
@@ -679,3 +688,9 @@ def test_notam_e2e(ref: dict, icao: str, unused: Any) -> None:  # noqa: ARG001
     assert isinstance(station.last_updated, datetime)
     for parsed, report in zip(station.data, ref["reports"], strict=True):
         assert asdict(parsed) == report["data"]
+
+
+@pytest.mark.parametrize("raw", ["8500FTMSL", "8500FT-AMSL"])
+def test_make_altitude_unreadable(raw: str) -> None:
+    """A height that still can't be read is left empty instead of raising."""
+    assert notam.make_altitude(raw, structs.Units.international()) is None

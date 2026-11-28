@@ -84,6 +84,8 @@ def sanitize_list_with(
                         cleaned = cleaner.clean(item)
                         wxdata[i] = cleaned
                         sans.log(item, cleaned)
+                        # Later cleaners must see the cleaned item, or they undo this one
+                        item = cleaned  # noqa: PLW2901
                     if cleaner.should_break:
                         break
 
