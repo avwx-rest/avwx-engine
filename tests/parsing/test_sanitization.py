@@ -32,6 +32,13 @@ def test_sanitize_report_string() -> None:
     assert sans.replaced == {"C A V O K": "CAVOK", "P6000F": "P6000FT"}
 
 
+def test_sanitize_backslash_fraction() -> None:
+    """Test that a fraction typed with a backslash is read as a fraction."""
+    sans = Sanitization()
+    assert clean_metar_string("PALP 07026G35KT 1\\2SM SN", sans) == "PALP 07026G35KT 1/2SM SN"
+    assert sans.errors_found is True
+
+
 def test_sanitize_empty_report_string() -> None:
     """Test that the sanitization minimaly affects short text."""
     assert clean_metar_string("  MVP=", Sanitization()) == "MVP"

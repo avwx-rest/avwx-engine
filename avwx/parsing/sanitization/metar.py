@@ -35,6 +35,8 @@ from avwx.parsing.sanitization.cleaners.wind import (
 METAR_REPL = {
     **CURRENT,
     "Z/ ": "Z ",
+    # 1\2SM is a fraction typed with a backslash
+    "\\": "/",
 }
 
 
